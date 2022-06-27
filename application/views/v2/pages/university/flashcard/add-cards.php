@@ -1,6 +1,7 @@
 <?php include viewPath('v2/includes/header');?>
 
 <input type="hidden" value="<?=base_url();?>" id="baseurl" />
+<input type="hidden" value="<?=$page->deckId;?>" id="deckid">
 
 <div class="fc-loader hide">
     <span>Loading...</span>
@@ -26,8 +27,8 @@
 
               <hr />
 
-              <button class="nsm-button">Reset</button>
-              <button class="nsm-button primary">Save Deck</button>
+              <button class="nsm-button" data-action="resetcards" data-default="Reset">Reset</button>
+              <button class="nsm-button primary" data-action="savedeck" data-default="Save Deck">Save Deck</button>
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     bLengthChange: false,
     order: [0, "desc"],
     ajax: {
-      url: `${api.prefixURL}/FlashCard/apiGetDecs`,
+      url: `${api.prefixURL}/FlashCard/apiGetDecks`,
       data: (param) => {
         $loader.classList.remove("hide");
         return param;
@@ -42,6 +42,28 @@ window.document.addEventListener("DOMContentLoaded", async () => {
       $(row).attr("data-id", data.id);
       $(row).find("[data-toggle=tooltip]").tooltip();
     },
+  });
+
+  const actions = getActions();
+  table.on("click", "[data-action]", async (event) => {
+    event.preventDefault();
+
+    let $target = event.target;
+    if (!$target.dataset.action) {
+      $target = $target.closest("[data-action]");
+    }
+
+    const $parent = $target.closest("tr");
+    const rows = table.rows().data().toArray();
+
+    const rowIndex = $parent.dataset.id;
+    const row = rows.find(({ id }) => id == rowIndex);
+
+    const action = $target.dataset.action;
+    if (!action || !actions[action]) return;
+
+    const func = actions[action].bind(this);
+    await func(row);
   });
 });
 
@@ -87,6 +109,34 @@ function getColumns() {
   };
 }
 
+function getActions() {
+  return {
+    addcards: (row) => {
+      window.location = `${api.prefixURL}/FlashCard/addCards/${row.id}`;
+    },
+    remove: async (row) => {
+      const result = await Swal.fire({
+        title: "Delete Deck",
+        text: "Deleting a deck will also remove its cards. Are you sure you want to delete this deck?",
+        icon: "question",
+        confirmButtonText: "Yes, delete",
+        showCancelButton: true,
+        cancelButtonText: "Cancel",
+      });
+
+      if (!result.isConfirmed) return;
+
+      const { data } = await api.removeDeck(row.id);
+      const table = $($table).DataTable();
+      table.row(`#row${data.id}`).remove().draw();
+    },
+    edit: (row) => {
+      $createModal.__row = row;
+      $($createModal).modal("show");
+    },
+  };
+}
+
 const $createBtn = document.getElementById("flashcardcreate");
 const $createModal = document.getElementById("flashcardcreatemodal");
 const $createForm = document.getElementById("flashcardcreateform");
@@ -111,9 +161,18 @@ $createForm.addEventListener("submit", async (event) => {
   $button.setAttribute("disabled", true);
 
   try {
-    const response = await api.createDeck({ title: name });
+    const modalData = $createModal.__row;
+    const isEdit = Boolean(modalData);
     const table = $($table).DataTable();
-    table.row.add(response.data).draw();
+
+    if (isEdit) {
+      const { data } = await api.updateDeck({ ...modalData, title: name });
+      table.row(`#row${data.id}`).data(data).draw();
+    } else {
+      const { data } = await api.createDeck({ title: name });
+      table.row.add(data).draw();
+    }
+
     $($createModal).modal("hide");
   } catch (error) {
   } finally {
@@ -129,4 +188,17 @@ $($createModal).on("show.bs.modal", () => {
   $name.value = "";
   $button.textContent = $button.dataset.textDefault;
   $button.removeAttribute("disabled");
+
+  // Reset modal title.
+  const $title = $createModal.querySelector(".modal-title");
+  $title.textContent = $title.dataset.textDefault;
+
+  const data = $createModal.__row;
+  if (!data) return;
+
+  $title.textContent = data.title;
+  $name.value = data.title;
+});
+$($createModal).on("hide.bs.modal", (event) => {
+  $createModal.__row = null;
 });
