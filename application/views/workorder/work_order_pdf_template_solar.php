@@ -81,11 +81,11 @@
                 </center><br> -->
                 <div class="table" style="font-size:10px;">
                     <center>
-						<div class="front" style="text-align:center;background-color:#4a5594;color:white;width:350px;font-size:9px;padding:1px;">
+						<div class="front" style="text-align:center;background-color:#4a5594;color:white;width:369px;font-size:9px;padding:1px;">
 							<b>Qualification Information for Solar</b>
 						</div>
 					</center>
-                    <table style="width:350px;background-color:#ced4e4;font-size:10px;height:500px;">
+                    <table style="width:370px;background-color:#ced4e4;font-size:10px;height:500px;">
                         <tr>
                             <td><div style="padding:6px;border-radius:5px;background-color:white;width:50%;">A</div><br><br><br></td>
                             <td><?php //echo $aItems->price ?>
@@ -141,21 +141,33 @@
                         <tr>
                             <td><div style="padding:6px;border-radius:5px;background-color:white;width:50%;">F</div></td>
                             <td><?php //echo $aItems->price ?>
-                                <div style="float:right;width:50%;">
+                                <div style="margin-left:140px;">
 										<center>
                                             <span class="">$ </span> <?php echo number_format($solars->estimated_bill); ?><br>
                                             Estimated Bill
                                         </center>
 								</div>
-                                <b>Electric Bill is over $100</b> <br><br>
+                                <div style="margin-top:-14px;">
+                                <b>Electric Bill is over $100</b> <br>
                                 <input type="radio" name="ebis" value="Yes" <?php if($ebis == 'Yes'){ echo 'checked';}else{ echo ''; } ?> disabled class="form-"> Yes &emsp;
                                 <input type="radio" name="ebis" value="No" <?php if($ebis == 'No'){ echo 'checked';}else{ echo ''; } ?> disabled class="form-"> No &emsp;
+                                <br>
 								<b>How do you get your Invoice</b><br>
                                 <input type="radio" name="hdygi" value="Paper" <?php if($hdygi == 'Paper'){ echo 'checked';}else{ echo ''; } ?> disabled class="form-"> Paper &emsp;
                                 <input type="radio" name="hdygi" value="Paperless" <?php if($hdygi == 'Paperless'){ echo 'checked';}else{ echo ''; } ?> disabled class="form-"> Paperless &emsp;
+                                <br>
 								<b>Electric Bill Account #</b><br>
 							    <span style="font-size:10px;"><?php echo $eba_text; ?></span>
-                                <br>
+                                <br><br>
+                                <b>Uploaded Files:</b><br>
+                                    <?php foreach($solar_files as $fsolar){ ?>
+                                        - <?php echo $fsolar->solar_image; ?><br>
+                                        - <?php echo $fsolar->solar_image1; ?><br>
+                                        - <?php echo $fsolar->solar_image2; ?><br>
+                                        - <?php echo $fsolar->solar_image3; ?><br>
+                                        - <?php echo $fsolar->solar_image4; ?><br>
+                                    <?php } ?>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -188,33 +200,57 @@
 							<b>Please Fill in the Details:</b>
 							</div>
 					</center><br>
-                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;">
+                    <table style="border: 0px solid white;border-collapse: collapse;width:330px;">
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $firstname;} ?><hr><b>First name:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($lastname)){ echo '<br>'; }else{echo $lastname;} ?><hr><b>Last name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $firstname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>First name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($lastname)){ echo '<br>'; }else{echo $lastname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Last name:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($address)){ echo '<br>'; }else{echo $address;} ?><hr><b>Address:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($city)){ echo '<br>'; }else{echo $city;} ?><hr><b>City:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($state)){ echo '<br>'; }else{echo $state;} ?><hr><b>State:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($address)){ echo '<br>'; }else{echo $address;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Address:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($postcode)){ echo '<br>'; }else{echo $postcode;} ?><hr><b>Postcode:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($county)){ echo '<br>'; }else{echo $county;} ?><hr><b>County:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($phone_number)){ echo '<br>'; }else{echo $phone_number;} ?><hr><b>Phone:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($city)){ echo '<br>'; }else{echo $city;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>City:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($state)){ echo '<br>'; }else{echo $state;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>State:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($mobile_number)){ echo '<br>'; }else{echo $mobile_number;} ?><hr><b>Mobile:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($email)){ echo '<br>'; }else{echo $email;} ?><hr><b>Email:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($postcode)){ echo '<br>'; }else{echo $postcode;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Postcode:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($county)){ echo '<br>'; }else{echo $county;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>County:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($comments)){ echo '<br>'; }else{echo $comments;} ?><hr><b>Comments:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($phone_number)){ echo '<br>'; }else{echo $phone_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($mobile_number)){ echo '<br>'; }else{echo $mobile_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Mobile:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($email)){ echo '<br>'; }else{echo $email;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Email:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($comments)){ echo '<br>'; }else{echo $comments;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Comments:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td colspan="2" style="border: 0px solid white;border-collapse: collapse;">

@@ -4494,6 +4494,34 @@ if (!function_exists('getTaskAssignedUser')) {
     }
 }
 
+if(!function_exists('set_bank_widget_data')) {
+    function set_bank_widget_data($data)
+    {
+        $CI =& get_instance();
+        $CI->load->model('chart_of_accounts_model');
+
+        $accountTypes = [
+            'Bank',
+            'Credit Card'
+        ];
+
+        $accounts = [];
+        foreach($accountTypes as $accountType) {
+            $accType = $CI->account_model->getAccTypeByName($accountType);
+
+            $accountTypeAccs = $CI->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            foreach($accountTypeAccs as $account) {
+                $accounts[] = $account;
+            }
+        }
+
+        $data['accounts'] = $accounts;
+
+        return $data;
+    }
+}
+
 if(!function_exists('set_expense_graph_data')) {
     
     function set_expense_graph_data($data)

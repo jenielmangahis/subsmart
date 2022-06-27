@@ -26,6 +26,8 @@
             /* Set the hr color */
             color: #333; /* old IE */
             background-color: #333; /* Modern Browsers */
+            /* margin-top:-2px; */
+            /* margin-bottom:-2px; */
         }
         @page{margin:2px}
 /* table {
@@ -267,46 +269,79 @@
 							<b>Details:</b>
 							</div>
 					</center>
-                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;font-size:8px;">
+                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;font-size:9px;">
+                        <!-- <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr> -->
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $firstname;} ?><hr><b>First name:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $lastname;} ?><hr><b>Last name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $firstname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>First name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $lastname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Last name:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $firstname_spouse;} ?><hr><b>First name (Spouse):</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $lastname_spouse;} ?><hr><b>Last name (Spouse):</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br>'; }else{echo $address;} ?><hr><b>Address:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $firstname_spouse;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>First name (Spouse):</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $lastname_spouse;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Last name (Spouse):</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $city;} ?><hr><b>City:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $state;} ?><hr><b>State:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $postcode;} ?><hr><b>Postcode:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $county;} ?><hr><b>County:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $address;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Address:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br>'; }else{echo $phone_number;} ?><hr><b>Phone:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br>'; }else{echo $mobile_number;} ?><hr><b>Mobile:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $city;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>City:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $state;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>State:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br>'; }else{echo $email;} ?><hr><b>Email:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $first_ecn;} ?><hr><b>1st Emergency Contact Name:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $first_ecn_no;} ?><hr><b>Phone:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $postcode;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Postcode:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $county;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>County:</b></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $second_ecn;} ?><hr><b>2nd Emergency Contact Name:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $second_ecn_no;} ?><hr><b>Phone:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $third_ecn;} ?><hr><b>3rd Emergency Contact Name:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $third_ecn_no;} ?><hr><b>Phone:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $phone_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $mobile_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Mobile:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $email;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Email:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $first_ecn;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>1st Emergency Contact Name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $first_ecn_no;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $second_ecn;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>2nd Emergency Contact Name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $second_ecn_no;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $third_ecn;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>3rd Emergency Contact Name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $third_ecn_no;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
                         </tr>
                     </table>
                     <br>
@@ -337,7 +372,7 @@
                         </tr>
                     </table>
                 </div> 
-                
+                <!-- <hr style="margin-top:0px;margin-bottom:-1px;"> -->
                 <b style="font-size:8px;">Agreement</b>
                 <br>
                 <div style="font-size:8px;"><?php echo $terms_and_conditions; ?></div>

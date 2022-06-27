@@ -27,7 +27,7 @@
 
               <hr />
 
-              <button class="nsm-button">Reset</button>
+              <button class="nsm-button" data-action="resetcards" data-default="Reset">Reset</button>
               <button class="nsm-button primary" data-action="savedeck" data-default="Save Deck">Save Deck</button>
             </div>
           </div>

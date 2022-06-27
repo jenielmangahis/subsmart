@@ -136,6 +136,8 @@ class Widgets extends MY_Controller
                 $data['height'] = 'height: 310px;';
                 if ($wids->w_name === 'Expense') {
                     $data = set_expense_graph_data($data);
+                } else if ($wids->w_name === 'Bank') {
+                    $data = set_bank_widget_data($data);
                 }
                 $view = $this->load->view($widget->w_view_link, $data);
 
@@ -174,6 +176,8 @@ class Widgets extends MY_Controller
                     $data['height'] = 'height: 310px;';
                     if ($wids->w_name === 'Expense') {
                         $data = set_expense_graph_data($data);
+                    } else if ($wids->w_name === 'Bank') {
+                        $data = set_bank_widget_data($data);
                     }
                     $view = $this->load->view($widget->w_view_link, $data);
                     return $view;
