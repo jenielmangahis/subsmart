@@ -112,7 +112,10 @@ function getColumns() {
 function getActions() {
   return {
     addcards: (row) => {
-      window.location = `${api.prefixURL}/FlashCard/addCards/${row.id}`;
+      window.location = `${api.prefixURL}/flashcard/add-cards/${row.id}`;
+    },
+    studycards: (row) => {
+      window.location = `${api.prefixURL}/flashcard/study-cards/${row.id}`;
     },
     remove: async (row) => {
       const result = await Swal.fire({

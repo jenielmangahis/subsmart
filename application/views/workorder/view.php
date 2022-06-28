@@ -2228,7 +2228,11 @@ table input.form-control {
 							<b>Content</b>
 							<textarea name="email_content" id="email_content_share" style="height:1000px;">
 
-							<p dir="rtl" style="text-align:center"><span style="color:#ffffff"><span style="font-size:30px"><span style="background-color:#9b59b6">&nbsp; <?php echo $company->business_name ?> &nbsp;&nbsp;</span></span></span></p>
+							<p dir="rtl" style="text-align:center">
+								<!-- <span style="color:#ffffff"><span style="font-size:30px"><span style="background-color:#9b59b6">&nbsp; <?php //echo $company->business_name ?> &nbsp;&nbsp;</span></span></span> -->
+								<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="width:100px;height:100px;" />
+							</p>
+							
 							
 							<p>W O R K O R D E R # &nbsp;<?php echo $workorder->work_order_number ?>&nbsp; F R O M &nbsp; <?php echo $company->business_name ?></p>
 							<br />
@@ -2238,11 +2242,12 @@ table input.form-control {
 							YOUR WORKORDER# <?php echo $workorder->work_order_number ?> IS ATTACHED. &nbsp; THE WORK ORDER CAN BE FOUND IN THE ATTACHED PDF FILE.<br /><br />
 
 							CLICK THE LINK TO VIEW THE WORK ORDER ONLINE. <br>
-							<a href="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>"><?php echo base_url('share_Link/public_view/'.$workorder->id) ?></a><br /><br />
+							<a href="<?php echo base_url('share_Link/public_view_solar/'.$workorder->id) ?>"><?php echo base_url('share_Link/public_view/'.$workorder->id) ?></a><br /><br />
 
-							REGARDS,<br /><br /><br />
-							NSMARTRAC PRO SUPPORT<br /><br />
-							POWERERED BY NSMARTRAC<br /><br />
+							REGARDS,<br /><br />
+							<?php echo $company->business_name ?><br /><br /><br /><br />
+
+							<p style="text-align:center">Powered by nSmarTrac</p>
 
 							</textarea>
 

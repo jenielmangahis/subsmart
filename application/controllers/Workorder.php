@@ -596,6 +596,7 @@ class Workorder extends MY_Controller
 
     public function view($id)
     {
+        // dd('test');
         $company_id = logged('company_id');
 
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
@@ -2354,6 +2355,9 @@ class Workorder extends MY_Controller
             'terms_and_conditions'              => $workorder->terms_and_conditions,
             'header'                            => $workorder->header,
 
+            'password'                          => $workorder->password,
+            'security_number'                   => $workorder->header,
+
             'lead_source'                       => $workorder->ls_name,
             'account_type'                      => $workorder->account_type,
             'panel_communication'               => $workorder->panel_communication,
@@ -2477,6 +2481,9 @@ class Workorder extends MY_Controller
 
             'comments'                          => $workorder->comments,
             'header'                            => $workorder->header,
+
+            'lead_source'                       => $workorder->ls_name,
+            'panel_communication'               => $workorder->panel_communication,
             // 'source' => $source
 
             'template'                          => '3',

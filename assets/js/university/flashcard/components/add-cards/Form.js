@@ -1,8 +1,8 @@
-const PREFIX_URL = location.hostname === "localhost" ? "/nsmartrac" : "";
+import { prefixURL } from "../../api.js";
 
 const $template = document.createElement("template");
 $template.innerHTML = `
-<link rel="stylesheet" href="${PREFIX_URL}/assets/css/v2/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="${prefixURL}/assets/css/v2/bootstrap.min.css" crossorigin="anonymous">
 
 <style>
 .root {

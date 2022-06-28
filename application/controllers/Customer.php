@@ -788,6 +788,8 @@ class Customer extends MY_Controller
 
     public function module($id=null)
     {
+        $this->load->helper('sms_helper');
+        
         $this->load->model('Clients_model');
 
         error_reporting(0);
@@ -865,14 +867,33 @@ class Customer extends MY_Controller
         //Sms
         $cid = logged('company_id');
         $default_sms = '';        
+        $enable_twilio_call = false;
+        $enable_ringcentral_call = false;
+
         $client      = $this->Clients_model->getById($cid);
         if( $client->default_sms_api != '' ){
             $default_sms = $client->default_sms_api;
+            if( $client->default_sms_api == 'twilio' ){
+                $enable_twilio_call = true;
+            }elseif( $client->default_sms_api == 'ring_central' ){
+                $enable_ringcentral_call = true;
+            }
         }
 
         //Sms Template
         $this->load->model('SmsTemplate_model');
         $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
+
+        //Calls
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('TwilioAccounts_model');
+
+        $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
+        $twilioAccount      = $this->TwilioAccounts_model->getByCompanyId($cid);
+        $this->page_data['twilioAccount'] = $twilioAccount;
+        $this->page_data['ringCentralAccount'] = $ringCentralAccount;
+        $this->page_data['enable_twilio_call'] = $enable_ringcentral_call;
+        $this->page_data['enable_ringcentral_call'] = $enable_ringcentral_call;
 
         $this->page_data['smsTemplates'] = $smsTemplates;
         $this->page_data['default_sms'] = $default_sms;
@@ -880,6 +901,8 @@ class Customer extends MY_Controller
         $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->page_data['ringCentralAccount'] = $ringCentralAccount;
+        $this->page_data['twilioAccount'] = $twilioAccount;
         $this->load->view('v2/pages/customer/module', $this->page_data);
     }
 

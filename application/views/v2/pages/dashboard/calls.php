@@ -1,13 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
 <link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet">
-<script>
-  (function() {
-    var rcs = document.createElement("script");
-    rcs.src = "https://ringcentral.github.io/ringcentral-embeddable/adapter.js?clientId=BP5ojuryTlKehE63y3jKiA&appServer=https://platform.devtest.ringcentral.com&redirectUri=https://ringcentral.github.io/ringcentral-embeddable/redirect.html";
-    var rcs0 = document.getElementsByTagName("script")[0];
-    rcs0.parentNode.insertBefore(rcs, rcs0);
-  })();
-</script>
 <style>
 .dialpad-container .row {
   margin: 0 auto;
@@ -172,7 +164,6 @@ div#controls div#call-controls div#volume-indicators > div {
                                                         $phone = cleanMobileNumber($customer->phone_m);
                                                     ?>
                                                     <a class="dropdown-item call-customer" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $phone; ?>" href="javascript:void(0);">Call</a>
-                                                    <a class="dropdown-item" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $phone; ?>" href="tel:+<?= $phone; ?>">+<?= $phone; ?></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -204,6 +195,20 @@ div#controls div#call-controls div#volume-indicators > div {
                     </tfoot>
                 </table>
 
+                <?php if( $enable_ringcentral_call ){ ?>
+                    <script type="text/html" id="template-login" style="display:none;">
+                        <form class="panel panel-default">
+                            <input type="hidden" class="form-control" value="<?= RINGCENTRAL_DEVTEST_URL; ?>" name="server">
+                            <input type="hidden" class="form-control" value="<?= $ringCentralAccount->client_id; ?>" name="appKey">
+                            <input type="hidden" class="form-control" value="<?= $ringCentralAccount->client_secret; ?>" name="appSecret">
+                            <input type="hidden" class="form-control" value="<?= $ringCentralAccount->rc_username; ?>" name="login" placeholder="18881234567">
+                            <input type="hidden" class="form-control" value="<?= $ringCentralAccount->rc_ext; ?>" name="extension">
+                            <input type="hidden" class="form-control" value="<?= $ringCentralAccount->rc_password; ?>" name="password">
+                            <input type="hidden" class="form-control" name="logLevel" value="1">
+                        </form>
+                    </script>
+                <?php } ?>
+
                 <!--Call Dialpad Modal-->
                 <div class="modal fade nsm-modal fade" id="modalCallDialPad" tabindex="-1" aria-labelledby="modalCallDialPadLabel" aria-hidden="true">
                     <div class="modal-dialog modal-sm">
@@ -213,6 +218,10 @@ div#controls div#call-controls div#volume-indicators > div {
                                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                             </div>
                             <div class="modal-body">
+                                <?php if( $enable_ringcentral_call ){ ?>
+                                    <video id="remoteVideo" hidden="hidden"></video>
+                                    <video id="localVideo" hidden="hidden" muted="muted"></video>
+                                <?php } ?>
                                 <div class="container dialpad-container" id="call-controls" style="display:none;">
                                   <div id="log" style="display:none;"></div>
                                   <div id="output"></div>
@@ -328,8 +337,370 @@ div#controls div#call-controls div#volume-indicators > div {
         $(".nsm-table").nsmPagination();
     });
 
+    <?php if( $enable_ringcentral_call ){ ?>
+    //RingCentral
+    $(function() {
+        var session = null;
+        /** @type {RingCentral.SDK} */
+        var sdk = null;
+        /** @type {Platform} */
+        var platform = null;
+        /** @type {WebPhone} */
+        var webPhone = null;
 
+        var logLevel = 0;
+        var username = null;
+        var extension = null;
+        var sipInfo = null;
+        var $app = $('#app');
 
+        var $loginTemplate = $('#template-login');
+        var $callTemplate = $('#template-call');
+        var $incomingTemplate = $('#template-incoming');
+        var $acceptedTemplate = $('#modalCallDialPad');
+
+        /**
+         * @param {jQuery|HTMLElement} $tpl
+         * @return {jQuery|HTMLElement}
+         */
+        function cloneTemplate($tpl) {
+            return $($tpl.html());
+        }
+
+        function login(server, appKey, appSecret, login, ext, password, ll) {
+            sdk = new RingCentral.SDK({
+                appKey: appKey,
+                appSecret: appSecret,
+                server: server
+            });
+
+            platform = sdk.platform();
+
+            // TODO: Improve later to support international phone number country codes better
+            if (login) {
+                login = (login.match(/^[\+1]/)) ? login : '1' + login;
+                login = login.replace(/\W/g, '')
+            }
+
+            platform
+                .login({
+                    username: login,
+                    extension: ext || null,
+                    password: password
+                })
+                .then(function() {
+
+                    logLevel = ll;
+                    username = login;
+
+                    localStorage.setItem('webPhoneServer', server || '');
+                    localStorage.setItem('webPhoneAppKey', appKey || '');
+                    localStorage.setItem('webPhoneAppSecret', appSecret || '');
+                    localStorage.setItem('webPhoneLogin', login || '');
+                    localStorage.setItem('webPhoneExtension', ext || '');
+                    localStorage.setItem('webPhonePassword', password || '');
+                    localStorage.setItem('webPhoneLogLevel', logLevel || 0);
+
+                    return platform.get('/restapi/v1.0/account/~/extension/~');
+
+                })
+                .then(function(res) {
+
+                    extension = res.json();
+
+                    console.log('Extension info', extension);
+
+                    return platform.post('/client-info/sip-provision', {
+                        sipInfo: [{
+                            transport: 'WSS'
+                        }]
+                    });
+
+                })
+                .then(function(res) { return res.json(); })
+                .then(register)
+                .then(function(res){
+                    $('#call-controls').show();
+                })
+                .catch(function(e) {
+                    console.error('Error in main promise chain');
+                    console.error(e.stack || e);
+                });
+
+        }
+
+        function register(data) {
+
+            sipInfo = data.sipInfo[0] || data.sipInfo;
+
+            webPhone = new RingCentral.WebPhone(data, {
+                appKey: localStorage.getItem('webPhoneAppKey'),
+                audioHelper: {
+                    enabled: true
+                },
+                logLevel: parseInt(logLevel, 10)
+            });
+            webPhone.userAgent.audioHelper.loadAudio({
+                incoming: '<?= base_url('assets/js/ringcentral/audio/incoming.ogg'); ?>',
+                outgoing: '<?= base_url('assets/js/ringcentral/audio/outgoing.ogg'); ?>'
+            })
+
+            webPhone.userAgent.audioHelper.setVolume(.3);
+
+            webPhone.userAgent.on('invite', onInvite);
+            webPhone.userAgent.on('connecting', function() { console.log('UA connecting'); });
+            webPhone.userAgent.on('connected', function() { console.log('UA Connected'); });
+            webPhone.userAgent.on('disconnected', function() { console.log('UA Disconnected'); });
+            webPhone.userAgent.on('registered', function() { console.log('UA Registered'); });
+            webPhone.userAgent.on('unregistered', function() { console.log('UA Unregistered'); });
+            webPhone.userAgent.on('registrationFailed', function() { console.log('UA RegistrationFailed', arguments); });
+            webPhone.userAgent.on('message', function() { console.log('UA Message', arguments); });
+
+            return webPhone;
+
+        }
+
+        function onInvite(session) {
+
+            console.log('EVENT: Invite', session.request);
+            console.log('To', session.request.to.displayName, session.request.to.friendlyName);
+            console.log('From', session.request.from.displayName, session.request.from.friendlyName);
+
+            var $modal = cloneTemplate($incomingTemplate).modal({backdrop: 'static'});
+
+            var acceptOptions = {
+                media: {
+                    render: {
+                        remote: document.getElementById('remoteVideo'),
+                        local: document.getElementById('localVideo')
+                    }
+                }
+            };
+
+            $modal.find('.answer').on('click', function() {
+                $modal.find('.before-answer').css('display', 'none');
+                $modal.find('.answered').css('display', '');
+                session.accept(acceptOptions)
+                    .then(function() {
+                        $modal.modal('hide');
+                        onAccepted(session);
+                    })
+                    .catch(function(e) { console.error('Accept failed', e.stack || e); });
+            });
+
+            $modal.find('.decline').on('click', function() {
+                session.reject();
+            });
+
+            $modal.find('.forward-form').on('submit', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                session.forward($modal.find('input[name=forward]').val().trim(), acceptOptions)
+                    .then(function() {
+                        console.log('Forwarded');
+                        $modal.modal('hide');
+                    })
+                    .catch(function(e) { console.error('Forward failed', e.stack || e); });
+            });
+
+            session.on('rejected', function() {
+                $modal.modal('hide');
+            });
+
+        }
+
+        function onAccepted(session) {
+
+            console.log('EVENT: Accepted', session.request);
+            console.log('To', session.request.to.displayName, session.request.to.friendlyName);
+            console.log('From', session.request.from.displayName, session.request.from.friendlyName);
+
+            var $modal = cloneTemplate($acceptedTemplate).modal();
+
+            var $info = $modal.find('.info').eq(0);
+            var $dtmf = $modal.find('input[name=dtmf]').eq(0);
+            var $transfer = $modal.find('input[name=transfer]').eq(0);
+            var $flip = $modal.find('input[name=flip]').eq(0);
+
+            var interval = setInterval(function() {
+
+                var time = session.startTime ? (Math.round((Date.now() - session.startTime) / 1000) + 's') : 'Ringing';
+
+                $info.text(
+                    'time: ' + time + '\n' +
+                    'startTime: ' + JSON.stringify(session.startTime, null, 2) + '\n'
+                );
+
+            }, 1000);
+
+            session.on('accepted', function() { console.log('Event: Accepted'); });
+            session.on('progress', function() { console.log('Event: Progress'); });
+            session.on('rejected', function() {
+                console.log('Event: Rejected');
+                close();
+            });
+            session.on('failed', function() {
+                console.log('Event: Failed');
+                close();
+            });
+            session.on('terminated', function() {
+                console.log('Event: Terminated');
+                close();
+            });
+            session.on('cancel', function() {
+                console.log('Event: Cancel');
+                close();
+            });
+            session.on('refer', function() {
+                console.log('Event: Refer');
+                close();
+            });
+            session.on('replaced', function(newSession) {
+                console.log('Event: Replaced: old session', session, 'has been replaced with', newSession);
+                close();
+                onAccepted(newSession);
+            });
+            session.on('dtmf', function() { console.log('Event: DTMF'); });
+            session.on('muted', function() { console.log('Event: Muted'); });
+            session.on('unmuted', function() { console.log('Event: Unmuted'); });
+            session.on('connecting', function() { console.log('Event: Connecting'); });
+            session.on('bye', function() {
+                console.log('Event: Bye');
+                close();
+            });
+
+            session.mediaHandler.on('iceConnection', function() { console.log('Event: ICE: iceConnection'); });
+            session.mediaHandler.on('iceConnectionChecking', function() { console.log('Event: ICE: iceConnectionChecking'); });
+            session.mediaHandler.on('iceConnectionConnected', function() { console.log('Event: ICE: iceConnectionConnected'); });
+            session.mediaHandler.on('iceConnectionCompleted', function() { console.log('Event: ICE: iceConnectionCompleted'); });
+            session.mediaHandler.on('iceConnectionFailed', function() { console.log('Event: ICE: iceConnectionFailed'); });
+            session.mediaHandler.on('iceConnectionDisconnected', function() { console.log('Event: ICE: iceConnectionDisconnected'); });
+            session.mediaHandler.on('iceConnectionClosed', function() { console.log('Event: ICE: iceConnectionClosed'); });
+            session.mediaHandler.on('iceGatheringComplete', function() { console.log('Event: ICE: iceGatheringComplete'); });
+            session.mediaHandler.on('iceGathering', function() { console.log('Event: ICE: iceGathering'); });
+            session.mediaHandler.on('iceCandidate', function() { console.log('Event: ICE: iceCandidate'); });
+            session.mediaHandler.on('userMedia', function() { console.log('Event: ICE: userMedia'); });
+            session.mediaHandler.on('userMediaRequest', function() { console.log('Event: ICE: userMediaRequest'); });
+            session.mediaHandler.on('userMediaFailed', function() { console.log('Event: ICE: userMediaFailed'); });
+
+        }
+
+        function makeCall(number, homeCountryId) {
+
+            homeCountryId = homeCountryId
+                          || (extension && extension.regionalSettings && extension.regionalSettings.homeCountry && extension.regionalSettings.homeCountry.id)
+                          || null;
+
+            session = webPhone.userAgent.invite(number, {
+                media: {
+                    render: {
+                        remote: document.getElementById('remoteVideo'),
+                        local: document.getElementById('localVideo')
+                    }
+                },
+                fromNumber: username,
+                homeCountryId: homeCountryId
+            });
+
+            var url = base_url + 'calls/_log_start_call';
+            var phoneNumber = document.getElementById('phone-number').value;
+            var cid = document.getElementById('cid').value;
+            var apiType = 'ringcentral';
+            $.ajax({
+                 type: "POST",
+                 url: url,
+                 data: {cid:cid,phoneNumber:phoneNumber,apiType:apiType},
+                 success: function(o)
+                 {          
+                    
+                 }
+            });
+
+            onAccepted(session);
+
+        }
+
+        function makeCallForm() {
+
+            var $form = cloneTemplate($callTemplate);
+
+            var $number = $form.find('input[name=number]').eq(0);
+            var $homeCountry = $form.find('input[name=homeCountry]').eq(0);
+
+            $number.val(localStorage.getItem('webPhoneLastNumber') || '');
+
+            $form.on('submit', function(e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                localStorage.setItem('webPhoneLastNumber', $number.val() || '');
+
+                makeCall($number.val(), $homeCountry.val());
+
+            });
+
+            $app.empty().append($form);
+
+        }
+
+        function connectRingCentral() {
+
+            var $form = cloneTemplate($loginTemplate);
+
+            var $server = $form.find('input[name=server]').eq(0);            
+            var $appKey = $form.find('input[name=appKey]').eq(0);            
+            var $appSecret = $form.find('input[name=appSecret]').eq(0);            
+            var $login = $form.find('input[name=login]').eq(0);            
+            var $ext = $form.find('input[name=extension]').eq(0);            
+            var $password = $form.find('input[name=password]').eq(0);
+            
+            var $logLevel = $form.find('input[name=logLevel]').eq(0);
+
+            /*$server.val(localStorage.getItem('webPhoneServer') || RingCentral.SDK.server.sandbox);
+            $appKey.val(localStorage.getItem('webPhoneAppKey') || '');
+            $appSecret.val(localStorage.getItem('webPhoneAppSecret') || '');
+            $login.val(localStorage.getItem('webPhoneLogin') || '');
+            $ext.val(localStorage.getItem('webPhoneExtension') || '');
+            $password.val(localStorage.getItem('webPhonePassword') || '');
+            $logLevel.val(localStorage.getItem('webPhoneLogLevel') || logLevel);*/            
+            login($server.val(), $appKey.val(), $appSecret.val(), $login.val(), $ext.val(), $password.val(), $logLevel.val());
+
+        }
+
+        $(document).on('click', '.call-customer', function(){
+            connectRingCentral();
+        });
+
+        $(document).on('click', '#button-call', function(){
+            var phone_number = $('#phone-number').val();
+            var countryid    = 1;
+
+            $('#button-call').hide();
+            $('#button-hangup').show();
+            makeCall(phone_number, countryid);
+        });
+
+        $(document).on('click', '#button-hangup', function(){
+            session.terminate();            
+            $('#button-call').show();
+            $('#button-hangup').hide();  
+
+            var url = base_url + 'calls/_log_end_call';
+            $.ajax({
+                 type: "POST",
+                 url: url,
+                 data: {},
+                 success: function(o)
+                 {          
+                    
+                 }
+            });          
+        });
+    });    
+    <?php } ?>
+
+    <?php if( $enable_twilio_call ){ ?>
     //Twilio
     //var speakerDevices = document.getElementById('speaker-devices');
     $(function(){
@@ -355,10 +726,11 @@ div#controls div#call-controls div#volume-indicators > div {
             var url = base_url + 'calls/_log_start_call';
             var phoneNumber = document.getElementById('phone-number').value;
             var cid = document.getElementById('cid').value;
+            var apiType = 'twilio';
             $.ajax({
                  type: "POST",
                  url: url,
-                 data: {cid:cid,phoneNumber:phoneNumber},
+                 data: {cid:cid,phoneNumber:phoneNumber,apiType:apiType},
                  success: function(o)
                  {          
                     
@@ -496,5 +868,6 @@ div#controls div#call-controls div#volume-indicators > div {
       div.innerHTML = 'Your client name: <strong>' + clientName +
         '</strong>';
     } 
+    <?php } ?>
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
