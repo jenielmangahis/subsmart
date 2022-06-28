@@ -198,7 +198,7 @@ div#controls div#call-controls div#volume-indicators > div {
                 <?php if( $enable_ringcentral_call ){ ?>
                     <script type="text/html" id="template-login" style="display:none;">
                         <form class="panel panel-default">
-                            <input type="hidden" class="form-control" value="<?= RINGCENTRAL_DEVTEST_URL; ?>" name="server">
+                            <input type="hidden" class="form-control" value="<?= RINGCENTRAL_DEV_URL; ?>" name="server">
                             <input type="hidden" class="form-control" value="<?= $ringCentralAccount->client_id; ?>" name="appKey">
                             <input type="hidden" class="form-control" value="<?= $ringCentralAccount->client_secret; ?>" name="appSecret">
                             <input type="hidden" class="form-control" value="<?= $ringCentralAccount->rc_username; ?>" name="login" placeholder="18881234567">
