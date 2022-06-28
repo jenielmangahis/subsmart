@@ -48,3 +48,13 @@ table.dataTable.no-footer {
     gap: 1rem;
   }
 }
+
+.study-cards {
+  display: flex;
+  justify-content: center;
+
+  &__inner {
+    width: 100%;
+    max-width: 500px;
+  }
+}

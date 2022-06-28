@@ -31,6 +31,21 @@ class FlashCard extends MY_Controller
         $this->load->view('v2/pages/university/flashcard/add-cards.php', $this->page_data);
     }
 
+    public function studyCards($deckId)
+    {
+        $userId = logged('id');
+        $this->db->where('id', $deckId);
+        $this->db->where('user_id', $userId);
+        $row = $this->db->get('university_flashcard_decks')->row();
+        if (!$row) {
+            show_404();
+        }
+
+        $this->page_data['page']->deckId = $row->id;
+        $this->page_data['page']->title = "Study Cards ($row->title)";
+        $this->load->view('v2/pages/university/flashcard/study-cards.php', $this->page_data);
+    }
+
     public function apiCreateDeck()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

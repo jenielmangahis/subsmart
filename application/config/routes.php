@@ -1323,3 +1323,7 @@ $route['calls/_log_start_call'] = 'Calls/ajax_log_start_call';
 $route['calls/_log_end_call'] = 'Calls/ajax_log_end_call';
 $route['calls/logs'] = 'Calls/logs';
 
+
+$route['flashcard'] = 'FlashCard/index';
+$route['flashcard/add-cards/(:num)'] = 'FlashCard/addCards/$1';
+$route['flashcard/study-cards/(:num)'] = 'FlashCard/studyCards/$1';

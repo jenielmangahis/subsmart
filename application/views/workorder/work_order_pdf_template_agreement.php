@@ -264,6 +264,12 @@
                      </div>
                 </center> -->
                 <div class="table2" style="width:450px;margin-top:-900px;margin-left:380px;font-size:8px;">
+                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;font-size:9px;">
+                        <tr>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($password)){ echo '<br>'; }else{echo $password;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Password:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($security_number)){ echo '<br>'; }else{echo $security_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>SSN:</b></td>
+                        </tr>
+                    </table>
                     <center>
 						<div class="front" style="text-align:center;background-color:#4a5594;color:white;width:350px;padding:2px;">
 							<b>Details:</b>
