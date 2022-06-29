@@ -13,9 +13,10 @@
           <div class="study-cards">
             <div class="study-cards__inner">
               <div class="mb-3">
-                Card <strong>3/4</strong>
+                Card <strong><span id="currentcard">0</span>/<span id="totalcards">0</span></strong>
               </div>
-              <study-card></study-card>
+
+              <div id="cardscontainer"></div>
             </div>
           </div>
         </div>

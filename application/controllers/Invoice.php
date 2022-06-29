@@ -766,7 +766,8 @@ class Invoice extends MY_Controller
     public function save_new_customer()
     {
         $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();
+        // $user_id  = getLoggedUserID();
+        $user_id    = logged('id');
 
         if ($this->input->post('notify_by_email') == 1) {
             $notify_by_email = '1';
