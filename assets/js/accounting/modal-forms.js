@@ -5811,7 +5811,7 @@ $(function() {
 
         $('#modal-container form#modal-form').submit();
 
-        $('#new-popup #accounting_vendors .ajax-print_checks_modal').trigger('click');
+        $('#new-popup #accounting_vendors .ajax-modal[data-target="#printChecksModal"]').trigger('click');
     });
 
     $(document).on('click', '#modal-container form #billPaymentModal #print-check', function(e) {
@@ -5823,7 +5823,7 @@ $(function() {
 
         $('#modal-container form#modal-form').submit();
 
-        $('#new-popup #accounting_vendors .ajax-print_checks_modal').trigger('click');
+        $('#new-popup #accounting_vendors .ajax-modal[data-target="#printChecksModal"]').trigger('click');
     });
 
     $(document).on('click', '#modal-container form #billModal #copy-bill', function(e) {

@@ -81,10 +81,11 @@
                 </center><br> -->
                 <table style="border: 0px solid white;border-collapse: collapse;width:370px;font-size:10px;">
                     <tr>
-                        <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($password)){ echo '<br>'; }else{echo $password;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Lead Source:</b></td>
-                        <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($security_number)){ echo '<br>'; }else{echo $security_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>System Type:</b></td>
+                        <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($password)){ echo ''; }else{echo $password;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Lead Source:</b></td>
+                        <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($security_number)){ echo ''; }else{echo $security_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>System Type:</b></td>
                     </tr>
                 </table>
+                <br>
                 <div class="table" style="font-size:10px;">
                     <center>
 						<div class="front" style="text-align:center;background-color:#4a5594;color:white;width:369px;font-size:9px;padding:1px;">

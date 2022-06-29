@@ -88,12 +88,14 @@ endif;
     });
 
     function loadTimesheet() {
+        // console.log("called");
         $.ajax({
             url: '<?php echo base_url(); ?>widgets/loadV2Timesheet',
             method: 'get',
             data: {},
             success: function(response) {
                 $('.timesheet-container').html(response);
+                setTimeout(function() {loadTimesheet()}, 2000);
             }
 
         });

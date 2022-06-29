@@ -73,6 +73,13 @@ class FlashCard extends MY_Controller
         $payload = json_decode(file_get_contents('php://input'), true);
         ['cards' => $cards, 'deck_id' => $deckId] = $payload;
 
+        $cards = array_map(function ($card) {
+            return array_merge($card, [
+                'question' => trim($card['question']),
+                'answer' => trim($card['answer']),
+            ]);
+        }, $cards);
+
         $newCards = array_filter($cards, function ($card) {
             return !array_key_exists('id', $card);
         });
@@ -172,8 +179,14 @@ class FlashCard extends MY_Controller
     public function apiGetDecks()
     {
         $userId = logged('id');
-        $this->db->where('user_id', $userId);
-        $rows = $this->db->get('university_flashcard_decks')->result();
+        $this->db->select('decks.*, COUNT(cards.id) AS total_cards', false);
+        $this->db->from('university_flashcard_decks decks');
+        $this->db->join('university_flashcard_cards cards', 'cards.deck_id = decks.id', 'left');
+        $this->db->where('decks.user_id', $userId);
+        $this->db->group_by('decks.id');
+        $this->db->order_by('decks.id', 'ASC');
+        $query = $this->db->get();
+        $rows = $query->result();
         $this->respond(['data' => $rows]);
     }
 

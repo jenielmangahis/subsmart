@@ -89,9 +89,12 @@ class Cron_Jobs_Controller extends CI_Controller
         $mail->Body =  'Timesheet Report.';
         $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, true);
         $mail->MsgHTML($content);
+
+        $mail->addAddress($receiver);
         $mail->addAddress('webtestcustomer@nsmartrac.com');
         // echo "pasok";
-        $mail->addAddress($receiver);
+        var_dump($receiver);
+        $mail->Send();
         if (!$mail->Send()) {
             echo 'Message could not be sent.';
             echo 'Mailer Error: ' . $mail->ErrorInfo;

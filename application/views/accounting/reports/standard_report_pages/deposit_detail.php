@@ -37,6 +37,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
        background-color: revert;
     }
+    .report-container .action-bar li a {
+        font-size: 14px !important;
+    }
+    .report-container .action-bar li a i {
+        font-size: unset !important;
+    }
+    .report-container #report-table {
+        font-size: 12px !important;
+    }
+    .report-container .report-footer {
+        font-size: 10px;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -76,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <div class="row my-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-9">
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-2">
@@ -158,7 +170,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row report-container">
                                     <div class="col">
                                         <div class="m-auto border" style="width: 60%">
                                             <div class="container-fluid">
@@ -320,14 +332,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                 <div class="row">
                                                     <div class="col-12 text-center">
-                                                        <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
+                                                        <h4><span class="company-name">nSmarTrac</span> <i class="material-icons" style="font-size:16px">edit</i></h4>
                                                         <p>Deposit Detail<br> <?=date("F 1-j, Y")?></p>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <table class="table" style="width: 100%;">
+                                                        <table class="table" style="width: 100%;" id="report-table">
                                                             <thead>
                                                                 <tr>
                                                                     <th>DATE</th>
@@ -366,7 +378,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="row">
+                                                <div class="row report-footer">
                                                     <div class="col-12 text-center">
                                                         <p><?=date("l, F j, Y h:i A eP")?></p>
                                                     </div>
