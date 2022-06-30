@@ -118,13 +118,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </div>
                       <div class="pl-3 pr-3 mt-1 row">
                         <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">A plugin is a piece of software that acts as an add-on to a web browser and gives the browser additional functionality.  Plugins can allow a web browser to display additional content it was not originally designed to display.  Integration to these plug-ins will help your company have more functionality to maneuver in tougher markets.</span>
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">A plugin is a piece of software that acts as an add-on to a web browser and gives the browser additional functionality. Plugins can allow a web browser to display additional content it was not originally designed to display.  Integration to these plug-ins will help your company have more functionality to maneuver in tougher markets.</span>
                         </div>
                       </div>
                   <div class="col-xl-12">
                       <?php include viewPath('flash'); ?>
                       <div class="row">
-                         <div style="text-align: right;display: inline-block;width: 100%;margin-right: 22px;">
+                         <div style="text-align: aaaa;display: inline-block;width: 100%;margin-right: 22px;">
                             <a href="javascript:void(0);" class="btn btn-primary btn-sm btn-addons-list">Addons List</a>
                             <a href="javascript:void(0);" class="btn btn-primary btn-sm btn-active-addons-list">Active Addons</a></div>                      
                           </div> 

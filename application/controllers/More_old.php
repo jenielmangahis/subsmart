@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-class More extends MY_Controller {
+class More_old extends MY_Controller {
 
 
 
@@ -26,9 +26,6 @@ class More extends MY_Controller {
 
 	public function upgrades(){
 
-        $this->page_data['page']->title = 'Add-On Plugins';
-        $this->page_data['page']->parent = 'More';
-
 		/*$is_allowed = $this->isAllowedModuleAccess(66);
         if( !$is_allowed ){
             $this->page_data['module'] = 'plan_builder';
@@ -39,8 +36,7 @@ class More extends MY_Controller {
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('company_id');
 
-		// $this->load->view('more/upgrades', $this->page_data);
-		$this->load->view('v2/pages/more/upgrades', $this->page_data);
+		$this->load->view('more/upgrades', $this->page_data);
 	}
 
 	public function ajax_load_addons_list(){
@@ -57,8 +53,7 @@ class More extends MY_Controller {
 
 		$this->page_data['active_addons_id'] = $active_addons_id;
 		$this->page_data['NsmartUpgrades']   = $NsmartUpgrades;
-		// $this->load->view('more/ajax_load_addons_list', $this->page_data);
-		$this->load->view('v2/pages/more/ajax_load_addons_list', $this->page_data);
+		$this->load->view('more/ajax_load_addons_list', $this->page_data);
 	}
 
 	public function ajax_load_active_addons_list(){
@@ -75,8 +70,7 @@ class More extends MY_Controller {
 
 		$this->page_data['active_addons_id'] = $active_addons_id;
 		$this->page_data['NsmartUpgrades']   = $NsmartUpgrades;
-		// $this->load->view('more/_load_active_addons_list', $this->page_data);
-		$this->load->view('v2/pages/more/_load_active_addons_list', $this->page_data);
+		$this->load->view('more/_load_active_addons_list', $this->page_data);
 	}
 
 	public function addons(){
@@ -96,8 +90,7 @@ class More extends MY_Controller {
 		$plugin = $this->NsmartUpgrades_model->getById($post['aid']);
 
 		$this->page_data['plugin'] = $plugin;
-		// $this->load->view('more/ajax_load_plugin_details', $this->page_data);
-		$this->load->view('v2/pages/more/ajax_load_plugin_details', $this->page_data);
+		$this->load->view('more/ajax_load_plugin_details', $this->page_data);
 	}
 
 	public function add_plugin(){

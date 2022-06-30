@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-auto">
                     <div class="h1-spacer">
-                        <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modalAddCategory"><i class="fa fa-plus"></i> Add Category</button>
+                        <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modalAddCategory"><i class="fa fa-category"></i> Add Category</button>
                         <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modalAddServiceItem"><i class="fa fa-plus"></i> Add Service/Item</button>
                     </div>
                 </div>

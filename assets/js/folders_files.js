@@ -3114,15 +3114,16 @@ function createFile(file, options = {}) {
 function createDocusignTemplate(file, options = {}) {
     const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
-    const { id, name, create_at, is_shared } = file;
+    const { id, name, created_at, is_shared } = file;
     const { onClick = null, onDoubleClick = null } = options;
-    const createdString = moment(create_at).format("MMMM DD, YYYY");
+    const createdString = moment(created_at).format("MMMM DD, YYYY");
     const templateUrl = `${prefixURL}/eSign/templatePrepare?id=${id}`;
 
     const svgIcon = `<svg style="width: inherit; height: inherit;" viewBox="0 0 640 512"><path fill="currentColor" d="M623.2 192c-51.8 3.5-125.7 54.7-163.1 71.5-29.1 13.1-54.2 24.4-76.1 24.4-22.6 0-26-16.2-21.3-51.9 1.1-8 11.7-79.2-42.7-76.1-25.1 1.5-64.3 24.8-169.5 126L192 182.2c30.4-75.9-53.2-151.5-129.7-102.8L7.4 116.3C0 121-2.2 130.9 2.5 138.4l17.2 27c4.7 7.5 14.6 9.7 22.1 4.9l58-38.9c18.4-11.7 40.7 7.2 32.7 27.1L34.3 404.1C27.5 421 37 448 64 448c8.3 0 16.5-3.2 22.6-9.4 42.2-42.2 154.7-150.7 211.2-195.8-2.2 28.5-2.1 58.9 20.6 83.8 15.3 16.8 37.3 25.3 65.5 25.3 35.6 0 68-14.6 102.3-30 33-14.8 99-62.6 138.4-65.8 8.5-.7 15.2-7.3 15.2-15.8v-32.1c.2-9.1-7.5-16.8-16.6-16.2z"/></svg>`;
 
     const html = `
     <div class="col-md-2 vault__file vault__docusignTemplate" title="${name}">
+      <div class="ribbon ribbon-top-left"><span>default</span></div>
       <div
         class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 vault__fileInner"
         isfolder="0"
@@ -3155,6 +3156,7 @@ function createDocusignTemplate(file, options = {}) {
                         <a class="dropdown-item" href="${templateUrl}">Use</a>
                         <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="edit">Edit</a>
                         <a class="dropdown-item" href="#" data-action="copy">Copy</a>
+                        <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="makedefault">Set as default</a>
                         <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="delete">Delete</a>
                         <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="share">Share with users</a>
                         <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="uploadThumbnail">Change thumbnail</a>
@@ -3173,6 +3175,24 @@ function createDocusignTemplate(file, options = {}) {
     const $elementInner = $element.find('.vault__fileInner');
 
     const actions = {
+      makedefault: async () => {
+        try {
+          const response = await fetch(`${prefixURL}/DocuSign/apiSetDefault`, {
+            method: "POST",
+            body: JSON.stringify({ template_id: id }),
+            headers: {
+              accepts: "application/json",
+              "content-type": "application/json",
+            },
+          });
+          const json = await response.json();
+          const $prevDefault = $(".vault__docusignTemplate--isDefault");
+          $prevDefault.removeClass("vault__docusignTemplate--isDefault");
+          $element.addClass("vault__docusignTemplate--isDefault");
+        } catch (error) {
+          console.log(error);
+        }
+      },
       copy: async function () {
         const response = await fetch(`${prefixURL}/DocuSign/apiCopyTemplate/${id}`, {
           method: "POST",

@@ -838,6 +838,33 @@ class DocuSign extends MYF_Controller
         echo json_encode(['data' => $records]);
     }
 
+    public function apiSetDefault()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $userId = logged('id');
+        $companyId = logged('company_id');
+
+        $this->db->where('company_id', $companyId);
+        $this->db->delete('user_docfile_template_defaults');
+
+        $this->db->insert('user_docfile_template_defaults', [
+            'user_id' => $userId,
+            'company_id' => $companyId,
+            'template_id' => $payload['template_id'],
+        ]);
+
+        $this->db->where('company_id', $companyId);
+        $row = $this->db->get('user_docfile_template_defaults')->row();
+        echo json_encode(['data' => $row]);
+    }
+
     public function apiGetTemplateFields($templateId)
     {
         $query = <<<SQL
