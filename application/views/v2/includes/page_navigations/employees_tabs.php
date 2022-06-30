@@ -10,7 +10,7 @@
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
                     <i class='bx bx-fw bx-spreadsheet'></i>
-                    <span>Timesheet</span>
+                    <span><?= $page->title ?></span>
                     <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
                 </a>
                 <ul class="dropdown-menu">
@@ -21,9 +21,10 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/employee') ?>">Employee</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedule</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/requests') ?>">Requests</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Settings</a></li>
                     <?php endif; ?>
-                    <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_lead_source') ?>">My Schedule</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
                 </ul>
             </div>
         </li>

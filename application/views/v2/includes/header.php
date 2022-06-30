@@ -408,14 +408,19 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-video'></i> Slide Share
                             </a>
                         </li>
+                        <li>
+                            <a href="<?= base_url("flashcard") ?>">
+                                <i class='bx bx-fw bx-card'></i> Flash Card
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li>
+                <li class="<?php if ($page->parent == 'More') : echo 'active'; endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i> More <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li>
+                        <li class="selected">
                             <a href="<?= base_url("more/upgrades") ?>">
                                 <i class='bx bx-fw bx-calendar-event'></i> Upgrades
                             </a>

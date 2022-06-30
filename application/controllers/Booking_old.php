@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Booking extends MY_Controller {
+class Booking_old extends MY_Controller {
 
 	public function __construct() {
 		parent::__construct();
@@ -27,10 +27,6 @@ class Booking extends MY_Controller {
 	}
 
 	public function index() {
-        $this->page_data['page']->title = 'Online Booking';
-        $this->page_data['page']->parent = 'More';
-        $this->page_data['page']->tab = "Dashboard";
-
 		$user = $this->session->userdata('logged');
 		$cid  = logged('company_id');
     	$eid  = hashids_encrypt($cid, '', 15);    	
@@ -46,15 +42,10 @@ class Booking extends MY_Controller {
 		$this->page_data['total_timeslots'] = $total_timeslots;
 		$this->page_data['total_new_inquiry'] = $total_new_inquiry;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
-		// $this->load->view('online_booking/index', $this->page_data);
-		$this->load->view('v2/pages/online_booking/index', $this->page_data);
+		$this->load->view('online_booking/index', $this->page_data);
 	}
 
 	public function products() {
-        $this->page_data['page']->title = 'Online Booking';
-        $this->page_data['page']->parent = 'More';
-        $this->page_data['page']->tab = "Products";
-
 		$user_id = logged('id');
         $role_id = logged('role');
         
@@ -66,15 +57,10 @@ class Booking extends MY_Controller {
 		$this->page_data['service_items'] = $service_items;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 
-		// $this->load->view('online_booking/products', $this->page_data);
-		$this->load->view('v2/pages/online_booking/products', $this->page_data);
+		$this->load->view('online_booking/products', $this->page_data);
 	}
 
 	public function time() {
-        $this->page_data['page']->title = 'Online Booking';
-        $this->page_data['page']->parent = 'More';
-        $this->page_data['page']->tab = "Time Slots";
-
         $user = $this->session->userdata('logged');
 
         $cid = logged('company_id');
@@ -82,8 +68,7 @@ class Booking extends MY_Controller {
 
         $this->page_data['bookingTimeSlots'] = $bookingTimeSlots;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
-		// $this->load->view('online_booking/time', $this->page_data);
-		$this->load->view('v2/pages/online_booking/time', $this->page_data);
+		$this->load->view('online_booking/time', $this->page_data);
 	}
 
 	public function form() {
@@ -434,8 +419,7 @@ class Booking extends MY_Controller {
 
     	$this->page_data['category'] = $category;
     	$this->page_data['category_id'] = $id;
-		// $this->load->view('online_booking/ajax_edit_category', $this->page_data);
-		$this->load->view('v2/pages/online_booking/ajax_edit_category', $this->page_data);
+		$this->load->view('online_booking/ajax_edit_category', $this->page_data);
     }
 
     public function ajax_edit_service_item()
@@ -447,8 +431,7 @@ class Booking extends MY_Controller {
     	$this->page_data['service_item'] = $service_item;
     	$this->page_data['category'] = $category;
     	$this->page_data['service_item_id'] = $id;
-		// $this->load->view('online_booking/ajax_edit_service_item', $this->page_data);
-		$this->load->view('v2/pages/online_booking/ajax_edit_service_item', $this->page_data);
+		$this->load->view('online_booking/ajax_edit_service_item', $this->page_data);
     }
 
     public function update_category()

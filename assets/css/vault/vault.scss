@@ -292,6 +292,18 @@ $colorPreviewFooter: #fff;
 }
 
 .vault__docusignTemplate {
+  position: relative;
+
+  &--isDefault {
+    .ribbon {
+      display: block !important;
+    }
+  }
+
+  .ribbon {
+    display: none;
+  }
+
   .preview,
   .templateFooter {
     max-width: 198px;
@@ -323,6 +335,64 @@ $colorPreviewFooter: #fff;
         margin: 0 !important;
         font-size: 16px !important;
       }
+    }
+  }
+}
+
+.ribbon {
+  --size: 100px;
+
+  width: var(--size);
+  height: var(--size);
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    display: block;
+    border: 5px solid #2980b9;
+  }
+
+  & span {
+    position: absolute;
+    display: block;
+    width: 175px;
+    padding: 3px 0;
+    background-color: #3498db;
+    color: #fff;
+    text-align: center;
+    text-transform: capitalize;
+    font-size: 15px;
+  }
+
+  &-top-left {
+    top: -10px;
+    left: -10px;
+
+    &::before,
+    &::after {
+      border-top-color: transparent;
+      border-left-color: transparent;
+    }
+
+    &::before {
+      top: 0;
+      right: 0;
+    }
+
+    &::after {
+      bottom: 0;
+      left: 0;
+    }
+
+    & span {
+      right: -25px;
+      top: 30px;
+      transform: rotate(-45deg);
     }
   }
 }

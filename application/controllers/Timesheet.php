@@ -5040,6 +5040,9 @@ class Timesheet extends MY_Controller
     }
     public function my_schedule()
     {
+        $this->page_data['page']->title = 'My Schedule';
+        $this->page_data['page']->parent = 'Company';
+
         add_css(array(
             "assets/css/timesheet/calendar/main.css",
             "assets/css/timesheet/timesheet_my_schedule.css"
@@ -5051,6 +5054,7 @@ class Timesheet extends MY_Controller
 
         ));
         $this->load->view('users/timesheet_my_schedule', $this->page_data);
+        // $this->load->view('v2/pages/users/timesheet_my_schedule', $this->page_data);
     }
     public function get_my_schedules()
     {
