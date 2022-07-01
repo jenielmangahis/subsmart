@@ -17,8 +17,9 @@ class CompanySms_model extends MY_Model
         $this->db->join('business_profile', 'business_profile.company_id = company_sms.company_id', 'left');
 
         if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
+            if ( !empty($filters['search']) ) {                
                 $this->db->like('from_number', $filters['search'], 'both');
+                $this->db->or_like('business_profile.business_name', $filters['search'], 'both');
             }
         }
 

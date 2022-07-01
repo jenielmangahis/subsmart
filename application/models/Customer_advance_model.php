@@ -268,6 +268,7 @@ class Customer_advance_model extends MY_Model {
             $this->db->like('acs_profile.first_name', $search['value'], 'both');
             $this->db->or_like('acs_profile.last_name', $search['value'], 'both');
             $this->db->or_like('acs_profile.email', $search['value'], 'both');
+            $this->db->or_like('acs_profile.phone_m', $search['value'], 'both');
             $this->db->group_end();
         }
 

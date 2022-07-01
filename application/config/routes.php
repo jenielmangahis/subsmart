@@ -1327,3 +1327,9 @@ $route['calls/logs'] = 'Calls/logs';
 $route['flashcard'] = 'FlashCard/index';
 $route['flashcard/add-cards/(:num)'] = 'FlashCard/addCards/$1';
 $route['flashcard/study-cards/(:num)'] = 'FlashCard/studyCards/$1';
+
+//Autosms
+$route['settings/auto_sms'] = 'Settings/auto_sms';
+$route['settings/_load_auto_sms_notification_module_status'] = 'Settings/ajax_load_auto_sms_notification_module_status';
+$route['settings/_create_sms_auto_notification'] = 'Settings/ajax_create_sms_auto_notification';
+$route['settings/_delete_auto_sms_notification'] = 'Settings/ajax_delete_auto_sms_notification';

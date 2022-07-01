@@ -129,31 +129,36 @@ function ringCentralLastMessage($ringCentral, $prof_id)
 
     $replies    = array();
     $companySms = $CI->CompanySms_model->getByProfId($prof_id);
-    if( $companySms ){        
-        $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
-        $platform = $rcsdk->platform();
-        $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
+    if( $companySms ){    
+        try {
+            $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+            $platform = $rcsdk->platform();
+            $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
 
-        $to_number = $companySms->to_number;
-        $to_number = cleanMobileNumber($to_number);
-        $to_number = '+1'.$to_number;
+            $to_number = $companySms->to_number;
+            $to_number = cleanMobileNumber($to_number);
+            $to_number = '+1'.$to_number;
 
-        $queryParams = array(
-            'dateFrom' => date('Y-m-d', strtotime($companySms->created)),
-            'availability' => array('Alive'),
-            'distinctConversations' => 'true',
-            'messageType' => array('SMS'),
-            'phoneNumber' => $to_number,
-            'page' => 1,
-            'perPage' => 1,
-        );
+            $queryParams = array(
+                'dateFrom' => date('Y-m-d', strtotime($companySms->created)),
+                'availability' => array('Alive'),
+                'distinctConversations' => 'true',
+                'messageType' => array('SMS'),
+                'phoneNumber' => $to_number,
+                'page' => 1,
+                'perPage' => 1,
+            );
 
-        $apiResponse = $platform->get("/restapi/v1.0/account/~/extension/~/message-store", $queryParams);
-        $jsonResponse = json_decode($apiResponse->text());
-        foreach (array_reverse($jsonResponse->records) as $r){
-            $sms_message = explode('-', $r->subject);
-            $replies[] = ['msg' => $sms_message[0], 'from' => $r->from->phoneNumber, 'date' => date("Y-m-d g:i A", strtotime($r->creationTime))];
-        }
+            $apiResponse = $platform->get("/restapi/v1.0/account/~/extension/~/message-store", $queryParams);
+            $jsonResponse = json_decode($apiResponse->text());
+            foreach (array_reverse($jsonResponse->records) as $r){
+                $sms_message = explode('-', $r->subject);
+                $replies[] = ['msg' => $sms_message[0], 'from' => $r->from->phoneNumber, 'date' => date("Y-m-d g:i A", strtotime($r->creationTime))];
+            }      
+        } catch (Exception $e) {
+            $msg = $e->getMessage();    
+        }    
+        
     }
 
     return array_reverse($replies);
