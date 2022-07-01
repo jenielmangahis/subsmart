@@ -378,7 +378,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <td></td>
                                                                 </tr>
                                                                 <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
-                                                                    <td>06/13/2022</td>
+                                                                    <td>&emsp;06/13/2022</td>
                                                                     <td>Charge</td>
                                                                     <td>123</td>
                                                                     <td>No</td>

@@ -82,11 +82,16 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-user'></i> Users
                     </a>
                 </li>
-                <!-- <li class="<?= $page_title == 'Leads' ? 'selected' : ''; ?>">
+                <li class="<?= $page_title == 'Customers' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/customers") ?>">
+                        <i class='bx bx-fw bx-group'></i> Customers
+                    </a>
+                </li>
+                <li class="<?= $page_title == 'Leads' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/leads") ?>">
                         <i class='bx bx-fw bx-notepad'></i> Leads
                     </a>
-                </li> -->
+                </li>
                 <li class="<?= $page_title == 'Offer Codes' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/offer_codes") ?>">
                         <i class='bx bx-fw bxs-coupon'></i> Offer Codes
@@ -97,11 +102,21 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-calendar'></i> Events
                     </a>
                 </li>
-                <!-- <li class="<?= $page_title == 'Taskhub' ? 'selected' : ''; ?>">
+                <li class="<?= $page_title == 'Taskhub' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/taskhub") ?>">
                         <i class='bx bx-fw bx-receipt'></i> Taskhub
                     </a>
-                </li> -->
+                </li>
+                <li class="<?= $page_title == 'SMS' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/sms") ?>">
+                        <i class='bx bx-fw bx-message-square-dots'></i> SMS
+                    </a>
+                </li>
+                <li class="<?= $page_title == 'Calls' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/calls") ?>">
+                        <i class='bx bx-fw bx-phone-call'></i> Calls
+                    </a>
+                </li>
                 <li class="<?= $page_title == 'Nsmart Plans' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/nsmart_plans") ?>">
                         <i class='bx bx-fw bx-list-ul'></i> nSmart Plans
@@ -143,11 +158,16 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-list-ul'></i> Event Icons
                             </a>
                         </li>
-                        <!-- <li class="<?php if($page_title == 'Task Status'): echo 'selected'; endif; ?>">
+                        <li class="<?php if($page_title == 'Task Status'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("admin/taskhub_status") ?>">
                                 <i class='bx bx-fw bx-list-ul'></i> Taskhub Status
                             </a>
-                        </li> -->
+                        </li>
+                        <li class="<?php if($page_title == 'Lead Types'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("admin/lead_types") ?>">
+                                <i class='bx bx-fw bx-list-ul'></i> Lead Types
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>

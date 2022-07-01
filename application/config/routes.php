@@ -668,6 +668,7 @@ $route['accounting/reports/activities'] = 'accounting_controllers/reports/activi
 $route['accounting/reports/analytics'] = 'accounting_controllers/reports/analytics';
 $route['accounting/reports/payscale'] = 'accounting_controllers/reports/payscale';
 $route['accounting/reports/audit-log'] = 'accounting_controllers/reports/audit_log';
+$route['accounting/reports/ffcra-cares-act-report'] = 'accounting_controllers/reports/ffcra_cares_act_report';
 $route['accounting/reports/view-report/(:any)'] = 'accounting_controllers/reports/view_report/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
@@ -1327,3 +1328,9 @@ $route['calls/logs'] = 'Calls/logs';
 $route['flashcard'] = 'FlashCard/index';
 $route['flashcard/add-cards/(:num)'] = 'FlashCard/addCards/$1';
 $route['flashcard/study-cards/(:num)'] = 'FlashCard/studyCards/$1';
+
+//Autosms
+$route['settings/auto_sms'] = 'Settings/auto_sms';
+$route['settings/_load_auto_sms_notification_module_status'] = 'Settings/ajax_load_auto_sms_notification_module_status';
+$route['settings/_create_sms_auto_notification'] = 'Settings/ajax_create_sms_auto_notification';
+$route['settings/_delete_auto_sms_notification'] = 'Settings/ajax_delete_auto_sms_notification';

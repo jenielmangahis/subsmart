@@ -227,6 +227,19 @@ class Reports extends MY_Controller {
         $this->load->view('accounting/reports/standard_report_pages/audit_log', $this->page_data);
     }
 
+    public function ffcra_cares_act_report()
+    {
+        add_footer_js([
+            'assets/js/accounting/reports/standard_report_pages/ffcra_cares_act_report.js'
+        ]);
+
+        $this->page_data['company_users'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "FFCRA Cares Act Report";
+        $this->load->view('accounting/reports/standard_report_pages/ffcra_cares_act_report', $this->page_data);
+    }
+
     public function view_report($reportTypeId)
     {
         $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);

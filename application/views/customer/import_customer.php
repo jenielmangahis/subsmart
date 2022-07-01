@@ -60,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <p>Industry Type Select and CSV Upload</p>
 
                                             <form id="import_customer" enctype="multipart/form-data" style="text-align: center;">
-                                               <input id="file-upload" name="file" type="file" accept=".csv"/>
+                                                <input id="file-upload" name="file" type="file" accept=".csv"/>
                                                 <input  name="file2" value="1" type="hidden"/>
                                                 <br><br>
                                                 <button type="button" id="nextBtn1" class="btn btn-primary btn-sm step step02" disabled ><span class="fa fa-arrow-right"></span> Next</button>
@@ -69,24 +69,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="section-content step2">
                                             <h2>Step 2</h2>
                                             <p>Map Headings</p>
-
-                                            <?php $headers = csvHeaderToMap();?>
+                                            <?php $fieldsValue = $import_settings->value ? explode(',', $import_settings->value) : array() ; ?>
+                                            <?php $headers = csvHeaderToMap(); $count = 0;?>
                                             <?php foreach ($headers as $header): ?>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <b ><?= $header; ?></b> <span class='mapping-line'>-----------------</span>
+                                                <?php if (in_array($count, $fieldsValue)) : ?>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <b ><?= $header; ?></b> <span class='mapping-line'>-----------------</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <select name="headers[]" class="form-control headersSelector">
+                                                                    <option value="">Select Heading</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <select name="headers[]" class="form-control headersSelector">
-                                                            <option value="">Select Heading</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <?php endforeach; ?>
+                                                <?php endif; ?>    
+                                            <?php $count++; endforeach; ?>
                                             <br>
                                             <button type="button" class="btn btn-primary btn-sm step step01" ><span class="fa fa-arrow-left"></span> Back</button>
                                             <button type="button" class="btn btn-primary btn-sm step step03" ><span class="fa fa-arrow-right"></span> Next</button>
@@ -171,9 +173,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             formData.append('customers', JSON.stringify(customerData));
             formData.append('mapHeaders', JSON.stringify(selectedHeader));
             formData.append('csvHeaders', JSON.stringify(csvHeaders));
-
-            console.log(selectedHeader);
-            console.log(customerData);
             
             if ($overlay) $overlay.style.display = "flex";
             // perform post request

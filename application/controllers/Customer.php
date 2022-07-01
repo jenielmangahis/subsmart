@@ -322,6 +322,19 @@ class Customer extends MY_Controller
         $this->load->view('customer/billing', $this->page_data);
     }
 
+    public function deleteCustomer($id=null)
+    {
+        $customerId = $id;
+        $dataToDelete = array(
+            'where' => array(
+                'prof_id' => $customerId
+            ),
+            'table' => 'acs_profile'
+        );
+        $deleteExceute = $this->general->delete_($dataToDelete); 
+        echo $deleteExceute ? 'deleted' : 'Theres an issue';
+    }
+
     public function save_billing(){        
         $input = $this->input->post();
         if($input){
@@ -2254,7 +2267,16 @@ class Customer extends MY_Controller
 
     public function import_customer()
     {
-        $user_id = logged('id');
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'setting_type' => 'import',
+            ),
+            'table' => 'customer_settings',
+            'select' => '*',
+        );
+        $importSettings = $this->general->get_data_with_param($get_company_settings, false);
+        $this->page_data['import_settings'] = $importSettings;
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->load->view('customer/import_customer', $this->page_data);
     }
@@ -4994,8 +5016,7 @@ class Customer extends MY_Controller
             'table' => 'customer_settings',
             'select' => '*',
         );
-        $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $this->page_data['importFields'] = $customer_settings;
+        $this->page_data['importFields'] = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['company_id'] = logged('company_id');
 
         $this->load->view('v2/pages/customer/settings_import', $this->page_data);
@@ -5033,7 +5054,7 @@ class Customer extends MY_Controller
             'table' => 'customer_settings',
             'select' => '*',
         );
-        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $customer_settings = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['importFields'] = $customer_settings;
         $this->page_data['company_id'] = logged('company_id');
 
@@ -5049,11 +5070,8 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         if ($input) {
             $importFields = json_decode($input['importFields']);
-            $data_arr = array("success" => TRUE,"message" => implode(",",$importFields) );
-
-
+            
             $table = 'customer_settings'; // database table to use
-
             // check if there is already save import settings
             $checkIfHasExistingData = array(
                 'where' => array(
@@ -5063,16 +5081,28 @@ class Customer extends MY_Controller
                 'table' => $table,
                 'select' => 'customer_settings_id',
             );
-            $customer_settings = $this->general->get_data_with_param($checkIfHasExistingData);
+            $customer_settings = $this->general->get_data_with_param($checkIfHasExistingData, false);
 
-            if(count($customer_settings) > 0) {
+            if($customer_settings) {
                 $data = array();
                 $data['value'] = implode(",",$importFields);
-                if ($this->general->update_with_key_field($data, $customer_settings->customer_settings_id, $table,'customer_settings_id')) {
+                if ($this->general->update_with_key_field($data, $customer_settings->customer_settings_id, $table, 'customer_settings_id')) {
+                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Import updated.');
+                }else{
                     $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
                 }
             } else {
-
+                $customer_setting = array();
+                $customer_setting['setting_type'] = 'import';
+                $customer_setting['value'] = implode(",",$importFields);
+                $customer_setting['status'] = 1;
+                $customer_setting['company_id'] = logged('company_id');
+                if($this->general->add_($customer_setting, $table)){
+                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Import added.');
+                }else{
+                    $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+                }
+                
             }
         }else{
             $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');

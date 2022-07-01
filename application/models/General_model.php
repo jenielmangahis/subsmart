@@ -137,14 +137,13 @@ class General_model extends MY_Model {
         return $update;
     }
 
-    public function update_with_key_field($input, $id,$table,$field)
+    public function update_with_key_field($input, $id, $table, $field)
     {
         if(empty($field)){
-            $update = $this->db->update($table, $input, array('id' => $id)) ? true : false;
+            return $this->db->update($table, $input, array('id' => $id)) ? true : false;
         }else{
-            $update = $this->db->update($table, $input, array($field => $id)) ? true : false;
+            return  $this->db->update($table, $input, array($field => $id)) ? true : false;
         }
-        return $update;
     }
 
     public function add_($input,$table)

@@ -83,7 +83,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('vault/mylibrary'); ?>">
+            <a class="nsm-page-link" id="esignlink" href="<?= base_url('vault/mylibrary?customer_id=' . $cus_id); ?>" data-customer-id="<?=$cus_id?>">
                 <i class='bx bx-fw bx-palette'></i>
                 <span>eSign</span>
             </a>
@@ -92,3 +92,17 @@
         <li><label></label></li>
     </ul>
 </div>
+<script>
+    (async () => {
+        const $esignLink = document.getElementById("esignlink");
+        const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+        const response = await fetch(`${prefixURL}/DocuSign/apiGetDefaultTemplate`);
+        const json = await response.json();
+        if (!json.data) return;
+
+        const templateId = json.data.template_id;
+        const customerId = $esignLink.dataset.customerId;
+        $esignLink.setAttribute("href", `${prefixURL}/eSign/templatePrepare?id=${templateId}&customer_id=${customerId}`); 
+    })()
+</script>

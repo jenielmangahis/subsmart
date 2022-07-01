@@ -4530,6 +4530,160 @@ class Admin extends CI_Controller
 
         echo json_encode($json_data);
     }
+
+    public function sms()
+    {
+        $this->load->model('CompanySms_model');
+
+        $search = '';
+        if( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $companySms = $this->CompanySms_model->getAll($filters);
+        }else{
+            $companySms = $this->CompanySms_model->getAll();
+        }
+
+        $this->page_data['search'] = $search;
+        $this->page_data['companySms']  = $companySms;
+        $this->page_data['page_title']  = 'SMS';
+        $this->page_data['page_parent'] = 'SMS';
+        $this->load->view('admin/sms/list', $this->page_data);
+    }
+
+    public function ajax_sms_messages()
+    {
+        $this->load->helper('sms_helper');
+        $this->load->model('CompanySms_model');
+        $this->load->model('Customer_advance_model');
+        $this->load->model('Clients_model');
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('TwilioAccounts_model');
+        $this->load->model('Business_model');
+
+        $post = $this->input->post();
+        $companySms  = $this->CompanySms_model->getById($post['smsid']);
+        $customer    = $this->Customer_advance_model->get_data_by_id('prof_id',$companySms->prof_id,'acs_profile');                
+        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($companySms->company_id);
+        $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($companySms->company_id);
+        $company       = $this->Business_model->getByCompanyId($companySms->company_id);
+        $sentMessages = array();
+        if( $companySms->sms_api == 'ringcentral' ){
+            $sentMessages  = ringCentralMessageReplies($ringCentral, $customer->phone_m, $companySms->date_created);    
+        }elseif( $client->default_sms_api == 'twilio' ){
+            $sentMessages  = twilioReadReplies($twilioAccount, $customer->phone_m);    
+        }
+
+        $this->page_data['sentMessages'] = $sentMessages;
+        $this->page_data['companySms'] = $companySms;
+        $this->page_data['customer']   = $customer;
+        $this->page_data['company']    = $company;
+        $this->load->view('admin/sms/ajax_sms_messages', $this->page_data);        
+    }
+
+    public function export_sms()
+    {
+        $this->load->model('CompanySms_model');
+
+        $companySms = $this->CompanySms_model->getAll();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "company_sms_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'From Number', 'To Number', 'API');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($companySms)) {
+            foreach ($companySms as $sms) {
+                $csvData = array(
+                    $sms->business_name,
+                    $sms->from_number,
+                    $sms->to_number,
+                    ucfirst($sms->sms_api)
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function calls()
+    {
+        $this->load->helper('sms_helper');
+        
+        $this->load->model('CompanyCallLogs_model');
+        $this->load->model('Customer_advance_model');
+
+        $cid   = logged('company_id');
+        $search = '';
+
+        if( get('search') != '' ){
+            $search  = trim(get('search'));
+            $search_param = ['search' => $search];
+            $companyCallLogs = $this->CompanyCallLogs_model->getAll($search_param);
+        }else{            
+            $companyCallLogs = $this->CompanyCallLogs_model->getAll();
+        }
+
+        $this->page_data['search'] = $search;
+        $this->page_data['companyCallLogs']  = $companyCallLogs;
+        $this->page_data['page_title']  = 'Calls';
+        $this->page_data['page_parent'] = 'Calls';
+        $this->load->view('admin/calls/list', $this->page_data);
+    }
+
+    public function export_calls()
+    {
+        $this->load->helper('sms_helper');
+        
+        $this->load->model('CompanyCallLogs_model');
+
+        $companyCallLogs = $this->CompanyCallLogs_model->getAll();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "company_call_logs_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'To Number', 'Start Call', 'End Call', 'API');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($companyCallLogs)) {
+            foreach ($companyCallLogs as $log) {
+                $csvData = array(
+                    $log->business_name,
+                    $log->to_number,
+                    date("Y-m-d G:i A", strtotime($log->start_call)),
+                    date("Y-m-d G:i A", strtotime($log->end_call)),
+                    ucfirst($log->api_type)
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
 }
 
 /* End of file Admin.php */

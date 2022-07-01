@@ -304,8 +304,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <label for="col-num">Num</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-created-date">
-                                                                                    <label for="col-created-date">Created Date</label>
+                                                                                    <input type="checkbox" id="col-create-date">
+                                                                                    <label for="col-create-date">Create Date</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
                                                                                     <input type="checkbox" id="col-last-modified-by">
