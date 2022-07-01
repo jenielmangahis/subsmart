@@ -520,6 +520,10 @@ a.nsm-button{
 	color: #fff;
 }
 
+.nsm-button.success{
+	background-color: #198754;
+	color: #fff;
+}
 
 .nsm-button.btn-sm{
     font-size: 10px;
@@ -1441,6 +1445,7 @@ a.nsm-button{
 .nsm-page-nav > ul > li:last-child{
 	float: none;
 	overflow: hidden;
+	min-width: 100px;
 }
 
 .nsm-page-nav .dropdown > .dropdown-menu .dropdown-item{
@@ -1478,6 +1483,14 @@ a.nsm-button{
 .nsm-table .table-select{
 	font-size: 18px;
 	margin: unset !important;
+}
+
+.nsm-table tr.primary{
+	background-color: #dad1e0 !important;
+}
+
+.nsm-table tr.primary > td:first-child{
+	color: #6a4a86;
 }
 
 .nsm-img-upload{

@@ -36,7 +36,7 @@
                                     <span>In Now</span>
 
                                     <div class="progress nsm-progress primary mt-2">
-                                        <div class="progress-bar" role="progressbar" style="width: <?php echo round(100 * ($in_now / $total_users), 2) . '%'; ?>;" aria-valuenow="<?php echo $in_now; ?>" aria-valuemin="0" aria-valuemax="100"><?php echo round(100 * ($in_now / $total_users), 2) . '%'; ?></div>
+                                        <div class="progress-bar" role="progressbar" style="width: <?php echo round(100 * ($in_now / $total_users), 2) . '%'; ?>;" aria-valuenow="<?php echo $in_now; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
