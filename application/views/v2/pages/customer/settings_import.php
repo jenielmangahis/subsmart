@@ -28,7 +28,7 @@
                                         <label class="nsm-subtitle mb-3">Check the column title for mapping import customer.</label>
                                         <form id="customer_headers_form" method="POST">
                                             <div class="row">
-                                                <?php $fieldsValue = explode(',', $importFields->value) ; ?>
+                                                <?php $fieldsValue = $importFields->value ? explode(',', $importFields->value) : array() ; ?>
                                                 <?php $headers = csvHeaderToMap(); $count = 0;?>
                                                 <?php foreach ($headers as $header):
                                                 $checked  = '';

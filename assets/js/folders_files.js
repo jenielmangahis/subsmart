@@ -3153,7 +3153,7 @@ function createDocusignTemplate(file, options = {}) {
                       </button>
 
                       <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="${templateUrl}">Use</a>
+                        <a class="dropdown-item" href="#" data-action="use">Use</a>
                         <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="edit">Edit</a>
                         <a class="dropdown-item" href="#" data-action="copy">Copy</a>
                         <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="makedefault">Set as default</a>
@@ -3174,7 +3174,22 @@ function createDocusignTemplate(file, options = {}) {
     const $element = $(element);
     const $elementInner = $element.find('.vault__fileInner');
 
+    if (file.is_default) {
+      const $prevDefault = $(".vault__docusignTemplate--isDefault");
+      $prevDefault.removeClass("vault__docusignTemplate--isDefault");
+      $element.addClass("vault__docusignTemplate--isDefault");
+    }
+
     const actions = {
+      use: () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get("customer_id");
+        if (customerId) {
+          window.location = `${templateUrl}&customer_id=${customerId}`;
+        } else {
+          window.location = templateUrl;
+        }
+      },
       makedefault: async () => {
         try {
           const response = await fetch(`${prefixURL}/DocuSign/apiSetDefault`, {

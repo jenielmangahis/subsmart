@@ -834,8 +834,28 @@ class DocuSign extends MYF_Controller
             $record->thumbnail = $this->db->get('user_docfile_templates_thumbnail')->row();
         }
 
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $default = $this->db->get('user_docfile_template_defaults')->row();
+
+        if ($default) {
+            foreach ($records as $record) {
+                $record->is_default = $default->template_id == $record->id;
+            }
+        }
+
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
+    }
+
+    public function apiGetDefaultTemplate()
+    {
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $default = $this->db->get('user_docfile_template_defaults')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $default]);
     }
 
     public function apiSetDefault()
@@ -1258,6 +1278,16 @@ SQL;
         }
 
         return ['error' => $error];
+    }
+
+    public function getCustomer($customerId)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('prof_id', $customerId);
+        $row = $this->db->get('acs_profile')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $row]);
     }
 
     public function getWorkorderCustomer($workorderId)
