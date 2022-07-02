@@ -8,6 +8,31 @@
     display: block;
     margin-top: 13px;
 }
+.chat li {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+.chat {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.pull-left {
+    float: left!important;
+}
+.img-circle {
+    border-radius: 50%;
+}
+.chat li.left .chat-body {
+    margin-left: 60px;
+}
+.pull-right {
+    float: right!important;
+}
+.text-muted {
+    color: #777;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12">
@@ -17,82 +42,59 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Messages list.
+                            SMS list.
                         </div>
                     </div>
-                </div>
+                </div>                
+                <?php if( $sentMessages ){ ?>
                 <div class="row">
-                    <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('acs_access/messages') ?>" method="GET">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search User" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
-                            </div>
-                            <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
-                        </form>
+                    <div class="col-12 col-md-12 grid-mb text-end">
+                        <!-- <div class="nsm-page-buttons page-button-container">                
+                            <a class="nsm-button primary send-message" href="javascript:void(0);" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Send SMS</a>
+                        </div> -->
                     </div>
                 </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Name" style="width:80%;">Name</td>
-                            <td data-name="Name" style="width:20%;">Mobile</td>
-                            <td data-name="Date">Date Last Message</td>                            
-                            <td data-name="Manage"></td>
+                            <td data-name="Name" style="width:20%;">Name</td>
+                            <td data-name="Date">Date Sent</td>                            
+                            <td data-name="Message" style="width:60%;">Message</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if( $messages ){ ?>
-                            <?php foreach($messages as $msg){ ?>
-                                <tr>
-                                    <td>
-                                        <div class="nsm-profile">
-                                            <span><?= ucwords($msg->FName[0]) . ucwords($msg->LName[0]); ?></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <label class="nsm-link default d-block fw-bold">
-                                            <?= ucwords($msg->FName) . ' ' . ucwords($msg->LName); ?>
-                                        </label>
-                                        <label class="nsm-link default content-subtitle fst-italic d-block">
-                                            <?= $msg->user_email; ?>                                                
-                                        </label>
-                                    </td>
-                                    <td><?= $msg->mobile; ?></td>
-                                    <td>
-                                        <?php 
-                                            $lastMessage = getCustomerLastMessage($msg->user_id, $msg->prof_id);
-                                            echo timeLapsedString($lastMessage->date_created);
-                                        ?>        
-                                    </td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item send-message" data-agent-name="<?= ucwords($msg->FName) . ' ' . ucwords($msg->LName) ?>" data-id="<?= $msg->user_id; ?>" data-phone="<?= $msg->mobile; ?>" href="javascript:void(0);">Send Message</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item sent-messages" data-aid="<?= $msg->user_id; ?>" href="javascript:void(0);">View Messages</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                       <?php }else{ ?>
+                        <?php foreach($sentMessages as $s){ ?>
                             <tr>
-                                <td colspan="4">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
+                                <td>
+                                    <div class="nsm-profile">
+                                        <?php if( $s['from'] == $companySms->from_number ){ ?>
+                                            <span><?= 'NS'; ?></span>
+                                        <?php }else{ ?>
+                                            <span><?= ucwords($companySms->first_name[0]) . ucwords($companySms->last_name[0]); ?></span>
+                                        <?php } ?>
                                     </div>
                                 </td>
+                                <td>
+                                    <label class="nsm-link default d-block fw-bold">
+                                        <?php if( $s['from'] == $companySms->from_number ){ ?>
+                                            nSmarTrac
+                                        <?php }else{ ?>
+                                            <?= $companySms->first_name . ' ' . $companySms->last_name; ?>
+                                        <?php } ?>
+                                    </label>
+                                </td>
+                                <td><?= timeLapsedString($s['date']); ?></td>
+                                <td><p><?= $s['msg']; ?></p></td>
                             </tr>
-                        <?php } ?>
+                        <?php } ?>                       
                     </tbody>
                 </table>
+                <?php }else{ ?>
+                <div class="nsm-empty alert alert-danger">
+                    <span>No messages found.</span>
+                </div>
+                <?php } ?>
 
                 <!--Send Message Modal-->
                 <div class="modal fade nsm-modal fade" id="modalSendMessage" tabindex="-1" aria-labelledby="modalSendMessageLabel" aria-hidden="true">
@@ -103,23 +105,8 @@
                                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                             </div>
                             <form action="" id="frm-send-message">
-                            <input type="hidden" name="aid" id="aid" value="">
                             <div class="modal-body">
-                                <div class="row">                                                                
-                                    <div class="col-md-12 mt-3">
-                                        <label for="">To</label>
-                                        <input type="text" name="agent_name" id="agent-name" readonly="" disabled="" class="form-control" required="">
-                                    </div>
-                                    <div class="col-md-12 mt-3">
-                                        <label for="">Phone Number</label>
-                                        <input type="text" name="agent_phone" id="agent-phone" readonly="" disabled="" class="form-control" required="">
-                                    </div>
-                                    <div class="form-check grp-send-sms-notification">
-                                      <input class="form-check-input" name="send_sms_notification" type="checkbox" value="" id="flexCheckDefault">
-                                      <label class="form-check-label" for="flexCheckDefault">
-                                        Send SMS Notification
-                                      </label>
-                                    </div>
+                                <div class="row"> 
                                     <div class="col-md-12 mt-3">
                                         <label for="">Message</label>
                                         <textarea class="form-control" name="sms_txt_message" id="sms-txt" style="height:150px;"></textarea>                                    
@@ -167,15 +154,7 @@
     });
 
     $(document).on('click', '.send-message', function(){
-        var agent_name = $(this).attr('data-agent-name');
-        var aid = $(this).attr('data-id');
-        var agent_phone = $(this).attr('data-phone');
-
-        $('#aid').val(aid);
-        $('#agent-name').val(agent_name);
-        $('#agent-phone').val(agent_phone);
         $('#modalSendMessage').modal('show');
-        $('#modalMessagesSent').modal('hide');
     });
 
     function smsCharCounter(){

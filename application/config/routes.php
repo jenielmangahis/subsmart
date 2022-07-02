@@ -1334,3 +1334,5 @@ $route['settings/auto_sms'] = 'Settings/auto_sms';
 $route['settings/_load_auto_sms_notification_module_status'] = 'Settings/ajax_load_auto_sms_notification_module_status';
 $route['settings/_create_sms_auto_notification'] = 'Settings/ajax_create_sms_auto_notification';
 $route['settings/_delete_auto_sms_notification'] = 'Settings/ajax_delete_auto_sms_notification';
+$route['settings/_edit_auto_sms_notification'] = 'Settings/ajax_edit_auto_sms_notification';
+$route['settings/_update_sms_auto_notification'] = 'Settings/ajax_update_sms_auto_notification';

@@ -9,19 +9,17 @@ class CompanyCallLogs_model extends MY_Model
 
     public function getAll($filters=array())
     {
-        $id = logged('id');
-
-        $this->db->select('company_call_logs.*, CONCAT(users.FName, " ", users.LName)AS sender_name');
+        $this->db->select('company_call_logs.*, CONCAT(users.FName, " ", users.LName)AS sender_name, business_profile.business_name');
         $this->db->from($this->table);
         $this->db->join('users', 'company_call_logs.user_id = users.id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = company_call_logs.company_id', 'left');
 
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('from_number', $filters['search'], 'both');
-            }
+        if ( !empty($filters['search']) ){
+            $this->db->like('company_call_logs.to_number', $filters['search'], 'both');
+            $this->db->or_like('business_profile.business_name', $filters['search'], 'both');        
         }
 
-        $this->db->order_by('id', 'ASC');
+        $this->db->order_by('company_call_logs.id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
