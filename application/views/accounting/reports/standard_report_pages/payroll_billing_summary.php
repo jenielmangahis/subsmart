@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Contractor Payments</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Billing Summary Report</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -80,8 +80,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             Share <i class="fa fa-caret-down"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">Share</a>
                                             <a class="dropdown-item" href="#">Export to Excel</a>
-                                            <a class="dropdown-item" href="#">Print or save PDF</a>
+                                            <a class="dropdown-item" href="#">Printer Friendly</a>
                                         </div>
                                     </div>
                                 </div>
@@ -95,31 +96,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-2">
-                                                    <label for="report-period">Report period</label>
-                                                    <select name="report_period" id="report-period" class="form-control">
+                                                    <label for="date-range">Date range</label>
+                                                    <select name="date_range" id="date-range" class="form-control">
+                                                        <option value="last-pay-date" selected>Last pay date</option>
                                                         <option value="this-month">This month</option>
-                                                        <option value="this-quarter" selected>This quarter</option>
+                                                        <option value="this-quarter">This quarter</option>
                                                         <option value="this-year">This year</option>
                                                         <option value="last-month">Last month</option>
                                                         <option value="last-quarter">Last quarter</option>
                                                         <option value="last-year">Last year</option>
-                                                        <option value="first-quarter">First quarter</option>
-                                                        <option value="second-quarter">Second quarter</option>
+                                                        <option value="first-quarter">1st quarter</option>
+                                                        <option value="second-quarter">2nd quarter</option>
                                                         <option value="custom">Custom</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("04/01/Y")?>">
-                                                </div>
-                                                <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("06/30/Y")?>">
+                                                    <button class="btn btn-success rounded">Run Report</button>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col d-flex justify-content-end align-items-end">
-                                        <div class="form-group">
-                                            <a href="#" class="btn"><i class="fa fa-sliders"></i> Customize</a>
                                         </div>
                                     </div>
                                 </div>
@@ -129,33 +123,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <table class="table" style="width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <th>Pay date</th>
-                                                    <th>Contractor</th>
-                                                    <th>Type</th>
-                                                    <th>Pay method</th>
-                                                    <th>Pay status</th>
-                                                    <th>Category</th>
-                                                    <th class="text-right">Amount</th>
+                                                    <th>DATE</th>
+                                                    <th class="text-right">AMOUNT</th>
+                                                    <th>ACCOUNT</th>
+                                                    <th>DESCRIPTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr class="bg-light">
-                                                    <td><b>Total</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td class="text-right"><b>$22,544.77</b></td>
-                                                </tr>
                                                 <tr>
-                                                    <td>06/15/2022</td>
-                                                    <td>Test Contractor</td>
-                                                    <td>Check</td>
-                                                    <td>Check</td>
-                                                    <td>-</td>
-                                                    <td>Commission</td>
-                                                    <td class="text-right">$22,544.77</td>
+                                                    <td>06/30/2022</td>
+                                                    <td class="text-right">$5.00</td>
+                                                    <td>....1234</td>
+                                                    <td>Subscription Fee</td>
                                                 </tr>
                                             </tbody>
                                         </table>

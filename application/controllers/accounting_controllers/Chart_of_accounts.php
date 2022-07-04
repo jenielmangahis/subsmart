@@ -35,6 +35,9 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('accounting_statements_model');
         $this->load->model('accounting_refund_receipt_model');
 
+		$this->page_data['page']->title = 'Chart of Accounts';
+        $this->page_data['page']->parent = 'Accounting';
+
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
             "assets/css/accounting/accounting.css",

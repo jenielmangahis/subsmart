@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Contractor Payments</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Payroll tax liability</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -95,21 +95,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-2">
-                                                    <label for="report-period">Report period</label>
-                                                    <select name="report_period" id="report-period" class="form-control">
+                                                    <select name="date_range" id="date-range" class="form-control">
+                                                        <option value="last-pay-date" selected>Last pay date</option>
                                                         <option value="this-month">This month</option>
-                                                        <option value="this-quarter" selected>This quarter</option>
+                                                        <option value="this-quarter">This quarter</option>
                                                         <option value="this-year">This year</option>
                                                         <option value="last-month">Last month</option>
                                                         <option value="last-quarter">Last quarter</option>
                                                         <option value="last-year">Last year</option>
                                                         <option value="first-quarter">First quarter</option>
                                                         <option value="second-quarter">Second quarter</option>
+                                                        <option value="third-quarter">Third quarter</option>
                                                         <option value="custom">Custom</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("04/01/Y")?>">
+                                                    <input type="text" name="start_date" id="start-date" class="date form-control" value="<?=date("06/30/Y")?>">
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
                                                     <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("06/30/Y")?>">
@@ -129,33 +130,72 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <table class="table" style="width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <th>Pay date</th>
-                                                    <th>Contractor</th>
-                                                    <th>Type</th>
-                                                    <th>Pay method</th>
-                                                    <th>Pay status</th>
-                                                    <th>Category</th>
-                                                    <th class="text-right">Amount</th>
+                                                    <th>Tax types</th>
+                                                    <th class="text-right">Tax amount</th>
+                                                    <th class="text-right">Tax paid</th>
+                                                    <th class="text-right">Tax owed</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr class="bg-light">
-                                                    <td><b>Total</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td class="text-right"><b>$22,544.77</b></td>
+                                                <tr>
+                                                    <td><b>Federal Taxes(941/943/944)</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>06/15/2022</td>
-                                                    <td>Test Contractor</td>
-                                                    <td>Check</td>
-                                                    <td>Check</td>
-                                                    <td>-</td>
-                                                    <td>Commission</td>
-                                                    <td class="text-right">$22,544.77</td>
+                                                    <td>&emsp;Federal Income Tax</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&emsp;Social Security</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&emsp;Social Security Employer</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&emsp;Medicare</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&emsp;Medicare Employer</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Federal Unemployment(940)</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&emsp;FUTA Employer</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>FL Unemployment Tax</b></td>
+                                                    <td class="text-right"><b>$0.27</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
+                                                    <td class="text-right"><b>$0.00</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&emsp;FL SUI Employer</td>
+                                                    <td class="text-right">$0.27</td>
+                                                    <td class="text-right">$0.00</td>
+                                                    <td class="text-right">$0.00</td>
                                                 </tr>
                                             </tbody>
                                         </table>

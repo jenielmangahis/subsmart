@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Employee Details</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Employee directory</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -94,8 +94,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-9">
                                         
                                     </div>
-                                    <div class="col">
-                                        <a href="#" class="float-right"><i class="fa fa-sliders"></i> Customize</a>
+                                    <div class="col d-flex justify-content-end align-items-end">
+                                        <div class="form-group">
+                                            <a href="#" class="btn"><i class="fa fa-sliders"></i> Customize</a>
+                                        </div>
                                     </div>
                                 </div>
 
