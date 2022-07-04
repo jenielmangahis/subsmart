@@ -77,6 +77,10 @@
             <span class="text">Save And Close</span>
         </button>
 
+        <button id="copylink" type="button" class="btn btn-secondary align-items-center mr-1 d-none">
+            <span class="text" data-default-text="Copy Link"></span>
+        </button>
+
         <button type="submit" class="btn btn-primary d-flex align-items-center">
             <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
                 <span class="sr-only">Loading...</span>
@@ -139,3 +143,30 @@
 		</div>
 	</div>
 </div>
+
+<script>
+  (() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerId = urlParams.get("customer_id");
+    const $copyLink = document.getElementById("copylink");
+    const $text = $copyLink.querySelector(".text");
+
+    const linkText = $text.dataset.defaultText;
+    $text.textContent = linkText;
+
+    if (!customerId) {
+      $copyLink.classList.add("d-none");
+    } else {
+      $copyLink.classList.remove("d-none");
+    }
+    
+    $copyLink.addEventListener("click", () => {
+      $text.textContent = "Copied!";
+      window.navigator.clipboard.writeText(window.location.href);
+
+      window.setTimeout(() => {
+        $text.textContent = linkText;
+      }, 300);
+    });
+  })();
+</script>
