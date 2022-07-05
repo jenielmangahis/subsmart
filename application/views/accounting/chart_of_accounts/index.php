@@ -49,6 +49,48 @@
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-cog"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
+                                <p class="m-0">Columns</p>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type" class="form-check-input">
+                                    <label for="chk_type" class="form-check-label">Type</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type" class="form-check-input">
+                                    <label for="chk_detail_type" class="form-check-label">Detail Type</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance" class="form-check-input">
+                                    <label for="chk_nsmart_balance" class="form-check-label">nSmarTrac Balance</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="col_bank_balance()" name="chk_bank_balance" id="chk_bank_balance" class="form-check-input">
+                                    <label for="chk_bank_balance" class="form-check-label">Bank Balance</label>
+                                </div>
+                                <p class="m-0">Other</p>
+                                <div class="form-check">
+                                    <input type="checkbox" id="inc_inactive" value="1" class="form-check-input">
+                                    <label for="inc_inactive" class="form-check-label">Include Inactive</label>
+                                </div>
+                                <p class="m-0">Rows</p>
+                                <div class="dropdown d-inline-block">
+                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                        <span>
+                                            150
+                                        </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
+                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">150</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
+                                    </ul>
+                                </div>
+                            </ul>
                         </div>
                     </div>
                 </div>
