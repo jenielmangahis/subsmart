@@ -10,6 +10,8 @@
         </div>
       </div>
     </div>
+    <!-- Added footer assets -->
+    <?php echo put_footer_assets();?>
     <!-- Chart JS -->
     <script src="<?= base_url("assets/js/v2/chart.min.js") ?>"></script> 
     <!-- Boostrap JS -->
