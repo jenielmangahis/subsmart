@@ -1004,6 +1004,216 @@ class Settings extends MY_Controller {
 
         echo json_encode($json_data);
     }
+
+    public function auto_sms()
+    {
+        $this->load->model('CompanyAutoSmsSettings_model');
+
+        $cid     =  logged('company_id');
+        $autoSms    = $this->CompanyAutoSmsSettings_model->getAllByCompanyId($cid);
+        $moduleList = $this->CompanyAutoSmsSettings_model->moduleList();
+
+        $recipients = array();
+        if( $autoSms ){
+            foreach($autoSms as $asms){
+                if( $asms->send_to == 'all' ){
+                    $recipients[$asms->id][] = 'All';
+                }else{
+                    $a_send_to  = unserialize($asms->send_to);
+                    foreach($a_send_to as $value){
+                        $user = getUserName($value);
+                        $recipients[$asms->id][] = $user['name'];
+                    }
+                }
+            }            
+        }
+
+        $this->page_data['page']->title = 'Auto SMS Notification';
+        $this->page_data['page']->parent = 'Company';
+        $this->page_data['autoSms'] = $autoSms;
+        $this->page_data['enable_popper_tooltip'] = true;
+        $this->page_data['moduleList'] = $moduleList;
+        $this->page_data['recipients'] = $recipients;
+        $this->load->view('v2/pages/settings/auto_sms_notification/list', $this->page_data);
+    }
+
+    public function ajax_load_auto_sms_notification_module_status()
+    {
+        $this->load->model('CompanyAutoSmsSettings_model');
+
+        $moduleStatus = array();
+        $post = $this->input->post();
+        if( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->estimateModuleStatusList();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleJob() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->jobModuleStatusList();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->workOrderModuleStatusList();
+        }
+
+        $this->page_data['moduleStatus'] = $moduleStatus;
+        $this->load->view('v2/pages/settings/auto_sms_notification/ajax_load_auto_sms_notification_module_status', $this->page_data);
+    }
+
+    public function ajax_create_sms_auto_notification()
+    {
+        $this->load->model('CompanyAutoSmsSettings_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $cid  =  logged('company_id');
+        $post = $this->input->post();
+        if( $post['sms_text'] == '' ){
+            $msg = 'Please specify sms message';
+        }elseif( $post['module_status'] == '' ){
+            $msg = 'Please specify status of the module that will trigger auto sms';
+        }elseif( !isset($post['send_to_all']) && empty($post['send_to'])  ){
+            $msg = 'Please specify recipient of the sms notification';
+        }else{            
+            if( isset($post['send_to_all']) ){
+                $send_to = 'all';
+            }else{
+                $send_to = array();
+                foreach($post['send_to'] as $value){
+                    $send_to[] = $value;
+                }
+
+                $send_to = serialize($send_to);
+            }
+
+            $data = [
+                'company_id' => $cid,
+                'module_name' => $post['module_name'],
+                'sms_text' => $post['sms_text'],
+                'send_to' => $send_to,
+                'module_status' => $post['module_status'],
+                'is_enabled' => $post['is_enabled']
+            ];
+
+            $this->CompanyAutoSmsSettings_model->create($data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+
+    }
+
+    public function ajax_delete_auto_sms_notification()
+    {
+        $this->load->model('CompanyAutoSmsSettings_model');
+
+        $is_success = 0;
+        $msg = "Cannot find data";
+
+        $cid     =  logged('company_id');
+        $post    = $this->input->post();   
+        $autoSms = $this->CompanyAutoSmsSettings_model->getById($post['asmsid']);
+        if( $autoSms ){
+            if( $autoSms->company_id == $cid ){
+                $this->CompanyAutoSmsSettings_model->delete($post['asmsid']);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_auto_sms_notification()
+    {
+        $this->load->model('CompanyAutoSmsSettings_model');
+
+        $post    = $this->input->post();   
+        $autoSms = $this->CompanyAutoSmsSettings_model->getById($post['sid']);
+
+        $moduleList   = $this->CompanyAutoSmsSettings_model->moduleList();
+        $moduleStatus = array();
+        if( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->estimateModuleStatusList();
+        }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleJob() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->jobModuleStatusList();
+        }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->workOrderModuleStatusList();
+        }
+
+        $recipients  = array();
+        $is_send_all = false; 
+        if( $autoSms->send_to == 'all' ){
+            $is_send_all = true;
+        }else{
+            $a_send_to  = unserialize($autoSms->send_to);
+            foreach($a_send_to as $value){
+                $userData = getUserName($value);
+                $recipients[$userData['id']] = $userData['name'];
+            }
+        }
+
+        $this->page_data['autoSms'] = $autoSms;
+        $this->page_data['moduleList'] = $moduleList;
+        $this->page_data['moduleStatus'] = $moduleStatus;
+        $this->page_data['recipients'] = $recipients;
+        $this->page_data['is_send_all'] = $is_send_all;
+        $this->load->view('v2/pages/settings/auto_sms_notification/ajax_edit_auto_sms_notification', $this->page_data);
+    }
+
+    public function ajax_update_sms_auto_notification()
+    {
+        $this->load->model('CompanyAutoSmsSettings_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post    = $this->input->post();   
+        $autoSms = $this->CompanyAutoSmsSettings_model->getById($post['smsid']);
+        if($autoSms){
+            if( $post['sms_text'] == '' ){
+                $msg = 'Please specify sms message';
+            }elseif( $post['module_status'] == '' ){
+                $msg = 'Please specify status of the module that will trigger auto sms';
+            }elseif( !isset($post['send_to_all']) && empty($post['send_to'])  ){
+                $msg = 'Please specify recipient of the sms notification';
+            }else{            
+                if( isset($post['send_to_all']) ){
+                    $send_to = 'all';
+                }else{
+                    $send_to = array();
+                    foreach($post['send_to'] as $value){
+                        $send_to[] = $value;
+                    }
+
+                    $send_to = serialize($send_to);
+                }
+
+                $data = [
+                    'module_name' => $post['module_name'],
+                    'sms_text' => $post['sms_text'],
+                    'send_to' => $send_to,
+                    'module_status' => $post['module_status'],
+                    'is_enabled' => $post['is_enabled']
+                ];
+
+                $this->CompanyAutoSmsSettings_model->update($autoSms->id, $data);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
 }
 
 /* End of file Settings.php */

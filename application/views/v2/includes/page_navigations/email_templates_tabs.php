@@ -9,9 +9,15 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="<?php echo base_url('settings/email_templates') ?>">Email Templates</a></li>
-                    <li><a class="dropdown-item" href="<?php echo base_url('settings/sms_templates') ?>">SMS Templates</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('settings/sms_templates') ?>">SMS Templates</a></li>                    
                 </ul>
             </div>
+        </li>
+        <li class="<?php if($page->title == 'Auto SMS Notification'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('settings/auto_sms') ?>">
+                <i class='bx bx-fw bx-notification'></i>
+                <span>Auto SMS Notification</span>
+            </a>
         </li>
         <li class="<?php if($page->title == 'Email Branding'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('settings/email_branding') ?>">
