@@ -1851,8 +1851,7 @@ class Estimate extends MY_Controller
                     </td>
                     <td colspan=1></td>
                     <td style="text-align:right;">
-                        <h5 style="font-size:20px;margin:0px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></h5>
-                        <br />
+                        <h6 style="font-size:20px;margin:0px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></h6>
                         <table>
                           <tr>
                             <td>Estimate Date :</td>
@@ -1866,7 +1865,7 @@ class Estimate extends MY_Controller
                     </td>
                 </tr>
             </table>
-            <br /><br /><br />
+            <br /><br />
 
             <table style="width="100%;>
             <thead>
@@ -1899,7 +1898,7 @@ class Estimate extends MY_Controller
                 $total_amount += $item->iTotal;
             }
 
-            $total_amount = ($estimate->sub_total - $estimate->tax1_total) + $estimate->adjustment_value;
+            $total_amount = ($estimate->sub_total + $estimate->tax1_total) + $estimate->adjustment_value;
 
             $adjustment_name = 'Adjustment';
             if( $estimate->adjustment_name != '' ){

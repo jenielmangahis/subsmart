@@ -2067,6 +2067,7 @@ function calculation(counter) {
   // alert( 'yeah ' + price);
 
   $("#span_total_" + counter).text(total);
+  $("#sub_total_text" + counter).val(total);
   $("#tax_1_" + counter).text(tax1);
   $("#tax_111_" + counter).text(tax1);
   $("#tax_1_" + counter).val(tax1);

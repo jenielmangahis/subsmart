@@ -22,6 +22,9 @@ class Products_and_services extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
 
+        $this->page_data['page']->title = 'Products and Services';
+        $this->page_data['page']->parent = 'Sales';
+
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.css",

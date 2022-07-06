@@ -112,7 +112,6 @@ class Expenses extends MY_Controller
         ));
 
         $this->page_data['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-        $this->page_data['categoryAccs'] = $this->get_category_accs();
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
         $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
