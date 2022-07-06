@@ -1049,6 +1049,8 @@ class Settings extends MY_Controller {
             $moduleStatus = $this->CompanyAutoSmsSettings_model->jobModuleStatusList();
         }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->workOrderModuleStatusList();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->eventModuleStatusList();
         }
 
         $this->page_data['moduleStatus'] = $moduleStatus;
@@ -1145,6 +1147,8 @@ class Settings extends MY_Controller {
             $moduleStatus = $this->CompanyAutoSmsSettings_model->jobModuleStatusList();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->workOrderModuleStatusList();
+        }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->eventModuleStatusList();
         }
 
         $recipients  = array();
