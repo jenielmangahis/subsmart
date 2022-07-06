@@ -581,12 +581,12 @@ span.sc-item {
                       </div>
 
                       <div id="printableArea" style="">
-                          <div style="margin-bottom: 20px;margin-left: 0px !important;margin-top:100px;">
+                          <div style="margin-bottom: 20px;margin-left: 0px !important;margin-top:10px;">
                             <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
-                            <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
+                            <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 180px; max-height: 180px;" />
                           </div>
                           
-                            <div class="col-xl-5 right" style="float: right">
+                            <div class="col-xl-5 right" style="float: right;margin-top:-150px;">
                                 <div style="text-align: right;">
                                   <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
                                   <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
@@ -795,7 +795,7 @@ span.sc-item {
                                 <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((int)$estimate->sub_total,2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Taxes</p></td>

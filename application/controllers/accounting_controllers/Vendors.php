@@ -29,6 +29,9 @@ class Vendors extends MY_Controller
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
 
+        $this->page_data['page']->title = 'Vendors';
+        $this->page_data['page']->parent = 'Expenses';
+
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.css",
@@ -135,6 +138,7 @@ class Vendors extends MY_Controller
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['vendors'] = $this->vendors_model->getAllByCompany();
         $this->page_data['page_title'] = "Vendors";
         $this->load->view('accounting/vendors/index', $this->page_data);
     }

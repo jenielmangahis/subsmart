@@ -48,8 +48,8 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-print-checks">Print checks</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-pay-bills">Pay bills</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="print-checks">Print checks</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="pay-bills">Pay bills</a></li>
                             </ul>
                         </div>
 
@@ -129,6 +129,29 @@
                                         <label for="filter-payee">Payee</label>
                                         <select class="nsm-field form-select" name="filter_payee" id="filter-payee">
                                             <option value="all" selected="selected">All</option>
+                                            <?php if(count($dropdown['customers']) > 0) : ?>
+                                            <optgroup label="Customer">
+                                            <?php foreach($dropdown['customers'] as $customer) : ?>
+                                                <option value="<?=$customer->prof_id?>"><?=$customer->first_name . ' ' . $customer->last_name?></option>
+                                            <?php endforeach; ?>
+                                            </optgroup>
+                                            <?php endif;?>
+
+                                            <?php if(count($dropdown['vendors']) > 0) : ?>
+                                            <optgroup label="Vendor">
+                                            <?php foreach($dropdown['vendors'] as $vendor) : ?>
+                                                <option value="<?=$vendor->id?>"><?=$vendor->display_name?></option>
+                                            <?php endforeach; ?>
+                                            </optgroup>
+                                            <?php endif;?>
+
+                                            <?php if(count($dropdown['employees']) > 0) : ?>
+                                            <optgroup label="Employee">
+                                            <?php foreach($dropdown['employees'] as $employee) : ?>
+                                                <option value="<?=$employee->id?>"><?=$employee->FName . ' ' . $employee->LName?></option>
+                                            <?php endforeach; ?>
+                                            </optgroup>
+                                            <?php endif;?>
                                         </select>
                                     </div>
                                 </div>
@@ -137,6 +160,15 @@
                                         <label for="filter-category">Category</label>
                                         <select class="nsm-field form-select" name="filter_category" id="filter-category">
                                             <option value="all" selected="selected">All</option>
+                                            <?php foreach($dropdown['categories'] as $type => $categories) : ?>
+                                            <?php if(count($categories) > 0) : ?>
+                                            <optgroup label="<?=$type?>">
+                                                <?php foreach($categories as $category) : ?>
+                                                    <option value="<?=$category->id?>"><?=$category->name?></option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                            <?php endif; ?>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -263,7 +295,15 @@
                             <td></td>
                             <td>
                                 <select class="nsm-field form-select" name="row_category[]">
-                                    <option value="test-category" selected="selected">Test Category</option>
+                                    <?php foreach($dropdown['categories'] as $type => $categories) : ?>
+                                    <?php if(count($categories) > 0) : ?>
+                                    <optgroup label="<?=$type?>">
+                                        <?php foreach($categories as $category) : ?>
+                                            <option value="<?=$category->id?>"><?=$category->name?></option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                    <?php endif; ?>
+                                    <?php endforeach; ?>
                                 </select>
                             </td>
                             <td></td>
