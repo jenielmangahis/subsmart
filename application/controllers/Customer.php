@@ -805,7 +805,7 @@ class Customer extends MY_Controller
         
         $this->load->model('Clients_model');
 
-        error_reporting(0);
+        error_reporting(0);        
         $this->page_data['page']->title = 'Customer Dashboard';
         $this->page_data['page']->parent = 'Customers';
 
@@ -905,7 +905,7 @@ class Customer extends MY_Controller
         $twilioAccount      = $this->TwilioAccounts_model->getByCompanyId($cid);
         $this->page_data['twilioAccount'] = $twilioAccount;
         $this->page_data['ringCentralAccount'] = $ringCentralAccount;
-        $this->page_data['enable_twilio_call'] = $enable_ringcentral_call;
+        $this->page_data['enable_twilio_call'] = $enable_twilio_call;
         $this->page_data['enable_ringcentral_call'] = $enable_ringcentral_call;
 
         $this->page_data['smsTemplates'] = $smsTemplates;
