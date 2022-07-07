@@ -54,6 +54,10 @@
             <label class="content-subtitle fw-bold mb-2" for="fc-name">Name</label>
             <input required class="form-control" id="fc-name" placeholder="Enter name">
           </div>
+          <div class="form-group form-check">
+            <input data-type="is_shared_in_company" type="checkbox" class="form-check-input" id="ss-private">
+            <label class="form-check-label" for="ss-private">Allow other admins to manage this deck</label>
+          </div>
         </form>
       </div>
       <div class="modal-footer">

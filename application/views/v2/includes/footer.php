@@ -10,8 +10,6 @@
         </div>
       </div>
     </div>
-    <!-- Added footer assets -->
-    <?php echo put_footer_assets();?>
     <!-- Chart JS -->
     <script src="<?= base_url("assets/js/v2/chart.min.js") ?>"></script> 
     <!-- Boostrap JS -->
@@ -49,6 +47,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <?php } ?>
+
+    <!-- Switchery -->
+    <script src="<?= base_url("assets/plugins/switchery/switchery.min.js"); ?>"></script>
 
     <!-- Ckeditor -->
     <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
@@ -377,6 +378,9 @@
         });
         <?php } ?>
     </script>
+
+    <!-- Added footer assets -->
+    <?php echo put_footer_assets();?>
   </body>
 
 </html>
