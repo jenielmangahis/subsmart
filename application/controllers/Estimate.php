@@ -182,6 +182,10 @@ class Estimate extends MY_Controller
         $addQuery = $this->estimate_model->save_estimate($new_data);
         if ($addQuery > 0) {
             customerAuditLog(logged('id'), $this->input->post('customer_id'), $addQuery, 'Estimate', 'Created estimate #'.$this->input->post('estimate_number'));
+
+            //SMS Notification
+            createCronAutoSmsNotification($company_id, $addQuery, 'estimate', $this->input->post('status'));
+
             // $new_data2 = array(
             //     'item_type' => $this->input->post('type'),
             //     'description' => $this->input->post('desc'),
@@ -1179,6 +1183,9 @@ class Estimate extends MY_Controller
         );
 
         $addQuery = $this->estimate_model->update_estimate($new_data);
+
+        //SMS Notification
+        createCronAutoSmsNotification($company_id, $id, 'estimate', $this->input->post('status'));
 
         // if ($addQuery > 0) {
             // $new_data2 = array(

@@ -13,7 +13,7 @@ class FillAndSign extends MY_Controller
     {
         add_css([
             'assets/esign/css/bootstrap.min.css',
-            'assets/css/esign/fill-and-sign/fill-and-sign.css'
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
         ]);
 
         add_footer_js([
@@ -27,6 +27,27 @@ class FillAndSign extends MY_Controller
         ]);
 
         $this->load->view('esign/fill-and-sign/step1', $this->page_data);
+    }
+
+    public function step1_test()
+    {
+        add_css([
+            'assets/esign/css/bootstrap.min.css',
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
+        ]);
+
+        add_footer_js([
+            'https://code.jquery.com/jquery-1.12.4.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+            'assets/js/esign/fill-and-sign/step1.js',
+        ]);
+
+        $this->page_data['page']->title = 'Fill and eSign: Step 1';
+        $this->load->view('esign/fill-and-sign/step1_test', $this->page_data);
     }
 
     public function step2()
@@ -52,6 +73,30 @@ class FillAndSign extends MY_Controller
 
         $this->load->view('esign/fill-and-sign/step2', $this->page_data);
     }
+    public function step2_test()
+    {
+        add_css([
+            'assets/esign/css/bootstrap.min.css',
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
+        ]);
+
+        add_footer_js([
+            'https://code.jquery.com/jquery-1.12.4.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
+            'https://html2canvas.hertzen.com/dist/html2canvas.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+            'assets/js/esign/fill-and-sign/step2.js',
+        ]);
+
+        $this->page_data['page']->title = 'Fill and eSign: Step 2';
+        $this->load->view('esign/fill-and-sign/step2_test', $this->page_data);
+    }
 
     public function store()
     {
@@ -67,7 +112,7 @@ class FillAndSign extends MY_Controller
             mkdir($filepath, 0777, true);
         }
 
-        $fileId = $_POST['vault_file_id'] ?? NULL;
+        $fileId = $_POST['vault_file_id'] ?? null;
         $file = $_FILES['document'];
         $userId = logged('id');
 
@@ -285,7 +330,8 @@ class FillAndSign extends MY_Controller
         echo json_encode(['link' => $record]);
     }
 
-    private function _createLink($file, $documentId) {
+    private function _createLink($file, $documentId)
+    {
         $filepath = './uploads/fillandsign/out/';
 
         if (!file_exists($filepath)) {
@@ -342,7 +388,8 @@ class FillAndSign extends MY_Controller
         echo json_encode(['documents' => $pdfs]);
     }
 
-    function emailDocument($documentId) {
+    public function emailDocument($documentId)
+    {
         // header('content-type: application/json');
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -352,14 +399,14 @@ class FillAndSign extends MY_Controller
 
         $file = $_FILES['document'];
         $document = $this->_createLink($file, $documentId);
-	    $emails = $this->input->post('emails');
+        $emails = $this->input->post('emails');
 
-	    $this->db->where('id', logged('id'));
+        $this->db->where('id', logged('id'));
         $currentUser = $this->db->get('users')->row();
-	    $currentUserName = implode(' ', [$currentUser->FName, $currentUser->LName]);
+        $currentUserName = implode(' ', [$currentUser->FName, $currentUser->LName]);
 
         $server = MAIL_SERVER;
-        $port = MAIL_PORT ;
+        $port = MAIL_PORT;
         $username = MAIL_USERNAME;
         $password = MAIL_PASSWORD;
         $from = MAIL_FROM;
@@ -384,11 +431,11 @@ class FillAndSign extends MY_Controller
         $documentPath = realpath(APPPATH . '../uploads/fillandsign/out/' . $document->hash . '.pdf');
         $mail->addAttachment($documentPath);
 
-        foreach($emails as $email) {
+        foreach ($emails as $email) {
             $mail->addAddress($email);
         }
 
-        if(!$mail->send()) {
+        if (!$mail->send()) {
             echo json_encode(['success' => false]);
             return;
         }
@@ -396,12 +443,13 @@ class FillAndSign extends MY_Controller
         echo json_encode(['success' => true]);
     }
 
-    private function isLocalhost($whitelist = ['127.0.0.1', '::1']) {
+    private function isLocalhost($whitelist = ['127.0.0.1', '::1'])
+    {
         return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
     }
 
-
-    public function getRecents() {
+    public function getRecents()
+    {
         $query = <<<SQL
         SELECT `fill_and_sign_documents`.* FROM `fill_and_sign_documents`
         LEFT JOIN `fill_and_sign_documents_links` ON `fill_and_sign_documents`.`id` = `fill_and_sign_documents_links`.`document_id`

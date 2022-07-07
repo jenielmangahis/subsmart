@@ -7,6 +7,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public $module_job = 'job';
     public $module_estimate = 'estimate';
     public $module_work_order = 'work_order';
+    public $module_event = 'event';
 
 
     public function getAll($filters=array())
@@ -82,12 +83,18 @@ class CompanyAutoSmsSettings_model extends MY_Model
         return $this->module_work_order;
     }
 
+    public function moduleEvent()
+    {
+        return $this->module_event;
+    }
+
     public function moduleList()
     {
         $modules = [
             $this->module_job => 'Jobs',
             $this->module_estimate => 'Estimates',
-            $this->module_work_order => 'Work Orders'
+            $this->module_work_order => 'Work Orders',
+            //$this->module_event => 'Events'
         ];
 
         return $modules;
@@ -128,6 +135,17 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Invoiced' => 'Invoiced',
             'Withdrawn' => 'Withdrawn',
             'Closed' => 'Closed'
+        ];
+
+        return $status;
+    }
+
+    public function eventModuleStatusList()
+    {
+        $status = [
+            'Scheduled' => 'Scheduled',
+            'Started' => 'Started',
+            'Completed' => 'Completed'
         ];
 
         return $status;

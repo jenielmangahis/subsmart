@@ -37,6 +37,9 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
 
+    <!-- Switchery -->
+    <link rel="stylesheet" href="<?= base_url("assets/plugins/switchery/switchery.min.css") ?>">
+
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
     <script>

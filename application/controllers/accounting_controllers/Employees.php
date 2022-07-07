@@ -11,6 +11,7 @@ class Employees extends MY_Controller {
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_invoices_model');
 
+        $this->load->model('vendors_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('invoice_model');
         $this->load->model('workorder_model');
@@ -19,6 +20,9 @@ class Employees extends MY_Controller {
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
+
+        $this->page_data['page']->title = 'Employees';
+        $this->page_data['page']->parent = 'Payroll';
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),

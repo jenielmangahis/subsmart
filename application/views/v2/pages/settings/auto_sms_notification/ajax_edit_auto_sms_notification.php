@@ -25,7 +25,15 @@
     </div>
     <div class="col-md-12 mt-3">
         <label for="">SMS Message</label>
-        <textarea class="form-control" name="sms_text" id="sms-txt" style="height:130px;" required=""><?= $autoSms->sms_text; ?></textarea>
+        <select class="form-control" id="edit-cmb-smart-tags" name="smart_tags" style="width:30% !important; float: right;">
+            <option value="0">Insert Smart Tags</option>
+            <option value="{{order_number}}">Order Number</option>
+            <option value="{{customer_name}}">Customer Name</option>
+            <option value="{{company_name}}">Company Name</option>
+            <!-- <option value="{{customer.email}}">Customer Email</option>
+            <option value="{{customer.phone}}">Customer Phone</option> -->
+        </select>
+        <textarea class="form-control" name="sms_text" id="edit-sms-txt" style="height:130px;" required=""><?= $autoSms->sms_text; ?></textarea>
     </div>                                    
     <div class="col-md-12 mt-3">
         <label for="">Send To</label>   
@@ -59,6 +67,18 @@
 $(document).ready(function(){
     $('.auto-sms-popover').popover({
         trigger:"hover"
+    });
+
+    $(document).on('change', '#edit-cmb-smart-tags', function(){
+        var smart_tags  = $(this).val();
+        var sms_message = $('#edit-sms-txt').val();
+        var new_sms_message = sms_message + ' ' + smart_tags;
+
+        $('#edit-sms-txt').val(new_sms_message);
+
+        //alert(new_sms_message);
+
+        $(this).val(0);
     });
 
     $('#edit-send-to-user').select2({

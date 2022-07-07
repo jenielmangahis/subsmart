@@ -145,7 +145,15 @@
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label for="">SMS Message</label>
-                                        <textarea class="form-control" name="sms_text" id="sms-txt" style="height:130px;" required=""></textarea>
+                                        <select class="form-control" id="cmb-smart-tags" name="smart_tags" style="width:30% !important; float: right;">
+                                            <option value="0">Insert Smart Tags</option>
+                                            <option value="{{order.number}}">Order Number</option>
+                                            <option value="{{customer.name}}">Customer Name</option>
+                                            <option value="{{business.name}}">Company Name</option>
+                                            <!-- <option value="{{customer.email}}">Customer Email</option>
+                                            <option value="{{customer.phone}}">Customer Phone</option> -->
+                                        </select>
+                                        <textarea class="form-control" name="sms_text" id="sms-txt" style="height:130px;margin-top: 17px;" required=""></textarea>
                                     </div>                                    
                                     <div class="col-md-12 mt-3">
                                         <label for="">Send To</label>   
@@ -363,6 +371,18 @@
              }
           });
         }, 800);
+    });
+
+    $(document).on('change', '#cmb-smart-tags', function(){
+        var smart_tags  = $(this).val();
+        var sms_message = $('#sms-txt').val();
+        var new_sms_message = sms_message + ' ' + smart_tags;
+
+        $('#sms-txt').val(new_sms_message);
+
+        //alert(new_sms_message);
+
+        $(this).val(0);
     });
 
     $(document).on('submit','#frm-edit-auto-sms-notification', function(e){
