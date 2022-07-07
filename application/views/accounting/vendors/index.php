@@ -8,7 +8,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/expenses'); ?>
+        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/expenses'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">

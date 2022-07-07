@@ -20,6 +20,9 @@ class Product_categories extends MY_Controller {
         $this->load->model('accounting_statements_model');
         $this->load->model('vendors_model');
 
+        $this->page_data['page']->title = 'Product Categories';
+        $this->page_data['page']->parent = 'Sales';
+
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.css",
@@ -103,6 +106,8 @@ class Product_categories extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/sales/product-categories.js"
         ));
+
+        $this->page_data['categories'] = $this->items_model->getItemCategories('asc');
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product Categories";
         $this->load->view('accounting/product_categories', $this->page_data);

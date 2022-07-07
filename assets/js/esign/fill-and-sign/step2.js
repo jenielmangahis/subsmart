@@ -492,13 +492,13 @@ function Step2({ documentId }) {
         return;
       }
 
-      $topnav.css({
-        position: "fixed",
-        top: `${headerHeight}px`,
-        left: 0,
-        width: "100%",
-        "z-index": 1,
-      });
+      // $topnav.css({
+      //   position: "fixed",
+      //   top: `${headerHeight}px`,
+      //   left: 0,
+      //   width: "100%",
+      //   "z-index": 1,
+      // });
     });
 
     $doneButton.on("click", () => {
