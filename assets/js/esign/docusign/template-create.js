@@ -11,7 +11,6 @@ function TemplateCreate() {
   let files = [];
   let workorder = undefined;
   let job = undefined;
-  let customer = undefined;
 
   const $form = $("#templateForm");
   const $docModal = $("#documentModal");
@@ -551,22 +550,6 @@ function TemplateCreate() {
       return r;
     });
 
-    // autopopulate customer/client if customer_id param is set
-    if (customer && "first_name" in customer && "last_name" in customer) {
-      _recipients = recipients.map((r) => {
-        if (!["CLIENT", "CUSTOMER"].includes(r.role_name.toUpperCase())) {
-          return r;
-        }
-
-        if (customerSet || r.name || r.email) return r;
-        const { first_name, last_name, email } = customer;
-        r.name = `${first_name} ${last_name}`;
-        r.email = email;
-        customerSet = true;
-        return r;
-      });
-    }
-
     if (!job || !job.id) {
       return _recipients.forEach((recipient) =>
         addRecipient({
@@ -631,13 +614,6 @@ function TemplateCreate() {
     job = data;
   }
 
-  async function getCustomer(customerId) {
-    const endpoint = `${prefixURL}/DocuSign/getCustomer/${customerId}`;
-    const response = await fetch(endpoint);
-    const { data } = await response.json();
-    customer = data;
-  }
-
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     templateId = urlParams.get("id");
@@ -652,7 +628,6 @@ function TemplateCreate() {
     if (templateId) {
       const workorderId = urlParams.get("workorder_id");
       const jobId = urlParams.get("job_id");
-      const customerId = urlParams.get("customer_id");
 
       if (workorderId) {
         await getWorkorderCustomer(workorderId);
@@ -660,10 +635,6 @@ function TemplateCreate() {
 
       if (jobId) {
         await getJobCustomer(jobId);
-      }
-
-      if (customerId) {
-        await getCustomer(customerId);
       }
 
       await setFormValues({ isPreparingTemplate, action });

@@ -373,10 +373,12 @@ function Signing(hash) {
       }
 
       const html = `
-            <select class="docusignField docusignField__dropdown">
-              <option value="">Select</option>
-              ${optionsArray.join("")}
-            </select>
+            <div class="docusignField docusignField__dropdown">
+              <select>
+                <option value="">Select</option>
+                ${optionsArray.join("")}
+              </select>
+            </div>
           `;
 
       const $element = createElementFromHTML(html);
@@ -385,7 +387,7 @@ function Signing(hash) {
         $element.addClass("docusignField__dropdown--isRequired");
       }
 
-      $element.on("change", function () {
+      $element.find("select").on("change", function () {
         storeFieldValue({ value: this.value, id: fieldId });
       });
 
@@ -516,7 +518,7 @@ function Signing(hash) {
         }
       });
 
-      const topEm = `${pxToEm(top + 8, container)}em`;
+      const topEm = `${pxToEm(top, container)}em`;
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
       return $element;
@@ -538,10 +540,25 @@ function Signing(hash) {
         const { pageTop: top, left } = JSON.parse(coordinates);
 
         context.font = "12px monospace";
+        context.textAlign = "start";
+
+        let topAdjust = 16;
+        let leftAdjust = 8;
+        const percentAdjust = 2;
+        const { height, width } = window.getComputedStyle(context.canvas);
+
+        if (height.endsWith("px")) {
+          topAdjust = (percentAdjust / 100) * parseInt(height, 10);
+        }
+
+        if (width.endsWith("px")) {
+          leftAdjust = (percentAdjust / 100) * parseInt(width, 10);
+        }
+
         context.fillText(
           isString ? $element : text,
-          left + (isString ? 40 : 0),
-          top + 30
+          left + leftAdjust,
+          top + topAdjust
         );
         return;
       }
@@ -626,8 +643,14 @@ function Signing(hash) {
       const $formula = $(`[data-key="${field.unique_key}"]`);
       const setValue = (v) => {
         let formula;
+        let hasNonZero = false;
+
         while ((match = regex.exec(specs.formula))) {
           const { fieldname } = match.groups;
+
+          if (Number(v[fieldname]) > 0) {
+            hasNonZero = true;
+          }
 
           if (!formula) {
             formula = specs.formula.replace(`[${fieldname}]`, v[fieldname]);
@@ -636,8 +659,13 @@ function Signing(hash) {
           }
         }
 
+        if (!hasNonZero) {
+          return;
+        }
+
         try {
           $formula.val(eval(formula));
+          $formula.attr("value", $formula.val());
         } catch (error) {
           $formula.val("Invalid");
         }
@@ -920,6 +948,13 @@ function Signing(hash) {
           backgroundColor: "initial",
           opacity: 1,
         });
+
+        if ($element.hasClass("docusignField__dropdown")) {
+          const $select = $element.find("select");
+          if (!$select.val().length) {
+            $element.css({ opacity: 0 });
+          }
+        }
       });
     });
   }

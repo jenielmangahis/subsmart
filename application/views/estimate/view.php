@@ -537,17 +537,25 @@ span.sc-item {
 
 }
 </style>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/header'); ?>
 <div class="wrapper" role="wrapper">
   <?php include viewPath('includes/notifications'); ?>
-  <?php include viewPath('includes/sidebars/estimate'); ?>
+  <?php //include viewPath('includes/sidebars/estimate'); ?>
     <!-- page wrapper start -->
     <?php 
     $total_amount = 0;
     ?>
     <div wrapper__section>
       <?php include viewPath('includes/notifications'); ?>
-        <div class="card">
+      
+        <div class="row page-content g-0">
+          
+      <div class="col-12 mb-3">
+            <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        </div>
+        <div class="col-12 mb-3">
+            <?php include viewPath('v2/includes/page_navigations/estimate_subtabs'); ?>
+        </div>
             <br class="clear"/>
             <div class="row">                
                 <div class="col-xl-12">
@@ -843,7 +851,7 @@ span.sc-item {
   </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(function(){
   $(".btn-approve-estimate").click(function(){

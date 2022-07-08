@@ -10,6 +10,7 @@ class Payment_methods extends MY_Controller {
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('vendors_model');
 
         $this->load->model('AcsProfile_model');
         $this->load->model('invoice_model');
@@ -19,6 +20,8 @@ class Payment_methods extends MY_Controller {
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
+
+        $this->page_data['page']->title = 'Payment Methods';
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -103,6 +106,8 @@ class Payment_methods extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/payment-method.js"
         ));
+
+        $this->page_data['methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods('asc', [1]);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/payment_methods', $this->page_data);
     }

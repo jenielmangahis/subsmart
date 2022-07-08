@@ -2356,7 +2356,7 @@ class Workorder extends MY_Controller
             'header'                            => $workorder->header,
 
             'password'                          => $workorder->password,
-            'security_number'                   => $workorder->header,
+            'security_number'                   => $workorder->security_number,
 
             'lead_source'                       => $workorder->ls_name,
             'account_type'                      => $workorder->account_type,
