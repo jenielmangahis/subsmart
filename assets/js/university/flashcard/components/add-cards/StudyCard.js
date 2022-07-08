@@ -17,7 +17,7 @@ $template.innerHTML = `
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 9px;
-  padding: 1.5rem;
+  padding: 1rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -27,8 +27,6 @@ $template.innerHTML = `
   flex: 1;
   display: grid;
   place-content: center;
-  font-size: 20px;
-  text-align: center;
 }
 
 .wrapper {
@@ -53,15 +51,19 @@ $template.innerHTML = `
   <div class="wrapper">
     <div class="question">
       <div>Question</div>
-      <div class="content"></div>
+      <div class="content">
+        In what year were the first Air Jordan sneakers released?
+      </div>
     </div>
     <div class="answer">
-      <div class="title"></div>
-      <div class="content"></div>
+      <div>Answer</div>
+      <div class="content">
+        1984
+      </div>
     </div>
   </div>
   <div class="mt-3">
-    <button class="nsm-button primary w-100" data-action="reveal">
+    <button class="nsm-button primary w-100">
       Reveal answer
     </button>
   </div>
@@ -69,8 +71,6 @@ $template.innerHTML = `
 `;
 
 class StudyCard extends HTMLElement {
-  _data = null;
-
   constructor() {
     super();
 
@@ -78,24 +78,8 @@ class StudyCard extends HTMLElement {
     shadowRoot.appendChild($template.content.cloneNode(true));
 
     this.$button = this.shadowRoot.querySelector(".nsm-button.primary");
-    this.$question = this.shadowRoot.querySelector(".question");
     this.$answer = this.shadowRoot.querySelector(".answer");
     this.onClickBtn = this.onClickBtn.bind(this);
-  }
-
-  set data(value) {
-    const $question = this.$question.querySelector(".content");
-    const $answer = this.$answer.querySelector(".content");
-    const $answerTitle = this.$answer.querySelector(".title");
-
-    $question.textContent = value.question;
-    $answer.textContent = value.answer;
-    $answerTitle.textContent = value.question;
-    this._data = value;
-  }
-
-  get data() {
-    return this._data;
   }
 
   connectedCallback() {
@@ -107,15 +91,8 @@ class StudyCard extends HTMLElement {
   }
 
   onClickBtn() {
-    if (this.$button.dataset.action === "reveal") {
-      this.$answer.classList.add("revealed");
-      this.$button.textContent = "Next";
-      this.$button.setAttribute("data-action", "next");
-    } else {
-      if (this.onNext) {
-        this.onNext();
-      }
-    }
+    this.$answer.classList.add("revealed");
+    this.$button.textContent = "Next";
   }
 }
 

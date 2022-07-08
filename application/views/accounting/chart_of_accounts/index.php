@@ -10,6 +10,9 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/accounting'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/chart_of_accounts_subtabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">

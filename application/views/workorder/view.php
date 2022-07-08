@@ -898,11 +898,11 @@ table input.form-control {
 		         							   				<li><span class="ul-head"> FROM:</span></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
 		         							   				<li><span class="ul-head text-uppercase"><?php echo $company->business_name ?></span></li>
-		         							   				<li><span class="ul-text">License: <?php echo $company->license_state ?></span></li>
+		         							   				<!-- <li><span class="ul-text">License: <?php //echo $company->license_state ?></span></li> -->
 		         							   				<li><span class="ul-text"><?php echo $company->street .' '. $company->city; ?></span></li>
-		         							   				<li><a href="" class="ul-text"><?php echo $company->state .', '. $company->postal_code .', USA'; ?></span></li>
+		         							   				<li><span class="ul-text"><?php echo $company->city .', '.$company->state.' '. $company->postal_code; ?></span></li>
 		         							   				<li><span class="ul-text">Email: <?php echo $company->email_address ?></span></li>
-		         							   				<li><span class="ul-text">Phone: <?php echo $company->phone_number ?> </span></li>			   			
+		         							   				<li><span class="ul-text">Phone: <?php echo $company->office_phone ?> </span></li>			   			
 		         							   			</ul>
 		         							   		</div><br>
 		         							   		<div class="ul-info">
@@ -1500,7 +1500,7 @@ table input.form-control {
 															</div> 
 														</div>     
 														<div class="form-group col-md-4">
-															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="payment_amount" id="payment_amount"  value="<?php echo number_format($workorder->payment_amount,2); ?>" readonly  style="background-color: #fff;"/>
+															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="payment_amount" id="payment_amount"  value="<?php echo number_format((int)$workorder->payment_amount,2); ?>" readonly  style="background-color: #fff;"/>
 															<b>Amount<small class="help help-sm"> ( $ )</small></b>
 														</div>
 														<div class="form-group col-md-4">

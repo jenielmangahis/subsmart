@@ -10,6 +10,9 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/employees_subtabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -52,9 +55,6 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
-                                <i class="bx bx-fw bx-file"></i> Paycheck list
-                            </button>
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-list-plus'></i> Add an employee
                             </button>

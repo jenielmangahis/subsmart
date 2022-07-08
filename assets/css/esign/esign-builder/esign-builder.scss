@@ -594,3 +594,14 @@
     margin-left: 5px;
   }
 }
+
+#main-pdf-render {
+  .esignBuilder__field {
+    height: 25px !important;
+    min-height: unset !important;
+
+    .subData {
+      padding: 0 !important;
+    }
+  }
+}

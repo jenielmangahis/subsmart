@@ -37,6 +37,8 @@ class Recurring_transactions extends MY_Controller {
         $this->load->model('workorder_model');
         $this->load->model('invoice_settings_model');
 
+        $this->page_data['page']->title = 'Recurring Transactions';
+
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.css",
@@ -120,6 +122,8 @@ class Recurring_transactions extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/recurring-transactions.js"
         ));
+
+        $this->page_data['transactions'] = $this->accounting_recurring_transactions_model->getCompanyRecurringTransactions(['company_id' => logged('company_id')], 'template_name', 'asc');
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/recurring_transactions', $this->page_data);
     }

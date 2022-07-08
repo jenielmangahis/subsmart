@@ -108,7 +108,7 @@ function Step1(params = {}) {
     $progressCheck.addClass("fillAndSign__uploadProgressCheck--completed");
 
     $submitButton.attr("disabled", false);
-    $submitButton.addClass("btn-success");
+    // $submitButton.addClass("btn-success");
   }
 
   async function fetchRecentDocuments() {
@@ -195,11 +195,11 @@ function Step1(params = {}) {
       $selected.removeClass("fillAndSign__vaultItem--selected");
       $fileInput.val(null);
 
-      $selectFileModal.show();
+      $selectFileModal.modal("show");
     });
 
     $selectFileModalClose.on("click", () => {
-      $selectFileModal.hide();
+      $selectFileModal.modal("hide");
     });
 
     $selectDocumentButton.on("click", async function () {
@@ -231,7 +231,7 @@ function Step1(params = {}) {
         return;
       }
 
-      $selectFileModal.hide();
+      $selectFileModal.modal("hide");
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
 

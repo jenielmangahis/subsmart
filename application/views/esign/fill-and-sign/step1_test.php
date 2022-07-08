@@ -1,12 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');?>
 <?php include viewPath('v2/includes/header');?>
 
-<link rel="stylesheet" href="<?=base_url("assets/esign/css/bootstrap.min.css")?>">
+<!-- <link rel="stylesheet" href="<?=base_url("assets/esign/css/bootstrap.min.css")?>"> -->
 <link rel="stylesheet" href="<?=base_url("assets/css/esign/fill-and-sign/fill-and-sign.css")?>">
 
-<script type="module"  src="<?=base_url("https://code.jquery.com/jquery-1.12.4.js")?>"></script>
-<script type="module"  src="<?=base_url("https://code.jquery.com/ui/1.12.1/jquery-ui.js")?>"></script>
-<script type="module"  src="<?=base_url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")?>"></script>
+
+<script type="module"  src="https://code.jquery.com/jquery-1.12.4.js>"></script>
+<script type="module"  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js>"></script>
+<script type="module"  src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js>"></script>
 
 <script type="module"  src="<?=base_url("assets/js/esign/libs/pdf.js")?>"></script>
 <script type="module"  src="<?=base_url("assets/js/esign/libs/pdf.worker.js")?>"></script>
@@ -20,7 +21,8 @@
   .fillAndSign__docPageCount {
     font-family: Quicksand, sans-serif;
   }
-  .fillAndSign__recent {
+  .fillAndSign__recent,
+  .fillAndSign__vault {
     padding: 0;
     list-style-type: none;
     font-family: Quicksand, sans-serif;
@@ -28,6 +30,15 @@
   .modal-header::before,
   .modal-header::after {
     content: none;
+  }
+  .nav-item.active .nav-link {
+    isolation: isolate;
+    border-color: #e9ecef #e9ecef #dee2e6;
+    border-bottom-color: #fff;
+  }
+  #selectDocumentModal .tab-content {
+    max-height: 500px;
+    overflow-y: auto;
   }
 </style>
 
@@ -45,7 +56,7 @@
             <div class="fillAndSign__upload">
                 <button class="btn" type="button">
                     <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
-                    <span>Select</span>
+                    <span class="nsm-button primary">Select</span>
                 </button>
             </div>
 
@@ -96,7 +107,7 @@
     </div>
 </section>
 
-<div class="modal fillAndSign__modal" id="selectDocumentModal" tabindex="-1" role="dialog">
+<div class="modal fade nsm-modal fillAndSign__modal" id="selectDocumentModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -147,18 +158,23 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary d-flex align-items-center" id="selectDocumentButton">
+                <button type="button" class="nsm-button primary d-flex align-items-center" id="selectDocumentButton">
                     <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                     Select Document
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="selectDocumentCloseButton">Close</button>
+                <button type="button" class="nsm-button" data-dismiss="modal" id="selectDocumentCloseButton">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-
+<style>
+  .nav-link,
+  .nav-link:hover {
+    color: #6a4a86;
+  }
+</style>
 
 <?php include viewPath('v2/includes/footer');?>
