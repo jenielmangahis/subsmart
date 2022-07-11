@@ -599,6 +599,11 @@ class Job extends MY_Controller
         }
 
         if ($updated) {
+
+            //SMS Notification
+            $comp_id = logged('company_id');
+            createCronAutoSmsNotification($comp_id, $input['jobs_id'], 'workorder', 'Completed');
+
             $jobs_data = array();
             $jobs_data['status'] = 'Completed';
             echo $this->general->update_with_key_field($jobs_data, $input['jobs_id'], 'jobs', 'id');
@@ -655,6 +660,9 @@ class Job extends MY_Controller
                     $jobs_data = array();
                     $jobs_data['status'] = 'Completed';
                     $this->general->update_with_key_field($jobs_data, $input['jobs_id'], 'jobs', 'id');
+
+                    //SMS Notification
+                    createCronAutoSmsNotification($job->company_id, $input['jobs_id'], 'job', 'Completed');
                 }
 
                 $is_success = true;
@@ -914,6 +922,9 @@ class Job extends MY_Controller
                 //Log audit trail
                 $job = $this->jobs_model->get_specific_job($id);
                 customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #'.$job->job_number.' to '.$input['status']);
+
+                //SMS Notification
+                createCronAutoSmsNotification($job->company_id, $job->id, 'job', $input['status']);
 
                 echo "Success";
             } else {
@@ -1435,6 +1446,10 @@ class Job extends MY_Controller
 
             $customer_data_office = array();
         }
+
+        //SMS Notification
+        createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled');
+
 
         echo $jobs_id;
     }

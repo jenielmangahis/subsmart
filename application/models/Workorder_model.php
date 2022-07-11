@@ -2083,6 +2083,16 @@ class Workorder_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function adminGetById($id)
+    {
+        $this->db->select('work_orders.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, acs_profile.phone_m AS customer_phone, acs_profile.email AS customer_email');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = work_orders.customer_id', 'left');
+        $this->db->where('work_orders.id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file Workorder_model.php */
