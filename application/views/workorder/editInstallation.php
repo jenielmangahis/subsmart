@@ -189,6 +189,7 @@ table input.form-control {
                                                 <option value="Rental">Rental</option>
                                                 <option value="Inhouse">Inhouse</option>
                                              </select>
+                                             <input type="hidden" value="<?php echo $workorder->account_type; ?>" class="account_typeClass">
                                         </div>    
                                     </div> 
                                     <div class="form-group col-md-2">
@@ -613,6 +614,12 @@ table input.form-control {
                                         <b>Last name:</b>
                                     </div>
                                 </div>
+                                <div class="row commercialDet" style="display:none;"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="businessname" id="businessname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->businessname; ?>">
+                                        <b>Business Name:</b>
+                                    </div>
+                                </div>
                                 <div class="row"> 
                                     <div class="col-md-6">
                                         <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->firstname_spouse; ?>">
@@ -1023,6 +1030,20 @@ table input.form-control {
 <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
 <script>
+	$(function() {
+		
+	var acctType  = $(".account_typeClass").val();
+
+		if (acctType == 'Commercial')
+		{
+			$('.commercialDet').show();
+		}else
+		{
+			$('.commercialDet').hide();
+		}
+	});
+</script>
+<script>
   $( function() {
     $( "#datepicker_date" ).datepicker({
         format: 'mm/dd/yyyy'
@@ -1044,6 +1065,15 @@ $('#clear3').click(function() {
 <!-- Chart code -->
 <script>
 jQuery(document).ready(function () {
+    var acctType  = $(".account_type").val();
+
+    if (acctType == 'Commercial')
+    {
+        $('.commercialDet').show();
+    }else
+    {
+        $('.commercialDet').hide();
+    }
 
     var paymentMethod = $('#payment_method_value').val();
     

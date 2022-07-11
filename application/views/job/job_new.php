@@ -15,6 +15,7 @@ add_css(array(
 
 <!-- add css for this page -->
 <?php include viewPath('job/css/job_new'); ?>
+
 <style>
     div[wrapper__section] {
         padding: 60px 10px !important;

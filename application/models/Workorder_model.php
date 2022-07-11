@@ -479,6 +479,7 @@ class Workorder_model extends MY_Model
         $this->db->update('workorder_agreement_items', array(
             'firstname'                 => $firstname,
             'lastname'                  => $lastname,
+            'businessname'              => $businessname,
             'firstname_spouse'          => $firstname_spouse,
             'lastname_spouse'           => $lastname_spouse,
             'address'                   => $address,

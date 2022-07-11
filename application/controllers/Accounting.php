@@ -507,7 +507,10 @@ class Accounting extends MY_Controller
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
-        $this->load->view('accounting/all_sales', $this->page_data);
+
+        $this->page_data['page']->title = 'Sales Transactions';
+        $this->page_data['page']->parent = 'Sales';
+        $this->load->view('accounting/sales/all_sales', $this->page_data);
     }
 
     public function invoices()
