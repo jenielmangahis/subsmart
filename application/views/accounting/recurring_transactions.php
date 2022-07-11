@@ -41,7 +41,7 @@
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                            <ul class="dropdown-menu dropdown-menu-end p-3 table-filter" style="width: max-content">
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-template-type">Template Type</label>

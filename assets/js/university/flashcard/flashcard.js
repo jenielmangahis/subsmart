@@ -114,8 +114,24 @@ function getActions() {
     addcards: (row) => {
       window.location = `${api.prefixURL}/flashcard/add-cards/${row.id}`;
     },
-    studycards: (row) => {
-      window.location = `${api.prefixURL}/flashcard/study-cards/${row.id}`;
+    studycards: async (row) => {
+      if (row.total_cards && row.total_cards >= 1) {
+        window.location = `${api.prefixURL}/flashcard/study-cards/${row.id}`;
+        return;
+      }
+
+      const result = await Swal.fire({
+        title: "This Deck Has No Cards",
+        text: "Before you can study this deck, you must add cards to this deck.",
+        icon: "info",
+        confirmButtonText: "Add cards",
+        showCancelButton: true,
+        cancelButtonText: "Okay",
+      });
+
+      if (result.isConfirmed) {
+        getActions().addcards(row);
+      }
     },
     remove: async (row) => {
       const result = await Swal.fire({

@@ -301,6 +301,14 @@
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
+                        <?php if($account_type == 'Commercial'){ ?>
+                        <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($businessname)){ echo '<br><br>'; }else{echo $businessname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Business Name:</b></td>
+                        </tr>
+                        <?php } ?>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
                         <tr>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $firstname_spouse;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>First name (Spouse):</b></td>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $lastname_spouse;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Last name (Spouse):</b></td>

@@ -263,7 +263,7 @@ table input.form-control {
                                     <div class="form-group col-md-2">
                                         <div class="select-wrap">
                                             <label for="lead_source">Account Type</label>
-                                            <select id="account_type" name="account_type" class="form-control custom-select m_select">
+                                            <select id="account_type" name="account_type" class="form-control custom-select m_select account_type">
                                                 <option value="">- none -</option>
                                                 <option value="Residential">Residential</option>
                                                 <option value="Commercial">Commercial</option>
@@ -935,6 +935,12 @@ table input.form-control {
                                         <b>Last name:</b>
                                     </div>
                                 </div>
+                                <div class="row commercialDet" style="display:none;"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="businessname" id="businessname" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Business Name:</b>
+                                    </div>
+                                </div>
                                 <div class="row"> 
                                     <div class="col-md-6">
                                         <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
@@ -1052,9 +1058,9 @@ table input.form-control {
                                                 <td>
                                                     <!-- <div class="input-group mb-3">
                                                     <div class="input-group-prepend"> -->
-                                                    <h4>$&nbsp;<span id="lblName" class="editableinstallationCost">0.00</span></h4>
+                                                    <span style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;">$&nbsp;</span>
                                                     <!-- </div> &nbsp; -->
-                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="0.00"  onkeyup="getTotalPrices()"> -->
+                                                    <input type="text" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;width:80%;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="0.00"  onkeyup="getTotalPrices()">
                                                     <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -1064,9 +1070,9 @@ table input.form-control {
                                                 <td>
                                                     <!-- <div class="input-group mb-3">
                                                     <div class="input-group-prepend"> -->
-                                                        <h4>$&nbsp;<span id="lblName" class="editableOTP">0.00</span></h4>
+                                                    <span style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;">$&nbsp;</span>
                                                     <!-- </div> &nbsp; -->
-                                                    <!-- <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin:;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="0.00"  onkeyup="getTotalPrices()"> -->
+                                                    <input type="text" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin:;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;width:80%;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="0.00"  onkeyup="getTotalPrices()">
                                                     <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -1076,9 +1082,9 @@ table input.form-control {
                                                 <td>
                                                     <!-- <div class="input-group mb-3">
                                                     <div class="input-group-prepend"> -->
-                                                        <h4>$&nbsp;<span id="lblName" class="editable">0.00</span></h4>
+                                                        <span style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;">$&nbsp;</span>
                                                     <!-- </div> &nbsp; -->
-                                                    <!-- <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value=""  onkeyup="getTotalPrices()"> -->
+                                                    <input type="text" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;width:80%;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="0.00"  onkeyup="getTotalPrices()">
                                                     <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -1470,6 +1476,8 @@ $(function () {
         //     getTotalPrices();
         // });
     });
+
+    
 });
 
 
@@ -1553,6 +1561,18 @@ $('.ctrans_check').on('change', function() {
 $('.ccam_check').on('change', function() {
     $('input[name="' + this.name + '"]').not(this).prop('checked', false);
     $('.dcam_check').val(this.value);
+});
+
+$('.account_type').on('change', function() {
+    var acctType  = $(this).val();
+
+    if (acctType == 'Commercial')
+    {
+        $('.commercialDet').show();
+    }else
+    {
+        $('.commercialDet').hide();
+    }
 });
 
 

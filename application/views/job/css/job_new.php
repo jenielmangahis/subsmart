@@ -160,9 +160,6 @@
         padding: 0;
         width: 100%;
     }
-    .card-header .btn:hover{
-
-    }
     .card-header {
         border: none;
         padding: 0px;

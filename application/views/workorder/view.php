@@ -897,12 +897,12 @@ table input.form-control {
 		         							   			<ul>
 		         							   				<li><span class="ul-head"> FROM:</span></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><span class="ul-head text-uppercase"><?php echo $company->business_name ?></span></li>
+		         							   				<li><span class="ul-head line"><?php echo $company->business_name ?></span></li>
 		         							   				<!-- <li><span class="ul-text">License: <?php //echo $company->license_state ?></span></li> -->
-		         							   				<li><span class="ul-text"><?php echo $company->street .' '. $company->city; ?></span></li>
+		         							   				<li><span class="ul-text"><?php echo $company->street; ?></span></li>
 		         							   				<li><span class="ul-text"><?php echo $company->city .', '.$company->state.' '. $company->postal_code; ?></span></li>
 		         							   				<li><span class="ul-text">Email: <?php echo $company->email_address ?></span></li>
-		         							   				<li><span class="ul-text">Phone: <?php echo $company->office_phone ?> </span></li>			   			
+		         							   				<li><span class="ul-text">Phone: <span class="phoneFormat"> <?php echo $company->office_phone ?> </span></span></li>			   			
 		         							   			</ul>
 		         							   		</div><br>
 		         							   		<div class="ul-info">
@@ -912,9 +912,9 @@ table input.form-control {
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
 																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
 																</li>
-															<li><span class="ul-text"><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?></a></li>
-															<li><span class="ul-text">Phone: <?php echo $workorder->phone_number ?></span></li>
+															<li><span class="ul-text"><?php echo $workorder->job_location .'<br>'. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code;  ?></a></li>
 															<li><span class="ul-text">Email: <?php echo $workorder->email ?></span></li>
+															<li><span class="ul-text">Phone: <span class="phoneFormat2"> <?php echo $workorder->phone_number ?></span></span></li>
 		         							   			
 		         							   			</ul>
 		         							   		</div><br>
@@ -976,9 +976,9 @@ table input.form-control {
 		         							   		</div> -->
 		         							   			<div class="ul-info">
 			         							   			<ul>
-			         							   				<li><a href="#" class="ul-head">Job Location </a></li>
+			         							   				<li><span class="ul-head">Job Location </span></li>
 																<li class="show_mobile_view"><hr></li>
-																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .'  <br> '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
+																<li><?php echo $workorder->job_location .'<br>'. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code;  ?> &emsp; 
 																<!-- <a href="#" style="color:green;">Show Map</a> -->
 																</li>	
 			         							   				<!-- <li></li>	 -->
@@ -1383,20 +1383,21 @@ table input.form-control {
 													<label for="lead_source">Account Type</label>
 													<select id="account_type" name="account_type" class="form-control custom-select m_select">
 														<option value="<?php echo $workorder->account_type; ?>"><?php echo $workorder->account_type; ?></option>
-														<option value="Residential">Residential</option>
+														<!-- <option value="Residential">Residential</option>
 														<option value="Commercial">Commercial</option>
 														<option value="Rental">Rental</option>
-														<option value="Inhouse">Inhouse</option>
+														<option value="Inhouse">Inhouse</option> -->
 													</select>
+													<input type="hidden" value="<?php echo $workorder->account_type; ?>" class="account_typeClass">
 												</div>    
 											</div> 
 											<div class="form-group col-md-2">
 												<div class="select-wrap">
 													<label for="lead_source">Communication Type</label>
 													<select id="communication_type" name="communication_type" class="form-control custom-select m_select">
-														<?php foreach($system_package_type as $lead){ ?>
-														<option value="<?php echo $lead->name; ?>" <?php if($workorder->panel_communication == $lead->name){ echo 'selected'; }else{ echo ''; } ?>><?php echo $lead->name; ?></option>
-														<?php } ?>
+														<?php //oreach($system_package_type as $lead){ ?>
+														<option value=""><?php echo $workorder->panel_communication; ?></option>
+														<?php //} ?>
 													</select>
 												</div>    
 											</div> 
@@ -1779,6 +1780,12 @@ table input.form-control {
 														<div class="col-md-6">
 															<input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0"  value="<?php echo $agreements->lastname; ?>" readonly style="background-color: #fff;">
 															<b>Last name:</b>
+														</div>
+													</div>
+													<div class="row commercialDet" style="display:none;"> 
+														<div class="col-md-12">
+															<input type="text" name="businessname" id="businessname" class="form-control border-top-0 border-right-0 border-left-0"  value="<?php echo $agreements->businessname; ?>">
+															<b>Business Name:</b>
 														</div>
 													</div>
 													<div class="row"> 
@@ -2326,6 +2333,20 @@ function myCopyFunction() {
 </script>
 
 <script>
+	$(function() {
+		
+	var acctType  = $(".account_typeClass").val();
+
+		if (acctType == 'Commercial')
+		{
+			$('.commercialDet').show();
+		}else
+		{
+			$('.commercialDet').hide();
+		}
+	});
+</script>
+<script>
 (function( $ ){
  
  $.fn.multipleInput = function() {
@@ -2427,6 +2448,17 @@ $('#my_input').multipleInput();
 // $("#packageID").click(function () {
 $(document).ready(function()
 {
+	
+	$(".phoneFormat").text(function(i, text) {
+        text = text.replace(/(\d{3})(\d{3})(\d{4})/, "$1.$2.$3");
+        return text;
+    });
+	
+	$(".phoneFormat2").text(function(i, text) {
+        text = text.replace(/(\d{3})(\d{3})(\d{4})/, "$1.$2.$3");
+        return text;
+    });
+
     // $( "#packageID" ).each(function(i) {
     //     $(this).on("click", function(){
     //     var packId = $(this).attr('pack-id');
