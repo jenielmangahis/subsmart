@@ -117,19 +117,25 @@
                     <br>
                     <table style="border: 0px solid white;border-collapse: collapse;font-size:8px;width:350px;">
                         <tr>
-                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $installation_date; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Installation Date:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $intall_time; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Install Time Date:</b></td>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($installation_date)){ echo '<br>'; } else{ echo $installation_date; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Installation Date:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($intall_time)){ echo '<br>'; } else{ echo $intall_time; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Install Time Date:</b></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $payment_method; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Payment Method:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $amount; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Amount ( $ )</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $billing_date; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Billing Date</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($payment_method)){ echo '<br>'; } else{ echo $payment_method; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Payment Method:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($amount)){ echo '<br>'; } else{ echo $amount; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Amount ( $ )</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($billing_date)){ echo '<br>'; } else{ echo $billing_date; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Billing Date</b></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;">
@@ -233,24 +239,33 @@
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $comments; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Notes:</b></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($comments)){ echo '<br>'; } else{ echo $comments; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Notes:</b></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $sales_re_name; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Sales Rep's Name:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php echo $sale_rep_phone; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Cell Phone:</b></td>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($sales_re_name)){ echo '<br>'; }else{ echo $sales_re_name; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Sales Rep's Name:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($sales_re_name)){ echo '<br>'; }else{ echo $sale_rep_phone; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Cell Phone:</b></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td conlspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;" colspan="3"><?php echo $team_leader; ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Team Leader:</b></td>
+                            <td conlspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;" colspan="3"><?php if (empty($sales_re_name)){ echo '<br>'; }else{ echo $team_leader;} ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Team Leader:</b></td>
                         </tr>
                     </table>
 
@@ -283,6 +298,14 @@
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $firstname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>First name:</b></td>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br><br>'; }else{echo $lastname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Last name:</b></td>
                         </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
+                        </tr>
+                        <?php if($account_type == 'Commercial'){ ?>
+                        <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($businessname)){ echo '<br><br>'; }else{echo $businessname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Business Name:</b></td>
+                        </tr>
+                        <?php } ?>
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>

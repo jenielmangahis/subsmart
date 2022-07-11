@@ -135,7 +135,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-line-chart'></i> Overview
                             </a>
                         </li>
-                        <li class="<?=$page->title === 'All Sales' ? 'selected' : ''?>">
+                        <li class="<?=$page->title === 'Sales Transactions' ? 'selected' : ''?>">
                             <a href="/accounting/all-sales">
                                 <i class='bx bx-fw bx-file'></i> All Sales
                             </a>

@@ -145,22 +145,30 @@ const columns = {
     const primary = actions.find((action) => action.isPrimary);
     const menus = actions.map((action) => {
       if (action.isPrimary) return null;
-      return `<a class="dropdown-item" href="#" data-action="${action.value}">${action.text}</a>`;
+      return `
+      <li>
+        <a class="dropdown-item" href="#" data-action="${action.value}">
+          ${action.text}
+        </a>
+      </li>
+      `;
     });
 
     return `
-    <div class="btn-group">
-      <button class="btn btn-sm btn-primary" data-action="${primary.value}">
-        ${primary.text}
-      </button>
-      <button class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="sr-only">Toggle Dropdown</span>
-      </button>
-      <div class="dropdown-menu">
+    <div class="dropdown table-management">
+      <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+          <a class="dropdown-item" href="#" data-action="${primary.value}">
+            ${primary.text}
+          </a>
+        </li>
         ${menus.join("")}
-      </div>
+      </ul>
     </div>
-  `;
+    `;
   },
 };
 

@@ -25,6 +25,9 @@ class Tags extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
 
+        $this->page_data['page']->title = 'Tags';
+        $this->page_data['page']->parent = 'Banking';
+
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.css",
@@ -108,6 +111,27 @@ class Tags extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/banking/tags/tags.js"
         ));
+
+        $getTags = $this->tags_model->getTags();
+
+        $tags = [];
+        foreach($getTags as $key => $tag) {
+            if($tag['type'] !== 'group-tag') {
+                $tags[] = [
+                    'id' => $tag['id'],
+                    'name' => $tag['name'],
+                    'transactions' => '',
+                    'type' => $tag['type'],
+                    'parentIndex' => $tag['parentIndex'],
+                ];
+    
+                if($tag['type'] === 'group') {
+                    $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                }
+            }
+        }
+
+        $this->page_data['tags'] = $tags;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/tags/index', $this->page_data);
     }
@@ -338,6 +362,17 @@ class Tags extends MY_Controller {
             }
         }
 
+        $filter = [
+            'company_id' => logged('company_id'),
+            'untagged' => true,
+            'type' => 'all',
+            'tags' => [82, 75, 76],
+            'from' => date("Y-m-d", strtotime("-1 year")),
+            'to' => date("Y-m-d")
+        ];
+
+        $this->page_data['transactions'] = $this->get_transactions($filter);
+        $this->page_data['page']->title = 'Transactions by tag';
         $this->page_data['groups'] = $groups;
         $this->page_data['ungrouped'] = $this->tags_model->get_ungrouped();
         $this->page_data['untagged'] = $this->input->get('untagged') === 'true';

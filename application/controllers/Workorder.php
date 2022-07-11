@@ -2356,7 +2356,7 @@ class Workorder extends MY_Controller
             'header'                            => $workorder->header,
 
             'password'                          => $workorder->password,
-            'security_number'                   => $workorder->header,
+            'security_number'                   => $workorder->security_number,
 
             'lead_source'                       => $workorder->ls_name,
             'account_type'                      => $workorder->account_type,
@@ -2394,6 +2394,7 @@ class Workorder extends MY_Controller
 
             'firstname'                         => $agreements->firstname,
             'lastname'                          => $agreements->lastname,
+            'businessname'                      => $agreements->businessname,
             'firstname_spouse'                  => $agreements->firstname_spouse,
             'lastname_spouse'                   => $agreements->lastname_spouse,
             'address'                           => $agreements->address,
@@ -8019,6 +8020,7 @@ class Workorder extends MY_Controller
         $solarItems = array(
             'firstname'                 => $this->input->post('firstname'),
             'lastname'                  => $this->input->post('lastname'),
+            'businessname'              => $this->input->post('businessname'),
             'firstname_spouse'          => $this->input->post('firstname_spouse'),
             'lastname_spouse'           => $this->input->post('lastname_spouse'),
             'address'                   => $this->input->post('address'),
@@ -8839,6 +8841,7 @@ class Workorder extends MY_Controller
         $installationItems = array(
             'firstname'                 => $this->input->post('firstname'),
             'lastname'                  => $this->input->post('lastname'),
+            'businessname'              => $this->input->post('businessname'),
             'firstname_spouse'          => $this->input->post('firstname_spouse'),
             'lastname_spouse'           => $this->input->post('lastname_spouse'),
             'address'                   => $this->input->post('address'),

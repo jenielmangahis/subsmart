@@ -27,24 +27,104 @@
                                         </div>
                                         <label class="nsm-subtitle mb-3">Check the column title for mapping import customer.</label>
                                         <form id="customer_headers_form" method="POST">
+                                            <?php $fieldsValue = $importFields->value ? explode(',', $importFields->value) : array() ; ?>
+                                            <?php $count = 0;?>
                                             <div class="row">
-                                                <?php $fieldsValue = $importFields->value ? explode(',', $importFields->value) : array() ; ?>
-                                                <?php $headers = csvHeaderToMap(); $count = 0;?>
-                                                <?php foreach ($headers as $header):
-                                                $checked  = '';
-                                                    if (in_array($count, $fieldsValue)) {
-                                                        $checked = 'checked="checked"';
-                                                    }
-                                                ?>
-                                                    <div class="col-12 col-md-6">
-                                                        <div class="d-block">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $count; ?>' <?= $checked; ?>>
-                                                                <label class="form-check-label" for=""><?= $header; ?></label>
+                                                
+                                                <div class="col-md-2">
+                                                    <h5>Customer Information</h5>
+                                                    <?php foreach (csvHeaderToMap(0, 16) as $header):
+                                                    $checked  = '';
+                                                        if (in_array($count, $fieldsValue)) {
+                                                            $checked = 'checked="checked"';
+                                                        }
+                                                    ?>
+                                                        <div class="col-12">
+                                                            <div class="d-block">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $count; ?>' <?= $checked; ?>>
+                                                                    <label class="form-check-label" for=""><?= $header; ?></label>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                <?php $count++; endforeach; ?>
+                                                    <?php $count++; endforeach; ?>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <h5>Billing Information</h5>
+                                                    <?php foreach (csvHeaderToMap(16, 11) as $header):
+                                                    $checked  = '';
+                                                        if (in_array($count, $fieldsValue)) {
+                                                            $checked = 'checked="checked"';
+                                                        }
+                                                    ?>
+                                                        <div class="col-12">
+                                                            <div class="d-block">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $count; ?>' <?= $checked; ?>>
+                                                                    <label class="form-check-label" for=""><?= $header; ?></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php $count++; endforeach; ?>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <h5>Office Information</h5>
+                                                    <?php foreach (csvHeaderToMap(27, 12) as $header):
+                                                    $checked  = '';
+                                                        if (in_array($count, $fieldsValue)) {
+                                                            $checked = 'checked="checked"';
+                                                        }
+                                                    ?>
+                                                        <div class="col-12">
+                                                            <div class="d-block">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $count; ?>' <?= $checked; ?>>
+                                                                    <label class="form-check-label" for=""><?= $header; ?></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php $count++; endforeach; ?>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <h5>Alarm Information</h5>
+                                                    <?php foreach (csvHeaderToMap(39, 12) as $header):
+                                                    $checked  = '';
+                                                        if (in_array($count, $fieldsValue)) {
+                                                            $checked = 'checked="checked"';
+                                                        }
+                                                    ?>
+                                                        <div class="col-12">
+                                                            <div class="d-block">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $count; ?>' <?= $checked; ?>>
+                                                                    <label class="form-check-label" for=""><?= $header; ?></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php $count++; endforeach; ?>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <h5>Contact Information</h5>
+                                                    <?php foreach (csvHeaderToMap(51, 9) as $header):
+                                                    $checked  = '';
+                                                        if (in_array($count, $fieldsValue)) {
+                                                            $checked = 'checked="checked"';
+                                                        }
+                                                    ?>
+                                                        <div class="col-12">
+                                                            <div class="d-block">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $count; ?>' <?= $checked; ?>>
+                                                                    <label class="form-check-label" for=""><?= $header; ?></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php $count++; endforeach; ?>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>

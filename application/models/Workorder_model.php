@@ -479,6 +479,7 @@ class Workorder_model extends MY_Model
         $this->db->update('workorder_agreement_items', array(
             'firstname'                 => $firstname,
             'lastname'                  => $lastname,
+            'businessname'              => $businessname,
             'firstname_spouse'          => $firstname_spouse,
             'lastname_spouse'           => $lastname_spouse,
             'address'                   => $address,
@@ -1862,7 +1863,7 @@ class Workorder_model extends MY_Model
         // // }
 
         // $this->db->select('*');
-        $this->db->select('*','business_profile.company_id','business_profile.street as b_street','business_profile.city as b_city','business_profile.postal_code as b_postal_code','business_profile.state as b_state','business_profile.license_state as b_license_state');
+        $this->db->select('*','business_profile.company_id','business_profile.street as b_street','business_profile.city as b_city','business_profile.postal_code as b_postal_code','business_profile.state as b_state','business_profile.license_state as b_license_state','business_profile.office_phone as b_office_phone');
 		$this->db->from('clients');
         $this->db->join('business_profile', 'clients.id  = business_profile.company_id');
 		$this->db->where('clients.id', $id);

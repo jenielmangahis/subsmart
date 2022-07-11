@@ -108,7 +108,7 @@
                                             <option value="last-month">Last month</option>
                                             <option value="last-quarter">Last quarter</option>
                                             <option value="last-year">Last year</option>
-                                            <option value="">All dates</option>
+                                            <option value="all-dates">All dates</option>
                                         </select>
                                     </div>
                                     <div class="col-4">

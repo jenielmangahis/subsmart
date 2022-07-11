@@ -44,8 +44,8 @@ class Job extends MY_Controller
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
+
         // get all employees
-        // get all job tags
         $get_login_user = array(
             'where' => array(
                 'id' => $user_id
@@ -64,6 +64,7 @@ class Job extends MY_Controller
             'select' => 'id',
         );
         $event_settings = $this->general->get_data_with_param($get_job_settings);
+
         // add default event settings if not set
         if (empty($event_settings)) {
             $event_settings_data = array(
@@ -73,6 +74,7 @@ class Job extends MY_Controller
             );
             $this->general->add_($event_settings_data, 'job_settings');
         }
+
         $get_employee = array(
             'where' => array(
                 'company_id' => $comp_id
@@ -173,15 +175,191 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
-//        $get_customer = array(
-//            'table' => 'acs_profile',
-//            'select' => 'prof_id,first_name,last_name,middle_name',
-//            'order' => array(
-//                'order_by' => 'first_name',
-//                'ordering' => 'ASC',
-//            ),
-//        );
-//        $this->page_data['customers']  = $this->general->get_data_with_param($get_customer);
+        if (!$id==null) {
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        }
+
+        $default_customer_id = 0;
+        $default_customer_name = '';
+
+        if( $this->input->get('cus_id') ){
+            $this->load->model('AcsProfile_model');         
+            $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
+            if( $customer ){
+                $default_customer_id = $customer->prof_id;
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
+            }
+            $default_customer_id = $this->input->get('cus_id');
+
+        }
+
+        $this->page_data['title'] = 'Job New';
+        $this->page_data['default_customer_id'] = $default_customer_id;
+        $this->page_data['default_customer_name'] = $default_customer_name;
+
+        add_css([
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/esign/fill-and-sign/step1.js',
+            'assets/js/esign/fill-and-sign/step2.js',
+            'assets/js/esign/fill-and-sign/job/script.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
+            'https://html2canvas.hertzen.com/dist/html2canvas.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+            'assets/js/esign/fill-and-sign/step2.js',
+        ]);
+
+        $this->load->view('v2/pages/job/job_new', $this->page_data);
+        //$this->load->view('job/job_new', $this->page_data);
+    }
+
+    public function new_job2($id=null)
+    {
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        // get all employees
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
+
+        // check if settings has been set
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'job_settings',
+            'select' => 'id',
+        );
+        $event_settings = $this->general->get_data_with_param($get_job_settings);
+
+        // add default event settings if not set
+        if (empty($event_settings)) {
+            $event_settings_data = array(
+                'job_num_prefix' => 'JOB',
+                'job_num_next' => 1,
+                'company_id' => $comp_id,
+            );
+            $this->general->add_($event_settings_data, 'job_settings');
+        }
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+
+        // get all job tags
+        $get_job_tags = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_tags',
+            'select' => 'id,name',
+        );
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
+
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
+        
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'is_active' => 1
+            ),
+            'table' => 'items',
+            'select' => 'items.id,title,price,type',
+        );
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        // get estimates
+        $get_estimates = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'estimates',
+            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
+        );
+        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
+
+        // get workorder
+        $get_workorder = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'work_orders',
+            'select' => 'id,work_order_number,job_name,customer_id,date_created',
+        );
+        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
+
+        // get invoices
+        $get_invoices = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'invoices',
+            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+        );
+        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
+
+        $get_settings= array(
+            'table' => 'job_tax_rates',
+            'select' => '*',
+        );
+        $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
 
         if (!$id==null) {
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
@@ -202,11 +380,16 @@ class Job extends MY_Controller
 
         }
 
+        $this->page_data['title'] = 'Job New';
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
 
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
         ]);
 
         add_footer_js([
@@ -224,6 +407,7 @@ class Job extends MY_Controller
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
 
+        //$this->load->view('v2/pages/job/job_new', $this->page_data);
         $this->load->view('job/job_new', $this->page_data);
     }
 

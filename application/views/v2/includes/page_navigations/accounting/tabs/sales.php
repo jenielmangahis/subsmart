@@ -6,8 +6,8 @@
                 <span>Overview</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'All Sales'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="/accounting/vendors">
+        <li class="<?php if($page->title == 'Sales Transactions'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="/accounting/all-sales">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>All Sales</span>
             </a>

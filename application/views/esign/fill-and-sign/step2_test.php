@@ -1,6 +1,7 @@
 <?php include viewPath('v2/includes/header');?>
 <link rel="stylesheet" href="<?=base_url("assets/esign/css/bootstrap.min.css")?>">
 <link rel="stylesheet" href="<?=base_url("assets/css/esign/fill-and-sign/fill-and-sign.css")?>">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <script type="module"  src="https://code.jquery.com/jquery-1.12.4.js>"></script>
 <script type="module"  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -17,6 +18,9 @@
 <style>
   .fillAndSign__topnav .action span {
     font-family: Quicksand, sans-serif;
+  }
+  .nsm-footer {
+    display: none;
   }
 </style>
 
@@ -80,12 +84,12 @@
 
     <div class="fillAndSign__footer">
 
-        <button type="button" class="btn btn-primary mr-3" id="doneButton">
+        <button type="button" class="nsm-button primary mr-3" id="doneButton">
             Done
         </button>
 
         <div class="btn-group dropup">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="nsm-button dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Share
             </button>
 
@@ -153,13 +157,13 @@
                 </div>
 
                 <div class="modal-footer__buttonContainer">
-                    <button type="button" class="btn btn-primary d-flex align-items-center" id="signatureApplyButton">
+                    <button type="button" class="nsm-button primary d-flex align-items-center" id="signatureApplyButton">
                         <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                         Apply Signature
                     </button>
-                    <button type="button" class="btn btn-secondary close-me" id="signatureModalCloseButton">Close</button>
+                    <button type="button" class="nsm-button close-me" id="signatureModalCloseButton">Close</button>
                 </div>
             </div>
         </div>
@@ -185,13 +189,13 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary d-flex align-items-center" id="sendEmailSendButton">
+                <button type="button" class="nsm-button primary d-flex align-items-center" id="sendEmailSendButton">
                     <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                     Send
                 </button>
-                <button type="button" class="btn btn-secondary close-me" id="sendEmailCloseButton">Close</button>
+                <button type="button" class="nsm-button close-me" id="sendEmailCloseButton">Close</button>
             </div>
         </div>
     </div>
@@ -238,6 +242,26 @@
   .fillAndSign__footer .btn.dropdown-toggle{
     height:100%
   }
+
+  .nsm-button.primary{
+    margin-right: 2px;
+  }
+  .modal-title{
+    margin-right:628px;
+  }
+  .fillAndSign__topnav .action span{
+    font-family: 'Quicksand', sans-serif;
+  }
+  .btn-info{
+    background-color: #6a4a86;
+  }
+  .btn-info:hover{
+    background-color: #6a4a86;
+  }
+  .dropdown-item.active, .dropdown-item:active{
+    background-color:#6a4a86;
+  }
+
 </style>
 
 <?php include viewPath('v2/includes/footer');?>

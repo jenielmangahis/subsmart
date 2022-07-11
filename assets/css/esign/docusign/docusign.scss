@@ -368,3 +368,8 @@ select.docusignField__dropdown--isRequired {
     max-width: 900px;
   }
 }
+
+.docusignField {
+  height: em(25);
+  box-sizing: border-box;
+}

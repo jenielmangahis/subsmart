@@ -21,6 +21,8 @@ class Attachments extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
 
+        $this->page_data['page']->title = 'Attachments';
+
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.css",
@@ -104,6 +106,8 @@ class Attachments extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/attachments.js"
         ));
+
+        $this->page_data['attachments'] = $this->accounting_attachments_model->getCompanyAttachments();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/lists/attachment', $this->page_data);
     }
