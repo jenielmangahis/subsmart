@@ -31,7 +31,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($estimates)?></h2>
                                             <span>ESTIMATES</span>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($InvOverdue)?></h2>
                                             <span>OVERDUE</span>
                                         </div>
                                     </div>
@@ -74,7 +74,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($OpenInvoices)?></h2>
                                             <span>OPEN INVOICES</span>
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year">0</h2>
+                                    <h2 id="total_this_year"><?=count($getAllInvPaid)?></h2>
                                     <span>PAID LAST 30 DAYS</span>
                                 </div>
                             </div>
