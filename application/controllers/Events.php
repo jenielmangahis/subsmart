@@ -559,6 +559,9 @@ class Events extends MY_Controller
         );
         $event_id = $this->general->add_return_id($events_data, 'events');
 
+        //SMS Notification
+        createCronAutoSmsNotification($comp_id, $event_id, 'event', 'Scheduled');
+
         if(isset($input['item_id'])){
             $devices = count($input['item_id']);
             for($xx=0;$xx<$devices;$xx++){

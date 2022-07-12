@@ -117,7 +117,7 @@ class Accounting extends MY_Controller
 
 
         $this->page_data['menu_icon'] = array("fa-credit-card", "fa-money", "fa-dollar", "fa-bar-chart", "fa-minus-circle", "fa-file", "fa-calculator");
-        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
+        $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
         $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
         $this->page_data['invoices_sales'] = $this->invoice_model->getAllDataSales(logged('company_id'));
@@ -631,7 +631,10 @@ class Accounting extends MY_Controller
         $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
         $this->page_data['page_title'] = "Invoices";
         // print_r($this->page_data);
-        $this->load->view('accounting/invoices', $this->page_data);
+
+        $this->page_data['page']->title = 'Invoices';
+        $this->page_data['page']->parent = 'Sales';
+        $this->load->view('accounting/sales/invoices', $this->page_data);
     }
 
     public function inv_number_details()
@@ -703,7 +706,9 @@ class Accounting extends MY_Controller
             $this->page_data['terms'] = $terms;
         }
 
-        $this->load->view('accounting/customers', $this->page_data);
+        $this->page_data['page']->title = 'Customers';
+        $this->page_data['page']->parent = 'Sales';
+        $this->load->view('accounting/sales/customers', $this->page_data);
     }
     public function import_customers()
     {
