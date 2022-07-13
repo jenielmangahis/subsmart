@@ -85,6 +85,17 @@ $(document).ready(function () {
 		};
 		reader.readAsDataURL(e.target.files[0]);
 	});
+
+	$(document).on("click", ".nsm-color-picker li", function () {
+		let _this = $(this);
+		let _parent = _this.closest(".nsm-color-picker");
+		let _input = _parent.find(".nsm-color-field");
+		let _colorVal = _this.attr("data-color");
+
+		_parent.find("li").removeClass("active");
+		_this.addClass("active");
+		_input.val(_colorVal);
+	});
 });
 
 function toggleSidebar() {
@@ -193,7 +204,7 @@ function showLoader(_elem) {
 	_elem.html(loader);
 }
 
-function showSwalLoading(){
+function showSwalLoading() {
 	Swal.fire({
 		title: 'Processing',
 		text: 'Request processing, please wait.',

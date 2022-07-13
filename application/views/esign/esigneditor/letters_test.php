@@ -71,7 +71,7 @@ ini_set('max_input_vars', 30000);
         <div class="preview"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="nsm-button " data-bs-dismiss="modal">
+        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">
             Close
         </button>
       </div>
@@ -102,7 +102,7 @@ ini_set('max_input_vars', 30000);
         </template>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary esigneditor__btn">
+        <button type="button" class="nsm-button primary esigneditor__btn">
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -143,7 +143,7 @@ ini_set('max_input_vars', 30000);
           </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary esigneditor__btn" data-action="email">
+        <button type="button" class="nsm-button primary esigneditor__btn" data-action="email">
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -165,6 +165,15 @@ ini_set('max_input_vars', 30000);
   }
   #letters_filter [type="search"]{
     margin-bottom:12px;
+  }
+
+  table.dataTable.no-footer,
+  table.dataTable thead th, table.dataTable thead td {
+    border-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .esignEditorLetters #letters td:nth-of-type(1) .link {
+    display: initial;
   }
 </style>
 

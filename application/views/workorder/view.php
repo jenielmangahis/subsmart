@@ -1505,8 +1505,8 @@ table input.form-control {
 															<b>Amount<small class="help help-sm"> ( $ )</small></b>
 														</div>
 														<div class="form-group col-md-4">
-															<b>Billing Date</b>
 															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->billing_date; ?>" readonly  style="background-color: #fff;"  />
+															<b>Billing Date</b>
 														</div>
 												</div>
 												<div class="row">                   

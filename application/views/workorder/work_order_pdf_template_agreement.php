@@ -237,14 +237,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
                         </tr> -->
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($comments)){ echo '<br>'; } else{ echo $comments; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Notes:</b></td>
                         </tr>
@@ -376,28 +376,28 @@
                     <br>
                     <table>
                         <tr>
-                            <td style="margin:;padding:6px;"><b>Equipment Cost</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $subtotal; ?></td>
+                            <td style="margin:;padding:4px;"><b>Equipment Cost</b></td>
+                            <td style="margin:;padding:4px;"><?php echo $subtotal; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:6px;"><b>Sales Tax</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $taxes; ?></td>
+                            <td style="margin:;padding:4px;"><b>Sales Tax</b></td>
+                            <td style="margin:;padding:4px;"><?php echo $taxes; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:6px;"><b>Installation Cost</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $installation_cost; ?></td>
+                            <td style="margin:;padding:4px;"><b>Installation Cost</b></td>
+                            <td style="margin:;padding:4px;"><?php echo $installation_cost; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:6px;"><b>One time (Program and Setup)</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $otp_setup; ?></td>
+                            <td style="margin:;padding:4px;"><b>One time (Program and Setup)</b></td>
+                            <td style="margin:;padding:4px;"><?php echo $otp_setup; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:6px;"><b>Monthly Monitoring</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $monthly_monitoring; ?></td>
+                            <td style="margin:;padding:4px;"><b>Monthly Monitoring</b></td>
+                            <td style="margin:;padding:4px;"><?php echo $monthly_monitoring; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:6px;"><b>Total Due</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $total; ?></td>
+                            <td style="margin:;padding:4px;"><b>Total Due</b></td>
+                            <td style="margin:;padding:4px;"><?php echo $total; ?></td>
                         </tr>
                     </table>
                 </div> 

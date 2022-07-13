@@ -9,7 +9,6 @@ if(isset($jobs_data)){
 <script>
     var cust_id = <?php echo $customer  ?>;
     window.onload = function() { // same as window.addEventListener('load', (event) => {
-        //alert(cust_id);
         $.ajax({
             type: "GET",
             url: "<?= base_url() ?>/job/get_customers",
@@ -24,13 +23,14 @@ if(isset($jobs_data)){
                         selected = "selected";
                     }
                     //console.log(cust_id);
-                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
+                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.first_name + ' ' + o.last_name +'</option>';
                 });
                 $('#customer_id').append(toAppend);
                 //console.log(template_data);
             }
         });
         if(cust_id != null && cust_id !== 0 && cust_id !== ''){
+            //alert(cust_id);
             load_customer_data(cust_id);
         }
     };
@@ -69,9 +69,13 @@ if(isset($jobs_data)){
             success: function(data)
             {
                 var customer_data = JSON.parse(data);
-                //console.log(customer_data);
+                console.log(customer_data);
                 $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-                $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+                if(customer_data.mail_add !== null){
+                    $('#cust_address').text(customer_data.mail_add + ' ');
+                }
+                $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
+                $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
                 $('#cust_number').text(customer_data.phone_h);
                 $('#cust_email').text(customer_data.email);
                 $('#mail_to').attr("href","mailto:"+customer_data.email);
@@ -95,26 +99,34 @@ if(isset($jobs_data)){
     }
 
     $(document).ready(function() {
-
-        $("#events_form").submit(function(e) {
-            //alert("asf");
+        $("#jobs_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/events/save_event",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data) {
-                    console.log(data);
-                    sucess_add_job();
-                }
-            });
+            if($('#job_color_id').val()=== ""){
+                error('Sorry!','Event Color is required!','warning');
+            }else{
+
+                var form = $(this);
+                const $overlay = document.getElementById('overlay');
+ 
+                //var url = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>/job/save_job",
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function(data) {
+                        if ($overlay) $overlay.style.display = "none";
+                        console.log(data);
+                        sucess_add_job(data);
+                    }, beforeSend: function() {
+                        if ($overlay) $overlay.style.display = "flex";
+                    }
+                });
+            }
         });
-        function sucess_add_job($id){
+        function sucess_add_job(){
             Swal.fire({
                 title: 'Nice!',
-                text: 'Event has been added!',
+                text: 'Job has been added!',
                 icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#32243d',
@@ -122,8 +134,21 @@ if(isset($jobs_data)){
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href='<?= base_url(); ?>events/';
+                    window.location.href='<?= base_url(); ?>job/';
                 }
+            });
+        }
+        function error(title,text,icon){
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+
             });
         }
         $("#fill_esign_btn").click(function () {
@@ -150,9 +175,9 @@ if(isset($jobs_data)){
         });
 
         $(".workorder_select").click(function () {
-            var idd = this.id;
-            $('#customer_id').empty().append('<option value="">Select Existing Customer</option>');
-            get_customers(idd);
+            window.location.href='<?= base_url(); ?>job/work_order_job/'+this.id;
+            //$('#customer_id').empty().append('<option value="">Select Existing Customer</option>');
+            //get_customers(idd);
         });
 
         $(".invoice_select").click(function () {
@@ -168,34 +193,31 @@ if(isset($jobs_data)){
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             var qty = $(this).data('quantity');
+            var item_type = $(this).data('item_type');
 
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
-            total = '$' + withCommas + '.00';
             console.log(total);
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-                "<td width=\"10%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
+                "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
+                "<td width=\"10%\"><small>Qty</small><input min=\"1\" data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\" maxlength=\"1\"></td>\n" +
+                "<td width=\"20%\"><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                "<td width=\"20%\"><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
+                //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td  style=\"text-align: center;margin-top: 20px;\" class=\"d-flex\" width=\"15%\"><b style=\"font-size: 16px;\" data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b></td>" +
+                "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button></td>\n" +
                 "</tr>";
-            tableBody = $("#jobs_items_table_body");
+            tableBody = $("#jobs_items");
             tableBody.append(markup);
             markup2 = "<tr id=\"sss\">" +
                 "<td >"+title+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
-                "<td >"+price+"</td>\n" +
-                "<td ></td>\n" +
-                "<td >"+qty+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
                 "<td >0</td>\n" +
+                "<td >"+price+"</td>\n" +
+                "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
+                "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
                 "<td ></td>\n" +
-                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
+                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
                 "</tr>";
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
@@ -221,10 +243,11 @@ if(isset($jobs_data)){
             }
             var withCommas = Number(total).toLocaleString('en');
             if(tax_total < 1){
-                $('#invoice_sub_total').html('$' + formatNumber(total));
+                $('#invoice_sub_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             }
-            $('#invoice_overall_total').html('$' + formatNumber(total));
+            $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             $('#pay_amount').val(withCommas);
+            $('#total_amount').val(total);
         }
         //$(".color-scheme").on( 'click', function () {});
         function formatNumber(num) {
@@ -241,21 +264,38 @@ if(isset($jobs_data)){
             var cost = $('#price'+id).val();
             var new_sub_total = Number(qty) * Number(cost);
             $('#sub_total'+id).data('subtotal',new_sub_total);
-            $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
+            $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_qty'+id).text(qty);
+            calculate_subtotal();
+        });
+
+        $("body").delegate(".qty", "change", function(){
+            //console.log( "Handler for .keyup() called." );
+            var id = this.id;
+            var qty=this.value;
+            var cost = $('#price'+id).val();
+            var new_sub_total = Number(qty) * Number(cost);
+            $('#sub_total'+id).data('subtotal',new_sub_total);
+            $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_qty'+id).text(qty);
             calculate_subtotal();
         });
 
         $("body").delegate(".remove_item_row", "click", function(){
             $(this).parent().parent().remove();
+            calculate_subtotal();
         });
 
         $("body").delegate(".remove_audit_item_row", "click", function(){
             $(this).parent().parent().remove();
+            calculate_subtotal();
         });
 
         $("body").delegate(".color-scheme", "click", function(){
             var id = this.id;
-            $('[id="job_color_id"]').val($(this).data('color'));
+            $('[id="job_color_id"]').val(id);
             console.log(id);
             $( "#"+id ).append( "<i class=\"fa fa-check calendar_button\" aria-hidden=\"true\"></i>" );
             remove_others(id);
@@ -263,22 +303,55 @@ if(isset($jobs_data)){
 
         $("body").delegate(".edit_item_list", "click", function(){
             var id = this.id;
-            console.log(id);
-            var title = $(this).data('name');
-            var price = $(this).data('price');
-            var qty = $(this).data('quantity');
+            var node = document.getElementById('device_qty'+id);
+            var qty = node.textContent;
             $('#new_items').modal('show');
-            $('#item_details_name').val(title);
+            $('#item_details_name').val($(this).data('name'));
             $('#item_details_qty').val(qty);
-            $('#item_details_cost').val(price);
-            $('#item_details_title').html('Edit Item');
+            $('#item_details_cost').val($(this).data('price'));
+            $('#item_details_title').html('Edit Points and Location');
+            load_item_location(id);
+            load_item(id);
+
         });
+
+        function load_item(id){
+            $.ajax({
+                type: "POST",
+                data: {id : id},
+                url: "<?= base_url() ?>/job/get_selected_item",
+                success: function(data){
+                    var template_data = JSON.parse(data);
+                    $('#description').val(template_data.description);
+                    $('#brand').val(template_data.brand);
+                    console.log(template_data);
+                }
+            });
+        }
+
+        function load_item_location(id){
+            $.ajax({
+                type: "POST",
+                data: {id : id},
+                url: "<?= base_url() ?>/job/get_item_storage_location",
+                success: function(data){
+                    var template_data = JSON.parse(data);
+                    var toAppend = '';
+                    $.each(template_data,function(i,o){
+                        toAppend += '<option value='+o.name+'>'+o.name + ' - ' + o.qty +'</option>';
+                    });
+                    $('#item_location').append(toAppend);
+                }
+            });
+        }
 
         // get the tax value and deduct it to subtotal then display over all total
         $("#tax_rate").on( 'change', function () {
             var tax = this.value;
             calculate_subtotal(tax);
         });
+
+        // get the tax value and deduct it to subtotal then display over all total
 
         function remove_others (color_id){
             $('.color-scheme').each(function(index) {
@@ -309,7 +382,7 @@ if(isset($jobs_data)){
             var tag_id = this.value;
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>/events/get_tag_selected",
+                url: "<?= base_url() ?>/job/get_tag_selected",
                 data: {id : tag_id}, // serializes the form's elements.
                 success: function(data)
                 {
@@ -320,22 +393,21 @@ if(isset($jobs_data)){
             });
         });
 
+        $("#start_time").on( 'change', function () {
+            var tag_id = this.value;
+            console.log(tag_id);
+            var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
+
+            if(end_time === 'Invalid date') {
+                $('#end_time').val("");
+            }else{
+               $('#end_time').val(end_time);
+            }
+            console.log(end_time);
+        });
+
         $("#job_type_option").on( 'change', function () {
             var type = this.value;
-            console.log(type);
-            if(type === 'Estimate'){
-                document.getElementById('convert_to_job').style.display = "block";
-                document.getElementById('customer_select').style.display = "block";
-                document.getElementById('customer_maps').style.display = "block";
-                document.getElementById('btn_omw_status').style.display = "block";
-                document.getElementById('add_another_invoice').style.display = "block";
-            }else{
-                document.getElementById('convert_to_job').style.display = "none";
-                document.getElementById('customer_select').style.display = "none";
-                document.getElementById('customer_maps').style.display = "none";
-                document.getElementById('btn_omw_status').style.display = "none";
-                document.getElementById('add_another_invoice').style.display = "none";
-            }
             $('#job_type').val(type);
         });
 
@@ -344,6 +416,114 @@ if(isset($jobs_data)){
             placeholder: 'Type Here ... ',
             tabsize: 2,
             height: 250,
+        });
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        $('#click').click(function(e){
+            e.preventDefault();
+            var data = signaturePad.toDataURL('image/png');
+            $('#output').val(data);
+            var url = '<?= base_url() ?>/job/save_esign';
+            $.ajax({
+                url: url,
+                type: "POST",
+                data:{base64: data}
+            }).done(function(e){
+                //$('#updateSignature').modal('hide');
+                var name = $('#authorizer_name').val();
+                $('#authorizer').html(name);
+                $('#appoval_name_right').html(name);
+                $('#date_signed').html(e);
+                $('#datetime_signed').val(e);
+                $('#name').val(name);
+                $('#signature_link').val(data);
+                $("#customer-signature").attr("src",data);
+                $("#customer_signature_right").attr("src",data);
+                //location.reload();
+            });
+        });
+
+        $('#clear-signature').click(function(e){
+            signaturePad.clear();
+        });
+
+        <?php if(isset($jobs_data) && $jobs_data->status == 'Started') : ?>
+            document.getElementById('check_form').style.display = "none";
+            document.getElementById('cash_form').style.display = "none";
+            document.getElementById('ach_form').style.display = "none";
+            document.getElementById('others_warranty_form').style.display = "none";
+            document.getElementById('svp_form').style.display = "none";
+        <?php endif; ?>
+
+        $("#pay_method").on( 'change', function () {
+            var method = this.value;
+            if(method === 'CHECK'){
+                document.getElementById('check_form').style.display = "block";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
+            }else if(method === 'CC'|| method === 'OCCP'){
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "block";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
+            }else if(method === 'CASH'){
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "block";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
+            }else if(method === 'ACH'){
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "block";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
+            }else if(method === 'OPT' || method === 'WW'){
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "block";
+                document.getElementById('svp_form').style.display = "none";
+            }
+            else if(method === 'SQ' || method === 'PP' || method === 'VENMO'){
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "block";
+            }
+        });
+
+        $("#save_payment").on( "click", function( event ) {
+            $('#pay_method_right').html($('#pay_method').val());
+            $('#pay_amount_right').html($('#pay_amount').val());
+        });
+        $("#approval_btn_left").on( "click", function( event ) {
+            document.getElementById('approval_card_right').style.display = "block";
+            document.getElementById('approval_card_left').style.display = "none";
+        });
+
+        $("#approval_btn_right").on( "click", function( event ) {
+            document.getElementById('approval_card_left').style.display = "block";
+            document.getElementById('approval_card_right').style.display = "none";
+        });
+
+        $("#pd_left").on( "click", function( event ) {
+            document.getElementById('pd_right_card').style.display = "block";
+            document.getElementById('pd_left_card').style.display = "none";
+        });
+
+        $("#pd_right").on( "click", function( event ) {
+            document.getElementById('pd_left_card').style.display = "block";
+            document.getElementById('pd_right_card').style.display = "none";
         });
 
         $("#notes_edit_btn_right").on( "click", function( event ) {
@@ -437,19 +617,6 @@ if(isset($jobs_data)){
             });
         });
 
-        $("#start_time").on( 'change', function () {
-            var tag_id = this.value;
-            console.log(tag_id);
-            var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
-
-            if(end_time === 'Invalid date') {
-                $('#end_time').val("");
-            }else{
-                $('#end_time').val(end_time);
-            }
-            console.log(end_time);
-        });
-
         $("#save_memo").on( "click", function( event ) {
             var note = $('#note_txt').val();
             $('#notes_edit_btn').text(note);
@@ -477,6 +644,36 @@ if(isset($jobs_data)){
             document.getElementById('notes_edit_btn_right').style.display = "block";
         });
 
+        $("#fillAndSignNext").on( "click", function( event ) {
+            return; // moved implementation to script.js@onClickNext
+
+            console.log('fsdfd');
+            var formData = {
+                'status': $(this).data('status'),
+                'id': $(this).data('id'),
+            };
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/update_jobs_status",
+                data: formData, // serializes the form's elements.
+                //dataType : 'json',
+                //encode : true,
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data === "Success"){
+                        sucess_add('Job is now Approved!',1);
+                    }else {
+                        warning('There is an error adding Customer. Contact Administrator!');
+                        console.log(data);
+                    }
+                },
+                error : function(data) {
+                    console.log(data);
+                }
+            });
+        });
+
         $("#new_customer_form").submit(function(e) {
             //alert("asf");
             e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -489,7 +686,6 @@ if(isset($jobs_data)){
                 success: function(data)
                 {
                     if(data === "Success"){
-                        //window.location.reload();
                         sucess_add('Customer Added Successfully!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
@@ -506,13 +702,13 @@ if(isset($jobs_data)){
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>/events/update_event_status",
+                url: "<?= base_url() ?>/job/update_jobs_status",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
                     if(data === "Success"){
                         //window.location.reload();
-                        sucess_add('Job Status Updated to On My Way!',1);
+                        sucess_add('Job Status Updated!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
                         console.log(data);
@@ -520,6 +716,7 @@ if(isset($jobs_data)){
                 }
             });
         });
+
         $("#update_status_to_started").submit(function(e) {
             //alert("asf");
             e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -527,34 +724,13 @@ if(isset($jobs_data)){
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>/events/update_event_status",
+                url: "<?= base_url() ?>/job/update_jobs_status",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
                     if(data === "Success"){
                         //window.location.reload();
-                        sucess_add('Job Status Updated to Started!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
-                    }
-                }
-            });
-        });
-        $("#update_status_to_finished").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/events/update_event_status",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Job Status Updated to Finished!',1);
+                        sucess_add('Job Status Updated!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
                         console.log(data);
@@ -580,6 +756,7 @@ if(isset($jobs_data)){
                 }
             });
         }
+
         function warning(information){
             Swal.fire({
                 title: 'Warning!',
@@ -608,14 +785,37 @@ if(isset($jobs_data)){
             }
         });
 
+        function get_employee_name($this){
+            //console.log($this.value);
+            $.ajax({
+                type: "POST",
+                data: {id : $this.value},
+                url: "<?= base_url() ?>/events/get_employee_selected",
+                success: function(data){
+                    var emp_data = JSON.parse(data);
+                    if($this.id === 'employee2' ){
+                        $('#emp2_id').val(emp_data.FName);
+                    }else if($this.id === 'employee3' ){
+                        $('#emp3_id').val(emp_data.FName);
+                    }else if($this.id === 'employee4' ){
+                        $('#emp4_id').val(emp_data.FName);
+                    }
+                    console.log(emp_data);
+                }
+            });
+        }
+
         $("#employee2").on( 'change', function () {
             $('#employee2_id').val(this.value);
+            console.log(get_employee_name(this));
         });
         $("#employee3").on( 'change', function () {
             $('#employee3_id').val(this.value);
+            console.log(get_employee_name(this));
         });
         $("#employee4").on( 'change', function () {
             $('#employee4_id').val(this.value);
+            console.log(get_employee_name(this));
         });
 
         $("#start_date").on("change", function(){
@@ -623,9 +823,9 @@ if(isset($jobs_data)){
         });
 
         $('#items_table').DataTable({
-            "lengthChange": true,
+            "lengthChange": false,
             "searching" : true,
-            "pageLength": 10,
+            "pageLength": 5,
             "order": [],
         });
 

@@ -954,9 +954,9 @@ include viewPath('includes/footer');
 <script>
     $(function(){
         $('#items_table').DataTable({
-            "lengthChange": false,
+            "lengthChange": true,
             "searching" : true,
-            "pageLength": 5,
+            "pageLength": 10,
             "autoWidth": false,
             "order": [],
         });
