@@ -57,7 +57,22 @@ const columns = {
     let status = row.status;
 
     if (!/^waiting for others$/i.test(status)) {
-      return status;
+      let badge = "";
+      switch (status.toLowerCase()) {
+        case "trashed":
+          badge = "error";
+          break;
+
+        case "completed":
+          badge = "success";
+          break;
+      }
+
+      return `
+        <div class="nsm-badge ${badge}">
+          ${status}
+        </div>
+      `;
     }
 
     if (recipientsToSign.length) {
@@ -181,48 +196,39 @@ const columns = {
     }
 
     const primaryMenu = `
-      <button
-        type="button"
-        class="btn btn-sm btn-primary d-flex align-items-center action text-capitalize" data-action="${primary}"
-      >
-        <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-        ${primary}
-      </button>
+      <li>
+        <a class="dropdown-item action text-capitalize" data-action="${primary}" href="#">
+          ${primary}
+        </a>
+      </li>
+
     `;
 
     let secondaryMenu = "";
     if (secondary && secondary.length) {
       const secondaryMenuItems = secondary.map((action) => {
         return `
+        <li>
           <a class="dropdown-item action text-capitalize" data-action="${action}" href="#">
             ${action}
           </a>
+        </li>
         `;
       });
 
-      secondaryMenu = `
-        <button
-          type="button"
-          class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <div class="dropdown-menu">
-            ${secondaryMenuItems.join("")}
-        </div>
-      `;
+      secondaryMenu = secondaryMenuItems.join("");
     }
 
     return `
-        <div class="btn-group">
+      <div class="dropdown table-management">
+        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
           ${primaryMenu}
           ${secondaryMenu}
-        </div>
+        </ul>
+      </div>
     `;
   },
   lastChanged: function (_, _, row) {
@@ -421,10 +427,12 @@ $(document).ready(function () {
     columns: [
       {
         sortable: false,
+        ordering: false,
         render: columns.name,
       },
       {
         sortable: false,
+        ordering: false,
         render: columns.status,
       },
       {
@@ -432,6 +440,7 @@ $(document).ready(function () {
       },
       {
         sortable: false,
+        ordering: false,
         render: columns.manage,
       },
     ],
@@ -448,6 +457,8 @@ $(document).ready(function () {
   });
 
   $table.find("tbody").on("click", ".action", async function (event) {
+    event.preventDefault();
+
     const $parent = $(this).closest("tr");
     const rows = table.rows().data().toArray();
 

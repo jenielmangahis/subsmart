@@ -1,6 +1,6 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == "Event Scheduler Tool"): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('events') ?>">
                 <i class='bx bx-fw bx-calendar-event'></i>
                 <span>Events</span>

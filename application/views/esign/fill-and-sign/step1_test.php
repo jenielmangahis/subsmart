@@ -1,17 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');?>
 <?php include viewPath('v2/includes/header');?>
 
-<!-- <link rel="stylesheet" href="<?=base_url("assets/esign/css/bootstrap.min.css")?>"> -->
 <link rel="stylesheet" href="<?=base_url("assets/css/esign/fill-and-sign/fill-and-sign.css")?>">
-
-
-<script type="module"  src="https://code.jquery.com/jquery-1.12.4.js>"></script>
-<script type="module"  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js>"></script>
-<script type="module"  src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js>"></script>
-
-<script type="module"  src="<?=base_url("assets/js/esign/libs/pdf.js")?>"></script>
-<script type="module"  src="<?=base_url("assets/js/esign/libs/pdf.worker.js")?>"></script>
-<script type="module"  src="<?=base_url("assets/js/esign/fill-and-sign/step1.js")?>"></script>
 
 <style>
   .fillAndSign__header .alert-warning span,
@@ -44,10 +34,9 @@
 
 <section class="container fillAndSign" data-step="1">
     <div class="fillAndSign__header">
-        <div class="alert alert-warning mt-2" role="alert">
-            <span style="color:black;">
-                To get started, upload a form from your library or from your local hard drive. Once the document is uploaded successfully, press NEXT. To add text, select the Text button in the main toolbar, click where you’d like to place the text cursor and type. Simply select another item from the toolbar and do it again.
-            </span>
+        <div class="nsm-callout primary" role="alert">
+            <button><i class="bx bx-x"></i></button>
+            To get started, upload a form from your library or from your local hard drive. Once the document is uploaded successfully, press NEXT. To add text, select the Text button in the main toolbar, click where you’d like to place the text cursor and type. Simply select another item from the toolbar and do it again.
         </div>
     </div>
 
@@ -92,13 +81,13 @@
         </div>
     </form>
 
-    <div class="modal fillAndSign__modal" id="documentModal" tabindex="-1" role="dialog">
+    <div class="modal fade nsm-modal fillAndSign__modal" id="documentModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span>&times;</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bx bx-fw bx-x m-0"></i>
                     </button>
                 </div>
                 <div class="modal-body"></div>
@@ -112,8 +101,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Select Document</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span>&times;</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -173,7 +162,7 @@
 <style>
   .nav-link,
   .nav-link:hover {
-    color: #6a4a86;
+    color: #6a4a86 !important;
   }
 </style>
 

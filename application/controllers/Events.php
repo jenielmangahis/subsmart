@@ -11,6 +11,7 @@ class Events extends MY_Controller
         $this->checkLogin();
 		$this->page_data['page']->title = 'Events';
         $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = 'Events';
         $this->hasAccessModule(4);
         //$this->load->library('paypal_lib');
         $this->load->model('Event_model', 'event_model');
@@ -45,6 +46,10 @@ class Events extends MY_Controller
     }
 
     public function new_event($id=null) {
+		$this->page_data['page']->title = 'Event Scheduler Tool';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = 'Events';
+        
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -151,7 +156,8 @@ class Events extends MY_Controller
         }
 
         $this->page_data['page_action'] = $page_action;
-        $this->load->view('events/event_new', $this->page_data);
+        // $this->load->view('events/event_new', $this->page_data);
+        $this->load->view('v2/pages/events/event_new', $this->page_data);
     }
 
     public function event_preview($id=null) {

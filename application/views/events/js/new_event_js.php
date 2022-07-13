@@ -641,13 +641,6 @@ if(isset($jobs_data)){
             $('#end_date').val(this.value);
         });
 
-        $('#items_table').DataTable({
-            "lengthChange": false,
-            "searching" : true,
-            "pageLength": 5,
-            "order": [],
-        });
-
         $('#device_audit').DataTable({
             "lengthChange": false,
             "searching" : false,

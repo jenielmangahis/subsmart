@@ -19,20 +19,21 @@ include viewPath('v2/includes/header');
 
     <div class="container mt-4">
         <div>
-            <div class="alert alert-warning" role="alert">
+            <div class="nsm-callout primary" role="alert">
+              <button><i class="bx bx-x"></i></button>
                 <p>Build and automate e-signature workflows in seconds. Speed up e-signing processes. Assign roles, set up steps and send documents for signing.</p>
             </div>
         </div>
 
         <form class="mb-3" id="addLetterForm">
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <label for="category">Category</label>
-                    <a class="link" href="#" data-toggle="modal" data-bs-toggle="modal" data-target="#manageTemplateModal" data-bs-target="#manageTemplateModal">Manage template categories</a>
+                    <a class="link nsm-link" href="#" data-toggle="modal" data-bs-toggle="modal" data-target="#manageTemplateModal" data-bs-target="#manageTemplateModal">Manage template categories</a>
                 </div>
                 <select class="form-control" id="category" data-name="category_id"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <div>
                     <label>Status</label>
                 </div>
@@ -45,11 +46,11 @@ include viewPath('v2/includes/header');
                     <label class="form-check-label" for="status_inactive">Inactive</label>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="title">Title</label>
                 <input class="form-control" id="title" data-name="title">
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <textarea class="form-control" id="letter"></textarea>
             </div>
             <div class="mt-3">
@@ -65,8 +66,8 @@ include viewPath('v2/includes/header');
         <fieldset>
             <legend class="d-flex justify-content-between align-items-center">
                 <h2>Placeholders</h2>
-               
-                <a class="link" href="#" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#createPlaceholderModal">
+
+                <a class="link nsm-link" href="#" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#createPlaceholderModal">
                     Manage template placeholders
                 </a>
             </legend>
@@ -80,13 +81,13 @@ include viewPath('v2/includes/header');
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Manage Template Categories</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
         <form class="d-flex align-items-center" id="addCategoryForm">
-            <div class="form-group w-100" style="margin-bottom: 0 !important;">
+            <div class="form-group mb-3 w-100" style="margin-bottom: 0 !important;">
                 <input class="form-control" placeholder="Enter category name">
             </div>
             <button type="button" class="nsm-button primary esigneditor__btn">
@@ -123,27 +124,27 @@ include viewPath('v2/includes/header');
   </div>
 </div>
 
-<div class="modal fade" id="createPlaceholderModal" tabindex="-1" role="dialog">
+<div class="modal fade nsm-modal" id="createPlaceholderModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Manage Template Placeholders</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
         <form id="addPlaceholderForm">
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>Code</label>
                 <input data-name="code" class="form-control" placeholder="Enter code">
                 <small class="form-text text-muted">Only alphanumeric and underscore characters are allowed.</small>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>Description</label>
                 <input data-name="description" class="form-control" placeholder="Enter description">
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>Value</label>
                 <input data-name="value" class="form-control" placeholder="Enter value">
             </div>
@@ -166,7 +167,7 @@ include viewPath('v2/includes/header');
   </div>
 </div>
 <style>
-    .form-check-input:checked{
+    /* .form-check-input:checked{
         background-color:#6a4a86;
         color:#6a4a86;
         border-color:#6a4a86
@@ -190,11 +191,19 @@ include viewPath('v2/includes/header');
     }
     .form-check-input:checked{
         margin-bottom:18px;
+    } */
+
+    .userPlaceholder {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
     }
 </style>
 
 <script src="<?=base_url("assets/textEditor/summernote-bs4.js")?>"></script>
 <script type="module"  src="<?=base_url("assets/js/esign/esigneditor/create.js")?>"></script>
+
+
 
 <?php include viewPath('v2/includes/footer');?>
 

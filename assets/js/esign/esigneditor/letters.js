@@ -209,7 +209,9 @@ const actions = {
     }
 
     const $modal = document.getElementById("customersModal");
-    const $next = removeButtonListeners($modal.querySelector(".btn-primary"));
+    const $next = removeButtonListeners(
+      $modal.querySelector(".nsm-button.primary")
+    );
 
     $next.addEventListener("click", async () => {
       const $selected = $modal.querySelector(".customer--isSelected");
@@ -234,11 +236,13 @@ const actions = {
   },
   send_pdf: (row) => {
     const $modal = document.getElementById("customersModal");
-    const $next = removeButtonListeners($modal.querySelector(".btn-primary"));
+    const $next = removeButtonListeners(
+      $modal.querySelector(".nsm-button.primary")
+    );
 
     const $sendModal = document.getElementById("sendLetterModal");
     const $preview = $sendModal.querySelector(".preview");
-    const $sendBtn = removeButtonListeners($sendModal.querySelector(".btn-primary")); // prettier-ignore
+    const $sendBtn = removeButtonListeners($sendModal.querySelector(".nsm-button.primary")); // prettier-ignore
 
     async function sendEmailHandler() {
       const { is_sent } = await window.helpers.submitBtn($sendBtn, async () => {

@@ -1664,3 +1664,142 @@ div.workspace-list > ul > li .nsm-badge{
 .nsm-page-subnav > ul > li > a .bx{
 	font-size: 16px;
 }
+
+.nsm-progressbar{
+	width: 100%;
+	height: 70px;
+	position: relative;
+}
+
+.nsm-progressbar > .progressbar{
+	width: 100%;
+	position: absolute;
+	z-index: 1;
+}
+
+.nsm-progressbar > .progressbar > ul{
+	counter-reset: step;
+	/* display: flex;
+	justify-content: space-evenly; */
+	list-style: none;
+	margin: unset;
+	padding: unset;
+}
+
+.nsm-progressbar > .progressbar > ul.items-1 li{
+	width: 100%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-2 li{
+	width: 50%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-3 li{
+	width: 33.33%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-4 li{
+	width: 25%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-5 li{
+	width: 20%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-6 li{
+	width: 16.66%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-7 li{
+	width: 14.28%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-8 li{
+	width: 12.50%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-9 li{
+	width: 11.11%;
+}
+
+.nsm-progressbar > .progressbar > ul.items-10 li{
+	width: 10%;
+}
+
+.nsm-progressbar > .progressbar > ul li{
+	float: left;
+	position: relative;
+  	text-align: center;
+	font-weight: bold;
+	color: #bebebe;
+}
+
+.nsm-progressbar > .progressbar > ul li.active{
+	color: inherit;
+}
+
+.nsm-progressbar > .progressbar > ul li::before{
+	content:counter(step);
+	counter-increment: step;
+	width: 30px;
+	height: 30px;
+	border: 2px solid #bebebe;
+	display: block;
+	margin: 0 auto 10px auto;
+	border-radius: 50%;
+	line-height: 27px;
+	background: white;
+	color: #bebebe;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.nsm-progressbar > .progressbar > ul li::after{
+	content: '';
+	position: absolute;
+	width:100%;
+	height: 2px;
+	background: #bebebe;
+	top: 14px;
+	left: -50%;
+	z-index: -1;
+}
+
+.nsm-progressbar > .progressbar > ul li:first-child:after{
+	content: none;
+}
+
+.nsm-progressbar > .progressbar > ul li.active::after{
+	background-color: #6a4a86;
+}
+
+
+.nsm-progressbar > .progressbar > ul li.active::before{
+	border-color: #6a4a86;
+	color: #6a4a86;
+	background-color: #dad1e0;
+}
+
+.nsm-color-picker{
+	width: 100%;
+}
+
+.nsm-color-picker > ul{
+	list-style: none;
+	padding: unset;
+	margin: unset;
+}
+
+.nsm-color-picker > ul li{
+	float: left;
+	width: 30px;
+	height: 30px;
+	border-radius: 100%;
+	cursor: pointer;
+	border: 3px solid #fff;
+}
+
+.nsm-color-picker > ul li.active{
+	border-color: #6a4a86;
+}

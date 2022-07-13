@@ -1495,18 +1495,6 @@ include viewPath('includes/footer');
     });
 </script>
 
-<?php if(!isset($jobs_data)) : ?>
-    <script>
-        window.addEventListener('beforeunload', function (e) {
-            // Cancel the event as stated by the standard.
-            //e.preventDefault();
-            // Chrome requires returnValue to be set.
-            //$('#myModal').modal();
-            //e.returnValue = '';
-        });
-    </script>
-<?php endif; ?>
-
 <script>
     var geocoder;
     function initMap(address=null) {

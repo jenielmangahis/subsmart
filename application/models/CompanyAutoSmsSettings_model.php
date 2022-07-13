@@ -94,7 +94,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             $this->module_job => 'Jobs',
             $this->module_estimate => 'Estimates',
             $this->module_work_order => 'Work Orders',
-            //$this->module_event => 'Events'
+            $this->module_event => 'Events'
         ];
 
         return $modules;
@@ -105,7 +105,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
         $status = [
             'Arrival' => 'Arrival',
             'Scheduled' => 'Scheduled',
-            //'Started' => 'Started',
+            'Started' => 'Started',
             'New' => 'New',
             'Completed' => 'Completed',
         ];
@@ -119,7 +119,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Submitted' => 'Submitted',
             'Accepted' => 'Accepted',
             'Declined By Customer' => 'Declined By Customer',
-            //'Lost' => 'Lost'
+            'Lost' => 'Lost'
         ];
 
         return $status;
@@ -131,7 +131,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'New' => 'New',
             'Scheduled' => 'Scheduled',
             'Started' => 'Started',
-            //'Paused' => 'Paused',
+            'Paused' => 'Paused',
             'Invoiced' => 'Invoiced',
             'Withdrawn' => 'Withdrawn',
             'Closed' => 'Closed'

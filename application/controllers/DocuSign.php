@@ -167,6 +167,31 @@ class DocuSign extends MYF_Controller
 
         $this->load->view('esign/docusign/manage', $this->page_data);
     }
+    public function manage_test()
+    {
+        $this->checkLogin();
+
+        // add_css([
+        //     'https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css',
+        //     'assets/css/esign/docusign/manage/manage.css',
+        //     'assets/css/esign/docusign/template-create/template-create.css',
+        //     'assets/css/esign/esign-builder/esign-builder.css',
+        //     'assets/css/esign/esign.css',
+        // ]);
+
+        add_footer_js([
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js',
+            'assets/js/esign/docusign/manage.js',
+        ]);
+
+        $this->page_data['page']->title = 'Manage: Inbox';
+        $this->load->view('esign/docusign/manage_test', $this->page_data);
+
+    }
 
     public function apiManage($view)
     {
@@ -597,6 +622,7 @@ class DocuSign extends MYF_Controller
 
     public function templateCreate()
     {
+
         $this->checkLogin();
 
         add_css([
@@ -614,6 +640,27 @@ class DocuSign extends MYF_Controller
         ]);
 
         $this->load->view('esign/docusign/template-create/index', $this->page_data);
+    }
+    public function templateCreate_Test()
+    {
+
+        $this->checkLogin();
+
+        add_css([
+            'assets/css/esign/esign-builder/esign-builder.css',
+            'assets/css/esign/docusign/template-create/template-create.css',
+        ]);
+
+        add_footer_js([
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'assets/js/esign/docusign/template-create.js',
+        ]);
+
+        $this->load->view('esign/docusign/template-create/index_test', $this->page_data);
     }
 
     public function apiStoreTemplate()
