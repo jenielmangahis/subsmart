@@ -36,10 +36,10 @@
                 <span>Work Order</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Invoice'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Invoices'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="/accounting/invoices">
                 <i class='bx bx-fw bx-message-square-error'></i>
-                <span>Invoice</span>
+                <span>Invoices</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Jobs'): echo 'active'; endif; ?>">

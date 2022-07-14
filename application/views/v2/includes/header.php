@@ -36,6 +36,12 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datepicker.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
+    
+    <!-- Multi select -->
+    <link rel="stylesheet" href="<?= base_url("assets/css/v2/multiple-select.min.css") ?>">
+
+    <!-- Full Calendar -->
+    <link rel="stylesheet" href="<?= base_url("assets/css/v2/full-calendar-main.css") ?>">
 
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
@@ -121,10 +127,67 @@ if ($this->session->userdata('usertimezone') == null) {
 
                     </ul>
                 </li>
-                <li>
-                    <a href="<?= base_url("workcalender") ?>">
+                <li class="<?php if ($page->parent == 'Calendar') : echo 'active'; endif; ?>">
+                    <a href="#">
                         <i class='bx bx-fw bx-calendar'></i> Calendar
+                        <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
+                    <ul class="mt-3">
+                        <li class="<?php if ($page->title == 'Schedule') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("workcalender") ?>">
+                                <i class='bx bx-fw bx-calendar-event'></i> Schedule
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("taskhub") ?>">
+                                <i class='bx bx-fw bx-task'></i> TaskHub
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("more/addon/booking") ?>">
+                                <i class='bx bx-fw bx-book-content'></i> Online Booking
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("workorder/priority/") ?>">
+                                <i class='bx bx-fw bx-list-check'></i> Priority
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("workorder/map") ?>">
+                                <i class='bx bx-fw bx-show-alt'></i> Bird's Eye View
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("event_types/index") ?>">
+                                <i class='bx bx-fw bx-calendar-minus'></i> Event Types
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("appointment_types/index") ?>">
+                                <i class='bx bx-fw bx-book-add'></i> Appointment Types
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("color_settings/index") ?>">
+                                <i class='bx bx-fw bx-brush'></i> Color Settings
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == '') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("settings/schedule") ?>">
+                                <i class='bx bx-fw bx-calendar-edit'></i> Calendar Settings
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="<?php if ($page->parent == 'Sales') : echo 'active';
                             endif; ?>">

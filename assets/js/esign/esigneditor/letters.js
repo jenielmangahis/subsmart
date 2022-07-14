@@ -145,30 +145,22 @@ const columns = {
     const primary = actions.find((action) => action.isPrimary);
     const menus = actions.map((action) => {
       if (action.isPrimary) return null;
-      return `
-      <li>
-        <a class="dropdown-item" href="#" data-action="${action.value}">
-          ${action.text}
-        </a>
-      </li>
-      `;
+      return `<a class="dropdown-item" href="#" data-action="${action.value}">${action.text}</a>`;
     });
 
     return `
-    <div class="dropdown table-management">
-      <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-          <i class="bx bx-fw bx-dots-vertical-rounded"></i>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-end">
-        <li>
-          <a class="dropdown-item" href="#" data-action="${primary.value}">
-            ${primary.text}
-          </a>
-        </li>
+    <div class="btn-group">
+      <button class="btn btn-sm btn-primary" data-action="${primary.value}">
+        ${primary.text}
+      </button>
+      <button class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <div class="dropdown-menu">
         ${menus.join("")}
-      </ul>
+      </div>
     </div>
-    `;
+  `;
   },
 };
 
@@ -209,9 +201,7 @@ const actions = {
     }
 
     const $modal = document.getElementById("customersModal");
-    const $next = removeButtonListeners(
-      $modal.querySelector(".nsm-button.primary")
-    );
+    const $next = removeButtonListeners($modal.querySelector(".btn-primary"));
 
     $next.addEventListener("click", async () => {
       const $selected = $modal.querySelector(".customer--isSelected");
@@ -236,13 +226,11 @@ const actions = {
   },
   send_pdf: (row) => {
     const $modal = document.getElementById("customersModal");
-    const $next = removeButtonListeners(
-      $modal.querySelector(".nsm-button.primary")
-    );
+    const $next = removeButtonListeners($modal.querySelector(".btn-primary"));
 
     const $sendModal = document.getElementById("sendLetterModal");
     const $preview = $sendModal.querySelector(".preview");
-    const $sendBtn = removeButtonListeners($sendModal.querySelector(".nsm-button.primary")); // prettier-ignore
+    const $sendBtn = removeButtonListeners($sendModal.querySelector(".btn-primary")); // prettier-ignore
 
     async function sendEmailHandler() {
       const { is_sent } = await window.helpers.submitBtn($sendBtn, async () => {

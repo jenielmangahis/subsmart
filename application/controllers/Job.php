@@ -1961,7 +1961,8 @@ class Job extends MY_Controller
 
         $this->page_data['jobs_total_amount'] = $jobs_total_amount;
         $this->page_data['upcomingJobs'] = $upcomingJobs;
-        $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
+        // $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
+        $this->load->view('v2/pages/job/ajax_load_upcoming_jobs', $this->page_data);
     }
 
     public function add_new_job_type()

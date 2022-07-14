@@ -674,6 +674,7 @@ function TemplateCreate() {
     prepareForm({ action });
     attachEventHandlers({ templateId, action });
     $(".card--loading").removeClass("card--loading");
+    $(".loader").addClass("d-none");
 
     $sortable.disableSelection();
     $sortable.sortable({

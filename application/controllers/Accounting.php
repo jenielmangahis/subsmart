@@ -343,7 +343,9 @@ class Accounting extends MY_Controller
             'https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js',
         ]);
 
-        $this->load->view('accounting/rules', $this->page_data);
+        $this->page_data['page']->title = 'Rules';
+        $this->page_data['page']->parent = 'Banking';
+        $this->load->view('accounting/banking/rules', $this->page_data);
     }
 
     public function receipts()
@@ -360,7 +362,9 @@ class Accounting extends MY_Controller
             'https://apis.google.com/js/client.js?onload=checkAuth,onApiLoad',
         ]);
 
-        $this->load->view('accounting/receipts', $this->page_data);
+        $this->page_data['page']->title = 'Receipts';
+        $this->page_data['page']->parent = 'Banking';
+        $this->load->view('accounting/banking/receipts', $this->page_data);
     }
 
     public function salesoverview()
@@ -7983,7 +7987,10 @@ class Accounting extends MY_Controller
         // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->page_data['page_title'] = "Estimate Lists";
         // print_r($this->page_data);
-        $this->load->view('accounting/estimatesList', $this->page_data);
+
+        $this->page_data['page']->title = 'Estimates';
+        $this->page_data['page']->parent = 'Sales';
+        $this->load->view('accounting/sales/estimates', $this->page_data);
     }
 
     public function savenewWorkOrder()
