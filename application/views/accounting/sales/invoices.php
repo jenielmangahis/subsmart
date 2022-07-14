@@ -138,48 +138,48 @@
                         </div>
 
                         <div class="dropdown d-inline-block">
-                            <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
-                                    Status
+                                    Filter
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item active" href="javascript:void(0);" id="all">All</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="needs-attention">Needs attention</a></li>
-                                <div class="dropdown-divider"></div>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="unpaid">Unpaid</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="overdue">- Overdue</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="not-due">- Not due</a></li>
-                                <div class="dropdown-divider"></div>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="paid">Paid</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="not-deposited">- Not deposited</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="deposited">- Deposited</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="dropdown d-inline-block">
-                            <input type="hidden" class="nsm-field form-control" id="selected_ids">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Date
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="this-month">This month</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="last-month">Last month</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="last-3-month">Last 3 months</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="last-6-month">Last 6 months</a></li>
-                                <li><a class="dropdown-item active" href="javascript:void(0);" id="last-12-month">Last 12 months</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="year-to-date">Year-to-date</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2021">2021</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2020">2020</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2019">2019</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2018">2018</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2017">2017</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2016">2016</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2015">2015</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="2014">2014</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end p-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="filter-status">Status</label>
+                                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                                            <option value="all" selected>All</option>
+                                            <option value="needs-attention">Needs attention</option>
+                                            <option value="unpaid">Unpaid</option>
+                                            <option value="overdue">- Overdue</option>
+                                            <option value="not-due">- Not due</option>
+                                            <option value="paid">Paid</option>
+                                            <option value="not-deposited">- Not deposited</option>
+                                            <option value="deposited">- Deposited</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="filter-date">Date</label>
+                                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                                            <option value="this-month">This month</option>
+                                            <option value="last-month">Last month</option>
+                                            <option value="last-3-months">Last 3 months</option>
+                                            <option value="last-6-months">Last 6 months</option>
+                                            <option value="last-12-months" selected>Last 12 months</option>
+                                            <option value="year-to-date">Year-to-date</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2014">2014</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </ul>
                         </div>
 
@@ -188,7 +188,10 @@
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
                             <button type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-list-plus'></i> New
+                                <i class='bx bx-fw bx-list-plus'></i> New Invoice
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-cog"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
@@ -227,6 +230,10 @@
                             <td data-name="No.">NO.</td>
                             <td data-name="Customer">CUSTOMER</td>
                             <td data-name="Amount">AMOUNT</td>
+                            <td data-name="Balance">BALANCE</td>
+                            <td data-name="Due Date">DUE DATE</td>
+                            <td data-name="PO Number">P.O. Number</td>
+                            <td data-name="Sales Rep">SALES REP</td>
                             <td data-name="Status">STATUS</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -250,6 +257,10 @@
                                 ?>
                             </td>
                             <td>$<?=$invoice->grand_total?></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td><?=$invoice->status?></td>
                             <td>
                                 <div class="dropdown table-management">

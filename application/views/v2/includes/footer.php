@@ -53,6 +53,13 @@
 
     <!-- Ckeditor -->
     <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
+
+    <!-- Multiselect -->
+    <script src="<?= base_url("assets/js/v2/multiple-select.min.js") ?>"></script>
+
+    <!-- FullCalendar -->
+    <script src="<?= base_url("assets/js/v2/full-calendar-main.js") ?>"></script>
+
     <!-- Main Script -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>

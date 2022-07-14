@@ -45,6 +45,8 @@ class Workcalender extends MY_Controller
 
     public function index()
     {
+		$this->page_data['page']->title = 'Schedule';
+		$this->page_data['page']->parent = 'Calendar';
 
         $this->hasAccessModule(4); 
         $this->load->model('Event_model', 'event_model');
@@ -350,7 +352,8 @@ class Workcalender extends MY_Controller
 
         $this->page_data['calendar_list'] = $calendar_list;
 
-        $this->load->view('workcalender/calender', $this->page_data);
+        // $this->load->view('workcalender/calender', $this->page_data);
+        $this->load->view('v2/pages/workcalender/calender', $this->page_data);
     }
 
     public function edit($id)
@@ -1692,7 +1695,8 @@ class Workcalender extends MY_Controller
         $this->page_data['settings'] = unserialize($settings);
 
         $this->page_data['events'] = $events;
-        $this->load->view('workcalender/ajax_load_upcoming_events', $this->page_data);
+        // $this->load->view('workcalender/ajax_load_upcoming_events', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_load_upcoming_events', $this->page_data);
     }
 
     public function debugCalendar()
@@ -2545,7 +2549,8 @@ class Workcalender extends MY_Controller
         $waitList = $this->Appointment_model->getAllCompanyWaitList($cid);
         
         $this->page_data['waitList'] = $waitList;
-        $this->load->view('workcalender/ajax_load_wait_list', $this->page_data);
+        // $this->load->view('workcalender/ajax_load_wait_list', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_load_wait_list', $this->page_data);
     }
 
     public function ajax_load_edit_wait_list()
