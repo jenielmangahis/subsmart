@@ -19,6 +19,8 @@ class EsignEditor extends MY_Controller
         parent::__construct();
     }
 
+   
+
     public function create()
     {
         add_css([
@@ -30,23 +32,8 @@ class EsignEditor extends MY_Controller
             'assets/textEditor/summernote-bs4.js',
             'assets/js/esign/esigneditor/create.js',
         ]);
-
-        $this->load->view('esign/esigneditor/create', $this->page_data);
-    }
-
-    public function create_TEST()
-    {
-        // add_css([
-        //     'assets/textEditor/summernote-bs4.css',
-        //     'assets/css/esign/esign-editor/esign-editor.css',
-        // ]);
-
-        // add_footer_js([
-        //     'assets/textEditor/summernote-bs4.js',
-        //     'assets/js/esign/esigneditor/create.js',
-        // ]);
         $this->page_data['page']->title = 'Add Letter';
-        $this->load->view('esign/esigneditor/create_test', $this->page_data);
+        $this->load->view('esign/esigneditor/create', $this->page_data);
     }
     public function letters()
     {
@@ -67,27 +54,7 @@ class EsignEditor extends MY_Controller
 
         $this->load->view('esign/esigneditor/letters', $this->page_data);
     }
-    public function letters_test()
-    {
-        add_css([
-            // 'assets/css/esign/esign-editor/esign-editor.css',
-            // 'https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css',
-        ]);
-
-        add_footer_js([
-            'assets/js/esign/esigneditor/letters.js',
-            'assets/js/v2/main.js',
-            'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
-
-            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.6/purify.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
-        ]);
-
-        $this->page_data['page']->title = 'eSign Editor Letters';
-        $this->load->view('esign/esigneditor/letters_test', $this->page_data);
-    }
+   
 
     public function edit()
     {

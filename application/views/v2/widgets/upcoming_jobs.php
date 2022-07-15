@@ -70,7 +70,7 @@ if ($var == 1) {
                     <?php foreach ($companies as $comp) :?>
                         <div class="widget-item cursor-pointer">
                             <div class="nsm-list-icon">
-                                <i class='bx bx-fw bx-buildings'></i>
+                                <i class='bx bx-buildings'></i>
                             </div>
                             <div class="content ms-2">
                                 <div class="details">

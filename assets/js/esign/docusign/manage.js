@@ -57,22 +57,7 @@ const columns = {
     let status = row.status;
 
     if (!/^waiting for others$/i.test(status)) {
-      let badge = "";
-      switch (status.toLowerCase()) {
-        case "trashed":
-          badge = "error";
-          break;
-
-        case "completed":
-          badge = "success";
-          break;
-      }
-
-      return `
-        <div class="nsm-badge ${badge}">
-          ${status}
-        </div>
-      `;
+      return status;
     }
 
     if (recipientsToSign.length) {
@@ -196,39 +181,48 @@ const columns = {
     }
 
     const primaryMenu = `
-      <li>
-        <a class="dropdown-item action text-capitalize" data-action="${primary}" href="#">
-          ${primary}
-        </a>
-      </li>
-
+      <button
+        type="button"
+        class="btn btn-sm btn-primary d-flex align-items-center action text-capitalize" data-action="${primary}"
+      >
+        <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        ${primary}
+      </button>
     `;
 
     let secondaryMenu = "";
     if (secondary && secondary.length) {
       const secondaryMenuItems = secondary.map((action) => {
         return `
-        <li>
           <a class="dropdown-item action text-capitalize" data-action="${action}" href="#">
             ${action}
           </a>
-        </li>
         `;
       });
 
-      secondaryMenu = secondaryMenuItems.join("");
+      secondaryMenu = `
+        <button
+          type="button"
+          class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+            ${secondaryMenuItems.join("")}
+        </div>
+      `;
     }
 
     return `
-      <div class="dropdown table-management">
-        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="bx bx-fw bx-dots-vertical-rounded"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
+        <div class="btn-group">
           ${primaryMenu}
           ${secondaryMenu}
-        </ul>
-      </div>
+        </div>
     `;
   },
   lastChanged: function (_, _, row) {
@@ -427,12 +421,10 @@ $(document).ready(function () {
     columns: [
       {
         sortable: false,
-        ordering: false,
         render: columns.name,
       },
       {
         sortable: false,
-        ordering: false,
         render: columns.status,
       },
       {
@@ -440,7 +432,6 @@ $(document).ready(function () {
       },
       {
         sortable: false,
-        ordering: false,
         render: columns.manage,
       },
     ],
@@ -457,8 +448,6 @@ $(document).ready(function () {
   });
 
   $table.find("tbody").on("click", ".action", async function (event) {
-    event.preventDefault();
-
     const $parent = $(this).closest("tr");
     const rows = table.rows().data().toArray();
 
@@ -502,14 +491,12 @@ $(document).ready(function () {
     const html = `
       <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
         <div class="esignBuilder__docPreviewHover"></div>
-
         <canvas></canvas>
         <div class="esignBuilder__docInfo">
             <div class="esignBuilder__docInfoText">
               <h5 class="esignBuilder__docTitle"></h5>
               <span class="esignBuilder__docPageCount"></span>
             </div>
-
             <div class="dropdown">
               <button
                 class="btn dropdown-toggle esignBuilder__docInfoActions"
@@ -520,18 +507,15 @@ $(document).ready(function () {
               >
                 <i class="fa fa-ellipsis-v"></i>
               </button>
-
               <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" data-action="preview" href="#">Preview</a>
                 <a class="dropdown-item" data-action="delete" href="#">Delete</a>
               </div>
             </div>
         </div>
-
         <div class="esignBuilder__uploadProgress" width="100%">
             <span></span>
         </div>
-
         <div class="esignBuilder__uploadProgressCheck">
             <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>Check</title>

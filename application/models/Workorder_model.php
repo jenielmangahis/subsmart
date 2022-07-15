@@ -1430,7 +1430,7 @@ class Workorder_model extends MY_Model
         
         $where = array(
             'work_orders.company_id' => $company_id,
-            'view_flag'   => '0'
+            'work_orders.view_flag'   => '0'
         );
 
         // $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id, work_order_alarm_details.work_order_id');

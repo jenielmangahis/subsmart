@@ -29,21 +29,7 @@ class FillAndSign extends MY_Controller
         $this->load->view('esign/fill-and-sign/step1', $this->page_data);
     }
 
-    public function step1_test()
-    {
-        add_footer_js([
-            'https://code.jquery.com/jquery-1.12.4.js',
-            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
-
-            'assets/js/esign/libs/pdf.js',
-            'assets/js/esign/libs/pdf.worker.js',
-            'assets/js/esign/fill-and-sign/step1.js',
-        ]);
-
-        $this->page_data['page']->title = 'Fill and eSign: Step 1';
-        $this->load->view('esign/fill-and-sign/step1_test', $this->page_data);
-    }
+   
 
     public function step2()
     {
@@ -63,30 +49,7 @@ class FillAndSign extends MY_Controller
 
         $this->load->view('esign/fill-and-sign/step2', $this->page_data);
     }
-    public function step2_test()
-    {
-        add_css([
-            'assets/esign/css/bootstrap.min.css',
-            'assets/css/esign/fill-and-sign/fill-and-sign.css',
-        ]);
-
-        add_footer_js([
-            'https://code.jquery.com/jquery-1.12.4.js',
-            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
-            'https://html2canvas.hertzen.com/dist/html2canvas.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-
-            'assets/js/esign/libs/pdf.js',
-            'assets/js/esign/libs/pdf.worker.js',
-            'assets/js/esign/fill-and-sign/step2.js',
-        ]);
-
-        $this->page_data['page']->title = 'Fill and eSign: Step 2';
-        $this->load->view('esign/fill-and-sign/step2_test', $this->page_data);
-    }
+    
 
     public function store()
     {

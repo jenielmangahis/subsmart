@@ -1783,7 +1783,8 @@ class Estimate extends MY_Controller
         }
 
         $this->page_data['scheduledEstimates'] = $scheduledEstimates;
-        $this->load->view('estimate/ajax_load_scheduled_estimates', $this->page_data);
+        // $this->load->view('estimate/ajax_load_scheduled_estimates', $this->page_data);
+        $this->load->view('v2/pages/estimate/ajax_load_scheduled_estimates', $this->page_data);
     }
 
     public function view($id)
