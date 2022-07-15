@@ -23,7 +23,7 @@ function Step2({ documentId }) {
 
   const $copyLink = $("#copyLink");
   const $linkPreview = $(".fillAndSign__shareLink");
-  const $copyLinkButton = $linkPreview.find(".btn");
+  const $copyLinkButton = $linkPreview.find(".nsm-button");
 
   const $downloadButton = $("#downloadDocument");
   const $container = $(".fillAndSign");
@@ -492,13 +492,13 @@ function Step2({ documentId }) {
         return;
       }
 
-      $topnav.css({
-        position: "fixed",
-        top: `${headerHeight}px`,
-        left: 0,
-        width: "100%",
-        "z-index": 1,
-      });
+      // $topnav.css({
+      //   position: "fixed",
+      //   top: `${headerHeight}px`,
+      //   left: 0,
+      //   width: "100%",
+      //   "z-index": 1,
+      // });
     });
 
     $doneButton.on("click", () => {
@@ -507,13 +507,13 @@ function Step2({ documentId }) {
 
     $closeModalButtons.on("click", (event) => {
       event.preventDefault();
-      $(event.target).closest(".fillAndSign__modal").hide();
+      $(event.target).closest(".fillAndSign__modal").modal("hide");
     });
 
     $addSignatureButton.on("click", () => {
       $(".fillAndSign__signatureInput").val("");
       signaturePad.clear();
-      $signatureModal.show();
+      $signatureModal.modal("show");
     });
 
     $signaturePadClear.on("click", (event) => {
@@ -581,7 +581,7 @@ function Step2({ documentId }) {
       });
 
       await storeSignature({ position, $element });
-      $signatureModal.hide();
+      $signatureModal.modal("hide");
 
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
@@ -620,7 +620,7 @@ function Step2({ documentId }) {
 
     $generateLinkAndEmail.on("click", async (event) => {
       event.preventDefault();
-      $sendEmailModal.show();
+      $sendEmailModal.modal("show");
     });
 
     $addEmailInput.on("click", (event) => {
@@ -679,7 +679,7 @@ function Step2({ documentId }) {
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
 
-      $sendEmailModal.hide();
+      $sendEmailModal.modal("hide");
     });
 
     const $fontItems = $fontSelect.find(".dropdown-item");

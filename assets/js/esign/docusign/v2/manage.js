@@ -33,10 +33,11 @@ const columns = {
                 To: ${firstThree.join(", ")}
                 <a
                     href="#"
-                    class="text-link"
-                    data-toggle="popover"
-                    data-trigger="hover"
-                    data-content="${dataContent}"
+                    class="text-link nsm-link"
+                    data-bs-toggle="popover"
+                    data-bs-trigger="hover"
+                    data-bs-placement="bottom"
+                    data-bs-content="${dataContent}"
                 >
                     +${totalRecipients - 3} more
                 </a>
@@ -107,11 +108,12 @@ const columns = {
       status = `
         <a
           href="javascript:;"
-          class="text-link"
-          data-toggle="popover"
-          data-placement="bottom"
-          data-trigger="hover"
-          data-content="${dataContent}"
+          tabindex="0"
+          class="text-link nsm-link"
+          data-bs-toggle="popover"
+          data-bs-trigger="hover"
+          data-bs-placement="bottom"
+          data-bs-content="${dataContent}"
         >
           ${row.status}
         </a>
@@ -386,7 +388,7 @@ const actions = {
 };
 
 $(document).ready(function () {
-  const $navItems = $(".submenus");
+  const $navItems = $(".tabitem");
   const $table = $("#documentsTable");
 
   const views = [...$navItems].map((item) => {
@@ -453,7 +455,7 @@ $(document).ready(function () {
   });
 
   table.on("draw", function () {
-    $table.find('[data-toggle="popover"]').popover({ html: true });
+    $table.find('[data-bs-toggle="popover"]').popover({ html: true });
   });
 
   $table.find("tbody").on("click", ".action", async function (event) {
@@ -514,7 +516,7 @@ $(document).ready(function () {
               <button
                 class="btn dropdown-toggle esignBuilder__docInfoActions"
                 type="button"
-                data-toggle="dropdown"
+                data-bs-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
               >

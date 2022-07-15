@@ -616,7 +616,8 @@ span.sc-item {
                             <div class="col-xl-5 left" style="margin-bottom: 33px;">
                               <h5><span class="fa fa-user-o fa-margin-right"></span> From <br> <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
                               <div class="col-xl-5 ml-0 pl-0">
-                                <span class=""><?= $client->business_address; ?></span><br />
+                                <span class="ul-text"><?php echo $client->street; ?></span><br>
+		         							   		<span class="ul-text"><?php echo $client->city .', '.$client->state.' '. $client->postal_code; ?></span><br>
                                 <span class="">EMAIL: <?= $client->email_address; ?></span><br />
                                 <span class="">PHONE: <?= $client->phone_number; ?></span>
                               </div>
@@ -625,7 +626,7 @@ span.sc-item {
                             <div class="col-xl-5 left">
                               <h5><span class="fa fa-user-o fa-margin-right"></span> To <br> <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
                               <div class="col-xl-5 ml-0 pl-0">
-                                <span class=""><?= $customer->mail_add . " " . $customer->city ?></span><br />
+                                <span class=""><?= $customer->mail_add . " " . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
                                 <span class="">EMAIL: <span class=""><?= $customer->email; ?></span><br />
                                 <span class="">PHONE: <span class=""><?= $customer->phone_w; ?></span><br />
                               </div>
@@ -818,9 +819,9 @@ span.sc-item {
                             </tbody>
                             </table>
                             <!-- </div> -->
-
+                                <?php //print_r($estimate); ?>
                             <hr />
-                            <p><b>Instructions</b><br /><br /><?= $estimate->instructions; ?></p>
+                            <p><b>Instructions</b><br /><br /><?php echo $estimate->instructions; ?></p>
                             <?php if($estimate->estimate_type == 'Standard'){ ?>
                             <p><b>Message</b><br /><br /><?= $estimate->customer_message; ?></p>
                             <?php } ?>

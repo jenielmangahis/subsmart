@@ -889,7 +889,7 @@ class Accounting_modals extends MY_Controller
             $emp = $this->users_model->getUser($empId);
             $payDetails = $this->users_model->getEmployeePayDetails($emp->id);
 
-            $empTotalPay = ($payDetails->pay_rate * (float)$postData['reg_pay_hours'][$key]) + (float)$postData['commission'][$key];
+            $empTotalPay = ($payDetails->pay_rate * floatval(str_replace(',', '', $postData['reg_pay_hours'][$key]))) + floatval(str_replace(',', '', $postData['commission'][$key]));
             $empTotalPay = number_format($empTotalPay, 2, '.', ',');
 
             $empSocial = ($empTotalPay / 100) * $socialSecurity;
@@ -1763,13 +1763,13 @@ class Accounting_modals extends MY_Controller
                 return floatval($item);
             }, $data['amount']));
 
-            $totalAmount = $totalAmount - floatval($data['cash_back_amount']);
+            $totalAmount = $totalAmount - floatval(str_replace(',', '', $data['cash_back_amount']));
 
             $insertData = [
                 'company_id' => logged('company_id'),
                 'account_id' => $data['bank_account'],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
-                'total_amount' => number_format($totalAmount, 2, '.', ','),
+                'total_amount' => $totalAmount,
                 'cash_back_account_id' => $data['cash_back_account'],
                 'cash_back_memo' => $data['cash_back_memo'],
                 'cash_back_amount' => $data['cash_back_amount'],
@@ -3070,7 +3070,7 @@ class Accounting_modals extends MY_Controller
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'memo' => $data['save_method'] !== 'save-and-void' ? $data['memo'] : 'Voided',
-                'total_amount' => $data['save_method'] !== 'save-and-void' ? $data['total_amount'] : 0.00,
+                'total_amount' => $data['save_method'] !== 'save-and-void' ? floatval(str_replace(',', '', $data['total_amount'])) : 0.00,
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => $data['save_method'] !== 'save-and-void' ? 1 : 4
             ];
@@ -3080,13 +3080,13 @@ class Accounting_modals extends MY_Controller
             if ($checkId) {
                 if(!isset($data['template_name'])) {
                     $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
-                    $newBalance = floatval($bankAcc->balance) - floatval($data['total_amount']);
+                    $newBalance = floatval($bankAcc->balance) - floatval(str_replace(',', '', $data['total_amount']));
                     $newBalance = number_format($newBalance, 2, '.', ',');
 
                     $bankAccData = [
                         'id' => $bankAcc->id,
                         'company_id' => logged('company_id'),
-                        'balance' => $newBalance
+                        'balance' => floatval(str_replace(',', '', $newBalance))
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($bankAccData);
@@ -3270,7 +3270,7 @@ class Accounting_modals extends MY_Controller
                             $expenseAccData = [
                                 'id' => $expenseAcc->id,
                                 'company_id' => logged('company_id'),
-                                'balance' => $newBalance
+                                'balance' => floatval(str_replace(',', '', $newBalance))
                             ];
 
                             $this->chart_of_accounts_model->updateBalance($expenseAccData);

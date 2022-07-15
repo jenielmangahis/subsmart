@@ -12,7 +12,7 @@
                 <span>Rules</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Receipts'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Receipts' || $page->title == 'Reviewed Receipts'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="/accounting/receipts">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Receipts</span>

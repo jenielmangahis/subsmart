@@ -367,6 +367,25 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/banking/receipts', $this->page_data);
     }
 
+    public function reviewed_receipts()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['receipts'] = $this->receipt_model->getReceipt();
+        $this->page_data['receipts_two'] = $this->receipt_model->getReceipt_two();
+        add_css([
+            'assets/css/accounting/receipts/reviewed_receipts.css',
+        ]);
+        add_footer_js([
+            'assets/js/accounting/banking/receipts/reviewed_receipts.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'https://apis.google.com/js/client.js?onload=checkAuth,onApiLoad',
+        ]);
+
+        $this->page_data['page']->title = 'Reviewed Receipts';
+        $this->page_data['page']->parent = 'Banking';
+        $this->load->view('accounting/banking/reviewed_receipts', $this->page_data);
+    }
+
     public function salesoverview()
     {
         add_css(array(

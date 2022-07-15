@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/calendar/calendar_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -306,18 +307,26 @@
     </div>
 </div>
 
+<?php if ($onlinePaymentAccount) { ?>
+    <?php if ($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '') { ?>
+        <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD&disable-funding=credit,card"></script>
+    <?php } ?>
+<?php } ?>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <script type="text/javascript">
     var calendar;
 
     $(document).ready(function() {
-        $('.multiple-select').multipleSelect();
-
+        // loadTags();
         reloadCalendar();
         loadMiniCalendar();
         loadWaitList();
         loadUpcomingJobs();
         loadUpcomingEvents();
         loadUnscheduledEstimates();
+
+        $("#select-employee").multipleSelect();
 
         $("#print_calender").on("click", function() {
             var defaultView = calendar.view.type;
@@ -380,6 +389,669 @@
 
             // }
         });
+
+        $("#btn_add_calendar").on("click", function() {
+            let _modal = $("#create_calendar_modal");
+            _modal.modal("show");
+        });
+
+        $('#wait-list-appointment-customer').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Select Customer',
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+        });
+
+        $("#btn_add_wait_list").on("click", function() {
+            let _modal = $("#create_waitlist_modal");
+            // loadCompanyCustomers($("#wait-list-appointment-customer"));
+            _modal.modal("show");
+        });
+
+        $(document).on("submit", "#create-google-calendar", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('/calendar/_create_google_calendar'); ?>";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "New calendar fee has been added successfully.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.message,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#create_calendar_modal").modal('hide');
+                    _this.trigger("reset");
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $('.datepicker').datepicker({
+            //format: 'yyyy-mm-dd',
+            format: 'DD, MM dd, yyyy',
+            autoclose: true,
+        });
+
+        $(".timepicker").datetimepicker({
+            format: 'hh:mm A'
+        });
+
+        $(document).on("submit", "#frm-create-appointment", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('calendar/_create_appointment'); ?>";
+            _this.find("button[type=submit]").html("Scheduling");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "Appointment was successfully created.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                reloadCalendar();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.message,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#create_appointment_modal").modal('hide');
+                    _this.trigger("reset");
+
+                    _this.find("button[type=submit]").html("Schedule");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $(document).on("submit", "#frm-create-appointment-wait-list", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('calendar/_create_appointment_wait_list'); ?>";
+            _this.find("button[type=submit]").html("Scheduling");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "Appointment wait list was successfully created.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                reloadCalendar();
+                                loadWaitList();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.message,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#create_waitlist_modal").modal('hide');
+                    _this.trigger("reset");
+
+                    _this.find("button[type=submit]").html("Schedule");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $(document).on("change", "#select-employee", function(e) {
+            let url = "<?php echo base_url('calendar/_update_employee_filter'); ?>";
+
+            var eids = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    eids: eids
+                },
+                dataType: 'json',
+                success: function(o) {
+                    reloadCalendar();
+                }
+            });
+        });
+
+        $('#appointment-user').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_users',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                formatResult: function(item) {
+                    return '<div>' + item.FName + ' ' + item.LName + '<br /><small>' + item.email + '</small></div>';
+                },
+                cache: true
+            },
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        $('#appointment-customer').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                        // pagination: {
+                        //   more: (params.page * 30) < data.total_count
+                        // }
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Select Customer',
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+        });
+
+        $('#appointment-tags').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_event_tags',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Select Tags',
+            minimumInputLength: 0,
+            templateResult: formatRepoTag,
+            templateSelection: formatRepoTagSelection
+        });
+
+        $(".btn-quick-add-customer").on("click", function() {
+            let _this = $(this);
+            let _parent = _this.closest(".nsm-modal");
+            _parent.modal("hide");
+            $("#quick_add_customer_modal").attr("parent-modal-id", _this.closest(".nsm-modal").attr("id"));
+            $("#quick_add_customer_modal").modal("show");
+        });
+
+        $(document).on("submit", "#frm-ql-add-customer", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('quick_add/_add_customer'); ?>";
+            let parentModalId = $("#quick_add_customer_modal").attr("parent-modal-id");
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: _this.serialize(),
+                dataType: 'json',
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "New customer was successfully added.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.message,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#quick_add_customer_modal").modal('hide');
+                    _this.trigger("reset");
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                    $("#" + parentModalId).modal("show");
+                },
+            });
+        });
+
+        $(document).on("click", ".btn-edit-waitlist", function() {
+            let appointment_id = $(this).attr('data-id');
+            let url = "<?php echo base_url('calendar/_load_edit_wait_list'); ?>";
+
+            showLoader($("#update_waitlist_container"));
+            $("#update_waitlist_modal").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    appointment_id: appointment_id
+                },
+                success: function(result) {
+                    $("#wid").val(appointment_id);
+                    $("#btn_delete_waitlist").attr("data-id", appointment_id);
+                    $("#update_waitlist_container").html(result);
+                    initializeEditWaitList();
+                }
+            });
+        });
+
+        $(document).on("submit", "#frm-update-appointment-wait-list", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('calendar/_update_appointment_wait_list'); ?>";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        if (o.is_wait_list == 0) {
+                            var swal_text = "Wait list was successfully moved to calendar.";
+                        } else {
+                            var swal_text = "Appointment wait list was successfully updated.";
+                        }
+
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: swal_text,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                loadWaitList()
+                            }
+                        });
+                    } else {
+                        $("#w_is_wait_list").val(0);
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.message,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#update_waitlist_modal").modal('hide');
+                    _this.trigger("reset");
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $(document).on("click", "#btn_delete_waitlist", function() {
+            let id = $(this).attr('data-id');
+
+            Swal.fire({
+                title: 'Delete Wait List',
+                text: "Do you want to delete selected wait list?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('calendar/_delete_appointment'); ?>",
+                        data: {
+                            appointment_id: id
+                        },
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Good job!',
+                                    text: "Appointment wait list was successfully deleted.",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        $("#update_waitlist_modal").modal("hide");
+                                        loadWaitList();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.message,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $("#btn_edit_appointment").on("click", function() {
+            let appointment_id = $(this).attr('data-id');
+            let url = "<?= base_url('calendar/_edit_appointment') ?>";
+
+            $("#edit-aid").val(appointment_id);
+            $("#view_appointment_modal").modal('hide');
+            $("#edit_appointment_modal").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    appointment_id: appointment_id
+                },
+                success: function(result) {
+                    $('#edit_appointment_container').html(result);
+                    initializeEditAppointment();
+                }
+            });
+        });
+
+        $(document).on("submit", "#frm-update-appointment", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('calendar/_update_appointment'); ?>";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "Appointment was successfully updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                reloadCalendar();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.message,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#edit_appointment_modal").modal('hide');
+                    _this.trigger("reset");
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $(document).on("click", "#btn_delete_appointment", function() {
+            let id = $(this).attr('data-id');
+
+            Swal.fire({
+                title: 'Delete Appointment',
+                text: "Do you want to delete selected appointment?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('calendar/_delete_appointment'); ?>",
+                        data: {
+                            appointment_id: id
+                        },
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Good job!',
+                                    text: "Appointment was successfully deleted.",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        $("#view_appointment_modal").modal("hide");
+                                        reloadCalendar();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.message,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $("#btn_checkout_appointment").on("click", function() {
+            let appointment_id = $(this).attr('data-id');
+            let url = "<?= base_url('calendar/_appointment_checkout') ?>";
+
+            $("#view_appointment_modal").modal("hide");
+            $("#checkout_appointment_modal").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    appointment_id: appointment_id
+                },
+                success: function(result) {
+                    $('#checkoout_appointment_container').html(result);
+                }
+            });
+        });
+
+        $(document).on("click", ".btn-add-item-row", function() {
+            let id = $(this).attr('data-id');
+
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('items/_get_item_details'); ?>",
+                data: {
+                    itemid: id
+                },
+                dataType: 'json',
+                success: function(result) {
+                    if (result.is_exists) {
+                        let item_price = parseFloat(result.item_price);
+                        let append_row = '<tr>' +
+                            '<td>' +
+                            '<input type="text" name="item_name[]" class="nsm-field form-control" placeholder="Item Name" value="' + result.item_name + '" required>' +
+                            '<input type="hidden" name="item_id[]" class="nsm-field form-control" placeholder="Item ID" value="' + result.item_id + '" required>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" name="price[]" class="nsm-field form-control item-price" placeholder="Item Price" value="' + item_price.toFixed(2) + '" required>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" name="qty[]" class="nsm-field form-control item-qty" placeholder="Quantity" value="1" required>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" name="tax[]" class="nsm-field form-control item-tax" placeholder="Tax Percentage" value="0.00" required>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" name="discount[]" class="nsm-field form-control item-discount" placeholder="Item Discount" value="0.00" required>' +
+                            '</td>' +
+                            '<td>' +
+                            '<button type="button" class="nsm-button btn-sm btn-delete-item">Remove</button>' +
+                            '</td>' +
+                            '</tr>';
+
+                        $("#checkout_items_table tbody").append(append_row).find("tr:last").hide().fadeIn("slow");
+                        $("#checkout_items_table").find(".nsm-table-empty").addClass("d-none");
+                        $("#checkout_items_table").nsmPagination();
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: "Cannot find item.",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+
+                    computeCheckoutTotals();
+                    $("#checkout_add_item_modal").modal("hide");
+                },
+            });
+        });
+
+        $("#btn_payment_details_appointment").on("click", function() {
+            var appointment_id = $(this).attr('data-id');
+            let url = "<?php echo base_url('calendar/_view_appointment_payment_details'); ?>";
+
+            $("#appointment_details_modal").modal('show');
+            showLoader($("#appointment_details_container"));
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    appointment_id: appointment_id
+                },
+                success: function(result) {
+                    $("#appointment_details_container").html(result);
+                }
+            });
+        });
     });
 
     function reloadCalendar() {
@@ -405,7 +1077,7 @@
             themeSystem: 'bootstrap5',
             eventDisplay: 'block',
             contentHeight: 750,
-            initialView: 'employeeTimeline',
+            initialView: 'threeDaysView',
             views: {
                 employeeTimeline: {
                     type: 'resourceTimeGridDay',
@@ -464,21 +1136,17 @@
                 //timeFormat: 'h(:mm)a'
             },
             dayCellDidMount(info) {
-                $(info.el).find('.fc-daygrid-day-top').popover({
-                    placement: 'top',
-                    trigger: 'hover',
-                    container: 'body',
-                    html: true,
-                    content: '<i class="bx bx-plus"></i> Create an Appointment',
-                });
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "Create an Appointment");
 
-                $('.fc-timegrid-slot:before').popover({
-                    placement: 'left',
-                    trigger: 'hover',
-                    container: 'body',
-                    html: true,
-                    content: '<i class="bx bx-plus"></i> Create an Appointment',
-                });
+                $('.fc-timegrid-slot:before').attr("data-bs-toggle", "popover");
+                $('.fc-timegrid-slot:before').attr("data-bs-trigger", "hover focus");
+                $('.fc-timegrid-slot:before').attr("data-bs-placement", "top");
+                $('.fc-timegrid-slot:before').attr("data-bs-content", "Create an Appointment");
+
+                initPopover();
             },
             selectable: true,
             select: function(info) {
@@ -502,11 +1170,13 @@
                     $("#appointment-user").empty().trigger('change');
                 }
 
-                $(".appointment-date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
-                $(".appointment-time").val(moment(info.startStr).format('hh:mm A'));
+                $("#appointment_date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
+                $("#appointment_time").val(moment(info.startStr).format('hh:mm A'));
                 $("#appointment-customer").empty().trigger('change');
-                $("#appointment-tags").empty().trigger('change');
-                $("#modal-create-appointment").modal('show');
+                // $("#appointment-tags").empty().trigger('change');
+                // loadCompanyUsers();
+                // loadCompanyCustomers($("#appointment-customer"));
+                $("#create_appointment_modal").modal('show');
             },
             slotEventOverlap: false,
             resourceLabelDidMount: function(info) {
@@ -692,30 +1362,9 @@
                 method: 'POST'
             },
             eventOrder: ["starttime"],
-            datesSet: function(info) {
-                if (info.view.type == "threeDaysView") {
-                    let resources = $(".fc-col-header-cell.fc-resource");
-                    $(".fc-scrollgrid-sync-inner").addClass("d-none");
-                    $.each(resources, function(i, o) {
-                        let _image = $(this).find(".datagrid-image");
-                        let _title = $(this).find(".fc-col-header-cell-cushion ");
-
-                        _image.attr("data-bs-toggle", "popover");
-                        _image.attr("data-bs-trigger", "hover focus");
-                        _image.attr("data-bs-placement", "bottom");
-                        _image.attr("data-bs-content", _title.text());
-                    });
-                    initPopover();
-                } else {
-                    $(".fc-scrollgrid-sync-inner").removeClass("d-none");
-                }
-            }
         });
 
         calendar.render();
-
-        // $(".fc-prev-button").html("<i class='bx bx-chevron-left'></i>");
-        // $(".fc-next-button").html("<i class='bx bx-chevron-right'></i>");
     }
 
     function loadMiniCalendar() {
@@ -821,6 +1470,344 @@
         var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
             return new bootstrap.Popover(popoverTriggerEl)
         })
+    }
+
+    function loadTags() {
+        let url = "<?= base_url('autocomplete/_company_event_tags') ?>";
+        let _container = $("#appointment-tags");
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            success: function(result) {
+                $.each(result, function(i, o) {
+                    _container.append("<option value='" + o.id + "'>" + o.name + "</option>");
+                });
+
+                $("#appointment-tags").multipleSelect();
+            },
+        });
+    }
+
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_h + ' / ' + repo.email + '</small></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if (repo.first_name != null) {
+            return repo.first_name + ' ' + repo.last_name;
+        } else {
+            return repo.text;
+        }
+    }
+
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+
+    function formatRepoTag(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div class="d-flex align-items-center"><img class="me-3" src="' + repo.img_marker + '"/> <label>' + repo.name + '</label></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoTagSelection(repo) {
+        if (repo.name != null) {
+            return repo.name;
+        } else {
+            return repo.text;
+        }
+
+    }
+
+    function initializeEditWaitList() {
+        $('#wishlist-edit-appointment-user').select2({
+            ajax: {
+                url: "<?= base_url('autocomplete/_company_users') ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                formatResult: function(item) {
+                    return '<div>' + item.FName + ' ' + item.LName + '<br /><small>' + item.email + '</small></div>';
+                },
+                cache: true
+            },
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        $('#wishlist-edit-appointment-customer').select2({
+            ajax: {
+                url: "<?= base_url('autocomplete/_company_customer') ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Select Customer',
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+        });
+
+        $('#wishlist-edit-appointment-tags').select2({
+            ajax: {
+                url: "<?= base_url('autocomplete/_company_event_tags') ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Select Tags',
+            minimumInputLength: 0,
+            templateResult: formatRepoTag,
+            templateSelection: formatRepoTagSelection
+        });
+
+        $('.datepicker').datepicker({
+            //format: 'yyyy-mm-dd',
+            format: 'DD, MM dd, yyyy',
+            autoclose: true,
+        });
+
+        $(".timepicker").datetimepicker({
+            format: 'hh:mm A'
+        });
+    }
+
+    function initializeEditAppointment() {
+        $('#edit-appointment-user').select2({
+            ajax: {
+                url: "<?= base_url('autocomplete/_company_users') ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                formatResult: function(item) {
+                    //console.log(item);
+                    return '<div>' + item.FName + ' ' + item.LName + '<br /><small>' + item.email + '</small></div>';
+                },
+                cache: true
+            },
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        $('#edit-appointment-customer').select2({
+            ajax: {
+                url: "<?= base_url('autocomplete/_company_customer') ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Select Customer',
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+        });
+
+        $('#edit-appointment-tags').select2({
+            ajax: {
+                url: "<?= base_url('autocomplete/_company_event_tags') ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Select Tags',
+            minimumInputLength: 0,
+            templateResult: formatRepoTag,
+            templateSelection: formatRepoTagSelection
+        });
+
+        $('.datepicker').datepicker({
+            //format: 'yyyy-mm-dd',
+            format: 'DD, MM dd, yyyy',
+            autoclose: true,
+        });
+
+        $(".timepicker").datetimepicker({
+            format: 'hh:mm A'
+        });
+    }
+
+    function viewAppointment(appointment_id) {
+        let url = "<?php echo base_url('calendar/_view_appointment'); ?>";
+
+        $("#view_appointment_modal").modal('show');
+        showLoader($("#view_appointment_container"));
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                appointment_id: appointment_id
+            },
+            success: function(result) {
+                $("#btn_edit_appointment").attr("data-id", appointment_id);
+                $("#btn_delete_appointment").attr("data-id", appointment_id);
+                $("#btn_checkout_appointment").attr("data-id", appointment_id);
+                $("#btn_payment_details_appointment").attr("data-id", appointment_id);
+
+                $("#view_appointment_container").html(result);
+            }
+        });
+    }
+
+    function computeCheckoutTotals() {
+        let total_price = 0;
+        let total_discount = 0;
+        let total_amount = 0;
+        let total_tax = 0;
+        let total_qty = 0;
+
+        $('#frm-checkout-items .form-control').each(function() {
+            var $el = $(this); // element we're testing
+            var n = parseFloat($el.val());
+
+            if ($el.hasClass('item-price')) {
+                if ($.isNumeric(n)) {
+                    var item_qty = parseFloat($el.closest('tr').find('.item-qty').val());
+                    if (item_qty > 0) {
+                        total_price = total_price + (parseFloat($el.val()) * item_qty);
+                    } else {
+                        total_price = total_price + 0;
+                    }
+                }
+            }
+
+            if ($el.hasClass('item-discount')) {
+                if ($.isNumeric(n)) {
+                    total_discount = total_discount + parseFloat($el.val());
+                }
+            }
+
+            if ($el.hasClass('item-tax')) {
+                if ($.isNumeric(n)) {
+                    var item_price = parseFloat($el.closest('tr').find('.item-price').val());
+                    var item_qty = parseFloat($el.closest('tr').find('.item-qty').val());
+                    var tax_amount = (parseFloat($el.val()) / 100) * (item_price * item_qty);
+                    total_tax = total_tax + tax_amount;
+                }
+            }
+        });
+
+        total_amount = (parseFloat(total_price) - parseFloat(total_discount)) + parseFloat(total_tax);
+        if (total_amount < 0) {
+            total_amount = 0;
+        }
+
+        $(".c-total-amount").text(parseFloat(total_amount).toFixed(2));
+        $(".c-total-price").text(parseFloat(total_price).toFixed(2));
+        $(".c-total-discount").text(parseFloat(total_discount).toFixed(2));
+        $(".c-total-tax").text(parseFloat(total_tax).toFixed(2));
+        $("#cash-amount-received").val(parseFloat(total_amount).toFixed(2));
+        $("#converge-amount-received").val(parseFloat(total_amount).toFixed(2));
+        $("#appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
+        $("#stripe-appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
     }
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

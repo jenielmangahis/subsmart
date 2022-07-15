@@ -1,7 +1,19 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');?>
-<?php include viewPath('includes/header');?>
+<?php include viewPath('v2/includes/header');?>
+<link rel="stylesheet" href="<?=base_url("assets/css/esign/fill-and-sign/fill-and-sign.css")?>">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+  .fillAndSign__topnav .action span {
+    font-family: Quicksand, sans-serif;
+  }
+  .nsm-footer {
+    display: none;
+  }
+</style>
 
 <section class="container-fluid fillAndSign fillAndSign--step2" data-step="2">
+
+
     <div class="fillAndSign__topnav">
         <div class="container">
             <div class="d-flex fillAndSign__actions">
@@ -38,8 +50,8 @@
                     </div>
                 </div>
             </div>
-            <div class="fillAndSign__readonly">
-                <p>This document is read-only.</p>
+            <div class="nsm-badge success">
+                This document is read-only.
             </div>
         </div>
     </div>
@@ -59,16 +71,16 @@
 
     <div class="fillAndSign__footer">
 
-        <button type="button" class="btn btn-primary mr-3" id="doneButton">
+        <button type="button" class="nsm-button primary mr-3" id="doneButton">
             Done
         </button>
 
         <div class="btn-group dropup">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="nsm-button dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Share
             </button>
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="#" id="copyLink">Get a link</a>
                 <a class="dropdown-item" href="#" id="generateLinkAndEmail">Send email</a>
                 <a class="dropdown-item" href="#" id="downloadDocument">Download a copy</a>
@@ -77,25 +89,25 @@
     </div>
 </section>
 
-<div class="modal fillAndSign__modal" id="signatureModal" tabindex="-1" role="dialog">
+<div class="modal nsm-modal fade fillAndSign__modal" id="signatureModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Signature</h5>
-                <button type="button" class="close close-me" aria-label="Close">
-                    <span>&times;</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item active">
-                        <a class="nav-link" id="draw-tab" data-toggle="tab" href="#draw" role="tab" aria-controls="draw" aria-selected="false">
-                            <i class="fa fa-pencil mr-2"></i>Draw
+                    <li class="nav-item">
+                        <a class="nav-link active" id="draw-tab" data-toggle="tab" data-bs-toggle="tab" href="#draw" role="tab" aria-controls="draw" aria-selected="false">
+                            Draw
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="type-tab" data-toggle="tab" href="#type" role="tab" aria-controls="type" aria-selected="true">
-                            <i class="fa fa-keyboard-o mr-2"></i>Type
+                        <a class="nav-link" id="type-tab" data-toggle="tab" data-bs-toggle="tab" href="#type" role="tab" aria-controls="type" aria-selected="true">
+                            Type
                         </a>
                     </li>
                 </ul>
@@ -103,13 +115,13 @@
                     <div class="tab-pane active" data-signature-type="draw" id="draw" role="tabpanel" aria-labelledby="draw-tab">
                         <div class="fillAndSign__signaturePad">
                             <canvas width="700" height="200"></canvas>
-                            <a href="#">Clear</a>
+                            <a class="nsm-link" href="#">Clear</a>
                         </div>
                     </div>
                     <div class="tab-pane" data-signature-type="type" id="type" role="tabpanel" aria-labelledby="type-tab">
 
                         <div class="dropdown mt-2 mb-2" id="fontSelect">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="fontDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="fontDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Select Font
                             </button>
                             <div class="dropdown-menu" aria-labelledby="fontDropdown">
@@ -132,26 +144,26 @@
                 </div>
 
                 <div class="modal-footer__buttonContainer">
-                    <button type="button" class="btn btn-primary d-flex align-items-center" id="signatureApplyButton">
+                    <button type="button" class="nsm-button primary d-flex align-items-center" id="signatureApplyButton">
                         <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                         Apply Signature
                     </button>
-                    <button type="button" class="btn btn-secondary close-me" id="signatureModalCloseButton">Close</button>
+                    <button type="button" class="nsm-button close-me" id="signatureModalCloseButton">Close</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fillAndSign__modal" id="sendEmail" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal nsm-modal fade fillAndSign__modal" id="sendEmail" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Email Document</h5>
-                <button type="button" class="close close-me" aria-label="Close">
-                    <span>&times;</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -160,17 +172,17 @@
                         <label for="exampleInputEmail1">Email address</label>
                         <input type="email" class="form-control mb-3" placeholder="Enter email">
                     </div>
-                    <a href="#" id="sendEmailAddMore">+ Add more</a>
+                    <a class="nsm-link" href="#" id="sendEmailAddMore">+ Add more</a>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary d-flex align-items-center" id="sendEmailSendButton">
+                <button type="button" class="nsm-button primary d-flex align-items-center" id="sendEmailSendButton">
                     <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                     Send
                 </button>
-                <button type="button" class="btn btn-secondary close-me" id="sendEmailCloseButton">Close</button>
+                <button type="button" class="nsm-button close-me" id="sendEmailCloseButton">Close</button>
             </div>
         </div>
     </div>
@@ -178,9 +190,38 @@
 
 <div class="fillAndSign__shareLink">
     <div class="fillAndSign__shareLinkContent"></div>
-    <button class="btn btn-info">Copy link</button>
+    <button class="nsm-button primary">Copy link</button>
 </div>
 
-<div class="fillAndSign__preview"></div>
+<div class="fillAndSign__preview" ></div>
 
-<?php echo put_footer_assets(); ?>
+<style>
+    .nsm-content,
+    .nsm-nav {
+        position: relative;
+    }
+
+    .fillAndSign {
+        margin-top: 0 !important;
+    }
+
+    .fillAndSign__preview {
+        position: absolute;
+        padding: 84px 31px 0 35px;
+    }
+    .fillAndSign__topnav{
+        position:sticky;
+        top:0;
+    }
+
+    .nsm-badge {
+        display: none;
+    }
+    .fillAndSign--readonly .nsm-badge {
+        display: block !important;
+        font-size: 1rem;
+        margin: 1rem 0;
+    }
+</style>
+
+<?php include viewPath('v2/includes/footer');?>

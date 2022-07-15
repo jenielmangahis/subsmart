@@ -17,6 +17,7 @@ class Estimate extends MY_Controller
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('items_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('Workorder_model', 'workorder_model');
         
         $this->checkLogin();
 
@@ -1798,7 +1799,8 @@ class Estimate extends MY_Controller
 
         if ($estimate) {
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-            $client   = $this->Clients_model->getById($company_id);
+            // $client   = $this->Clients_model->getById($company_id);
+            $client = $this->workorder_model->getCompanyCompanyId($company_id);
 
             $this->page_data['customer'] = $customer;
             $this->page_data['client'] = $client;
@@ -1830,43 +1832,41 @@ class Estimate extends MY_Controller
 
             $company_id = $estimate->company_id;
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-            $client   = $this->Clients_model->getById($company_id);
+            // $client   = $this->Clients_model->getById($company_id);
+            $client = $this->workorder_model->getCompanyCompanyId($company_id);
             // $estimateItems = unserialize($estimate->estimate_items);
             $estimateItems = $this->estimate_model->getEstimatesItems($id);
 
             $html = '
-            <table style="padding-top:-40px;">
+            <table style="padding-top:10px;">
                 <tr>
-                    <td>
-                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$client->business_name.'</span></h5>
+                    <td><br />
+                        <b style="font-size:12px;">From <br /><span>'.$client->business_name.'</span></b>
                         <br />
-                        <span class="">'.$client->business_address.'</span><br />
-                        <span class="">EMAIL: '.$client->email_address.'</span><br />
-                        <span class="">PHONE: '.$client->phone_number.'</span>
-                        <br/><br /><br />
-                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$customer->first_name . ' ' .$customer->last_name.'</span></h5>
+                        <span class="">'.$client->street.'</span><br />
+                        <span class="">'.$client->city .', '.$client->state.' '. $client->postal_code.'</span><br />
+                        <span class="">Email:'.$client->email_address.'</span><br />
+                        <span class="">Phone:'.$client->phone_number.'</span>
+                        <br /><br /><br />
+                        <b style="font-size:12px;">To <br /><span>'.$customer->first_name . ' ' .$customer->last_name.'</span></b>
                         <br />
-                        <span class="">'.$customer->mail_add. " " .$customer->city.'</span><br />
+                        <span class="">'.$customer->mail_add . " " . $customer->city.', '. $customer->state .' '. $customer->zip_code.'</span><br />
                         <span class="">EMAIL: '.$customer->email.'</span><br />
                         <span class="">PHONE: '.$customer->phone_w.'</span>
                     </td>
                     <td colspan=1></td>
+                </tr>
+            </table>
+            <table style="padding-top:-230px;">
+                <tr>
                     <td style="text-align:right;">
-                        <h6 style="font-size:20px;margin:0px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></h6>
-                        <table>
-                          <tr>
-                            <td>Estimate Date :</td>
-                            <td>'.date("F d, Y", strtotime($estimate->estimate_date)).'</td>
-                          </tr>
-                          <tr>
-                            <td>Expire Due :</td>
-                            <td>'.date("F d, Y", strtotime($estimate->expiry_date)).'</td>
-                          </tr>
-                        </table>
+                        <h6 style="font-size:20px;margin:0px;margin-top:-400px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></h6>
+                        <br />Estimate Date: '.date("F d, Y", strtotime($estimate->estimate_date)).'
+                        <br />Expire Due: '.date("F d, Y", strtotime($estimate->expiry_date)).'
                     </td>
                 </tr>
             </table>
-            <br /><br />
+            <br /><br /><br />
 
             <table style="width="100%;>
             <thead>
@@ -1924,10 +1924,10 @@ class Estimate extends MY_Controller
             </tr>
           </tbody>
           </table>
-          <br /><br /><br />
-          <p><b>Instructions</b><br /><br />'.$estimate->instructions.'</p>
-          <p><b>Message</b><br /><br />'.$estimate->customer_message.'</p>
-          <p><b>Terms</b><br /><Br />'.$estimate->terms_conditions.'</p>
+          <br /><br /><br /><br /><br />
+          <b>Instructions</b>'.$estimate->instructions.'<br />
+          <b>Message</b>'.$estimate->customer_message.'<br />
+          <b>Terms</b>'.$estimate->terms_conditions.'
             ';
 
             tcpdf();
