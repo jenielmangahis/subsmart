@@ -3604,6 +3604,7 @@ Responsive
     position: absolute;
     left: -10vw;
     bottom: -14px;
+    display: none;
  }
  /* Contact Page */
  .uppercase {
