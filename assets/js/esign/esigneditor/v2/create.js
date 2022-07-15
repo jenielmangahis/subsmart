@@ -292,6 +292,6 @@ function initLetterForm(letter = null) {
     payload.is_active = $form.querySelector("#status_active").checked ? 1 : 0;
     payload.content = $letter.summernote("code");
     window.helpers.submitBtn($button, () => func(payload));
-    window.location.href = `${window.api.prefixURL}/EsignEditor/letters`;
+    window.location.href = `${window.api.prefixURL}/EsignEditor_v2/letters`;
   });
 }

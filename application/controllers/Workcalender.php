@@ -2040,7 +2040,8 @@ class Workcalender extends MY_Controller
 
         $this->page_data['a_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
-        $this->load->view('workcalender/ajax_load_view_appointment', $this->page_data);
+        // $this->load->view('workcalender/ajax_load_view_appointment', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_load_view_appointment', $this->page_data);
     }
 
     public function ajax_edit_appointment()
@@ -2066,7 +2067,8 @@ class Workcalender extends MY_Controller
         $this->page_data['a_selected_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
         $this->page_data['appointmentTypes'] = $appointmentTypes;
-        $this->load->view('workcalender/ajax_edit_appointment', $this->page_data);
+        // $this->load->view('workcalender/ajax_edit_appointment', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_edit_appointment', $this->page_data);
     }
 
     public function ajax_update_appointment()
@@ -2236,7 +2238,8 @@ class Workcalender extends MY_Controller
         $this->page_data['appointment'] = $appointment;
         $this->page_data['appointmentItems'] = $appointmentItems;
         $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
-        $this->load->view('workcalender/ajax_checkout_appointment', $this->page_data);
+        // $this->load->view('workcalender/ajax_checkout_appointment', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_checkout_appointment', $this->page_data);
     }
 
     public function ajax_view_appointment_payment_details()
@@ -2265,7 +2268,8 @@ class Workcalender extends MY_Controller
         $this->page_data['appointment'] = $appointment;
         $this->page_data['appointmentItems'] = $appointmentItems;
         $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
-        $this->load->view('workcalender/ajax_view_appointment_payment_details', $this->page_data);
+        // $this->load->view('workcalender/ajax_view_appointment_payment_details', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_view_appointment_payment_details', $this->page_data);
     }
 
     public function ajax_save_checkout_items()
@@ -2538,7 +2542,8 @@ class Workcalender extends MY_Controller
         $items = $this->Items_model->getByCompanyId($cid, $filters);
         
         $this->page_data['items'] = $items;
-        $this->load->view('workcalender/ajax_load_checkout_item_list', $this->page_data);
+        // $this->load->view('workcalender/ajax_load_checkout_item_list', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_load_checkout_item_list', $this->page_data);
     }
 
     public function ajax_load_wait_list()
@@ -2576,7 +2581,8 @@ class Workcalender extends MY_Controller
         $this->page_data['a_selected_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
         $this->page_data['appointmentTypes'] = $appointmentTypes;
-        $this->load->view('workcalender/ajax_edit_appointment_wait_list', $this->page_data);
+        // $this->load->view('workcalender/ajax_edit_appointment_wait_list', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_edit_appointment_wait_list', $this->page_data);
     }
 
     public function ajax_update_calendar_drop_waitlist()

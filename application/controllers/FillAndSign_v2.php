@@ -8,12 +8,10 @@ class FillAndSign_v2 extends MY_Controller
         parent::__construct();
         $this->checkLogin();
     }
-    
 
     public function step1()
     {
         add_css([
-            'assets/esign/css/bootstrap.min.css',
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
         ]);
 
@@ -24,14 +22,12 @@ class FillAndSign_v2 extends MY_Controller
 
             'assets/js/esign/libs/pdf.js',
             'assets/js/esign/libs/pdf.worker.js',
-            'assets/js/esign/fill-and-sign/step1.js',
+            'assets/js/esign/fill-and-sign/v2/step1.js',
         ]);
 
         $this->page_data['page']->title = 'Fill and eSign: Step 1';
-        $this->load->view('v2/pages/esign/fill-and-sign/step1_test', $this->page_data);
+        $this->load->view('v2/pages/esign/fill-and-sign/step1', $this->page_data);
     }
-
-
 
     public function step2()
     {
@@ -51,11 +47,11 @@ class FillAndSign_v2 extends MY_Controller
 
             'assets/js/esign/libs/pdf.js',
             'assets/js/esign/libs/pdf.worker.js',
-            'assets/js/esign/fill-and-sign/step2.js',
+            'assets/js/esign/fill-and-sign/v2/step2.js',
         ]);
 
         $this->page_data['page']->title = 'Fill and eSign: Step 2';
-        $this->load->view('v2/pages/esign/fill-and-sign/step2_test', $this->page_data);
+        $this->load->view('v2/pages/esign/fill-and-sign/step2', $this->page_data);
     }
 
     public function store()

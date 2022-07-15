@@ -29,10 +29,13 @@ class FillAndSign extends MY_Controller
         $this->load->view('esign/fill-and-sign/step1', $this->page_data);
     }
 
-   
-
     public function step2()
     {
+        add_css([
+            'assets/esign/css/bootstrap.min.css',
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
+        ]);
+
         add_footer_js([
             'https://code.jquery.com/jquery-1.12.4.js',
             'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
@@ -49,7 +52,6 @@ class FillAndSign extends MY_Controller
 
         $this->load->view('esign/fill-and-sign/step2', $this->page_data);
     }
-    
 
     public function store()
     {

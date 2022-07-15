@@ -671,6 +671,8 @@ $route['accounting/reports/audit-log'] = 'accounting_controllers/reports/audit_l
 $route['accounting/reports/ffcra-cares-act-report'] = 'accounting_controllers/reports/ffcra_cares_act_report';
 $route['accounting/reports/view-report/(:any)'] = 'accounting_controllers/reports/view_report/$1';
 
+$route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
+
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
@@ -1176,6 +1178,12 @@ $route['eSign/templatePrepare'] = 'DocuSign/templatePrepare';
 $route['eSign/templateEdit'] = 'DocuSign/templateEdit';
 $route['eSign/signing'] = 'DocuSign/signing';
 $route['eSign/manage'] = 'DocuSign/manage';
+
+$route['eSign_v2/templateCreate'] = 'DocuSign_v2/templateCreate';
+$route['eSign_v2/templatePrepare'] = 'DocuSign_v2/templatePrepare';
+$route['eSign_v2/templateEdit'] = 'DocuSign_v2/templateEdit';
+$route['eSign_v2/signing'] = 'DocuSign_v2/signing';
+$route['eSign_v2/manage'] = 'DocuSign_v2/manage';
 
 // Cron Payment
 $route['cron/acs_billing_method_cc'] = 'Cron_Payment/acs_billing_method_cc';

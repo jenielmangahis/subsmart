@@ -149,7 +149,7 @@ class EsignEditor_v2 extends MY_Controller
 
         add_footer_js([
             'assets/textEditor/summernote-bs4.js',
-            'assets/js/esign/esigneditor/customer-letters.js',
+            'assets/js/esign/esigneditor/v2/customer-letters.js',
             'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
 
@@ -158,8 +158,8 @@ class EsignEditor_v2 extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
         ]);
-
-        $this->load->view('esign/esigneditor/customer-letters', $this->page_data);
+        $this->page_data['page']->title = 'Send Letters';
+        $this->load->view('v2/pages/esign/esigneditor/customer-letters', $this->page_data);
     }
 
     public function apiGetCategories()

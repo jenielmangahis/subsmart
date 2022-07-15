@@ -103,25 +103,27 @@
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
-                            <td data-name="Job Number">NAME</td>
-                            <td data-name="Date">TYPE</td>
-                            <td data-name="Employee">DETAIL TYPE</td>
-                            <td data-name="Amount">NSMARTRAC BALANCE</td>
-                            <td data-name="Event Type">BANK BALANCE</td>
+                            <td data-name="Name">NAME</td>
+                            <td data-name="Type">TYPE</td>
+                            <td data-name="Detail Type">DETAIL TYPE</td>
+                            <td data-name="nSmarTrac Balance">NSMARTRAC BALANCE</td>
+                            <td data-name="Bank Balance">BANK BALANCE</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php if(count($accounts) > 0) : ?>
+                        <?php foreach($accounts as $account) : ?>
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default">Test Account</td>
-                            <td>Bank</td>
-                            <td>Cash on Hand</td>
-                            <td>$0.00</td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$account->name?></td>
+                            <td><?=$this->account_model->getName($account->account_id)?></td>
+                            <td><?=$this->account_detail_model->getName($account->acc_detail_id)?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ','))?></td>
                             <td>$0.00</td>
                             <td>
                                 <div class="dropdown table-management">
@@ -145,6 +147,16 @@
                                 </div>
                             </td>
                         </tr>
+                        <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="8">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

@@ -217,40 +217,67 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type" class="form-check-input">
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_type" id="chk_type" class="form-check-input">
                                     <label for="chk_type" class="form-check-label">Type</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type" class="form-check-input">
-                                    <label for="chk_detail_type" class="form-check-label">Detail Type</label>
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_no" id="chk_no" class="form-check-input">
+                                    <label for="chk_no" class="form-check-label">No.</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance" class="form-check-input">
-                                    <label for="chk_nsmart_balance" class="form-check-label">nSmarTrac Balance</label>
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_payee" id="chk_payee" class="form-check-input">
+                                    <label for="chk_payee" class="form-check-label">Payee</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_bank_balance()" name="chk_bank_balance" id="chk_bank_balance" class="form-check-input">
-                                    <label for="chk_bank_balance" class="form-check-label">Bank Balance</label>
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_method" id="chk_method" class="form-check-input">
+                                    <label for="chk_method" class="form-check-label">Method</label>
                                 </div>
-                                <p class="m-0">Other</p>
                                 <div class="form-check">
-                                    <input type="checkbox" id="inc_inactive" value="1" class="form-check-input">
-                                    <label for="inc_inactive" class="form-check-label">Include Inactive</label>
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_source" id="chk_source" class="form-check-input">
+                                    <label for="chk_source" class="form-check-label">Source</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_category" id="chk_category" class="form-check-input">
+                                    <label for="chk_category" class="form-check-label">Category</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_memo" id="chk_memo" class="form-check-input">
+                                    <label for="chk_memo" class="form-check-label">Memo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_due_date" id="chk_due_date" class="form-check-input">
+                                    <label for="chk_due_date" class="form-check-label">Due date</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_balance" id="chk_balance" class="form-check-input">
+                                    <label for="chk_balance" class="form-check-label">Balance</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_status" id="chk_status" class="form-check-input">
+                                    <label for="chk_status" class="form-check-label">Status</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_attachments" id="chk_attachments" class="form-check-input">
+                                    <label for="chk_attachments" class="form-check-label">Attachments</label>
                                 </div>
                                 <p class="m-0">Rows</p>
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            150
+                                            50
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">150</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
                                     </ul>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="compact" id="compact" class="form-check-input">
+                                    <label for="compact" class="form-check-label">Compact</label>
                                 </div>
                             </ul>
                         </div>

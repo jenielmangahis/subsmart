@@ -7,61 +7,63 @@
 <?php echo put_header_assets(); ?>
 
 <div class="wrapper " role="wrapper">
-  <div class="d-none">
-    <?php include viewPath('includes/sidebars/docusign');?>
-  </div>
-
   <section class="container-fluid mt-3">
     <div class="nsm-page-nav mb-3">
       <ul>
-        <li class="active">
-          <a class="nsm-page-link" href="<?=base_url('esign/Files')?>">
+        <li class="tabitem">
+          <a class="nsm-page-link" href="<?=base_url('esign_v2/Files')?>">
             <span>Send envelope</span>
           </a>
         </li>
 
-        <li class="">
-          <a class="nsm-page-link" href="#">
+        <li class="tabitem">
+          <a class="nsm-page-link" href="#" id="signadocument">
             <span>Sign a document</span>
           </a>
         </li>
 
-        <li class="">
-          <a class="nsm-page-link" href="<?=base_url('eSign/manage?view=inbox')?>">
+        <li class="tabitem">
+          <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=inbox')?>">
             <span>Inbox</span>
           </a>
         </li>
 
-        <li class="">
-          <a class="nsm-page-link" href="<?=base_url('eSign/manage?view=sent')?>">
+        <li class="tabitem">
+          <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=sent')?>">
             <span>Sent</span>
           </a>
         </li>
 
-        <li class="">
-          <a class="nsm-page-link" href="<?=base_url('eSign/manage?view=drafts')?>">
+        <li class="tabitem">
+          <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=drafts')?>">
             <span>Draft</span>
           </a>
         </li>
 
-        <li class="">
-          <a class="nsm-page-link" href="<?=base_url('eSign/manage?view=deleted')?>">
+        <li class="tabitem">
+          <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=deleted')?>">
             <span>Deleted</span>
           </a>
         </li>
 
-        <li class="">
-          <a class="nsm-page-link" href="<?=base_url('eSign/manage?view=action_required')?>">
+        <li class="tabitem">
+          <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=action_required')?>">
             <span>Action Required</span>
+          </a>
+        </li>
+
+        <li class="tabitem">
+          <a class="nsm-page-link" href="#">
+            <span></span>
           </a>
         </li>
       </ul>
     </div>
-    <div class="">
+    <div>
       <div class="esignActionRequired alert alert-primary">
         <div class="esignActionRequired__inner">
           <i class="fa fa-info-circle esignActionRequired__icon"></i>
-          <a class="esignActionRequired__body" href="<?php echo base_url('eSign/manage?view=action_required') ?>">
+          <a class="esignActionRequired__body" href="<?php echo base_url('eSign_v2/manage?view=action_required') ?>">
             Your action is required for <span class="esignActionRequired__count">0</span> of your eSign documents.
           </a>
         </div>
@@ -81,13 +83,13 @@
   </section>
 </div>
 
-<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+<div class="modal nsm-modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="confirmDeleteLabel">Delete Envelope</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -95,7 +97,7 @@
         <p>Are you sure you want to delete?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-danger d-flex align-items-center">
             <div class="spinner-border spinner-border-sm mt-0 d-none" role="status">
                 <span class="sr-only">Loading...</span>
@@ -107,13 +109,13 @@
   </div>
 </div>
 
-<div class="modal fade" id="confirmVoid" tabindex="-1" role="dialog" aria-labelledby="confirmVoidLabel" aria-hidden="true">
+<div class="modal nsm-modal fade" id="confirmVoid" tabindex="-1" role="dialog" aria-labelledby="confirmVoidLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="confirmVoidLabel">Void Envelope</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -133,7 +135,7 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-danger d-flex align-items-center">
             <div class="spinner-border spinner-border-sm mt-0 d-none" role="status">
                 <span class="sr-only">Loading...</span>
@@ -145,13 +147,13 @@
   </div>
 </div>
 
-<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel" aria-hidden="true">
+<div class="modal nsm-modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="historyModalLabel">Envelope History</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -189,10 +191,59 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal nsm-modal fade" id="selectDocument" tabindex="-1" role="dialog" aria-labelledby="selectDocumentLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="max-width: 802px;">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="selectDocumentLabel">Sign a document</h5>
+			<button type="button" data-bs-dismiss="modal" aria-label="Close">
+        <i class="bx bx-fw bx-x m-0"></i>
+      </button>
+		</div>
+		<div class="modal-body">
+      <div class="fileupload">
+          <div class="custome-fileup">
+              <div class="upload-btn-wrapper">
+                  <button class="btn">
+                      <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
+                      <span>Upload</span>
+                  </button>
+                  <input multiple="" type="file" name="docFile" id="docFile" accept="application/pdf,application/vnd.ms-excel" required="">
+              </div>
+          </div>
+      </div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+			<button type="button" class="nsm-button primary d-flex align-items-center">
+				<div class="spinner-border spinner-border-sm m-0 d-none" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
+				<span class="ml-1">Sign</span>
+			</button>
+		</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal nsm-modal fade" id="documentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column"></div>
+        </div>
+    </div>
 </div>
 
 <script>

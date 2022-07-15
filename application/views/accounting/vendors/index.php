@@ -191,7 +191,7 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$vendor->id?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$vendor->display_name?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/vendors/view/' . $vendor->id) ?>'"><?=$vendor->display_name?></td>
                             <td></td>
                             <td><?=$vendor->phone?></td>
                             <td><?=$vendor->email?></td>
