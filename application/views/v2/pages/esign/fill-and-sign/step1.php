@@ -1,9 +1,39 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');?>
-<?php include viewPath('includes/header');?>
+<?php include viewPath('v2/includes/header');?>
+
+<?=put_header_assets();?>
+
+<style>
+  .fillAndSign__header .alert-warning span,
+  .fillAndSign__vaultItemTitle,
+  .fillAndSign__vaultItemInfo,
+  .fillAndSign__docTitle,
+  .fillAndSign__docPageCount {
+    font-family: Quicksand, sans-serif;
+  }
+  .fillAndSign__recent,
+  .fillAndSign__vault {
+    padding: 0;
+    list-style-type: none;
+    font-family: Quicksand, sans-serif;
+  }
+  .modal-header::before,
+  .modal-header::after {
+    content: none;
+  }
+  .nav-item.active .nav-link {
+    isolation: isolate;
+    border-color: #e9ecef #e9ecef #dee2e6;
+    border-bottom-color: #fff;
+  }
+  #selectDocumentModal .tab-content {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+</style>
 
 <section class="container fillAndSign" data-step="1">
     <div class="fillAndSign__header">
-        <h1 class="fillAndSign__title">Fill and eSign</h1>
         <div class="alert alert-warning mt-2" role="alert">
             <span style="color:black;">
                 To get started, upload a form from your library or from your local hard drive. Once the document is uploaded successfully, press NEXT. To add text, select the Text button in the main toolbar, click where you’d like to place the text cursor and type. Simply select another item from the toolbar and do it again.
@@ -12,11 +42,11 @@
     </div>
 
     <form id="form">
-        <div class="d-flex">
+        <div class="d-flex" style="gap: 1rem;">
             <div class="fillAndSign__upload">
                 <button class="btn" type="button">
                     <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
-                    <span>Select</span>
+                    <span class="nsm-button primary">Select</span>
                 </button>
             </div>
 
@@ -43,7 +73,7 @@
         </div>
 
         <div class="fillAndSign__footer">
-            <button type="submit" class="btn" id="formSubmit" disabled>
+            <button type="submit" class="nsm-button primary" id="formSubmit" disabled>
                 <div class="spinner-border spinner-border-sm d-none" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -52,13 +82,13 @@
         </div>
     </form>
 
-    <div class="modal fillAndSign__modal" id="documentModal" tabindex="-1" role="dialog">
+    <div class="modal fade nsm-modal fillAndSign__modal" id="documentModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span>&times;</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bx bx-fw bx-x m-0"></i>
                     </button>
                 </div>
                 <div class="modal-body"></div>
@@ -67,13 +97,13 @@
     </div>
 </section>
 
-<div class="modal fillAndSign__modal" id="selectDocumentModal" tabindex="-1" role="dialog">
+<div class="modal fade nsm-modal fillAndSign__modal" id="selectDocumentModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Select Document</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span>&times;</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -118,16 +148,23 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary d-flex align-items-center" id="selectDocumentButton">
+                <button type="button" class="nsm-button primary d-flex align-items-center" id="selectDocumentButton">
                     <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                     Select Document
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="selectDocumentCloseButton">Close</button>
+                <button type="button" class="nsm-button" data-dismiss="modal" id="selectDocumentCloseButton">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<?php include viewPath('includes/footer');?>
+<style>
+  .nav-link,
+  .nav-link:hover {
+    color: #6a4a86;
+  }
+</style>
+
+<?php include viewPath('v2/includes/footer');?>

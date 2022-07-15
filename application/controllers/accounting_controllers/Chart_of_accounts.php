@@ -151,6 +151,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();
 
+        $this->page_data['accounts'] = $this->chart_of_accounts_model->getFilteredAccounts([1]);
         $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));

@@ -912,7 +912,7 @@ table input.form-control {
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
 																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
 																</li>
-															<li><span class="ul-text"><?php echo $workorder->job_location .'<br>'. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code;  ?></a></li>
+															<li><span class="ul-text"><?php echo $workorder->job_location .'<br>'. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code;  ?></span></li>
 															<li><span class="ul-text">Email: <?php echo $workorder->email ?></span></li>
 															<li><span class="ul-text">Phone: <span class="phoneFormat2"> <?php echo $workorder->phone_number ?></span></span></li>
 		         							   			

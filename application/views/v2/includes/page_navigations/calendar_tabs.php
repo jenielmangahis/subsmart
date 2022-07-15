@@ -48,7 +48,7 @@
                 <span>Color Settings</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Calendar Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('settings/schedule') ?>">
                 <i class='bx bx-fw bx-calendar-edit'></i>
                 <span>Calendar Settings</span>

@@ -181,7 +181,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-brush'></i> Color Settings
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == '') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Calendar Settings') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("settings/schedule") ?>">
                                 <i class='bx bx-fw bx-calendar-edit'></i> Calendar Settings

@@ -29,6 +29,8 @@ class Settings extends MY_Controller {
 
     public function schedule()
     {
+		$this->page_data['page']->title = 'Calendar Settings';
+		$this->page_data['page']->parent = 'Calendar';
 
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
@@ -95,7 +97,8 @@ class Settings extends MY_Controller {
             }
             $this->page_data['is_glink'] = $is_glink;
             $this->page_data['page']->menu = 'settings';
-            $this->load->view('settings/schedule', $this->page_data);
+            // $this->load->view('settings/schedule', $this->page_data);
+            $this->load->view('v2/pages/settings/schedule', $this->page_data);
         }
     }
 
