@@ -711,7 +711,7 @@ add_footer_js(array(
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'No',
             }).then((result) => {
-                if (result.value) {
+                if (result.value) {  
                     $.ajax({
                         type: "POST",
                         url: "/job/delete_job",

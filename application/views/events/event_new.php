@@ -1016,4 +1016,3 @@ include viewPath('includes/footer');
         });
     }
 </script>
-

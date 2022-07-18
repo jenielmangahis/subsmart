@@ -24,6 +24,8 @@
     <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>esign/css/responsive.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
+
+
     <title>eSign</title>
 
     <?php echo put_header_assets(); ?>
@@ -40,11 +42,14 @@
         .modal-backdrop.in {
             opacity: 0.5 !important;
         }
+        .btn-success{
+            border-color: #6a4a86;
+        }
     </style>
 </head>
 
 <body style="background: white !important;">
-    <?php include viewPath('includes/header');?>
+<?php include viewPath('v2/includes/header');?>
 
     <?php if (isset($next_step) && $next_step == 0) {?>
 
@@ -124,7 +129,9 @@
             <div class="container-fluid">
                 <ul>
                     <li>
-                        <button type="submit" class="btn esignBuilder__submit btn-success" disabled>
+                   
+          
+                        <button type="submit" class="nsm-button primary">
                             Next
                         </button>
                     </li>
@@ -651,6 +658,8 @@
                 </div>
             </div>
         </div>
+
+        <?php include viewPath('v2/includes/footer');?>
     <?php endif;?>
 
     <script type="text/javascript" src="<?php echo $url->assets ?>/esign/js/jquery.min.js"></script>
@@ -658,9 +667,12 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 </body>
 
+
 </html>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script  src="<?=base_url("assets/frontend/js/dashboard/main.js")?>"></script>
 
 <?php if (isset($next_step) && $next_step == 0): ?>
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>

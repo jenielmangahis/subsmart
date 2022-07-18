@@ -1519,6 +1519,28 @@ function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessF
 
     return $CI->load->view('modals/folder_manager', $params, TRUE);
 }
+function getFolderManagerView_v2($isMain = true, $isMyLibrary = false, $isBusinessFormTemplates = false){
+    $CI = &get_instance();
+
+    $company_id = logged('company_id');
+    $user_fname = logged('FName');
+    $user_lname = logged('LName');
+
+    $company = getCompany()->row();
+
+    $params = array(
+        'isMain' => $isMain,
+        'isMyLibrary' => $isMyLibrary,
+        'isBusinessFormTemplates' => $isBusinessFormTemplates,
+        'company_name' => $company->business_name,
+        'user_fname' => $user_fname,
+        'user_lname' => $user_lname,
+        'categories' => $CI->file_folders_categories_model->getByWhere(array('company_id' => $company_id)),
+        'permissions' => getUserFileVaultPermissions()
+    );
+
+    return $CI->load->view('modals/v2/folder_manager', $params, TRUE);
+}
 
 function get_event_color($work_status)
 {

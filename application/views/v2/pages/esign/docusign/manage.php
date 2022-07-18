@@ -209,13 +209,11 @@
 		<div class="modal-body">
       <div class="fileupload">
           <div class="custome-fileup">
-              <div class="upload-btn-wrapper">
-                  <button class="btn">
-                      <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
-                      <span>Upload</span>
-                  </button>
-                  <input multiple="" type="file" name="docFile" id="docFile" accept="application/pdf,application/vnd.ms-excel" required="">
-              </div>
+              <button class="btn">
+                  <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
+                  <span class="nsm-button primary">Upload</span>
+              </button>
+              <input multiple="" type="file" name="docFile" id="docFile" accept="application/pdf,application/vnd.ms-excel" required="">
           </div>
       </div>
 		</div>
@@ -245,6 +243,24 @@
         </div>
     </div>
 </div>
+
+<style>
+.fileupload .custome-fileup .btn span {
+    background-color: #6a4a86 !important;
+    color: #fff !important;
+    width: 150px;
+    margin: auto;
+}
+.fileupload .custome-fileup {
+    position: relative;
+}
+.fileupload .custome-fileup:hover .btn span {
+    border-color: rgba(106, 74, 134, 0.1);
+}
+.fileupload .custome-fileup input {
+    cursor: pointer;
+}
+</style>
 
 <script>
 window.addEventListener('DOMContentLoaded', async (event) => {

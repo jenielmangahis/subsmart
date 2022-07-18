@@ -34,10 +34,9 @@
 
 <section class="container fillAndSign" data-step="1">
     <div class="fillAndSign__header">
-        <div class="alert alert-warning mt-2" role="alert">
-            <span style="color:black;">
-                To get started, upload a form from your library or from your local hard drive. Once the document is uploaded successfully, press NEXT. To add text, select the Text button in the main toolbar, click where you’d like to place the text cursor and type. Simply select another item from the toolbar and do it again.
-            </span>
+        <div class="nsm-callout primary mt-2" role="alert">
+            <button><i class="bx bx-x"></i></button>
+            To get started, upload a form from your library or from your local hard drive. Once the document is uploaded successfully, press NEXT. To add text, select the Text button in the main toolbar, click where you’d like to place the text cursor and type. Simply select another item from the toolbar and do it again.
         </div>
     </div>
 

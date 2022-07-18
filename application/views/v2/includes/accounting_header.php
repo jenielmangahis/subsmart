@@ -244,7 +244,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 Chart of Accounts
                             </a>
                         </li>
-                        <li class="<?=$page->title === 'Reconcile' ? 'selected' : ''?>">
+                        <li class="<?=$page->title === 'Reconcile' || $page->title === 'Reconciliation Summary' || $page->title === 'History by account' ? 'selected' : ''?>">
                             <a href="/accounting/reconcile">
                                 Reconcile
                             </a>

@@ -1573,7 +1573,7 @@ class Customer extends MY_Controller
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll(); 
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
 
-        $this->load->view('customer/add_advance', $this->page_data);
+        $this->load->view('v2/pages/customer/add', $this->page_data);
     }
 
     public function leads()

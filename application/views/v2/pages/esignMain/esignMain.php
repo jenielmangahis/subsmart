@@ -1,4 +1,4 @@
-<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/header');?>
 
 <div class="row page-content g-0">
     <div class="col-12">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="row g-4">
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('eSign/templateCreate') ?>'">
+                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('eSign_v2/templateCreate') ?>'">
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 text-center">
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('EsignEditor/create') ?>'">
+                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('EsignEditor_v2/create') ?>'">
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 text-center">
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('EsignEditor/letters') ?>'">
+                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('EsignEditor_v2/letters') ?>'">
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 text-center">
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('FillAndSign/step1') ?>'">
+                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('FillAndSign_v2/step1') ?>'">
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 text-center">
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('eSign/manage?view=inbox') ?>'">
+                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('eSign_v2/manage?view=inbox') ?>'">
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 text-center">
@@ -175,4 +175,4 @@
 <script type="text/javascript">
     $(document).ready(function() {});
 </script>
-<?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('v2/includes/footer');?>

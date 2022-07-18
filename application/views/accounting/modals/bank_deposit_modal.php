@@ -61,7 +61,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT</h6>
-                                            <h2 class="text-right total-deposit-amount">
+                                            <h2 class="text-right transaction-total-amount">
                                                 <?php if(isset($deposit)) :
                                                     $amount = '$'.number_format(floatval($deposit->total_amount), 2, '.', ',');
                                                     $amount = str_replace('$-', '-$', $amount);

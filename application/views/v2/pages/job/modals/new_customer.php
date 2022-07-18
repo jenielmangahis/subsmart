@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="newcustomerLabel">Add new customer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="modal-footer modal-footer-detail">
                     <div class="button-modal-list">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                         <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
                     </div>
                 </div>

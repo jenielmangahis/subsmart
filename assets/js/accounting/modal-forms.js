@@ -8298,7 +8298,7 @@ const computeBankDepositeTotal = () => {
     var totalDepositAmount = (parseFloat(otherFundsTotal) - parseFloat(cashBackAmount)).toFixed(2);
 
     $('div#depositModal span.other-funds-total').html(formatter.format(parseFloat(otherFundsTotal)));
-    $('div#depositModal h2.total-deposit-amount').html(formatter.format(parseFloat(totalDepositAmount)));
+    $('div#depositModal h2.transaction-total-amount').html(formatter.format(parseFloat(totalDepositAmount)));
     $('div#depositModal span.total-cash-back').html(formatter.format(parseFloat(totalDepositAmount)));
 }
 
@@ -8472,6 +8472,7 @@ const submitModalForm = (event, el) => {
         case '#depositModal' :
             data.delete('received_from[]');
             data.delete('payment_method[]');
+            var totalAmount = $(`#depositModal span.transaction-total-amount`).html().replace('$', '');
     
             $('#depositModal #bank-deposit-table tbody tr select[name="received_from[]"]').each(function() {
                 if(data.has('received_from[]') === false) {
@@ -11139,7 +11140,6 @@ const clearForm = () => {
     $(modalName).find('.modal-body div.form-group#summary').remove();
     $(modalName).find('.modal-body .transaction-total-amount').html('$0.00');
     $(modalName).find('.modal-body #account-balance').html('$0.00');
-    $(modalName).find('.modal-body .total-deposit-amount').html('$0.00');
 
     modalAttachmentId = [];
     modalAttachedFiles = [];
