@@ -204,3 +204,34 @@
         <?php echo form_close(); ?>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="auth-modal" tabindex="-1" aria-labelledby="auth-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-auth-verify', 'autocomplete' => 'off']); ?>
+        <input type="hidden" name="auth_module" id="auth-module" value="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="setup_stripe_modal_label">Authentication</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="content-subtitle">Authentication key was sent to <span class="auth-email"></span>.</label>
+                    </div>
+                </div>
+                <div class="row mb-3 mt-3">
+                    <div class="col-12 mb-3">
+                        <label class="content-subtitle d-block mb-2 fw-bold">Enter Authentication Key</label>
+                        <input type="text" placeholder="" name="auth_key" class="nsm-field form-control auth-key" required value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary btn-auth-verify">Verify and continue</button>
+            </div>
+        </div>
+        <?php echo form_close(); ?>
+    </div>
+</div>

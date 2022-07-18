@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class MailSendTo_model extends MY_Model
 {
-    public $table = 'mail_send_to';
+    public $table = 'cron_mail_send_to';
    
     public function getAll($filters=array())
     {

@@ -188,7 +188,7 @@ class Users_model extends MY_Model
             }
 
             if( $filters['eids'] != '' ){
-                $this->db->where_in('id', $filters['eids']);                
+                $this->db->where_in('users.id', $filters['eids']);                
             }
         }
         $query = $this->db->get();

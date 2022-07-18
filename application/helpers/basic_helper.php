@@ -4463,9 +4463,9 @@ if (!function_exists('is_admin_logged')) {
                 'email_body' => $data['body'],
                 'is_sent' => 0,
                 'is_with_error' => 0,
-                'note' => '',
+                'err_note' => '',
                 'email_attachment' => $attachment,
-                'created' => date('Y-m-d H:i:s'),
+                'date_created' => date('Y-m-d H:i:s'),
             ];
 
             $CI->MailSendTo_model->create($data_mail_send);

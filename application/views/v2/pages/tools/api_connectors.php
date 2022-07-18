@@ -661,6 +661,11 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $("#btn_setup_paypal").on("click", function() {
+            let api_module = 'paypal';
+            generate_auth_key(api_module);
+        });
+
+        function api_paypal(){
             let _container = $("#paypal_api_container");
             let url = "<?php echo base_url(); ?>tools/_get_paypal_api_credentials";
 
@@ -674,7 +679,7 @@
                     _container.html(result);
                 }
             });
-        });
+        }
 
         $("#btn_setup_square").on("click", function() {
             $("#setup_square_modal").modal("show");
@@ -684,7 +689,84 @@
             $("#setup_wepay_modal").modal("show");
         });
 
+        function generate_auth_key(module_name){
+            let url = "<?php echo base_url(); ?>tools/_send_auth_key";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                success: function(result) {
+                    if( result.is_success == 1 ){
+                        $('#auth-modal').modal('show');
+                        $('#auth-module').val(module_name);
+                        $('.auth-email').html("<b>"+result.user_email+"</b>");
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Cannot view data. We cannot verify or send authentication key to your email. Please contact your system administrator to continue.',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                }
+            });  
+        }
+
+        $("#form-auth-verify").on("submit", function(e) {
+            e.preventDefault();
+            let _this = $(this);            
+
+            var url = "<?php echo base_url(); ?>tools/_validate_auth_key";
+            _this.find("button[type=submit]").html("Verifying");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success == 1) {                        
+                        $('.auth-key').val("");
+                        $('.auth-email').html("");
+                        $('#auth-modal').modal('hide');
+                        if( $('#auth-module').val() == 'ring_central' ){
+                            api_ring_central();
+                        }else if( $('#auth-module').val() == 'twilio' ){
+                            api_twilio();
+                        }else if( $('#auth-module').val() == 'converge' ){
+                            api_converge();
+                        }else if( $('#auth-module').val() == 'nmi' ){
+                            api_nmi();
+                        }else if( $('#auth-module').val() == 'stripe' ){
+                            api_stripe();
+                        }else if( $('#auth-module').val() == 'paypal' ){
+                            api_paypal();
+                        }
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Invalid authentication key.',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+
+                    _this.find("button[type=submit]").html("Verify and continue");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
         $("#btn-setup-ring-central").on("click", function(){
+            let api_module = 'ring_central';
+            generate_auth_key(api_module);
+            
+        });
+
+        function api_ring_central(){
             let _container = $("#ring-central-container");
             let url = "<?php echo base_url(); ?>tools/_get_ring_central_credentials";
 
@@ -698,11 +780,14 @@
                     _container.html(result);
                 }
             });
-
-            
-        });
+        }
 
         $("#btn-setup-twilio").on("click", function(){
+            let api_module = 'twilio';
+            generate_auth_key(api_module);
+        });
+
+        function api_twilio(){
             let _container = $("#twilio-container");
             let url = "<?php echo base_url(); ?>tools/_get_twilio_credentials";
 
@@ -716,11 +801,14 @@
                     _container.html(result);
                 }
             });
-
-            
-        });
+        }
 
         $("#btn_setup_stripe").on("click", function() {
+            let api_module = 'stripe';
+            generate_auth_key(api_module);
+        });
+
+        function api_stripe(){
             let _container = $("#stripe_api_container");
             let url = "<?php echo base_url(); ?>tools/_get_stripe_api_credentials";
 
@@ -734,9 +822,14 @@
                     _container.html(result);
                 }
             });
-        });
+        }
 
         $("#btn_setup_nmi").on("click", function() {
+            let api_module = 'nmi';
+            generate_auth_key(api_module);
+        });
+
+        function api_nmi(){
             let _container = $("#nmi_api_container");
             let url = "<?php echo base_url(); ?>tools/_get_nmi_api_credentials";
 
@@ -750,9 +843,14 @@
                     _container.html(result);
                 }
             });
-        });
+        }
 
         $(".btn-setup-converge").on("click", function() {
+            let api_module = 'converge';
+            generate_auth_key(api_module);
+        });
+
+        function api_converge(){
             let _container = $("#converge_api_container");
             let url = "<?php echo base_url(); ?>tools/_get_converge_api_credentials";
 
@@ -766,7 +864,7 @@
                     _container.html(result);
                 }
             });
-        });
+        }
 
         $("#form-paypal-account").on("submit", function(e) {
             let _this = $(this);
