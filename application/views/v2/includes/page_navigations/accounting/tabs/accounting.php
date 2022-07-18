@@ -6,7 +6,7 @@
                 <span>Chart of accounts</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Reconcile'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Reconcile' || $page->title == 'Reconciliation Summary' || $page->title == 'History by account'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="/accounting/reconcile">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Reconcile</span>

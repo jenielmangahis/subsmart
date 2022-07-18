@@ -306,30 +306,35 @@ class Workcalender extends MY_Controller
 
             if( $refresh_token ){
                 //Set Client
-                $client = new Google_Client();
-                $client->setClientId($google_client_id);
-                $client->setClientSecret($google_secrect);
-                $client->setAccessToken($access_token);
-                $client->refreshToken($refresh_token);
-                $client->setScopes(array(
-                    'email',
-                    'profile',
-                    'https://www.googleapis.com/auth/calendar',
-                ));
-                $client->setApprovalPrompt('force');
-                $client->setAccessType('offline');
-                
-                //Request
-                $access_token = $client->getAccessToken();
-                if(!$client->isAccessTokenExpired()) {
-                    $calendar     = new Google_Service_Calendar($client);
-                    $data = $calendar->calendarList->listCalendarList();
+                try {
+                    $client = new Google_Client();
+                    $client->setClientId($google_client_id);
+                    $client->setClientSecret($google_secrect);
+                    $client->setAccessToken($access_token);
+                    $client->refreshToken($refresh_token);
+                    $client->setScopes(array(
+                        'email',
+                        'profile',
+                        'https://www.googleapis.com/auth/calendar',
+                    ));
+                    $client->setApprovalPrompt('force');
+                    $client->setAccessType('offline');
 
-                    $calendar_list = $data->getItems();
-                    $email = $google_user_api->google_email;
-                    $enabled_calendar = unserialize($google_user_api->enabled_calendars);
-                    $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);  
-                }                
+                    //Request
+                    $access_token = $client->getAccessToken();
+                    if(!$client->isAccessTokenExpired()) {
+                        $calendar     = new Google_Service_Calendar($client);
+                        $data = $calendar->calendarList->listCalendarList();
+
+                        $calendar_list = $data->getItems();
+                        $email = $google_user_api->google_email;
+                        $enabled_calendar = unserialize($google_user_api->enabled_calendars);
+                        $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);  
+                    }       
+                } catch (Exception $e) {
+                    $err = $e->getMessage();
+                }
+                           
             }
         }
 

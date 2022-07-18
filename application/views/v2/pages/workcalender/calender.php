@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/calendar/calendar_modals'); ?>
 

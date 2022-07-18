@@ -48,7 +48,7 @@ class Cron_Notification extends MYF_Controller {
                     if( $smsApi == 'twilio' ){
                         $isSent  = smsTwilio($twilioAccount, $sms->mobile_number, $sms_message);
                         //$isSent['is_success'] = 1; 
-                        if( $isSent['is_success'] == 1 ){  
+                        if( $isSent['is_sent'] ){  
                             $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
                             $data = [
                                 'is_sent' => 1,

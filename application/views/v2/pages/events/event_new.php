@@ -1,4 +1,13 @@
-<?php include viewPath('v2/includes/header'); ?>
+<?php 
+add_css(array(
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+    'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+    //"assets/css/accounting/sidebar.css",
+    'assets/textEditor/summernote-bs4.css',
+));
+include viewPath('v2/includes/header'); 
+?>
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
@@ -246,6 +255,9 @@
                                         </div>
                                         <div class="col-12">
                                             <label class="content-subtitle fw-bold d-block mb-2">Event Items Listing</label>
+                                            <button type="button" class="nsm-button pull-right" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
+                                                 <i class='bx bx-fw bx-plus'></i> Add Item
+                                            </button>
                                             <table class="nsm-table">
                                                 <thead>
                                                     <tr>
@@ -311,7 +323,7 @@
                                             <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                         </div>
                                         <div class="col-12 text-end">
-                                            <button type="button" class="nsm-button"><i class='bx bx-fw bx-plus'></i> Add Item</button>
+                                            
                                             <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
                                         </div>
                                     </div>
@@ -325,10 +337,94 @@
     </div>
 </div>
 
+<!-- Modals -->
+<?php include viewPath('v2/pages/events/modals/event_new_modals'); ?>
 
 <script type="text/javascript">
     $(document).ready(function() {
 
     });
 </script>
-<?php include viewPath('v2/includes/footer'); ?>
+<?php
+    add_footer_js(array(
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+        'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+        'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js',
+        'assets/textEditor/summernote-bs4.js',
+    ));
+    include viewPath('v2/includes/footer');
+?>
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+
+<?php include viewPath('v2/pages/events/js/new_event_js'); ?>
+<script>
+    $(function(){
+        $('#items_table').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "autoWidth": false,
+            "order": [],
+        });
+        $("#customer_id").select2({
+            placeholder: "Select Customer"
+        });
+        $("#employee_id").select2({
+            placeholder: "Select Employee"
+        });
+        $("#event_type_option").select2({
+            placeholder: "Select Event Type"
+        });
+        $("#event_tags_option").select2({
+            placeholder: "Select Event Tag"
+        });
+    });
+</script>
+<script>
+    var geocoder;
+    function initMap(address=null) {
+
+        var input = document.getElementById('event_address');
+        new google.maps.places.Autocomplete(input);
+
+        if(address == null){
+            address = '6866 Pine Forest Rd Pensacola FL 32526';
+        }else{
+            const myLatLng = { lat: -25.363, lng: 131.044 };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                height:220,
+                center: myLatLng,
+            });
+            new google.maps.Marker({
+                position: myLatLng,
+                map,
+                title: "Hello World!",
+            });
+            geocoder = new google.maps.Geocoder();
+            codeAddress(geocoder, map,address);
+        }
+
+    }
+
+    function codeAddress(geocoder, map,address) {
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                console.log(status);
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
