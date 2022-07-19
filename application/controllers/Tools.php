@@ -600,4 +600,75 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/ajax_company_nmi_form', $this->page_data);
     }
 
+    public function ajax_send_auth_key(){
+        $this->load->model('Users_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find user';
+        $user_email = '';
+
+        $user_id = getLoggedUserID();
+        $key     = generateRandomString(10) . $user_id;
+
+        $user = $this->Users_model->getUserByID($user_id);
+
+        if( $user ){
+            if( $user->email != '' ){
+                $data = ['auth_key' => $key];
+                $this->Users_model->update($user->id, $data);
+
+                $user_email = preg_replace("/(?!^).(?=[^@]+@)/", "*", $user->email);
+                //$user_email = $user->email;
+
+                $subject = 'nSmarTrac : Authentication Key';
+                $to   = $user->email;
+                $body = "Your nSmarTrac authentication key is <b>" .$key. "</b>";
+
+                $data = [
+                    'to' => $to, 
+                    'subject' => $subject, 
+                    'body' => $body,
+                    'cc' => '',
+                    'bcc' => '',
+                    'attachment' => ''
+                ];
+
+                $isSent = sendEmail($data);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Email not valid';
+            }
+            
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg, 'user_email' => $user_email];
+        echo json_encode($json_data);
+        
+    }
+
+    public function ajax_validate_auth_key(){
+        $this->load->model('Users_model');
+
+        $is_success = 0;
+        $msg = 'Invalid authentication key';
+
+        $post = $this->input->post();
+
+        $user_id = getLoggedUserID();
+        $user    = $this->Users_model->getUserByID($user_id);
+        if( $user ){
+            if( $user->auth_key == $post['auth_key'] ){
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+    }
+
 }

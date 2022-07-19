@@ -1,444 +1,339 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<style>
-    .form-inline {
-        border: none !important;
-    }
-</style>
-<?php include viewPath('includes/header'); ?>
-<!-- page wrapper start -->
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="card">
-            <div class="container-fluid" style="font-size:14px;">
+<?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
+    </div>
+    <ul class="nsm-fab-options">
+        <li onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-window-alt"></i>
+            </div>
+            <span class="nsm-fab-label">Industry Templates</span>
+        </li>
+        <li data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-task"></i>
+            </div>
+            <span class="nsm-fab-label">New Work Order</span>
+        </li>
+        <li onclick="location.href='<?php echo base_url('workorder/settings') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-cog"></i>
+            </div>
+            <span class="nsm-fab-label">Settings</span>
+        </li>
+    </ul>
+</div>
+
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col">
-                        <h1 class="m-0">Work Orders</h1>
-                    </div>
-                </div>
-
-                <div
-                    style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                    Work order are are crucial to an organization’s maintenance operation. They help everyone from
-                    maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks.
-                    When done well, work orders allow you to capture information, share it, and use it to get the work
-                    done as efficiently as possible. Our work order has legal headers and two (2) places where you can
-                    outline specific terms. This form will empower you team to move forward with each project without
-                    looking backward. Signature place holders and specific term(s) statements will help make this work
-                    order into a binding agreement.
-                </div>
-                <div class="row pb-2">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/accounting/sales-overview')?>"
-                            class="banking-tab">Overview</a>
-                        <a href="<?php echo url('/accounting/all-sales')?>"
-                            class="banking-tab">All Sales</a>
-                        <a href="<?php echo url('/accounting/newEstimateList')?>"
-                            class="banking-tab">Estimates</a>
-                        <a href="<?php echo url('/accounting/customers')?>"
-                            class="banking-tab">Customers</a>
-                        <a href="<?php echo url('/accounting/deposits')?>"
-                            class="banking-tab">Deposits</a>
-                        <a href="<?php echo url('/accounting/listworkOrder')?>"
-                            class="banking-tab-active text-decoration-none">Word Order</a>
-                        <a href="<?php echo url('/accounting/invoices')?>"
-                            class="banking-tab">Invoices</a>
-                        <a href="<?php echo url('/accounting/jobs ')?>"
-                            class="banking-tab">Jobs</a>
-                        <a href="<?php echo url('/accounting/products-and-services')?>"
-                            class="banking-tab">Products and Services</a>
-                    </div>
-                </div>
-                <div class="row" style="margin-bottom:20px;">
-                    <div class="col">
-                        <!-- <h1 class="m-0">Work Orders</h1> -->
-                    </div>
-                    <div class="col-auto">
-                        <div class="h1-spacer">
-                            <a href="<?php echo base_url('workorder/settings') ?>"
-                                style="padding-right:20px;"><i class="fa fa-cog" style="font-size:24px;"></i> Settings
-                            </a>
-                            <a class=" btn-primary btn-md"
-                                href="<?php echo base_url('accounting/work_order_templates') ?>">
-                                <span class="fa fa-pencil"></span> &nbsp; Industry Templates
-                            </a>
-                            <!-- <a class="btn btn-primary btn-md" href="#" data-toggle="modal" data-target="#workordermodal">
-                                <span class="fa fa-plus"></span> &nbsp; New Work Order
-                            </a> -->
-                            <!-- <a href="#" class=" btn-primary btn-md" data-toggle="modal" data-target="#workordermodal"><span class="fa fa-plus"></span> &nbsp; New Work Order</a> -->
-                            <a href="#" class=" btn-primary btn-md" data-toggle="modal"
-                                data-target="#workordermodal"><span class="fa fa-plus"></span> &nbsp; New Work Order</a>
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible. Our work order has legal headers and two (2) places where you can outline specific terms. This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.
                         </div>
                     </div>
                 </div>
-
-
-                <div class="row align-items-center mb-4 margin-bottom-ter">
-                    <div class="col">
-                        <!-- <p class="m-0">Listing all your work orders.</p> -->
-                    </div>
-                    <div class="col-auto text-right-sm d-flex align-items-center">
-                        <form style="display: inline;" class="form-inline form-search" name="form-search"
-                            action="<?php echo base_url('workorder') ?>"
-                            method="get">
-                            <div class="form-group m-0" style="margin:0 !important;">
-                                <span>Search:</span> &nbsp;<input class="form-control form-control-md" name="search"
-                                    value="<?php echo (!empty($search)) ? $search : '' ?>"
-                                    type="text" placeholder="Search..."
-                                    style="border-width: 1px;height: 38px !important;margin-right: 8px;">
-                                <button class="btn btn-default btn-md" type="submit">
-                                    <span class="fa fa-search"></span>
-                                </button>
-                                <?php if (!empty($search)) { ?>
-                                <a class="btn btn-default btn-md ml-2"
-                                    href="<?php echo base_url('workorder') ?>"><span
-                                        class="fa fa-times"></span></a>
-                                <?php } ?>
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <form action="<?php echo base_url('workorder') ?>" method="GET">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" value="<?php echo (!empty($search)) ? $search : '' ?>" placeholder="Search Work Order">
                             </div>
                         </form>
-                        <span class="margin-left-sec">Sort:</span> &nbsp;
-                        <div class="dropdown dropdown-inline"><a class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown" aria-expanded="false"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>?order=date-issued-desc">Date
-                                Issued: Newest <span class="caret"></span></a>
-                            <ul class="dropdown-menu dropdown-menu-align-right btn-block" role="menu">
-                                <li class="active" role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=date-issued-desc">Date
-                                        Issued: Newest</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=date-issued-asc">Date
-                                        Issued: Oldest</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=event-date-desc">Scheduled
-                                        Date: Newest </a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=event-date-asc">Scheduled
-                                        Date: Oldest </a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=date-completed-desc">Completed
-                                        Date: Newest </a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=date-completed-asc">Completed
-                                        Date: Oldest </a></li>
-                                <!--                                <li role="presentation"><a role="menuitem" tabindex="-1"-->
-                                <!--                                                           href="<?php echo base_url('accounting/listworkOrder/') ?>?order=name-asc">Job:-->
-                                <!--                                        A to Z</a></li>-->
-                                <!--                                <li role="presentation"><a role="menuitem" tabindex="-1"-->
-                                <!--                                                           href="<?php echo base_url('accounting/listworkOrder/') ?>?order=name-desc">Job:-->
-                                <!--                                        Z to A</a></li>-->
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=number-asc">Work
-                                        Order #: A to Z</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=number-desc">Work
-                                        Order #: Z to A</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=priority-asc">Priority:
-                                        A to Z</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                        href="<?php echo base_url('accounting/listworkOrder/') ?>?order=priority-desc">Priority:
-                                        Z to A</a></li>
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Sort by Date Issued: Newest</span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-issued-desc">Date Issued: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-issued-asc">Date Issued: Oldest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=event-date-desc">Scheduled Date: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=event-date-asc">Scheduled Date: Oldest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-completed-desc">Completed Date: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-completed-asc">Completed Date: Oldest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=number-asc">Work Order #: A to Z</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=number-desc">Work Order #: Z to A</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=priority-asc">Priority: A to Z</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=priority-desc">Priority: Z to A</a></li>
                             </ul>
                         </div>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>
+                                Filter by <?= ucwords($tab_status); ?>
+                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>">All</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=new') ?>">New</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=scheduled') ?>">Scheduled</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=started') ?>">Started</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=paused') ?>">Paused</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=invoiced') ?>">Invoiced</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=withdrawn') ?>">Withdrawn</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=closed') ?>">Closed</a></li>
+                            </ul>
+                        </div>
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
+                                <i class='bx bx-fw bx-window-alt'></i> Industry Templates
+                            </button>
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
+                                <i class='bx bx-fw bx-task'></i> New Work Order
+                            </button>
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('workorder/settings') ?>'">
+                                <i class='bx bx-fw bx-cog'></i>
+                            </button>
+                        </div>
                     </div>
-                    <div></div>
                 </div>
+                <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td class="table-icon text-center">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <td data-name="Work Order Number">Work Order Number</td>
+                            <td data-name="Date Issued">Date Issued</td>
+                            <td data-name="Customer">Customer</td>
+                            <td data-name="Employees">Employees</td>
+                            <td data-name="Priority">Priority</td>
+                            <td data-name="Status">Status</td>
+                            <td data-name="Manage"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (!empty($workorders)) :
+                        ?>
+                            <?php
+                            foreach ($workorders as $workorder) :
+                                switch ($workorder->priority):
+                                    case "Emergency":
+                                        $prio_badge = "error";
+                                        break;
+                                    case "Low":
+                                        $prio_badge = "secondary";
+                                        break;
+                                    case "Standard":
+                                        $prio_badge = "success";
+                                        break;
+                                    case "Urgent":
+                                        $prio_badge = "primary";
+                                        break;
+                                endswitch;
 
-                <div class="tabs">
-                    <ul class="clearfix work__order" id="myTab" role="tablist">
-                        <?php foreach ($workorderStatusFilters as $key => $statusFilter) { ?>
-                        <?php if ($key === 0) { ?>
-                        <li <?php echo (empty($tab_index)) ? 'class="active"' : '' ?>>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">All
-                                (<?php echo get_workorder_count() ?>)</a>
-                        </li>
-                        <?php } ?>
-                        <li <?php echo ((!empty($tab_index)) && $statusFilter->id === $tab_index) ? "class='active'" : "" ?>>
-                            <a class="nav-link" id="profile-tab"
-                                data-toggle="tab<?php echo $key ?>"
-                                href="<?php echo base_url('accounting/listworkOrder/' . $statusFilter->id) ?>"
-                                role="tab" aria-controls="profile" aria-selected="false"><?php echo $statusFilter->title ?>
-                                (<?php echo $statusFilter->total ?>)</a>
-                        </li>
-                        <?php } ?>
-                        <li class="active">
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">All
-                                (0)</a>
-                        </li>
-                        <li>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">New
-                                (0)</a>
-                        </li>
-                        <li>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">Scheduled
-                                (0)</a>
-                        </li>
-                        <li>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">Started
-                                (0)</a>
-                        </li>
-                        <li>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">Paused
-                                (0)</a>
-                        </li>
-                        <li>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">Invoiced
-                                (0)</a>
-                        </li>
-                        <li>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">Withdrawn
-                                (0)</a>
-                        </li>
-                        <li>
-                            <a class="nav-link active"
-                                href="<?php echo base_url('accounting/listworkOrder/') ?>"
-                                aria-controls="tab1" aria-selected="true">Closed
-                                (0)</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-
-                        <?php if (!empty($workorders)) { ?>
-                            <table class="table table-hover table-to-list" data-id="work_orders">
-                                <thead>
+                                switch ($workorder->w_status):
+                                    case "New":
+                                        $status_badge = "success";
+                                        break;
+                                    case "Draft":
+                                        $status_badge = "";
+                                        break;
+                                    case "Scheduled":
+                                        $status_badge = "secondary";
+                                        break;
+                                    case "Started":
+                                        $status_badge = "primary";
+                                        break;
+                                    case "Paused":
+                                        $status_badge = "secondary";
+                                        break;
+                                    case "Completed":
+                                        $status_badge = "success";
+                                        break;
+                                    case "Invoiced":
+                                        $status_badge = "success";
+                                        break;
+                                    case "Withdrawn":
+                                        $status_badge = "success";
+                                        break;
+                                    case "Closed":
+                                        $status_badge = "success";
+                                        break;
+                                endswitch;
+                            ?>
                                 <tr>
-                                    <th>
-                                        <div class="table-name">
-                                            <div class="checkbox checkbox-sm select-all-checkbox">
-                                                <input type="checkbox" name="id_selector" value="0" id="select-all"
-                                                       class="select-all">
-                                                <label for="select-all"></label>
-                                            </div>
-                                            <div class="table-nowrap">Work Order#</div>
+                                    <td>
+                                        <div class="table-row-icon table-checkbox">
+                                            <input class="form-check-input select-one table-select" type="checkbox" name="id[<?php echo $workorder->id ?>]" value="<?php echo $workorder->id ?>" id="work_order_id_<?php echo $workorder->id ?>">
                                         </div>
-                                    </th>
-                                    <!-- <th>Job</th> -->
-                                    <th>Date Issued</th>
-                                    <th>Customer</th>
-                                    <th>Employees</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                                </thead>
+                                    </td>
+                                    <td class="fw-bold nsm-text-primary"><?php echo $workorder->work_order_number ?></td>
+                                    <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
+                                    <td>
+                                        <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link">
+                                        <?php 
+                                            //echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name; 
+                                            if(empty($workorder->first_name)){
+                                                echo $workorder->contact_name;
+                                            }else{
 
-                                <tbody>
-
-                                <?php foreach ($workorders as $workorder) { ?>
-                                    <tr>
-                                        <td>
-                                            <div class="table-name">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="id[<?php echo $workorder->id ?>]"
-                                                           value="<?php echo $workorder->id ?>"
-                                                           class="select-one"
-                                                           id="work_order_id_<?php echo $workorder->id ?>">
-                                                    <label for="work_order_id_<?php echo $workorder->id ?>"></label>
-                                                </div>
-                                                <div><a class="a-default table-nowrap" href="">
-                                                        <?php echo $workorder->work_order_number ?>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <!-- <td>
-                                            <a class="a-default"
-                                               href="#">
-                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name ?>
-                                            </a>
-                                        </td> -->
-                                        <td>
-                                            <div class="table-nowrap">
-                                                <?php echo date('M d, Y', strtotime($workorder->date_created)) ?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>">
-                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name 
                                                 echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
-                                                ?>
+                                            }
+                                        ?></a>
+                                        <label class="d-block">Issued on: 
+                                            <?php //echo date_format($workorder->first_name, 'd M Y H:i:s') 
+                                                echo date("d M Y H:i:s", strtotime($workorder->date_issued));
+                                            ?>
+                                        </label>
+                                    </td>
+                                    <td><?php echo get_user_by_id($workorder->employee_id)->FName . ' ' . get_user_by_id($workorder->employee_id)->LName ?></td>
+                                    <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $workorder->priority; ?></span></td>
+                                    <td><span class="nsm-badge <?= $status_badge ?>"><?php echo $workorder->w_status; ?></span></td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
-                                            <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>
-                                        </td>
-                                        <td><?php echo get_user_by_id($workorder->employee_id)->FName .' '. get_user_by_id($workorder->employee_id)->LName ?></td>
-                                        <td><?php echo $workorder->priority; ?></td>
-                                        <td><?php  if( $workorder->is_mail_open == 1 ){
-                                              echo "<i class='fa fa-eye'></i>  ";
-                                            } echo $workorder->w_status;  ?></td>
-                                        <td class="text-center">
-                                            <div class="dropdown dropdown-btn">
-                                                <button class="btn btn-default dropdown-toggle" type="button"
-                                                        id="dropdown-edit"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                    <span class="btn-label">Manage</span><span
-                                                            class="caret-holder"><span
-                                                                class="caret"></span></span>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                    aria-labelledby="dropdown-edit">
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('workorder/view/' . $workorder->id) ?>"><span
-                                                                    class="fa fa-file-text-o icon"></span> View</a></li>
-                                                    <li role="presentation">
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('workorder/view/' . $workorder->id) ?>">View</a>
+                                                </li>
+                                                <li>
                                                     <?php if($workorder->work_order_type_id == '2'){ ?>
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    <?php }else{ ?>
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php }elseif($workorder->work_order_type_id == '3')
+                                                    { ?>
+                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editWorkorderSolar/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php  }elseif($workorder->work_order_type_id == '4'){ ?>
+                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editInstallation/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php } else{ ?>
+                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     <?php } ?>
-                                                    </li>
-                                                    <li role="separator" class="divider"></li>
-                                                    <li role="presentation"><a role="menuitem"
-                                                                               tabindex="-1"
-                                                                               href="#"
-                                                                               data-toggle="modal"
-                                                                               data-target="#modalCloneWorkorder"
-                                                                               data-id="<?php echo $workorder->id ?>"
-                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder">
-                                                                               <span class="fa fa-files-o icon clone-workorder">
-
-                                                        </span> Clone Work Order</a>
-                                                    </li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('invoice') ?>"
-                                                                               data-convert-to-invoice-modal="open"
-                                                                               data-id="161983"
-                                                                               data-name="WO-00433"><span
-                                                                    class="fa fa-money icon"></span> Create Invoice</a>
-                                                    </li>
-                                                    <!-- <li role="presentation"><a role="menuitem"
-                                                                               tabindex="-1"
-                                                                               href="<?php echo base_url('workorder/delete/' . $workorder->id) ?>>"
-                                                                               onclick="return confirm('Do you really want to delete this item ?')"
-                                                                               data-delete-modal="open" data-id="161983"
-                                                                               data-name="WO-00433"><span
-                                                                    class="fa fa-trash-o icon"></span> Delete</a></li> -->
-                                                    <li role="presentation">
-                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete </a></li>
-                                                    <li role="presentation">
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>">
-                                                            <span class="fa fa-briefcase icon"></span> Convert To Jobs
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-
-                                </tbody>
-
-                            </table>
-                        <?php } else { ?>
-                            <div class="page-empty-container">
-                                <h5 class="page-empty-header">You haven't yet added your work orders</h5>
-                                <p class="text-ter margin-bottom">Manage your work orders.</p>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </div>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-id="<?php echo $workorder->id ?>" data-wo_num="<?php echo $workorder->work_order_number ?>" data-bs-toggle="modal" data-bs-target="#clone_workorder_modal">Clone Work Order</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice') ?>">Create Invoice</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-work-id="<?php echo $workorder->id; ?>">Delete</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('job/work_order_job/' . $workorder->id) ?>">Convert To Jobs</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                            endforeach;
+                            ?>
+                        <?php
+                        else :
+                        ?>
+                            <tr>
+                                <td colspan="8">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php
+                        endif;
+                        ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
-    <!-- MODAL CLONE WORKORDER -->
-    <div class="modal fade" id="modalCloneWorkorder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">Clone Work Order</h4>
-                </div>
-                <div class="modal-body">
-                    <form name="clone-modal-form">
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-                            You are going create a new work order based on <b>Work Order #<span
-                                    class="data_workorder_id"></span></b>.<br>
-                            Afterwards you can edit the newly created work order.
-                        </p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
-                        Work Order
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="modal fade" id="newJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Select Job</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-12 row">
-                        <div class="col-md-9 form-group" style="z-index:2;">
-                            <label for="exampleFormControlSelect1">Select Job</label>
-                            <select class="form-control" id="selectExistingJob">
-                                <option value="" selected disabled hidden>Select</option>
-                                <?php foreach ($jobs as $job) : ?>
-                                <option
-                                    value="<?php echo $job->job_number; ?>">
-                                    Job <?php echo $job->job_number; ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-3 form-group" style="margin-top: 6px;">
-                            <label for="exampleFormControlSelect1"></label><br>
-                            <a class="btn btn-primary" id="btnExistingJob" href="javascript:void(0)">
-                                GO
-                            </a>
-                        </div>
-                        <div class="col-md-12 text-center form-group" style="margin-top: 6px;">
-                            <label for="exampleFormControlSelect1">Or</label>
-                        </div>
-                        <div class="col-md-12 text-center form-group" style="margin-top: 6px;">
-                            <a class="btn btn-primary"
-                                href="<?php echo base_url('job/new_job') ?>">
-                                New Job
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- page wrapper end -->
-    <?php include viewPath('includes/footer_accounting'); ?>
 </div>
-<?php include viewPath('accounting/workorder_modal');
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".nsm-table").nsmPagination();
+
+        $("#select-all").on("change", function() {
+            let isChecked = $(this).is(":checked");
+
+            if (isChecked)
+                $(".nsm-table").find(".select-one").prop("checked", true);
+            else
+                $(".nsm-table").find(".select-one").prop("checked", false);
+        });
+
+        $(document).on("click", ".clone-item", function() {
+            let num = $(this).attr('data-wo_num');
+            let id = $(this).attr('data-id');
+
+            $('.work_order_no').text(num);
+            $('#wo_id').val(id);
+        });
+
+        $("#clone_workorder").on("click", function(){
+            let wo_num = $('#wo_id').val();
+
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url(); ?>workorder/duplicate_workorder",
+                data: {
+                    wo_num: wo_num
+                },
+                success: function(result) {
+                    Swal.fire({
+                        title: 'Good job!',
+                        text: "Data Cloned Successfully!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                },
+            });
+        });
+
+        $(document).on("click", ".delete-item", function() {
+            let id = $(this).attr('data-work-id');
+            console.log(id);
+
+            Swal.fire({
+                title: 'Delete Work Order',
+                text: "Are you sure you want to delete this Work Order?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>workorder/delete_workorder",
+                        data: {
+                            id: id
+                        },
+                        success: function(result) {
+                            Swal.fire({
+                                title: 'Good job!',
+                                text: "Data Deleted Successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+                        },
+                    });
+                }
+            });
+        });
+    });
+</script>
+<?php include viewPath('v2/includes/footer'); ?>

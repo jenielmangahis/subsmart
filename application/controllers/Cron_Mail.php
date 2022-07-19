@@ -45,7 +45,8 @@ class Cron_Mail extends MYF_Controller {
                         $mail->Subject = $subject;
                         $mail->MsgHTML($body);
                         if( $m->email_to != '' ){
-                            $mail->addAddress($m->email_to);    
+                            $mail->addAddress($m->email_to);   
+                            //$mail->addAddress('webtestcustomer@nsmartrac.com');   
                         }
 
                         if( $m->email_bcc != '' ){
@@ -71,7 +72,7 @@ class Cron_Mail extends MYF_Controller {
                             $error = 'Mailer Error: ' . $mail->ErrorInfo;
                             $update_send_to_data = [
                                 'is_with_error' => 1,
-                                'note' => $error
+                                'err_note' => $error
                             ];                        
                             $this->MailSendTo_model->updateSendTo($m->id, $update_send_to_data);
                         }

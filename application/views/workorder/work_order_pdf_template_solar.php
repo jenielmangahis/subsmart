@@ -283,7 +283,7 @@
                         <td style="border: 0px solid white;border-collapse: collapse;" align="center">
                             <?php if(empty($company_representative_signature)){ } else{ ?>
                             <img src="<?php echo base_url($company_representative_signature); ?>" style="width:30%;height:50px;"><br>
-                            <?php echo $company_representative_name; ?>
+                            <?php echo $first; ?>
                             <?php } ?>
                         </td>
                         

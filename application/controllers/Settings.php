@@ -1087,12 +1087,24 @@ class Settings extends MY_Controller {
                 $send_to = serialize($send_to);
             }
 
+            $send_to_creator = 0;
+            if( isset($post['send_creator']) ){
+                $send_to_creator = 1;
+            }
+
+            $is_email_opened = 0;
+            if( isset($post['email_opened']) ){
+                $is_email_opened = 1;
+            }
+
             $data = [
                 'company_id' => $cid,
                 'module_name' => $post['module_name'],
                 'sms_text' => $post['sms_text'],
                 'send_to' => $send_to,
                 'module_status' => $post['module_status'],
+                'send_to_creator' => $send_to_creator,
+                'is_email_opened' => $is_email_opened,
                 'is_enabled' => $post['is_enabled']
             ];
 

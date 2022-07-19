@@ -134,9 +134,9 @@
                         <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
                         </tr> -->
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;">
                             <div style="text-align: justify; text-justify: inter-word;font-size:8px;">
@@ -376,35 +376,36 @@
                     <br>
                     <table>
                         <tr>
-                            <td style="margin:;padding:4px;"><b>Equipment Cost</b></td>
-                            <td style="margin:;padding:4px;"><?php echo $subtotal; ?></td>
+                            <td style="margin:;padding:3px;"><b>Equipment Cost</b></td>
+                            <td style="margin:;padding:3px;"><?php echo $subtotal; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:4px;"><b>Sales Tax</b></td>
-                            <td style="margin:;padding:4px;"><?php echo $taxes; ?></td>
+                            <td style="margin:;padding:3px;"><b>Sales Tax</b></td>
+                            <td style="margin:;padding:3px;"><?php echo $taxes; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:4px;"><b>Installation Cost</b></td>
-                            <td style="margin:;padding:4px;"><?php echo $installation_cost; ?></td>
+                            <td style="margin:;padding:3px;"><b>Installation Cost</b></td>
+                            <td style="margin:;padding:3px;"><?php echo $installation_cost; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:4px;"><b>One time (Program and Setup)</b></td>
-                            <td style="margin:;padding:4px;"><?php echo $otp_setup; ?></td>
+                            <td style="margin:;padding:3px;"><b>One time (Program and Setup)</b></td>
+                            <td style="margin:;padding:3px;"><?php echo $otp_setup; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:4px;"><b>Monthly Monitoring</b></td>
-                            <td style="margin:;padding:4px;"><?php echo $monthly_monitoring; ?></td>
+                            <td style="margin:;padding:3px;"><b>Monthly Monitoring</b></td>
+                            <td style="margin:;padding:3px;"><?php echo $monthly_monitoring; ?></td>
                         </tr>
                         <tr>
-                            <td style="margin:;padding:4px;"><b>Total Due</b></td>
-                            <td style="margin:;padding:4px;"><?php echo $total; ?></td>
+                            <td style="margin:;padding:3px;"><b>Total Due</b></td>
+                            <td style="margin:;padding:3px;"><?php echo $total; ?></td>
                         </tr>
                     </table>
                 </div> 
                 <!-- <hr style="margin-top:0px;margin-bottom:-1px;"> -->
+                <br>
                 <b style="font-size:8px;">Agreement</b>
                 <br>
-                <div style="font-size:8px;"><?php echo $terms_and_conditions; ?></div>
+                <div style="font-size:7px;"><?php echo $terms_and_conditions; ?></div>
         
                 <b style="font-size:8px;">ASSIGNED TO:</b>
                 <hr>
@@ -413,7 +414,7 @@
                         <td style="border: 0px solid white;border-collapse: collapse;" align="center">
                             <?php if(empty($company_representative_signature)){ } else{ ?>
                             <img src="<?php echo base_url($company_representative_signature); ?>" style="width:30%;height:50px;"><br>
-                            <?php echo $company_representative_name; ?>
+                            <?php echo $first; ?>
                             <?php } ?>
                         </td>
                         

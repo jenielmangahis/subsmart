@@ -2386,7 +2386,7 @@ class Workorder extends MY_Controller
             'template'                          => '3',
             'business_logo'                     => $business_logo,
 
-            'first'                             => $first,
+            'first'                             => $first->FName.' '.$first->LName,
             'second'                            => $second,
             'third'                             => $third,
 
@@ -2490,7 +2490,7 @@ class Workorder extends MY_Controller
             'template'                          => '3',
             'business_logo'                     => $business_logo,
 
-            'first'                             => $first,
+            'first'                             => $first->FName.' '.$first->LName,
             'second'                            => $second,
             'third'                             => $third,
 

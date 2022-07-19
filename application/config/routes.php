@@ -1347,3 +1347,7 @@ $route['settings/_update_sms_auto_notification'] = 'Settings/ajax_update_sms_aut
 
 //Cron SMS Notification
 $route['cron_notification/auto_sms_notification'] = 'Cron_Notification/auto_sms_notification';
+
+//Auth Key
+$route['tools/_send_auth_key'] = 'Tools/ajax_send_auth_key';
+$route['tools/_validate_auth_key'] = 'Tools/ajax_validate_auth_key';

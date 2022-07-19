@@ -31,7 +31,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == 'Work Order'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="/accounting/listworkOrder">
+            <a class="nsm-page-link" href="/accounting/workorder">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Work Order</span>
             </a>

@@ -149,8 +149,8 @@ define('RINGCENTRAL_EXT', '105');*/
 define('MAIL_SERVER', 'mail.nsmartrac.com');
 define('MAIL_PORT', 465);
 define('MAIL_USERNAME', 'websndr@nsmartrac.com');
-define('MAIL_PASSWORD', ')d_2=Gm[xpSZ');
-define('MAIL_FROM', 'noreply@nsmartrac.com');
+define('MAIL_PASSWORD', 'AtWt]&[+t#x.');
+define('MAIL_FROM', 'websndr@nsmartrac.com');
 define('REGISTRATION_MONTHS_DISCOUNTED', 3);
 
 //TRAC360
