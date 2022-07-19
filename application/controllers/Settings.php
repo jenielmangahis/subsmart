@@ -1111,11 +1111,6 @@ class Settings extends MY_Controller {
                 $send_to_company_admin = 1;
             }
 
-            $is_email_opened = 0;
-            if( isset($post['email_opened']) ){
-                $is_email_opened = 1;
-            }
-
             $data = [
                 'company_id' => $cid,
                 'module_name' => $post['module_name'],
@@ -1123,8 +1118,7 @@ class Settings extends MY_Controller {
                 'send_to' => $send_to,
                 'module_status' => $post['module_status'],
                 'send_to_creator' => $send_to_creator,
-                'send_to_company_admin' => $send_to_company_admin,
-                'is_email_opened' => $is_email_opened,
+                'send_to_company_admin' => $send_to_company_admin,                
                 'is_enabled' => $post['is_enabled']
             ];
 
@@ -1191,11 +1185,13 @@ class Settings extends MY_Controller {
         if( $autoSms->send_to == 'all' ){
             $is_send_all = true;
         }else{
-            $a_send_to  = unserialize($autoSms->send_to);
-            foreach($a_send_to as $value){
-                $userData = getUserName($value);
-                $recipients[$userData['id']] = $userData['name'];
-            }
+            if( $autoSms->send_to != '' ){
+                $a_send_to  = unserialize($autoSms->send_to);
+                foreach($a_send_to as $value){
+                    $userData = getUserName($value);
+                    $recipients[$userData['id']] = $userData['name'];
+                }
+            }            
         }
 
         $this->page_data['autoSms'] = $autoSms;

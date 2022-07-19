@@ -65,7 +65,12 @@
                             <?php foreach ($autoSms as $asms){ ?>
                             <tr>
                                 <td>
-                                    Send auto sms notification if <b><?= ucfirst(str_replace("_", " ", $asms->module_name)) ?></b> having status <br /> <b><?= ucfirst($asms->module_status); ?></b>
+                                    <?php if( $asms->module_status == 'Email Opened' ){ ?>
+                                        Send auto sms notification if <b><?= ucfirst(str_replace("_", " ", $asms->module_name)) ?> Email is Opened</b></b>                                    
+                                    <?php }else{ ?>
+                                        Send auto sms notification if <b><?= ucfirst(str_replace("_", " ", $asms->module_name)) ?></b> having status <br /> <b><?= ucfirst($asms->module_status); ?></b>                                    
+                                    <?php } ?>
+                                    
                                 </td>
                                 <td><?= $asms->sms_text; ?></td>
                                 <td>
@@ -117,7 +122,7 @@
 
                 <!-- Create auto sms notification -->
                 <div class="modal fade nsm-modal fade" id="modalCreateAutoSmsNotification" aria-labelledby="modalCreateAutoSmsNotificationLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-md">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Create Auto SMS Notification Setting</span>
@@ -145,12 +150,6 @@
                                                 <option value="">Select Status</option>
                                             </select>
                                             </span>
-                                        </div>
-                                        <div class="form-check" style="margin-top:5px;">
-                                          <input class="form-check-input" type="checkbox" value="email_opened" name="email_opened" id="chk-email-opened">
-                                          <label class="form-check-label" for="flexCheckDefault">
-                                            Send when email is opened
-                                          </label>
                                         </div>
                                     </div>
                                     <div class="col-md-12 mt-3">
@@ -211,7 +210,7 @@
 
                 <!-- Edit auto sms notification -->
                 <div class="modal fade nsm-modal fade" id="modalEditAutoSmsNotification" aria-labelledby="modalEditAutoSmsNotificationLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-md">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Edit Auto SMS Notification Setting</span>

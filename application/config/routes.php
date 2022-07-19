@@ -1351,3 +1351,6 @@ $route['cron_notification/auto_sms_notification'] = 'Cron_Notification/auto_sms_
 //Auth Key
 $route['tools/_send_auth_key'] = 'Tools/ajax_send_auth_key';
 $route['tools/_validate_auth_key'] = 'Tools/ajax_validate_auth_key';
+
+//Image tracker email
+$route['tracker/estimate_image_tracker'] = 'Tracker/estimateImageTracker';

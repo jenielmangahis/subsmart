@@ -108,6 +108,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Started' => 'Started',
             'New' => 'New',
             'Completed' => 'Completed',
+            'Email Opened' => 'Email Opened',
         ];
 
         return $status;
@@ -119,7 +120,8 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Submitted' => 'Submitted',
             'Accepted' => 'Accepted',
             'Declined By Customer' => 'Declined By Customer',
-            'Lost' => 'Lost'
+            'Lost' => 'Lost',
+            'Email Opened' => 'Email Opened'
         ];
 
         return $status;
@@ -134,7 +136,8 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Paused' => 'Paused',
             'Invoiced' => 'Invoiced',
             'Withdrawn' => 'Withdrawn',
-            'Closed' => 'Closed'
+            'Closed' => 'Closed',
+            'Email Opened' => 'Email Opened'
         ];
 
         return $status;
@@ -145,7 +148,8 @@ class CompanyAutoSmsSettings_model extends MY_Model
         $status = [
             'Scheduled' => 'Scheduled',
             'Started' => 'Started',
-            'Completed' => 'Completed'
+            'Completed' => 'Completed',
+            'Email Opened' => 'Email Opened'
         ];
 
         return $status;

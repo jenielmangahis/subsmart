@@ -370,6 +370,7 @@
             </div>
         </div>
     </div>
+    <img src="<?= base_url('tracker/estimate_image_tracker?id='.$eid); ?>">
 </div>
 </body>
 </html>

@@ -22,12 +22,6 @@
             </select>
             </span>
         </div>
-        <div class="form-check" style="margin-top:5px;">
-          <input class="form-check-input" type="checkbox" value="email_opened" name="email_opened" id="chk-email-opened">
-          <label class="form-check-label" for="flexCheckDefault">
-            Send when email is opened
-          </label>
-        </div>
     </div>
     <div class="col-md-12 mt-3">
         <label for="">SMS Message</label>
@@ -60,9 +54,15 @@
           </label>
         </div>
         <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
-          <input class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
+          <input <?= $autoSms->send_to_creator == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
           <label class="form-check-label" for="flexCheckDefault">
-            Send Creator
+            Send to Module Item Creator
+          </label>
+        </div>
+        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+          <input <?= $autoSms->send_to_company_admin == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="chk-send-company-admin">
+          <label class="form-check-label" for="flexCheckDefault">
+            Send to Company Admin
           </label>
         </div>
         

@@ -1746,6 +1746,7 @@ class Users extends MY_Controller
         $payscale_id = $this->input->post('empPayscale');
         $emp_number  = $this->input->post('emp_number');
         $user_type   = $this->input->post('user_type');
+        
         $user = $this->Users_model->getUser($user_id);
 
         if( $profile_img == '' ){
