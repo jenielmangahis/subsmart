@@ -156,7 +156,7 @@ if ($this->session->userdata('usertimezone') == null) {
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Work Order' ? 'selected' : ''?>">
-                            <a href="/accounting/listworkOrder">
+                            <a href="/accounting/workorder">
                                 <i class='bx bx-fw bx-task'></i> Work Order
                             </a>
                         </li>
@@ -210,7 +210,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li class="<?=$page->title === 'reports' ? 'selected' : ''?>">
+                <li class="<?=$page->parent === 'Reports' ? 'selected' : ''?>">
                     <a href="/accounting/reports">
                         <i class='bx bx-fw bx-chart'></i> Reports
                     </a>

@@ -32,7 +32,7 @@ class Vault_v2 extends MY_Controller
     {
         $this->page_data['folder_manager'] = getFolderManagerView_v2(true, true);
         add_footer_js(['assets/js/vaults/dataTables.checkboxes.min.js']);
-        $this->load->view('vault/list', $this->page_data);
+        $this->load->view('v2/pages/vault/list', $this->page_data);
     }
 
     public function beforeafter()
@@ -40,7 +40,13 @@ class Vault_v2 extends MY_Controller
         $this->load->model('Before_after_model', 'before_after_model');
         $comp_id = logged('company_id');
         $this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
-        $this->load->view('vault/beforeafter', $this->page_data);
+        $this->page_data['page']->title = 'Before and After Photos';
+
+        add_css([
+            'https://nightly.datatables.net/css/jquery.dataTables.css',
+        ]);
+
+        $this->load->view('v2/pages/vault/beforeafter', $this->page_data);
     }
 
     public function businessformtemplates()

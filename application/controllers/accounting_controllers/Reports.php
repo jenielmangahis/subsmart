@@ -133,6 +133,9 @@ class Reports extends MY_Controller {
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+
+        $this->page_data['page']->title = 'Reports';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/index', $this->page_data);
     }
 
@@ -163,6 +166,9 @@ class Reports extends MY_Controller {
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+
+        $this->page_data['page']->title = 'Custom Reports';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/custom', $this->page_data);
     }
 
@@ -181,6 +187,9 @@ class Reports extends MY_Controller {
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+
+        $this->page_data['page']->title = 'Management Reports';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/management_reports', $this->page_data);
     }
 
@@ -191,6 +200,9 @@ class Reports extends MY_Controller {
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+
+        $this->page_data['page']->title = 'Activities Reports';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/activities', $this->page_data);
     }
 
@@ -201,6 +213,9 @@ class Reports extends MY_Controller {
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+
+        $this->page_data['page']->title = 'Analytics';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/analytics', $this->page_data);
     }
 
@@ -211,6 +226,9 @@ class Reports extends MY_Controller {
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+
+        $this->page_data['page']->title = 'PayScale';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/payscale', $this->page_data);
     }
 
@@ -224,6 +242,9 @@ class Reports extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "Audit Log";
+
+        $this->page_data['page']->title = 'Audit Log';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/standard_report_pages/audit_log', $this->page_data);
     }
 
@@ -237,6 +258,9 @@ class Reports extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "FFCRA Cares Act Report";
+
+        $this->page_data['page']->title = 'FFCRA Cares Act Report';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/standard_report_pages/ffcra_cares_act_report', $this->page_data);
     }
 
@@ -257,6 +281,8 @@ class Reports extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Balance Sheet Reports";
+
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
 }

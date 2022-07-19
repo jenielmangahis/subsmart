@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('vault/mylibrary') ?>'">
+                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('vault_v2/mylibrary') ?>'">
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 text-center">
