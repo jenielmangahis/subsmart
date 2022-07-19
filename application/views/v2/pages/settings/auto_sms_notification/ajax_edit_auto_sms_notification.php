@@ -22,6 +22,12 @@
             </select>
             </span>
         </div>
+        <div class="form-check" style="margin-top:5px;">
+          <input class="form-check-input" type="checkbox" value="email_opened" name="email_opened" id="chk-email-opened">
+          <label class="form-check-label" for="flexCheckDefault">
+            Send when email is opened
+          </label>
+        </div>
     </div>
     <div class="col-md-12 mt-3">
         <label for="">SMS Message</label>
@@ -47,10 +53,16 @@
                 <?php } ?>
             </select>
         </span>                                        
-        <div class="form-check" style="margin-top:5px;">
+        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
           <input <?= $is_send_all ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_to_all" id="edit-chk-send-all">
           <label class="form-check-label" for="flexCheckDefault">
             Send to all
+          </label>
+        </div>
+        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+          <input class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
+          <label class="form-check-label" for="flexCheckDefault">
+            Send Creator
           </label>
         </div>
         

@@ -21,6 +21,7 @@
                             <form method="POST" id="support_form">
                                 <div class="row g-3">
                                     <div class="col-12">
+                                        <input type="hidden" name="ns_input" id="ns-input" value="">
                                         <label class="content-subtitle fw-bold mb-2 d-block">First Name</label>
                                         <input type="text" placeholder="First Name" name="first_name" id="first_name" class="nsm-field form-control" required value="<?php echo $user->FName; ?>" />
                                     </div>

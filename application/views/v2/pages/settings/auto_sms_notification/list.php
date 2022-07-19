@@ -70,9 +70,13 @@
                                 <td><?= $asms->sms_text; ?></td>
                                 <td>
                                     <ul>
-                                    <?php foreach($recipients[$asms->id] as $value){ ?>
-                                        <li><?= $value; ?></li>
-                                    <?php } ?>
+                                    <?php if( !empty($recipients[$asms->id]) ){ ?>
+                                        <?php foreach($recipients[$asms->id] as $value){ ?>
+                                            <li><?= $value; ?></li>
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <li>-</li>
+                                    <?php } ?>                                    
                                     </ul>
                                 </td>
                                 <td>
@@ -142,6 +146,12 @@
                                             </select>
                                             </span>
                                         </div>
+                                        <div class="form-check" style="margin-top:5px;">
+                                          <input class="form-check-input" type="checkbox" value="email_opened" name="email_opened" id="chk-email-opened">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                            Send when email is opened
+                                          </label>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label for="">SMS Message</label>
@@ -161,10 +171,22 @@
                                         <span id="" class="auto-sms-popover" data-bs-toggle="popover" data-bs-content="Employee(s) that will receive the auto notification">
                                             <select name="send_to[]" id="send-to-user" class="form-control" multiple=""></select>
                                         </span>                                        
-                                        <div class="form-check" style="margin-top:5px;">
+                                        <div class="form-check" style="margin-top:5px;display: inline-block;">
                                           <input class="form-check-input" type="checkbox" value="all" name="send_to_all" id="chk-send-all">
                                           <label class="form-check-label" for="flexCheckDefault">
                                             Send to all
+                                          </label>
+                                        </div>
+                                        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+                                          <input class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                            Send to Module Item Creator
+                                          </label>
+                                        </div>
+                                        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+                                          <input class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="chk-send-company-admin">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                            Send to Company Admin
                                           </label>
                                         </div>
                                         

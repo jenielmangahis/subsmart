@@ -1,3 +1,9 @@
+<style>
+.api-input{
+    letter-spacing: 3px;
+    text-align: center;
+}
+</style>
 <div class="row gy-3 text-center">
     <div class="col-12 mb-3">
         <img class="w-50" src="<?php echo $url->assets ?>img/nmi.png">
@@ -7,7 +13,7 @@
     </div>
     <div class="col-12">
         <label class="content-subtitle d-block mb-2 fw-bold">Transaction Key</label>
-        <textarea placeholder="Transaction Key" name="nmi_transaction_key" class="nsm-field form-control" required><?= $nmi ? $nmi->nmi_transaction_key : ''; ?></textarea>
+        <input type="text" name="nmi_transaction_key" class="nsm-field form-control api-input" value="<?= $nmi ? maskString($nmi->nmi_transaction_key) : ''; ?>" required>
     </div>
     <div class="col-12">
         <label class="content-subtitle d-block mb-2 fw-bold">Terminal ID</label>

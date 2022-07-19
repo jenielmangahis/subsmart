@@ -4424,6 +4424,11 @@ if (!function_exists('is_admin_logged')) {
             $err_msg  = 'Please specify email subject';
         }
 
+        if( isset($data['honeypot']) && $data['honeypot'] != '' ){
+            $is_valid = false; 
+            $err_msg = 'Invalid form data';           
+        }
+
         if( $data['to'] == '' && $data['bcc'] == '' && $data['cc'] == '' ){
             $is_valid = false; 
             $err_msg = 'Please specify recipient';           
@@ -4747,5 +4752,12 @@ if(!function_exists('set_expense_graph_data')) {
                 }
             }
         }
+    }
+
+    function maskString($string, $length = 5){
+    
+        $mask_string =  str_repeat("*", strlen($string)-$length) . substr($string, -$length);
+        
+        return $mask_string;
     }
 }

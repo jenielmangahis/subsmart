@@ -38,6 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <input type="text" value="" placeholder="Phone number" class="phone-input-contact"/>
                   <input type="text" value="" placeholder="Email" class="phone-input-contact"/>
                   <textarea placeholder="Message" class="phone-input-contact" style="height: 95px;"></textarea>
+                  <input type="hidden" name="contact_chk" value="" id="contact-chk" >
                   <button type="submit" class="btn-phone">Send</button>
                 </div>
               </div>
