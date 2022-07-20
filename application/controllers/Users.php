@@ -1746,6 +1746,7 @@ class Users extends MY_Controller
         $payscale_id = $this->input->post('empPayscale');
         $emp_number  = $this->input->post('emp_number');
         $user_type   = $this->input->post('user_type');
+        
         $user = $this->Users_model->getUser($user_id);
 
         if( $profile_img == '' ){
@@ -2136,7 +2137,8 @@ class Users extends MY_Controller
 		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));
 
 		$this->page_data['user'] = $get_user;
-		$this->load->view('users/modal_edit_profile', $this->page_data);
+		// $this->load->view('users/modal_edit_profile', $this->page_data);
+		$this->load->view('v2/pages/users/modal_edit_profile', $this->page_data);
 	}
 
 	public function ajax_update_profile()

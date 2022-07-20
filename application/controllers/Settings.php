@@ -1022,11 +1022,21 @@ class Settings extends MY_Controller {
                 if( $asms->send_to == 'all' ){
                     $recipients[$asms->id][] = 'All';
                 }else{
-                    $a_send_to  = unserialize($asms->send_to);
-                    foreach($a_send_to as $value){
-                        $user = getUserName($value);
-                        $recipients[$asms->id][] = $user['name'];
+                    if( $asms->send_to != '' ){
+                        $a_send_to  = unserialize($asms->send_to);
+                        foreach($a_send_to as $value){
+                            $user = getUserName($value);
+                            $recipients[$asms->id][] = $user['name'];
+                        }
                     }
+
+                    if( $asms->send_to_creator == 1 ){
+                        $recipients[$asms->id][] = 'Send to Module Item Creator';
+                    }                    
+
+                    if( $asms->send_to_company_admin == 1 ){
+                        $recipients[$asms->id][] = 'Send to Company Admin';
+                    }                    
                 }
             }            
         }
@@ -1073,18 +1083,22 @@ class Settings extends MY_Controller {
             $msg = 'Please specify sms message';
         }elseif( $post['module_status'] == '' ){
             $msg = 'Please specify status of the module that will trigger auto sms';
-        }elseif( !isset($post['send_to_all']) && empty($post['send_to'])  ){
+        }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_company_admin']) ){
             $msg = 'Please specify recipient of the sms notification';
         }else{            
             if( isset($post['send_to_all']) ){
                 $send_to = 'all';
             }else{
-                $send_to = array();
-                foreach($post['send_to'] as $value){
-                    $send_to[] = $value;
-                }
+                if(isset($post['send_to'])){
+                    $send_to = array();
+                    foreach($post['send_to'] as $value){
+                        $send_to[] = $value;
+                    }
 
-                $send_to = serialize($send_to);
+                    $send_to = serialize($send_to);
+                }else{
+                    $send_to = '';
+                }             
             }
 
             $send_to_creator = 0;
@@ -1092,9 +1106,9 @@ class Settings extends MY_Controller {
                 $send_to_creator = 1;
             }
 
-            $is_email_opened = 0;
-            if( isset($post['email_opened']) ){
-                $is_email_opened = 1;
+            $send_to_company_admin = 0;
+            if( isset($post['send_company_admin']) ){
+                $send_to_company_admin = 1;
             }
 
             $data = [
@@ -1104,7 +1118,7 @@ class Settings extends MY_Controller {
                 'send_to' => $send_to,
                 'module_status' => $post['module_status'],
                 'send_to_creator' => $send_to_creator,
-                'is_email_opened' => $is_email_opened,
+                'send_to_company_admin' => $send_to_company_admin,                
                 'is_enabled' => $post['is_enabled']
             ];
 
@@ -1171,11 +1185,13 @@ class Settings extends MY_Controller {
         if( $autoSms->send_to == 'all' ){
             $is_send_all = true;
         }else{
-            $a_send_to  = unserialize($autoSms->send_to);
-            foreach($a_send_to as $value){
-                $userData = getUserName($value);
-                $recipients[$userData['id']] = $userData['name'];
-            }
+            if( $autoSms->send_to != '' ){
+                $a_send_to  = unserialize($autoSms->send_to);
+                foreach($a_send_to as $value){
+                    $userData = getUserName($value);
+                    $recipients[$userData['id']] = $userData['name'];
+                }
+            }            
         }
 
         $this->page_data['autoSms'] = $autoSms;

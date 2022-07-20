@@ -2350,6 +2350,7 @@ class Workorder extends MY_Controller
             'otp_setup'                         => $workorder->otp_setup,
             'monthly_monitoring'                => $workorder->monthly_monitoring,
             'installation_cost'                 => $workorder->installation_cost,
+            'email'                             => $workorder->email,
 
             'comments'                          => $workorder->comments,
             'terms_and_conditions'              => $workorder->terms_and_conditions,

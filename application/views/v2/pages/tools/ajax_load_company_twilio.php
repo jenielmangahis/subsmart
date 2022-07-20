@@ -1,3 +1,9 @@
+<style>
+.api-input{
+    letter-spacing: 3px;
+    text-align: center;
+}
+</style>
 <div class="row gy-3 text-center">
     <div class="col-12 mb-1">
         <img class="w-50" src="<?= base_url() ?>/assets/img/api-tools/twilio.png">
@@ -11,13 +17,13 @@
         <div class="row mb-5 mt-5">
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">SID</label>
-                <textarea placeholder="" name="tw_sid" class="nsm-field form-control" required><?= $twilio ? $twilio->tw_sid : ''; ?></textarea>
+                <input type="text" name="tw_sid" class="nsm-field form-control api-input" value="<?= $twilio ? maskString($twilio->tw_sid) : ''; ?>" required>
             </div>
         </div>
         <div class="row mb-5 mt-5">
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Token</label>
-                <textarea placeholder="" name="tw_token" class="nsm-field form-control" required rows=3><?= $twilio ? $twilio->tw_token : ''; ?></textarea>
+                <input type="text" name="tw_token" class="nsm-field form-control api-input" value="<?= $twilio ? maskString($twilio->tw_token) : ''; ?>" required />
             </div>
         </div>
         <div class="row mb-5">

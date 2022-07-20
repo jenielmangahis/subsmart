@@ -931,6 +931,19 @@
             exit;
         }
 
+        public function estimateTrackerImage()
+        {
+            $this->load->helper(array('hashids_helper'));
+
+            $estimate_id = 9;
+            $eid = hashids_encrypt($estimate_id, '', 15);
+
+            $src = base_url('tracker/estimate_image_tracker?id='.$eid);
+            echo "<img src='".$src."' />";
+            echo $src;
+            exit;
+        }
+
     }
     /* End of file Debug.php */
 

@@ -65,14 +65,23 @@
                             <?php foreach ($autoSms as $asms){ ?>
                             <tr>
                                 <td>
-                                    Send auto sms notification if <b><?= ucfirst(str_replace("_", " ", $asms->module_name)) ?></b> having status <br /> <b><?= ucfirst($asms->module_status); ?></b>
+                                    <?php if( $asms->module_status == 'Email Opened' ){ ?>
+                                        Send auto sms notification if <b><?= ucfirst(str_replace("_", " ", $asms->module_name)) ?> Email is Opened</b></b>                                    
+                                    <?php }else{ ?>
+                                        Send auto sms notification if <b><?= ucfirst(str_replace("_", " ", $asms->module_name)) ?></b> having status <br /> <b><?= ucfirst($asms->module_status); ?></b>                                    
+                                    <?php } ?>
+                                    
                                 </td>
                                 <td><?= $asms->sms_text; ?></td>
                                 <td>
                                     <ul>
-                                    <?php foreach($recipients[$asms->id] as $value){ ?>
-                                        <li><?= $value; ?></li>
-                                    <?php } ?>
+                                    <?php if( !empty($recipients[$asms->id]) ){ ?>
+                                        <?php foreach($recipients[$asms->id] as $value){ ?>
+                                            <li><?= $value; ?></li>
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <li>-</li>
+                                    <?php } ?>                                    
                                     </ul>
                                 </td>
                                 <td>
@@ -113,7 +122,7 @@
 
                 <!-- Create auto sms notification -->
                 <div class="modal fade nsm-modal fade" id="modalCreateAutoSmsNotification" aria-labelledby="modalCreateAutoSmsNotificationLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-md">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Create Auto SMS Notification Setting</span>
@@ -161,10 +170,22 @@
                                         <span id="" class="auto-sms-popover" data-bs-toggle="popover" data-bs-content="Employee(s) that will receive the auto notification">
                                             <select name="send_to[]" id="send-to-user" class="form-control" multiple=""></select>
                                         </span>                                        
-                                        <div class="form-check" style="margin-top:5px;">
+                                        <div class="form-check" style="margin-top:5px;display: inline-block;">
                                           <input class="form-check-input" type="checkbox" value="all" name="send_to_all" id="chk-send-all">
                                           <label class="form-check-label" for="flexCheckDefault">
                                             Send to all
+                                          </label>
+                                        </div>
+                                        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+                                          <input class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                            Send to Module Item Creator
+                                          </label>
+                                        </div>
+                                        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+                                          <input class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="chk-send-company-admin">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                            Send to Company Admin
                                           </label>
                                         </div>
                                         
@@ -189,7 +210,7 @@
 
                 <!-- Edit auto sms notification -->
                 <div class="modal fade nsm-modal fade" id="modalEditAutoSmsNotification" aria-labelledby="modalEditAutoSmsNotificationLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-md">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Edit Auto SMS Notification Setting</span>

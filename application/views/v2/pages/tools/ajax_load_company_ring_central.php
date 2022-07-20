@@ -1,3 +1,9 @@
+<style>
+.api-input{
+    letter-spacing: 3px;
+    text-align: center;
+}
+</style>
 <div class="row gy-3 text-center">
     <div class="col-12 mb-1">
         <img class="w-50" src="<?= base_url() ?>/assets/img/api-tools/ring_central.png">
@@ -11,11 +17,11 @@
         <div class="row mb-5 mt-5">
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Client ID</label>
-                <textarea placeholder="" name="client_id" class="nsm-field form-control" required><?= $ringCentral ? $ringCentral->client_id : ''; ?></textarea>
+                <input type="text" name="client_id" class="nsm-field form-control api-input" value="<?= $ringCentral ? maskString($ringCentral->client_id) : ''; ?>" required />
             </div>
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Client Secret</label>
-                <textarea placeholder="" name="client_secret" class="nsm-field form-control" required rows=3><?= $ringCentral ? $ringCentral->client_secret : ''; ?></textarea>
+                <input type="text" name="client_secret" class="nsm-field form-control api-input" value="<?= $ringCentral ? maskString($ringCentral->client_secret) : ''; ?>" required />
             </div>
         </div>
         <div class="row mb-5">
@@ -25,7 +31,7 @@
             </div>
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Password</label>
-                <input type="text" placeholder="" name="rc_password" class="nsm-field form-control" required value="<?= $ringCentral ? $ringCentral->rc_password : ''; ?>"/>
+                <input type="password" style="text-align:left;" placeholder="" name="rc_password" class="nsm-field form-control api-input" required value="<?= $ringCentral ? maskString($ringCentral->rc_password) : ''; ?>"/>
             </div>
         </div>
         <div class="row">

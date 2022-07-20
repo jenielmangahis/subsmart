@@ -90,6 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="row row-margin-top">
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                             <input type="text" class="form-control stop" required="" name="firstname" id="inputFirstname" placeholder="First Name">
+                                            <input type="hidden" name="reg_chk" value="" id="reg-chck">
                                     </div>
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                             <input type="text" class="form-control stop" required="" name="lastname" id="inputLastname" placeholder="Last Name">

@@ -47,10 +47,22 @@
                 <?php } ?>
             </select>
         </span>                                        
-        <div class="form-check" style="margin-top:5px;">
+        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
           <input <?= $is_send_all ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_to_all" id="edit-chk-send-all">
           <label class="form-check-label" for="flexCheckDefault">
             Send to all
+          </label>
+        </div>
+        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+          <input <?= $autoSms->send_to_creator == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
+          <label class="form-check-label" for="flexCheckDefault">
+            Send to Module Item Creator
+          </label>
+        </div>
+        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
+          <input <?= $autoSms->send_to_company_admin == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="chk-send-company-admin">
+          <label class="form-check-label" for="flexCheckDefault">
+            Send to Company Admin
           </label>
         </div>
         

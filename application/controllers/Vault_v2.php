@@ -23,16 +23,20 @@ class Vault_v2 extends MY_Controller
 
     public function index()
     {
+        $this->page_data['ctrlMethod'] = $this->router->fetch_method();
         $this->page_data['folder_manager'] = getFolderManagerView_v2();
         $this->page_data['page']->title = 'Shared Library';
-        $this->load->view('v2/pages/vault/shared_library', $this->page_data);
+        $this->load->view('v2/pages/vault/view', $this->page_data);
     }
 
     public function mylibrary()
     {
+        $this->page_data['ctrlMethod'] = $this->router->fetch_method();
         $this->page_data['folder_manager'] = getFolderManagerView_v2(true, true);
+        $this->page_data['page']->title = 'My Library';
+
         add_footer_js(['assets/js/vaults/dataTables.checkboxes.min.js']);
-        $this->load->view('v2/pages/vault/list', $this->page_data);
+        $this->load->view('v2/pages/vault/view', $this->page_data);
     }
 
     public function beforeafter()

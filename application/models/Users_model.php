@@ -546,6 +546,18 @@ class Users_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getAllAdminByCompanyID($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('user_type', 7);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function findAllUsersByCompanyId($company_id=0, $loggedUserId=0)
     {
         $this->db->select('*');

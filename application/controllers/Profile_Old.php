@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Profile extends MY_Controller {
+class Profile_Old extends MY_Controller {
 
 	public function __construct()
 	{
@@ -17,9 +17,6 @@ class Profile extends MY_Controller {
 
 	public function index($tab = 'profile')
 	{
-        $this->page_data['page']->title = 'Profile';
-        $this->page_data['page']->parent = 'Profile';
-
 		$user = $this->users_model->getById(logged('id'));
 		$this->page_data['user'] = $user;
 		$this->page_data['user']->role = $this->roles_model->getById( logged('role') );
@@ -34,11 +31,9 @@ class Profile extends MY_Controller {
 			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
 			'assets/js/esign/fill-and-sign/step2.js',
             'assets/js/profile/signature.js',
-			'assets/js/jquery.signaturepad.js'
         ]);
 
-		// $this->load->view('account/profile', $this->page_data);
-		$this->load->view('v2/pages/account/profile', $this->page_data);
+		$this->load->view('account/profile', $this->page_data);
 	}
 
 	public function updateProfile()

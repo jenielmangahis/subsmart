@@ -120,7 +120,7 @@
             </div>
             <div class="col-12">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="role_7" name="user_type" <?= $user->user_type == 7 ? 'checked="checked"' : ''; ?>>
+                    <input class="form-check-input" type="radio" id="role_7" value="7" name="user_type" <?= $user->user_type == 7 ? 'checked="checked"' : ''; ?>>
                     <label class="form-check-label" for="role_7">
                         Admin
                         <span class="content-subtitle d-block fst-italic">ALL Access</span>

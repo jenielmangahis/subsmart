@@ -1,10 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Tracker extends MY_Controller {
+class Tracker extends MYF_Controller {
 	public function __construct(){
 		parent::__construct();
-		//$this->checkLogin(1);
 	}
 
 	public function imageTracker(){
@@ -32,6 +31,7 @@ class Tracker extends MY_Controller {
 		$estimate    = $this->Estimate_model->getEstimate($estimate_id);
 		if( $estimate->is_mail_open == 0 ){
 			$this->Estimate_model->update($estimate->id, ['is_mail_open' => 1, 'mail_open_date' => date("Y-m-d H:i:s")]);
+			createCronAutoSmsNotification($estimate->company_id, $estimate->id, 'estimate', 'Email Opened', $estimate->user_id);
 		}		
 		
 		$image = base_url('/assets/img/tracking_pixel.png'); 

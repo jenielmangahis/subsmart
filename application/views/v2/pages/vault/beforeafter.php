@@ -28,7 +28,7 @@ include viewPath('includes/notifications');
                 </a>
             </li>
             <li>
-                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/vault') ?>">
+                <a class="nsm-page-link" href="<?php echo base_url('vault_v2') ?>">
 
                     <span>Shared Library</span>
                 </a>
@@ -58,7 +58,7 @@ include viewPath('includes/notifications');
         </div>
 
         <div class="d-flex justify-content-end">
-            <a class="nsm-button primary m-0" id="newJobBtn" href="<?php echo url('before-after/add_photo') ?>">
+            <a class="nsm-button primary m-0" id="newJobBtn" href="<?php echo url('Before_after_v2/addPhoto') ?>">
                 <span class="fa fa-plus"></span> Add Photos
             </a>
         </div>

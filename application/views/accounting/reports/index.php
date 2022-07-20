@@ -1,5 +1,4 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
         <i class='bx bx-user-plus'></i>
@@ -42,13 +41,14 @@
                                                     <?php foreach($colRepTypes as $reportType) : ?>
                                                     <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id'));?>
                                                     <li class="border-bottom p-3 cursor-pointer">
-                                                        <h6>
                                                         <?=$reportType->name?>
-                                                        <a href="#"><i class="bx bx-fw bx-help-circle"></i></a>
+                                                        <a href="#" style="color: #888888" data-bs-toggle="collapse" data-bs-target="#<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse" aria-expanded="false" aria-controls="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse">
+                                                            <i class="bx bx-fw bx-help-circle"></i>
+                                                        </a>
 
                                                         <div class="dropdown float-end d-inline-block" style="min-width: 23px; min-height: 1px">
                                                             <?php if($reportType->customizable) : ?>
-                                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="color: #888888">
                                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                             </a>
                                                             <ul class="dropdown-menu dropdown-menu-end">
@@ -59,9 +59,15 @@
                                                             <?php endif; ?>
                                                         </div>
                                                         <?php if($reportType->favoritable === "1") : ?>
-                                                        <a href="#" class="float-end"><i class="bx bx-fw <?=is_null($favorite) ? 'bx-star' : 'bxs-star'?>"></i></a>
+                                                        <a href="#" data-id="<?=$reportType->id?>" class="float-end <?=is_null($favorite) ? 'add-to-favorites' : 'remove-from-favorites'?>" style="color: <?=is_null($favorite) ? '#888888' : '#408854'?>">
+                                                            <i class="bx bx-fw <?=is_null($favorite) ? 'bx-star' : 'bxs-star'?>"></i>
+                                                        </a>
                                                         <?php endif; ?>
-                                                        </h6>
+                                                        <div class="accordion-collapse collapse" id="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse">
+                                                            <div class="accordion-body">
+                                                                <p class="m-0"><?=$reportType->description?></p>
+                                                            </div>
+                                                        </div>
                                                     </li>
                                                     <?php endforeach; ?>
                                                 </ul>

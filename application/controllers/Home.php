@@ -9,7 +9,7 @@ class Home extends MYF_Controller {
 		$this->page_data['page']->title = 'nSmart';
 	}
 
-	public function index(){	
+	public function index(){
 		$this->page_data['business'] = getIndustryBusiness();
 		$this->page_data['roles']    = getRegistrationRoles();
 		$this->load->view('home', $this->page_data);

@@ -185,7 +185,7 @@ class Estimate extends MY_Controller
             customerAuditLog(logged('id'), $this->input->post('customer_id'), $addQuery, 'Estimate', 'Created estimate #'.$this->input->post('estimate_number'));
 
             //SMS Notification
-            createCronAutoSmsNotification($company_id, $addQuery, 'estimate', $this->input->post('status'));
+            createCronAutoSmsNotification($company_id, $addQuery, 'estimate', $this->input->post('status'), $user_id);
 
             // $new_data2 = array(
             //     'item_type' => $this->input->post('type'),
@@ -1186,7 +1186,7 @@ class Estimate extends MY_Controller
         $addQuery = $this->estimate_model->update_estimate($new_data);
 
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $id, 'estimate', $this->input->post('status'));
+        createCronAutoSmsNotification($company_id, $id, 'estimate', $this->input->post('status'), $user_id);
 
         // if ($addQuery > 0) {
             // $new_data2 = array(
@@ -1517,6 +1517,8 @@ class Estimate extends MY_Controller
 
     public function sendEstimateToAcs()
     {
+        $this->load->helper(array('hashids_helper'));
+
         $id = $this->input->post('id');
         $wo_id = $this->input->post('est_id');
 
@@ -1536,6 +1538,8 @@ class Estimate extends MY_Controller
         $items_dataBD1 = $this->estimate_model->getItemlistByIDBundle1($wo_id);
         $items_dataBD2 = $this->estimate_model->getItemlistByIDBundle2($wo_id);
         $items = $this->estimate_model->getEstimatesItems($wo_id);
+
+        $eid = hashids_encrypt($workData->id, '', 15);
 
         $data = array(
             // 'workorder'             => $workorder,
@@ -1600,6 +1604,7 @@ class Estimate extends MY_Controller
             'adjustment_value'              => $workData->adjustment_value,
             'markup_type'                   => $workData->markup_type,
             'markup_amount'                 => $workData->markup_amount,
+            'eid'                           => $eid,
             // 'source' => $source
         );
 
