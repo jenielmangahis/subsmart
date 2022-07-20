@@ -2137,7 +2137,8 @@ class Users extends MY_Controller
 		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));
 
 		$this->page_data['user'] = $get_user;
-		$this->load->view('users/modal_edit_profile', $this->page_data);
+		// $this->load->view('users/modal_edit_profile', $this->page_data);
+		$this->load->view('v2/pages/users/modal_edit_profile', $this->page_data);
 	}
 
 	public function ajax_update_profile()

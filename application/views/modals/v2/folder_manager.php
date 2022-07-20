@@ -64,30 +64,27 @@ if ($isMyLibrary) {
 
         <div class="nsm-page-nav mb-3">
           <ul>
-              <li class="active">
+              <li data-controller="mylibrary">
                   <a class="nsm-page-link" href="<?php echo base_url('vault_v2/mylibrary') ?>">
                       <span>My Library</span>
                   </a>
               </li>
-              <li>
-                  <a class="nsm-page-link" href="<?php echo base_url('vault_v2/vault') ?>">
-                 
+              <li data-controller="index">
+                  <a class="nsm-page-link" href="<?php echo base_url('vault_v2') ?>">
                       <span>Shared Library</span>
                   </a>
               </li>
               <li>
                   <a class="nsm-page-link" href="<?php echo base_url('vault_v2/businessformtemplates') ?>">
-
                       <span>Business Form Templates</span>
                   </a>
               </li>
               <li>
                   <a class="nsm-page-link" href="<?php echo base_url('vault_v2/beforeafter') ?>">
-
                       <span>Photos Gallery</span>
                   </a>
               </li>
-          
+
               <!-- Do not remove the last li -->
               <li><label></label></li>
           </ul>

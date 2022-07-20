@@ -1527,6 +1527,14 @@ a.nsm-button {
 	color: #c7c7c7;
 }
 
+.nsm-img-upload.circle{
+	border-radius: 100%;
+	width: 100%;
+	max-width: 300px;
+	aspect-ratio: 1;
+	height: unset;
+}
+
 ul.workspace-list {
 	margin: unset;
 	padding: unset;
@@ -2021,4 +2029,10 @@ span.select2-selection {
 
 .select2-container .select2-search__field{
 	padding: 0rem 0.75rem !important;
+}
+
+.nsm-sign-canvas{
+	border: 1px solid #d3d3d3;
+	width: 100%;
+	border-radius: 5px;
 }
