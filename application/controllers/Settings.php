@@ -1246,18 +1246,37 @@ class Settings extends MY_Controller {
                 $msg = 'Please specify sms message';
             }elseif( $post['module_status'] == '' ){
                 $msg = 'Please specify status of the module that will trigger auto sms';
-            }elseif( !isset($post['send_to_all']) && empty($post['send_to'])  ){
+            }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) ){
                 $msg = 'Please specify recipient of the sms notification';
-            }else{            
+            }else{  
                 if( isset($post['send_to_all']) ){
-                    $send_to = 'all';
+                $send_to = 'all';
                 }else{
-                    $send_to = array();
-                    foreach($post['send_to'] as $value){
-                        $send_to[] = $value;
-                    }
+                    if(isset($post['send_to'])){
+                        $send_to = array();
+                        foreach($post['send_to'] as $value){
+                            $send_to[] = $value;
+                        }
 
-                    $send_to = serialize($send_to);
+                        $send_to = serialize($send_to);
+                    }else{
+                        $send_to = '';
+                    }             
+                }  
+
+                $send_to_creator = 0;
+                if( isset($post['send_creator']) ){
+                    $send_to_creator = 1;
+                }
+
+                $send_to_company_admin = 0;
+                if( isset($post['send_company_admin']) ){
+                    $send_to_company_admin = 1;
+                }
+
+                $send_to_assigned_user = 0;
+                if( isset($post['send_assigned_user']) && $post['module_name'] == 'taskhub' ){
+                    $send_to_assigned_user = 1;
                 }
 
                 $data = [
@@ -1265,6 +1284,9 @@ class Settings extends MY_Controller {
                     'sms_text' => $post['sms_text'],
                     'send_to' => $send_to,
                     'module_status' => $post['module_status'],
+                    'send_to_creator' => $send_to_creator,
+                    'send_to_company_admin' => $send_to_company_admin,                
+                    'send_to_assigned_user' => $send_to_assigned_user,
                     'is_enabled' => $post['is_enabled']
                 ];
 
