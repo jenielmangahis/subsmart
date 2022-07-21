@@ -188,6 +188,12 @@
                                             Send to Company Admin
                                           </label>
                                         </div>
+                                        <div class="form-check grp-send-assigned-user" style="margin-top:5px; margin-left: 10px; display: none;">
+                                          <input class="form-check-input" type="checkbox" value="all" name="send_assigned_user" id="chk-assigned-user">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                            Send to Assigned User
+                                          </label>
+                                        </div>
                                         
                                     </div>
                                     <div class="col-md-12 mt-3">
@@ -301,6 +307,13 @@
         var module_name = $(this).val();
         var url = base_url + 'settings/_load_auto_sms_notification_module_status';
         $(".module-status-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+        if( module_name == 'taskhub' ){
+            $('.grp-send-assigned-user').show();
+            $('.grp-send-assigned-user').css('display', 'inline-block');
+        }else{
+            $('.grp-send-assigned-user').hide();
+        }
 
         setTimeout(function () {
           $.ajax({

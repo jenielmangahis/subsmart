@@ -4250,7 +4250,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'));
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id);
         
 
         if($this->input->post('payment_method') == 'Cash'){
@@ -5394,7 +5394,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->update_workorder($update_data);
 
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'));
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id);
         
 
         if($this->input->post('payment_method') == 'Cash'){
