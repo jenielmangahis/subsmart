@@ -2069,6 +2069,8 @@ class Customer extends MY_Controller
         $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
         $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
         $input_alarm['comm_type'] = $input['comm_type'];
+        $input_alarm['account_cost'] = $input['account_cost'];
+        $input_alarm['pass_thru_cost'] = $input['pass_thru_cost'];
 
         $check = array(
             'where' => array(

@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/workorder/sign-modal'); ?>
 <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
 <style>
@@ -1144,7 +1145,7 @@ table input.form-control {
                             <br><br>
                             <div class="row signature_web">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6> <a data-toggle="modal" data-target=".companySignature" class="btn btn-success"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Company Representative Approval</h6> <a class="btn btn-success companySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <div id="companyrep"></div>
 
                                     <input type="hidden" id="saveCompanySignatureDB1a"
@@ -1163,11 +1164,12 @@ table input.form-control {
                                         </select>
                                            <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
                                             <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
-                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
+                                            <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> -->
+                                            <div id="company_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder</h6><a data-toggle="modal" data-target=".primarySignature" class="btn btn-warning"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Primary Account Holder</h6><a class="btn btn-warning primarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <div id="primaryrep"></div>
                                     <input type="hidden" id="savePrimaryAccountSignatureDB2a"
                                            name="primary_account_holder_signature2a">
@@ -1183,11 +1185,12 @@ table input.form-control {
                                             <?php //} ?>
                                     </select> -->
                                     
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web"> -->
+                                           <div id="primary_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder</h6><a data-toggle="modal" data-target=".secondarySignature" class="btn btn-danger"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Secondary Account Holder</h6><a class="btn btn-danger secondarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <div id="secondaryrep"></div>
                                     <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
                                            name="secondary_account_holder_signature3a">
@@ -1203,7 +1206,8 @@ table input.form-control {
                                             <?php //} ?>
                                         </select> -->
 
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web"> -->
+                                           <div id="secondary_representative_div"></div>
 
                                 </div>
                             </div>
@@ -1740,7 +1744,7 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad = new SignaturePad(signaturePadCanvas);
 
-  signaturePadCanvas.width  = 780;
+//   signaturePadCanvas.width  = 780;
   signaturePadCanvas.height = 300;
 });
 
@@ -1751,7 +1755,7 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad2 = new SignaturePad(signaturePadCanvas2);
 
-  signaturePadCanvas2.width  = 780;
+//   signaturePadCanvas2.width  = 780;
   signaturePadCanvas2.height = 300;
 });
 
@@ -1762,8 +1766,20 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad3 = new SignaturePad(signaturePadCanvas3);
 
-  signaturePadCanvas3.width  = 780;
+//   signaturePadCanvas3.width  = 780;
   signaturePadCanvas3.height = 300;
+});
+
+$(document).on('click touchstart','.companySignature',function(){
+    $("#company-representative-approval-signature").modal("show");
+});
+
+$(document).on('click touchstart','.primarySignature',function(){
+    $("#primary-account-holder-signature").modal("show");
+});
+
+$(document).on('click touchstart','.secondarySignature',function(){
+    $("#secondary-account-holder-signature").modal("show");
 });
 
 

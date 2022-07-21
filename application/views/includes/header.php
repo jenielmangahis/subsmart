@@ -337,6 +337,35 @@ if ($this->session->userdata('usertimezone') == null) {
             bottom: auto;
             margin-bottom: 0px;
         }
+        #canvasb
+        {
+            width:780px;
+            height:300px;
+        }
+        #canvas2b
+        {
+            width:780px;
+            height:300px;
+        }
+        #canvas3b
+        {
+            width:780px;
+            height:300px;
+        }
+    @media screen and (max-width:500px){
+    #canvasb
+    {
+        width:360px !important;
+    }
+    #canvas2b
+    {
+        width:360px !important;
+    }
+    #canvas3b
+    {
+        width:360px !important;
+    }
+}
     </style>
 </head>
 <script>

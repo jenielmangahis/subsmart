@@ -182,7 +182,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </th>
                                     <!-- <th>Job</th> -->
-                                    <th>Date Issued</th>
+                                    <th>Date Created</th>
                                     <th>Customer</th>
                                     <th>Employees</th>
                                     <th>Priority</th>

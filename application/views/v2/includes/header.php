@@ -252,9 +252,15 @@ if ($this->session->userdata('usertimezone') == null) {
                 </li>
                 <li class="<?php if ($page->title == 'Customers') : echo 'selected '; endif; ?> <?php if ($page->parent == 'Customers') : echo 'active'; endif; ?>">
                     <a href="<?= base_url("customer") ?>">
-                        <i class='bx bx-fw bx-group'></i> Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                        <i class='bx bx-fw bx-group'></i>My Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
+                        <li class="<?php if ($page->title == 'Customer') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("customer") ?>">
+                                <i class='bx bx-fw bx-group'></i> List of Customer
+                            </a>
+                        </li>
                         <li class="<?php if ($page->title == 'Customer Subscriptions') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("customer/subscriptions") ?>">

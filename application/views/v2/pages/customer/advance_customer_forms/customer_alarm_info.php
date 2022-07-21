@@ -421,6 +421,25 @@
                     <a href="<?= base_url() ?>customer/settings_system_package" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
                 </div>
             </div>
+
+            <div class="row form_line field-custom-name-container">
+                <div class="col-md-6">
+                    <field-custom-name default="Account Cost" form="alarm_info"></field-custom-name>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="account_cost" id="account_cost" value="<?= $alarm_info ? ($alarm_info->account_cost !=0 ? $alarm_info->account_cost : '') : '';  ?>"/>
+                </div>
+            </div>
+
+            <div class="row form_line field-custom-name-container">
+                <div class="col-md-6">
+                    <field-custom-name default="Pass Thru Cost" form="alarm_info"></field-custom-name>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="pass_thru_cost" id="pass_thru_cost" value="<?= $alarm_info ? ($alarm_info->pass_thru_cost !=0 ? $alarm_info->pass_thru_cost : '') : '';  ?>"/>
+                </div>
+            </div>
+
             <hr>
             <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">

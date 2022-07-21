@@ -280,8 +280,8 @@ class Reports extends MY_Controller {
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
-        $this->page_data['page_title'] = "Balance Sheet Reports";
 
+        $this->page_data['page']->title = $reportType->name;
         $this->page_data['page']->parent = 'Reports';
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
