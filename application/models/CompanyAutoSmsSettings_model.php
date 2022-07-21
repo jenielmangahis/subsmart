@@ -6,7 +6,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public $table = 'company_auto_sms_settings';
     public $module_job = 'job';
     public $module_estimate = 'estimate';
-    public $module_work_order = 'work_order';
+    public $module_work_order = 'workorder';
     public $module_event = 'event';
     public $module_customer = 'customer';
     public $module_taskhub  = 'taskhub';
