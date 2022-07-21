@@ -146,7 +146,7 @@ class Before_after_v2 extends MY_Controller
             $this->session->set_flashdata('alert', 'Cannot find data');
         }
 
-        redirect('vault/beforeafter');
+        redirect('vault_v2/beforeafter');
     }
 
     public function uploadBeforeAfter($customer_id, $group_number, $notes)
@@ -219,7 +219,7 @@ class Before_after_v2 extends MY_Controller
         $this->page_data['beforeAfter'] = $beforeAfter;
         $this->page_data['group_number'] = $id;
         $this->page_data['photos'] = $this->before_after_model->getByWhere(['company_id' => $comp_id, 'group_number' => $id]);
-        $this->load->view('before_after/edit_photo', $this->page_data);
+        $this->load->view('v2/pages/before_after/edit_photo', $this->page_data);
 
     }
 
@@ -227,7 +227,7 @@ class Before_after_v2 extends MY_Controller
     {
         $this->before_after_model->deleteBeforeAfter($id);
 
-        redirect('vault/beforeafter');
+        redirect('vault_v2/beforeafter');
     }
 
     public function delete_image()
@@ -238,6 +238,6 @@ class Before_after_v2 extends MY_Controller
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'Before/After image was successfully deleted');
 
-        redirect('vault/beforeafter');
+        redirect('vault_v2/beforeafter');
     }
 }

@@ -343,6 +343,20 @@
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle"><?= !empty($alarm_info->comm_type) ? $alarm_info->comm_type : '---'; ?></label>
                 </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Account Cost</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->account_cost) ? $alarm_info->account_cost : '---'; ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Pass Thru Cost</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->pass_thru_cost) ? $alarm_info->pass_thru_cost : '---'; ?></label>
+                </div>
                
                 <div class="col-12">
                     <hr>

@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 include_once 'application/services/InvoiceCustomer.php';
 
-class Accounting extends MY_Controller
+class Accounting_v1 extends MY_Controller
 {
     private $upload_path = "./uploads/accounting/";
     private $expenses_path = "./uploads/accounting/expenses/";
@@ -175,7 +175,7 @@ class Accounting extends MY_Controller
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();*/
 
-        $this->load->view('v2/pages/accounting/dashboard', $this->page_data);
+        $this->load->view('accounting/dashboard', $this->page_data);
     }
 
     public function bank_connect()

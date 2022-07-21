@@ -16,7 +16,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 
 echo put_header_assets();
-include viewPath('includes/notifications');
+include viewPath('includes/v2/notifications');
 ?>
 
 <div class="row page-content g-0">
@@ -101,7 +101,7 @@ include viewPath('includes/notifications');
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item"  href="<?=base_url('before-after/edit/' . $photo->id);?>">Edit</a>
+                                            <a class="dropdown-item"  href="<?=base_url('Before_after_v2/edit/' . $photo->id);?>">Edit</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item btn-delete-photo" data-id="<?=$photo->id;?>" href="#">Delete</a>
@@ -132,7 +132,7 @@ include viewPath('includes/notifications');
                     <h5 class="modal-title" id="exampleModalLongTitle">Delete Image</h5>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
-                <?php echo form_open_multipart('before-after/delete_image', ['class' => 'form-validate m-0', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart('Before_after_v2/delete_image', ['class' => 'form-validate m-0', 'autocomplete' => 'off']); ?>
                 <?php echo form_input(array('name' => 'bai', 'type' => 'hidden', 'value' => '', 'id' => 'bai')); ?>
                     <div class="modal-body">
                         <p>Delete selected before and after image?</p>

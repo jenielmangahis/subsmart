@@ -237,7 +237,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
@@ -262,7 +262,7 @@
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
                         </tr> -->
                         <tr>
-                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
+                            <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td conlspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;" colspan="3"><?php if (empty($sales_re_name)){ echo '<br>'; }else{ echo $team_leader;} ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Team Leader:</b></td>
@@ -404,7 +404,19 @@
                     </table>
                 </div> 
                 <!-- <hr style="margin-top:0px;margin-bottom:-1px;"> -->
-                <br><br><br><br><br><br><br><br><br><br>
+                <br><br>
+                <?php
+                if($payment_method ==  'Cash'){
+                    
+                }
+                elseif(empty($payment_method))
+                {
+
+                }else{
+                    echo '<br><br><br><br><br><br><br><br>';
+                }
+                ?>
+                
                 <b style="font-size:8px;">Agreement</b>
                 <br>
                 <div style="font-size:7px;"><?php echo $terms_and_conditions; ?></div>

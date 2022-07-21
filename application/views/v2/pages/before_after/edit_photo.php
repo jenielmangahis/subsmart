@@ -1,113 +1,166 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+echo put_header_assets();
+include viewPath('v2/includes/header');
 ?>
-<?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/filevault'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="row custom__border">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="row margin-bottom-ter mb-2 align-items-center">
-                          <div class="col-auto vault__header">
-                              <h3 class="page-title mb-0 vault__title">Edit Photos</h3>
-                          </div>                          
-                        </div>
-                        <div class="pl-3 pr-3 mt-0 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                    Upload your before and after photos. 
-                                </span>
-                            </div>
-                        </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-                        <div class="card-body">
-                        <?php echo form_open_multipart('before-after/update-before-after', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
-                            <input type="hidden" name="id" value="<?= $beforeAfter->id; ?>">
-                            <hr>
-                            <div class="col-md-12 col-lg-12 col-xl-9">
-                                <div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <label>Customer</label> <span class="help">(optional, assign this session to a customer)</span>
-                                                <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                    <option></option>
-                                                    <?php foreach($customers as $c){ ?>
-                                                        <option <?= $beforeAfter->customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                                    <?php } ?>
-                                                </select>                                                
-                                                <input type="hidden" id="job_customer_id" name=""">
-                                                <input type="hidden" id="group_number" name="group_number" value="<?php echo $group_number;?>">
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div style="padding-top: 40px">
-                                                    <a href="<?php echo base_url() . 'customer/add_advance' ?>"><span class="fa fa-plus"></span> New Customer</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card" data-fileupload="list" style="border:1px solid white;">
-                                        <div class="validation-error" data-fileupload="error" role="alert" style="display: none;"></div>
-                                        <div class="" data-fileupload="progressbar" style="display: none;">
-                                            <div class="text">Uploading</div>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <div class="set clearfix set--h">
-                                                    <div class="set__box__separator"></div>
-                                                    <div class="set__box">
-                                                        <div class="set__box__title --off">Before</div>
-                                                        <a class="set__box__delete" data-fileupload-delete="0,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                                                        <div class="set__box__icon " data-fileupload="upload" data-position="0,0"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->before_image?>">
-                                                        <div class="set__box__date"></div>
-                                                    </div>
-                                                    <div class="set__box">
-                                                        <div class="set__box__title --off">After</div>
-                                                        <a class="set__box__delete" data-fileupload-delete="0,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                                                        <div class="set__box__icon " data-fileupload="upload" data-position="0,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->after_image?>">
-                                                        <div class="set__box__date"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="0,0" data-orientation="h" onchange="readURL(this, 'b1_img');" name="b1_img" type="file"></span>
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="0,1" data-orientation="h" onchange="readURL(this, 'a1_img');" name="a1_img" type="file"></span>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="notes">
-                                                    <label>Comments</label>
-                                                    <input type="text" name="note" value="<?= $beforeAfter->note; ?>" class="form-control" autocomplete="off">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr class="card-hr">
-                                    <button type="submit" class="btn btn-primary" id="saveBtnAddPhotos">Save</button>
-                                    <a class="btn btn-primary" href="<?php echo base_url() . "vault/beforeafter"; ?>">Cancel</a>
-                                </div>
-                            </div>
+<style>
+    .select2-container,
+    .set__box__icon,
+    .set--h .set__box__separator{
+        z-index: unset !important;
+    }
+
+    .set {
+        border: 0;
+        background-color: unset;
+        background: unset;
+        display: flex;
+        gap: 1rem;
+    }
+    .set--h .set__box {
+        --size: 100%;
+        width: var(--size);
+        height: var(--size);
+        background-color: #f2f2f2;
+    }
+    .set__box img {
+        width: inherit;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .fileinput-button {
+        position: relative;
+        overflow: hidden;
+        display: block;
+        text-align: center;
+    }
+    .fileinput-button input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .upload-group {
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="row page-content g-0">
+    <div class="nsm-page-nav mb-3">
+        <ul>
+            <li>
+                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/mylibrary') ?>">
+                    <span>My Library</span>
+                </a>
+            </li>
+            <li>
+                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/vault') ?>">
+
+                    <span>Shared Library</span>
+                </a>
+            </li>
+            <li>
+                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/businessformtemplates') ?>">
+
+                    <span>Business Form Templates</span>
+                </a>
+            </li>
+            <li  class="active">
+                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/beforeafter') ?>">
+
+                    <span>Photos Gallery</span>
+                </a>
+            </li>
+
+            <!-- Do not remove the last li -->
+            <li><label></label></li>
+        </ul>
+    </div>
+
+    <?php include viewPath('includes/v2/notifications');?>
+    <div>
+        <div class="nsm-callout primary">
+            <button><i class="bx bx-x"></i></button>
+            Upload your before and after photos.
+        </div>
+    </div>
+
+    <?php echo form_open_multipart('Before_after_v2/updateBeforeAfter', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+        <input type="hidden" name="id" value="<?=$beforeAfter->id;?>">
+
+        <div class="form-group mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <label>Customer</label> <span class="help">(optional, assign this session to a customer)</span>
+                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                        <option></option>
+                        <?php foreach ($customers as $c) {?>
+                            <option <?=$beforeAfter->customer_id == $c->prof_id ? 'selected="selected"' : '';?> value="<?=$c->prof_id;?>"><?=$c->first_name . ' ' . $c->last_name;?></option>
+                        <?php }?>
+                    </select>
+                    <input type="hidden" id="job_customer_id" name=""">
+                    <input type="hidden" id="group_number" name="group_number" value="<?php echo $group_number; ?>">
+                </div>
+
+                <a href="<?php echo base_url() . 'customer/add_advance' ?>"><span class="fa fa-plus"></span> New Customer</a>
+            </div>
+        </div>
+
+        <div class="card" data-fileupload="list" style="border:1px solid white;">
+            <div class="validation-error" data-fileupload="error" role="alert" style="display: none;"></div>
+            <div class="" data-fileupload="progressbar" style="display: none;">
+                <div class="text">Uploading</div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="row upload-group">
+                <div class="col-sm-4">
+                    <div class="set clearfix set--h">
+                        <div class="set__box__separator"></div>
+                        <div class="set__box">
+                            <div class="set__box__title --off">Before</div>
+                            <a class="set__box__delete" data-fileupload-delete="0,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
+                            <div class="set__box__icon " data-fileupload="upload" data-position="0,0"><span class="fa fa-camera"></span></div>
+                            <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->before_image ?>">
+                            <div class="set__box__date"></div>
                         </div>
-                        <?php echo form_close(); ?>
+                        <div class="set__box">
+                            <div class="set__box__title --off">After</div>
+                            <a class="set__box__delete" data-fileupload-delete="0,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
+                            <div class="set__box__icon " data-fileupload="upload" data-position="0,1"><span class="fa fa-camera"></span></div>
+                            <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->after_image ?>">
+                            <div class="set__box__date"></div>
+                        </div>
                     </div>
-                    <!-- end card -->
+                </div>
+                <div class="col-sm-2">
+                    <span class="nsm-button fileinput-button">Upload Before<input data-fileupload="file" data-position="0,0" data-orientation="h" onchange="readURL(this, 'b1_img');" name="b1_img" type="file"></span>
+                    <span class="nsm-button fileinput-button">Upload After <input data-fileupload="file" data-position="0,1" data-orientation="h" onchange="readURL(this, 'a1_img');" name="a1_img" type="file"></span>
+                </div>
+                <div class="col-sm-6">
+                    <div class="notes">
+                        <label>Comments</label>
+                        <textarea name="note" class="form-control" autocomplete="off"><?=$beforeAfter->note;?></textarea>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- end container-fluid -->
-    </div>
-    <!-- page wrapper end -->
+
+        <a class="nsm-button" href="<?=base_url() . "vault_v2/beforeafter";?>">Cancel</a>
+        <button type="submit" class="nsm-button primary mb-0" id="saveBtnAddPhotos" style="border:0; height:34px;">Save images</button>
+    <?php echo form_close(); ?>
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('v2/includes/footer');?>
 <script>
 $(function(){
     $("#sel-customer").select2({
