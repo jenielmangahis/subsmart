@@ -41,7 +41,7 @@
                                                     <?php foreach($colRepTypes as $reportType) : ?>
                                                     <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id'));?>
                                                     <li class="border-bottom p-3 cursor-pointer">
-                                                        <?=$reportType->name?>
+                                                        <span onclick="location.href='<?=is_null($reportType->url) ? base_url('/accounting/reports/view-report/'.$reportType->id) : base_url($reportType->url)?>'"><?=$reportType->name?></span>
                                                         <a href="#" style="color: #888888" data-bs-toggle="collapse" data-bs-target="#<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse" aria-expanded="false" aria-controls="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse">
                                                             <i class="bx bx-fw bx-help-circle"></i>
                                                         </a>

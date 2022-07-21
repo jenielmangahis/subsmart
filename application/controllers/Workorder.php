@@ -7998,6 +7998,7 @@ class Workorder extends MY_Controller
              'primary_account_holder_name'          => $this->input->post('primary_account_holder_name'),
              'secondary_account_holder_signature'   => $file3_save,
              'secondary_account_holder_name'        => $this->input->post('secondery_account_holder_name'),
+             'date_issued'                          => date("Y-m-d"),
 
             // 'company_representative_signature' => 'company_representative_signature',
             // 'company_representative_name' => 'company_representative_name',

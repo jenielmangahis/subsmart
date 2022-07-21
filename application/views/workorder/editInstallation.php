@@ -96,6 +96,10 @@ table input.form-control {
     {
         font-size:12px;
     }
+    /* #signArea
+    {
+        width:350px !important;
+    } */
 }
 
 @media screen and (max-width:1400px){
@@ -1468,7 +1472,7 @@ jQuery(document).ready(function () {
   signaturePad = new SignaturePad(signaturePadCanvas);
 
   signaturePadCanvas.width  = 780;
-  signaturePadCanvas.height = 300;
+//   signaturePadCanvas.height = 300;
 });
 
 var signaturePad2;
@@ -1479,7 +1483,7 @@ jQuery(document).ready(function () {
   signaturePad2 = new SignaturePad(signaturePadCanvas2);
 
   signaturePadCanvas2.width  = 780;
-  signaturePadCanvas2.height = 300;
+//   signaturePadCanvas2.height = 300;
 });
 
 var signaturePad3;
@@ -1490,7 +1494,7 @@ jQuery(document).ready(function () {
   signaturePad3 = new SignaturePad(signaturePadCanvas3);
 
   signaturePadCanvas3.width  = 780;
-  signaturePadCanvas3.height = 300;
+//   signaturePadCanvas3.height = 300;
 });
 
 

@@ -88,7 +88,7 @@ include viewPath('v2/includes/header');
         </ul>
     </div>
 
-    <?php include viewPath('includes/notifications');?>
+    <?php include viewPath('includes/v2/notifications');?>
     <div>
         <div class="nsm-callout primary">
             <button><i class="bx bx-x"></i></button>
@@ -111,7 +111,7 @@ include viewPath('v2/includes/header');
                             <option value="<?=$c->prof_id;?>"><?=$c->first_name . ' ' . $c->last_name;?></option>
                         <?php }?>
                     </select>
-                    <input type="hidden" id="job_customer_id" name=""">
+                    <input type="hidden" id="job_customer_id" name="">
                     <input type="hidden" id="group_number" name="group_number" value="<?php echo $group_number; ?>">
                 </div>
 

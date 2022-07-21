@@ -3411,7 +3411,7 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad = new SignaturePad(signaturePadCanvas);
 
-  signaturePadCanvas.width  = 780;
+//   signaturePadCanvas.width  = 780;
   signaturePadCanvas.height = 300;
 });
 
@@ -3422,7 +3422,7 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad2 = new SignaturePad(signaturePadCanvas2);
 
-  signaturePadCanvas2.width  = 780;
+//   signaturePadCanvas2.width  = 780;
   signaturePadCanvas2.height = 300;
 });
 
@@ -3433,7 +3433,7 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad3 = new SignaturePad(signaturePadCanvas3);
 
-  signaturePadCanvas3.width  = 780;
+//   signaturePadCanvas3.width  = 780;
   signaturePadCanvas3.height = 300;
 });
 

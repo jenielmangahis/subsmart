@@ -108,7 +108,7 @@
                                 <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                             </td>
                             <td data-name="Work Order Number">Work Order Number</td>
-                            <td data-name="Date Issued">Date Issued</td>
+                            <td data-name="Date Issued">Date Created</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Employees">Employees</td>
                             <td data-name="Priority">Priority</td>
@@ -188,7 +188,15 @@
                                         ?></a>
                                         <label class="d-block">Issued on: 
                                             <?php //echo date_format($workorder->first_name, 'd M Y H:i:s') 
-                                                echo date("d M Y H:i:s", strtotime($workorder->date_issued));
+                                                if($workorder->work_order_type_id == '4'){
+                                                    echo date("M d Y", strtotime($workorder->date_created));
+                                                }else if($workorder->work_order_type_id == '3')
+                                                {
+                                                    echo date("M d Y", strtotime($workorder->date_created));
+                                                }
+                                                else{
+                                                    echo date("M d Y", strtotime($workorder->date_issued));
+                                                }
                                             ?>
                                         </label>
                                     </td>
