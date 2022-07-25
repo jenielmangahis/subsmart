@@ -10,8 +10,26 @@ echo put_header_assets();
    <?php echo $folder_manager; ?>
 </div>
 <style>
-   a{
-      text-decoration:none;
+   .col-md-2 {
+      position: relative;
+      width: 200px;
+   }
+   .fa-2x{
+      margin:5px;
+   }
+
+   [isfolder="1"] {
+      border-color: #e4e4e4 !important;
+      box-shadow: none !important;
+      color: #797979;
+      font-weight: 600;
+   }
+   [isfolder="1"].bg-info {
+      background-color: #e8f0fe!important;
+      color: #1967d2 !important;
+   }
+   [isfolder="1"] table {
+      width: 100% !important;
    }
 </style>
 <script src="<?=base_url("assets/js/v2/folders_files.js")?>"></script>
@@ -26,10 +44,5 @@ echo put_header_assets();
       }
    })();
 </script>
-<style>
-   .col-md-2 {
-      position: relative;
-      width: 100%;
-   }
-</style>
+
 <?php include viewPath('v2/includes/footer');?>

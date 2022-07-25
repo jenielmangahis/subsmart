@@ -153,6 +153,44 @@ table input.form-control {
     }
 }
 
+@media screen and (max-width:1000px){
+
+    .wo-signatureModal canvas {
+        width: 100%;
+        border: 1px solid #e4e4e4;
+        position: relative;
+        z-index: 1;
+        height: 250px;
+        margin-top: 1px;
+    }
+    .wo-signatureModal .mobileHeight {
+        /* max-width: 500px; */
+        margin: 1.75rem auto;
+        width: 100% !important;
+    }
+    .alert-primary {
+        color: #004085;
+        background-color: #cce5ff;
+        border-color: #b8daff;
+        margin-top: -22px;
+        font-size: 9px;
+        margin-bottom: 0px;
+    }
+    .modal-title {
+        font-size: 12px;
+        margin: 0;
+        color: #002638;
+    }
+    .modal-header {
+        padding: 0.4rem 0.4rem;
+    }
+    .modal-body {
+        /* padding: 10px 10px; */
+    }
+}
+
+
+
 .item {
   width: 100px;
   border: 1px solid #000;
@@ -610,7 +648,7 @@ table input.form-control {
                             <br>
                             <div class="row"> 
                                 <div class="col-md-6">
-                                    <input type="text" name="installation_date" id="datepicker_date" class="form-control border-top-0 border-right-0 border-left-0">
+                                    <input type="text" name="installation_date" id="datepicker_date" class="form-control border-top-0 border-right-0 border-left-0"  placeholder="Enter Installation Date">
                                     <b>Installation Date:</b>
                                 </div>
                                 <div class="col-md-6">
@@ -650,13 +688,13 @@ table input.form-control {
                                     </div>     
                                     <div class="form-group col-md-4">
                                         <b>Amount<small class="help help-sm"> ( $ )</small></b>
-                                        <input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="payment_amount" id="payment_amount"  />
+                                        <input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0 payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <b>Billing Date</b>
                                         <!-- <input type="date" class="form-control input-element border-top-0 border-right-0 border-left-0" name="billing_date" id=""  /> -->
                                         <select name="billing_date" id="" class="form-control custom-select m_select border-top-0 border-right-0 border-left-0">
-                                                <option value=""></option>
+                                                <option value="">0</option>
                                                 <?php for ($i=1; $i<=31; $i++ ) { ?>
                                                 <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                                                 <?php } ?>
@@ -886,18 +924,18 @@ table input.form-control {
                             <div class="row" style="margin-top:-46px;">
                                 <!-- <div class="form-group col-md-12"> -->
                                     <div class="col-md-6">
-                                        <input type="text" name="sales_re_name" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="sales_re_name" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo logged('FName').' '.logged('LName'); ?>">
                                         <b>Sales Rep's Name</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="sale_rep_phone" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="sale_rep_phone" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo logged('mobile'); ?>" placeholder="Enter Cellphone Number">
                                         <b>Cell Phone</b>
                                     </div>     
                                 <!-- </div> -->
                             </div>   
                             <div class="row">                   
                                 <div class="form-group col-md-12">
-                                    <input type="text" name="team_leader" class="form-control border-top-0 border-right-0 border-left-0">
+                                    <input type="text" name="team_leader" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Team Leader/Mentor">
                                     <b>Team Leader / Mentor</b>
                                 </div>                                        
                             </div>
@@ -928,101 +966,101 @@ table input.form-control {
                             <br>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" placeholder="Enter First Name">
                                         <b>First name:</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" placeholder="Enter Last Name">
                                         <b>Last name:</b>
                                     </div>
                                 </div>
                                 <div class="row commercialDet" style="display:none;"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="businessname" id="businessname" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="businessname" id="businessname" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Business Name">
                                         <b>Business Name:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" placeholder="Enter First name (Spouse)">
                                         <b>First name (Spouse):</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" placeholder="Enter Last name (Spouse)">
                                         <b>Last name (Spouse):</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Address">
                                         <b>Address:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-8">
-                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter City">
                                         <b>City:</b>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter State">
                                         <b>State:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="number" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Postcode">
                                         <b>Postcode:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter County">
                                         <b>County:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Mobile">
                                         <b>Mobile:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Email">
                                         <b>Email:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Emergency Contact Name">
                                         <b>1st Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Emergency Contact Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Emergency Contact Name">
                                         <b>2nd Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Emergency Contact Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Emergency Contact Name">
                                         <b>3rd Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Emergency Contact Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
@@ -1535,6 +1573,7 @@ function primaryName(){
 
     var val4 = $('#totalDue').html(val3.toFixed(2));
     $('.totalDue').val(val3.toFixed(2));
+    $('.payment_amount').val(val3.toFixed(2));
     // });
 
     // var number = document.getElementById('pg_av_total_read_data');

@@ -32,6 +32,16 @@ window.document.addEventListener("DOMContentLoaded", async () => {
         sortable: false,
       },
       {
+        render: columns.createdBy,
+        sortable: false,
+        searchable: false,
+      },
+      {
+        render: columns.createdAt,
+        sortable: false,
+        searchable: false,
+      },
+      {
         render: columns.actions,
         sortable: false,
         searchable: false,
@@ -79,6 +89,13 @@ function getColumns() {
         </div>
     `;
     },
+    createdBy: (_, __, row) => {
+      return `<div>${row.uploaded_by_firstname} ${row.uploaded_by_lastname}</div>`;
+    },
+    createdAt: (_, __, row) => {
+      const createdAt = moment.utc(row.created_at).fromNow();
+      return `<div>${createdAt}</div>`;
+    },
     actions: () => {
       return `
         <div class="d-flex align-items-center" style="width: max-content;">
@@ -115,7 +132,7 @@ function getActions() {
       window.location = `${api.prefixURL}/flashcard/add-cards/${row.id}`;
     },
     studycards: async (row) => {
-      if (row.total_cards && row.total_cards >= 1) {
+      if (row.cards && row.cards.length >= 1) {
         window.location = `${api.prefixURL}/flashcard/study-cards/${row.id}`;
         return;
       }
@@ -168,8 +185,10 @@ $createForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const $name = $createForm.querySelector("#fc-name");
+  const $isPublic = $createForm.querySelector("#ss-private");
   const $button = $createModal.querySelector(".nsm-button.primary");
   const name = $name.value.trim();
+  const isPublic = $isPublic.checked;
 
   if (!name.length) {
     $name.focus();
@@ -185,7 +204,13 @@ $createForm.addEventListener("submit", async (event) => {
     const table = $($table).DataTable();
 
     if (isEdit) {
-      const { data } = await api.updateDeck({ ...modalData, title: name });
+      const payload = {
+        ...modalData,
+        title: name,
+        is_shared_in_company: isPublic,
+      };
+
+      const { data } = await api.updateDeck(payload);
       table.row(`#row${data.id}`).data(data).draw();
     } else {
       const { data } = await api.createDeck({ title: name });
@@ -202,9 +227,11 @@ $createForm.addEventListener("submit", async (event) => {
 
 $($createModal).on("show.bs.modal", () => {
   const $name = $createForm.querySelector("#fc-name");
+  const $isPublic = $createForm.querySelector("#ss-private");
   const $button = $createModal.querySelector(".nsm-button.primary");
 
   $name.value = "";
+  $isPublic.checked = false;
   $button.textContent = $button.dataset.textDefault;
   $button.removeAttribute("disabled");
 
@@ -212,10 +239,20 @@ $($createModal).on("show.bs.modal", () => {
   const $title = $createModal.querySelector(".modal-title");
   $title.textContent = $title.dataset.textDefault;
 
+  const $formCheck = $createModal.querySelector(".form-check");
+  $formCheck.classList.remove("d-none");
+
   const data = $createModal.__row;
   if (!data) return;
 
+  if (data.current_user_id !== data.user_id) {
+    $formCheck.classList.add("d-none");
+  } else {
+    $formCheck.classList.remove("d-none");
+  }
+
   $title.textContent = data.title;
+  $isPublic.checked = data.is_shared_in_company == 1;
   $name.value = data.title;
 });
 $($createModal).on("hide.bs.modal", (event) => {

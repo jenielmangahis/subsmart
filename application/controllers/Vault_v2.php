@@ -55,8 +55,10 @@ class Vault_v2 extends MY_Controller
 
     public function businessformtemplates()
     {
+        $this->page_data['ctrlMethod'] = $this->router->fetch_method();
         $this->page_data['folder_manager'] = getFolderManagerView_v2(true, false, true);
-        $this->load->view('vault/businessformtemplates', $this->page_data);
+        $this->page_data['page']->title = 'Business Form Templates';
+        $this->load->view('v2/pages/vault/businessformtemplates', $this->page_data);
     }
 
     public function add()

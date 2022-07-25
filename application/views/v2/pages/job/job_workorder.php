@@ -355,42 +355,14 @@
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">
-                            <div class="col-12">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title">
-                                            <span>Job Configuration Status</span>
-                                        </div>
-                                    </div>
-                                    <div class="nsm-card-content">
-                                        <div class="nsm-progressbar my-4">
-                                            <div class="progressbar">
-                                                <ul class="items-7">
-                                                    <li class="<?= !isset($jobs_data) || $jobs_data->status == '0'  ? 'active' : ''; ?>">Draft</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>">Schedule</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '2'  ? 'active' : ''; ?>" style="display: none;">Arrival</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '3'  ? 'active' : ''; ?>">Start</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Approved</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Finish</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Invoice</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Completed</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="nsm-card primary" style="margin-top: 30px;">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
-                                            <span>Schedule Job</span>
+                                            <span>From Work Order to Job</span>
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
-                                        <h6 class="page-title "><span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6>
                                         <hr>
                                         <?php if(!isset($jobs_data)): ?>
                                         <p>Import Data from Wordorder/Invoice/Estimates</p>
@@ -542,9 +514,7 @@
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
                                             <b>Created By: </b>&nbsp;&nbsp; <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
-                                            <button type="submit" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button primary text-end" style="position: absolute;right: 40px;">
-                                                    <i class='bx bx-fw bx-plus'></i> Add New Customer
-                                            </button>
+                                            
                                         </div>
                                     </div>     
                                     <div class="nsm-card-content">
@@ -1298,63 +1268,9 @@ add_footer_js(array(
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 <script>
     $(function(){
-        $('#customer_id').select2({
-            ajax: {
-                url: '<?= base_url() ?>autocomplete/_company_customer',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                  return {
-                    q: params.term, // search term
-                    page: params.page
-                  };
-                },
-                processResults: function (data, params) {
-                  // parse the results into the format expected by Select2
-                  // since we are using custom formatting functions we do not need to
-                  // alter the remote JSON data, except to indicate that infinite
-                  // scrolling can be used
-                  params.page = params.page || 1;
-
-                  return {
-                    results: data,
-                    // pagination: {
-                    //   more: (params.page * 30) < data.total_count
-                    // }
-                  };
-                },
-                cache: true
-              },
-              placeholder: 'Select Customer',
-              minimumInputLength: 0,
-              templateResult: formatRepoCustomer,
-              templateSelection: formatRepoCustomerSelection
-        });
-
-        function formatRepoCustomerSelection(repo) {
-            if( repo.first_name != null ){
-                return repo.first_name + ' ' + repo.last_name;      
-            }else{
-                return repo.text;
-            }
-          
-        }
-
-        function formatRepoCustomer(repo) {
-          if (repo.loading) {
-            return repo.text;
-          }
-
-          var $container = $(
-            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_h+' / '+repo.email+'</small></div>'
-          );
-
-          return $container;
-        }
-
-        /*$("#customer_id").select2({
+        $("#customer_id").select2({
             placeholder: "Select Customer"
-        });*/
+        });
         $("#employee_id").select2({
             placeholder: "Select Employee"
         });
@@ -1364,14 +1280,8 @@ add_footer_js(array(
         $("#priority").select2({
             placeholder: ""
         });
-
-        <?php if( $default_customer_id > 0 ){ ?>
-            $('#customer_id').click();
-            load_customer_data('<?= $default_customer_id; ?>');
-        <?php } ?>
     });
 </script>
-
 <script>
     var geocoder;
     function initMap(address=null) {

@@ -152,18 +152,44 @@ class Workorder extends MY_Controller
                     break;
             }
         }
+        
 
         if (!empty(get('search'))) {
             $filter['status'] = $workorder_status;
             $filter['search'] = get('search');
-            $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
+            
+            $org_id = array('58','31');
+            if($company_id == 58 || $company_id == 31)
+            {
+                $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
+            }else{
+                $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
+            }
         }else{
             $filter['status'] = $workorder_status;
-            $workorder = $this->workorder_model->getworkorderList($filter, $sort);    
+            // $workorder = $this->workorder_model->getworkorderList($filter, $sort);    
+            $org_id = array('58','31');
+            if($company_id == 58 || $company_id == 31)
+            {
+                $workorder = $this->workorder_model->getworkorderListMultiple($org_id, $filter, $sort); 
+            }else{
+                $workorder = $this->workorder_model->getworkorderList($filter, $sort);  
+            }
         }
+
+        // $org_id = array('58','31');
+        // if($company_id == 58 || $company_id == 31)
+        // {
+        //     $this->page_data['workorder'] = $this->workorder_model->getByIdArray($org_id);
+        //     $work =  $this->workorder_model->getById($id);
+        // }else{
+        //     $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        //     $work =  $this->workorder_model->getById($id);
+        // }
 
         
         $this->page_data['workorders'] = $workorder;
+
         $company_id = logged('company_id');
         $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
 
@@ -3800,7 +3826,7 @@ class Workorder extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
-        $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
+        // $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
 
         // $termsCondi = $this->workorder_model->getTerms($company_id);
         // if($termsCondi){
@@ -3885,6 +3911,15 @@ class Workorder extends MY_Controller
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
         $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
+
+        $org_id = array('58','31');
+            if($company_id == 58 || $company_id == 31)
+            {
+                // $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
+                $this->page_data['number'] = $this->workorder_model->getlastInsertMultiple($org_id);
+            }else{
+                $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
+            }
         
 
         $this->page_data['page_title'] = "Work Order";
@@ -3940,7 +3975,6 @@ class Workorder extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
-        $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
 
         // $termsCondi = $this->workorder_model->getTerms($company_id);
         // if($termsCondi){
@@ -4027,6 +4061,17 @@ class Workorder extends MY_Controller
 
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
+
+        $org_id = array('58','31');
+            if($company_id == 58 || $company_id == 31)
+            {
+                // $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
+                $this->page_data['number'] = $this->workorder_model->getlastInsertMultiple($org_id);
+            }else{
+                $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
+            }
+        
+
         $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
         
 

@@ -1,5 +1,7 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/dashboard_modals'); ?>
+<?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
+<?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 <?php include viewPath('v2/widgets/add_widgets'); ?>
 
 <div class="nsm-fab-container">
@@ -7,6 +9,18 @@
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
+        <li data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-chart"></i>
+            </div>
+            <span class="nsm-fab-label">Add Estimate</span>
+        </li>
+        <li data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-message-alt-add"></i>
+            </div>
+            <span class="nsm-fab-label">Add Workorder</span>
+        </li>
         <li onclick="window.open('<?= base_url('taskhub/entry') ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
             <div class="nsm-fab-icon">
                 <i class="bx bx-task"></i>
@@ -59,6 +73,12 @@
 </div>
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
+        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+            <i class='bx bx-fw bx-chart'></i> Add Estimate
+        </button>
+        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
+            <i class='bx bx-fw bx-message-alt-add'></i> Add Workorder
+        </button>
         <button type="button" class="nsm-button btn-add-task">
             <i class='bx bx-fw bx-task'></i> New Task
         </button>

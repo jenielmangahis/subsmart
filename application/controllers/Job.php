@@ -551,7 +551,7 @@ class Job extends MY_Controller
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
 
-        $this->load->view('job/job_workorder', $this->page_data);
+        $this->load->view('v2/pages/job/job_workorder', $this->page_data);
     }
 
     public function estimate_job($id=null)

@@ -1291,6 +1291,23 @@ class Workorder_model extends MY_Model
         return $result->result();
     }
 
+    public function getlastInsertMultiple($company_id=array())
+    {
+        $where = array(
+            'view_flag'     => '0',
+            // 'company_id'   => $company_id
+          );
+
+        $this->db->select('*');
+        $this->db->from('work_orders');
+        $this->db->where($where);
+        $this->db->where_in('company_id',$company_id);
+        $this->db->order_by('work_order_number', 'DESC');
+        $this->db->limit(1);
+        $result = $this->db->get();
+        return $result->result();
+    }
+
     public function getname($id)
     {
         $this->db->select('*');
@@ -1462,6 +1479,45 @@ class Workorder_model extends MY_Model
         // $query = $this->db->get();
         // return $query;
     }
+    public function getworkorderListMultiple( $company_id = array(), $filters = array(), $sort = array() )
+    {
+        // $company_id = logged('company_id');
+        
+        $where = array(
+            // 'work_orders.company_id' => $company_id,
+            'work_orders.view_flag'   => '0'
+        );
+
+        // $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id, work_order_alarm_details.work_order_id');
+		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+        $this->db->select('*, work_orders.status AS w_status');
+        $this->db->from('work_orders');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+        // $this->db->join('work_order_alarm_details', 'work_orders.id  = work_order_alarm_details.work_order_id');
+		$this->db->where($where);
+        $this->db->where_in('work_orders.company_id',$company_id);
+
+        if( $filters['status'] != '' && $filters['status'] != 'all' ){
+            $this->db->where('work_orders.status', ucwords($filters['status']));
+        }
+
+        if( !empty($sort) ){
+            $this->db->order_by($sort['field'], strtoupper($sort['order']));
+        }else{
+            $this->db->order_by('id', 'DESC');    
+        }
+        
+        $query = $this->db->get();
+        return $query->result();
+
+        // $this->db->select('*');    
+        // $this->db->from('work_orders');
+        // $this->db->join('acs_profile', 'work_orders.customer_id = acs_profile.prof_id');
+        // $this->db->join('work_order_alarm_details', 'work_orders.id = work_order_alarm_details.work_order_id');
+        // $this->db->where('work_orders.company_id', $company_id);
+        // $query = $this->db->get();
+        // return $query;
+    }
 
     public function getFilterworkorderList( $company_id, $filters=array(), $sort = array() )
     {
@@ -1475,6 +1531,42 @@ class Workorder_model extends MY_Model
         $this->db->from('work_orders');
         $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
         $this->db->where($where);
+
+        if ( !empty($filters) ) {
+            if( $filter['status'] != '' && $filter['status'] != 'all' ){
+                $this->db->where('work_orders.status', ucwords($filter['status']));
+            }
+
+            if ( $filters['search'] != '' ) {
+                $this->db->like('work_order_number', $filters['search'], 'both');
+                $this->db->or_like('acs_profile.first_name', $filters['search'], 'both');
+                $this->db->or_like('acs_profile.last_name', $filters['search'], 'both');
+            }
+        }
+
+        if( !empty($sort) ){
+            $this->db->order_by($sort['field'], strtoupper($sort['order']));
+        }else{
+            $this->db->order_by('id', 'DESC');    
+        }
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getFilterworkorderListMultiple( $company_id=array() , $filters=array(), $sort = array() )
+    {
+
+        $where = array(
+            // 'work_orders.company_id' => $company_id,
+            'view_flag'   => '0'
+        );
+
+        $this->db->select('*, work_orders.status AS w_status');
+        $this->db->from('work_orders');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+        $this->db->where($where);
+        $this->db->where_in('work_orders.company_id',$company_id);
 
         if ( !empty($filters) ) {
             if( $filter['status'] != '' && $filter['status'] != 'all' ){
@@ -1660,6 +1752,16 @@ class Workorder_model extends MY_Model
 		$this->db->where('work_orders.id', $id);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function getByIdArray($org_ids = array())
+    {
+        $this->db->select('*','ls_name');
+		$this->db->from('work_orders');
+        $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id');
+		$this->db->where_in('work_orders.id', $org_ids);
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function getByProfIdComp($prof_id)

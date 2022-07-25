@@ -2,10 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/workorder'); ?>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<?php include viewPath('includes/workorder/sign-modal'); ?>
+<!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
 <style>
 .box-left-mini{
     float:left;
@@ -130,13 +129,52 @@ img.company-logo2 {
         width:50%;
     }
 }
-</style>
 
+
+@media screen and (max-width:1000px){
+
+.wo-signatureModal canvas {
+    width: 100%;
+    border: 1px solid #e4e4e4;
+    position: relative;
+    z-index: 1;
+    height: 250px;
+    margin-top: 1px;
+}
+.wo-signatureModal .mobileHeight {
+    /* max-width: 500px; */
+    margin: 1.75rem auto;
+    width: 100% !important;
+}
+.alert-primary {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    margin-top: -22px;
+    font-size: 9px;
+    margin-bottom: 0px;
+}
+.modal-title {
+    font-size: 12px;
+    margin: 0;
+    color: #002638;
+}
+.modal-header {
+    padding: 0.4rem 0.4rem;
+}
+.modal-body {
+    /* padding: 10px 10px; */
+}
+}
+</style>
+<input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
+<div class="wrapper" role="wrapper">
+<?php include viewPath('includes/sidebars/workorder'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
           <div class="row" style="margin-top: 30px;">
-            <div class="col lawas">
+            <div class="col">
                 <h3 class="m-0">Solar Stimulus Data Control / 2022 - 2024</h3>
             </div>
         </div>
@@ -144,7 +182,7 @@ img.company-logo2 {
         <!-- <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
           Create your workorder.
         </div> -->
-          <div class="card">
+          <div class="">
             <!-- end row -->
             <!-- <div class="row">
                 <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
@@ -154,7 +192,7 @@ img.company-logo2 {
             <br> -->
             <?php echo form_open_multipart('workorder/savenewWorkorderSolar', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                     <div class="row">
-                        <div class="col-md-12 lawas">
+                        <div class="col-md-12">
                             <div id="header_area">
                                 <h4 class="mt-0 header-title mb-5">Header</h4>
                                 <div class="row">
@@ -377,57 +415,57 @@ img.company-logo2 {
                             <br>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" placeholder="Enter First Name">
                                         <b>First name:</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" placeholder="Enter Last Name">
                                         <b>Last name:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Address">
                                         <b>Address:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter City">
                                         <b>City:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="country" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="country" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter County">
                                         <b>County:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="number" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Postcode">
                                         <b>Postcode:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Mobile">
                                         <b>Mobile:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Email">
                                         <b>Email:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="comments" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="comments" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Enter Your comments here">
                                         <b>Comments:</b>
                                     </div>
                                 </div>
@@ -702,7 +740,7 @@ img.company-logo2 {
                             <br><br>
                             <div class="row signature_web lawas">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6> <a data-toggle="modal" data-target=".companySignature" class="btn btn-success"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                <h6>Company Representative Approval</h6> <a class="btn btn-success companySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <div id="companyrep"></div>
 
                                     <input type="hidden" id="saveCompanySignatureDB1a"
@@ -721,11 +759,12 @@ img.company-logo2 {
                                         </select>
                                            <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
                                             <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
-                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
+                                            <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> -->
+                                            <div id="company_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder</h6><a data-toggle="modal" data-target=".primarySignature" class="btn btn-warning"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Primary Account Holder</h6><a class="btn btn-warning primarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <div id="primaryrep"></div>
                                     <input type="hidden" id="savePrimaryAccountSignatureDB2a"
                                            name="primary_account_holder_signature2a">
@@ -741,11 +780,12 @@ img.company-logo2 {
                                             <?php //} ?>
                                     </select> -->
                                     
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web"> -->
+                                           <div id="primary_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder</h6><a data-toggle="modal" data-target=".secondarySignature" class="btn btn-danger"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Secondary Account Holder</h6><a class="btn btn-danger secondarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <div id="secondaryrep"></div>
                                     <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
                                            name="secondary_account_holder_signature3a">
@@ -761,7 +801,8 @@ img.company-logo2 {
                                             <?php //} ?>
                                         </select> -->
 
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web"> -->
+                                           <div id="secondary_representative_div"></div>
 
                                 </div>
                             </div>
@@ -1100,6 +1141,18 @@ jQuery(document).ready(function () {
 
 //   signaturePadCanvas3.width  = 780;
   signaturePadCanvas3.height = 300;
+});
+
+$(document).on('click touchstart','.companySignature',function(){
+    $("#company-representative-approval-signature").modal("show");
+});
+
+$(document).on('click touchstart','.primarySignature',function(){
+    $("#primary-account-holder-signature").modal("show");
+});
+
+$(document).on('click touchstart','.secondarySignature',function(){
+    $("#secondary-account-holder-signature").modal("show");
 });
 
 

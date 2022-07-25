@@ -28,6 +28,8 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_statements_model');
         $this->load->model('items_model');
 
+        $this->load->model('tags_model');
+
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.css",
@@ -280,6 +282,10 @@ class Reports extends MY_Controller {
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+
+        if($reportType->name === 'Profit and Loss by Tag Group') {
+            $this->page_data['group_tags'] = $this->tags_model->getGroup();
+        }
 
         $this->page_data['page']->title = $reportType->name;
         $this->page_data['page']->parent = 'Reports';

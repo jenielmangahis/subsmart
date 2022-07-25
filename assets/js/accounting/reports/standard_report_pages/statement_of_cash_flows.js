@@ -1,20 +1,18 @@
-$('.date').each(function() {
-    $(this).datepicker({
-        uiLibrary: 'bootstrap'
+$(function() {
+    $('.datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 });
 
-$('select').select2({
-    minimumResultsForSearch: -1
-});
-
-$('.dropdown-menu').on('click', function(e) {
+$('.dropdown-menu:not(.export-dropdown)').on('click', function(e) {
     e.stopPropagation();
 });
 
 $('input[name="show_rows"], input[name="show_cols"]').on('change', function() {
-    var selectedRow = $('input[name="show_rows"]:checked').attr('id').replace('row-', '');
-    var selectedCol = $('input[name="show_cols"]:checked').attr('id').replace('col-', '');
+    var selectedRow = $('input[name="show_rows"]:checked').attr('id').replace('-rows', '');
+    var selectedCol = $('input[name="show_cols"]:checked').attr('id').replace('-columns', '');
 
     switch(selectedRow) {
         case 'active' :
@@ -40,5 +38,5 @@ $('input[name="show_rows"], input[name="show_cols"]').on('change', function() {
         break;
     }
 
-    $(this).parent().parent().prev().html(`${row}/${col}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>`);
+    $(this).parent().parent().prev().find('span').html(`${row}/${col}`);
 });
