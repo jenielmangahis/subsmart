@@ -6,8 +6,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public $table = 'company_auto_sms_settings';
     public $module_job = 'job';
     public $module_estimate = 'estimate';
-    public $module_work_order = 'work_order';
+    public $module_work_order = 'workorder';
     public $module_event = 'event';
+    public $module_customer = 'customer';
+    public $module_taskhub  = 'taskhub';
 
 
     public function getAll($filters=array())
@@ -88,13 +90,25 @@ class CompanyAutoSmsSettings_model extends MY_Model
         return $this->module_event;
     }
 
+    public function moduleCustomer()
+    {
+        return $this->module_customer;
+    }
+
+    public function moduleTaskHub()
+    {
+        return $this->module_taskhub;
+    }
+
     public function moduleList()
     {
         $modules = [
             $this->module_job => 'Jobs',
             $this->module_estimate => 'Estimates',
             $this->module_work_order => 'Work Orders',
-            $this->module_event => 'Events'
+            $this->module_event => 'Events',
+            $this->module_customer => 'Customers',
+            $this->module_taskhub => 'Taskhub',
         ];
 
         return $modules;
@@ -108,7 +122,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Started' => 'Started',
             'New' => 'New',
             'Completed' => 'Completed',
-            'Email Opened' => 'Email Opened',
+            //'Email Opened' => 'Email Opened',
         ];
 
         return $status;
@@ -137,7 +151,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Invoiced' => 'Invoiced',
             'Withdrawn' => 'Withdrawn',
             'Closed' => 'Closed',
-            'Email Opened' => 'Email Opened'
+            //'Email Opened' => 'Email Opened'
         ];
 
         return $status;
@@ -149,7 +163,16 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Scheduled' => 'Scheduled',
             'Started' => 'Started',
             'Completed' => 'Completed',
-            'Email Opened' => 'Email Opened'
+            //'Email Opened' => 'Email Opened'
+        ];
+
+        return $status;
+    }
+
+    public function customerModuleStatusList()
+    {
+        $status = [
+            'New' => 'New'
         ];
 
         return $status;

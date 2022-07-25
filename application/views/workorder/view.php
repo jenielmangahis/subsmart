@@ -1368,7 +1368,7 @@ table input.form-control {
 									<?php }elseif($workorder->work_order_type_id == '4'){ ?>
 
 										<div class="row">
-											<div class="form-group col-md-2">
+											<div class="form-group col-md-3">
 												<div class="select-wrap">
 													<label for="lead_source">Lead Source</label>
 													<select id="lead_source" name="lead_source" class="form-control custom-select m_select">
@@ -1378,7 +1378,7 @@ table input.form-control {
 													</select>
 												</div>    
 											</div> 
-											<div class="form-group col-md-2">
+											<div class="form-group col-md-3">
 												<div class="select-wrap">
 													<label for="lead_source">Account Type</label>
 													<select id="account_type" name="account_type" class="form-control custom-select m_select">
@@ -1391,7 +1391,7 @@ table input.form-control {
 													<input type="hidden" value="<?php echo $workorder->account_type; ?>" class="account_typeClass">
 												</div>    
 											</div> 
-											<div class="form-group col-md-2">
+											<div class="form-group col-md-3">
 												<div class="select-wrap">
 													<label for="lead_source">Communication Type</label>
 													<select id="communication_type" name="communication_type" class="form-control custom-select m_select">
@@ -1401,10 +1401,10 @@ table input.form-control {
 													</select>
 												</div>    
 											</div> 
-											<div class="form-group col-md-2">
+											<div class="form-group col-md-3">
 												<div class="select-wrap">
 													<label for="lead_source">Panel Type</label>
-													<select name="panel_type" id="panel_type" class="form-control input_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>">
+													<select name="panel_type" id="panel_type" class="form-control m_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>">
 														<option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
 														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
 														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>

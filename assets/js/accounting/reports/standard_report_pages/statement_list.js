@@ -1,13 +1,11 @@
-$('.date').each(function() {
-    $(this).datepicker({
-        uiLibrary: 'bootstrap'
+$(function() {
+    $('.datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 });
 
-$('select').select2({
-    minimumResultsForSearch: -1
-});
-
-$('.dropdown-menu').on('click', function(e) {
+$('.dropdown-menu:not(.export-dropdown)').on('click', function(e) {
     e.stopPropagation();
 });

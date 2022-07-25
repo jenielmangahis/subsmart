@@ -6,12 +6,7 @@
                 <span class="modal-title content-title" id="setup_paypal_modal_label">Setup Paypal</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" id="paypal_api_container">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save</button>
-            </div>
+            <div class="modal-body" id="paypal_api_container"></div>            
         </div>
         <?php echo form_close(); ?>
     </div>
@@ -120,12 +115,7 @@
                 <span class="modal-title content-title" id="setup_stripe_modal_label">Setup Stripe</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" id="stripe_api_container">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save</button>
-            </div>
+            <div class="modal-body" id="stripe_api_container"></div>
         </div>
         <?php echo form_close(); ?>
     </div>
@@ -139,12 +129,7 @@
                 <span class="modal-title content-title" id="setup_nmi_modal_label">Setup NMI</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" id="nmi_api_container">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save</button>
-            </div>
+            <div class="modal-body" id="nmi_api_container"></div>            
         </div>
         <?php echo form_close(); ?>
     </div>
@@ -158,12 +143,7 @@
                 <span class="modal-title content-title" id="setup_converge_modal_label">Setup Converge</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" id="converge_api_container">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save</button>
-            </div>
+            <div class="modal-body" id="converge_api_container"></div>            
         </div>
         <?php echo form_close(); ?>
     </div>
@@ -177,11 +157,7 @@
                 <span class="modal-title content-title" id="setup_stripe_modal_label">Setup Ring Central</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" id="ring-central-container"></div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save</button>
-            </div>
+            <div class="modal-body" id="ring-central-container"></div>            
         </div>
         <?php echo form_close(); ?>
     </div>
@@ -195,11 +171,7 @@
                 <span class="modal-title content-title" id="setup_stripe_modal_label">Setup Twilio</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" id="twilio-container"></div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save</button>
-            </div>
+            <div class="modal-body" id="twilio-container"></div>            
         </div>
         <?php echo form_close(); ?>
     </div>

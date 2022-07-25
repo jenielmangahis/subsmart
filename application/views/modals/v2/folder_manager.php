@@ -33,6 +33,7 @@
      bottom: 0px;
    }
  }
+ 
 </style>
 
 <link rel="stylesheet" href="<?=base_url('assets/css/esign/esign.css');?>" type="text/css">
@@ -74,7 +75,7 @@ if ($isMyLibrary) {
                       <span>Shared Library</span>
                   </a>
               </li>
-              <li>
+              <li data-controller="businessformtemplates">
                   <a class="nsm-page-link" href="<?php echo base_url('vault_v2/businessformtemplates') ?>">
                       <span>Business Form Templates</span>
                   </a>

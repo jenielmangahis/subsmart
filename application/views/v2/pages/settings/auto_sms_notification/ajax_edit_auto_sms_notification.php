@@ -64,6 +64,12 @@
           <label class="form-check-label" for="flexCheckDefault">
             Send to Company Admin
           </label>
+        </div>        
+        <div class="form-check edit-grp-send-assigned-user" style="margin-top:5px; margin-left: 10px;<?= $autoSms->module_name != 'taskhub' ? 'display: none;' : 'display: inline-block'; ?>">
+          <input <?= $autoSms->send_to_assigned_user == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_assigned_user" id="chk-assigned-user">
+          <label class="form-check-label" for="flexCheckDefault">
+            Send to Assigned User
+          </label>
         </div>
         
     </div>
@@ -155,6 +161,13 @@ $(document).on('change', '#edit-module-name', function(e){
     var module_name = $(this).val();
     var url = base_url + 'settings/_load_auto_sms_notification_module_status';
     $(".edit-module-status-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+    if( module_name == 'taskhub' ){
+        $('.edit-grp-send-assigned-user').show();
+        $('.edit-grp-send-assigned-user').css('display', 'inline-block');
+    }else{
+        $('.edit-grp-send-assigned-user').hide();
+    }
 
     setTimeout(function () {
       $.ajax({

@@ -30,6 +30,8 @@
                     <tr>
                         <td>id</td>
                         <td>Name</td>
+                        <td>Created By</td>
+                        <td>Created At</td>
                         <td class="cell-shrink">Actions</td>
                     </tr>
                 </thead>

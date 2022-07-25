@@ -4772,24 +4772,26 @@ if(!function_exists('set_expense_graph_data')) {
                     }                    
                 }
             }else{
-                $a_send_to = unserialize($autoSms->send_to);
-                foreach($a_send_to as $uid){
-                    $user = $CI->Users_model->getUserByID($uid);
-                    if( $user ){
-                        if( $user->mobile != '' ){
-                            $cron_data = [
-                                'company_auto_sms_id' => $autoSms->id,
-                                'obj_id' => $object_id,
-                                'mobile_number' => $user->mobile,
-                                'sms_message' => $autoSms->sms_text,
-                                'is_sent' => 0,
-                                'created' => date("Y-m-d H:i:s")
-                            ];
+                if( $autoSms->send_to != '' ){
+                    $a_send_to = unserialize($autoSms->send_to);
+                    foreach($a_send_to as $uid){
+                        $user = $CI->Users_model->getUserByID($uid);
+                        if( $user ){
+                            if( $user->mobile != '' ){
+                                $cron_data = [
+                                    'company_auto_sms_id' => $autoSms->id,
+                                    'obj_id' => $object_id,
+                                    'mobile_number' => $user->mobile,
+                                    'sms_message' => $autoSms->sms_text,
+                                    'is_sent' => 0,
+                                    'created' => date("Y-m-d H:i:s")
+                                ];
 
-                            $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
-                        } 
-                    }                         
-                }
+                                $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+                            } 
+                        }                         
+                    }
+                }                
             }
         }
     }

@@ -1,31 +1,27 @@
-$('.date').each(function() {
-    $(this).datepicker({
-        uiLibrary: 'bootstrap'
+$(function() {
+    $('.datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 });
 
-$('select').select2({
-    minimumResultsForSearch: -1
-});
-
-$('.dropdown-menu').on('click', function(e) {
+$('.dropdown-menu:not(.export-dropdown)').on('click', function(e) {
     e.stopPropagation();
 });
 
-$('#previous-period, #previous-year').on('change', function() {
+$('#previous-period, #previous-year, #year-to-date').on('change', function() {
     if($(this).prop('checked')) {
         $(this).parent().next().find('input').prop('disabled', false);
-        $(this).parent().next().find('label').removeClass('text-muted');
     } else {
         $(this).parent().next().find('input').prop('checked', false);
         $(this).parent().next().find('input').prop('disabled', true);
-        $(this).parent().next().find('label').addClass('text-muted');
     }
 });
 
 $('input[name="show_rows"], input[name="show_cols"]').on('change', function() {
-    var selectedRow = $('input[name="show_rows"]:checked').attr('id').replace('row-', '');
-    var selectedCol = $('input[name="show_cols"]:checked').attr('id').replace('col-', '');
+    var selectedRow = $('input[name="show_rows"]:checked').attr('id').replace('-rows', '');
+    var selectedCol = $('input[name="show_cols"]:checked').attr('id').replace('-columns', '');
 
     switch(selectedRow) {
         case 'active' :
@@ -51,7 +47,7 @@ $('input[name="show_rows"], input[name="show_cols"]').on('change', function() {
         break;
     }
 
-    $(this).parent().parent().prev().html(`${row}/${col}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>`);
+    $(this).parent().parent().prev().find('span').html(`${row}/${col}`);
 });
 
 $('input[name="selected_period"]').on('change', function() {
@@ -101,5 +97,5 @@ $('input[name="selected_period"]').on('change', function() {
         }
     }
 
-    $(this).parent().parent().prev().html(`${label}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>`);
+    $(this).parent().parent().prev().find('span').html(label);
 });

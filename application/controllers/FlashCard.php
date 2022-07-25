@@ -18,10 +18,7 @@ class FlashCard extends MY_Controller
 
     public function addCards($deckId)
     {
-        $userId = logged('id');
-        $this->db->where('id', $deckId);
-        $this->db->where('user_id', $userId);
-        $row = $this->db->get('university_flashcard_decks')->row();
+        $row = $this->getCard($deckId);
         if (!$row) {
             show_404();
         }
@@ -31,12 +28,29 @@ class FlashCard extends MY_Controller
         $this->load->view('v2/pages/university/flashcard/add-cards.php', $this->page_data);
     }
 
-    public function studyCards($deckId)
+    public function getCard($id)
     {
         $userId = logged('id');
-        $this->db->where('id', $deckId);
-        $this->db->where('user_id', $userId);
-        $row = $this->db->get('university_flashcard_decks')->row();
+        $companyId = logged('company_id');
+
+        $this->db->select('decks.*', false);
+        $this->db->from('university_flashcard_decks decks');
+
+        $this->db->join('users', 'users.id = decks.user_id', 'left');
+        $this->db->where('users.company_id', $companyId);
+
+        $this->db->group_start();
+        $this->db->where('decks.user_id', $userId);
+        $this->db->or_where('decks.is_shared_in_company', 1);
+        $this->db->group_end();
+
+        $this->db->where('decks.id', $id);
+        return $this->db->get('university_flashcard_decks')->row();
+    }
+
+    public function studyCards($deckId)
+    {
+        $row = $this->getCard($deckId);
         if (!$row) {
             show_404();
         }
@@ -108,10 +122,7 @@ class FlashCard extends MY_Controller
 
     public function apiGetDeck($deckId)
     {
-        $userId = logged('id');
-        $this->db->where('id', $deckId);
-        $this->db->where('user_id', $userId);
-        $row = $this->db->get('university_flashcard_decks')->row();
+        $row = $this->getCard($deckId);
         $row = $this->populateData($row);
         $this->respond(['data' => $row]);
     }
@@ -157,11 +168,13 @@ class FlashCard extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        $userId = logged('id');
+        $row = $this->getCard($payload['id']);
 
-        $this->db->where('id', $payload['id']);
-        $this->db->where('user_id', $userId);
-        $this->db->update('university_flashcard_decks', $payload);
+        $this->db->where('id', $row->id);
+        $this->db->update('university_flashcard_decks', [
+            'title' => $payload['title'],
+            'is_shared_in_company' => $payload['is_shared_in_company'],
+        ]);
 
         $this->db->where('id', $payload['id']);
         $row = $this->db->get('university_flashcard_decks')->row();
@@ -171,6 +184,19 @@ class FlashCard extends MY_Controller
 
     private function populateData($item)
     {
+        static $users = [];
+
+        if (!array_key_exists($item->user_id, $users)) {
+            $this->db->where('id', $item->user_id);
+            $users[$item->user_id] = $this->db->get('users')->row();
+        }
+
+        $item->current_user_id = logged('id');
+
+        $user = $users[$item->user_id];
+        $item->uploaded_by_firstname = $user->FName;
+        $item->uploaded_by_lastname = $user->LName;
+
         $this->db->where('deck_id', $item->id);
         $item->cards = $this->db->get('university_flashcard_cards')->result();
         return $item;
@@ -179,15 +205,32 @@ class FlashCard extends MY_Controller
     public function apiGetDecks()
     {
         $userId = logged('id');
+        $companyId = logged('company_id');
+
         $this->db->select('decks.*, COUNT(cards.id) AS total_cards', false);
         $this->db->from('university_flashcard_decks decks');
+
+        $this->db->join('users', 'users.id = decks.user_id', 'left');
         $this->db->join('university_flashcard_cards cards', 'cards.deck_id = decks.id', 'left');
+
+        $this->db->where('users.company_id', $companyId);
+
+        $this->db->group_start();
         $this->db->where('decks.user_id', $userId);
+        $this->db->or_where('decks.is_shared_in_company', 1);
+        $this->db->group_end();
+
         $this->db->group_by('decks.id');
         $this->db->order_by('decks.id', 'ASC');
+
         $query = $this->db->get();
-        $rows = $query->result();
-        $this->respond(['data' => $rows]);
+        $results = $query->result();
+
+        $results = array_map(function ($result) {
+            return $this->populateData($result);
+        }, $results);
+
+        $this->respond(['data' => $results]);
     }
 
     private function respond($data)

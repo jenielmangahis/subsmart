@@ -13,7 +13,18 @@ $('.dropdown-menu').on('click', function(e) {
 });
 
 $('#show-cols').on('click', function(e) {
-    e.preventDefault();
+    e.preventDefault();$(function() {
+        $('.datepicker').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+    });
+    
+    $('.dropdown-menu:not(.export-dropdown)').on('click', function(e) {
+        e.stopPropagation();
+    });
+    
 
     if($(this).text().trim().replace('Show ', '') === 'More') {
         $(this).html('<i class="fa fa-caret-up text-info"></i> Show Less');

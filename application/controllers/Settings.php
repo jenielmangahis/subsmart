@@ -1036,6 +1036,10 @@ class Settings extends MY_Controller {
 
                     if( $asms->send_to_company_admin == 1 ){
                         $recipients[$asms->id][] = 'Send to Company Admin';
+                    }
+
+                    if( $asms->send_to_assigned_user == 1 ){
+                        $recipients[$asms->id][] = 'Send to Assigned User';
                     }                    
                 }
             }            
@@ -1053,6 +1057,7 @@ class Settings extends MY_Controller {
     public function ajax_load_auto_sms_notification_module_status()
     {
         $this->load->model('CompanyAutoSmsSettings_model');
+        $this->load->model('Taskhub_status_model');
 
         $moduleStatus = array();
         $post = $this->input->post();
@@ -1064,6 +1069,15 @@ class Settings extends MY_Controller {
             $moduleStatus = $this->CompanyAutoSmsSettings_model->workOrderModuleStatusList();
         }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->eventModuleStatusList();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->customerModuleStatusList();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
+            $taskHubStatus = $this->Taskhub_status_model->getAll();
+            foreach($taskHubStatus as $status){
+                if( $status->status_text != '' ){
+                    $moduleStatus[$status->status_text] = $status->status_text;
+                }                
+            }
         }
 
         $this->page_data['moduleStatus'] = $moduleStatus;
@@ -1083,7 +1097,7 @@ class Settings extends MY_Controller {
             $msg = 'Please specify sms message';
         }elseif( $post['module_status'] == '' ){
             $msg = 'Please specify status of the module that will trigger auto sms';
-        }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_company_admin']) ){
+        }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) ){
             $msg = 'Please specify recipient of the sms notification';
         }else{            
             if( isset($post['send_to_all']) ){
@@ -1111,6 +1125,11 @@ class Settings extends MY_Controller {
                 $send_to_company_admin = 1;
             }
 
+            $send_to_assigned_user = 0;
+            if( isset($post['send_assigned_user']) && $post['module_name'] == 'taskhub' ){
+                $send_to_assigned_user = 1;
+            }
+
             $data = [
                 'company_id' => $cid,
                 'module_name' => $post['module_name'],
@@ -1119,6 +1138,7 @@ class Settings extends MY_Controller {
                 'module_status' => $post['module_status'],
                 'send_to_creator' => $send_to_creator,
                 'send_to_company_admin' => $send_to_company_admin,                
+                'send_to_assigned_user' => $send_to_assigned_user,
                 'is_enabled' => $post['is_enabled']
             ];
 
@@ -1164,6 +1184,7 @@ class Settings extends MY_Controller {
     public function ajax_edit_auto_sms_notification()
     {
         $this->load->model('CompanyAutoSmsSettings_model');
+        $this->load->model('Taskhub_status_model');
 
         $post    = $this->input->post();   
         $autoSms = $this->CompanyAutoSmsSettings_model->getById($post['sid']);
@@ -1178,6 +1199,15 @@ class Settings extends MY_Controller {
             $moduleStatus = $this->CompanyAutoSmsSettings_model->workOrderModuleStatusList();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->eventModuleStatusList();
+        }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->customerModuleStatusList();
+        }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
+            $taskHubStatus = $this->Taskhub_status_model->getAll();
+            foreach($taskHubStatus as $status){
+                if( $status->status_text != '' ){
+                    $moduleStatus[$status->status_text] = $status->status_text;
+                }                
+            }
         }
 
         $recipients  = array();
@@ -1216,18 +1246,37 @@ class Settings extends MY_Controller {
                 $msg = 'Please specify sms message';
             }elseif( $post['module_status'] == '' ){
                 $msg = 'Please specify status of the module that will trigger auto sms';
-            }elseif( !isset($post['send_to_all']) && empty($post['send_to'])  ){
+            }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) ){
                 $msg = 'Please specify recipient of the sms notification';
-            }else{            
+            }else{  
                 if( isset($post['send_to_all']) ){
-                    $send_to = 'all';
+                $send_to = 'all';
                 }else{
-                    $send_to = array();
-                    foreach($post['send_to'] as $value){
-                        $send_to[] = $value;
-                    }
+                    if(isset($post['send_to'])){
+                        $send_to = array();
+                        foreach($post['send_to'] as $value){
+                            $send_to[] = $value;
+                        }
 
-                    $send_to = serialize($send_to);
+                        $send_to = serialize($send_to);
+                    }else{
+                        $send_to = '';
+                    }             
+                }  
+
+                $send_to_creator = 0;
+                if( isset($post['send_creator']) ){
+                    $send_to_creator = 1;
+                }
+
+                $send_to_company_admin = 0;
+                if( isset($post['send_company_admin']) ){
+                    $send_to_company_admin = 1;
+                }
+
+                $send_to_assigned_user = 0;
+                if( isset($post['send_assigned_user']) && $post['module_name'] == 'taskhub' ){
+                    $send_to_assigned_user = 1;
                 }
 
                 $data = [
@@ -1235,6 +1284,9 @@ class Settings extends MY_Controller {
                     'sms_text' => $post['sms_text'],
                     'send_to' => $send_to,
                     'module_status' => $post['module_status'],
+                    'send_to_creator' => $send_to_creator,
+                    'send_to_company_admin' => $send_to_company_admin,                
+                    'send_to_assigned_user' => $send_to_assigned_user,
                     'is_enabled' => $post['is_enabled']
                 ];
 

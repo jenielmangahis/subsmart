@@ -1,5 +1,5 @@
 <div class="modal fade wo-signatureModal" tabindex="-1" role="dialog" id="company-representative-approval-signature">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-lg mobileHeight" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Company Representative Approval</h5>

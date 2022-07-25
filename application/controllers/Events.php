@@ -526,6 +526,7 @@ class Events extends MY_Controller
 
     public function save_event() {
         $input = $this->input->post();
+        $user_id = logged('id');
         $comp_id = logged('company_id');
         $get_event_settings = array(
             'where' => array(
@@ -566,7 +567,7 @@ class Events extends MY_Controller
         $event_id = $this->general->add_return_id($events_data, 'events');
 
         //SMS Notification
-        createCronAutoSmsNotification($comp_id, $event_id, 'event', 'Scheduled');
+        createCronAutoSmsNotification($comp_id, $event_id, 'event', 'Scheduled', $input['employee_id']);
 
         if(isset($input['item_id'])){
             $devices = count($input['item_id']);
