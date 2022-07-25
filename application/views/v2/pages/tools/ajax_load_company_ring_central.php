@@ -18,11 +18,11 @@
         <div class="row mb-5 mt-5">
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Client ID</label>
-                <input type="text" class="nsm-field form-control api-input" value="<?= $ringCentral ? maskString($ringCentral->client_id) : ''; ?>" readonly disabled />
+                <input type="text" class="nsm-field form-control api-input" value="<?= $ringCentral ? maskString(base64_decode($ringCentral->client_id)) : ''; ?>" readonly disabled />
             </div>
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Client Secret</label>
-                <input type="text" class="nsm-field form-control api-input" value="<?= $ringCentral ? maskString($ringCentral->client_secret) : ''; ?>" readonly disabled />
+                <input type="text" class="nsm-field form-control api-input" value="<?= $ringCentral ? maskString(base64_decode($ringCentral->client_secret)) : ''; ?>" readonly disabled />
             </div>
         </div>
         <div class="row mb-5">
@@ -66,11 +66,11 @@
         <div class="row mb-5 mt-5">
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Client ID</label>
-                <input type="text" name="client_id" class="nsm-field form-control api-input" value="<?= $ringCentral ? $ringCentral->client_id : ''; ?>" required />
+                <input type="text" name="client_id" class="nsm-field form-control api-input" value="<?= $ringCentral ? base64_decode($ringCentral->client_id) : ''; ?>" required />
             </div>
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">Client Secret</label>
-                <input type="text" name="client_secret" class="nsm-field form-control api-input" value="<?= $ringCentral ? $ringCentral->client_secret : ''; ?>" required />
+                <input type="text" name="client_secret" class="nsm-field form-control api-input" value="<?= $ringCentral ? base64_decode($ringCentral->client_secret) : ''; ?>" required />
             </div>
         </div>
         <div class="row mb-5">

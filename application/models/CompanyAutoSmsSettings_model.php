@@ -10,6 +10,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public $module_event = 'event';
     public $module_customer = 'customer';
     public $module_taskhub  = 'taskhub';
+    public $module_lead = 'lead';
 
 
     public function getAll($filters=array())
@@ -100,6 +101,11 @@ class CompanyAutoSmsSettings_model extends MY_Model
         return $this->module_taskhub;
     }
 
+    public function moduleLead()
+    {
+        return $this->module_lead;
+    }
+
     public function moduleList()
     {
         $modules = [
@@ -109,6 +115,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             $this->module_event => 'Events',
             $this->module_customer => 'Customers',
             $this->module_taskhub => 'Taskhub',
+            $this->module_lead => 'Leads',
         ];
 
         return $modules;
@@ -173,6 +180,20 @@ class CompanyAutoSmsSettings_model extends MY_Model
     {
         $status = [
             'New' => 'New'
+        ];
+
+        return $status;
+    }
+
+    public function leadModuleStatusList()
+    {
+        $status = [
+            'New' => 'New',
+            'Contacted' => 'Contacted',
+            'Follow Up' => 'Follow Up',
+            'Assigned' => 'Assigned',
+            'Converted' => 'Converted',
+            'Closed' => 'Closed',
         ];
 
         return $status;

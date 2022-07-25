@@ -4707,7 +4707,7 @@ if(!function_exists('set_expense_graph_data')) {
         return $user_data;
     }
 
-    function createCronAutoSmsNotification( $company_id, $object_id, $module_name, $module_status, $user_id = 0 ){
+    function createCronAutoSmsNotification( $company_id, $object_id, $module_name, $module_status, $user_id = 0, $assigned_to_user_id = 0 ){
         $CI =& get_instance();
         $CI->load->model('CompanyAutoSmsSettings_model');
         $CI->load->model('CronAutoSmsNotification_model');
@@ -4736,6 +4736,24 @@ if(!function_exists('set_expense_graph_data')) {
                             $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
                         }  
                     }                    
+                }
+            }
+
+            if( $autoSms->module_name == 'taskhub' || $autoSms->module_name == 'lead' ){
+                if( $autoSms->send_to_assigned_user == 1 && $assigned_to_user_id > 0 ){
+                    $assignedUser = $CI->Users_model->getUserByID($assigned_to_user_id);
+                    if( $assignedUser->mobile != '' ){
+                        $cron_data = [
+                            'company_auto_sms_id' => $autoSms->id,
+                            'obj_id' => $object_id,
+                            'mobile_number' => $assignedUser->mobile,
+                            'sms_message' => $autoSms->sms_text,
+                            'is_sent' => 0,
+                            'created' => date("Y-m-d H:i:s")
+                        ];
+
+                        $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+                    }  
                 }
             }
 
@@ -4797,7 +4815,6 @@ if(!function_exists('set_expense_graph_data')) {
     }
 
     function maskString($string, $length = 5){
-    
         $mask_string =  str_repeat("*", strlen($string)-$length) . substr($string, -$length);
         
         return $mask_string;

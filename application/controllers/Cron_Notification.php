@@ -104,12 +104,18 @@ class Cron_Notification extends MYF_Controller {
         $this->load->model('Jobs_model');
         $this->load->model('Business_model');
         $this->load->model('CompanyAutoSmsSettings_model');
+        $this->load->model('Taskhub_model');
+        $this->load->model('Customer_advance_model');
 
         $order_number  = '';
         $customer_name = '';
         $business_name = '';
         $customer_email = '';
         $customer_phone = '';
+        $sales_agent = '';
+        $lead_name  = '';
+        $lead_email = '';
+        $lead_phone = '';
 
         if( $module_name == $this->CompanyAutoSmsSettings_model->moduleJob() ){
             $job = $this->Jobs_model->get_specific_job($object_id);
@@ -158,6 +164,31 @@ class Cron_Notification extends MYF_Controller {
                 $customer_email = $event->email;
                 $customer_phone = $event->phone_m;
             }
+        }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
+            $task = $this->Taskhub_model->getById($object_id);
+            if( $task ){
+                $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$task->prof_id,"acs_profile");
+                $company  = $this->Business_model->getByCompanyId($task->company_id);
+                if( $company ){
+                    $business_name = $company->business_name;
+                }
+
+                $customer_name = $customer->first_name . ' ' . $customer->last_name;
+                $customer_email = $customer->email;
+                $customer_phone = $customer->phone_m;
+            }
+        }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleLead() ){
+            $lead = $this->customer_ad_model->get_data_by_id('leads_id',$object_id,"ac_leads");
+            if( $lead ){
+                $company  = $this->Business_model->getByCompanyId($lead->company_id);
+                if( $company ){
+                    $business_name = $company->business_name;
+                }
+
+                $lead_name = $lead->firstname . ' ' . $lead->lastname;
+                $lead_email = $lead->email_add;
+                $lead_phone = $lead->phone_cell;
+            }
         }
 
         $sms_message = str_replace("{{order.number}}", $order_number, $sms_message);
@@ -165,6 +196,11 @@ class Cron_Notification extends MYF_Controller {
         $sms_message = str_replace("{{business.name}}", $business_name, $sms_message);
         $sms_message = str_replace("{{customer.email}}", $customer_email, $sms_message);
         $sms_message = str_replace("{{customer.phone}}", $customer_phone, $sms_message);
+
+        $sms_message = str_replace("{{lead.name}}", $lead_name, $sms_message);
+        $sms_message = str_replace("{{lead.phone}}", $lead_phone, $sms_message);
+        $sms_message = str_replace("{{lead.email}}", $lead_email, $sms_message);
+
 
         return $sms_message;
     }

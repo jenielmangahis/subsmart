@@ -370,8 +370,8 @@ class Tools extends MY_Controller {
             $companyRingCentral = $this->RingCentralAccounts_model->getByCompanyId($company_id);
             if( $companyRingCentral ){
                 $ring_central_data = [
-                    'client_id' => $post['client_id'],
-                    'client_secret' => $post['client_secret'],
+                    'client_id' => base64_encode($post['client_id']),
+                    'client_secret' => base64_encode($post['client_secret']),
                     'rc_username' => $post['rc_username'],
                     'rc_password' => $post['rc_password'],
                     'rc_from_number' => $post['rc_from_number'],
@@ -382,8 +382,8 @@ class Tools extends MY_Controller {
             }else{
                 $ring_central_data = [
                     'company_id' => $company_id,
-                    'client_id' => $post['client_id'],
-                    'client_secret' => $post['client_secret'],
+                    'client_id' => base64_encode($post['client_id']),
+                    'client_secret' => base64_encode($post['client_secret']),
                     'rc_username' => $post['rc_username'],
                     'rc_password' => $post['rc_password'],
                     'rc_from_number' => $post['rc_from_number'],
@@ -416,13 +416,13 @@ class Tools extends MY_Controller {
         $post = $this->input->post();
         $company_id = logged('company_id');  
 
-        $twilio = validateTwilioAccount($post['tw_sid'], $post['tw_token']);
+        $twilio = validateTwilioAccount($post['tw_sid'], $post['tw_token']);        
         if( $twilio['is_valid'] ){
             $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($company_id);
             if( $twilioAccount ){
                 $twilio_data = [
-                    'tw_sid' => $post['tw_sid'],
-                    'tw_token' => $post['tw_token'],
+                    'tw_sid' => base64_encode($post['tw_sid']),
+                    'tw_token' => base64_encode($post['tw_token']),
                     'tw_number' => $post['tw_number'],   
                     'tw_capability_token_url' => $post['tw_capability_token_url'],                 
                     'created' => date("Y-m-d H:i:s")
@@ -432,8 +432,8 @@ class Tools extends MY_Controller {
             }else{
                 $twilio_data = [
                     'company_id' => $company_id,
-                    'tw_sid' => $post['tw_sid'],
-                    'tw_token' => $post['tw_token'],
+                    'tw_sid' => base64_encode($post['tw_sid']),
+                    'tw_token' => base64_encode($post['tw_token']),
                     'tw_number' => $post['tw_number'], 
                     'tw_capability_token_url' => $post['tw_capability_token_url'],                   
                     'created' => date("Y-m-d H:i:s")
@@ -519,9 +519,13 @@ class Tools extends MY_Controller {
         $converge = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         if( $converge ){
+            //$post['converge_merchant_id'] = base64_encode($post['converge_merchant_id']);
+            //$post['converge_merchant_pin'] = base64_encode($post['converge_merchant_pin']);
             $post['modified'] = date("Y-m-d H:i:s");
             $convergeAccount  = $this->CompanyOnlinePaymentAccount_model->updateCompanyAccount($company_id,$post);
         }else{
+            //$post['converge_merchant_id'] = base64_encode($post['converge_merchant_id']);
+            //$post['converge_merchant_pin'] = base64_encode($post['converge_merchant_pin']);
             $post['created']  = date("Y-m-d H:i:s");
             $post['modified'] = date("Y-m-d H:i:s");
             $convergeAccount = $this->CompanyOnlinePaymentAccount_model->create($post);    
@@ -549,6 +553,23 @@ class Tools extends MY_Controller {
 
         $post['company_id'] = $company_id;
         $paymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+
+        /*if( isset($post['api_name'])){
+            if( $post['api_name'] == 'converge' ){
+                $post['converge_merchant_id'] = base64_encode($post['converge_merchant_id']);
+                $post['converge_merchant_pin'] = base64_encode($post['converge_merchant_pin']);
+            }elseif( $post['api_name'] == 'nmi' ){
+                $post['nmi_transaction_key'] = base64_encode($post['nmi_transaction_key']);
+            }elseif( $post['api_name'] == 'stripe' ){
+                $post['stripe_secret_key'] = base64_encode($post['stripe_secret_key']);
+                $post['stripe_publish_key'] = base64_encode($post['stripe_publish_key']);
+            }elseif( $post['api_name'] == 'paypal' ){
+                $post['paypal_client_id'] = base64_encode($post['paypal_client_id']);
+                $post['paypal_client_secret'] = base64_encode($post['paypal_client_secret']);
+            }
+
+            unset($post['api_name']);
+        }*/
 
         if( $paymentAccount ){
             $post['modified'] = date("Y-m-d H:i:s");

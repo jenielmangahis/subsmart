@@ -2348,18 +2348,25 @@ class Customer extends MY_Controller
     public function save_new_lead()
     {
         $input = $this->input->post();
+        $uid   = logged('id');
+        $company_id = logged('company_id');
+        
         if ($input) {
             unset($input['credit_report']);
             unset($input['report_history']);            
             if( isset($input['leads_id']) ){                
                 if ($this->customer_ad_model->update_data($input, "ac_leads", 'leads_id')) {
+                    //SMS Notification
+                    createCronAutoSmsNotification($company_id, $input['leads_id'], 'lead', $input['status'], $uid, $input['fk_assign_id']);
                     echo 'Saved';
                 } else {
                     echo "Error";
                 }
             }else{
                 $input['company_id'] = logged('company_id');
-                if ($this->customer_ad_model->add($input, "ac_leads")) {
+                if ($lastid = $this->customer_ad_model->add($input, "ac_leads")) {
+                    //SMS Notification
+                    createCronAutoSmsNotification($company_id, $lastid, 'lead', $input['status'], $uid, $input['fk_assign_id']);
                     echo 'Saved';
                 } else {
                     echo "Error";

@@ -157,10 +157,14 @@
                                         <select class="form-control" id="cmb-smart-tags" name="smart_tags" style="width:30% !important; float: right;">
                                             <option value="0">Insert Smart Tags</option>
                                             <option value="{{order.number}}">Order Number</option>
-                                            <option value="{{customer.name}}">Customer Name</option>
+                                            <option value="{{customer.name}}">Customer Name</option>                                            
+                                            <option value="{{customer.email}}">Customer Email</option>
+                                            <option value="{{customer.phone}}">Customer Phone</option>
                                             <option value="{{business.name}}">Company Name</option>
-                                            <!-- <option value="{{customer.email}}">Customer Email</option>
-                                            <option value="{{customer.phone}}">Customer Phone</option> -->
+                                            <option value="{{sales.agent}}">Sales Agent</option>                                            
+                                            <option value="{{lead.name}}">Lead Name</option>
+                                            <option value="{{lead.phone}}">Lead Phone</option>
+                                            <option value="{{lead.email}}">Lead Email</option>
                                         </select>
                                         <textarea class="form-control" name="sms_text" id="sms-txt" style="height:130px;margin-top: 17px;" required=""></textarea>
                                     </div>                                    
@@ -308,7 +312,7 @@
         var url = base_url + 'settings/_load_auto_sms_notification_module_status';
         $(".module-status-container").html('<span class="bx bx-loader bx-spin"></span>');
 
-        if( module_name == 'taskhub' ){
+        if( module_name == 'taskhub' || module_name == 'lead' ){
             $('.grp-send-assigned-user').show();
             $('.grp-send-assigned-user').css('display', 'inline-block');
         }else{

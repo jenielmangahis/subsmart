@@ -1071,6 +1071,8 @@ class Settings extends MY_Controller {
             $moduleStatus = $this->CompanyAutoSmsSettings_model->eventModuleStatusList();
         }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->customerModuleStatusList();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleLead() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->leadModuleStatusList();
         }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
             $taskHubStatus = $this->Taskhub_status_model->getAll();
             foreach($taskHubStatus as $status){
@@ -1201,6 +1203,8 @@ class Settings extends MY_Controller {
             $moduleStatus = $this->CompanyAutoSmsSettings_model->eventModuleStatusList();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->customerModuleStatusList();
+        }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleLead() ){
+            $moduleStatus = $this->CompanyAutoSmsSettings_model->leadModuleStatusList();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
             $taskHubStatus = $this->Taskhub_status_model->getAll();
             foreach($taskHubStatus as $status){
