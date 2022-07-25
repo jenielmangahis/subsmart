@@ -47,7 +47,7 @@ else :
     ?>
     <div class="nsm-empty">
         <i class='bx bx-meh-blank'></i>
-        <span>Task hub is empty.</span>
+        <span>All Caught Up!</span>
     </div>
 <?php
 endif;
