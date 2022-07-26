@@ -500,9 +500,12 @@ class Accounting extends MY_Controller
         $this->page_data['deposit_transaction_count'] = $deposit_transaction_count;
         $this->page_data['graph_data'] = "[" . $this->graph_data_to_text($graph_data) . "]";
 
+        $this->page_data['page']->title = 'Sales Overview';
+        $this->page_data['page']->parent = 'Sales';
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
-        $this->load->view('accounting/sales_overview', $this->page_data);
+        $this->load->view('accounting/sales/overview', $this->page_data);
     }
 
     public function graph_data_to_text($graph_data = array())

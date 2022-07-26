@@ -295,7 +295,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     </ul>
                 </li>
                 <li>
-                    <a href="<?= base_url("vault") ?>">
+                    <a href="<?= base_url("vault_v2") ?>">
                         <i class='bx bx-fw bx-folder'></i> Files Vault
                     </a>
                     <ul>
@@ -377,7 +377,7 @@ if ($this->session->userdata('usertimezone') == null) {
                             if ($page->parent == 'Tools') : echo 'active';
                             endif; ?>">
                     <a href="#">
-                        <i class='bx bx-fw bx-extension'></i> Tools <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                        <i class='bx bx-fw bx-extension'></i> Toolbox <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li class="<?php if ($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration') : echo 'selected';

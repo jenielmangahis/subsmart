@@ -82,6 +82,9 @@ class Users extends MY_Controller
 
 	public function businessview()
 	{
+        $this->page_data['page']->title = 'My Profile';
+        $this->page_data['page']->parent = 'My Business';
+
 		$this->load->model('DealsSteals_model');
 
 		add_css(array(
@@ -113,10 +116,14 @@ class Users extends MY_Controller
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->page_data['dealsSteals'] = $dealsSteals;
-		$this->load->view('business_profile/business', $this->page_data);
+		// $this->load->view('business_profile/business', $this->page_data);
+		$this->load->view('v2/pages/business_profile/business', $this->page_data);
 	}
 	public function businessdetail()
 	{
+        $this->page_data['page']->title = 'Business Details';
+        $this->page_data['page']->parent = 'My Business';
+
 		//ifPermissions('businessdetail');
 		$cid  = logged('id');
 		$comp_id = logged('company_id');
@@ -125,6 +132,7 @@ class Users extends MY_Controller
 		$this->page_data['userid'] = $cid;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->load->view('business_profile/businessdetail', $this->page_data);
+		// $this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
 	}
 
 	public function services()
