@@ -272,6 +272,9 @@
         public function ringCentral()
         {
             $this->load->helper('sms_helper');
+            $this->load->model('RingCentralAccounts_model');
+
+            $cid  = logged('company_id');
 
             $ringcentral = smsRingCentral('8503081341', '+18509417380', 'test ringcentral');
 

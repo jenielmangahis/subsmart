@@ -1087,6 +1087,84 @@
                 },
             });
         });
+
+        $("#form-nmi-account").on("submit", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url(); ?>tools/_activate_company_nmi";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Your nmi account was successfully saved.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Cannot save data.',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#setup_nmi_modal").modal('hide');
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $("#form-stripe-account").on("submit", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url(); ?>tools/_activate_company_stripe";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Your stripe account was successfully saved.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Cannot save data.',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#setup_stripe_modal").modal('hide');
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
     });
 
     $(document).on('click', '.btn-rc-edit', function(){

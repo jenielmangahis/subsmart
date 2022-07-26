@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/workorder'); ?>
+<?php include viewPath('includes/workorder/sign-modal'); ?>
 <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
 <style>
@@ -123,8 +123,47 @@ table input.form-control {
         width:100% !important;
     }
 }
+
+
+@media screen and (max-width:1000px){
+
+.wo-signatureModal canvas {
+    width: 100%;
+    border: 1px solid #e4e4e4;
+    position: relative;
+    z-index: 1;
+    height: 250px;
+    margin-top: 1px;
+}
+.wo-signatureModal .mobileHeight {
+    /* max-width: 500px; */
+    margin: 1.75rem auto;
+    width: 100% !important;
+}
+.alert-primary {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    margin-top: -22px;
+    font-size: 9px;
+    margin-bottom: 0px;
+}
+.modal-title {
+    font-size: 12px;
+    margin: 0;
+    color: #002638;
+}
+.modal-header {
+    padding: 0.4rem 0.4rem;
+}
+.modal-body {
+    /* padding: 10px 10px; */
+}
+}
+
 </style>
 
+<?php include viewPath('includes/sidebars/workorder'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -610,101 +649,101 @@ table input.form-control {
                             <br>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->firstname; ?>" onkeyup="primaryName()">
+                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->firstname; ?>" onkeyup="primaryName()" placeholder="Enter First Name">
                                         <b>First name:</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->lastname; ?>">
+                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->lastname; ?>" placeholder="Enter Last Name">
                                         <b>Last name:</b>
                                     </div>
                                 </div>
                                 <div class="row commercialDet" style="display:none;"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="businessname" id="businessname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->businessname; ?>">
+                                        <input type="text" name="businessname" id="businessname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->businessname; ?>" placeholder="Enter Business Name">
                                         <b>Business Name:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->firstname_spouse; ?>">
+                                        <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->firstname_spouse; ?>" placeholder="Enter First name (Spouse)">
                                         <b>First name (Spouse):</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->lastname_spouse; ?>">
+                                        <input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->lastname_spouse; ?>" placeholder="Enter Last name (Spouse)">
                                         <b>Last name (Spouse):</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->address; ?>">
+                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->address; ?>" placeholder="Enter Address">
                                         <b>Address:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-8">
-                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->city; ?>">
+                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->city; ?>" placeholder="Enter City">
                                         <b>City:</b>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->state; ?>"> 
+                                        <input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->state; ?>" placeholder="Enter State"> 
                                         <b>State:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->postcode; ?>">
+                                        <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->postcode; ?>" placeholder="Enter Postcode">
                                         <b>Postcode:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->county; ?>">
+                                        <input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->county; ?>" placeholder="Enter County">
                                         <b>County:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->phone_number; ?>">
+                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->phone_number; ?>" placeholder="Enter Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->mobile_number; ?>">
+                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->mobile_number; ?>" placeholder="Enter Mobile">>
                                         <b>Mobile:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->email; ?>">
+                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->email; ?>" placeholder="Enter Email">
                                         <b>Email:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->first_ecn; ?>">
+                                        <input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->first_ecn; ?>" placeholder="Enter Emergency Contact Name">
                                         <b>1st Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->first_ecn_no; ?>">
+                                        <input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->first_ecn_no; ?>" placeholder="Enter Emergency Contact Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->second_ecn; ?>">
+                                        <input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->second_ecn; ?>" placeholder="Enter Emergency Contact Name">
                                         <b>2nd Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->second_ecn_no; ?>">
+                                        <input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->second_ecn_no; ?>" placeholder="Enter Emergency Contact Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->third_ecn; ?>">
+                                        <input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->third_ecn; ?>" placeholder="Enter Emergency Contact Name">
                                         <b>3rd Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->third_ecn_no; ?>">
+                                        <input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->third_ecn_no; ?>" placeholder="Enter Emergency Contact Phone">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
@@ -828,7 +867,7 @@ table input.form-control {
                             <!-- <div class="row signature_web"> -->
                             <div class="row signature_web">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
+                                    <h6>Company Representative Approval</h6> <a class="btn btn-success companySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
                                     <div id="companyrep"></div>
                                     <br>
@@ -843,11 +882,12 @@ table input.form-control {
                                                 <option <?php if(isset($workorder)){ if($workorder->company_representative_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php } ?>
                                         </select>
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> 
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">  -->
+                                           <div id="company_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <h6>Primary Account Holder</h6><a class="btn btn-warning primarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
                                     <div id="primaryrep"></div>
                                     <br>
@@ -863,11 +903,12 @@ table input.form-control {
                                             <?php //} ?>
                                         </select> -->
 
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web"> -->
+                                           <div id="primary_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <h6>Secondary Account Holder</h6><a class="btn btn-danger secondarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
                                     <div id="secondaryrep"></div>
                                     <br>
@@ -882,7 +923,8 @@ table input.form-control {
                                             <?php //} ?>
                                         </select> -->
 
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web"> -->
+                                           <div id="secondary_representative_div"></div>
 
                                 </div>
                             </div>
@@ -1359,6 +1401,18 @@ $(document).on('click touchstart','#canvas3',function(){
     var canvas_web3 = document.getElementById("canvas3");    
     var dataURL = canvas_web3.toDataURL("image/png");
     $("#saveSecondaryAccountSignatureDB3aM").val(dataURL);
+});
+
+$(document).on('click touchstart','.companySignature',function(){
+    $("#company-representative-approval-signature").modal("show");
+});
+
+$(document).on('click touchstart','.primarySignature',function(){
+    $("#primary-account-holder-signature").modal("show");
+});
+
+$(document).on('click touchstart','.secondarySignature',function(){
+    $("#secondary-account-holder-signature").modal("show");
 });
 
 

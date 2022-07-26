@@ -236,6 +236,10 @@ class Taskhub extends MY_Controller {
 						}						
 					}
 
+					//SMS Notification
+					$taskStatus = $this->taskhub_status_model->getById($this->input->post('status'));
+            		createCronAutoSmsNotification($company_id, $taskid, 'taskhub', $taskStatus->status_text, $uid, $assigned_to);
+
 					$data_assigned = [
 		                'task_id' => $taskid,
 		                'user_id' => $assigned_to,
@@ -523,6 +527,15 @@ class Taskhub extends MY_Controller {
         	}else{
         		$data = ['status_id' => 6];
 	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
+
+	        	//SMS Notification
+	        	$taskStatus   = $this->taskhub_status_model->getById(6);
+	        	$taskAssigned = $this->taskhub_participants_model->getIsAssignedByTaskId($taskHub->task_id);
+	        	if( $taskAssigned ){
+	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskStatus->status_text, $taskHub->created_by, $taskAssigned->user_id);
+	        	}else{
+	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskStatus->status_text, $taskHub->created_by);
+	        	}
 
 	        	$msg ='';
 	        	$is_success = 1;

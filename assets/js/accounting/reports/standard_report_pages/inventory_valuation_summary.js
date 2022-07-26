@@ -1,30 +1,26 @@
-$('.date').each(function() {
-    $(this).datepicker({
-        uiLibrary: 'bootstrap'
+$(function() {
+    $('.datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 });
 
-$('select').select2({
-    minimumResultsForSearch: -1
-});
-
-$('.dropdown-menu').on('click', function(e) {
+$('.dropdown-menu:not(.export-dropdown)').on('click', function(e) {
     e.stopPropagation();
 });
 
 $('#previous-period, #previous-year').on('change', function() {
     if($(this).prop('checked')) {
         $(this).parent().next().find('input').prop('disabled', false);
-        $(this).parent().next().find('label').removeClass('text-muted');
     } else {
         $(this).parent().next().find('input').prop('checked', false);
         $(this).parent().next().find('input').prop('disabled', true);
-        $(this).parent().next().find('label').addClass('text-muted');
     }
 });
 
 $('input[name="show_rows"]').on('change', function() {
-    var selectedRow = $('input[name="show_rows"]:checked').attr('id').replace('row-', '');
+    var selectedRow = $('input[name="show_rows"]:checked').attr('id').replace('-rows', '');
 
     switch(selectedRow) {
         case 'active' :
@@ -38,5 +34,5 @@ $('input[name="show_rows"]').on('change', function() {
         break;
     }
 
-    $(this).parent().parent().prev().html(`${row}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>`);
+    $(this).parent().parent().prev().find('span').html(row);
 });

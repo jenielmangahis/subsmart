@@ -27,9 +27,15 @@
         <label for="">SMS Message</label>
         <select class="form-control" id="edit-cmb-smart-tags" name="smart_tags" style="width:30% !important; float: right;">
             <option value="0">Insert Smart Tags</option>
-            <option value="{{order_number}}">Order Number</option>
-            <option value="{{customer_name}}">Customer Name</option>
-            <option value="{{company_name}}">Company Name</option>
+            <option value="{{order.number}}">Order Number</option>
+            <option value="{{customer.name}}">Customer Name</option>                                            
+            <option value="{{customer.email}}">Customer Email</option>
+            <option value="{{customer.phone}}">Customer Phone</option>
+            <option value="{{business.name}}">Company Name</option>
+            <option value="{{sales.agent}}">Sales Agent</option>                                            
+            <option value="{{lead.name}}">Lead Name</option>
+            <option value="{{lead.phone}}">Lead Phone</option>
+            <option value="{{lead.email}}">Lead Email</option>
             <!-- <option value="{{customer.email}}">Customer Email</option>
             <option value="{{customer.phone}}">Customer Phone</option> -->
         </select>

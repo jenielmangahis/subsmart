@@ -18,13 +18,13 @@
             <div class="row mb-5 mt-5">
                 <div class="col-12 mb-3">
                     <label class="content-subtitle d-block mb-2 fw-bold">SID</label>
-                    <input type="text" class="nsm-field form-control api-input" value="<?= $twilio ? maskString($twilio->tw_sid) : ''; ?>" readonly disabled />
+                    <input type="text" class="nsm-field form-control api-input" value="<?= $twilio ? maskString(base64_decode($twilio->tw_sid)) : ''; ?>" readonly disabled />
                 </div>
             </div>
             <div class="row mb-5 mt-5">
                 <div class="col-12 mb-3">
                     <label class="content-subtitle d-block mb-2 fw-bold">Token</label>
-                    <input type="text" class="nsm-field form-control api-input" value="<?= $twilio ? maskString($twilio->tw_token) : ''; ?>" readonly disabled />
+                    <input type="text" class="nsm-field form-control api-input" value="<?= $twilio ? maskString(base64_decode($twilio->tw_token)) : ''; ?>" readonly disabled />
                 </div>
             </div>
             <div class="row mb-5">
@@ -60,13 +60,13 @@
             <div class="row mb-5 mt-5">
                 <div class="col-12 mb-3">
                     <label class="content-subtitle d-block mb-2 fw-bold">SID</label>
-                    <input type="text" name="tw_sid" class="nsm-field form-control api-input" value="<?= $twilio ? $twilio->tw_sid : ''; ?>" required>
+                    <input type="text" name="tw_sid" class="nsm-field form-control api-input" value="<?= $twilio ? base64_decode($twilio->tw_sid) : ''; ?>" required>
                 </div>
             </div>
             <div class="row mb-5 mt-5">
                 <div class="col-12 mb-3">
                     <label class="content-subtitle d-block mb-2 fw-bold">Token</label>
-                    <input type="text" name="tw_token" class="nsm-field form-control api-input" value="<?= $twilio ? $twilio->tw_token : ''; ?>" required />
+                    <input type="text" name="tw_token" class="nsm-field form-control api-input" value="<?= $twilio ? base64_decode($twilio->tw_token) : ''; ?>" required />
                 </div>
             </div>
             <div class="row mb-5">

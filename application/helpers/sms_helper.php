@@ -12,8 +12,8 @@ function smsRingCentral($ringCentral, $to_number, $txt_message)
     $message = $txt_message;
 
     $rc = new RingCentralLite(
-        $ringCentral->client_id, //Client id
-        $ringCentral->client_secret, //Client secret
+        base64_decode($ringCentral->client_id), //Client id
+        base64_decode($ringCentral->client_secret), //Client secret
         RINGCENTRAL_DEV_URL //server url
     );
      
@@ -56,7 +56,7 @@ function smsTwilio($twilio, $to_number, $message)
     $to_number = cleanMobileNumber($to_number);
     $to_number = '+1'.$to_number;
     try {
-        $client = new Twilio\Rest\Client($twilio->tw_sid, $twilio->tw_token);
+        $client = new Twilio\Rest\Client(base64_decode($twilio->tw_sid), base64_decode($twilio->tw_token));
         $result = $client->messages->create(
             // Where to send a text message (your cell phone?)
             $to_number,
@@ -93,7 +93,7 @@ function ringCentralMessageReplies($ringCentral, $to_number, $date_from)
         
     $replies  = array();
 
-    $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+    $rcsdk    = new RingCentral\SDK\SDK(base64_decode($ringCentral->client_id), base64_decode($ringCentral->client_secret), RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
     $platform = $rcsdk->platform();
     $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
 
@@ -131,7 +131,7 @@ function ringCentralLastMessage($ringCentral, $prof_id)
     $companySms = $CI->CompanySms_model->getByProfId($prof_id);
     if( $companySms ){    
         try {
-            $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+            $rcsdk    = new RingCentral\SDK\SDK(base64_decode($ringCentral->client_id), base64_decode($ringCentral->client_secret), RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
             $platform = $rcsdk->platform();
             $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
 
@@ -190,7 +190,7 @@ function validateRingCentralAccount($client_id, $client_secret, $rc_user, $rc_pa
     $err_msg  = '';
     $is_valid = false;
 
-    $rcsdk    = new RingCentral\SDK\SDK($client_id, $client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+    $rcsdk    = new RingCentral\SDK\SDK(base64_decode($client_id), base64_decode($client_secret), RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
 
     try {
         $platform = $rcsdk->platform();
@@ -216,7 +216,7 @@ function validateTwilioAccount($sid, $token)
 
     $to_number     = '+1'.$to_number;
     try {
-        $client = new Twilio\Rest\Client($sid, $token); 
+        $client = new Twilio\Rest\Client(base64_decode($sid), base64_decode($token)); 
         
         $service = $client->verify->v2->services
                               ->create("My First Verify Service");
@@ -240,7 +240,7 @@ function twilioReadReplies($twilio, $to_number)
     $to_number = '+1'.$to_number;
 
     try {
-        $client = new Twilio\Rest\Client($twilio->tw_sid, $twilio->tw_token);
+        $client = new Twilio\Rest\Client(base64_decode($twilio->tw_sid), base64_decode($twilio->tw_token));
         
         $messages = $client->messages
            ->read([
