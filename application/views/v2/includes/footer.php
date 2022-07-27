@@ -10,6 +10,8 @@
         </div>
       </div>
     </div>
+    <!-- DataTables -->
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <!-- Chart JS -->
     <script src="<?= base_url("assets/js/v2/chart.min.js") ?>"></script> 
     <!-- Boostrap JS -->

@@ -122,7 +122,9 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex"></div>
+                        <div class="col-md-4 d-flex">
+                            <a href="#" class="text-white m-auto" id="print-checks-setup">Print setup</a>
+                        </div>
                         <div class="col-md-4">
                             <button class="btn btn-success float-right" id="preview-and-print">
                                 Preview and print

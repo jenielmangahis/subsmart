@@ -31,5 +31,12 @@ echo put_header_assets();
       position: relative;
       width: 100%;
    }
+
+   .dropdown-color{
+      color:black !important;
+   }
+   #modal-folder-manager-alert .modal-header{
+      background-color:white!important;
+   }
 </style>
 <?php include viewPath('v2/includes/footer');?>

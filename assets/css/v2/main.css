@@ -197,6 +197,48 @@ body {
 	display: block;
 }
 
+.nsm-sidebar-menu .dropdown-menu {
+	width: 300% !important;
+	white-space: nowrap;
+}
+
+.nsm-sidebar-menu .dropdown-menu ul {
+	padding: 0;
+}
+
+.full-screen-modal .modal {
+    padding: 0 !important;
+    /** override inline padding-right added from js **/
+}
+
+.full-screen-modal .modal .modal-dialog {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    max-width: 100%;
+}
+
+.full-screen-modal .modal .modal-content {
+    border: 0;
+    border-radius: 0;
+    background-color: #f4f5f8;
+}
+
+.full-screen-modal .modal .modal-body {
+    overflow-y: auto;
+}
+
+.full-screen-modal .modal-container {
+    margin: auto;
+    width: 100%;
+    border: 1px solid gainsboro;
+    padding: 10px;
+    -moz-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    background: #ffffff;
+}
+
 .nsm-sidebar .nsm-sidebar-logo {
 	margin-bottom: 3em;
 	display: flex;
