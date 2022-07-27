@@ -56,6 +56,10 @@ $(document).ready(function () {
 		resizeSidebar();
 	});
 
+	$(".nsm-sidebar-menu .dropdown-menu#new-popup").on("click", function(e) {
+		e.stopPropagation();
+	});
+
 	$(".nsm-alert button").on("click", function () {
 		let _alert = $(this).closest(".nsm-alert");
 		_alert.fadeOut(300, function () {

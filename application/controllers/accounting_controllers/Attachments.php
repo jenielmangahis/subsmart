@@ -44,6 +44,7 @@ class Attachments extends MY_Controller {
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
+            "assets/js/accounting/modal-forms1.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",

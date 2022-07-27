@@ -394,7 +394,7 @@ $(function() {
         checkbox.prop('checked', flag);
     });
 
-    $(document).on('click', '#new-popup ul li a.ajax-modal', function(e) {
+    $(document).on('click', '.nsm-sidebar-menu #new-popup ul li a.ajax-modal', function(e) {
         e.preventDefault();
         var target = e.currentTarget.dataset;
         var view = target.view

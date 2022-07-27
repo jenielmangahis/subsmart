@@ -2380,7 +2380,7 @@ $(document).ready(function(){
     if ((theme == "error") || (theme == "info")) {
   
       if(theme == "error"){
-        title_class = "bg-danger";
+        title_class = "";
       }
   
       $('#btn-modal-folder-manager-alert-ok').removeClass('d-none');
@@ -2410,7 +2410,7 @@ $(document).ready(function(){
       $("#modal-folder-manager-alert-title-div").removeClass('bg-warning');
     } else if((current_alert_theme == 'error') || (current_alert_theme == 'info')){
       if(current_alert_theme == 'error'){
-        $("#modal-folder-manager-alert-title-div").removeClass('bg-danger');  
+        $("#modal-folder-manager-alert-title-div").removeClass('');  
       } else {
         $("#modal-folder-manager-alert-title-div").removeClass('bg-info');  
       }
@@ -3148,8 +3148,8 @@ $(document).ready(function(){
                       </div>
   
                       <div class="dropdown">
-                        <button class="btn dropdown-toggle templateFooter__actions" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v"></i>
+                        <button class="btn dropdown-toggle templateFooter__actions" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="bx bx-fw bx-dots-vertical-rounded"></i>
                         </button>
   
                         <div class="dropdown-menu dropdown-menu-right">

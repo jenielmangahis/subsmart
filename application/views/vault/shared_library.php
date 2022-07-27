@@ -11,13 +11,13 @@
                   <?php echo $folder_manager; ?>
                </div>
          </div>
-         <!-- end row -->
+
       </div>
    </div>
-   <!-- end container-fluid -->
+
 </div>
 
-<!-- page wrapper end -->
+
 
 <?php include viewPath('includes/footer'); ?>
 <script src="<?php echo $url->assets ?>js/folders_files.js"></script>

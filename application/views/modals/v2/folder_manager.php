@@ -493,7 +493,7 @@ foreach ($categories as $category) {
 
               <div class="card" id="search_folders_section">
                 <div class="card-header">
-                  <a class="card-link" data-toggle="collapse" href="#div_search_table_folders">
+                  <a class="card-link" data-bs-toggle="collapse" href="#div_search_table_folders">
                     <i class="fa fa-plus mr-2"></i>Folders
                   </a>
                 </div>
@@ -517,7 +517,7 @@ foreach ($categories as $category) {
 
               <div class="card" id="search_files_section">
                 <div class="card-header">
-                  <a class="collapsed card-link" data-toggle="collapse" href="#div_search_table_files">
+                  <a class="collapsed card-link" data-bs-toggle="collapse" href="#div_search_table_files">
                     <i class="fa fa-plus mr-2"></i>Files
                   </a>
                 </div>

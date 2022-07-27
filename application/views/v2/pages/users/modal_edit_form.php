@@ -16,6 +16,16 @@
         <input type="text" name="lastname" class="nsm-field form-control" required value="<?= $user->LName; ?>" />
     </div>
 </div>
+<div class="row gy-3 mb-4">    
+    <div class="col-12 col-md-6">
+        <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
+        <input type="text" name="mobile" class="nsm-field form-control" value="<?= $user->mobile; ?>" />
+    </div>
+    <div class="col-12 col-md-6">
+        <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
+        <input type="text" name="phone" class="nsm-field form-control" value="<?= $user->phone; ?>" />
+    </div>
+</div>
 <div class="row gy-3 mb-4">
     <div class="col-12">
         <label class="content-title">Login Details</label>

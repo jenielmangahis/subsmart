@@ -960,7 +960,7 @@ class Users extends MY_Controller
 			$img_id = $this->users_model->addProfilePhoto($data);
 		}
 			
-		print_r($this->input->post);
+		//print_r($this->input->post);
         $fname = $this->input->post('firstname');
         $lname = $this->input->post('lastname');
         $email = $this->input->post('email');
@@ -971,6 +971,9 @@ class Users extends MY_Controller
         $city  = $this->input->post('city');
         $state  = $this->input->post('state');
         $postal_code  = $this->input->post('postal_code');
+
+        $mobile = $this->input->post('mobile');
+        $phone  = $this->input->post('phone');
 
         $user_type = $this->input->post('user_type');
         $role = $this->input->post('role');
@@ -1009,6 +1012,8 @@ class Users extends MY_Controller
 	            'company_id' => $cid,
 	            'profile_img' => $profile_img,
 	            'address' => $address,
+	            'mobile' => $mobile,
+	            'phone' => $phone,
 	            'state' => $state,
 	            'city' => $city,
 	            'postal_code' => $postal_code,
@@ -1754,6 +1759,8 @@ class Users extends MY_Controller
         $payscale_id = $this->input->post('empPayscale');
         $emp_number  = $this->input->post('emp_number');
         $user_type   = $this->input->post('user_type');
+        $mobile      = $this->input->post('mobile');
+        $phone       = $this->input->post('phone');
         
         $user = $this->Users_model->getUser($user_id);
 
@@ -1773,6 +1780,8 @@ class Users extends MY_Controller
             'state' => $state,
             'city' => $city,
             'postal_code' => $postal_code,
+            'mobile' => $mobile,
+            'phone' => $phone,
             'payscale_id' => $payscale_id,
             'user_type' => $user_type,
             'employee_number' => $emp_number
