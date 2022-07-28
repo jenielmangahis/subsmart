@@ -1,10 +1,29 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
-
+<style>
+    #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
         <i class="bx bx-plus"></i>
     </div>
+</div>
+<div id="overlay">
+    <div>
+        <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+        <center><p>Processing...</p></center></div>
 </div>
 
 <div class="row page-content g-0">

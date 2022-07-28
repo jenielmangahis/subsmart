@@ -187,4 +187,44 @@ $(document).ready(function () {
             $('#printSetupModal').modal('show');
         });
     });
+
+    $(document).on('click', '#printSetupModal #continue-setup', function(e) {
+        $('#printSetupModal .nsm-progressbar .progressbar ul li.active').removeClass('active').next().addClass('active');
+        var index = $('#printSetupModal .nsm-progressbar .progressbar ul li.active').index();
+
+        $(this).parent().prev().html('<button class="nsm-button primary" id="back-setup" type="button">Back</button>');
+
+        $(`#printSetupModal #step-${index}`).hide();
+        $(`#printSetupModal #step-${index + 1}`).show();
+
+        if(index === 2) {
+            $(this).parent().html('<button class="nsm-button success" id="finish-setup" type="button">Finish setup</button>');
+        }
+    });
+
+    $(document).on('click', '#printSetupModal #back-setup', function(e) {
+        $('#printSetupModal .nsm-progressbar .progressbar ul li.active').removeClass('active').prev().addClass('active');
+        var index = $('#printSetupModal .nsm-progressbar .progressbar ul li.active').index();
+        $(`#printSetupModal #step-${index + 2}`).hide();
+        $(`#printSetupModal #step-${index + 1}`).show();
+
+        $('#printSetupModal #finish-setup').parent().html(`
+        Are the fields lined up properly?
+        <button class="nsm-button success" id="continue-setup" type="button">
+            No, continue setup
+        </button>
+        <button class="nsm-button success" id="finish-setup" type="button">
+            Yes, I'm finished with setup
+        </button>
+        `);
+
+        if(index === 0) {
+            $(this).parent().html(`<button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>`);
+        }
+    });
+
+    $(document).on('change', '#printSetupModal input[name="check_type"]', function() {
+        $('#printSetupModal .check-type-preview.selected').removeClass('selected');
+        $(this).parent().find('.check-type-preview').addClass('selected');
+    });
 });
