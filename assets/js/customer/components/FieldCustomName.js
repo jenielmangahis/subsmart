@@ -1,6 +1,15 @@
 const PREFIX_URL = location.hostname === "localhost" ? "/nsmartrac" : "";
 const CUSTOM_EVENT_NAME = "formfieldcustomnamesready";
 
+(() => {
+  const $link = document.createElement("link");
+  $link.href = `${PREFIX_URL}/assets/plugins/font-awesome/css/font-awesome.min.css`;
+  $link.type = "text/css";
+  $link.rel = "stylesheet";
+
+  document.querySelector("head").appendChild($link);
+})();
+
 const $template = document.createElement("template");
 $template.innerHTML = `
 <link rel="stylesheet" href="${PREFIX_URL}/assets/plugins/font-awesome/css/font-awesome.min.css">

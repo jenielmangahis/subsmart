@@ -47,6 +47,7 @@ class Reports extends MY_Controller {
         ));
 
         add_footer_js(array(
+            "assets/plugins/jqueryUI/jquery-ui.min.js",
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",

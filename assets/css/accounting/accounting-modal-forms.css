@@ -289,3 +289,33 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
 #printSetupModal .check-type-preview#standard-type-preview {
     background-position: 0 -243px;
 }
+
+#printSetupModal .printsetup-container {
+    height: 289px;
+    width: 376px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+#printSetupModal .printsetup-amountbox {
+    background-image: url(/uploads/accounting/print-check-setup.svg);
+    background-repeat: no-repeat;
+    height: 279px;
+    width: 376px;
+    background-size: 392px auto;
+    background-position: 0 -770px;
+}
+
+#printSetupModal .printsetup-amountgrid {
+    background-image: url(/uploads/accounting/print-check-setup.svg);
+    background-repeat: no-repeat;
+    height: 81px;
+    width: 178px;
+    background-size: 370px auto;
+    position: absolute;
+    cursor: move;
+    background-position: 0 -606px;
+    top: 113px;
+    left: 100px;
+}
