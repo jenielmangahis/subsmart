@@ -184,6 +184,16 @@ $(document).ready(function () {
                 `);
             }
 
+            $('#printSetupModal .printsetup-amountgrid').draggable({
+                drag: function(e,ui) {
+                    var verticalDistance = ui.position.top - ui.originalPosition.top;
+                    var horizontalDistance = ui.position.left - ui.originalPosition.left;
+
+                    $('#printSetupModal #vertical-offset').val(verticalDistance);
+                    $('#printSetupModal #horizontal-offset').val(horizontalDistance);
+                }
+            });
+
             $('#printSetupModal').modal('show');
         });
     });

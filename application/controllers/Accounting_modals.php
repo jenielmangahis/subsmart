@@ -58,6 +58,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('workorder_model');
         $this->load->model('invoice_settings_model');
         $this->load->model('accounting_linked_transactions_model');
+        $this->load->model('accounting_print_checks_settings_model');
         $this->load->library('form_validation');
     }
 
@@ -282,6 +283,11 @@ class Accounting_modals extends MY_Controller
 
                     $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
                     $this->page_data['number'] = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
+                break;
+                case 'print_checks_setup_modal' :
+                    $settings = $this->accounting_print_checks_settings_model->get_by_company_id(logged('company_id'));
+
+                    $this->page_data['settings'] = $settings;
                 break;
             }
 

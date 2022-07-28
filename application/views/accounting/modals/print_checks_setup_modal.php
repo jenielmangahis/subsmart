@@ -50,14 +50,14 @@
                                                                     <div class="row">
                                                                         <div class="col-12 col-md-6">
                                                                             <div class="form-check">
-                                                                                <input type="radio" id="voucher-type" name="check_type" class="form-check-input" checked>
+                                                                                <input type="radio" id="voucher-type" name="check_type" class="form-check-input" <?=isset($settings) && $settings->check_type === '1' || !isset($settings) ? 'checked' : ''?>>
                                                                                 <label for="voucher-type" class="form-check-label">Voucher</label>
                                                                                 <div class="check-type-preview selected" id="voucher-type-preview"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-12 col-md-6">
                                                                             <div class="form-check">
-                                                                                <input type="radio" id="standard-type" name="check_type" class="form-check-input">
+                                                                                <input type="radio" id="standard-type" name="check_type" class="form-check-input" <?=isset($settings) && $settings->check_type === '2' ? 'checked' : ''?>>
                                                                                 <label for="standard-type" class="form-check-label">Standard</label>
                                                                                 <div class="check-type-preview" id="standard-type-preview"></div>
                                                                             </div>
@@ -168,8 +168,46 @@
                                                         <li>
                                                             <div class="row">
                                                                 <div class="col-12 col-md-1"><h1>a</h1></div>
-                                                                <div class="col-12 col-md-11 d-flex align-items-end">
-                                                                    <p class="w-100"><b>Drag the grid</b> inside the large square to the place where it appears on your printout. This lets nSmarTrac figure out how to adjust the alignment.</p>
+                                                                <div class="col-12 col-md-11">
+                                                                    <p><b>Drag the grid</b> inside the large square to the place where it appears on your printout. This lets nSmarTrac figure out how to adjust the alignment.</p>
+                                                                    <div class="printsetup-container">
+                                                                        <div class="printsetup-amountbox"></div>
+                                                                        <div class="printsetup-amountgrid"></div>
+                                                                    </div>
+                                                                    <div class="offset-fields">
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-6">
+                                                                                <div class="form-group row">
+                                                                                    <label for="horizontal-offset" class="col-12 col-md-3 col-form-label">Horizontal</label>
+                                                                                    <div class="col-12 col-md-3">
+                                                                                        <input type="number" name="horizontal_offset" class="nsm-field form-control" id="horizontal-offset" value="<?=isset($settings) ? $settings->horizontal : '0'?>">
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="btn-group">
+                                                                                            <button class="nsm-button" type="button" id="minus-h-offset">-</button>
+                                                                                            <button class="nsm-button" type="button" id="plus-h-offset">+</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-6">
+                                                                                <div class="form-group row">
+                                                                                    <label for="vertical-offset" class="col-12 col-md-3 col-form-label">Vertical</label>
+                                                                                    <div class="col-12 col-md-3">
+                                                                                        <input type="number" name="vertical_offset" class="nsm-field form-control" id="vertical-offset" value="<?=isset($settings) ? $settings->vertical : '0'?>">
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="btn-group">
+                                                                                            <button class="nsm-button" type="button" id="minus-v-offset">-</button>
+                                                                                            <button class="nsm-button" type="button" id="plus-v-offset">+</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </li>
