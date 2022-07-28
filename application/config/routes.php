@@ -1344,6 +1344,7 @@ $route['settings/_create_sms_auto_notification'] = 'Settings/ajax_create_sms_aut
 $route['settings/_delete_auto_sms_notification'] = 'Settings/ajax_delete_auto_sms_notification';
 $route['settings/_edit_auto_sms_notification'] = 'Settings/ajax_edit_auto_sms_notification';
 $route['settings/_update_sms_auto_notification'] = 'Settings/ajax_update_sms_auto_notification';
+$route['settings/_load_auto_sms_notification_module_smart_tags'] = 'Settings/ajax_load_auto_sms_notification_module_smart_tags';
 
 //Cron SMS Notification
 $route['cron_notification/auto_sms_notification'] = 'Cron_Notification/auto_sms_notification';

@@ -106,6 +106,7 @@ class Cron_Notification extends MYF_Controller {
         $this->load->model('CompanyAutoSmsSettings_model');
         $this->load->model('Taskhub_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('Users_model');
 
         $order_number  = '';
         $customer_name = '';
@@ -116,6 +117,7 @@ class Cron_Notification extends MYF_Controller {
         $lead_name  = '';
         $lead_email = '';
         $lead_phone = '';
+        $sales_agent = '';
 
         if( $module_name == $this->CompanyAutoSmsSettings_model->moduleJob() ){
             $job = $this->Jobs_model->get_specific_job($object_id);
@@ -178,16 +180,38 @@ class Cron_Notification extends MYF_Controller {
                 $customer_phone = $customer->phone_m;
             }
         }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleLead() ){
-            $lead = $this->customer_ad_model->get_data_by_id('leads_id',$object_id,"ac_leads");
+            $lead = $this->Customer_advance_model->get_data_by_id('leads_id',$object_id,"ac_leads");
             if( $lead ){
                 $company  = $this->Business_model->getByCompanyId($lead->company_id);
                 if( $company ){
                     $business_name = $company->business_name;
                 }
 
+                $salesAgent = $this->Users_model->getUserByID($lead->fk_sr_id);
+                if( $salesAgent ){
+                    $sales_agent = $salesAgent->FName . ' ' . $salesAgent->LName;
+                }
+
                 $lead_name = $lead->firstname . ' ' . $lead->lastname;
                 $lead_email = $lead->email_add;
                 $lead_phone = $lead->phone_cell;
+            }
+        }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
+            $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$object_id,"acs_profile");
+            if( $customer ){
+                $company  = $this->Business_model->getByCompanyId($customer->company_id);
+                if( $company ){
+                    $business_name = $company->business_name;
+                }
+
+                /*$salesAgent = $this->Users_model->getUserByID($lead->fk_sr_id);
+                if( $salesAgent ){
+                    $sales_agent = $salesAgent->FName . ' ' . $salesAgent->LName;
+                }*/
+
+                $customer_name = $customer->first_name . ' ' . $customer->last_name;
+                $customer_email = $customer->email;
+                $customer_phone = $customer->phone_m;
             }
         }
 

@@ -198,6 +198,100 @@ class CompanyAutoSmsSettings_model extends MY_Model
 
         return $status;
     }
+
+    public function jobSmartTags()
+    {
+        $smartTags = [
+            'order.number' => 'Order Number',
+            'customer.name' => 'Customer Name',
+            'customer.email' => 'Customer Email',
+            'customer.phone' => 'Customer Phone',
+            'business.name' => "Company Name",
+
+        ];
+
+        return $smartTags;
+    }
+
+    public function estimateTags()
+    {
+        $smartTags = [
+            'order.number' => 'Estimate Number',
+            'customer.name' => 'Customer Name',
+            'customer.email' => 'Customer Email',
+            'customer.phone' => 'Customer Phone',
+            'business.name' => "Company Name",
+
+        ];
+
+        return $smartTags;
+    }
+
+    public function workOrderTags()
+    {
+        $smartTags = [
+            'order.number' => 'Workorder Number',
+            'customer.name' => 'Customer Name',
+            'customer.email' => 'Customer Email',
+            'customer.phone' => 'Customer Phone',
+            'business.name' => "Company Name",
+
+        ];
+
+        return $smartTags;
+    }
+
+    public function eventsTags()
+    {
+        $smartTags = [
+            'customer.name' => 'Customer Name',
+            'customer.email' => 'Customer Email',
+            'customer.phone' => 'Customer Phone',
+            'business.name' => "Company Name",
+
+        ];
+
+        return $smartTags;
+    }
+
+    public function taskHubTags()
+    {
+        $smartTags = [
+            'customer.name' => 'Customer Name',
+            'customer.email' => 'Customer Email',
+            'customer.phone' => 'Customer Phone',
+            'business.name' => "Company Name",
+
+        ];
+
+        return $smartTags;
+    }
+
+    public function customerTags()
+    {
+        $smartTags = [
+            'customer.name' => 'Customer Name',
+            'customer.email' => 'Customer Email',
+            'customer.phone' => 'Customer Phone',
+            'business.name' => "Company Name",
+
+        ];
+
+        return $smartTags;
+    }
+
+    public function leadsTags()
+    {
+        $smartTags = [
+            'lead.name' => 'Lead Name',
+            'lead.email' => 'Lead Email',
+            'lead.phone' => 'Lead Phone',
+            'business.name' => "Company Name",
+
+        ];
+
+        return $smartTags;
+    }
 }
 
 /* End of file CompanyAutoSmsSettings_model.php */

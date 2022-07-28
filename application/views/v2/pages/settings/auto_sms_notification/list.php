@@ -154,18 +154,12 @@
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label for="">SMS Message</label>
-                                        <select class="form-control" id="cmb-smart-tags" name="smart_tags" style="width:30% !important; float: right;">
-                                            <option value="0">Insert Smart Tags</option>
-                                            <option value="{{order.number}}">Order Number</option>
-                                            <option value="{{customer.name}}">Customer Name</option>                                            
-                                            <option value="{{customer.email}}">Customer Email</option>
-                                            <option value="{{customer.phone}}">Customer Phone</option>
-                                            <option value="{{business.name}}">Company Name</option>
-                                            <option value="{{sales.agent}}">Sales Agent</option>                                            
-                                            <option value="{{lead.name}}">Lead Name</option>
-                                            <option value="{{lead.phone}}">Lead Phone</option>
-                                            <option value="{{lead.email}}">Lead Email</option>
-                                        </select>
+                                        <div class="smart-tags-container" style="width:30% !important; float: right;">
+                                            <select class="form-control" id="cmb-smart-tags" name="smart_tags">
+                                                <option value="0">Insert Smart Tags</option>
+                                                <option value="">Please select module</option>                                                
+                                            </select>
+                                        </div>                                        
                                         <textarea class="form-control" name="sms_text" id="sms-txt" style="height:130px;margin-top: 17px;" required=""></textarea>
                                     </div>                                    
                                     <div class="col-md-12 mt-3">
@@ -309,8 +303,11 @@
         e.preventDefault();
 
         var module_name = $(this).val();
-        var url = base_url + 'settings/_load_auto_sms_notification_module_status';
+        var url_module_status = base_url + 'settings/_load_auto_sms_notification_module_status';
+        var url_smart_tags    = base_url + 'settings/_load_auto_sms_notification_module_smart_tags';
+
         $(".module-status-container").html('<span class="bx bx-loader bx-spin"></span>');
+        //$(".smart-tags-container").html('<span class="bx bx-loader bx-spin"></span>');
 
         if( module_name == 'taskhub' || module_name == 'lead' ){
             $('.grp-send-assigned-user').show();
@@ -322,11 +319,28 @@
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,
+             url: url_module_status,
              data: {module_name:module_name},
              success: function(o)
              {          
                 $('.module-status-container').html(o);
+             }
+          });
+        }, 800);
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url_smart_tags,
+             data: {module_name:module_name},
+             dataType: 'json',
+             success: function(data)
+             {          
+                $('#cmb-smart-tags').empty();
+                $('#cmb-smart-tags').append('<option value="0">Insert Smart Tags</option>');
+                data.forEach(function(entry){
+                    $('#cmb-smart-tags').append('<option value="' + entry.key+ '">' + entry.value + '</option>');
+                });
              }
           });
         }, 800);

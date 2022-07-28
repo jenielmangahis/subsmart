@@ -2402,7 +2402,11 @@ class Customer extends MY_Controller
                 'email' => $input['email_add'],
                 'phone_h' => $input['phone_home']
             ];
-            if ($this->customer_ad_model->add($customer_data, "acs_profile")) {
+            if ($lastid = $this->customer_ad_model->add($customer_data, "acs_profile")) {
+                $lead = $this->customer_ad_model->get_data_by_id('leads_id',$this->input->post('leads_id'),"ac_leads");
+                //SMS Notification
+                createCronAutoSmsNotification(logged('company_id'), $lead->leads_id, 'lead', 'Converted', 0, $lead->fk_assign_id);
+
                 $is_success = 1;
             } else {
                 $msg = 'Required field is missing. Cannot convert to customer.';

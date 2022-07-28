@@ -1086,6 +1086,40 @@ class Settings extends MY_Controller {
         $this->load->view('v2/pages/settings/auto_sms_notification/ajax_load_auto_sms_notification_module_status', $this->page_data);
     }
 
+    public function ajax_load_auto_sms_notification_module_smart_tags()
+    {
+        $this->load->model('CompanyAutoSmsSettings_model');
+        $this->load->model('Taskhub_status_model');
+
+        $moduleStatus = array();
+        $post = $this->input->post();
+        if( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
+            $smartTags = $this->CompanyAutoSmsSettings_model->estimateTags();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleJob() ){
+            $smartTags = $this->CompanyAutoSmsSettings_model->jobSmartTags();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
+            $smartTags = $this->CompanyAutoSmsSettings_model->workOrderTags();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
+            $smartTags = $this->CompanyAutoSmsSettings_model->eventsTags();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
+            $smartTags = $this->CompanyAutoSmsSettings_model->customerTags();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleLead() ){
+            $smartTags = $this->CompanyAutoSmsSettings_model->leadsTags();
+        }elseif( $post['module_name'] == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
+            $smartTags = $this->Taskhub_status_model->taskHubTags();            
+        }
+            
+        $tags = array();
+        foreach($smartTags as $key => $value){
+            $tags[] = ['key' => $key, 'value' => $value];
+        }
+
+        echo json_encode($tags);
+
+        //$this->page_data['smartTags'] = $smartTags;
+        //$this->load->view('v2/pages/settings/auto_sms_notification/ajax_load_auto_sms_notification_module_smart_tags', $this->page_data);
+    }
+
     public function ajax_create_sms_auto_notification()
     {
         $this->load->model('CompanyAutoSmsSettings_model');
@@ -1195,16 +1229,22 @@ class Settings extends MY_Controller {
         $moduleStatus = array();
         if( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->estimateModuleStatusList();
+            $defaultSmartTags = $this->CompanyAutoSmsSettings_model->estimateTags();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleJob() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->jobModuleStatusList();
+            $defaultSmartTags = $this->CompanyAutoSmsSettings_model->jobSmartTags();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->workOrderModuleStatusList();
+            $defaultSmartTags = $this->CompanyAutoSmsSettings_model->workOrderTags();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->eventModuleStatusList();
+            $defaultSmartTags = $this->CompanyAutoSmsSettings_model->eventsTags();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->customerModuleStatusList();
+            $defaultSmartTags = $this->CompanyAutoSmsSettings_model->customerTags();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleLead() ){
             $moduleStatus = $this->CompanyAutoSmsSettings_model->leadModuleStatusList();
+            $defaultSmartTags = $this->CompanyAutoSmsSettings_model->leadsTags();
         }elseif( $autoSms->module_name == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
             $taskHubStatus = $this->Taskhub_status_model->getAll();
             foreach($taskHubStatus as $status){
@@ -1212,6 +1252,7 @@ class Settings extends MY_Controller {
                     $moduleStatus[$status->status_text] = $status->status_text;
                 }                
             }
+            $defaultSmartTags = $this->CompanyAutoSmsSettings_model->taskHubTags();
         }
 
         $recipients  = array();
@@ -1233,6 +1274,7 @@ class Settings extends MY_Controller {
         $this->page_data['moduleStatus'] = $moduleStatus;
         $this->page_data['recipients'] = $recipients;
         $this->page_data['is_send_all'] = $is_send_all;
+        $this->page_data['defaultSmartTags'] = $defaultSmartTags;
         $this->load->view('v2/pages/settings/auto_sms_notification/ajax_edit_auto_sms_notification', $this->page_data);
     }
 

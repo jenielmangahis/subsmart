@@ -4684,6 +4684,250 @@ class Admin extends CI_Controller
 
         fpassthru($f);
     }
+
+    public function auto_sms_notification()
+    {
+        $this->load->model('CronAutoSmsNotification_model');
+
+        $cid   = logged('company_id');
+        $search = '';
+
+        if( get('search') != '' ){
+            $search  = trim(get('search'));
+            $search_param = ['search' => $search];
+            $cronAutoSms = $this->CronAutoSmsNotification_model->getAll($search_param);
+        }else{            
+            $cronAutoSms = $this->CronAutoSmsNotification_model->getAll();
+        }
+
+        $this->page_data['search'] = $search;
+        $this->page_data['cronAutoSms']  = $cronAutoSms;
+        $this->page_data['page_title']  = 'Auto SMS Logs';
+        $this->page_data['page_parent'] = 'Auto SMS Logs';
+        $this->load->view('admin/auto_sms_notifications/list', $this->page_data);
+    }
+
+    public function ajaxViewAutoSMSNotification()
+    {
+        $this->load->model('CronAutoSmsNotification_model');
+
+        $post = $this->input->post();
+        $cronAutoSms = $this->CronAutoSmsNotification_model->getById($post['logid']);
+
+        $this->page_data['cronAutoSms'] = $cronAutoSms;
+        $this->load->view('admin/auto_sms_notifications/ajaxViewAutoSMSNotification', $this->page_data);
+    }
+
+    public function ajaxResendAutoSMSNotification()
+    {
+        $this->load->helper('sms_helper');
+        $this->load->model('RingCentralSmsLogs_model');
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('TwilioAccounts_model');
+        $this->load->model('TwilioSmsLogs_model');
+        $this->load->model('Clients_model');
+        $this->load->model('CronAutoSmsNotification_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $is_with_valid_sms_account = false;
+
+        $post = $this->input->post();
+        $cronAutoSms = $this->CronAutoSmsNotification_model->getById($post['logid']);
+        if($cronAutoSms){
+            $client = $this->Clients_model->getById($cronAutoSms->company_id);
+            if( $client ){
+                if( $client->default_sms_api == 'ring_central' ){
+                    $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                    if( $ringCentral ){ 
+                        $smsApi = 'ring_central';
+                        $is_with_valid_sms_account = true;
+                    }                
+                }elseif( $client->default_sms_api == 'twilio' ){
+                    $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($client->id);
+                    if( $twilioAccount ){
+                        $smsApi = 'twilio';
+                        $is_with_valid_sms_account = true;  
+                    }
+                }
+
+                if( $is_with_valid_sms_account ){                    
+                    $sms_message = $this->smsReplaceSmartTags($cronAutoSms->module_name, $cronAutoSms->obj_id, $cronAutoSms->sms_message);
+
+                    if( $smsApi == 'twilio' ){
+                        //$isSent  = smsTwilio($twilioAccount, $cronAutoSms->mobile_number, $sms_message);
+                        $isSent['is_success'] = 1; 
+                        if( $isSent['is_success'] == 1 ){  
+                            $cronSms = $this->CronAutoSmsNotification_model->getById($cronAutoSms->id);
+                            $data = [
+                                'is_sent' => 1,
+                                'date_sent' => date('Y-m-d H:i:s')
+                            ];
+                            $this->CronAutoSmsNotification_model->update($cronAutoSms->id, $data);
+
+                            $is_success = 1;
+                            $msg = '';
+
+                        }else{
+                            $err_msg = $isSent['msg'];
+                            $data = [
+                                'is_sent' => 0,
+                                'is_with_error' => 1,
+                                'err_msg' => $err_msg
+                            ];
+                            $this->CronAutoSmsNotification_model->update($cronAutoSms->id, $data);
+
+                            $msg = $err_msg;
+                        }
+                    }elseif( $smsApi == 'ring_central' ){
+                        //$isSent = smsRingCentral($ringCentral, $cronAutoSms->mobile_number, $sms_message);
+                        $isSent['is_sent'] = true;
+                        if( $isSent['is_sent'] ){
+                            $cronSms = $this->CronAutoSmsNotification_model->getById($cronAutoSms->id);
+                            $data = [
+                                'is_sent' => 1,
+                                'date_sent' => date('Y-m-d H:i:s')
+                            ];
+                            $this->CronAutoSmsNotification_model->update($cronAutoSms->id, $data);
+
+                            $is_success = 1;
+                            $msg = '';
+
+                        }else{
+                            $err_msg = $isSent['msg'];
+                            $data = [
+                                'is_sent' => 0,
+                                'is_with_error' => 1,
+                                'err_msg' => $err_msg
+                            ];
+                            $this->CronAutoSmsNotification_model->update($cronAutoSms->id, $data);
+
+                            $msg = $err_msg;
+                        }    
+                    }           
+                }else{
+                    $msg = 'Company doesnt have a valid sms api account';
+                }
+            }else{
+                $msg = 'Cannot find company data';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function smsReplaceSmartTags($module_name, $object_id, $sms_message)
+    {
+        $this->load->model('Estimate_model');
+        $this->load->model('Workorder_model');
+        $this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Business_model');
+        $this->load->model('CompanyAutoSmsSettings_model');
+
+        $order_number  = '';
+        $customer_name = '';
+        $business_name = '';
+        $customer_email = '';
+        $customer_phone = '';
+
+        if( $module_name == $this->CompanyAutoSmsSettings_model->moduleJob() ){
+            $job = $this->Jobs_model->get_specific_job($object_id);
+            if( $job ){
+                $company = $this->Business_model->getByCompanyId($job->company_id);
+                if( $company ){
+                    $business_name = $company->business_name;
+                }
+                $order_number  = $job->job_number;
+                $customer_name = $job->first_name . ' ' . $job->last_name;
+                $customer_email = $job->email;
+                $customer_phone = $job->phone_m;
+            }
+        }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
+            $estimate = $this->Estimate_model->getById($object_id);
+            if( $estimate ){
+                $company = $this->Business_model->getByCompanyId($estimate->company_id);
+                if( $company ){
+                    $business_name = $company->business_name;
+                }
+
+                $order_number  = $estimate->estimate_number;
+                $customer_name = $estimate->first_name . ' ' . $job->last_name;
+            }
+        }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
+            $workorder = $this->Workorder_model->adminGetById($object_id);
+            if( $workorder ){
+                $company = $this->Business_model->getByCompanyId($workorder->company_id);
+                if( $company ){
+                    $business_name = $company->business_name;
+                }
+                $order_number  = $workorder->work_order_number;
+                $customer_name = $workorder->first_name . ' ' . $workorder->last_name;
+                $customer_email = $workorder->email;
+                $customer_phone = $workorder->phone_m;
+            }
+        }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
+            $event = $this->Event_model->get_specific_event($object_id);
+            if( $event ){
+                $company = $this->Business_model->getByCompanyId($event->company_id);
+                if( $company ){
+                    $business_name = $company->business_name;
+                }
+                $order_number  = $event->event_number;
+                $customer_name = $event->first_name . ' ' . $event->last_name;
+                $customer_email = $event->email;
+                $customer_phone = $event->phone_m;
+            }
+        }
+
+        $sms_message = str_replace("{{order.number}}", $order_number, $sms_message);
+        $sms_message = str_replace("{{customer.name}}", $customer_name, $sms_message);
+        $sms_message = str_replace("{{business.name}}", $business_name, $sms_message);
+        $sms_message = str_replace("{{customer.email}}", $customer_email, $sms_message);
+        $sms_message = str_replace("{{customer.phone}}", $customer_phone, $sms_message);
+
+        return $sms_message;
+    }
+
+    public function export_auto_sms_notification()
+    {
+        $this->load->model('CronAutoSmsNotification_model');
+
+        $cronAutoSms = $this->CronAutoSmsNotification_model->getAll();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "auto_sms_notification_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'Condition', 'Send To', 'Error Message');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($cronAutoSms)) {
+            foreach ($cronAutoSms as $log) {
+                $condition = "Send auto sms notification if ".ucfirst(str_replace("_", " ", $log->module_name))." having status ".ucfirst($log->module_status);
+                $csvData = array(
+                    $log->business_name,
+                    $condition,
+                    $log->mobile_number,
+                    $log->err_msg
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
 }
 
 /* End of file Admin.php */
