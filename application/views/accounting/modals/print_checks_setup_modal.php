@@ -5,7 +5,7 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header" style="border-bottom: 0">
+                <div class="modal-header">
                     <span class="modal-title content-title">Print checks setup</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
@@ -50,14 +50,14 @@
                                                                     <div class="row">
                                                                         <div class="col-12 col-md-6">
                                                                             <div class="form-check">
-                                                                                <input type="radio" id="voucher-type" name="check_type" class="form-check-input" <?=isset($settings) && $settings->check_type === '1' || !isset($settings) ? 'checked' : ''?>>
+                                                                                <input type="radio" id="voucher-type" name="check_type" value="1" class="form-check-input" <?=isset($settings) && $settings->check_type === '1' || !isset($settings) ? 'checked' : ''?>>
                                                                                 <label for="voucher-type" class="form-check-label">Voucher</label>
                                                                                 <div class="check-type-preview selected" id="voucher-type-preview"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-12 col-md-6">
                                                                             <div class="form-check">
-                                                                                <input type="radio" id="standard-type" name="check_type" class="form-check-input" <?=isset($settings) && $settings->check_type === '2' ? 'checked' : ''?>>
+                                                                                <input type="radio" id="standard-type" name="check_type" value="2" class="form-check-input" <?=isset($settings) && $settings->check_type === '2' ? 'checked' : ''?>>
                                                                                 <label for="standard-type" class="form-check-label">Standard</label>
                                                                                 <div class="check-type-preview" id="standard-type-preview"></div>
                                                                             </div>
@@ -78,7 +78,7 @@
                                                             <div class="row">
                                                                 <div class="col-12 col-md-1"><h1>c</h1></div>
                                                                 <div class="col d-flex align-items-end">
-                                                                    <button type="button" class="nsm-button">View preview and print sample</button>
+                                                                    <button type="button" class="nsm-button preview-print-sample">View preview and print sample</button>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -132,7 +132,7 @@
                                                             <div class="row">
                                                                 <div class="col-12 col-md-1"><h1>c</h1></div>
                                                                 <div class="col d-flex align-items-end">
-                                                                    <button type="button" class="nsm-button">View preview and print sample</button>
+                                                                    <button type="button" class="nsm-button preview-print-sample">View preview and print sample</button>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -215,7 +215,7 @@
                                                             <div class="row">
                                                                 <div class="col-12 col-md-1"><h1>b</h1></div>
                                                                 <div class="col d-flex align-items-end">
-                                                                    <button type="button" class="nsm-button">View preview and print sample</button>
+                                                                    <button type="button" class="nsm-button preview-print-sample">View preview and print sample</button>
                                                                 </div>
                                                             </div>
                                                         </li>

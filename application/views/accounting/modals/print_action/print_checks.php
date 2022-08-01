@@ -14,6 +14,40 @@
     <?php else : ?>
     <div class="container" style="width: 100%;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: avoid; height: 100%">
     <?php endif; ?>
+        <?php if($check['type'] === 'sample') : ?>
+        <div class="row" style="display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
+            <div>
+                <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
+                    <tbody>
+                        <tr>
+                            <td colspan="3">&nbsp;</td>
+                            <td style="text-align: center"><?=$check['date']?></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center"><?=$check['name']?></td>
+                            <td style="text-align: center"></td>
+                            <td style="text-align: center"></td>
+                            <td style="text-align: center">
+                                <div style="width: 100%; display: flex; align-items: center; justify-content: center; border: 1px solid black">
+                                    <span>**<?=$check['total']?></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><?=$check['total_in_words']?></td>
+                            <td style="text-align: center">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
+                            <td style="text-align: center"></td>
+                            <td style="text-align: center"></td>
+                            <td style="text-align: center"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <?php else : ?>
         <div class="row" style="display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
             <div>
                 <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
@@ -116,6 +150,7 @@
                 </table>
             </div>
         </div>
+        <?php endif; ?>
     </div>
     <?php $count++; ?>
     <?php endforeach; ?>
