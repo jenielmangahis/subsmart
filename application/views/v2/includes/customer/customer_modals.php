@@ -750,3 +750,17 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="messages_modal" tabindex="-1" aria-labelledby="messages_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="frm-send-message">
+            <div class="modal-header">
+                <span class="modal-title content-title">Messages</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body modal-messages-container"></div>
+            </form>                
+        </div>
+    </div>
+</div>

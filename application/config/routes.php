@@ -83,6 +83,8 @@ $route['customer/activities/(:num)'] = 'Customer/activities/$1';
 $route['customer/_load_welcome_email_form'] = 'Customer/ajax_welcome_email_form';
 $route['customer/_send_welcome_email'] = 'Customer/ajax_send_welcome_email';
 $route['customer/_update_customer_dispute'] = 'Customer/ajax_update_customer_dispute';
+$route['customer/_get_messages'] = 'Customer/ajax_get_messages';
+$route['customer/_send_message'] = 'Customer/ajax_send_message';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1079,6 +1081,7 @@ $route['acs_access/_load_message_replies'] = 'AcsAccess/ajax_load_messages_list'
 $route['acs_access/_load_message_thread'] = 'AcsAccess/ajax_load_message_thread';
 $route['acs_access/_send_message_reply'] = 'AcsAccess/ajax_send_message_reply';
 $route['acs_access/_load_sent_messages'] = 'AcsAccess/ajax_load_sent_messages';
+$route['acs_access/_send_message'] = 'AcsAccess/ajax_send_message';
 
 //Cards File
 $route['cards_file/list'] = 'CardsFile/index';

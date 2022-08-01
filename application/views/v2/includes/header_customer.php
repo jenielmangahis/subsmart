@@ -68,7 +68,7 @@ if ($this->session->userdata('usertimezone') == null) {
                 </li>
                 <li>
                     <a href="<?= base_url("acs_access/messages") ?>">
-                        <i class='bx bx-fw bx-message-square-dots'></i> SMS
+                        <i class='bx bx-fw bx-message-square-dots'></i> Messages
                     </a>
                 </li>
             </ul>
