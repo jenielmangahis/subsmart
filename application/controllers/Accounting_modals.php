@@ -7787,7 +7787,7 @@ class Accounting_modals extends MY_Controller
 
         echo json_encode($return);
     }
-
+//
     public function print_preview_checks()
     {
         $this->load->helper('string');
@@ -20151,5 +20151,46 @@ class Accounting_modals extends MY_Controller
             fclose ($fd);
             exit;
         }
+    }
+
+    public function preview_and_print_sample()
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_checks";
+        $post = $this->input->post();
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_check_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $fileType = explode('/', $files['type'][$key]);
+        $uploadedName = str_replace('.'.$extension, '', $name);
+
+        $data = [
+            [
+                'date' => date("m/d/Y"),
+                'name' => 'John Doe',
+                'total' => '1,425.25',
+                'mailing_address' => 'John Doe<br>123 Main Street<br>Anytown, USA 12345',
+                'payment_account' => 'Payment Account',
+                'type' => 'sample',
+                'total_in_words' => 'One thousand four hundred twenty-five and 25/1000*********************************************************************'
+            ]
+        ];
+
+        $this->pdf->save_pdf($view, ['checks' => $data], $fileName, 'portrait');
+
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+
+        $this->page_data['pdf'] = $pdf;
+        $this->load->view('accounting/modals/view_print_checks', $this->page_data);
     }
 }

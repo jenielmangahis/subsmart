@@ -185,12 +185,14 @@ $(document).ready(function () {
             }
 
             $('#printSetupModal .printsetup-amountgrid').draggable({
-                drag: function(e,ui) {
+                stop: function(e, ui) {
                     var verticalDistance = ui.position.top - ui.originalPosition.top;
                     var horizontalDistance = ui.position.left - ui.originalPosition.left;
+                    var verticalOffset = $('#printSetupModal #vertical-offset').val();
+                    var horizontalOffset = $('#printSetupModal #horizontal-offset').val();
 
-                    $('#printSetupModal #vertical-offset').val(verticalDistance);
-                    $('#printSetupModal #horizontal-offset').val(horizontalDistance);
+                    $('#printSetupModal #vertical-offset').val(verticalDistance + parseInt(verticalOffset));
+                    $('#printSetupModal #horizontal-offset').val(horizontalDistance + parseInt(horizontalOffset));
                 }
             });
 
@@ -236,5 +238,58 @@ $(document).ready(function () {
     $(document).on('change', '#printSetupModal input[name="check_type"]', function() {
         $('#printSetupModal .check-type-preview.selected').removeClass('selected');
         $(this).parent().find('.check-type-preview').addClass('selected');
+    });
+
+    $(document).on('change', '#printSetupModal #horizontal-offset, #printSetupModal #vertical-offset', function() {
+        var horizontal = $('#printSetupModal #horizontal-offset').val();
+        var vertical = $('#printSetupModal #vertical-offset').val();
+
+        var top = 113 + parseInt(vertical);
+        var left = 100 + parseInt(horizontal);
+        $('#printSetupModal .printsetup-amountgrid').css('inset', `${top}px auto auto ${left}px`);
+    });
+
+    $(document).on('click', '#printSetupModal #minus-h-offset, #printSetupModal #plus-h-offset', function(e) {
+        var horizontal = $('#printSetupModal #horizontal-offset').val();
+        if($(this).attr('id').includes('plus')) {
+            var val = parseInt(horizontal) + 1;
+        } else {
+            var val = parseInt(horizontal) - 1;
+        }
+
+        $('#printSetupModal #horizontal-offset').val(val).trigger('change');
+    });
+
+    $(document).on('click', '#printSetupModal #minus-v-offset, #printSetupModal #plus-v-offset', function(e) {
+        var vertical = $('#printSetupModal #vertical-offset').val();
+        if($(this).attr('id').includes('plus')) {
+            var val = parseInt(vertical) + 1;
+        } else {
+            var val = parseInt(vertical) - 1;
+        }
+
+        $('#printSetupModal #vertical-offset').val(val).trigger('change');
+    });
+
+    $(document).on('click', '#printSetupModal .preview-print-sample', function(e) {
+        e.preventDefault();
+
+        var data = new FormData();
+        data.set('check_type', $('#printSetupModal input[name="check_type"]').val());
+        data.set('horizontal', $('#printSetupModal #horizontal-offset').val());
+        data.set('vertical', $('#printSetupModal #vertical-offset').val());
+
+        $.ajax({
+            url: '/accounting/preview-and-print-sample',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                $('div#modal-container').append(result);
+
+                $('#viewPrintChecksModal').modal('show');
+            }
+        })
     });
 });

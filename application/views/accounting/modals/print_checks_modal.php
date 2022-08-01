@@ -5,7 +5,7 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+                <div class="modal-header">
                     <span class="modal-title content-title">Print Checks</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>

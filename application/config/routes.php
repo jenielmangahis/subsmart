@@ -449,6 +449,7 @@ $route['accounting/print-sales-receipt-modal/(:any)'] = 'accounting_modals/print
 $route['accounting/download-sales-receipt-pdf/(:any)'] = 'accounting_modals/download_sales_receipt_pdf/$1';
 $route['accounting/print-refund-receipt-modal/(:any)'] = 'accounting_modals/print_refund_receipt/$1';
 $route['accounting/download-refund-receipt-pdf/(:any)'] = 'accounting_modals/download_refund_receipt_pdf/$1';
+$route['accounting/preview-and-print-sample']['post'] = 'accounting_modals/preview_and_print_sample';
 
 $route['accounting/lists'] = 'accounting/lists';
 
