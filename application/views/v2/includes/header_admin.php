@@ -117,6 +117,11 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-phone-call'></i> Calls
                     </a>
                 </li>
+                <li class="<?= $page_title == 'Auto SMS Logs' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/auto_sms_notification") ?>">
+                        <i class='bx bx-fw bx-notification'></i> Auto SMS Logs
+                    </a>
+                </li>
                 <li class="<?= $page_title == 'Nsmart Plans' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/nsmart_plans") ?>">
                         <i class='bx bx-fw bx-list-ul'></i> nSmart Plans

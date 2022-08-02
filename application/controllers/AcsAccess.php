@@ -30,24 +30,19 @@ class AcsAccess extends CI_Controller
 
     public function messages()
     {
-        $this->load->helper('sms_helper');
-        $this->load->model('CompanySms_model');
-        $this->load->model('Customer_advance_model');
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
 
-        $companySms = $this->CompanySms_model->getByProfId($this->customer_id);
-        $customer   = $this->Customer_advance_model->get_data_by_id('prof_id',$this->customer_id,'acs_profile');
+        $customerMessages = $this->CustomerMessages_model->getAllByProfId($this->customer_id);
+        $customer = $this->AcsProfile_model->getByProfId($this->customer_id);
+        $business = $this->Business_model->getByCompanyId($customer->company_id);
         
-        $sentMessages = array();
-        if( $companySms ){
-            if( $companySms->sms_api == $this->CompanySms_model->apiRingCentral() ){
-                $sentMessages  = ringCentralMessageReplies($customer->phone_m);    
-            }
-        }           
-        
-        $this->page_data['sentMessages'] = $sentMessages;
-        $this->page_data['companySms']   = $companySms;     
-        $this->page_data['page_title']   = 'SMS';
-        $this->page_data['page_parent']  = 'SMS';
+        $this->page_data['customerMessages'] = $customerMessages;
+        $this->page_data['customer']   = $customer;    
+        $this->page_data['business']   = $business;
+        $this->page_data['page_title']   = 'Messages';
+        $this->page_data['page_parent']  = 'Messages';
         $this->load->view('customer_access/messages/list', $this->page_data);
     }
 
@@ -211,6 +206,66 @@ class AcsAccess extends CI_Controller
         $this->page_data['customer'] = $customer;
         $this->page_data['agent'] = $agent;
         $this->load->view('customer_access/messages/ajax_sent_messages.php', $this->page_data);
+    }
+
+    public function ajax_send_message()
+    {
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+
+        if( $post['customer_message'] != '' ){
+            $customer = $this->AcsProfile_model->getByProfId($this->customer_id);
+            if( $customer ){
+                $business = $this->Business_model->getByCompanyId($customer->company_id);
+
+                $data = [
+                    'prof_id' => $this->customer_id,
+                    'user_id' => 0,
+                    'message_date' => date("Y-m-d H:i:s"),
+                    'message' => $post['customer_message'],
+                    'status' => $this->CustomerMessages_model->statusNew(),
+                ];
+
+                $this->CustomerMessages_model->create($data);
+
+                if( $business->business_email != '' ){
+                    //Send mail
+                    $login_url = base_url('login');
+                    $subject  = 'nSmarTrac : Customer Reply';
+                    $body     = "<p>Hi ".$business->business_name.",</p><br /><p>".$customer->first_name . ' ' . $customer->last_name ." have sent a reply to your message. To view this message, please login to your account and go to messages. To login, <a href='".$login_url."' target='_blank'>Click here</a></p>";
+                    $to       = $business->business_email;
+                    $attachment = '';
+
+                    $data_email = [
+                        'subject' => $subject, 
+                        'body' => $body,
+                        'to' => $to,
+                        'cc' => '',
+                        'bcc' => '',
+                        'attachment' => $attachment
+                    ];
+
+                    $isSent = sendEmail($data_email); 
+                }
+
+                $msg = '';
+                $is_success = 1;
+            }else{
+                $msg = 'Cannot find customer';
+            }
+        }else{
+            $msg = 'Please enter your message to customer';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 }
 

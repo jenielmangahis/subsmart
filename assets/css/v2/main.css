@@ -1886,6 +1886,10 @@ div.workspace-list>ul>li .nsm-badge {
 	background-color: unset !important;
 }
 
+.nsm-field.datepicker{
+	padding: .375rem .75rem !important;
+}
+
 .nsm-input-group {
 	display: inline-block;
 }

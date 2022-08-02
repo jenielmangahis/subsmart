@@ -131,12 +131,15 @@ class Users extends MY_Controller
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $cid;
 		$this->page_data['profiledata'] = $profiledata;
-		$this->load->view('business_profile/businessdetail', $this->page_data);
-		// $this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
+		// $this->load->view('business_profile/businessdetail', $this->page_data);
+		$this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
 	}
 
 	public function services()
 	{
+        $this->page_data['page']->title = 'Services';
+        $this->page_data['page']->parent = 'My Business';
+
 		$industryType = $this->IndustryType_model->getAll();
 		$businessTypes = [
 			'Building Contractors' => 'Building Contractors',
@@ -161,7 +164,8 @@ class Users extends MY_Controller
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		//print_r($user);die;
 		$cid = logged('id');
-		$this->load->view('business_profile/services', $this->page_data);
+		// $this->load->view('business_profile/services', $this->page_data);
+		$this->load->view('v2/pages/business_profile/services', $this->page_data);
 	}
 
 	public function saveservices()
@@ -210,6 +214,8 @@ class Users extends MY_Controller
 
 	public function credentials()
 	{
+        $this->page_data['page']->title = 'Credentials';
+        $this->page_data['page']->parent = 'My Business';
 		//ifPermissions('businessdetail');
 
 		$user = (object)$this->session->userdata('logged');
@@ -221,11 +227,15 @@ class Users extends MY_Controller
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata;
 
-		$this->load->view('business_profile/credentials', $this->page_data);
+		// $this->load->view('business_profile/credentials', $this->page_data);
+		$this->load->view('v2/pages/business_profile/credentials', $this->page_data);
 	}
 
 	public function availability()
 	{
+        $this->page_data['page']->title = 'Availability';
+        $this->page_data['page']->parent = 'My Business';
+
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');
 		$cid = logged('id');
@@ -251,11 +261,15 @@ class Users extends MY_Controller
 
 		$this->page_data['data_working_days'] = $data_working_days;
 		$this->page_data['profiledata'] = $profiledata;
-		$this->load->view('business_profile/availability', $this->page_data);
+		// $this->load->view('business_profile/availability', $this->page_data);
+		$this->load->view('v2/pages/business_profile/availability', $this->page_data);
 	}
 
 	public function portfolio()
 	{
+        $this->page_data['page']->title = 'Portfolio';
+        $this->page_data['page']->parent = 'My Business';
+
 		add_css(array(
 			"assets/css/jquery.fancybox.css"
 		));
@@ -270,7 +284,8 @@ class Users extends MY_Controller
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
 
 		$this->page_data['profiledata'] = $profiledata;
-		$this->load->view('business_profile/work_pictures', $this->page_data);
+		// $this->load->view('business_profile/work_pictures', $this->page_data);
+		$this->load->view('v2/pages/business_profile/work_pictures', $this->page_data);
 	}
 
 	public function profilesetting()

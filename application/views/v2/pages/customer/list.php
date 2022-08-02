@@ -191,7 +191,7 @@
                                                     <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="#">Message</a>
+                                                    <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?= $customer->prof_id; ?>">Message</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -384,6 +384,73 @@
         $("#btn_print_customer_list").on("click", function() {
             $("#customer_table_print").printThis();
         });
+    });
+
+    $(document).on('click', '.btn-messages', function(){
+
+        var profid = $(this).attr('data-id');
+        var url = base_url + 'customer/_get_messages';
+
+        $('#messages_modal').modal('show');
+        $(".modal-messages-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,             
+             data: {profid:profid},
+             success: function(o)
+             {          
+                $(".modal-messages-container").html(o);                
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on('submit', '#frm-send-message', function(e){
+        e.preventDefault();
+
+        var url = base_url + 'customer/_send_message';
+        $(".btn-send-message").html('<span class="bx bx-loader bx-spin"></span>');
+
+        var formData = new FormData($("#frm-send-message")[0]);   
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {          
+                if( o.is_success == 1 ){   
+                    $("#messages_modal").modal("hide");         
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Customer message was successfully sent",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                        
+                        //}
+                    });
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                  });
+                } 
+
+                $(".btn-send-message").html('Send');
+             }
+          });
+        }, 800);
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

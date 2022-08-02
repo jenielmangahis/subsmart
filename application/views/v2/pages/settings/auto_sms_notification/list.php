@@ -37,7 +37,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Create your auto sms notification.
+                            Create your auto sms notification.<br /> Note: You need to have a valid SMS API account for this to work. Please set your SMS API account in our <a href="<?= base_url('tools/api_connectors'); ?>">API Connectors list</a>.
                         </div>
                     </div>
                 </div>

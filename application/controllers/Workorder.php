@@ -7562,6 +7562,21 @@ class Workorder extends MY_Controller
              'secondary_account_holder_signature'   => $file3_save,
              'secondary_account_holder_name'        => $this->input->post('secondery_account_holder_name'),
 
+
+            // 'roof_type'                 => $this->input->post('tor'),
+            // 'house_area'                => $this->input->post('sfoh'),
+            // 'roof_age'                 => $this->input->post('aor'),
+            // 'solar_panel_mounting_prefs'                => $this->input->post('spmp'),
+            // 'is_homeowner_assoc_member'                 => $this->input->post('hoa'),
+            // 'hoa_text'            => $this->input->post('address'),
+            // 'estimated_bill'      => $this->input->post('estimated_bill'),
+            // 'ebis'                => $this->input->post('ebis'),
+            // 'hdygi'               => $this->input->post('hdygi'),
+            // 'hdygi_file'          => $this->input->post('hdygi_file'),
+            // 'eba_text'            => $this->input->post('eba_text'),
+            // 'es'                  => $this->input->post('es'),
+            // 'options'             => $options,
+
             // 'company_representative_signature' => 'company_representative_signature',
             // 'company_representative_name' => 'company_representative_name',
             // 'primary_account_holder_signature' => 'primary_account_holder_signature',

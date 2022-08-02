@@ -5436,7 +5436,7 @@ class Customer extends MY_Controller
         $this->load->view('customer/ajax_load_quick_note', $this->page_data);
     }
 
-    public function ajax_send_message()
+    public function ajax_send_message_old()
     {
         $this->load->model('CustomerMessages_model');
         $this->load->model('AcsProfile_model');
@@ -5686,6 +5686,86 @@ class Customer extends MY_Controller
         }else{
             $msg = 'Please specify customer mobile number';
         }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_get_messages()
+    {
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('Business_model');
+
+        $post   = $this->input->post();
+        $cid    = logged('company_id');
+        $profid = $post['profid'];
+
+        $business = $this->Business_model->getByCompanyId($cid);
+        $customerMessages = $this->CustomerMessages_model->getAllByProfIdAndCompanyId($profid, $cid);
+
+        $this->page_data['business'] = $business;
+        $this->page_data['customerMessages'] = $customerMessages;
+        $this->page_data['profid'] = $profid;
+        $this->load->view('v2/pages/customer/ajax_get_messages', $this->page_data);
+    }
+
+    public function ajax_send_message()
+    {
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+
+        if( $post['customer_message'] != '' ){
+            $customer = $this->AcsProfile_model->getByProfId($post['profid']);
+            if( $customer ){
+                $data = [
+                    'prof_id' => $post['profid'],
+                    'user_id' => $uid,
+                    'message_date' => date("Y-m-d H:i:s"),
+                    'message' => $post['customer_message'],
+                    'status' => $this->CustomerMessages_model->statusNew(),
+                ];
+
+                $this->CustomerMessages_model->create($data);
+
+                if( $customer->email != '' ){
+                    //Send mail
+                    $customer_login_url = base_url('login/customer');
+                    $business = $this->Business_model->getByCompanyId($cid);
+
+                    $subject  = 'nSmarTrac : Customer Message';
+                    $body     = "<p>Hi ".$customer->first_name.",</p><br /><p>".$business->business_name." have sent you a message. To view this message, please login to your account and go to messages. To login, <a href='".$customer_login_url."' target='_blank'>Click here</a></p>";
+                    $to       = $customer->email;
+                    $attachment = '';
+
+                    $data_email = [
+                        'subject' => $subject, 
+                        'body' => $body,
+                        'to' => $to,
+                        'cc' => '',
+                        'bcc' => '',
+                        'attachment' => $attachment
+                    ];
+
+                    $isSent = sendEmail($data_email); 
+                }
+
+                $msg = '';
+                $is_success = 1;
+            }else{
+                $msg = 'Cannot find customer';
+            }
+        }else{
+            $msg = 'Please enter your message to customer';
+        }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
