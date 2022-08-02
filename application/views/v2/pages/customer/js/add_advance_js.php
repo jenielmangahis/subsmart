@@ -152,6 +152,52 @@
             }
         });
     });
+
+    $(document).on('click', '#btn-notify-customer-new-pw', function(e){
+        e.preventDefault();
+
+        var url = base_url + 'customer/_send_login_details';    
+        var cid = $(this).attr('data-id');     
+
+        Swal.fire({
+            title: 'Email Notification',
+            html: "Are you sure you want to send to customer email their login access?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: {cid:cid},
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Email Sent!',
+                                text: "An email was sent to customer of their login details!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
+                        }
+                    },
+                });
+            }
+        });
+    });
 </script>
 
 <script>
@@ -403,8 +449,8 @@
             const formArray = form.serializeArray();
             const payload = {};
             formArray.forEach(({ name, value }) => payload[name] = value);
-            
-            const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+            //const prefixURL = location.hostname === "localhost" ? "/ci/nsmart_v2" : "";
+            const prefixURL = base_url;
             const response = await fetch(`${prefixURL}/customer_form/apiCheckDuplicate`, { 
                 method: "post", 
                 body: JSON.stringify(payload),

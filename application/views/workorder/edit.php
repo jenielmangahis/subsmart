@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
+<?php include viewPath('includes/workorder/sign-modal'); ?>
     <style>
     label>input {
       visibility: initial !important;
@@ -1262,7 +1263,8 @@ border: none;
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
+                                    <!-- <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6> -->
+                                    <h6>Company Representative Approval</h6> <a class="btn btn-success companySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
                                     <div id="companyrep"></div>
                                     <br>
@@ -1277,13 +1279,16 @@ border: none;
                                                 <option <?php if(isset($workorder)){ if($workorder->company_representative_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php } ?>
                                         </select>
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> 
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">  -->
+                                           <div id="company_representative_div"></div>
+                                           
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <!-- <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6> -->
+                                    <h6>Primary Account Holder</h6><a class="btn btn-warning primarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
-                                    <div id="primaryrep"></div>
+                                    <!-- <div id="primaryrep"></div> -->
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
@@ -1297,11 +1302,13 @@ border: none;
                                             <?php //} ?>
                                         </select> -->
 
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web"> -->
+                                           <div id="primary_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <!-- <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6> -->
+                                    <h6>Secondary Account Holder</h6><a class="btn btn-danger secondarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
                                     <div id="secondaryrep"></div>
                                     <br>
@@ -1316,7 +1323,8 @@ border: none;
                                             <?php //} ?>
                                         </select> -->
 
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web"> -->
+                                           <div id="secondary_representative_div"></div>
 
                                 </div>
                             </div>

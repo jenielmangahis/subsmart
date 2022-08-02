@@ -623,12 +623,13 @@ table input.form-control {
                                             <td>
                                                 <input type="hidden" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value=""> 
                                                 <div class="input-group">
+                                                    <input type="hidden" class="pers_check" name="dataValue[]">
                                                     <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkPers" name="pers_check" />PERS</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkPers" name="pers_check" />PERS w/Fall Detect</span>
+                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkPers" name="checkPers" value="PERS"/>PERS</span>
+                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkPers" name="checkPers"  value="PERS w/Fall Detect"/>PERS w/Fall Detect</span>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" class="" name="dataValue[]">
+                                                <!-- <input type="hidden" class="" name="dataValue[]"> -->
                                             </td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
@@ -1599,6 +1600,11 @@ $('.checkOneThree').on('change', function() {
 $('.ctrans_check').on('change', function() {
     $('input[name="' + this.name + '"]').not(this).prop('checked', false);
     $('.dtrans_check').val(this.value);
+});
+
+$('.checkPers').on('change', function() {
+    $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+    $('.pers_check').val(this.value);
 });
 
 $('.ccam_check').on('change', function() {

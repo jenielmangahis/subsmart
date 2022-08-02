@@ -12,27 +12,27 @@
                 <span>Business Details</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Customer Groups'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/group') ?>">
-                <i class='bx bx-fw bx-group'></i>
+        <li class="<?php if($page->title == 'Services'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('users/services') ?>">
+                <i class='bx bx-fw bx-wrench'></i>
                 <span>Services</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/leads') ?>">
-                <i class='bx bx-fw bx-notepad'></i>
+        <li class="<?php if($page->title == 'Credentials'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('users/credentials') ?>">
+                <i class='bx bx-fw bx-show-alt'></i>
                 <span>Credentials</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/leads') ?>">
+        <li class="<?php if($page->title == 'Availability'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('users/availability') ?>">
                 <i class='bx bx-fw bx-notepad'></i>
                 <span>Availability</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/leads') ?>">
-                <i class='bx bx-fw bx-notepad'></i>
+        <li class="<?php if($page->title == 'Portfolio'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('users/portfolio') ?>">
+                <i class='bx bx-fw bx-images'></i>
                 <span>Portfolio</span>
             </a>
         </li>

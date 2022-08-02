@@ -6,7 +6,7 @@
     <title>print</title>
     <!-- <link rel="stylesheet" href="/assets/dashboard/css/bootstrap.min.css"> -->
 </head>
-<body style="margin: 0;    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';font-size: 1rem;font-weight: 400;line-height: 1.5;    color: #212529;    text-align: left;    background-color: #fff;">
+<body style="margin: 0; font-size: 14px; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji'; font-weight: 400;line-height: 1.5;    color: #212529;    text-align: left;    background-color: #fff;">
     <?php $count = 1; ?>
     <?php foreach($checks as $check) : ?>
     <?php if($count < count($checks)) : ?>
@@ -16,32 +16,75 @@
     <?php endif; ?>
         <?php if($check['type'] === 'sample') : ?>
         <div class="row" style="display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
-            <div>
+            <div style="width: 100%;">
+                <table style="width: 100%; margin-bottom: 1rem; color: #212529; border-collapse: collapse; margin-top: 1rem;">
+                    <tr>
+                        <td></td>
+                        <td>Alignment Grid</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%; padding: 0 25px;">
+                            <span><?=$check['name']?></span>
+                        </td>
+                        <td style="width: 50%">
+                            <div style="border: 1px solid gray; width: 250px; height: 89px; background: url(/uploads/accounting/grid.png); background-repeat: repeat;">
+                                <p style="margin-bottom: 0; margin-top: 31px; text-align: center;">**<?=$check['total']?></p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><?=$check['total_in_words']?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 25px;"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
+                        <td></td>
+                    </tr>
+                </table>
                 <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
                     <tbody>
                         <tr>
-                            <td colspan="3">&nbsp;</td>
-                            <td style="text-align: center"><?=$check['date']?></td>
+                            <td colspan="2">Pay Period: 01/01/2007 - 01/15/2007</td>
                         </tr>
                         <tr>
-                            <td style="text-align: center"><?=$check['name']?></td>
-                            <td style="text-align: center"></td>
-                            <td style="text-align: center"></td>
-                            <td style="text-align: center">
-                                <div style="width: 100%; display: flex; align-items: center; justify-content: center; border: 1px solid black">
-                                    <span>**<?=$check['total']?></span>
+                            <td style="padding: 0 25px;">
+                                <p><?=$check['name']?></p>
+                            </td>
+                            <td style="width: 50%">
+                                <div style="width: 200px;">
+                                    <p style="text-align: center;">**<?=$check['total']?></p>
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="3"><?=$check['total_in_words']?></td>
-                            <td style="text-align: center">&nbsp;</td>
+                            <td colspan="2"><p><?=$check['total_in_words']?></p></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
-                            <td style="text-align: center"></td>
-                            <td style="text-align: center"></td>
-                            <td style="text-align: center"></td>
+                            <td style="padding: 0 25px;"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
+                    <tbody>
+                        <tr>
+                            <td colspan="2">Pay Period: 01/01/2007 - 01/15/2007</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 25px;">
+                                <p><?=$check['name']?></p>
+                            </td>
+                            <td style="width: 50%">
+                                <div style="width: 200px;">
+                                    <p style="text-align: center;">**<?=$check['total']?></p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><p><?=$check['total_in_words']?></p></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 25px;"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>

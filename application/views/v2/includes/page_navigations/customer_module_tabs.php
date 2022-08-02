@@ -1,4 +1,4 @@
-                 b<div class="nsm-page-nav">
+<div class="nsm-page-nav">
     <ul>
         <li class="<?php if($page->title == 'Customer Dashboard'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/module/'.$cus_id)?>">

@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
+<?php include viewPath('includes/workorder/sign-modal'); ?>
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <style>
@@ -520,6 +521,64 @@ border: none;
 }
 .selected-checklists li a{
     float: right;
+}
+
+@media screen and (max-width:1400px){
+    table input[type=text],
+    input[type=email],
+    input[type=url],
+    /* input[type=checkbox], */
+    input[type=password] {
+    width: 100%;
+    font-size:10px;
+    }
+    /* table input[type=checkbox] {
+        width: 80%;
+    } */
+    table thead
+    {
+        font-size:14px;
+    }
+    .withCheck
+    {
+        width:100% !important;
+    }
+}
+
+@media screen and (max-width:1000px){
+
+.wo-signatureModal canvas {
+    width: 100%;
+    border: 1px solid #e4e4e4;
+    position: relative;
+    z-index: 1;
+    height: 250px;
+    margin-top: 1px;
+}
+.wo-signatureModal .mobileHeight {
+    /* max-width: 500px; */
+    margin: 1.75rem auto;
+    width: 100% !important;
+}
+.alert-primary {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    margin-top: -22px;
+    font-size: 9px;
+    margin-bottom: 0px;
+}
+.modal-title {
+    font-size: 12px;
+    margin: 0;
+    color: #002638;
+}
+.modal-header {
+    padding: 0.4rem 0.4rem;
+}
+.modal-body {
+    /* padding: 10px 10px; */
+}
 }
 </style>
     <!-- page wrapper start -->
@@ -1427,7 +1486,7 @@ border: none;
                             </div>
                             <div class="row signature_web">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6> <a data-toggle="modal" data-target=".companySignature" class="btn btn-success"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                <h6>Company Representative Approval</h6> <a class="btn btn-success companySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <!-- <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
                                         <ul class="sigNav" style="">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -1462,11 +1521,12 @@ border: none;
                                         </select>
                                            <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
                                             <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
-                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
+                                            <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> -->
+                                            <div id="company_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder</h6><a data-toggle="modal" data-target=".primarySignature" class="btn btn-warning"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                <h6>Primary Account Holder</h6><a class="btn btn-warning primarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a> Add Signature</a>
                                     <!-- <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -1498,11 +1558,12 @@ border: none;
                                             <?php //} ?>
                                     </select> -->
                                     
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web"> -->
+                                           <div id="primary_representative_div"></div>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder</h6><a data-toggle="modal" data-target=".secondarySignature" class="btn btn-danger"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                <h6>Secondary Account Holder</h6><a class="btn btn-danger secondarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <!-- <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -1534,7 +1595,8 @@ border: none;
                                             <?php //} ?>
                                         </select> -->
 
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                           <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web"> -->
+                                           <div id="secondary_representative_div"></div>
 
                                 </div>
                             </div>
@@ -2586,6 +2648,19 @@ $(document).on('click touchstart','#canvas3b',function(){
     var dataURL = canvas_web3.toDataURL("image/png");
     $("#saveSecondaryAccountSignatureDB3aMb").val(dataURL);
 });
+
+$(document).on('click touchstart','.companySignature',function(){
+    $("#company-representative-approval-signature").modal("show");
+});
+
+$(document).on('click touchstart','.primarySignature',function(){
+    $("#primary-account-holder-signature").modal("show");
+});
+
+$(document).on('click touchstart','.secondarySignature',function(){
+    $("#secondary-account-holder-signature").modal("show");
+});
+
 
 
 $(document).on('click touchstart','.edit_first_signature',function(){

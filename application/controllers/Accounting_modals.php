@@ -20179,7 +20179,7 @@ class Accounting_modals extends MY_Controller
                 'mailing_address' => 'John Doe<br>123 Main Street<br>Anytown, USA 12345',
                 'payment_account' => 'Payment Account',
                 'type' => 'sample',
-                'total_in_words' => 'One thousand four hundred twenty-five and 25/1000*********************************************************************'
+                'total_in_words' => 'One thousand four hundred twenty-five and 25/1000****************************'
             ]
         ];
 
