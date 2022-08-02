@@ -546,21 +546,20 @@ span.sc-item {
     $total_amount = 0;
     ?>
     <div wrapper__section>
-      <?php include viewPath('includes/notifications'); ?>
       
         <div class="row page-content g-0">
           
-      <div class="col-12 mb-3">
+        <div class="col-12 mb-3">
             <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
         </div>
         <div class="col-12 mb-3">
             <?php include viewPath('v2/includes/page_navigations/estimate_subtabs'); ?>
         </div>
             <br class="clear"/>
-            <div class="row">                
+            <div class="row" style="padding-right:4%;padding-left:4%;">                
                 <div class="col-xl-12">
                   <?php include viewPath('flash'); ?>
-                    <div class="card">
+                    <div class="">
                       <?php if($estimate){ ?>
                       <div class="d-block">
                         <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
@@ -583,7 +582,7 @@ span.sc-item {
                                                     
                                                     <?php } ?>
                           <a class="btn btn-info" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"><span class="fa fa-file-pdf-o icon"></span> PDF</a>
-                          <a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
+                          <a class="btn btn-info" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
                           <a class="btn btn-info" href="<?php echo base_url('estimate/') ?>">BACK TO ESTIMATE LIST</a>
                         </div>
                       </div>

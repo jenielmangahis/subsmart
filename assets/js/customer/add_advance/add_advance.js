@@ -1,4 +1,4 @@
-window.document.addEventListener("DOMContentLoaded", () => {
+window.document.addEventListener("DOMContentLoaded", async () => {
   import("./BillingInfo.js");
   import("./SubscriptionPayPlan.js");
   import("./OfficeUseInfo.js");
@@ -17,4 +17,15 @@ window.document.addEventListener("DOMContentLoaded", () => {
       $($select).val($select.dataset.value).trigger("change");
     }
   });
+
+  const $form = document.getElementById("customer_form");
+  if ($form) {
+    const { FormAutoSave, FormAutoSaveConfig } = await import(
+      "./FormAutoSave.js"
+    );
+
+    const config = new FormAutoSaveConfig();
+    const autoSave = new FormAutoSave($form, config);
+    autoSave.listen();
+  }
 });
