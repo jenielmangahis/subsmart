@@ -14192,6 +14192,29 @@ class Accounting extends MY_Controller
 
         fpassthru($f);
     }
+
+    public function print_checks_layout()
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_checks";
+        $post = $this->input->post();
+
+        $data = [
+            [
+                'date' => date("m/d/Y"),
+                'name' => 'John Doe',
+                'total' => '1,425.25',
+                'mailing_address' => 'John Doe<br>123 Main Street<br>Anytown, USA 12345',
+                'payment_account' => 'Payment Account',
+                'type' => 'sample',
+                'total_in_words' => 'One thousand four hundred twenty-five and 25/1000****************************'
+            ]
+        ];
+
+        $this->page_data['checks'] = $data;
+        $this->load->view($view, $this->page_data);
+    }
 }
 
 // date_plan: date_plan, merchant_name:merchant_name, plan_amount:plan_amount, plan_type:plan_type, plan_repeat:plan_repeat
