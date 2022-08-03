@@ -10,25 +10,25 @@
     <?php $count = 1; ?>
     <?php foreach($checks as $check) : ?>
     <?php if($count < count($checks)) : ?>
-    <div class="container" style="width: 100%;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: always; height: 100%">
+    <div class="container" style="width: 100%;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: always; height: 100%;">
     <?php else : ?>
-    <div class="container" style="width: 100%;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: avoid; height: 100%">
+    <div class="container" style="width: 100%;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: avoid; height: 100%;">
     <?php endif; ?>
         <?php if($check['type'] === 'sample') : ?>
         <div class="row" style="display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
-            <div style="width: 100%;">
-                <table style="width: 100%; margin-bottom: 1rem; color: #212529; border-collapse: collapse; margin-top: 1rem;">
+            <div style="width: 100%; padding-top: 50px;">
+                <table style="width: 100%; margin-bottom: 144px; color: #212529; border-collapse: collapse; margin-right: -20px;">
                     <tr>
-                        <td></td>
-                        <td>Alignment Grid</td>
+                        <td style="width: 75%"></td>
+                        <td style="width: 25%">Alignment Grid</td>
                     </tr>
                     <tr>
-                        <td style="width: 50%; padding: 0 25px;">
+                        <td style="width: 75%; padding: 0 25px;">
                             <span><?=$check['name']?></span>
                         </td>
-                        <td style="width: 50%">
-                            <div style="border: 1px solid gray; width: 250px; height: 89px; background: url(/uploads/accounting/grid.png); background-repeat: repeat;">
-                                <p style="margin-bottom: 0; margin-top: 31px; text-align: center;">**<?=$check['total']?></p>
+                        <td style="width: 25%; height: 70px;">
+                            <div style="border: 1px solid gray; width: 100%; height: 70px; background: url(/uploads/accounting/grid.png); background-repeat: repeat; position: absolute">
+                                <p style="margin-bottom: 0; margin-top: 24px; text-align: center;">**<?=$check['total']?></p>
                             </div>
                         </td>
                     </tr>
@@ -39,20 +39,21 @@
                         <td style="padding: 0 25px;"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
                         <td></td>
                     </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 25px;">Pay Period: 01/01/2007 - 01/15/2007</td>
+                    </tr>
                 </table>
-                <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
+                <table class="table" style="width: 100%; margin-bottom: 145px; color: #212529;border-collapse: collapse; margin-top: 144px; margin-right: -20px;">
                     <tbody>
                         <tr>
-                            <td colspan="2">Pay Period: 01/01/2007 - 01/15/2007</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 0 25px;">
-                                <p><?=$check['name']?></p>
+                            <td style="width: 75%; padding: 0 25px;">
+                                <span><?=$check['name']?></span>
                             </td>
-                            <td style="width: 50%">
-                                <div style="width: 200px;">
-                                    <p style="text-align: center;">**<?=$check['total']?></p>
-                                </div>
+                            <td style="width: 25%;">
+                                <p style="text-align: center; margin: 0">**<?=$check['total']?></p>
                             </td>
                         </tr>
                         <tr>
@@ -61,22 +62,23 @@
                         <tr>
                             <td style="padding: 0 25px;"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
                             <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 0 25px;">Pay Period: 02/01/2007 - 02/15/2007</td>
                         </tr>
                     </tbody>
                 </table>
-                <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
+                <table class="table" style="width: 100%; color: #212529;border-collapse: collapse; margin-top: 145px; margin-right: -20px;">
                     <tbody>
                         <tr>
-                            <td colspan="2">Pay Period: 01/01/2007 - 01/15/2007</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 0 25px;">
-                                <p><?=$check['name']?></p>
+                            <td style="width: 75%; padding: 0 25px;">
+                                <span><?=$check['name']?></span>
                             </td>
-                            <td style="width: 50%">
-                                <div style="width: 200px;">
-                                    <p style="text-align: center;">**<?=$check['total']?></p>
-                                </div>
+                            <td style="width: 25%">
+                                <p style="text-align: center; margin: 0">**<?=$check['total']?></p>
                             </td>
                         </tr>
                         <tr>
@@ -85,6 +87,12 @@
                         <tr>
                             <td style="padding: 0 25px;"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
                             <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 0 25px;">Pay Period: 03/01/2007 - 03/15/2007</td>
                         </tr>
                     </tbody>
                 </table>
