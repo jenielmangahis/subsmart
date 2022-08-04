@@ -1,4 +1,14 @@
-export class FormAutoSaveConfig {}
+export class FormAutoSaveConfig {
+  onChange = null;
+
+  constructor(args = {}) {
+    Object.keys(args).forEach((key) => {
+      if (this.hasOwnProperty(key)) {
+        this[key] = args[key];
+      }
+    });
+  }
+}
 
 export class FormAutoSave {
   CHANGING_TIMEOUT = 500; // ms
@@ -34,7 +44,21 @@ export class FormAutoSave {
   setInputListener($input) {
     if (!$input.name || !$input.name.length) return;
 
-    // TODO: handle timepicker
+    if (
+      $input.classList.contains("timepicker") &&
+      $.isFunction($().timepicker)
+    ) {
+      $($input).timepicker().on("changeTime.timepicker", this.onChange);
+      return;
+    }
+
+    if (
+      $input.classList.contains("date_picker") &&
+      $.isFunction($().datepicker)
+    ) {
+      $($input).datepicker().on("changeDate", this.onChange);
+      return;
+    }
 
     if (this.isTextBox($input)) {
       $input.addEventListener("keyup", this.onChange);
@@ -78,8 +102,49 @@ export class FormAutoSave {
     );
   }
 
-  onDoneChanging({ name, value }) {
-    console.log({ name, value });
+  async onDoneChanging({ name, value }) {
+    if (typeof this.config.onChange !== "function") {
+      return;
+    }
+
+    try {
+      this.toggleSavingIndicator();
+      await this.config.onChange(name, value);
+    } finally {
+      this.toggleSavingIndicator(false);
+    }
+  }
+
+  toggleSavingIndicator(show = true) {
+    const id = "formautosavemessage";
+    let $div = document.getElementById(id);
+
+    if (!$div) {
+      $div = document.createElement("div");
+      $div.style.cssText = `
+        --height: 25px;
+
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+
+        padding-left: 10px;
+        padding-right: 1rem;
+        height: var(--height);
+        border-radius: var(--height);
+        box-sizing: border-box;
+        align-items: center;
+
+        background-color: rgb(230 230 230);
+        z-index: 999;
+      `;
+
+      $div.textContent = "Saving...";
+      $div.setAttribute("id", id);
+      document.body.appendChild($div);
+    }
+
+    $div.style.display = show ? "flex" : "none";
   }
 
   // https://stackoverflow.com/a/38795917/8062659

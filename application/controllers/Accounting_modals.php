@@ -7792,7 +7792,7 @@ class Accounting_modals extends MY_Controller
     {
         $this->load->helper('string');
         $this->load->library('pdf');
-        $view = "accounting/modals/print_action/print_checks";
+        $view = "accounting/modals/print_action/print_checks_voucher";
         $post = $this->input->post();
 
         $extension = '.pdf';
@@ -20157,14 +20157,14 @@ class Accounting_modals extends MY_Controller
     {
         $this->load->helper('string');
         $this->load->library('pdf');
-        $view = "accounting/modals/print_action/print_checks";
+        $view = "accounting/modals/print_action/print_checks_sample_voucher";
         $post = $this->input->post();
 
         $extension = '.pdf';
 
         do {
             $randomString = random_string('alnum');
-            $fileName = 'print_check_'.$randomString . '.' .$extension;
+            $fileName = 'print_check_sample_'.$randomString . '.' .$extension;
             $exists = file_exists('./assets/pdf/'.$fileName);
         } while ($exists);
 
@@ -20172,18 +20172,10 @@ class Accounting_modals extends MY_Controller
         $uploadedName = str_replace('.'.$extension, '', $name);
 
         $data = [
-            [
-                'date' => date("m/d/Y"),
-                'name' => 'John Doe',
-                'total' => '1,425.25',
-                'mailing_address' => 'John Doe<br>123 Main Street<br>Anytown, USA 12345',
-                'payment_account' => 'Payment Account',
-                'type' => 'sample',
-                'total_in_words' => 'One thousand four hundred twenty-five and 25/1000****************************'
-            ]
+            'top-margin' => 32 - intval($post['vertical'])
         ];
 
-        $this->pdf->save_pdf($view, ['checks' => $data], $fileName, 'portrait');
+        $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
 
         $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
         if (file_exists(getcwd()."/assets/pdf/$fileName")) {
