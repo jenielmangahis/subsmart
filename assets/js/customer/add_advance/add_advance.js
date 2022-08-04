@@ -24,10 +24,24 @@ window.document.addEventListener("DOMContentLoaded", async () => {
       "./FormAutoSave.js"
     );
 
+    const $profileId = $form.querySelector("[name=prof_id]");
     const config = new FormAutoSaveConfig({
       onChange: async () => {
         try {
-          await autoSaveForm();
+          const response = await autoSaveForm();
+          const { profile_id } = response;
+
+          $profileId.value = profile_id;
+          window.history.replaceState({}, "", `/customer/add_advance/${profile_id}`); // prettier-ignore
+
+          let $customerId = $form.querySelector("[name=customer_id]");
+          if (!$customerId) {
+            $customerId = document.createElement("input");
+            $customerId.setAttribute("type", "hidden");
+            $customerId.setAttribute("name", "customer_id");
+            $customerId.value = profile_id;
+            $form.appendChild($customerId);
+          }
         } catch (error) {
           console.error(error);
         }
