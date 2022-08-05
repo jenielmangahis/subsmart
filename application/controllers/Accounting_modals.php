@@ -20172,7 +20172,9 @@ class Accounting_modals extends MY_Controller
         $uploadedName = str_replace('.'.$extension, '', $name);
 
         $data = [
-            'top-margin' => 32 - intval($post['vertical'])
+            'top-margin' => 25 - intval($post['vertical']),
+            // 'left-margin' => -15 + intval($post['horizontal']),
+            // 'right-margin' => -15 - intval($post['horizontal'])
         ];
 
         $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');

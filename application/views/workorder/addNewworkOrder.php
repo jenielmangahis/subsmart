@@ -2490,6 +2490,7 @@ border: none;
 
 <?php include viewPath('includes/footer'); ?>
 <script src="<?php echo $url->assets;?>js/jquery-input-mask-phone-number.js"></script>
+<script src="<?=base_url("assets/js/workorder/autosave.js")?>"></script>
 
 <script>
 // $('.value').on('keydown keyup mousedown mouseup', function() {
