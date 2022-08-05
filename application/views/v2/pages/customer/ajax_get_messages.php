@@ -59,7 +59,7 @@
                                     ?>
 
                                     <div class="<?= $message_position; ?> pb-4">
-                                        <div>
+                                        <div style="text-align: center;">
                                             <img src="<?= $default_profile_image; ?>" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
                                             <div class="text-muted small text-nowrap mt-2"><?= timeLapsedString($msg->message_date); ?></div>
                                         </div>

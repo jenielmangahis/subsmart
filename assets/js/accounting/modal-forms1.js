@@ -240,12 +240,18 @@ $(document).ready(function () {
         $(this).parent().find('.check-type-preview').addClass('selected');
     });
 
+    $(document).on('click', '#printSetupModal .check-type-preview', function() {
+        if($(this).hasClass('selected') === false) {
+            $(this).prev().prev().prop('checked', true).trigger('change');
+        }
+    });
+
     $(document).on('change', '#printSetupModal #horizontal-offset, #printSetupModal #vertical-offset', function() {
         var horizontal = $('#printSetupModal #horizontal-offset').val();
         var vertical = $('#printSetupModal #vertical-offset').val();
 
         var top = 113 + parseInt(vertical);
-        var left = 100 + parseInt(horizontal);
+        var left = 100 - parseInt(horizontal);
         $('#printSetupModal .printsetup-amountgrid').css('inset', `${top}px auto auto ${left}px`);
     });
 

@@ -5742,7 +5742,7 @@ class Customer extends MY_Controller
                     $business = $this->Business_model->getByCompanyId($cid);
 
                     $subject  = 'nSmarTrac : Customer Message';
-                    $body     = "<p>Hi ".$customer->first_name.",</p><br /><p>".$business->business_name." have sent you a message. To view this message, please login to your account and go to messages. To login, <a href='".$customer_login_url."' target='_blank'>Click here</a></p>";
+                    $body     = "<p>Hi ".$customer->first_name.",</p><br /><p><b>".$business->business_name."</b> have sent you a message. To view this message, please login to your account and go to messages.<br /><br />To login, <a href='".$customer_login_url."' target='_blank'>Click here</a></p>";
                     $to       = $customer->email;
                     $attachment = '';
 
@@ -5765,6 +5765,62 @@ class Customer extends MY_Controller
             }
         }else{
             $msg = 'Please enter your message to customer';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_send_login_details()
+    {
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data.';
+
+        $post = $this->input->post();
+
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $post['cid']
+            ),
+            'table' => 'acs_access'
+        );
+        $customerAccess = $this->general->get_data_with_param($check,FALSE);        
+
+        if( $customerAccess ){            
+            $customer = $this->AcsProfile_model->getByProfId($post['cid']);
+            if( $customer && $customer->email != '' ){
+                //Send mail
+                $customer_login_url = base_url('login/customer');
+                $business = $this->Business_model->getByCompanyId($cid);
+
+                $subject  = 'nSmarTrac : Customer Login Details';
+                $body     = "<p>Hi ".$customer->first_name.",</p><br /><p>Below is your login details.</p><br /><p>Username : ".$customerAccess->access_login."<br /> Password : ".$customerAccess->access_password."</p><br />";
+                $body    .= "<p>To login to your account, click <a href='".$customer_login_url."'>here</a></p>";
+                $to       = $customer->email;
+                $attachment = '';
+
+                $data_email = [
+                    'subject' => $subject, 
+                    'body' => $body,
+                    'to' => $to,
+                    'cc' => '',
+                    'bcc' => '',
+                    'attachment' => $attachment
+                ];
+
+                $isSent = sendEmail($data_email);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Cannot find customer data';
+            }
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];

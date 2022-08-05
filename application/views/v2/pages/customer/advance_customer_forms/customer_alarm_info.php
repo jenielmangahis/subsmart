@@ -501,17 +501,7 @@
                 <input type="radio" name="portal_status" value="0"  id="portal_status" <?php if(isset($access_info)){ echo $access_info->portal_status == 0 ? 'checked': ''; } ?>>
                 <span>Off</span>
             </div>
-        </div>
-        <?php if(isset($access_info)): ?>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Reset Password 
-            </div>
-            <div class="col-md-6">
-                <button type="button" class="btn btn-primary btn-md" name="reset_password" id="reset_password" >Send Email Reset </button>
-            </div>
-        </div>
-        <?php endif; ?>
+        </div>        
         <div class="row form_line">
             <div class="col-md-6">
                 Login
@@ -535,6 +525,14 @@
                 </div>
             </div>
         </div>
+        <?php if(isset($access_info)): ?>
+        <div class="row form_line mt-2">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary btn-md" name="reset_password" data-id="<?= $access_info->fk_prof_id; ?>" id="btn-notify-customer-new-pw" >Send Email Reset </button>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 

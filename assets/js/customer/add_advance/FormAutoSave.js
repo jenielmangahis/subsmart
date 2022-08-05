@@ -83,6 +83,10 @@ export class FormAutoSave {
     value = this.isCheckbox($input) ? $input.checked : value;
     const timeout = this.inputTimeouts[name];
 
+    if ($input.getAttribute("type") === "file") {
+      value = $input.hasAttribute("multiple") ? $input.files : $input.files[0];
+    }
+
     const _onDoneChanging = () => {
       this.onDoneChanging({ name, value });
     };

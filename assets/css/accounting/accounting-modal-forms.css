@@ -282,6 +282,10 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     background-repeat: no-repeat;
 }
 
+#printSetupModal .check-type-preview:hover {
+    opacity: 1;
+}
+
 #printSetupModal .check-type-preview.selected {
     opacity: 1;
 }
