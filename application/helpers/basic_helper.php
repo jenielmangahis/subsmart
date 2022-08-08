@@ -888,7 +888,7 @@ if (!function_exists('getLoggedUserID')) {
 
         $CI = &get_instance();
         $user = (object)$CI->session->userdata('logged');
-        return $user->id;
+        return $user->id ?? null;
     }
 }
 

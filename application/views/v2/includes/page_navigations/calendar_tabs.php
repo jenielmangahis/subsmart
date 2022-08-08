@@ -6,7 +6,7 @@
                 <span>Schedule</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Task Hub'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('taskhub') ?>">
                 <i class='bx bx-fw bx-task'></i>
                 <span>TaskHub</span>

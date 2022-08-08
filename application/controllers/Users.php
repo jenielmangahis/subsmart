@@ -83,7 +83,7 @@ class Users extends MY_Controller
 	public function businessview()
 	{
         $this->page_data['page']->title = 'My Profile';
-        $this->page_data['page']->parent = 'My Business';
+        $this->page_data['page']->parent = 'Company';
 
 		$this->load->model('DealsSteals_model');
 
@@ -122,7 +122,7 @@ class Users extends MY_Controller
 	public function businessdetail()
 	{
         $this->page_data['page']->title = 'Business Details';
-        $this->page_data['page']->parent = 'My Business';
+        $this->page_data['page']->parent = 'Company';
 
 		//ifPermissions('businessdetail');
 		$cid  = logged('id');
@@ -138,7 +138,7 @@ class Users extends MY_Controller
 	public function services()
 	{
         $this->page_data['page']->title = 'Services';
-        $this->page_data['page']->parent = 'My Business';
+        $this->page_data['page']->parent = 'Company';
 
 		$industryType = $this->IndustryType_model->getAll();
 		$businessTypes = [
@@ -215,7 +215,7 @@ class Users extends MY_Controller
 	public function credentials()
 	{
         $this->page_data['page']->title = 'Credentials';
-        $this->page_data['page']->parent = 'My Business';
+        $this->page_data['page']->parent = 'Company';
 		//ifPermissions('businessdetail');
 
 		$user = (object)$this->session->userdata('logged');
@@ -234,7 +234,7 @@ class Users extends MY_Controller
 	public function availability()
 	{
         $this->page_data['page']->title = 'Availability';
-        $this->page_data['page']->parent = 'My Business';
+        $this->page_data['page']->parent = 'Company';
 
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');
@@ -268,7 +268,7 @@ class Users extends MY_Controller
 	public function portfolio()
 	{
         $this->page_data['page']->title = 'Portfolio';
-        $this->page_data['page']->parent = 'My Business';
+        $this->page_data['page']->parent = 'Company';
 
 		add_css(array(
 			"assets/css/jquery.fancybox.css"
@@ -290,6 +290,8 @@ class Users extends MY_Controller
 
 	public function profilesetting()
 	{
+        $this->page_data['page']->title = 'Profile Settings';
+        $this->page_data['page']->parent = 'Company';
 		//ifPermissions('businessdetail');
 
 		add_css(array(
@@ -307,11 +309,14 @@ class Users extends MY_Controller
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
 
 		$this->page_data['profiledata'] = $profiledata;
-		$this->load->view('business_profile/profile_settings', $this->page_data);
+		// $this->load->view('business_profile/profile_settings', $this->page_data);
+		$this->load->view('v2/pages/business_profile/profile_settings', $this->page_data);
 	}
 
 	public function socialMedia()
 	{
+        $this->page_data['page']->title = 'Social Media';
+        $this->page_data['page']->parent = 'Company';
 		//ifPermissions('businessdetail');
 
 		$user = (object)$this->session->userdata('logged');
@@ -320,7 +325,8 @@ class Users extends MY_Controller
 
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata;
-		$this->load->view('business_profile/social_media', $this->page_data);
+		// $this->load->view('business_profile/social_media', $this->page_data);
+		$this->load->view('v2/pages/business_profile/social_media', $this->page_data);
 	}
 
 	public function saveBusinessNameImage()
@@ -1976,6 +1982,30 @@ class Users extends MY_Controller
 			// basename() may prevent filesystem traversal attacks;
 			// further validation/sanitation of the filename may be appropriate
 			$name = basename($_FILES["file"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/work_pictures/$comp_id/$name");
+
+			$profiledata = $this->business_model->getByCompanyId($comp_id);
+			$workImages  = unserialize($profiledata->work_images);
+			$workImages[] = ['file' => $name, 'caption' => 'Work Picture'];
+			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+		}
+	}
+
+	public function upload_work_picture_v2(){
+		$comp_id = logged('company_id');
+
+		if(!empty($_FILES['work_picture']['name'])){
+			$target_dir = "./uploads/work_pictures/$comp_id/";
+
+			if (!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
+
+			$tmp_name = $_FILES['work_picture']['tmp_name'];
+			$extension = strtolower(end(explode('.', $_FILES['work_picture']['name'])));
+			// basename() may prevent filesystem traversal attacks;
+			// further validation/sanitation of the filename may be appropriate
+			$name = basename($_FILES["work_picture"]["name"]);
 			move_uploaded_file($tmp_name, "./uploads/work_pictures/$comp_id/$name");
 
 			$profiledata = $this->business_model->getByCompanyId($comp_id);

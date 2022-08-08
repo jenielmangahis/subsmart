@@ -5,6 +5,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
 <?php include viewPath('includes/workorder/sign-modal'); ?>
+
+<!-- Script for autosaving form -->
+<script src="<?=base_url("assets/js/workorder/autosave.js")?>"></script>
+
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <style>
@@ -2490,7 +2494,6 @@ border: none;
 
 <?php include viewPath('includes/footer'); ?>
 <script src="<?php echo $url->assets;?>js/jquery-input-mask-phone-number.js"></script>
-<script src="<?=base_url("assets/js/workorder/autosave.js")?>"></script>
 
 <script>
 // $('.value').on('keydown keyup mousedown mouseup', function() {

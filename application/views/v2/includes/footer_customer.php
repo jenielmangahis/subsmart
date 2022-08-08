@@ -23,6 +23,7 @@
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.table.js") ?>"></script>
+    <script type="text/javascript" src="<?= base_url("assets/js/v2/customer.js") ?>"></script>
     <script type="text/javascript">
         var baseURL = '<?= base_url() ?>';        
     </script>

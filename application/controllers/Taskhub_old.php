@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Taskhub extends MY_Controller {
+class Taskhub_old extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->checkLogin();
@@ -28,9 +28,6 @@ class Taskhub extends MY_Controller {
         }
 
 	public function index(){
-        $this->page_data['page']->title = 'Task Hub';
-        $this->page_data['page']->parent = 'Calendar';
-
 		$this->hasAccessModule(6); 
 		$cid = logged('company_id');
 		if( $this->input->get('status') && $this->input->get('cus_id') ){
@@ -41,8 +38,7 @@ class Taskhub extends MY_Controller {
 		
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
-		// $this->load->view('workcalender/taskhub/list', $this->page_data);
-		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
+		$this->load->view('workcalender/taskhub/list', $this->page_data);
 	}
 
 	public function entry($id = 0){

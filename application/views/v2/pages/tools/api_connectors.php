@@ -272,6 +272,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-card primary p-5" role="button">
+                            <div class="nsm-card-content h-100">
+                                <div class="row h-100 align-content-between">
+                                    <div class="col-12 text-center mb-3">
+                                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/plaid.jpg">
+
+                                        <div class="nsm-card-title">
+                                            <span>PLAID</span>
+                                        </div>
+                                        <label class="content-subtitle mb-2"></label>
+                                        <label class="nsm-subtitle d-block">
+                                            Connect your financial accounts using PLAID.
+                                        </label>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12">
+                                                <label class="nsm-subtitle text-success">Free</label>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="nsm-button primary" id="btn-setup-plaid">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row g-3 mt-3">
                     <div class="col-12">
@@ -681,6 +709,22 @@
             });
         }
 
+        function api_plaid(){
+            let _container = $("#plaid-container");
+            let url = "<?php echo base_url(); ?>tools/_get_plaid_api_credentials";
+
+            showLoader(_container);
+            $("#setup_plaid_modal").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function(result) {
+                    _container.html(result);
+                }
+            });
+        }
+
         $("#btn_setup_square").on("click", function() {
             $("#setup_square_modal").modal("show");
         });
@@ -743,6 +787,8 @@
                             api_stripe();
                         }else if( $('#auth-module').val() == 'paypal' ){
                             api_paypal();
+                        }else if(){
+                            api_plaid();
                         }
                     } else {
                         Swal.fire({
@@ -784,6 +830,16 @@
 
         $("#btn-setup-twilio").on("click", function(){
             let api_module = 'twilio';
+            generate_auth_key(api_module);
+        });
+
+        $("#btn-setup-twilio").on("click", function(){
+            let api_module = 'twilio';
+            generate_auth_key(api_module);
+        });
+
+        $("#btn-setup-plaid").on("click", function(){
+            let api_module = 'plaid';
             generate_auth_key(api_module);
         });
 

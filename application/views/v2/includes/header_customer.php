@@ -98,6 +98,23 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul>
                         <li>
                             <div class="dropdown d-flex">
+                                <a href="#" class="dropdown-toggle customer-notifications" data-bs-toggle="dropdown"><i class='bx bx-fw bx-bell'></i></a>
+                                <div class="dropdown-menu dropdown-list nsm-nav-dropdown">
+                                    <div class="list-header">
+                                        <h6 class="dropdown-header fw-bold">Notifications</h6>
+                                    </div>
+                                    <div id="notifications_container"></div>
+                                    <div>
+                                        <hr class="dropdown-divider">
+                                    </div>
+                                    <div class="list-item text-center">
+                                        <span class="content-subtitle">View All</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown d-flex">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                     <?php
                                     $image = null;

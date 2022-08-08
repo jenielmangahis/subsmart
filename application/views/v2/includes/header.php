@@ -36,12 +36,15 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datepicker.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
-    
+
     <!-- Multi select -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/multiple-select.min.css") ?>">
 
     <!-- Full Calendar -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/full-calendar-main.css") ?>">
+
+    <!-- Fancybox -->
+    <link rel="stylesheet" href="<?= base_url("assets/css/v2/fancybox.css") ?>" />
 
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
@@ -50,7 +53,7 @@ if ($this->session->userdata('usertimezone') == null) {
         var surveyBaseUrl = '<?= base_url() ?>';
     </script>
     <style>
-        .nsm-nav-items #clockOut i{
+        .nsm-nav-items #clockOut i {
             color: "green";
         }
     </style>
@@ -127,7 +130,8 @@ if ($this->session->userdata('usertimezone') == null) {
 
                     </ul>
                 </li>
-                <li class="<?php if ($page->parent == 'Calendar') : echo 'active'; endif; ?>">
+                <li class="<?php if ($page->parent == 'Calendar') : echo 'active';
+                            endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-calendar'></i> Calendar
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
@@ -139,7 +143,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-calendar-event'></i> Schedule
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == '') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Task Hub') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("taskhub") ?>">
                                 <i class='bx bx-fw bx-task'></i> TaskHub
@@ -250,7 +254,9 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if ($page->title == 'Customers') : echo 'selected '; endif; ?> <?php if ($page->parent == 'Customers') : echo 'active'; endif; ?>">
+                <li class="<?php if ($page->title == 'Customers') : echo 'selected ';
+                            endif; ?> <?php if ($page->parent == 'Customers') : echo 'active';
+                                                                                                endif; ?>">
                     <a href="<?= base_url("customer") ?>">
                         <i class='bx bx-fw bx-group'></i>My Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
@@ -435,7 +441,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-buildings'></i> Company <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li>
+                        <li class="<?php if ($page->title == 'My Profile' || $page->title == 'Business Details' || $page->title == 'Services' || $page->title == 'Credentials' || $page->title == 'Availability' || $page->title == 'Portfolio' || $page->title == 'Profile Settings' || $page->title == 'Social Media') : echo 'selected'; endif; ?>">
                             <a href="<?= base_url("users/businessview") ?>">
                                 <i class='bx bx-fw bx-building-house'></i> My Business
                             </a>
@@ -484,7 +490,8 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if ($page->parent == 'More') : echo 'active'; endif; ?>">
+                <li class="<?php if ($page->parent == 'More') : echo 'active';
+                            endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i> More <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
