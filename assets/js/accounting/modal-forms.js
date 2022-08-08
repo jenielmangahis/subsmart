@@ -394,182 +394,182 @@ $(function() {
         checkbox.prop('checked', flag);
     });
 
-    $(document).on('click', '#new-popup ul li a.ajax-modal', function(e) {
-        e.preventDefault();
-        var target = e.currentTarget.dataset;
-        var view = target.view
-        var modal_element = target.target;
-        modalName = target.target;
+    // $(document).on('click', '#new-popup ul li a.ajax-modal', function(e) {
+    //     e.preventDefault();
+    //     var target = e.currentTarget.dataset;
+    //     var view = target.view
+    //     var modal_element = target.target;
+    //     modalName = target.target;
 
-        $.get(GET_OTHER_MODAL_URL + view, function(res) {
-            if ($('div#modal-container').length > 0) {
-                $('div#modal-container').html(res);
-            } else {
-                $('body').append(`
-                    <div id="modal-container"> 
-                        ${res}
-                    </div>
-                `);
-            }
+    //     $.get(GET_OTHER_MODAL_URL + view, function(res) {
+    //         if ($('div#modal-container').length > 0) {
+    //             $('div#modal-container').html(res);
+    //         } else {
+    //             $('body').append(`
+    //                 <div id="modal-container"> 
+    //                     ${res}
+    //                 </div>
+    //             `);
+    //         }
 
-            $(`${modal_element} [data-toggle="popover"]`).popover();
+    //         $(`${modal_element} [data-toggle="popover"]`).popover();
 
-            if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
-                rowInputs = $('div#modal-container table tbody tr:first-child()').html();
-                if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
-                    blankRow = $('div#modal-container table tbody tr:last-child()').html();
+    //         if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
+    //             rowInputs = $('div#modal-container table tbody tr:first-child()').html();
+    //             if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
+    //                 blankRow = $('div#modal-container table tbody tr:last-child()').html();
 
-                    $('div#modal-container table.clickable tbody tr:first-child()').remove();
-                    $('div#modal-container table tbody tr:last-child()').remove();
-                } else {
-                    blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
-                }
+    //                 $('div#modal-container table.clickable tbody tr:first-child()').remove();
+    //                 $('div#modal-container table tbody tr:last-child()').remove();
+    //             } else {
+    //                 blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+    //             }
 
-                rowCount = $('div#modal-container table tbody tr').length;
+    //             rowCount = $('div#modal-container table tbody tr').length;
 
-                $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);
-                $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
-            }
+    //             $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);
+    //             $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
+    //         }
 
-            if (vendorModals.includes(modal_element)) {
-                rowCount = 2;
-                catDetailsInputs = $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).html();
-                catDetailsBlank = $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).html();
+    //         if (vendorModals.includes(modal_element)) {
+    //             rowCount = 2;
+    //             catDetailsInputs = $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).html();
+    //             catDetailsBlank = $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).html();
 
-                $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).remove();
-                $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).remove();
-            }
+    //             $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).remove();
+    //             $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).remove();
+    //         }
 
-            if (modal_element === '#printChecksModal') {
-                loadChecksTable();
-            }
+    //         if (modal_element === '#printChecksModal') {
+    //             loadChecksTable();
+    //         }
 
-            $(`${modal_element} select`).each(function() {
-                var type = $(this).attr('id');
-                if (type === undefined) {
-                    type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
-                } else {
-                    type = type.replaceAll('_', '-');
+    //         $(`${modal_element} select`).each(function() {
+    //             var type = $(this).attr('id');
+    //             if (type === undefined) {
+    //                 type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+    //             } else {
+    //                 type = type.replaceAll('_', '-');
 
-                    if (type.includes('transfer')) {
-                        type = 'transfer-account';
-                    }
-                }
+    //                 if (type.includes('transfer')) {
+    //                     type = 'transfer-account';
+    //                 }
+    //             }
 
-                if (dropdownFields.includes(type)) {
-                    $(this).select2({
-                        ajax: {
-                            url: '/accounting/get-dropdown-choices',
-                            dataType: 'json',
-                            data: function(params) {
-                                var query = {
-                                    search: params.term,
-                                    type: 'public',
-                                    field: type,
-                                    modal: modal_element.replaceAll('#', '')
-                                }
+    //             if (dropdownFields.includes(type)) {
+    //                 $(this).select2({
+    //                     ajax: {
+    //                         url: '/accounting/get-dropdown-choices',
+    //                         dataType: 'json',
+    //                         data: function(params) {
+    //                             var query = {
+    //                                 search: params.term,
+    //                                 type: 'public',
+    //                                 field: type,
+    //                                 modal: modal_element.replaceAll('#', '')
+    //                             }
 
-                                // Query parameters will be ?search=[term]&type=public&field=[type]
-                                return query;
-                            }
-                        },
-                        templateResult: formatResult,
-                        templateSelection: optionSelect
-                    });
-                } else {
-                    var options = $(this).find('option');
-                    if (options.length > 10) {
-                        $(this).select2();
-                    } else {
-                        $(this).select2({
-                            minimumResultsForSearch: -1
-                        });
-                    }
-                }
-            });
+    //                             // Query parameters will be ?search=[term]&type=public&field=[type]
+    //                             return query;
+    //                         }
+    //                     },
+    //                     templateResult: formatResult,
+    //                     templateSelection: optionSelect
+    //                 });
+    //             } else {
+    //                 var options = $(this).find('option');
+    //                 if (options.length > 10) {
+    //                     $(this).select2();
+    //                 } else {
+    //                     $(this).select2({
+    //                         minimumResultsForSearch: -1
+    //                     });
+    //                 }
+    //             }
+    //         });
 
-            if ($('div#modal-container select#tags').length > 0) {
-                $('div#modal-container select#tags').select2({
-                    placeholder: 'Start typing to add a tag',
-                    allowClear: true,
-                    ajax: {
-                        url: '/accounting/get-job-tags',
-                        dataType: 'json'
-                    }
-                });
-            }
-            if (view === "weekly_timesheet_modal") {
-                tableWeekDate(document.getElementById('weekDates'));
-            }
+    //         if ($('div#modal-container select#tags').length > 0) {
+    //             $('div#modal-container select#tags').select2({
+    //                 placeholder: 'Start typing to add a tag',
+    //                 allowClear: true,
+    //                 ajax: {
+    //                     url: '/accounting/get-job-tags',
+    //                     dataType: 'json'
+    //                 }
+    //             });
+    //         }
+    //         if (view === "weekly_timesheet_modal") {
+    //             tableWeekDate(document.getElementById('weekDates'));
+    //         }
 
-            if ($(`${modal_element} .date`).length > 0) {
-                $(`${modal_element} .date`).each(function() {
-                    $(this).datepicker({
-                        uiLibrary: 'bootstrap'
-                    });
-                });
-            }
+    //         if ($(`${modal_element} .date`).length > 0) {
+    //             $(`${modal_element} .date`).each(function() {
+    //                 $(this).datepicker({
+    //                     uiLibrary: 'bootstrap'
+    //                 });
+    //             });
+    //         }
 
-            if ($(`${modal_element} .attachments`).length > 0) {
-                var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
-                modalAttachments = new Dropzone(`#${attachmentContId}`, {
-                    url: '/accounting/attachments/attach',
-                    maxFilesize: 20,
-                    uploadMultiple: true,
-                    // maxFiles: 1,
-                    addRemoveLinks: true,
-                    init: function() {
-                        this.on("success", function(file, response) {
-                            var ids = JSON.parse(response)['attachment_ids'];
-                            var modal = $(`${modal_element}`);
+    //         if ($(`${modal_element} .attachments`).length > 0) {
+    //             var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
+    //             modalAttachments = new Dropzone(`#${attachmentContId}`, {
+    //                 url: '/accounting/attachments/attach',
+    //                 maxFilesize: 20,
+    //                 uploadMultiple: true,
+    //                 // maxFiles: 1,
+    //                 addRemoveLinks: true,
+    //                 init: function() {
+    //                     this.on("success", function(file, response) {
+    //                         var ids = JSON.parse(response)['attachment_ids'];
+    //                         var modal = $(`${modal_element}`);
 
-                            for (i in ids) {
-                                if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                                    modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                                }
+    //                         for (i in ids) {
+    //                             if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+    //                                 modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+    //                             }
 
-                                modalAttachmentId.push(ids[i]);
-                            }
-                            modalAttachedFiles.push(file);
-                        });
-                    },
-                    removedfile: function(file) {
-                        var ids = modalAttachmentId;
-                        var index = modalAttachedFiles.map(function(d, index) {
-                            if (d == file) return index;
-                        }).filter(isFinite)[0];
+    //                             modalAttachmentId.push(ids[i]);
+    //                         }
+    //                         modalAttachedFiles.push(file);
+    //                     });
+    //                 },
+    //                 removedfile: function(file) {
+    //                     var ids = modalAttachmentId;
+    //                     var index = modalAttachedFiles.map(function(d, index) {
+    //                         if (d == file) return index;
+    //                     }).filter(isFinite)[0];
 
-                        $(`${modal_element} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+    //                     $(`${modal_element} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
-                        if($('#modal-container form .modal .attachments-container').length > 0) {
-                            $('#modal-container form .modal .attachments-container #attachment-types').trigger('change');
-                        }
+    //                     if($('#modal-container form .modal .attachments-container').length > 0) {
+    //                         $('#modal-container form .modal .attachments-container #attachment-types').trigger('change');
+    //                     }
 
-                        //remove thumbnail
-                        var previewElement;
-                        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-                    }
-                });
-            }
+    //                     //remove thumbnail
+    //                     var previewElement;
+    //                     return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+    //                 }
+    //             });
+    //         }
 
-            if ($(`${modal_element} .dropdown`).length > 0) {
-                $(`${modal_element} .dropdown-menu`).on('click', function(e) {
-                    e.stopPropagation();
-                });
-            }
+    //         if ($(`${modal_element} .dropdown`).length > 0) {
+    //             $(`${modal_element} .dropdown-menu`).on('click', function(e) {
+    //                 e.stopPropagation();
+    //             });
+    //         }
 
-            if (modal_element === '#payBillsModal') {
-                loadBills();
-            }
+    //         if (modal_element === '#payBillsModal') {
+    //             loadBills();
+    //         }
 
-            // if(modal_element === '#receivePaymentModal') {
+    //         // if(modal_element === '#receivePaymentModal') {
 
-            // }
+    //         // }
 
-            $(modal_element).modal('show');
-            $(document).off('shown', modal_element);
-        });
-    });
+    //         $(modal_element).modal('show');
+    //         $(document).off('shown', modal_element);
+    //     });
+    // });
 
     $(document).on('hide.bs.modal', '#tags-modal', function(e) {
         if ($('div#modal-container').next('.modal-backdrop').length > 0 ||
@@ -4014,11 +4014,11 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort, #printChecksModal #check-type', function() {
-        $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
-    });
+    // $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort, #printChecksModal #check-type', function() {
+    //     $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
+    // });
 
-    $(document).on('change', '#printChecksModal #checks-table #select-all-checks', function() {
+    $(document).on('change', '#printChecksModal #checks-table input.select-all', function() {
         $('#printChecksModal #checks-table tbody tr input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
     });
 
@@ -4026,67 +4026,67 @@ $(function() {
         $('#printChecksModal #selected-checks').html($('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').length);
 
         var notChecked = $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:not(:checked)').length;
-        $('#printChecksModal #checks-table #select-all-checks').prop('checked', notChecked === 0);
+        $('#printChecksModal #checks-table input.select-all').prop('checked', notChecked === 0);
 
-        var selectedTotal = parseFloat($('#printChecksModal #selected-checks-total').html().replaceAll(',', ''));
+        var selectedTotal = parseFloat($('#printChecksModal #selected-checks-total').html().replaceAll(',', '').replace('$', ''));
         var row = $(this).parent().parent().parent();
-        var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
+        var amount = row.find('td:last-child').html();
 
         if ($(this).prop('checked')) {
-            selectedTotal += parseFloat(rowData.amount.replace('$', '').replaceAll(',', ''));
+            selectedTotal += parseFloat(amount.replace('$', '').replaceAll(',', ''));
         } else {
-            selectedTotal -= parseFloat(rowData.amount.replace('$', '').replaceAll(',', ''));
+            selectedTotal -= parseFloat(amount.replace('$', '').replaceAll(',', ''));
         }
 
-        $('#printChecksModal #selected-checks-total').html(parseFloat(selectedTotal).toFixed(2));
+        $('#printChecksModal #selected-checks-total').html(formatter.format(parseFloat(selectedTotal)));
     });
 
     $(document).on('click', '#printChecksModal #add-check-button', function() {
         $('#printChecksModal').modal('hide');
         $('.modal-backdrop:last-child').remove();
 
-        $('#new-popup #accounting_vendors a[data-target="#checkModal"]').trigger('click');
+        $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-target="#checkModal"]').trigger('click');
     });
 
-    $(document).on('click', '#printChecksModal #remove-from-list', function() {
-        var data = new FormData();
+    // $(document).on('click', '#printChecksModal #remove-from-list', function() {
+    //     var data = new FormData();
 
-        $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
-            var row = $(this).parent().parent().parent();
-            var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
-            var transactionType = rowData.type;
-            transactionType = transactionType.replaceAll(' (Check)', '');
-            transactionType = transactionType.replaceAll(' (Credit Card)', '');
-            transactionType = transactionType.replaceAll(' ', '-');
-            transactionType = transactionType.toLowerCase();
+    //     $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
+    //         var row = $(this).parent().parent().parent();
+    //         var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
+    //         var transactionType = rowData.type;
+    //         transactionType = transactionType.replaceAll(' (Check)', '');
+    //         transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    //         transactionType = transactionType.replaceAll(' ', '-');
+    //         transactionType = transactionType.toLowerCase();
 
-            if (data.has('id[]') === false) {
-                data.set('id[]', $(this).val());
-                data.set('type[]', transactionType);
-            } else {
-                data.append('id[]', $(this).val());
-                data.append('type[]', transactionType);
-            }
-        });
+    //         if (data.has('id[]') === false) {
+    //             data.set('id[]', $(this).val());
+    //             data.set('type[]', transactionType);
+    //         } else {
+    //             data.append('id[]', $(this).val());
+    //             data.append('type[]', transactionType);
+    //         }
+    //     });
 
-        $.ajax({
-            url: '/accounting/remove-to-print',
-            data: data,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function(result) {
-                var res = JSON.parse(result);
+    //     $.ajax({
+    //         url: '/accounting/remove-to-print',
+    //         data: data,
+    //         type: 'post',
+    //         processData: false,
+    //         contentType: false,
+    //         success: function(result) {
+    //             var res = JSON.parse(result);
 
-                toast(res.success, res.message);
+    //             toast(res.success, res.message);
 
-                $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
-                $('#printChecksModal #checks-table #select-all-checks').prop('checked', false);
-                $('#printChecksModal #selected-checks-total').html('0.00');
-                $('#printChecksModal #selected-checks').html('0');
-            }
-        });
-    });
+    //             $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
+    //             $('#printChecksModal #checks-table #select-all-checks').prop('checked', false);
+    //             $('#printChecksModal #selected-checks-total').html('0.00');
+    //             $('#printChecksModal #selected-checks').html('0');
+    //         }
+    //     });
+    // });
 
     $(document).on('click', '#printChecksModal #preview-and-print', function(e) {
         e.preventDefault();
@@ -4104,15 +4104,12 @@ $(function() {
                     timer: 2000
                 })
             } else {
-                var data = new FormData(form);
-                data.delete('sort');
-                data.delete('check_type');
-                data.delete('table_rows');
+                var data = new FormData();
+                data.set('starting_check_no', $('#printChecksModal #starting-check-no').val());
 
                 $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
                     var row = $(this).parent().parent().parent();
-                    var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
-                    var transactionType = rowData.type;
+                    var transactionType = row.find('td:nth-child(3)').html();
                     transactionType = transactionType.replaceAll(' (Check)', '');
                     transactionType = transactionType.replaceAll(' (Credit Card)', '');
                     transactionType = transactionType.replaceAll(' ', '-');
@@ -4197,10 +4194,9 @@ $(function() {
     $(document).on('hidden.bs.modal', '#successPrintCheck', function() {
         $(this).parent().parent().next('.modal-backdrop').remove();
         $(this).parent().remove();
-        $('#printChecksModal #checks-table thead input').prop('checked', false);
+        $('#printChecksModal #checks-table input[type="checkbox"]').prop('checked', false);
         $('#printChecksModal #selected-checks').html('0');
-        $('#printChecksModal #selected-checks-total').html('0.00');
-        $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
+        $('#printChecksModal #selected-checks-total').html('$0.00');
     });
 
     $(document).on('submit', '#modal-container #successPrintCheck #print-success-form', function(e) {
@@ -4210,8 +4206,7 @@ $(function() {
 
         $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
             var row = $(this).parent().parent().parent();
-            var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
-            var transactionType = rowData.type;
+            var transactionType = row.find('td:nth-child(3)').html();
             transactionType = transactionType.replaceAll(' (Check)', '');
             transactionType = transactionType.replaceAll(' (Credit Card)', '');
             transactionType = transactionType.replaceAll(' ', '-');

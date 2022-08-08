@@ -62,6 +62,9 @@
     <!-- FullCalendar -->
     <script src="<?= base_url("assets/js/v2/full-calendar-main.js") ?>"></script>
 
+    <!-- Fancybox -->
+    <script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
+
     <!-- Main Script -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>

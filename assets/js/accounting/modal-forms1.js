@@ -45,53 +45,53 @@ $(document).ready(function () {
                 $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).remove();
             }
 
-            if (modal_element === '#printChecksModal') {
-                loadChecksTable();
-            }
+            // if (modal_element === '#printChecksModal') {
+            //     loadChecksTable();
+            // }
 
-            $(`${modal_element} select`).each(function() {
-                var type = $(this).attr('id');
-                if (type === undefined) {
-                    type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
-                } else {
-                    type = type.replaceAll('_', '-');
+            // $(`${modal_element} select`).each(function() {
+            //     var type = $(this).attr('id');
+            //     if (type === undefined) {
+            //         type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            //     } else {
+            //         type = type.replaceAll('_', '-');
 
-                    if (type.includes('transfer')) {
-                        type = 'transfer-account';
-                    }
-                }
+            //         if (type.includes('transfer')) {
+            //             type = 'transfer-account';
+            //         }
+            //     }
 
-                if (dropdownFields.includes(type)) {
-                    $(this).select2({
-                        ajax: {
-                            url: '/accounting/get-dropdown-choices',
-                            dataType: 'json',
-                            data: function(params) {
-                                var query = {
-                                    search: params.term,
-                                    type: 'public',
-                                    field: type,
-                                    modal: modal_element.replaceAll('#', '')
-                                }
+            //     if (dropdownFields.includes(type)) {
+            //         $(this).select2({
+            //             ajax: {
+            //                 url: '/accounting/get-dropdown-choices',
+            //                 dataType: 'json',
+            //                 data: function(params) {
+            //                     var query = {
+            //                         search: params.term,
+            //                         type: 'public',
+            //                         field: type,
+            //                         modal: modal_element.replaceAll('#', '')
+            //                     }
 
-                                // Query parameters will be ?search=[term]&type=public&field=[type]
-                                return query;
-                            }
-                        },
-                        templateResult: formatResult,
-                        templateSelection: optionSelect
-                    });
-                } else {
-                    var options = $(this).find('option');
-                    if (options.length > 10) {
-                        $(this).select2();
-                    } else {
-                        $(this).select2({
-                            minimumResultsForSearch: -1
-                        });
-                    }
-                }
-            });
+            //                     // Query parameters will be ?search=[term]&type=public&field=[type]
+            //                     return query;
+            //                 }
+            //             },
+            //             templateResult: formatResult,
+            //             templateSelection: optionSelect
+            //         });
+            //     } else {
+            //         var options = $(this).find('option');
+            //         if (options.length > 10) {
+            //             $(this).select2();
+            //         } else {
+            //             $(this).select2({
+            //                 minimumResultsForSearch: -1
+            //             });
+            //         }
+            //     }
+            // });
 
             if ($('div#modal-container select#tags').length > 0) {
                 $('div#modal-container select#tags').select2({
@@ -281,7 +281,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         var data = new FormData();
-        data.set('check_type', $('#printSetupModal input[name="check_type"]').val());
+        data.set('check_type', $('#printSetupModal input[name="check_type"]:checked').val());
         data.set('horizontal', $('#printSetupModal #horizontal-offset').val());
         data.set('vertical', $('#printSetupModal #vertical-offset').val());
 
@@ -294,8 +294,51 @@ $(document).ready(function () {
             success: function(result) {
                 $('div#modal-container').append(result);
 
-                $('#viewPrintChecksModal').modal('show');
+                $('#viewPrintChecksModal').attr('id', 'viewPrintChecksSampleModal');
+                $('#viewPrintChecksSampleModal').modal('show');
             }
         })
+    });
+
+    $(document).on('click', '#printSetupModal #finish-setup', function(e) {
+        e.preventDefault();
+
+        var data = new FormData();
+        data.set('check_type', $('#printSetupModal input[name="check_type"]:checked').val());
+        data.set('horizontal', $('#printSetupModal #horizontal-offset').val());
+        data.set('vertical', $('#printSetupModal #vertical-offset').val());
+
+        $.ajax({
+            url: '/accounting/save-print-checks-settings',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                if(res.success) {
+                    $('#printSetupModal').modal('hide');
+                    $('.modal-backdrop').remove();
+
+                    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-target="#printChecksModal"]').trigger('click');
+                }
+            }
+        })
+    });
+
+    $(document).on('click', '#viewPrintChecksSampleModal #preview-and-print', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintChecksSampleModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintChecksSampleModal', function() {
+        $(this).parent().parent().next('.modal-backdrop').remove();
+        $(this).parent().remove();
     });
 });

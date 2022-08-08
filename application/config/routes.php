@@ -451,6 +451,7 @@ $route['accounting/download-sales-receipt-pdf/(:any)'] = 'accounting_modals/down
 $route['accounting/print-refund-receipt-modal/(:any)'] = 'accounting_modals/print_refund_receipt/$1';
 $route['accounting/download-refund-receipt-pdf/(:any)'] = 'accounting_modals/download_refund_receipt_pdf/$1';
 $route['accounting/preview-and-print-sample']['post'] = 'accounting_modals/preview_and_print_sample';
+$route['accounting/save-print-checks-settings']['post'] = 'accounting_modals/save_print_checks_settings';
 
 $route['accounting/lists'] = 'accounting/lists';
 

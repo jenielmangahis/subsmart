@@ -16,4 +16,11 @@ class Accounting_print_checks_settings_model extends MY_Model {
         $query = $this->db->get($this->table);
         return $query->row();
     }
+
+	public function update_by_company_id($companyId, $data)
+	{
+		$this->db->where('company_id', $companyId);
+		$update = $this->db->update($this->table, $data);
+		return $update;
+	}
 }

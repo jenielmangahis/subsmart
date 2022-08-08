@@ -72,19 +72,19 @@
 }
 
 .nsm-text-success{
-	color: #198754;
+	color: #198754 !important;
 }
 
 .nsm-text-error{
-	color: #dc3545;
+	color: #dc3545 !important;
 }
 
 .nsm-text-primary{
-    color: #212529;
+    color: #212529 !important;
 }
 
 .nsm-text-secondary{
-    color: #888888;
+    color: #888888 !important;
 }
 
 .nsm-grid{
