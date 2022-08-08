@@ -4928,6 +4928,24 @@ class Admin extends CI_Controller
 
         fpassthru($f);
     }
+
+    public function ajax_get_messages()
+    {
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('Business_model');
+
+        $post   = $this->input->post();
+        $cid    = logged('company_id');
+        $profid = $post['profid'];
+
+        $business = $this->Business_model->getByCompanyId($cid);
+        $customerMessages = $this->CustomerMessages_model->getAllByProfIdAndCompanyId($profid, $cid);
+
+        $this->page_data['business'] = $business;
+        $this->page_data['customerMessages'] = $customerMessages;
+        $this->page_data['profid'] = $profid;
+        $this->load->view('admin/customers/ajax_get_messages', $this->page_data);
+    }
 }
 
 /* End of file Admin.php */

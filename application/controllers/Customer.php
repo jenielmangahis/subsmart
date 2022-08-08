@@ -5715,6 +5715,7 @@ class Customer extends MY_Controller
         $this->load->model('CustomerMessages_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Business_model');
+        $this->load->helper('customer_helper');
 
         $is_success = 0;
         $msg = 'Cannot save data.';
@@ -5757,6 +5758,8 @@ class Customer extends MY_Controller
 
                     $isSent = sendEmail($data_email); 
                 }
+
+                createNotification($post['profid'], 'Messages', 'New Message from ' . $business->business_name);
 
                 $msg = '';
                 $is_success = 1;

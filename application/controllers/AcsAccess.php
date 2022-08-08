@@ -267,6 +267,14 @@ class AcsAccess extends CI_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_notifications()
+    {
+        $this->load->model('CustomerNotification_model');
+        $notifications = $this->CustomerNotification_model->getAllByProfIdAndModule($this->customer_id, 'Messages');
+        $this->page_data['notifications'] = $notifications;
+        $this->load->view('customer_access/ajax_notifications', $this->page_data);
+    }
 }
 
 /* End of file AcsAccess.php */

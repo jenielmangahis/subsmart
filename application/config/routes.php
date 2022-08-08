@@ -1084,6 +1084,7 @@ $route['acs_access/_load_message_thread'] = 'AcsAccess/ajax_load_message_thread'
 $route['acs_access/_send_message_reply'] = 'AcsAccess/ajax_send_message_reply';
 $route['acs_access/_load_sent_messages'] = 'AcsAccess/ajax_load_sent_messages';
 $route['acs_access/_send_message'] = 'AcsAccess/ajax_send_message';
+$route['acs_access/_notifications'] = 'AcsAccess/ajax_notifications';
 
 //Cards File
 $route['cards_file/list'] = 'CardsFile/index';

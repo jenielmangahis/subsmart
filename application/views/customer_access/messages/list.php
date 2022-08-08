@@ -151,7 +151,7 @@
                         confirmButtonText: 'Okay'
                     }).then((result) => {
                         //if (result.value) {
-                        
+                        location.reload();
                         //}
                     });
                 }else{

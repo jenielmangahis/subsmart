@@ -138,6 +138,9 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">View</a>
                                                 </li>
                                                 <li>
+                                                    <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?= $customer->prof_id; ?>"> Messages</a>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item delete-customer" href="javascript:void(0);" data-name="<?= $customer->first_name . ' ' . $customer->last_name; ?>" data-company="<?= $customer->business_name; ?>" data-id="<?= $customer->prof_id; ?>">Delete</a>
                                                 </li>
                                             </ul>
@@ -162,6 +165,22 @@
                         ?>
                     </tbody>
                 </table>
+
+
+                <div class="modal fade nsm-modal fade" id="messages_modal" tabindex="-1" aria-labelledby="messages_modal_label" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form method="POST" id="frm-send-message">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Messages</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body modal-messages-container"></div>
+                            </form>                
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -177,6 +196,27 @@ $(document).ready(function() {
 
     $(document).on('click','.btn-add-new-lead',function(){
         $('#modalAddNewLeads').modal('show');
+    });
+
+    $(document).on('click', '.btn-messages', function(){
+
+        var profid = $(this).attr('data-id');
+        var url = base_url + 'admin/ajax_get_messages';
+
+        $('#messages_modal').modal('show');
+        $(".modal-messages-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,             
+             data: {profid:profid},
+             success: function(o)
+             {          
+                $(".modal-messages-container").html(o);                
+             }
+          });
+        }, 800);
     });
 
     $(document).on('click','.btn-view-lead',function(){
