@@ -1,5 +1,97 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 
+<style>
+
+/*Customize Modal*/
+	.modal.right .modal-dialog {
+		position: fixed;
+		margin: auto;
+		width: 320px;
+		height: 100%;
+		-webkit-transform: translate3d(0%, 0, 0);
+		    -ms-transform: translate3d(0%, 0, 0);
+		     -o-transform: translate3d(0%, 0, 0);
+		        transform: translate3d(0%, 0, 0);
+	}
+
+	.modal.right .modal-content {
+		height: 100%;
+		overflow-y: auto;
+        border-radius: 50px !important;
+	}
+        
+	.modal.right.fade .modal-dialog {
+		right: -320px;
+		-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+		   -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+		     -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+		        transition: opacity 0.3s linear, right 0.3s ease-out;
+	}
+	
+	.modal.right.fade.in .modal-dialog {
+		right: 0;
+	}
+
+	.modal-content {
+		border-radius: 0;
+		border: none;
+	}
+
+	.modal-header {
+		border-bottom-color: #EEEEEE;
+	}
+    .groupby {
+        display: none;
+        padding-left: 30px;
+        transition: height 1s ease-in;
+    }
+    #rcDownArrow{
+        display: none;
+    }
+    .rwcl{
+        padding-top: 20px;
+    }
+    .rwcl h6{
+        padding-top: 10px;
+    }
+    .change-col {
+        color: blue;
+        cursor: pointer;
+    }
+    .change-col:hover{
+        text-decoration: underline !important;
+    }
+    .filter {
+        display: none;
+        padding-left: 30px;
+        transition: height 1s ease-in;
+    }
+    #fDownArrow{
+        display: none;
+    }
+    .f{
+        padding-top: 20px;
+    }
+    .hf {
+        display: none;
+        padding-left: 30px;
+        transition: height 1s ease-in;
+    }
+    #hfDownArrow{
+        display: none;
+    }
+    .hf2{
+        padding-top: 20px;
+    }
+    .czLabel {
+        cursor: pointer;
+    }
+    .czLabel i {
+        color: black !important;
+        font-size: 13px;
+    }
+
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
         <i class='bx bx-user-plus'></i>
@@ -45,9 +137,9 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
+                            <a type="button" class="nsm-button demo" data-bs-toggle="modal" data-bs-target="#customizeModal">
                                 <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
+                            </a>
                             <button type="button" class="nsm-button primary">
                                 <i class='bx bx-fw bx-save'></i> Save customization
                             </button>
@@ -55,8 +147,60 @@
                     </div>
                 </div>
 
+                <!-- customize-modal -->
+                <div class="modal right fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content rounded">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title fw-bold" id="customizeModalLabel">Customize Report</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="rwcl">
+                                    <h6 onclick="rwcl()" class="czLabel" id="rcRightArrow"><i class='bx bx-fw bxs-right-arrow'></i>Rows/Columns</h6>
+                                    <h6 onclick="rwcl()" class="czLabel" id="rcDownArrow"><i class='bx bx-fw bxs-down-arrow'></i>Rows/Columns</h6>
+                                    <div class="col-lg-6 groupby" id="groupby">
+                                        <h6>Group by</h6>
+                                        <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                            <option value="default" selected>Default</option>
+                                            <option value="billing-city">Billing City</option>
+                                            <option value="billing-country">Billing Country</option>
+                                            <option value="billing-state">Billing State</option>
+                                            <option value="billing-street">Billing Street</option>
+                                            <option value="billing-zip">Billing ZIP</option>
+                                            <option value="last-modified">Last Modified</option>
+                                            <option value="last-modified-by">Last Modified By</option>
+                                            <option value="last-name">Last Name</option>
+                                            <option value="note">Note</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                        <h6 class="change-col">Change Columns</h6>
+                                    </div>
+                                </div>
+                                <div class="f">
+                                    <h6 onclick="filter()" class="czLabel" id="fRightArrow"><i class='bx bx-fw bxs-right-arrow'></i>Filter</h6>
+                                    <h6 onclick="filter()" class="czLabel" id="fDownArrow"><i class='bx bx-fw bxs-down-arrow'></i>Filter</h6>
+                                    <div class="filter" id="filter">
+                                        <p>Group by</p>
+                                    </div>
+                                </div>
+                                <div class="hf2">
+                                    <h6 onclick="hf()" class="czLabel" id="hfRightArrow"><i class='bx bx-fw bxs-right-arrow'></i>Header/Footer</h6>
+                                    <h6 onclick="hf()" class="czLabel" id="hfDownArrow"><i class='bx bx-fw bxs-down-arrow'></i>Header/Footer</h6>
+                                    <div class="hf" id="hf">
+                                        <p>Group by</p>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="nsm-button success">Run Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end-customize-modal -->
                 <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                    <div class="col-12 col-md-10 offset-md-1">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -399,14 +543,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <?php foreach($acs_profile as $acsProfile) : ?>
                                         <tr>
-                                            <td>Test Customer</td>
-                                            <td>Phone: (123) 456-7890</td>
-                                            <td>test@test.com</td>
-                                            <td>Test Customer</td>
+                                            <td><?= $acsProfile->customer_type ?></td>
+                                            <td><?= $acsProfile->phone_h ?></td>
+                                            <td><?= $acsProfile->email ?></td>
+                                            <td><?= $acsProfile->first_name.' '. $acsProfile->last_name ?></td>
                                             <td>Test billing address</td>
                                             <td>Test shipping address</td>
                                         </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -422,3 +568,107 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+    function rwcl() {
+        var x = document.getElementById("groupby");
+        var rcright = document.getElementById("rcRightArrow");
+        var rcdown = document.getElementById("rcDownArrow");
+        var fright = document.getElementById("fRightArrow");
+        var fdown = document.getElementById("fDownArrow");
+        var hfright = document.getElementById("hfRightArrow");
+        var hfdown = document.getElementById("hfDownArrow");
+
+        rcright.style.color = "#6a4a86";
+        rcdown.style.color = "#6a4a86";
+        fright.style.color = "black";
+        fdown.style.color = "black";
+        hfright.style.color = "black";
+        hfdown.style.color = "black";
+
+        fright.classList.remove("fw-bold");
+        fdown.classList.remove("fw-bold");
+        hfright.classList.remove("fw-bold");
+        hfdown.classList.remove("fw-bold");
+
+        if (x.style.display === "block") {
+            x.style.display = "none";
+            rcdown.style.display = "none";
+            rcright.style.display = "inline";
+            rcright.classList.add("fw-bold");
+            
+        } else {
+            x.style.display = "block";
+            rcdown.style.display = "inline";
+            rcright.style.display = "none";
+            rcdown.classList.add("fw-bold");
+
+        }
+    }
+    function filter() {
+        var x = document.getElementById("filter");
+        var fright = document.getElementById("fRightArrow");
+        var fdown = document.getElementById("fDownArrow");
+        var rcright = document.getElementById("rcRightArrow");
+        var rcdown = document.getElementById("rcDownArrow");
+        var hfright = document.getElementById("hfRightArrow");
+        var hfdown = document.getElementById("hfDownArrow");
+
+        fright.style.color = "#6a4a86";
+        fdown.style.color = "#6a4a86";
+        rcright.style.color = "black";
+        rcdown.style.color = "black";
+        hfright.style.color = "black";
+        hfdown.style.color = "black";
+
+        hfright.classList.remove("fw-bold");
+        hfdown.classList.remove("fw-bold");
+        rcright.classList.remove("fw-bold");
+        rcdown.classList.remove("fw-bold");
+
+        if (x.style.display === "block") {
+            x.style.display = "none";
+            fdown.style.display = "none";
+            fright.style.display = "inline";
+            fright.classList.add("fw-bold");
+        } else {
+            x.style.display = "block";
+            fdown.style.display = "inline";
+            fright.style.display = "none";
+            fdown.classList.add("fw-bold");
+        }
+    }
+    function hf() {
+        var x = document.getElementById("hf");
+        var hfright = document.getElementById("hfRightArrow");
+        var hfdown = document.getElementById("hfDownArrow");
+        var fright = document.getElementById("fRightArrow");
+        var fdown = document.getElementById("fDownArrow");
+        var rcright = document.getElementById("rcRightArrow");
+        var rcdown = document.getElementById("rcDownArrow");
+
+        hfright.style.color = "#6a4a86";
+        hfdown.style.color = "#6a4a86";
+        fright.style.color = "black";
+        fdown.style.color = "black";
+        rcright.style.color = "black";
+        rcdown.style.color = "black";
+
+        fright.classList.remove("fw-bold");
+        fdown.classList.remove("fw-bold");
+        rcright.classList.remove("fw-bold");
+        rcdown.classList.remove("fw-bold");
+
+        if (x.style.display === "block") {
+            x.style.display = "none";
+            hfdown.style.display = "none";
+            hfright.style.display = "inline";
+            hfright.classList.add("fw-bold");
+        } else {
+            x.style.display = "block";
+            hfdown.style.display = "inline";
+            hfright.style.display = "none";
+            hfdown.classList.add("fw-bold");
+        }
+    }
+</script>
