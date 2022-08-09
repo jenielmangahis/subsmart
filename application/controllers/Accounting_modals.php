@@ -256,15 +256,19 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $count = 1;
+                    $paymentAccounts = [];
                     foreach ($accountTypes as $typeName) {
                         $accType = $this->account_model->getAccTypeByName($typeName);
 
                         $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
                         if (count($accounts) > 0) {
+                            $paymentAccounts[$typeName] = [];
                             foreach ($accounts as $account) {
                                 $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
+                                $account->child_accounts = $childAccs;
+                                $paymentAccounts[$typeName][] = $account;
                                 if ($count === 1) {
                                     $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
 
@@ -277,6 +281,85 @@ class Accounting_modals extends MY_Controller
                             }
                         }
                     }
+
+                    $this->page_data['paymentAccounts'] = $paymentAccounts;
+
+                    $filters = [
+                        'payment_account' => $this->page_data['account']->id
+                    ];
+
+                    $checks = $this->expenses_model->get_checks_to_print($filters);
+                    $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
+                    $totalCount = count($checks) + count($billPayments);
+
+                    $data = [];
+                    if (isset($checks) && count($checks) > 0) {
+                        foreach ($checks as $check) {
+                            switch ($check->payee_type) {
+                                case 'vendor':
+                                    $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                    $payeeName = $payee->display_name;
+                                break;
+                                case 'customer':
+                                    $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                                break;
+                                case 'employee':
+                                    $payee = $this->users_model->getUser($check->payee_id);
+                                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                                break;
+                            }
+            
+                            if (strpos($check->total_amount, '-') !== false) {
+                                $total = str_replace('-', '', floatval(str_replace(',', '', $check->total_amount)));
+                                $amount = '-$'.number_format($total, 2, '.', ',');
+                            } else {
+                                $amount = '$'.number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
+                            }
+            
+                            $data[] = [
+                                'id' => $check->id,
+                                'date' => date("m/d/Y", strtotime($check->payment_date)),
+                                'type' => 'Check',
+                                'payee' => $payeeName,
+                                'amount' => $amount,
+                                'order_created' => strtotime($check->created_at)
+                            ];
+                        }
+                    }
+            
+                    if (isset($billPayments) && count($billPayments) > 0) {
+                        foreach ($billPayments as $payment) {
+                            $payee = $this->vendors_model->get_vendor_by_id($payment->payee_id);
+                            $payeeName = $payee->display_name;
+            
+                            $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+                            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                            $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
+            
+                            if (strpos($payment->total_amount, '-') !== false) {
+                                $total = str_replace('-', '', floatval(str_replace(',', '', $payment->total_amount)));
+                                $amount = '-$'.number_format($total, 2, '.', ',');
+                            } else {
+                                $amount = '$'.number_format(floatval(str_replace(',', '', $payment->total_amount)), 2, '.', ',');
+                            }
+            
+                            $data[] = [
+                                'id' => $payment->id,
+                                'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                                'type' => 'Bill Payment ('.$paymentType.')',
+                                'payee' => $payeeName,
+                                'amount' => $amount,
+                                'order_created' => strtotime($payment->created_at)
+                            ];
+                        }
+                    }
+            
+                    usort($data, function ($a, $b) use ($sort) {
+                        return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && $a['order_created'] > $b['order_created'];
+                    });
+
+                    $this->page_data['checks'] = $data;
                 break;
                 case 'invoice_modal' :
                     $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
@@ -7787,11 +7870,12 @@ class Accounting_modals extends MY_Controller
 
         echo json_encode($return);
     }
-//
+
     public function print_preview_checks()
     {
         $this->load->helper('string');
         $this->load->library('pdf');
+        $settings = $this->accounting_print_checks_settings_model->get_by_company_id(logged('company_id'));
         $view = "accounting/modals/print_action/print_checks_voucher";
         $post = $this->input->post();
 
@@ -7808,7 +7892,7 @@ class Accounting_modals extends MY_Controller
 
         $startingCheckNo = $post['starting_check_no'] === "" ? null : intval($post['starting_check_no']);
 
-        $data = [];
+        $checks = [];
         foreach ($post['id'] as $key => $id) {
             if ($post['type'][$key] === 'check') {
                 $check = $this->vendors_model->get_check_by_id($id, logged('company_id'));
@@ -7836,7 +7920,7 @@ class Accounting_modals extends MY_Controller
                 $totalWords = ucfirst($totalWords);
                 $totalWords .= ' and '.$totalSplit[1].'/100*******************************************************************';
 
-                $data[] = [
+                $checks[] = [
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'name' => $payeeName,
                     'total' => $totalDecimal,
@@ -7900,7 +7984,7 @@ class Accounting_modals extends MY_Controller
                 $totalWords = ucfirst($totalWords);
                 $totalWords .= ' and '.$totalSplit[1].'/100*******************************************************************';
 
-                $data[] = [
+                $checks[] = [
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'name' => $payeeName,
                     'total' => number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ','),
@@ -7931,7 +8015,14 @@ class Accounting_modals extends MY_Controller
             $startingCheckNo++;
         }
 
-        $this->pdf->save_pdf($view, ['checks' => $data], $fileName, 'portrait');
+        $data = [
+            'top-margin' => 25 - intval(isset($settings) ? $settings->vertical : 0),
+            'left-padding' => 15 + intval(isset($settings) ? $settings->horizontal : 0),
+            'right-padding' => 15 - intval(isset($settings) ? $settings->horizontal : 0),
+            'checks' => $checks
+        ];
+
+        $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
 
         $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
         if (file_exists(getcwd()."/assets/pdf/$fileName")) {
@@ -8315,7 +8406,7 @@ class Accounting_modals extends MY_Controller
                     'Bank',
                     'Credit Card'
                 ];
-
+//
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
             case 'bank-credit-account':
@@ -20173,8 +20264,8 @@ class Accounting_modals extends MY_Controller
 
         $data = [
             'top-margin' => 25 - intval($post['vertical']),
-            // 'left-margin' => -15 + intval($post['horizontal']),
-            // 'right-margin' => -15 - intval($post['horizontal'])
+            'left-padding' => 15 + intval($post['horizontal']),
+            'right-padding' => 15 - intval($post['horizontal'])
         ];
 
         $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
@@ -20186,5 +20277,33 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['pdf'] = $pdf;
         $this->load->view('accounting/modals/view_print_checks', $this->page_data);
+    }
+
+    public function save_print_checks_settings()
+    {
+        $settings = $this->accounting_print_checks_settings_model->get_by_company_id(logged('company_id'));
+        $post = $this->input->post();
+
+        $data = [
+            'check_type' => $post['check_type'],
+            'horizontal' => $post['horizontal'],
+            'vertical' => $post['vertical']
+        ];
+
+        if(is_null($settings)) {
+            $data['company_id'] = logged('company_id');
+            $query = $this->accounting_print_checks_settings_model->create($data);
+            $id = $query;
+        } else {
+            $query = $this->accounting_print_checks_settings_model->update_by_company_id(logged('company_id'), $data);
+            $id = $settings->id;
+        }
+
+        $return = [
+            'data' => $id,
+            'success' => $query ? true : false
+        ];
+
+        echo json_encode($return);
     }
 }

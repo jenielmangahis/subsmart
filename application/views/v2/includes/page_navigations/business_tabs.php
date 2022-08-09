@@ -36,7 +36,7 @@
                 <span>Portfolio</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Profile Settings' || $page->title == 'Social Media'): echo 'active'; endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
                     <i class='bx bx-fw bx-cog'></i>
@@ -44,8 +44,8 @@
                     <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_sales_area') ?>">Profile Settings</a></li>
-                    <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_lead_source') ?>">Social Media</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('users/profilesetting') ?>">Profile Settings</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('users/socialMedia') ?>">Social Media</a></li>
                 </ul>
             </div>
         </li>

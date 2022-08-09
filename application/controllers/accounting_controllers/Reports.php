@@ -284,6 +284,7 @@ class Reports extends MY_Controller {
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile();
 
         if($reportType->name === 'Profit and Loss by Tag Group') {
             $this->page_data['group_tags'] = $this->tags_model->getGroup();
