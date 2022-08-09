@@ -5,6 +5,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
 <?php include viewPath('includes/workorder/sign-modal'); ?>
+
+<!-- Script for autosaving form -->
+<script src="<?=base_url("assets/js/workorder/autosave-update.js")?>"></script>
+
     <style>
     label>input {
       visibility: initial !important;

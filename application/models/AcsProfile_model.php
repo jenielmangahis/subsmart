@@ -52,6 +52,16 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
 
+    public function getProfile()
+    {
+        $id = 4837;
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getByProfIdajax($prof_id)
     {
 

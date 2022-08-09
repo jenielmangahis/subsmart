@@ -3727,7 +3727,7 @@ class Workorder extends MY_Controller
 
         $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
 
-        $checkLists = array();
+        $checklists = array();
         foreach( $checkListsHeader as $h ){
             $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
             $checklists[] = ['header' => $h, 'items' => $checklistItems];
@@ -4592,6 +4592,11 @@ class Workorder extends MY_Controller
                 $data = ['work_order_num_next' => $new_next_num];
                 $this->WorkorderSettings->updateByCompanyId($company_id,$data);
 
+
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            }
 
             redirect('workorder');
             }
