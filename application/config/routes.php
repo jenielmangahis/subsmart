@@ -1085,6 +1085,8 @@ $route['acs_access/_send_message_reply'] = 'AcsAccess/ajax_send_message_reply';
 $route['acs_access/_load_sent_messages'] = 'AcsAccess/ajax_load_sent_messages';
 $route['acs_access/_send_message'] = 'AcsAccess/ajax_send_message';
 $route['acs_access/_notifications'] = 'AcsAccess/ajax_notifications';
+$route['acs_access/_clear_notifications'] = 'AcsAccess/ajax_clear_notifications';
+$route['acs_access/notifications'] = 'AcsAccess/notifications';
 
 //Cards File
 $route['cards_file/list'] = 'CardsFile/index';
@@ -1111,6 +1113,8 @@ $route['tools/_activate_company_ring_central'] = 'Tools/ajax_activate_company_ri
 $route['tools/_update_company_default_sms_api'] = 'Tools/ajax_update_company_default_sms_api';
 $route['tools/_get_twilio_credentials'] = 'Tools/ajax_load_company_twilio';
 $route['tools/_activate_company_twilio'] = 'Tools/ajax_activate_company_twilio';
+$route['tools/_get_plaid_api_credentials'] = 'Tools/ajax_load_company_plaid_form';
+$route['tools/_activate_company_plaid'] = 'Tools/ajax_activate_company_plaid';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
