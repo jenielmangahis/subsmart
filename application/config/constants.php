@@ -178,3 +178,8 @@ define('TWILIO_NUMBER', '+15005550006');*/
 define('TWILIO_SID', 'ACdf812e3cc1aae1e3576046e1d7138296');
 define('TWILIO_TOKEN', '503645bbef7fcd46ac6f6b04ce5c0188');
 define('TWILIO_NUMBER', '+18509035118');
+
+define('PLAID_API_URL', 'https://sandbox.plaid.com');
+define('PLAID_API_REDIRECT_URL', 'https://nsmartrac.com/');
+define('PLAID_API_WEBHOOK_URL', 'https://sample-web-hook.com');
+define('PLAID_API_ENV', 'sandbox');

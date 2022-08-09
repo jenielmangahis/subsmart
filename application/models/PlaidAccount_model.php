@@ -23,6 +23,16 @@ class PlaidAccount_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getByCompanyId($company_id, $filters=array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
 
 /* End of file PlaidAccount_model.php */

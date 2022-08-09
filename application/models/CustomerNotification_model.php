@@ -47,6 +47,25 @@ class CustomerNotification_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByProfIdAndStatus($prof_id, $status)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('prof_id', $prof_id);
+        $this->db->where('status', $status);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function clearAllNotificationByProfId($prof_id)
+    {
+        $this->db->from($this->table);
+        $this->db->set(['status' => $this->status_read]);
+        $this->db->where('prof_id', $prof_id);
+        $this->db->update();
+    }
+
     public function statusNew()
     {
         return $this->status_new;

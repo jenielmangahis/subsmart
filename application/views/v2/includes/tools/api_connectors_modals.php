@@ -210,7 +210,7 @@
 
 <div class="modal fade nsm-modal fade" id="setup_plaid_modal" tabindex="-1" aria-labelledby="setup_plaid_label" aria-hidden="true">
     <div class="modal-dialog">
-        <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-twilio-account', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-plaid-account', 'autocomplete' => 'off']); ?>
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="setup_stripe_modal_label">Setup Plaid</span>
