@@ -4813,7 +4813,6 @@ if(!function_exists('set_expense_graph_data')) {
                         if( $user ){
                             if( $user->mobile != '' ){
                                 if( empty($sent_numbers) || !in_array($user->mobile, $sent_numbers) ){
-                                    echo 5;
                                     $cron_data = [
                                         'company_auto_sms_id' => $autoSms->id,
                                         'obj_id' => $object_id,
