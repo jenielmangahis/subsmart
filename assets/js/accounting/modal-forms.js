@@ -4106,6 +4106,7 @@ $(function() {
             } else {
                 var data = new FormData();
                 data.set('starting_check_no', $('#printChecksModal #starting-check-no').val());
+                data.set('on_first_page_print', $('#printChecksModal #on-first-page-print').val());
 
                 $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
                     var row = $(this).parent().parent().parent();

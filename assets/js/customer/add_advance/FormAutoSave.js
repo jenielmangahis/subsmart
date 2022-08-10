@@ -112,39 +112,62 @@ export class FormAutoSave {
     }
 
     try {
-      this.toggleSavingIndicator();
+      FormAutoSave.toggleSavingIndicator();
       await this.config.onChange(name, value);
     } finally {
-      this.toggleSavingIndicator(false);
+      FormAutoSave.toggleSavingIndicator(false);
     }
   }
 
-  toggleSavingIndicator(show = true) {
+  static toggleSavingIndicator(show = true) {
     const id = "formautosavemessage";
     let $div = document.getElementById(id);
 
     if (!$div) {
-      $div = document.createElement("div");
-      $div.style.cssText = `
-        --height: 25px;
-
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-
-        padding-left: 10px;
-        padding-right: 1rem;
-        height: var(--height);
-        border-radius: var(--height);
-        box-sizing: border-box;
-        align-items: center;
-
-        background-color: rgb(230 230 230);
-        z-index: 999;
-      `;
-
+      $div = FormAutoSave.createIndicatorElement();
       $div.textContent = "Saving...";
       $div.setAttribute("id", id);
+      document.body.appendChild($div);
+    }
+
+    $div.style.display = show ? "flex" : "none";
+  }
+
+  static createIndicatorElement() {
+    const $div = document.createElement("div");
+    $div.style.cssText = `
+      --height: 25px;
+
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+
+      padding-left: 10px;
+      padding-right: 1rem;
+      height: var(--height);
+      border-radius: var(--height);
+      box-sizing: border-box;
+      align-items: center;
+
+      background-color: rgb(230 230 230);
+      z-index: 999;
+    `;
+
+    return $div;
+  }
+
+  static toggleSavingErrorIndicator(show = true) {
+    const id = "formautosavemessage--error";
+    let $div = document.getElementById(id);
+
+    if (!$div) {
+      $div = FormAutoSave.createIndicatorElement();
+      $div.textContent = "Saving failed, something went wrong.";
+      $div.setAttribute("id", id);
+
+      $div.style.backgroundColor = "#e3778f47";
+      $div.style.color = "#dc3545";
+
       document.body.appendChild($div);
     }
 
