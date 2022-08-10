@@ -60,9 +60,9 @@ class CompanyAutoSmsSettings_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
+        $this->db->where('company_id', $company_id);
         if( !empty($filter) ){
-            foreach($filter as $value){                
+            foreach($filter as $value){                       
                 $this->db->where($value['field'], $value['value']);
             }
         }
