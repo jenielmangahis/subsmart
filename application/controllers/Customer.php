@@ -2278,9 +2278,17 @@ class Customer extends MY_Controller
             'select' => '*',
         );
         $importSettings = $this->general->get_data_with_param($get_company_settings, false);
+        $getImportFields = array(
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        );
+        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
+
         $this->page_data['import_settings'] = $importSettings;
         $this->page_data['users'] = $this->users_model->getUsers();
-        $this->load->view('customer/import_customer', $this->page_data);
+        $this->page_data['page']->title = 'Customer Import';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/import', $this->page_data);
     }
 
     public function add_lead($lead_id=0)
@@ -3056,8 +3064,23 @@ class Customer extends MY_Controller
     public function importCustomerData()
     {
         addJSONResponseHeader();
+        $getImportFields = array(
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        );
+        $importFieldsList = $this->general->get_data_with_param($getImportFields);
+        
+        $getCompanyImportSettings= array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'setting_type' => 'import',
+            ),
+            'table' => 'customer_settings',
+            'select' => '*',
+        );
+        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
+        
         $input = $this->input->post();
-
         if ($input) {
             $customers = json_decode($input['customers']);
             $mappingSelected = json_decode($input['mapHeaders'], true);
@@ -3069,94 +3092,49 @@ class Customer extends MY_Controller
             $acsOfficeData = array();
             $acsBillingData = array();
 
-            // initialize counter
+            $fieldCompanyValues = explode(',', $importFieldSettings->value);
+
             $exist = $insert = 0;
-
             foreach($customers as $data) {
-                $monitoringId = $csvHeaders[$mappingSelected[0]];
-                $firstName = $csvHeaders[$mappingSelected[1]];
-                $lastName = $csvHeaders[$mappingSelected[2]];
-                $companyName = $csvHeaders[$mappingSelected[3]];
-                $panelType = $csvHeaders[$mappingSelected[4]];
-                $installDate = $csvHeaders[$mappingSelected[5]];
-                $salesDate = $csvHeaders[$mappingSelected[6]];
-                $subscriptionPay = $csvHeaders[$mappingSelected[7]];
-                $salesRep = $csvHeaders[$mappingSelected[8]];
-                $status = $csvHeaders[$mappingSelected[9]];
-                $billingAddress = $csvHeaders[$mappingSelected[10]];
-                $shippingAddress = $csvHeaders[$mappingSelected[11]];
-                $state = $csvHeaders[$mappingSelected[12]];
-                $city = $csvHeaders[$mappingSelected[13]];
-                $zip = $csvHeaders[$mappingSelected[14]];
-                $contractTerm = $csvHeaders[$mappingSelected[15]];
-                $creditScore = $csvHeaders[$mappingSelected[16]];
-                $phoneNumber = $csvHeaders[$mappingSelected[17]];
-                $email = $csvHeaders[$mappingSelected[18]];
-                $customer = $csvHeaders[$mappingSelected[19]];
-                $techinician = $csvHeaders[$mappingSelected[20]];
-                $contact1 = $csvHeaders[$mappingSelected[21]];
-                $contact2 = $csvHeaders[$mappingSelected[22]];
-                $contact3 = $csvHeaders[$mappingSelected[23]];
-                $paymentMethod = $csvHeaders[$mappingSelected[24]];
-                $billingDate = $csvHeaders[$mappingSelected[25]];
-                $paymentDetail = $csvHeaders[$mappingSelected[26]];
-
-                $acsAlarmData['monitor_id'] = $data->$monitoringId;
-                $acsProfileData['first_name'] = $data->$firstName;
-                $acsProfileData['last_name'] = $data->$lastName;
-                $acsProfileData['business_name'] = $data->$companyName;
-                $acsAlarmData['panel_type'] = $data->$panelType;
-                $acsOfficeData['install_date'] = $data->$installDate;
-                $acsOfficeData['sales_date'] = $data->$salesDate;
-                $acsBillingData['mmr'] = $data->$subscriptionPay;
-                $acsOfficeData['fk_sales_rep_office'] = $data->$salesRep;
-                $acsProfileData['status'] = $data->$status;
-                $acsProfileData['mail_add'] = $data->$billingAddress ? $data->$billingAddress : $data->$shippingAddress;
-                $acsProfileData['state'] = $data->$state;
-                $acsProfileData['city'] = $data->$city;
-                $acsProfileData['zip_code'] = $data->$zip;
-                $acsBillingData['contract_term'] = $data->$contractTerm;
-
-                // switch ($data->$creditScore){
-                //     case 'A':
-                //         $score2 = 700;
-                //         break;
-                //     case 'B':
-                //         $score2 = 650;
-                //         break;
-                //     case 'C':
-                //         $score2 = 625;
-                //         break;
-                //     case 'D':
-                //         $score2 = 600;
-                //         break;
-                //     case 'F':
-                //         $score2 = 599;
-                //         break;
-                //     default:
-                //         $score2 = 0;
-                // }
-
-                $acsOfficeData['credit_score'] = $data->$creditScore;
-                $acsProfileData['phone_m'] = $data->$phoneNumber;
-                $acsProfileData['email'] = $data->$email;
-                $acsOfficeData['technician'] = $data->$techinician;
-                $acsProfileData['contact_name1'] = $data->$contact1;
-                $acsProfileData['contact_name2'] = $data->$contact2;
-                $acsProfileData['contact_name3'] = $data->$contact3;
-                $acsBillingData['bill_method'] = $data->$paymentMethod;
-                $acsBillingData['bill_end_date'] = $data->$billingDate;
-                //$acsBillingData['bill_end_date'] = $data->$paymentDetail;
-                //print_r($data->FirstName) . PHP_EOL;
-                //print_r($data) . PHP_EOL;
-
+                $counter = 0;
+                foreach($fieldCompanyValues as $field) {
+                    $fieldname = "";
+                    $category = "";
+                    foreach($importFieldsList as $importSetting) {
+                        if($field == $importSetting->id) {
+                            $fieldname = $importSetting->field_name;
+                            $category = $importSetting->field_category;
+                        }
+                    }
+                    $dataValue = $csvHeaders[$mappingSelected[$counter]];
+                    switch($category){
+                        case 1:
+                            $acsProfileData[$fieldname] = $data->$dataValue;
+                            break;
+                        case 2:
+                            $acsBillingData[$fieldname] = $data->$dataValue;
+                            break;    
+                        case 3:
+                            $acsOfficeData[$fieldname] = $data->$dataValue;
+                            break;    
+                        case 4:
+                            $acsAlarmData[$fieldname] = $data->$dataValue;
+                            break;    
+                        case 5:
+                            $acsProfileData[$fieldname] = $data->$dataValue;
+                            break;    
+                        default:
+                            break;    
+                    }
+                    $counter++;
+                }
                 $check_user = array(
-                    'where' => array(
-                        'first_name' => $data->$firstName,
-                        'last_name' => $data->$lastName,
-                        'company_id' => logged('company_id'),
-                    ),
-                    'returnType' => 'count'
+                'where' => array(
+                    'first_name' => $data->FirstName,
+                    'last_name' => $data->LastName,
+                    'company_id' => logged('company_id'),
+                ),
+                'returnType' => 'count'
                 );
                 $isExist = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
                 if ($isExist > 0) {
@@ -3164,7 +3142,7 @@ class Customer extends MY_Controller
                 }else{
                     $acsProfileData['company_id'] = logged('company_id');
                     $fk_prod_id = $this->customer_ad_model->add($acsProfileData,"acs_profile");
-
+                    $insert++;
                     if($fk_prod_id){
                         $acsAlarmData['fk_prof_id'] = $fk_prod_id;
                         $acsBillingData['fk_prof_id'] = $fk_prod_id;
@@ -3173,10 +3151,9 @@ class Customer extends MY_Controller
                         $this->customer_ad_model->add($acsAlarmData,"acs_alarm");
                         $this->customer_ad_model->add($acsBillingData,"acs_billing");
                         $this->customer_ad_model->add($acsOfficeData,"acs_office");
-
-                        $insert++;
                     }
                 }
+
             }
             $data_arr = array("success" => TRUE,"message" => 'There are '.$exist . ' existing customer and '.$insert . ' inserted new customer.');
         }else{
@@ -3381,56 +3358,47 @@ class Customer extends MY_Controller
     public function customer_export()
     {
         $user_id = logged('id');
-        //$items = $this->customer_model->getByCompanyId(logged('company_id'));
-        //$items =  $this->customer_ad_model->get_customer_data('fk_user_id',$user_id,"acs_profile");
-        $items =  $this->customer_ad_model->get_customer_data();
+        $items =  $this->customer_ad_model->getExportData();
 
+        $getImportFields = array(
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        );
+        $importFieldsList = $this->general->get_data_with_param($getImportFields);
+        
+        $getCompanyImportSettings= array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'setting_type' => 'export',
+            ),
+            'table' => 'customer_settings',
+            'select' => '*',
+        );
+        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
+        $fieldCompanyValues = explode(',', $importFieldSettings->value);
+
+        $fields = array();
+        $fieldNames = array();
+        foreach($fieldCompanyValues as $field) {
+            foreach($importFieldsList as $importSetting) {
+                if($field == $importSetting->id) {
+                    array_push($fields,$importSetting->field_description);
+                    array_push($fieldNames,$importSetting->field_name);
+                }
+            }
+        }
         $delimiter = ",";
         $time      = time();
         $filename  = "customers_list_".$time.".csv";
-
         $f = fopen('php://memory', 'w');
-
-        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'Industry', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
-                        'AbortCode','Address','Address1','Area','City','State','Zip','ContractTerm','CreditScore','CreditScore2','Email','MonitoringCompany','StatusID','Technician');
         fputcsv($f, $fields, $delimiter);
 
         if (!empty($items)) {
             foreach ($items as $item) {
-                $industry_type = 'Not Specified';
-                if( $item->industry_type_id > 0 ){
-                    $industry_type = $item->industry_type;
+                $csvData = array();
+                foreach($fieldNames as $fieldName){
+                    array_push($csvData, $item->$fieldName);
                 }
-
-                $csvData = array(
-                    $item->monitor_id,
-                    $item->last_name,
-                    $item->first_name,
-                    $item->business_name,
-                    $industry_type,
-                    $item->panel_type,
-                    $item->acct_type,
-                    $item->install_date,
-                    $item->sales_date,
-                    $item->mmr,
-                    $item->fk_sales_rep_office,
-                    $item->status,
-                    $item->status,
-                    $item->passcode,
-                    $item->mail_add,
-                    $item->mail_add,
-                    'COR',
-                    $item->city,
-                    $item->state,
-                    $item->zip_code,
-                    $item->contract_term,
-                    $item->credit_score,
-                    $item->credit_score,
-                    $item->email,
-                    $item->monitor_comp,
-                    3,
-                    $item->technician,
-                );
                 fputcsv($f, $csvData, $delimiter);
             }
         } else {
@@ -3439,10 +3407,8 @@ class Customer extends MY_Controller
         }
 
         fseek($f, 0);
-
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $filename . '";');
-
         fpassthru($f);
     }
 
@@ -5029,6 +4995,11 @@ class Customer extends MY_Controller
             'table' => 'customer_settings',
             'select' => '*',
         );
+        $getImportFields = array(
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        );
+        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
         $this->page_data['importFields'] = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['company_id'] = logged('company_id');
 
@@ -5067,6 +5038,12 @@ class Customer extends MY_Controller
             'table' => 'customer_settings',
             'select' => '*',
         );
+        $getImportFields = array(
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        );
+        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
+
         $customer_settings = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['importFields'] = $customer_settings;
         $this->page_data['company_id'] = logged('company_id');
@@ -5089,7 +5066,7 @@ class Customer extends MY_Controller
             $checkIfHasExistingData = array(
                 'where' => array(
                     'company_id' => logged('company_id'),
-                    'setting_type' => 'import',
+                    'setting_type' => $input['type'],
                 ),
                 'table' => $table,
                 'select' => 'customer_settings_id',
@@ -5106,7 +5083,7 @@ class Customer extends MY_Controller
                 }
             } else {
                 $customer_setting = array();
-                $customer_setting['setting_type'] = 'import';
+                $customer_setting['setting_type'] = $input['type'];
                 $customer_setting['value'] = implode(",",$importFields);
                 $customer_setting['status'] = 1;
                 $customer_setting['company_id'] = logged('company_id');
@@ -5715,6 +5692,7 @@ class Customer extends MY_Controller
         $this->load->model('CustomerMessages_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Business_model');
+        $this->load->helper('customer_helper');
 
         $is_success = 0;
         $msg = 'Cannot save data.';
@@ -5757,6 +5735,8 @@ class Customer extends MY_Controller
 
                     $isSent = sendEmail($data_email); 
                 }
+
+                createNotification($post['profid'], 'Messages', 'New Message from ' . $business->business_name);
 
                 $msg = '';
                 $is_success = 1;

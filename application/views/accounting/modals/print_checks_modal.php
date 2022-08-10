@@ -53,6 +53,16 @@
                                         <label for="starting-check-no" class="float-start">Starting check no.</label>
                                         <input type="number" class="nsm-field form-control" min="0" value="<?=$startingCheckNo?>" id="starting-check-no" required>
                                     </div>
+                                    <?php if(!is_null($printSettings) && $printSettings->check_type === "2") : ?>
+                                    <div class="d-inline-block">
+                                        <label for="on-first-page-print" class="float-start">On first page print</label>
+                                        <select id="on-first-page-print" class="nsm-field form-select" required>
+                                            <option value="1">1 check</option>
+                                            <option value="2">2 checks</option>
+                                            <option value="3" selected>3 checks</option>
+                                        </select>
+                                    </div>
+                                    <?php endif; ?>
                                     <div class="dropdown d-inline-block">
                                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                             <span>

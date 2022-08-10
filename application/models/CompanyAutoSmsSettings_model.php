@@ -128,7 +128,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Scheduled' => 'Scheduled',
             'Started' => 'Started',
             'New' => 'New',
-            'Completed' => 'Completed',
+            'Completed' => 'Completed',            
             //'Email Opened' => 'Email Opened',
         ];
 
@@ -138,6 +138,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function estimateModuleStatusList()
     {
         $status = [
+            'Draft' => 'Draft',
             'Submitted' => 'Submitted',
             'Accepted' => 'Accepted',
             'Declined By Customer' => 'Declined By Customer',
@@ -151,6 +152,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function workOrderModuleStatusList()
     {
         $status = [
+            'Draft' => 'Draft',
             'New' => 'New',
             'Scheduled' => 'Scheduled',
             'Started' => 'Started',

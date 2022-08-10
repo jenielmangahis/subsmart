@@ -611,6 +611,16 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/ajax_company_paypal_form', $this->page_data);
     }
 
+    public function ajax_load_company_plaid_form(){
+        $this->load->model('PlaidAccount_model');
+        $company_id = logged('company_id');    
+
+        $plaid = $this->PlaidAccount_model->getByCompanyId($company_id);
+
+        $this->page_data['plaid'] = $plaid;
+        $this->load->view('v2/pages/tools/ajax_company_plaid_form', $this->page_data);
+    }
+
     public function ajax_load_company_nmi_form(){
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $company_id = logged('company_id');    
@@ -690,6 +700,68 @@ class Tools extends MY_Controller {
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
 
+    }
+
+    public function ajax_activate_company_plaid(){
+        $this->load->model('PlaidAccount_model');
+        $this->load->helper(array('plaid_helper'));
+
+        $is_success = false;
+        $msg = 'Invalid plaid account';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        $plaid = $this->PlaidAccount_model->getByCompanyId($company_id);
+
+        //Check if plaid account is valid
+        $plaidToken = linkTokenCreate($post['client_id'], $post['client_secret'], $post['client_user_id'], $post['client_name']);
+
+        if( $plaid ){            
+            if( $plaidToken['is_valid'] == true ){
+                $plaid_data = [
+                    'client_name' => $post['client_name'],
+                    'client_user_id' => $post['client_user_id'],
+                    'client_id' => $post['client_id'],
+                    'client_secret' => $post['client_secret'],              
+                    'modified' => date("Y-m-d H:i:s"),
+                ];
+
+                $this->PlaidAccount_model->update($plaid->id, $plaid_data);
+
+                $is_success = true;
+                $msg = '';
+
+            }else{
+                $msg = 'Invalid Account';
+            }            
+        }else{
+            if( $plaidToken['is_valid'] == true ){
+                $plaid_data = [
+                    'company_id' => $company_id,
+                    'client_name' => $post['client_name'],
+                    'client_user_id' => $post['client_user_id'],
+                    'client_id' => $post['client_id'],
+                    'client_secret' => $post['client_secret'],              
+                    'created' => date("Y-m-d H:i:s"),
+                ];
+
+                $this->PlaidAccount_model->create($plaid_data);
+
+                $is_success = true;
+                $msg = '';
+
+            }else{
+                $msg = 'Invalid Account';
+            }            
+        }            
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 
 }

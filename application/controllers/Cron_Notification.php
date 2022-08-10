@@ -34,18 +34,18 @@ class Cron_Notification extends MYF_Controller {
                         $smsApi = 'ring_central';
                         $is_with_valid_sms_account = true;
                     }                
-                }elseif( $client->default_sms_api == 'twilio' ){
+                }/*elseif( $client->default_sms_api == 'twilio' ){
                     $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($client->id);
                     if( $twilioAccount ){
                         $smsApi = 'twilio';
                         $is_with_valid_sms_account = true;  
                     }
-                }
+                }*/
                 
                 if( $is_with_valid_sms_account ){                    
                     $sms_message = $this->smsReplaceSmartTags($sms->module_name, $sms->obj_id, $sms->sms_message);
 
-                    if( $smsApi == 'twilio' ){
+                    /*if( $smsApi == 'twilio' ){
                         $isSent  = smsTwilio($twilioAccount, $sms->mobile_number, $sms_message);
                         //$isSent['is_success'] = 1; 
                         if( $isSent['is_sent'] ){  
@@ -67,6 +67,28 @@ class Cron_Notification extends MYF_Controller {
                             $this->CronAutoSmsNotification_model->update($sms->id, $data);
                         }
                     }elseif( $smsApi == 'ring_central' ){
+                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
+                        //$isSent['is_sent'] = true;
+                        if( $isSent['is_success'] == 1 ){
+                            $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
+                            $data = [
+                                'is_sent' => 1,
+                                'date_sent' => date('Y-m-d H:i:s')
+                            ];
+                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
+
+                            $total_sent++;
+                        }else{
+                            $err_msg = $isSent['msg'];
+                            $data = [
+                                'is_sent' => 0,
+                                'is_with_error' => 1,
+                                'err_msg' => $err_msg
+                            ];
+                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                        }    
+                    }*/
+                    if( $smsApi == 'ring_central' ){
                         $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
                         //$isSent['is_sent'] = true;
                         if( $isSent['is_success'] == 1 ){

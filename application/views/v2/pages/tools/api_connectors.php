@@ -787,7 +787,7 @@
                             api_stripe();
                         }else if( $('#auth-module').val() == 'paypal' ){
                             api_paypal();
-                        }else if(){
+                        }else if( $('#auth-module').val() == 'plaid' ){
                             api_plaid();
                         }
                     } else {
@@ -1105,6 +1105,46 @@
             });
         });
 
+        $("#form-plaid-account").on("submit", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url(); ?>tools/_activate_company_plaid";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        $("#setup_plaid_modal").modal('hide');
+
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Your plaid account was successfully saved.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }                    
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
         $("#form-converge-account").on("submit", function(e) {
             let _this = $(this);
             e.preventDefault();
@@ -1273,6 +1313,15 @@
         $('.form-edit-values').show();
     });
     $(document).on('click', '.btn-paypal-cancel', function(){
+        $('.form-view-values').show();
+        $('.form-edit-values').hide();
+    });
+
+    $(document).on('click', '.btn-plaid-edit', function(){
+        $('.form-view-values').hide();
+        $('.form-edit-values').show();
+    });
+    $(document).on('click', '.btn-plaid-cancel', function(){
         $('.form-view-values').show();
         $('.form-edit-values').hide();
     });

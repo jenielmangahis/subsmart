@@ -947,6 +947,45 @@
             exit;
         }
 
+        public function plaid_demo()
+        {
+            $this->load->helper(array('plaid_helper'));
+
+            $client_id = '62cd17c4e7bf0f001347726e';
+            $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
+            $client_name = 'NsmarTrac';
+            $client_user_id = 'user_good';
+            $plaidToken = linkTokenCreate($client_id, $client_secret, $client_user_id, $client_name);
+
+            $this->page_data['plaidToken'] = $plaidToken;        
+            $this->page_data['client_name'] = $client_name;    
+            $this->load->view('v2/pages/debug/plaid_demo', $this->page_data);
+        }
+
+        public function plaidAuth()
+        {
+            $this->load->helper(array('plaid_helper'));
+
+            $post = $this->input->post();
+
+            $client_id = '62cd17c4e7bf0f001347726e';
+            $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
+            $client_name = 'NsmarTrac';
+            $client_user_id = 'user_good';
+            $accessToken  = exchangeToken($client_id, $client_secret, $post['token']);
+            if( isset($accessToken) ){
+                echo $accessToken->access_token;
+                if( $accessToken->access_token != '' ){
+                    $plaidAccount = authGet($client_id, $client_secret, $accessToken->access_token, $post['account_id']); 
+                    echo 'account';
+                    echo "<pre>";                    
+                    print_r($plaidAccount);
+                } 
+            }
+
+            exit;
+        }
+
     }
     /* End of file Debug.php */
 
