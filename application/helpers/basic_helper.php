@@ -4713,7 +4713,7 @@ if(!function_exists('set_expense_graph_data')) {
         $CI->load->model('CronAutoSmsNotification_model');
         $CI->load->model('Users_model');
 
-
+        $sent_numbers = array();
         $filter[] = ['field' => 'module_name', 'value' => strtolower($module_name)];
         $filter[] = ['field' => 'module_status', 'value' => $module_status];
         $filter[] = ['field' => 'is_enabled', 'value' => 1];
@@ -4724,16 +4724,20 @@ if(!function_exists('set_expense_graph_data')) {
                     $itemCreator = $CI->Users_model->getUserByID($user_id);
                     if( $itemCreator ){
                         if( $itemCreator->mobile != '' ){
-                            $cron_data = [
-                                'company_auto_sms_id' => $autoSms->id,
-                                'obj_id' => $object_id,
-                                'mobile_number' => $itemCreator->mobile,
-                                'sms_message' => $autoSms->sms_text,
-                                'is_sent' => 0,
-                                'created' => date("Y-m-d H:i:s")
-                            ];
+                            if( empty($sent_numbers) || !in_array($itemCreator->mobile, $sent_numbers) ){
+                                $cron_data = [
+                                    'company_auto_sms_id' => $autoSms->id,
+                                    'obj_id' => $object_id,
+                                    'mobile_number' => $itemCreator->mobile,
+                                    'sms_message' => $autoSms->sms_text,
+                                    'is_sent' => 0,
+                                    'created' => date("Y-m-d H:i:s")
+                                ];
 
-                            $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+                                $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+
+                                $sent_numbers[] = $itemCreator->mobile;
+                            }
                         }  
                     }                    
                 }
@@ -4743,16 +4747,20 @@ if(!function_exists('set_expense_graph_data')) {
                 if( $autoSms->send_to_assigned_user == 1 && $assigned_to_user_id > 0 ){
                     $assignedUser = $CI->Users_model->getUserByID($assigned_to_user_id);
                     if( $assignedUser->mobile != '' ){
-                        $cron_data = [
-                            'company_auto_sms_id' => $autoSms->id,
-                            'obj_id' => $object_id,
-                            'mobile_number' => $assignedUser->mobile,
-                            'sms_message' => $autoSms->sms_text,
-                            'is_sent' => 0,
-                            'created' => date("Y-m-d H:i:s")
-                        ];
+                        if( empty($sent_numbers) || !in_array($assignedUser->mobile, $sent_numbers) ){
+                            $cron_data = [
+                                'company_auto_sms_id' => $autoSms->id,
+                                'obj_id' => $object_id,
+                                'mobile_number' => $assignedUser->mobile,
+                                'sms_message' => $autoSms->sms_text,
+                                'is_sent' => 0,
+                                'created' => date("Y-m-d H:i:s")
+                            ];
 
-                        $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+                            $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+
+                            $sent_numbers[] = $assignedUser->mobile;
+                        }
                     }  
                 }
             }
@@ -4761,15 +4769,19 @@ if(!function_exists('set_expense_graph_data')) {
                 $companyAdminUsers = $CI->Users_model->getAllAdminByCompanyID($company_id);
                 foreach($companyAdminUsers as $u){
                     if( $u->mobile != '' ){
-                        $cron_data = [
-                            'company_auto_sms_id' => $autoSms->id,
-                            'obj_id' => $object_id,
-                            'mobile_number' => $u->mobile,
-                            'sms_message' => $autoSms->sms_text,                            
-                            'created' => date("Y-m-d H:i:s")
-                        ];
+                        if( empty($sent_numbers) || !in_array($u->mobile, $sent_numbers) ){
+                            $cron_data = [
+                                'company_auto_sms_id' => $autoSms->id,
+                                'obj_id' => $object_id,
+                                'mobile_number' => $u->mobile,
+                                'sms_message' => $autoSms->sms_text,                            
+                                'created' => date("Y-m-d H:i:s")
+                            ];
 
-                        $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+                            $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+
+                            $sent_numbers[] = $u->mobile;
+                        }                        
                     }                    
                 }
             }
@@ -4778,15 +4790,19 @@ if(!function_exists('set_expense_graph_data')) {
                 $users = $CI->Users_model->getAllUsersByCompanyID($company_id);
                 foreach($users as $u){
                     if( $u->mobile != '' ){
-                        $cron_data = [
-                            'company_auto_sms_id' => $autoSms->id,
-                            'obj_id' => $object_id,
-                            'mobile_number' => $u->mobile,
-                            'sms_message' => $autoSms->sms_text,                            
-                            'created' => date("Y-m-d H:i:s")
-                        ];
+                        if( empty($sent_numbers) || !in_array($u->mobile, $sent_numbers) ){
+                            $cron_data = [
+                                'company_auto_sms_id' => $autoSms->id,
+                                'obj_id' => $object_id,
+                                'mobile_number' => $u->mobile,
+                                'sms_message' => $autoSms->sms_text,                            
+                                'created' => date("Y-m-d H:i:s")
+                            ];
 
-                        $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+                            $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+
+                            $sent_numbers[] = $u->mobile;
+                        }                        
                     }                    
                 }
             }else{
@@ -4796,16 +4812,21 @@ if(!function_exists('set_expense_graph_data')) {
                         $user = $CI->Users_model->getUserByID($uid);
                         if( $user ){
                             if( $user->mobile != '' ){
-                                $cron_data = [
-                                    'company_auto_sms_id' => $autoSms->id,
-                                    'obj_id' => $object_id,
-                                    'mobile_number' => $user->mobile,
-                                    'sms_message' => $autoSms->sms_text,
-                                    'is_sent' => 0,
-                                    'created' => date("Y-m-d H:i:s")
-                                ];
+                                if( empty($sent_numbers) || !in_array($user->mobile, $sent_numbers) ){
+                                    echo 5;
+                                    $cron_data = [
+                                        'company_auto_sms_id' => $autoSms->id,
+                                        'obj_id' => $object_id,
+                                        'mobile_number' => $user->mobile,
+                                        'sms_message' => $autoSms->sms_text,
+                                        'is_sent' => 0,
+                                        'created' => date("Y-m-d H:i:s")
+                                    ];
 
-                                $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+                                    $CI->Users_model->CronAutoSmsNotification_model->create($cron_data);
+
+                                    $sent_numbers[] = $user->mobile;
+                                }                            
                             } 
                         }                         
                     }

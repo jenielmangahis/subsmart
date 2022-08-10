@@ -2069,7 +2069,7 @@ span.select2-selection {
 }
 
 .select2-container .select2-search__field{
-	padding: 0rem 0.75rem !important;
+	/*padding: 0rem 0.75rem !important;*/
 }
 
 .nsm-sign-canvas{
