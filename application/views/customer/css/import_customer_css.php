@@ -45,7 +45,6 @@
     .mapping-line{
         text-align: right;
         right: 0;
-        position: absolute;
     }
     table{
     overflow-x:scroll !important;

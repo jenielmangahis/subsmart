@@ -359,6 +359,7 @@ class Accounting_modals extends MY_Controller
                         return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && $a['order_created'] > $b['order_created'];
                     });
 
+                    $this->page_data['printSettings'] = $this->accounting_print_checks_settings_model->get_by_company_id(logged('company_id'));
                     $this->page_data['checks'] = $data;
                 break;
                 case 'invoice_modal' :
@@ -7876,8 +7877,24 @@ class Accounting_modals extends MY_Controller
         $this->load->helper('string');
         $this->load->library('pdf');
         $settings = $this->accounting_print_checks_settings_model->get_by_company_id(logged('company_id'));
-        $view = "accounting/modals/print_action/print_checks_voucher";
         $post = $this->input->post();
+
+        if(is_null($settings) || $settings->check_type === "1") {
+            $view = "accounting/modals/print_action/print_checks_voucher";
+            $data = [
+                'top-margin' => 25 - intval(isset($settings) ? $settings->vertical : 0),
+                'left-padding' => 15 + intval(isset($settings) ? $settings->horizontal : 0),
+                'right-padding' => 15 - intval(isset($settings) ? $settings->horizontal : 0)
+            ];
+        } else {
+            $view = "accounting/modals/print_action/print_checks_standard";
+
+            $data = [
+                'top-margin' => 47 - intval(isset($settings) ? $settings->vertical : 0),
+                'left-padding' => 15 + intval(isset($settings) ? $settings->horizontal : 0),
+                'right-padding' => 15 - intval(isset($settings) ? $settings->horizontal : 0)
+            ];
+        }
 
         $extension = '.pdf';
 
@@ -8015,12 +8032,29 @@ class Accounting_modals extends MY_Controller
             $startingCheckNo++;
         }
 
-        $data = [
-            'top-margin' => 25 - intval(isset($settings) ? $settings->vertical : 0),
-            'left-padding' => 15 + intval(isset($settings) ? $settings->horizontal : 0),
-            'right-padding' => 15 - intval(isset($settings) ? $settings->horizontal : 0),
-            'checks' => $checks
-        ];
+        if(is_null($settings) || $settings->check_type === "1") { 
+            $data['checks'] = $checks;
+        } else {
+            if($post['on_first_page_print'] !== '3') {
+                $data['checks'] = [];
+                
+                $data['checks'][0][] = $checks[0];
+                unset($checks[0]);
+
+                if(intval($post['on_first_page_print']) > 1) {
+                    $data['checks'][0][] = $checks[1];
+                    unset($checks[1]);
+                }
+
+                $checkGroups = array_chunk($checks, 3);
+
+                foreach($checkGroups as $checkGroup) {
+                    $data['checks'][] = $checkGroup;
+                }
+            } else {
+                $data['checks'] = array_chunk($checks, 3);
+            }
+        }
 
         $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
 
@@ -20248,8 +20282,25 @@ class Accounting_modals extends MY_Controller
     {
         $this->load->helper('string');
         $this->load->library('pdf');
-        $view = "accounting/modals/print_action/print_checks_sample_voucher";
         $post = $this->input->post();
+
+        if($post['check_type'] === "1") {
+            $view = "accounting/modals/print_action/print_checks_sample_voucher";
+
+            $data = [
+                'top-margin' => 25 - intval($post['vertical']),
+                'left-padding' => 15 + intval($post['horizontal']),
+                'right-padding' => 15 - intval($post['horizontal'])
+            ];
+        } else {
+            $view = "accounting/modals/print_action/print_checks_sample_standard";
+
+            $data = [
+                'top-margin' => 32 - intval($post['vertical']),
+                'left-padding' => 15 + intval($post['horizontal']),
+                'right-padding' => 15 - intval($post['horizontal'])
+            ];
+        }
 
         $extension = '.pdf';
 

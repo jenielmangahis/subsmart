@@ -720,12 +720,12 @@ border: none;
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice"><?php echo number_format($workorder->subtotal,2); ?></span>
+                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice"><?php echo number_format(floatval($workorder->subtotal),2); ?></span>
                                                 <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo number_format($workorder->taxes,2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
+                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo number_format(floatval($workorder->taxes),2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
