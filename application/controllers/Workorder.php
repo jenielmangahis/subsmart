@@ -7601,6 +7601,9 @@ class Workorder extends MY_Controller
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
+        //SMS Notification
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', 'New', $user_id);
+
         $solarItems = array(
             'tor'                 => $this->input->post('tor'),
             'sfoh'                => $this->input->post('sfoh'),

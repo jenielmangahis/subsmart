@@ -60,9 +60,9 @@ class CompanyAutoSmsSettings_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
+        $this->db->where('company_id', $company_id);
         if( !empty($filter) ){
-            foreach($filter as $value){                
+            foreach($filter as $value){                       
                 $this->db->where($value['field'], $value['value']);
             }
         }
@@ -204,11 +204,11 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function jobSmartTags()
     {
         $smartTags = [
-            'order.number' => 'Order Number',
-            'customer.name' => 'Customer Name',
-            'customer.email' => 'Customer Email',
-            'customer.phone' => 'Customer Phone',
-            'business.name' => "Company Name",
+            '{{order.number}}' => 'Order Number',
+            '{{customer.name}}' => 'Customer Name',
+            '{{customer.email}}' => 'Customer Email',
+            '{{customer.phone}}' => 'Customer Phone',
+            '{{business.name}}' => "Company Name",
 
         ];
 
@@ -218,11 +218,11 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function estimateTags()
     {
         $smartTags = [
-            'order.number' => 'Estimate Number',
-            'customer.name' => 'Customer Name',
-            'customer.email' => 'Customer Email',
-            'customer.phone' => 'Customer Phone',
-            'business.name' => "Company Name",
+            '{{order.number}}' => 'Estimate Number',
+            '{{customer.name}}' => 'Customer Name',
+            '{{customer.email}}' => 'Customer Email',
+            '{{customer.phone}}' => 'Customer Phone',
+            '{{business.name}}' => "Company Name",
 
         ];
 
@@ -232,11 +232,11 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function workOrderTags()
     {
         $smartTags = [
-            'order.number' => 'Workorder Number',
-            'customer.name' => 'Customer Name',
-            'customer.email' => 'Customer Email',
-            'customer.phone' => 'Customer Phone',
-            'business.name' => "Company Name",
+            '{{order.number}}' => 'Workorder Number',
+            '{{customer.name}}' => 'Customer Name',
+            '{{customer.email}}' => 'Customer Email',
+            '{{customer.phone}}' => 'Customer Phone',
+            '{{business.name}}' => "Company Name",
 
         ];
 
@@ -246,10 +246,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function eventsTags()
     {
         $smartTags = [
-            'customer.name' => 'Customer Name',
-            'customer.email' => 'Customer Email',
-            'customer.phone' => 'Customer Phone',
-            'business.name' => "Company Name",
+            '{{customer.name}}' => 'Customer Name',
+            '{{customer.email}}' => 'Customer Email',
+            '{{customer.phone}}' => 'Customer Phone',
+            '{{business.name}}' => "Company Name",
 
         ];
 
@@ -259,10 +259,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function taskHubTags()
     {
         $smartTags = [
-            'customer.name' => 'Customer Name',
-            'customer.email' => 'Customer Email',
-            'customer.phone' => 'Customer Phone',
-            'business.name' => "Company Name",
+            '{{customer.name}}' => 'Customer Name',
+            '{{customer.email}}' => 'Customer Email',
+            '{{customer.phone}}' => 'Customer Phone',
+            '{{business.name}}' => "Company Name",
 
         ];
 
@@ -272,10 +272,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function customerTags()
     {
         $smartTags = [
-            'customer.name' => 'Customer Name',
-            'customer.email' => 'Customer Email',
-            'customer.phone' => 'Customer Phone',
-            'business.name' => "Company Name",
+            '{{customer.name}}' => 'Customer Name',
+            '{{customer.email}}' => 'Customer Email',
+            '{{customer.phone}}' => 'Customer Phone',
+            '{{business.name}}' => "Company Name",
 
         ];
 
@@ -285,10 +285,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
     public function leadsTags()
     {
         $smartTags = [
-            'lead.name' => 'Lead Name',
-            'lead.email' => 'Lead Email',
-            'lead.phone' => 'Lead Phone',
-            'business.name' => "Company Name",
+            '{{lead.name}}' => 'Lead Name',
+            '{{lead.email}}' => 'Lead Email',
+            '{{lead.phone}}' => 'Lead Phone',
+            '{{business.name}}' => "Company Name",
 
         ];
 

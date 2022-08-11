@@ -1,5 +1,6 @@
-<?php include viewPath('v2/includes/accounting_header'); ?>
-
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php include viewPath('includes/header'); ?>
 <style>
     /* .btn-success {
         background-color: #46a83d;
@@ -203,11 +204,6 @@
         position: relative;
         left: 17px;
     }
-    .pr-a{
-        text-decoration: none;
-        color: black;
-        cursor: pointer;
-    }
 
     @media only screen and (max-width: 1300px) {
         .card-deck-upgrades div a {
@@ -236,38 +232,34 @@
         }
     }
 </style>
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
-        <i class='bx bx-user-plus'></i>
-    </div>
-</div>
-
-<div class="row page-content g-0">
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
-    </div>
-    <div class="col-12">
-        <div class="nsm-page">
-            <div class="nsm-page-content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="col-lg-6 px-0">
-                            <h3>Payroll Overview</h3>
-                        </div>
-                        <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
-					            No Payroll History Needed. All Reports in One Spot.  Very easy shortcuts to help reduce the headaches of paying your staffs and vendors.  Let's go!
-                        </div>
+    <div class="wrapper" role="wrapper" >
+       
+        <!-- page wrapper start -->
+        <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
+            <div class="container-fluid" style="background-color:white;">
+				<div class="page-title-box mx-4">
+					<div class="col-lg-6 px-0">
+						<h3>Payroll Overview</h3>
+					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+					No Payroll History Needed. All Reports in One Spot.  Very easy shortcuts to help reduce the headaches of paying your staffs and vendors.  Let's go!
                     </div>
-                    <div class="row pt-3">
+					<div class="row pb-2">
+						<div class="col-md-12 banking-tab-container">
+							<a href="<?php echo url('/accounting/payroll-overview')?>" class="banking-tab-active text-decoration-none">Overview</a>
+							<a href="<?php echo url('/accounting/employees')?>" class="banking-tab">Employees</a>
+							<a href="<?php echo url('/accounting/contractors')?>" class="banking-tab">Contractors</a>
+							<a href="<?php echo url('/accounting/workers-comp')?>" class="banking-tab">Worker's Comp</a>
+							<a href="#" class="banking-tab">Benefits</a>
+						</div>
+					</div>
+					<div class="row pt-3">
 						<div class="col-lg-7 pl-0">
 							<div class="bg-white">
 								<div class="row p-4 rounded mx-0">
 									<div class="col">
 										<h1>It's time to run payroll</h1>
-                                        <button type="button" class="nsm-button primary">
-                                            <h5>Let's go</h5>
-                                        </button>
+										<a href="#" class="btn btn-success rounded px-4 py-1"><h5>Let's go</h5></a>
 									</div>
 									
 								</div>
@@ -283,37 +275,58 @@
 								<h5 class="text-secondary mt-0">SHORTCUTS</h5>
 								<div class="row px-2 text-center mt-4 align-items-center">
 									<div class="col-sm-6">
-                                        <a href="#" class="add-employee pr-a"><p class=""><i class="fa fa-money h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Run Payroll</h6></a>
+										<p class=""><i class="fa fa-money h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Run Payroll</h6>
 									</div>
 									<div class="col-sm-6">
-                                        <a href="#" class="add-employee pr-a" id="addEmployeeData"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6 >Add Employee</h6> </a>
+                                        <a href="#" class="add-employee" id="addEmployeeData"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Add Employee</h6> </a>
 									</div>
 									<div class="col-sm-6">
-                                        <a href="#" class="add-employee pr-a"><p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Pay Contractor</h6></a>
+                                        <p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Pay Contractor</h6>
 									</div>
 									<div class="col-sm-6">
-                                        <a href="#" data-bs-toggle="modal" class="pr-a" data-bs-target="#modalAddContractor"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+                                        <a href="#" data-toggle="modal" data-target="#modalAddContractor"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Add Contractor</h6> </a>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-                </div>
+				</div>
+            </div>
+            <!-- end container-fluid -->
+        </div>
+        <!-- page wrapper end -->
+
+<div class="modal fade" id="modalShareAddEmployee">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-globe"></i> Public URL</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p>You public URL for adding employees</p>
+                <div class="copy-info"></div>
+                <input type="hidden" id="e-public-url" value="<?php echo base_url('/add_company_employee/' . $eid); ?>">
+                <label class="label label-default label-public-url" style="padding: 10px;font-size:15px;width: 88%; color: #ffffff;"><?php echo base_url('/add_company_employee/' . $eid); ?></label><a class="btn-copy-public-url" href="javascript:void(0);" style="padding: 10px;"><i class="fa fa-copy"></i></a>
             </div>
         </div>
     </div>
-    <!-- add contractor modal -->
-        <div class="modal fade" id="modalAddContractor" tabindex="-1" role="dialog" aria-labelledby="addContractorLabel" aria-hidden="true">
+</div>
+
+            <!-- add contractor modal -->
+            <div class="modal fade" id="modalAddContractor" tabindex="-1" role="dialog" aria-labelledby="addContractorLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg w-25 m-auto" role="document">
                     <div class="modal-content">
                         <form action="/accounting/contractors/add" method="post" class="form-validate" novalidate="novalidate">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addContractorLabel">Add a contractor</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
                             </div>
                             <div class="modal-body" style="max-height: 25%;">
                                 <div class="row">
@@ -349,249 +362,249 @@
                     </div>
                 </div>
             </div>
-        <!-- end add contractor modal -->
-        <!--Adding Employee modal-->
-            <div class="modal fade" id="modalAddEmployee">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title"><i class="fa fa-user-plus"></i> Add Employee</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <!-- Modal body -->
-                        <form action="" id="addEmployeeForm">
-                            <input type="hidden" name="user_id" id="userID">
-                            <div class="modal-body">
-                                <div class="section-title" style="">Basic Details</div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="">Employee Number</label>
-                                            <input type="text" name="emp_number" class="form-control" id="emp_number" placeholder="Enter Employee Number">
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="">First Name</label>
-                                            <input type="text" name="firstname" class="form-control" placeholder="Enter First Name">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="">Last Name</label>
-                                            <input type="text" name="lastname" class="form-control" placeholder="Enter Last Name">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="section-title">Login Details</div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <!-- <div class="col-md-6">
-                                            <label for="" style="display: block">Email</label>
-                                            <input type="text" name="email" class="form-control" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
-                                            <i class="fa fa-sync-alt check-if-exist" title="Check if Email is already exist" data-toggle="tooltip"></i>
-                                            <span class="email-error"></span>
-                                        </div> -->
-                                        <div class="col-md-7">
-                                            <label for="" style="display: block">Email <small>(Will be use as your username)</small></label>
-                                            <input type="email" name="username" class="form-control" id="employeeUsername" placeholder="e.g: nsmartrac" style="width: 90%">
-                                            <i class="fa fa-sync-alt check-if-exist" title="Check if Username already exist" data-toggle="tooltip"></i>
-                                            <span class="username-error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="password-container">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="">Password</label>
-                                                <input type="password" name="addnew_password" id="employeePass" class="form-control">
-                                                <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                                <span class="password-error"></span>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="">Confirm Password</label>
-                                                <input type="password" name="confirm_password" id="employeeConfirmPass" class="form-control">
-                                                <i class="fa fa-eye view-password showConfirmPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="javascript:void (0)" class="change-password" id="changePassword">Want to change password?</a>
-                                    <div class="new-password-container">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="">Old Password</label>
-                                                <input type="password" name="password" id="oldPassword" class="form-control">
-                                                <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                                <span class="old-password-error"></span>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="">New Password</label>
-                                                <input type="password" name="password" id="newPassword" class="form-control">
-                                                <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="section-title">Other Details</div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="">Address</label>
-                                            <input type="text" name="address" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="">State</label>
-                                            <input type="text" name="state" value="" class="form-control">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="">Zip Code</label>
-                                            <input type="text" name="postal_code" value="" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="">Title</label>
-                                            <select name="role" id="employeeRole" class="form-control select2-role"></select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="">Status</label>
-                                            <select name="status" id="" class="form-control">
-                                                <option value="1">Active</option>
-                                                <option value="0">Inactive</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="input-switch">
-                                                <label for="">App Access</label><br>
-                                                <input type="checkbox" name="app_access" class="js-switch" checked />
-                                            </div>
-                                            <div class="input-switch">
-                                                <label for="">Web Access</label><br>
-                                                <input type="checkbox" name="web_access" class="js-switch" checked />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="section-title">Profile Image</div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="">Image</label>
-                                            <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                <div class="dz-message" style="margin: 20px;">
-                                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="img_id" id="photoIdAdd">
-                                            <input type="hidden" name="profile_photo" id="photoNameAdd">
-
-                                            <div>
-                                                <label for="">Payscale</label>
-                                                <select name="empPayscale" id="empPayscale" class="form-control select2-payscale">
-                                                    <option value="">Select payscale</option>
-                                                    <?php foreach ($payscale as $p) { ?>
-                                                        <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="profile-container">
-                                                <img src="/uploads/users/default.png" alt="Profile photo">
-                                            </div>
-                                            <label>Rights and Permissions</label>
-                                            <div class="help help-sm help-block">Select employee role</div>
-                                            <div>
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="radio" name="user_type" value="7" id="role_7">
-                                                    <label for="role_7"><span>Admin</span></label>
-                                                </div>
-                                                <div class="help help-sm help-block">
-                                                    ALL Access<br>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="radio" name="user_type" value="1" id="role_1">
-                                                    <label for="role_1"><span>Office Manager</span></label>
-                                                </div>
-                                                <div class="help help-sm help-block">
-                                                    ALL except high security file vault<br>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="radio" name="user_type" value="2" id="role_2">
-                                                    <label for="role_2"><span>Partner</span></label>
-                                                </div>
-                                                <div class="help help-sm help-block">
-                                                    ALL base on plan type
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="radio" name="user_type" value="3" id="role_3">
-                                                    <label for="role_3"><span>Team Leader</span></label>
-                                                </div>
-                                                <div class="help help-sm help-block">
-                                                    No accounting or any changes to company profile or deletion
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="radio" name="user_type" value="4" id="role_4">
-                                                    <label for="role_4"><span>Standard User</span></label>
-                                                </div>
-                                                <div class="help help-sm help-block">
-                                                    Cannot add or delete employees, can not manage subscriptions
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="radio" name="user_type" value="5" id="role_5">
-                                                    <label for="role_5"><span>Field Sales</span></label>
-                                                </div>
-                                                <div class="help help-sm help-block">
-                                                    View only no input
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="radio" name="user_type" value="6" id="role_6">
-                                                    <label for="role_6"><span>Field Tech</span></label>
-                                                </div>
-                                                <div class="help help-sm help-block">
-                                                    App access only, no Web access
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" id="closedEmployeeModal">Cancel</button>
-                                <button type="button" class="btn btn-success" id="savedNewEmployee">Save</button>
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
-            </div>
             <!-- end add contractor modal -->
 
-    
-</div>
 
-<?php include viewPath('v2/includes/footer'); ?>
+<!--Adding Employee modal-->
+<div class="modal fade" id="modalAddEmployee">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-user-plus"></i> Add Employee</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="addEmployeeForm">
+                <input type="hidden" name="user_id" id="userID">
+                <div class="modal-body">
+                    <div class="section-title" style="">Basic Details</div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Employee Number</label>
+                                <input type="text" name="emp_number" class="form-control" id="emp_number" placeholder="Enter Employee Number">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">First Name</label>
+                                <input type="text" name="firstname" class="form-control" placeholder="Enter First Name">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Last Name</label>
+                                <input type="text" name="lastname" class="form-control" placeholder="Enter Last Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-title">Login Details</div>
+                    <div class="form-group">
+                        <div class="row">
+                            <!-- <div class="col-md-6">
+                                <label for="" style="display: block">Email</label>
+                                <input type="text" name="email" class="form-control" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
+                                <i class="fa fa-sync-alt check-if-exist" title="Check if Email is already exist" data-toggle="tooltip"></i>
+                                <span class="email-error"></span>
+                            </div> -->
+                            <div class="col-md-7">
+                                <label for="" style="display: block">Email <small>(Will be use as your username)</small></label>
+                                <input type="email" name="username" class="form-control" id="employeeUsername" placeholder="e.g: nsmartrac" style="width: 90%">
+                                <i class="fa fa-sync-alt check-if-exist" title="Check if Username already exist" data-toggle="tooltip"></i>
+                                <span class="username-error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="password-container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Password</label>
+                                    <input type="password" name="addnew_password" id="employeePass" class="form-control">
+                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+                                    <span class="password-error"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Confirm Password</label>
+                                    <input type="password" name="confirm_password" id="employeeConfirmPass" class="form-control">
+                                    <i class="fa fa-eye view-password showConfirmPass" id="" title="Show password" data-toggle="tooltip"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="javascript:void (0)" class="change-password" id="changePassword">Want to change password?</a>
+                        <div class="new-password-container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Old Password</label>
+                                    <input type="password" name="password" id="oldPassword" class="form-control">
+                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+                                    <span class="old-password-error"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">New Password</label>
+                                    <input type="password" name="password" id="newPassword" class="form-control">
+                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-title">Other Details</div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="">Address</label>
+                                <input type="text" name="address" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">State</label>
+                                <input type="text" name="state" value="" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Zip Code</label>
+                                <input type="text" name="postal_code" value="" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Title</label>
+                                <select name="role" id="employeeRole" class="form-control select2-role"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Status</label>
+                                <select name="status" id="" class="form-control">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-switch">
+                                    <label for="">App Access</label><br>
+                                    <input type="checkbox" name="app_access" class="js-switch" checked />
+                                </div>
+                                <div class="input-switch">
+                                    <label for="">Web Access</label><br>
+                                    <input type="checkbox" name="web_access" class="js-switch" checked />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-title">Profile Image</div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Image</label>
+                                <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                    <div class="dz-message" style="margin: 20px;">
+                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="img_id" id="photoIdAdd">
+                                <input type="hidden" name="profile_photo" id="photoNameAdd">
+
+                                <div>
+                                    <label for="">Payscale</label>
+                                    <select name="empPayscale" id="empPayscale" class="form-control select2-payscale">
+                                        <option value="">Select payscale</option>
+                                        <?php foreach ($payscale as $p) { ?>
+                                            <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="profile-container">
+                                    <img src="/uploads/users/default.png" alt="Profile photo">
+                                </div>
+                                <label>Rights and Permissions</label>
+                                <div class="help help-sm help-block">Select employee role</div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="7" id="role_7">
+                                        <label for="role_7"><span>Admin</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        ALL Access<br>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="1" id="role_1">
+                                        <label for="role_1"><span>Office Manager</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        ALL except high security file vault<br>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="2" id="role_2">
+                                        <label for="role_2"><span>Partner</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        ALL base on plan type
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="3" id="role_3">
+                                        <label for="role_3"><span>Team Leader</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        No accounting or any changes to company profile or deletion
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="4" id="role_4">
+                                        <label for="role_4"><span>Standard User</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        Cannot add or delete employees, can not manage subscriptions
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="5" id="role_5">
+                                        <label for="role_5"><span>Field Sales</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        View only no input
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="6" id="role_6">
+                                        <label for="role_6"><span>Field Tech</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        App access only, no Web access
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="closedEmployeeModal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="savedNewEmployee">Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+		 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+   </div>
+
+<?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
     $(document).ready(function() {
@@ -615,7 +628,10 @@
         });
 
         $(document).on('click', '#addEmployeeData', function() {
-            $('#modalAddEmployee').modal('show');
+            $('#modalAddEmployee').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
         });
         $(document).on('click', '#editEmployeeProfile', function() {
             $('#modalEditEmployeeProfile').modal({

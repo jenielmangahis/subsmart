@@ -52,15 +52,51 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
 
-    public function getProfile()
+    public function getProfile($prof_id=null, $col=null)
     {
-        $id = 4837;
+        if(($prof_id != null) && $col == null){
+            $this->db->select('*');
+            $this->db->from($this->table);
+            $this->db->where_in('prof_id', $prof_id);
+    
+            $query = $this->db->get();
+            return $query->result();
+
+        }elseif(($prof_id == null) && $col != null){
+            $this->db->select($col);
+            $this->db->from($this->table);
+
+            $query = $this->db->get();
+            return $query->result();
+
+        }elseif($prof_id != null && $col != null){
+            $this->db->select($col);
+            $this->db->from($this->table);
+            $this->db->where_in('prof_id', $prof_id);
+    
+            $fl = $this->db->get();
+            return $fl->result();
+        }
+         else{
+            $this->db->select('*');
+            $this->db->from($this->table);
+
+            $query = $this->db->get();
+            return $query->result();
+        }
+    }
+// Return acs_profile group by
+    public function getProfileGb($prof_id)
+    {
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where_in('prof_id', $prof_id);
 
         $query = $this->db->get();
         return $query->result();
     }
+// Return acs_profile fields
+    
 
     public function getByProfIdajax($prof_id)
     {
