@@ -26,9 +26,11 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Filter by name">
-                        </div>
+                        <form action="<?php echo base_url('accounting/chart-of-accounts') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Filter by name" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
@@ -39,7 +41,7 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make_inactive">Make inactive</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
@@ -58,38 +60,38 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
                                     <label for="chk_type" class="form-check-label">Type</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_detail_type" class="form-check-input">
                                     <label for="chk_detail_type" class="form-check-label">Detail Type</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance" class="form-check-input">
-                                    <label for="chk_nsmart_balance" class="form-check-label">nSmarTrac Balance</label>
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_nsmartrac_balance" class="form-check-input">
+                                    <label for="chk_nsmartrac_balance" class="form-check-label">nSmarTrac Balance</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="col_bank_balance()" name="chk_bank_balance" id="chk_bank_balance" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_bank_balance" class="form-check-input">
                                     <label for="chk_bank_balance" class="form-check-label">Bank Balance</label>
                                 </div>
                                 <p class="m-0">Other</p>
                                 <div class="form-check">
-                                    <input type="checkbox" id="inc_inactive" value="1" class="form-check-input">
+                                    <input type="checkbox" <?=$status === 'all' ? 'checked' : ''?> id="inc_inactive" value="1" class="form-check-input">
                                     <label for="inc_inactive" class="form-check-label">Include Inactive</label>
                                 </div>
                                 <p class="m-0">Rows</p>
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            150
+                                            50
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">150</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
                                     </ul>
                                 </div>
@@ -97,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="accounts-table">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
@@ -117,23 +119,25 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$account['id']?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$account->name?></td>
-                            <td><?=$this->account_model->getName($account->account_id)?></td>
-                            <td><?=$this->account_detail_model->getName($account->acc_detail_id)?></td>
-                            <td><?=str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ','))?></td>
-                            <td>$0.00</td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$account['name']?></td>
+                            <td><?=$account['type']?></td>
+                            <td><?=$account['detail_type']?></td>
+                            <td><?=$account['nsmartrac_balance']?></td>
+                            <td><?=$account['bank_balance']?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        <?php if(in_array($account['type'], ['Income', 'Cost of Goods Sold', 'Expenses', 'Other Income', 'Other Expense'])) : ?>
                                         <li>
                                             <a class="dropdown-item" href="#">View Register</a>
                                         </li>
+                                        <?php endif; ?>
                                         <li>
                                             <a class="dropdown-item" href="#">Edit</a>
                                         </li>

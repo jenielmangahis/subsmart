@@ -41,12 +41,17 @@
 		border-bottom-color: #EEEEEE;
 	}
     .groupby {
-        display: none;
+        display: block;
         padding-left: 30px;
         transition: height 1s ease-in;
     }
-    #rcDownArrow{
+    #rcRightArrow{
         display: none;
+    }
+    #rcDownArrow{
+        display: inline;
+        color: #6a4a86;
+        font-weight: bold;
     }
     .rwcl{
         padding-top: 20px;
@@ -82,6 +87,9 @@
     }
     .hf2{
         padding-top: 20px;
+    }
+    .changeCol{
+        display: none;
     }
     .czLabel {
         cursor: pointer;
@@ -123,15 +131,15 @@
                                             <option value="shipping-city">Shipping City</option>
                                             <option value="shipping-state">Shipping State</option>
                                             <option value="shipping-zip">Shipping ZIP</option>
-                                            <option value="billing-city">Billing City</option>
-                                            <option value="billing-state">Billing State</option>
-                                            <option value="billing-zip">Billing ZIP</option>
+                                            <option value="city">Billing City</option>
+                                            <option value="state">Billing State</option>
+                                            <option value="zip">Billing ZIP</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-center">
-                                        <button type="button" class="nsm-button primary">
+                                        <button type="submit" class="nsm-button primary">
                                             Run Report
                                         </button>
                                     </div>
@@ -148,6 +156,7 @@
                 </div>
 
                 <!-- customize-modal -->
+                <form method="POST" action="<?= base_url('/accounting/reports/view-report/'.$reportTypeId); ?>">
                 <div class="modal right fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content rounded">
@@ -157,24 +166,56 @@
                             </div>
                             <div class="modal-body">
                                 <div class="rwcl">
-                                    <h6 onclick="rwcl()" class="czLabel" id="rcRightArrow"><i class='bx bx-fw bxs-right-arrow'></i>Rows/Columns</h6>
                                     <h6 onclick="rwcl()" class="czLabel" id="rcDownArrow"><i class='bx bx-fw bxs-down-arrow'></i>Rows/Columns</h6>
-                                    <div class="col-lg-6 groupby" id="groupby">
+                                    <h6 onclick="rwcl()" class="czLabel" id="rcRightArrow"><i class='bx bx-fw bxs-right-arrow'></i>Rows/Columns</h6>
+                                    <div class="col-lg-12 groupby" id="groupby">
                                         <h6>Group by</h6>
-                                        <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                            <option value="default" selected>Default</option>
-                                            <option value="billing-city">Billing City</option>
-                                            <option value="billing-country">Billing Country</option>
-                                            <option value="billing-state">Billing State</option>
-                                            <option value="billing-street">Billing Street</option>
-                                            <option value="billing-zip">Billing ZIP</option>
-                                            <option value="last-modified">Last Modified</option>
-                                            <option value="last-modified-by">Last Modified By</option>
+                                        <div class="col-lg-6">
+                                        <select name="sort_by" id="sort_by" class="nsm-field form-select">
+                                            <option value="default">Default</option>
+                                            <option value="city">Billing City</option>
+                                            <option value="state">Billing State</option>
+                                            <option value="street">Billing Street</option>
+                                            <option value="zip">Billing ZIP</option>
                                             <option value="last-name">Last Name</option>
-                                            <option value="note">Note</option>
-                                            <option value="other">Other</option>
                                         </select>
-                                        <h6 class="change-col">Change Columns</h6>
+                                        </div>
+                                        <h6 class="change-col" onclick="ccl()">Change Columns</h6>
+                                        <div class="changeCol" id="changeCol">
+                                            <h6 class="fw-bold">Select and reorder columns</h6>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="first_name, last_name">
+                                                <label for="sort-asc" class="form-check-label">Customer</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="phone_h">
+                                                <label for="sort-asc" class="form-check-label">Phone Number</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="email">
+                                                <label for="sort-asc" class="form-check-label">Email</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="first_name, last_name">
+                                                <label for="sort-asc" class="form-check-label">Full Name</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="city">
+                                                <label for="sort-asc" class="form-check-label">Billing Address</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="status">
+                                                <label for="sort-asc" class="form-check-label">Status</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="notes">
+                                                <label for="sort-asc" class="form-check-label">Notes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="status">
+                                                <label for="sort-asc" class="form-check-label">Address</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="f">
@@ -193,11 +234,13 @@
                                 </div>  
                             </div>
                             <div class="modal-footer border-0">
-                                <button type="button" class="nsm-button success">Run Report</button>
+                                <button type="submit" class="nsm-button success">Run Report</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                </form>
+
                 <!-- end-customize-modal -->
                 <div class="row g-3">
                     <div class="col-12 col-md-10 offset-md-1">
@@ -531,13 +574,15 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
+                                <?php
+                                    if($tblDefault){
+                                ?>
                                 <table class="nsm-table">
                                     <thead>
                                         <tr>
                                             <td data-name="Customer">CUSTOMER</td>
                                             <td data-name="Phone Numbers">PHONE NUMBERS</td>
                                             <td data-name="Email">EMAIL</td>
-                                            <td data-name="Full Name">FULL NAME</td>
                                             <td data-name="Billing Address">BILLING ADDRESS</td>
                                             <td data-name="Shipping Address">SHIPPING ADDRESS</td>
                                         </tr>
@@ -545,16 +590,44 @@
                                     <tbody>
                                     <?php foreach($acs_profile as $acsProfile) : ?>
                                         <tr>
-                                            <td><?= $acsProfile->customer_type ?></td>
+                                            <td><?= $acsProfile->first_name.' '. $acsProfile->last_name ?></td>
                                             <td><?= $acsProfile->phone_h ?></td>
                                             <td><?= $acsProfile->email ?></td>
-                                            <td><?= $acsProfile->first_name.' '. $acsProfile->last_name ?></td>
                                             <td>Test billing address</td>
                                             <td>Test shipping address</td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                                <?php }else{ ?>
+                                <table class="nsm-table">
+                                    <thead>
+                                        <tr>
+                                        <?php foreach($custExp as $cust) : 
+                                            if($cust == 'first_name, last_name'){
+                                                $col = 'Customer';
+                                            }elseif($cust == 'phone_h'){
+                                                $col = 'Phone Number';
+                                            }
+                                        ?>
+                                            <td data-name="Customer"><?= !empty($col) ? strtoupper($col) : strtoupper($cust) ?></td>
+                                        <?php 
+                                            $col='';
+                                            endforeach; ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach($acs_profile as $acsProfile) : ?>
+                                        <tr>
+                                            <td><?= $acsProfile->first_name.' '. $acsProfile->last_name ?></td>
+                                            <td><?= $acsProfile->phone_h ?></td>
+                                            <td><?= $acsProfile->email ?></td>
+                                            <td><?= $acsProfile->status ?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                                <?php } ?>
                             </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>
@@ -569,7 +642,8 @@
 
 <?php include viewPath('v2/includes/footer'); ?>
 
-<script>
+<script type="text/javascript">
+
     function rwcl() {
         var x = document.getElementById("groupby");
         var rcright = document.getElementById("rcRightArrow");
@@ -618,6 +692,8 @@
         fdown.style.color = "#6a4a86";
         rcright.style.color = "black";
         rcdown.style.color = "black";
+        rcdown.style.fontWeight = "normal";
+        rcright.style.fontWeight = "normal";
         hfright.style.color = "black";
         hfdown.style.color = "black";
 
@@ -626,16 +702,16 @@
         rcright.classList.remove("fw-bold");
         rcdown.classList.remove("fw-bold");
 
-        if (x.style.display === "block") {
-            x.style.display = "none";
-            fdown.style.display = "none";
-            fright.style.display = "inline";
-            fright.classList.add("fw-bold");
-        } else {
+        if (x.style.display === "none") {
             x.style.display = "block";
             fdown.style.display = "inline";
             fright.style.display = "none";
             fdown.classList.add("fw-bold");
+        } else {
+            x.style.display = "none";
+            fdown.style.display = "none";
+            fright.style.display = "inline";
+            fright.classList.add("fw-bold");
         }
     }
     function hf() {
@@ -653,6 +729,8 @@
         fdown.style.color = "black";
         rcright.style.color = "black";
         rcdown.style.color = "black";
+        rcdown.style.fontWeight = "normal";
+        rcright.style.fontWeight = "normal";
 
         fright.classList.remove("fw-bold");
         fdown.classList.remove("fw-bold");
@@ -669,6 +747,15 @@
             hfdown.style.display = "inline";
             hfright.style.display = "none";
             hfdown.classList.add("fw-bold");
+        }
+    }
+    function ccl() {
+        var x = document.getElementById("changeCol");
+        
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
         }
     }
 </script>

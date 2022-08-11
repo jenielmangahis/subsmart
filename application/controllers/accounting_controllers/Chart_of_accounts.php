@@ -153,7 +153,78 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();
 
-        $this->page_data['accounts'] = $this->chart_of_accounts_model->getFilteredAccounts([1]);
+        $status = [
+            1
+        ];
+
+        if(get('status') === 'all') {
+            array_push($status, 0);
+        }
+
+        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status);
+
+        $data = [];
+        foreach($accounts as $index => $account) {
+            $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id, $status);
+
+            if(!empty(get('search'))) {
+                if(stripos($account->name, get('search')) !== false) {
+                    $data[] = [
+                        'id' => $account->id,
+                        'name' => $account->active === "1" ? $account->name : "$account->name (deleted)",
+                        'type' => $this->account_model->getName($account->account_id),
+                        'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
+                        'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ',')),
+                        'bank_balance' => '$0.00',
+                        'status' => $account->active
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $account->id,
+                    'name' => $account->active === "1" ? $account->name : "$account->name (deleted)",
+                    'type' => $this->account_model->getName($account->account_id),
+                    'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
+                    'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ',')),
+                    'bank_balance' => '$0.00',
+                    'status' => $account->active
+                ];
+            }
+
+            foreach($childAccounts as $childAcc) {
+                if(!empty(get('search'))) {
+                    if(stripos($childAcc->name, get('search')) !== false) {
+                        $data[] = [
+                            'id' => $childAcc->id,
+                            'name' => $childAcc->active === "1" ? "&emsp;$childAcc->name" : "&emsp;$childAcc->name (deleted)",
+                            'type' => $this->account_model->getName($childAcc->account_id),
+                            'detail_type' => $this->account_detail_model->getName($childAcc->acc_detail_id),
+                            'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($childAcc->balance), 2, '.', ',')),
+                            'bank_balance' => '$0.00',
+                            'status' => $childAcc->active
+                        ];
+                    }
+                } else {
+                    $data[] = [
+                        'id' => $childAcc->id,
+                        'name' => $childAcc->active === "1" ? "&emsp;$childAcc->name" : "&emsp;$childAcc->name (deleted)",
+                        'type' => $this->account_model->getName($childAcc->account_id),
+                        'detail_type' => $this->account_detail_model->getName($childAcc->acc_detail_id),
+                        'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($childAcc->balance), 2, '.', ',')),
+                        'bank_balance' => '$0.00',
+                        'status' => $childAcc->active
+                    ];
+                }
+            }
+        }
+
+        if(!empty(get('search'))) {
+            $this->page_data['search'] = get('search');
+        }
+        if(!empty(get('status'))) {
+            $this->page_data['status'] = get('status');
+        }
+        $this->page_data['accounts'] = $data;
         $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));

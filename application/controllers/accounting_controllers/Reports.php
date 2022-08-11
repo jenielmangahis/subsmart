@@ -8,6 +8,11 @@ class Reports extends MY_Controller {
 		parent::__construct();
         $this->checkLogin();
 
+        $this->load->library('session');
+
+        //helper
+        $this->load->helper('accounting/reports_helper');
+
         $this->load->model('accounting_favorite_reports_model');
         $this->load->model('accounting_report_groups_model');
         $this->load->model('accounting_report_types_model');
@@ -19,6 +24,7 @@ class Reports extends MY_Controller {
 
         $this->load->model('accounting_invoices_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('AcsBilling_model');
         $this->load->model('invoice_model');
         $this->load->model('workorder_model');
         $this->load->model('estimate_model');
@@ -109,6 +115,7 @@ class Reports extends MY_Controller {
 
         $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));
     }
+    public $report_type_id = '';
 
     public function index()
     {
@@ -268,6 +275,7 @@ class Reports extends MY_Controller {
         $this->load->view('accounting/reports/standard_report_pages/ffcra_cares_act_report', $this->page_data);
     }
 
+
     public function view_report($reportTypeId)
     {
         $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);
@@ -284,7 +292,44 @@ class Reports extends MY_Controller {
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
-        $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile();
+        $this->page_data['reportTypeId'] = $reportTypeId;
+
+        $sort_by = $this->input->post('sort_by');
+        $cust = $this->input->post('customer');
+
+        // when sort and columns are NOT empty
+        if(($sort_by != 'default' && !empty($sort_by)) && !empty($cust)){
+            $getBill = $this->AcsBilling_model->getBilling($sort_by);
+            $gb = json_decode(json_encode($getBill), true);
+            $gbArray = array();
+            foreach($gb as $g_b){
+                array_push($gbArray, $g_b['fk_prof_id']);
+            }
+            $custImp = implode(", ", $cust);
+            $custExp = explode(",", $custImp);
+            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $custExp);
+            $this->page_data['tblDefault'] = false;   
+        //when sort are NOT empty
+        }elseif(($sort_by != 'default' && !empty($sort_by)) && empty($cust)){
+            $getBill = $this->AcsBilling_model->getBilling($sort_by);
+            $gb = json_decode(json_encode($getBill), true);
+            $gbArray = array();
+            foreach($gb as $g_b){
+                array_push($gbArray, $g_b['fk_prof_id']);
+            }
+            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, null);
+            $this->page_data['tblDefault'] = true;  
+        
+            //when columns are NOT empty
+        }elseif(($sort_by === 'default') && !empty($cust)){
+            $custImp = implode(", ", $cust);
+            $custExp = explode(",", $custImp);
+            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $custExp);
+            $this->page_data['tblDefault'] = false;   
+        }else {      
+            $this->page_data['tblDefault'] = true;
+            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile();
+        }
 
         if($reportType->name === 'Profit and Loss by Tag Group') {
             $this->page_data['group_tags'] = $this->tags_model->getGroup();
@@ -292,6 +337,8 @@ class Reports extends MY_Controller {
 
         $this->page_data['page']->title = $reportType->name;
         $this->page_data['page']->parent = 'Reports';
+        $this->page_data['custExp'] = $cust;
+
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
 }
