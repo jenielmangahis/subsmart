@@ -56,40 +56,32 @@
                                 <div class="col-12 col-lg-12 col-xl-12">
                                     <div class="position-relative">
                                         <div class="chat-messages p-4">
-                                            <?php if( $customerMessages ){ ?>
-                                                <?php foreach($customerMessages as $msg){ ?>
-                                                    <?php 
-                                                        $message_position = 'chat-message-left'; //Customer
-                                                        $default_profile_image = base_url('assets/img/default-customer.png');
-                                                        $chat_user_name   = $msg->first_name . ' ' . $msg->last_name;
-                                                        $box_msg_css      = 'ml-3';
-                                                        if( $msg->user_id > 0 ){ //User
-                                                            $message_position = 'chat-message-right';
-                                                            $default_profile_image = businessProfileImage($business->id);
-                                                            $chat_user_name = $business->business_name;
-                                                            $box_msg_css      = 'mr-3';
-                                                        }
+                                            <?php foreach($customerMessages as $msg){ ?>
+                                                <?php 
+                                                    $message_position = 'chat-message-left'; //Customer
+                                                    $default_profile_image = base_url('assets/img/default-customer.png');
+                                                    $chat_user_name   = $msg->first_name . ' ' . $msg->last_name;
+                                                    $box_msg_css      = 'ml-3';
+                                                    if( $msg->user_id > 0 ){ //User
+                                                        $message_position = 'chat-message-right';
+                                                        $default_profile_image = businessProfileImage($business->id);
+                                                        $chat_user_name = $business->business_name;
+                                                        $box_msg_css      = 'mr-3';
+                                                    }
 
-                                                    ?>
+                                                ?>
 
-                                                    <div class="<?= $message_position; ?> pb-4">
-                                                        <div>
-                                                            <img src="<?= $default_profile_image; ?>" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
-                                                            <div class="text-muted small text-nowrap mt-2"><?= timeLapsedString($msg->message_date); ?></div>
-                                                        </div>
-                                                        <div class="flex-shrink-1 bg-light rounded py-2 px-3 <?= $box_msg_css; ?>">
-                                                            <div class="font-weight-bold mb-1"><b><?= $chat_user_name; ?></b></div>
-                                                            <?= $msg->message; ?>
-                                                        </div>
+                                                <div class="<?= $message_position; ?> pb-4">
+                                                    <div>
+                                                        <img src="<?= $default_profile_image; ?>" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
+                                                        <div class="text-muted small text-nowrap mt-2"><?= timeLapsedString($msg->message_date); ?></div>
                                                     </div>
-                                                <?php } ?>
-                                            <?php }else{ ?>
-                                                <div class="nsm-empty">
-                                                    <i class="bx bx-meh-blank"></i>
-                                                    <span>You have no messages.</span>
+                                                    <div class="flex-shrink-1 bg-light rounded py-2 px-3 <?= $box_msg_css; ?>">
+                                                        <div class="font-weight-bold mb-1"><b><?= $chat_user_name; ?></b></div>
+                                                        <?= $msg->message; ?>
+                                                    </div>
                                                 </div>
                                             <?php } ?>
-                                            
                                         </div>
                                     </div>
                                     <form method="POST" id="frm-send-message">

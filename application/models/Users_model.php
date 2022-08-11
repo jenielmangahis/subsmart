@@ -187,6 +187,10 @@ class Users_model extends MY_Model
                 $this->db->or_like('LName', $filters['search'], 'both');
             }
 
+            if( $filters['mobile'] != '' ){
+                $this->db->where('users.mobile !=', '');                
+            }            
+
             if( $filters['eids'] != '' ){
                 $this->db->where_in('users.id', $filters['eids']);                
             }

@@ -165,7 +165,7 @@
                                     <div class="col-md-12 mt-3">
                                         <label for="">Send To</label>   
                                         <br />
-                                        <span id="" class="auto-sms-popover" data-bs-toggle="popover" data-bs-content="Employee(s) that will receive the auto notification">
+                                        <span id="" class="auto-sms-popover" data-bs-toggle="popover" data-bs-content="Employee(s) that will receive the auto notification. Only employees with mobile number will be shown.">
                                             <select name="send_to[]" id="send-to-user" class="form-control" multiple=""></select>
                                         </span>                                        
                                         <div class="form-check" style="margin-top:5px;display: inline-block;">
@@ -243,12 +243,22 @@
             trigger:"hover"
         });
 
+        /*$("#send-to-user").on("select2:close", function (e) { 
+            //console.log(e);
+            //console.log(e.params.originalSelect2Event.data.mobile);
+            if( e.params.originalSelect2Event.data.mobile == "" ){
+                alert(4);
+                $("#send-to-user").val(null).trigger("change"); 
+
+            }
+        });*/
+
         $('#send-to-user').select2({
             dropdownParent: $("#modalCreateAutoSmsNotification"),
             width: '100%',
             //placeholder: 'Select User',
             ajax: {
-                url: base_url + 'autocomplete/_company_users',
+                url: base_url + 'autocomplete/_company_users?mobile=1',
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -273,10 +283,11 @@
                 },
                 formatResult: function(item){ 
                     //console.log(item);
-                    return '<div>'+item.FName + ' ' + item.LName +'<br /><small>'+item.email+'</small></div>';
+                    return '<div>'+item.FName + ' ' + item.LName +'<br /><small>'+item.mobile+'</small></div>';
                 },
                 cache: true
-              },              
+              },    
+              escapeMarkup: function (markup) { return markup; },          
               minimumInputLength: 0,
               templateResult: formatRepoUser,
               templateSelection: formatRepoSelectionUser
@@ -287,8 +298,14 @@
             return repo.text;
           }
 
+          if( repo.mobile != '' ){
+            var mobile = repo.mobile;         
+          }else{
+            var mobile = 'Undefined';
+          }
+
           var $container = $(
-            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="'+repo.user_image+'" /></div><div class="autocomplete-right">'+repo.FName + ' ' + repo.LName +'<br /><small>'+repo.email+'</small></div></div>'
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="'+repo.user_image+'" /></div><div class="autocomplete-right">'+repo.FName + ' ' + repo.LName +'<br /><small>Mobile Number : '+mobile+'</small></div></div>'
           );
 
           return $container;

@@ -18,6 +18,11 @@ class Autocomplete extends MY_Controller
         $search = $this->input->get('q');
         $filter = ['search' => $search];
         $cid    = logged('company_id');
+
+        if( $this->input->get('mobile') ){
+            $filter = ['mobile' => 1];
+        }
+
         $users  = $this->Users_model->getCompanyUsers($cid, $filter);  
         foreach($users as $u){
             $default_imp_img = userProfileImage($u->id);
