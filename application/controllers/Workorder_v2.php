@@ -2715,7 +2715,7 @@ class Workorder_v2 extends MY_Controller
 
     public function priority()
     {
-        new Priority($this);
+        new Priority_Old($this);
     }
 
 

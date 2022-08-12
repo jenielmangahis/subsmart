@@ -64,7 +64,7 @@
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                            <select name="appointment_type_id" id="appointment-customer" class="nsm-field form-select" required>
+                            <select name="appointment_type_id" class="nsm-field form-select" required>
                                 <?php $start = 0; ?>
                                 <?php foreach ($appointmentTypes as $a) { ?>
                                     <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>

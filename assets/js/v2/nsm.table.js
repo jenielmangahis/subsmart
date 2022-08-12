@@ -133,13 +133,15 @@ function getCollapsedColumns(_this) {
             itemsPerPage: 10,
         }, options);
         
-        changePage(_this, settings.page, settings.itemsPerPage);
+        _this.attr("data-maxitems", settings.itemsPerPage)
+        changePage(_this, settings.page);
     };
 }(jQuery));
 
-function changePage(_table, page=1, itemsPerPage=10){
+function changePage(_table, page=1){
     var _tableRows = _table.find("tbody tr:not(.nsm-row-collapse)");
     var _tableColCount = _table.find("thead tr:first-child td").length;
+    var itemsPerPage = parseInt(_table.attr("data-maxitems"));
     var rowLength = _tableRows.length;
     var rowStart = page > 1 ? (itemsPerPage * (page-1)) : 0;
     var rowEnd = rowStart + itemsPerPage;
@@ -150,6 +152,7 @@ function changePage(_table, page=1, itemsPerPage=10){
     var nextIsDisabled = isLastPage ? "disabled" : "";
     var maxPaginationNum = 4;
     var paginationPages = getPaginationPages(page, maxPaginationNum);
+
     
     try{
         _table.find("tfoot").remove();

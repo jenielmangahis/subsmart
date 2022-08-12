@@ -46,6 +46,9 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function entry($id = 0){
+        $this->page_data['page']->title = 'Task';
+        $this->page_data['page']->parent = 'Calendar';
+
 		$this->hasAccessModule(6);
 		$uid = logged('id');
 		$company_id = logged('company_id');
@@ -96,13 +99,15 @@ class Taskhub extends MY_Controller {
 
 		if($this->form_validation->run() == false){			
 			$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
-			$this->load->view('workcalender/taskhub/entry', $this->page_data);
+			// $this->load->view('workcalender/taskhub/entry', $this->page_data);
+			$this->load->view('v2/pages/workcalender/taskhub/entry', $this->page_data);
 		} else {
 
 			IF( $this->input->post('description') == '' ){
 				$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 				$this->page_data['error'] = 'Please specify task description';
-				$this->load->view('workcalender/taskhub/entry', $this->page_data);
+				// $this->load->view('workcalender/taskhub/entry', $this->page_data);
+				$this->load->view('v2/pages/workcalender/taskhub/entry', $this->page_data);
 			}else{
 				$assigned_to = $this->input->post('assigned_to');
 				if($assigned_to == ''){
@@ -256,7 +261,8 @@ class Taskhub extends MY_Controller {
 
 				} else {
 					$this->page_data['error'] = 'Error creating task';
-					$this->load->view('workcalender/taskhub/entry', $this->page_data);
+					// $this->load->view('workcalender/taskhub/entry', $this->page_data);
+					$this->load->view('v2/pages/workcalender/taskhub/entry', $this->page_data);
 				}
 			}
 		}

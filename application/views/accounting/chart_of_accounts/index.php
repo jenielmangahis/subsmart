@@ -34,7 +34,6 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
-                            <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
                                     Batch Actions
@@ -48,7 +47,7 @@
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="new-account-button">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
@@ -88,6 +87,7 @@
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
+                                        <li><a class="dropdown-item" href="javascript:void(0);">10</a></li>
                                         <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
@@ -116,7 +116,7 @@
                     <tbody>
                         <?php if(count($accounts) > 0) : ?>
                         <?php foreach($accounts as $account) : ?>
-                        <tr>
+                        <tr data-status="<?=$account['status']?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$account['id']?>">
@@ -133,7 +133,8 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <?php if(in_array($account['type'], ['Income', 'Cost of Goods Sold', 'Expenses', 'Other Income', 'Other Expense'])) : ?>
+                                        <?php if($account['status'] === "1") : ?>
+                                        <?php if(!in_array($account['type'], ['Income', 'Cost of Goods Sold', 'Expenses', 'Other Income', 'Other Expense'])) : ?>
                                         <li>
                                             <a class="dropdown-item" href="#">View Register</a>
                                         </li>
@@ -141,8 +142,9 @@
                                         <li>
                                             <a class="dropdown-item" href="#">Edit</a>
                                         </li>
+                                        <?php endif;?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Make inactive (reduces usage)</a>
+                                            <a class="dropdown-item <?=$account['status'] === '0' ? 'make-active' : 'make-inactive'?>" href="#"><?=$account['status'] === '0' ? 'Make active' : 'Make inactive (reduces usage)'?></a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#">Run report</a>

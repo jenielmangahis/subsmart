@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Color_Settings extends MY_Controller {
+class Color_Settings_Old extends MY_Controller {
 
 	public function __construct(){
 
@@ -19,9 +19,6 @@ class Color_Settings extends MY_Controller {
 
 
 	public function index(){
-        $this->page_data['page']->title = 'Color Settings';
-        $this->page_data['page']->parent = 'Calendar';
-
 		$user_id = logged('id');
         $role_id = logged('role');
         
@@ -29,8 +26,7 @@ class Color_Settings extends MY_Controller {
 		$colorSettings = $this->ColorSettings_model->getByWhere($args);
 
 		$this->page_data['colorSettings'] = $colorSettings;
-		// $this->load->view('color_settings/index', $this->page_data);
-		$this->load->view('v2/pages/color_settings/index', $this->page_data);
+		$this->load->view('color_settings/index', $this->page_data);
 	}
 
 	public function add_new_color_setting(){
@@ -142,8 +138,7 @@ class Color_Settings extends MY_Controller {
 		$this->session->set_flashdata('message', 'Color Setting has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
-		// redirect('color_settings/index');
-		echo true;
+		redirect('color_settings/index');
 	}
 
 

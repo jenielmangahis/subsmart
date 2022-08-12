@@ -6,7 +6,7 @@
                 <span>Schedule</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Task Hub'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Task Hub' || $page->title == 'Task'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('taskhub') ?>">
                 <i class='bx bx-fw bx-task'></i>
                 <span>TaskHub</span>
@@ -18,7 +18,7 @@
                 <span>Online Booking</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Priority'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('workorder/priority/') ?>">
                 <i class='bx bx-fw bx-list-check'></i>
                 <span>Priority</span>
@@ -42,7 +42,7 @@
                 <span>Appointment Types</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Color Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('color_settings/index') ?>">
                 <i class='bx bx-fw bx-brush'></i>
                 <span>Color Settings</span>

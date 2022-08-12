@@ -145,7 +145,9 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        $(".nsm-table").nsmPagination({
+            itemsPerPage: 5,
+        });
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-id');

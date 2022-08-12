@@ -2056,7 +2056,7 @@ div.workspace-list>ul>li .nsm-badge {
 
 .select2-container {
 	width: 100% !important;
-	z-index: 9999 !important;
+	/* z-index: 9999 !important; */
 }
 
 span.select2-selection {
@@ -2076,4 +2076,14 @@ span.select2-selection {
 	border: 1px solid #d3d3d3;
 	width: 100%;
 	border-radius: 5px;
+}
+
+.select2 .select2-selection--single{
+	height: 33px !important;
+    display: flex !important;
+    align-items: center;
+}
+
+.select2 .select2-selection__arrow{
+	top: unset !important;
 }

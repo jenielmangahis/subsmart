@@ -45,7 +45,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button btn-clear-all">
                                 <i class='bx bx-fw bx-check'></i> Clear All
                             </button>
                             <button type="button" class="nsm-button">
@@ -99,7 +99,37 @@
                                     </td>
                                     <td><?= $row->customer_name; ?></td>
                                     <td><?= getTaskAssignedUser($row->task_id); ?></td>
-                                    <td><span class="nsm-badge success"><?php echo $row->status_text; ?></span></td>
+                                    <td>
+                                    <?php
+                                        switch ($row->status_text):
+                                            case 'New':
+                                                $task_status = "primary";
+                                                break;
+                                            case 'Resumed':
+                                                $task_status = "primary";
+                                                break;
+                                            case 'On Hold':
+                                                $task_status = "error";
+                                                break;
+                                            case 'Completed':
+                                                $task_status = "success";
+                                                break;
+                                            case 'Complete':
+                                                $task_status = "success";
+                                                break;
+                                            case 'Re-opened':
+                                                $task_status = "primary";
+                                                break;
+                                            case 'On Going':
+                                                $task_status = "secondary";
+                                                break;
+                                            default:
+                                                $task_status = "";
+                                                break;
+                                        endswitch;
+                                        ?>
+                                        <span class="nsm-badge <?= $task_status ?>"><?php echo $row->status_text; ?></span>
+                                    </td>
                                     <td><?php echo date("F d, Y", strtotime($row->estimated_date_complete)); ?></td>
                                     <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
                                     <td>
@@ -109,16 +139,16 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('taskhub/entry/'.$row->task_id) ?>">Edit</a>
+                                                    <a class="dropdown-item" href="<?php echo url('taskhub/entry/' . $row->task_id) ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
+                                                    <a class="dropdown-item btn-complete-task" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>">Add Update</a>
+                                                    <a class="dropdown-item" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('taskhub/view/'.$row->task_id) ?>">View Comments</a>
+                                                    <a class="dropdown-item" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">View Comments</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -144,6 +174,108 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+
+        $(".btn-clear-all").on("click", function() {
+            let id = $(this).attr('data-id');
+            let name = $(this).attr("data-name");
+
+            Swal.fire({
+                title: 'Clear All',
+                text: "This will mark all tasks as completed. Proceed with action?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('taskhub/_mark_all_completed'); ?>",
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.is_success == 1) {
+                                Swal.fire({
+                                    title: 'Update Successful!',
+                                    text: "Taskhub data is successfully updated!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'An Error Occured',
+                                    text: "No changes will be made.",
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $(document).on("click", ".btn-complete-task", function() {
+            let id = $(this).attr('data-id');
+            let subject = $(this).attr("data-subject");
+
+            Swal.fire({
+                title: 'Complete Task',
+                text: "Are you sure you want to mark as completed task: " + subject + "?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('taskhub/_task_mark_completed'); ?>",
+                        dataType: 'json',
+                        data: {
+                            tsid: id
+                        },
+                        success: function(result) {
+                            console.log(result);
+                            if (result.is_success == 1) {
+                                Swal.fire({
+                                    title: 'Update Successful!',
+                                    text: "Taskhub data is successfully updated!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'An Error Occured',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

@@ -64,29 +64,21 @@
                                     </div>
                                     <?php endif; ?>
                                     <div class="dropdown d-inline-block">
-                                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                            <span>
-                                                Sort by Date / Order created
-                                            </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                            <li><a class="dropdown-item" href="javascript:void(0);" id="sort-by-payee">Sort by Payee</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);" id="sort-by-order-created">Sort by Order created</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);" id="sort-by-date-payee">Sort by Date / Payee</a></li>
-                                            <li><a class="dropdown-item active" href="javascript:void(0);" id="sort-by-date-order-created">Sort by Date / Order created</a></li>
-                                        </ul>
+                                        <label for="sort-by" class="float-start">Sort by</label>
+                                        <select id="sort-by" class="nsm-field form-select" required>
+                                            <option value="payee">Sort by Payee</option>
+                                            <option value="order-created">Sort by Order created</option>
+                                            <option value="date-payee">Sort by Date / Payee</option>
+                                            <option value="date-order-created" selected>Sort by Date / Order created</option>
+                                        </select>
                                     </div>
                                     <div class="dropdown d-inline-block">
-                                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                            <span>
-                                                Show all checks
-                                            </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                            <li><a class="dropdown-item active" href="javascript:void(0);" id="show-all-checks">Show all checks</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);" id="show-regular-checks">Show regular checks</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);" id="show-bill-payment-checks">Show bill payment checks</a></li>
-                                        </ul>
+                                        <label for="check-type" class="float-start">Type</label>
+                                        <select id="check-type" class="nsm-field form-select" required>
+                                            <option value="all-checks" selected>Show all checks</option>
+                                            <option value="regular">Show regular checks</option>
+                                            <option value="bill-payment">Show bill payment checks</option>
+                                        </select>
                                     </div>
                                     <div class="nsm-page-buttons page-button-container">
                                         <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_checks_list_modal">
@@ -104,10 +96,10 @@
                                                     </span> <i class='bx bx-fw bx-chevron-down'></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
+                                                    <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
                                                     <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                                     <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                                    <li><a class="dropdown-item active" href="javascript:void(0);">150</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
                                                     <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
                                                 </ul>
                                             </div>

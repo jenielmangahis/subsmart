@@ -3305,6 +3305,8 @@ class Workorder extends MY_Controller
 
     public function priority()
     {
+        $this->page_data['page']->title = 'Priority';
+        $this->page_data['page']->parent = 'Calendar';
         new Priority($this);
     }
 
@@ -7997,7 +7999,7 @@ class Workorder extends MY_Controller
         file_put_contents($file3, $image_base643);
         }
 
-        $options = implode(',',$_POST['options']);
+        $options = implode(',', array_key_exists('options', $_POST) ? $_POST['options'] : []);
         // dd($service_name);
 
 
@@ -8453,6 +8455,10 @@ class Workorder extends MY_Controller
             $data = ['work_order_num_next' => $new_next_num];
             $this->WorkorderSettings->updateByCompanyId($company_id,$data);
 
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            }
 
            redirect('workorder');
         }

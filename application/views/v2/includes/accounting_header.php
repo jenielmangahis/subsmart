@@ -50,9 +50,6 @@ if ($this->session->userdata('usertimezone') == null) {
 
     <!-- newly added script/link -->
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
-    <link
-        href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css"
-        rel="stylesheet" type="text/css">
         
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">

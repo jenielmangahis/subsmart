@@ -155,7 +155,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-book-content'></i> Online Booking
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == '') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Priority') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("workorder/priority/") ?>">
                                 <i class='bx bx-fw bx-list-check'></i> Priority
@@ -179,7 +179,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-book-add'></i> Appointment Types
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == '') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Color Settings') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("color_settings/index") ?>">
                                 <i class='bx bx-fw bx-brush'></i> Color Settings
