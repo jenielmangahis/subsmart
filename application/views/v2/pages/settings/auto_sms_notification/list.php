@@ -25,6 +25,16 @@
     width: 80%;
     vertical-align: top;
 }
+.list-chk-options{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.list-chk-options li{
+    display: inline-block;
+    width: 30%;
+    margin: 5px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -167,32 +177,49 @@
                                         <br />
                                         <span id="" class="auto-sms-popover" data-bs-toggle="popover" data-bs-content="Employee(s) that will receive the auto notification. Only employees with mobile number will be shown.">
                                             <select name="send_to[]" id="send-to-user" class="form-control" multiple=""></select>
-                                        </span>                                        
-                                        <div class="form-check" style="margin-top:5px;display: inline-block;">
-                                          <input class="form-check-input" type="checkbox" value="all" name="send_to_all" id="chk-send-all">
-                                          <label class="form-check-label" for="flexCheckDefault">
-                                            Send to all
-                                          </label>
-                                        </div>
-                                        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
-                                          <input class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
-                                          <label class="form-check-label" for="flexCheckDefault">
-                                            Send to Module Item Creator
-                                          </label>
-                                        </div>
-                                        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
-                                          <input class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="chk-send-company-admin">
-                                          <label class="form-check-label" for="flexCheckDefault">
-                                            Send to Company Admin
-                                          </label>
-                                        </div>
-                                        <div class="form-check grp-send-assigned-user" style="margin-top:5px; margin-left: 10px; display: none;">
-                                          <input class="form-check-input" type="checkbox" value="all" name="send_assigned_user" id="chk-assigned-user">
-                                          <label class="form-check-label" for="flexCheckDefault">
-                                            Send to Assigned User
-                                          </label>
-                                        </div>
-                                        
+                                        </span>        
+                                        <ul class="list-chk-options">
+                                            <li>
+                                                <div class="form-check">
+                                                  <input class="form-check-input" type="checkbox" value="all" name="send_to_all" id="chk-send-all">
+                                                  <label class="form-check-label" for="chk-send-all">
+                                                    Send to all Employees
+                                                  </label>
+                                                </div>        
+                                            </li>
+                                            <li>
+                                                <div class="form-check">
+                                                  <input class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
+                                                  <label class="form-check-label" for="chk-send-creator">
+                                                    Send to Module Item Creator
+                                                  </label>
+                                                </div>        
+                                            </li>
+                                            <li>
+                                                <div class="form-check">
+                                                  <input class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="chk-send-company-admin">
+                                                  <label class="form-check-label" for="chk-send-company-admin">
+                                                    Send to Company Admin
+                                                  </label>
+                                                </div>
+                                            </li>
+                                            <li class="grp-send-assigned-user" style="display: none;">
+                                                <div class="form-check">
+                                                  <input class="form-check-input" type="checkbox" value="all" name="send_assigned_user" id="chk-assigned-user">
+                                                  <label class="form-check-label" for="chk-assigned-user">
+                                                    Send to Assigned User
+                                                  </label>
+                                                </div>
+                                            </li>
+                                            <li class="grp-send-assigned-agent" style="display: none;">
+                                                <div class="form-check ">
+                                                  <input class="form-check-input" type="checkbox" value="all" name="send_assigned_agent" id="chk-assigned-agent">
+                                                  <label class="form-check-label" for="chk-assigned-agent">
+                                                    Send to Assigned Agent
+                                                  </label>
+                                                </div>
+                                            </li>
+                                        </ul>   
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label for="">Status</label>
@@ -328,9 +355,15 @@
 
         if( module_name == 'taskhub' || module_name == 'lead' ){
             $('.grp-send-assigned-user').show();
-            $('.grp-send-assigned-user').css('display', 'inline-block');
+            //$('.grp-send-assigned-user').css('display', 'inline-block');
         }else{
             $('.grp-send-assigned-user').hide();
+        }
+
+        if( module_name == 'lead' ){
+            $('.grp-send-assigned-agent').show();
+        }else{
+            $('.grp-send-assigned-agent').hide();
         }
 
         setTimeout(function () {

@@ -974,7 +974,6 @@
             $client_user_id = 'user_good';
             $accessToken  = exchangeToken($client_id, $client_secret, $post['token']);
             if( isset($accessToken) ){
-                echo $accessToken->access_token;
                 if( $accessToken->access_token != '' ){
                     $plaidAccount = authGet($client_id, $client_secret, $accessToken->access_token, $post['account_id']); 
                     echo 'account';
@@ -983,6 +982,96 @@
                 } 
             }
 
+            exit;
+        }
+
+        public function plaidProcessorAuth()
+        {
+            $this->load->helper(array('plaid_helper'));
+
+            $post = $this->input->post();
+
+            $client_id = '62cd17c4e7bf0f001347726e';
+            $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
+            $client_name = 'NsmarTrac';
+            $client_user_id = 'user_good';
+            $accessToken  = exchangeToken($client_id, $client_secret, $post['token']);
+            if( isset($accessToken) ){
+                if( $accessToken->access_token != '' ){
+                    $processorToken       = processorToken($client_id, $client_secret, $accessToken->access_token, $post['account_id']);
+                    $processorAuthAccount = processorAuthGet($client_id, $client_secret, $processorToken->processor_token);
+                    echo 'account';
+                    echo "<pre>";                    
+                    print_r($processorAuthAccount);
+                } 
+            }
+
+            exit;
+        }
+
+        public function plaidIdentityGet()
+        {
+            $this->load->helper(array('plaid_helper'));
+
+            $post = $this->input->post();
+
+            $client_id = '62cd17c4e7bf0f001347726e';
+            $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
+            $client_name = 'NsmarTrac';
+            $client_user_id = 'user_good';
+            $accessToken  = exchangeToken($client_id, $client_secret, $post['token']);
+            if( isset($accessToken) ){
+                if( $accessToken->access_token != '' ){
+                    $plaidIdentity = identityGet($client_id, $client_secret, $accessToken->access_token);
+                    echo 'account';
+                    echo "<pre>";                    
+                    print_r($plaidIdentity);
+                } 
+            }
+
+            exit;
+        }
+
+        public function plaidInfoView()
+        {
+            $this->load->helper(array('plaid_helper'));
+
+            $post = $this->input->post();
+
+            $client_id = '62cd17c4e7bf0f001347726e';
+            $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
+            $client_name = 'NsmarTrac';
+            $client_user_id = 'user_good';
+            $accessToken  = exchangeToken($client_id, $client_secret, $post['token']);
+            $plaidIdentity = array();
+            $plaidAccount  = array();
+            $plaidTransactions = array();
+            $plaidBalance = array();
+            $plaidRecurringTransactions = array();
+            $start_date = '2022-01-01';
+            $end_date   = '2022-08-25';
+            if( isset($accessToken) ){
+                if( $accessToken->access_token != '' ){
+                    $plaidTransactions = transactionGet($client_id, $client_secret, $accessToken->access_token, $start_date, $end_date, $post['account_id']);
+                    $plaidIdentity = identityGet($client_id, $client_secret, $accessToken->access_token);
+                    $plaidAccount  = authGet($client_id, $client_secret, $accessToken->access_token, $post['account_id']);  
+                    $plaidBalance  = balanceGet($client_id, $client_secret, $accessToken->access_token, $post['account_id']);                     
+                    $plaidRecurringTransactions = recurringTransactionsGet($client_id, $client_secret, $accessToken->access_token, $post['account_id']);
+                } 
+            }
+
+            $this->page_data['plaidIdentity'] = $plaidIdentity;
+            $this->page_data['plaidAccount']  = $plaidAccount;
+            $this->page_data['plaidTransactions'] = $plaidTransactions;
+            $this->page_data['plaidBalance'] = $plaidBalance;
+            $this->load->view('v2/pages/debug/ajax_plaid_info', $this->page_data);
+        }
+
+        public function testReplace()
+        {
+            $sms_message = 'business.name Workorder 123';
+            $sms_message = str_replace("business.name", 'nsmart', $sms_message);
+            echo $sms_message;
             exit;
         }
 
