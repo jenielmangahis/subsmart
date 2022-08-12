@@ -6963,6 +6963,8 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+        //SMS Notification
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id);
 
         customerAuditLog(logged('id'), $w_acs, $addQuery, 'Workorder', 'Created workorder #'.$this->input->post('workorder_number'));
 
