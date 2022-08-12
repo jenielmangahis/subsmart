@@ -4014,9 +4014,50 @@ $(function() {
         }
     });
 
-    // $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort, #printChecksModal #check-type', function() {
-    //     $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
-    // });
+    $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort-by, #printChecksModal #check-type', function() {
+        var data = new FormData();
+
+        data.set('payment_account', $('#printChecksModal #payment_account').val());
+        data.set('sort', $('#printChecksModal #sort-by').val());
+        data.set('type', $('#printChecksModal #check-type').val());
+
+        $.ajax({
+            url: '/accounting/get-checks',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var checks = JSON.parse(result);
+
+                $('#printChecksModal #checks-table tbody tr').remove();
+
+                if(checks.length < 1) {
+                    $('#printChecksModal #checks-table tbody').append(`
+                    <tr>
+                        <td colspan="5"><div class="nsm-empty"><span>No results found.</span></div></td>
+                    </tr>
+                    `);
+                } else {
+                    checks.forEach(function(check) {
+                        $('#printChecksModal #checks-table tbody').append(`
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="${check.id}">
+                                </div>
+                            </td>
+                            <td>${check.date}</td>
+                            <td>${check.type}</td>
+                            <td>${check.payee}</td>
+                            <td>${check.amount}</td>
+                        </tr>
+                        `);
+                    });
+                }
+            }
+        });
+    });
 
     $(document).on('change', '#printChecksModal #checks-table input.select-all', function() {
         $('#printChecksModal #checks-table tbody tr input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
@@ -4048,45 +4089,46 @@ $(function() {
         $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-target="#checkModal"]').trigger('click');
     });
 
-    // $(document).on('click', '#printChecksModal #remove-from-list', function() {
-    //     var data = new FormData();
+    $(document).on('click', '#printChecksModal #remove-from-list', function() {
+        var data = new FormData();
 
-    //     $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
-    //         var row = $(this).parent().parent().parent();
-    //         var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
-    //         var transactionType = rowData.type;
-    //         transactionType = transactionType.replaceAll(' (Check)', '');
-    //         transactionType = transactionType.replaceAll(' (Credit Card)', '');
-    //         transactionType = transactionType.replaceAll(' ', '-');
-    //         transactionType = transactionType.toLowerCase();
+        $('#printChecksModal #checks-table tbody tr input.select-one:checked').each(function() {
+            var row = $(this).parent().parent().parent();
+            var transactionType = row.find('td:nth-child(3)').html();
+            transactionType = transactionType.replaceAll(' (Check)', '');
+            transactionType = transactionType.replaceAll(' (Credit Card)', '');
+            transactionType = transactionType.replaceAll(' ', '-');
+            transactionType = transactionType.toLowerCase();
 
-    //         if (data.has('id[]') === false) {
-    //             data.set('id[]', $(this).val());
-    //             data.set('type[]', transactionType);
-    //         } else {
-    //             data.append('id[]', $(this).val());
-    //             data.append('type[]', transactionType);
-    //         }
-    //     });
+            if (data.has('id[]') === false) {
+                data.set('id[]', $(this).val());
+                data.set('type[]', transactionType);
+            } else {
+                data.append('id[]', $(this).val());
+                data.append('type[]', transactionType);
+            }
+        });
 
-    //     $.ajax({
-    //         url: '/accounting/remove-to-print',
-    //         data: data,
-    //         type: 'post',
-    //         processData: false,
-    //         contentType: false,
-    //         success: function(result) {
-    //             var res = JSON.parse(result);
+        $.ajax({
+            url: '/accounting/remove-to-print',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
 
-    //             toast(res.success, res.message);
+                toast(res.success, res.message);
 
-    //             $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
-    //             $('#printChecksModal #checks-table #select-all-checks').prop('checked', false);
-    //             $('#printChecksModal #selected-checks-total').html('0.00');
-    //             $('#printChecksModal #selected-checks').html('0');
-    //         }
-    //     });
-    // });
+                $('#printChecksModal #checks-table tbody tr input.select-one:checked').each(function() {
+                    $(this).closest('tr').remove();
+                });
+                $('#printChecksModal #checks-table .select-all').prop('checked', false);
+                $('#printChecksModal #selected-checks-total').html('$0.00');
+                $('#printChecksModal #selected-checks').html('0');
+            }
+        });
+    });
 
     $(document).on('click', '#printChecksModal #preview-and-print', function(e) {
         e.preventDefault();

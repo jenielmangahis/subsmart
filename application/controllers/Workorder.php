@@ -3305,6 +3305,8 @@ class Workorder extends MY_Controller
 
     public function priority()
     {
+        $this->page_data['page']->title = 'Priority';
+        $this->page_data['page']->parent = 'Calendar';
         new Priority($this);
     }
 
@@ -3670,6 +3672,7 @@ class Workorder extends MY_Controller
         $user_id = logged('id');
 
         $company_id = logged('company_id');
+
         $this->load->library('session');
 
         $users_data = $this->session->all_userdata();
@@ -4294,9 +4297,8 @@ class Workorder extends MY_Controller
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
-        //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id);
-        
+        //SMS Notification        
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id);        
 
         if($this->input->post('payment_method') == 'Cash'){
             $payment_data = array(
@@ -7997,7 +7999,7 @@ class Workorder extends MY_Controller
         file_put_contents($file3, $image_base643);
         }
 
-        $options = implode(',',$_POST['options']);
+        $options = implode(',', array_key_exists('options', $_POST) ? $_POST['options'] : []);
         // dd($service_name);
 
 
@@ -8440,6 +8442,10 @@ class Workorder extends MY_Controller
 
             $notification = $this->workorder_model->save_notification($notif);
 
+            //SMS Notification        
+            createCronAutoSmsNotification(getLoggedCompanyID(), $addQuery, 'workorder', $this->input->post('status'), $user_id);        
+
+
 
             //Updated workorder settings
             $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
@@ -8449,6 +8455,10 @@ class Workorder extends MY_Controller
             $data = ['work_order_num_next' => $new_next_num];
             $this->WorkorderSettings->updateByCompanyId($company_id,$data);
 
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            }
 
            redirect('workorder');
         }

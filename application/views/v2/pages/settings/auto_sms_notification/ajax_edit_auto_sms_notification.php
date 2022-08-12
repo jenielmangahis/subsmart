@@ -102,7 +102,7 @@ $(document).ready(function(){
         width: '100%',
         //placeholder: 'Select User',
         ajax: {
-            url: base_url + 'autocomplete/_company_users',
+            url: base_url + 'autocomplete/_company_users?mobile=1',
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -141,8 +141,14 @@ $(document).ready(function(){
         return repo.text;
       }
 
+      if( repo.mobile != '' ){
+        var mobile = repo.mobile;         
+      }else{
+        var mobile = 'Undefined';
+      }
+
       var $container = $(
-        '<div><div class="autocomplete-left"><img class="autocomplete-img" src="'+repo.user_image+'" /></div><div class="autocomplete-right">'+repo.FName + ' ' + repo.LName +'<br /><small>'+repo.email+'</small></div></div>'
+        '<div><div class="autocomplete-left"><img class="autocomplete-img" src="'+repo.user_image+'" /></div><div class="autocomplete-right">'+repo.FName + ' ' + repo.LName +'<br /><small>Mobile Number : '+mobile+'</small></div></div>'
       );
 
       return $container;

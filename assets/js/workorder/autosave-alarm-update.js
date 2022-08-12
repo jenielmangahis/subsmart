@@ -1,6 +1,6 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   const $form = document.querySelector(
-    "form[action$=savenewWorkorderAgreement]"
+    "form[action$=updateWorkorderAgreement]"
   );
   if (!$form) return;
 
@@ -12,10 +12,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const config = new FormAutoSaveConfig({
     onChange: async () => {
       try {
-        const response = await autoSaveForm();
-        const { id } = response;
-        window.history.replaceState({}, "", `/workorder/editInstallation/${id}`); // prettier-ignore
-        $form.setAttribute("edit", true);
+        await autoSaveForm();
       } catch (error) {
         if (error.toString().includes("is not valid JSON")) {
           return;
@@ -37,7 +34,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
 async function autoSaveForm() {
   const $form = document.querySelector(
-    "form[action$=savenewWorkorderAgreement]"
+    "form[action$=updateWorkorderAgreement]"
   );
 
   const prefixURL = "";
@@ -46,15 +43,13 @@ async function autoSaveForm() {
   const formdata = new FormData($form);
   formdata.append("action", "submit");
 
-  let url = `${prefixURL}/workorder/savenewWorkorderAgreement?json=1`;
-  if ($form.hasAttribute("edit")) {
-    url = `${prefixURL}/workorder/updateWorkorderAgreement?json=1`;
-  }
-
-  const response = await fetch(url, {
-    method: "post",
-    body: formdata,
-  });
+  const response = await fetch(
+    `${prefixURL}/workorder/updateWorkorderAgreement?json=1`,
+    {
+      method: "post",
+      body: formdata,
+    }
+  );
 
   return response.json();
 }

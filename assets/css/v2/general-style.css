@@ -258,3 +258,8 @@
 .modal-dialog.modal-xxl{
 	max-width: 1800px !important;
 }
+
+.nsm-bg-primary{
+	background-color: #6a4a8624 !important;
+    color: #6a4a86 !important;
+}

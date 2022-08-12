@@ -110,6 +110,8 @@ function toggleSidebar() {
 	let sidebarWidth = _sidebar.innerWidth();
 	let mobileView = $(".nsm-container").hasClass("nsm-mobile");
 
+	resizeSidebar();
+	
 	if (mobileView && isShown) {
 		_sidebar.removeClass("shown");
 		_sidebarBG.removeClass("shown");
@@ -142,7 +144,7 @@ function initializeWindow() {
 function resizeSidebar() {
 	$(".nsm-sidebar").css("height", "auto");
 	$(".nsm-sidebar").css("min-height", $(".nsm-main").innerHeight() + "px");
-	$(".nsm-sidebar-bg").css("height", $(".nsm-sidebar").innerHeight() + "px");
+	$(".nsm-sidebar-bg").css("height", $(".nsm-main").innerHeight() + "px");
 }
 
 function initializeChart(chartType = "all") {

@@ -1,6 +1,6 @@
 <?php
 
-class Priority
+class Priority_Old
 {
     protected $app;
 
@@ -39,8 +39,7 @@ class Priority
 
 
         $this->app->page_data['priorityList'] = $this->app->priorityList_model->getAll();
-        // $this->app->load->view('workorder/priority-list/list', $this->app->page_data);
-        $this->app->load->view('v2/pages/workorder/priority-list/list', $this->app->page_data);
+        $this->app->load->view('workorder/priority-list/list', $this->app->page_data);
     }
 
 

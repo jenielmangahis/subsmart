@@ -7821,6 +7821,112 @@ class Accounting_modals extends MY_Controller
         echo json_encode($result);
     }
 
+    public function get_checks()
+    {
+        $post = $this->input->post();
+        $sort = $post['sort'];
+        $type = $post['type'];
+
+        $filters = [
+            'payment_account' => $post['payment_account']
+        ];
+
+        switch ($type) {
+            case 'regular':
+                $checks = $this->expenses_model->get_checks_to_print($filters);
+            break;
+            case 'bill-payment':
+                $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
+            break;
+            default:
+                $checks = $this->expenses_model->get_checks_to_print($filters);
+                $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
+            break;
+        }
+
+        $data = [];
+        if (isset($checks) && count($checks) > 0) {
+            foreach ($checks as $check) {
+                switch ($check->payee_type) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($check->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                if (strpos($check->total_amount, '-') !== false) {
+                    $total = str_replace('-', '', floatval(str_replace(',', '', $check->total_amount)));
+                    $amount = '-$'.number_format($total, 2, '.', ',');
+                } else {
+                    $amount = '$'.number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
+                }
+
+                $data[] = [
+                    'id' => $check->id,
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'type' => 'Check',
+                    'payee' => $payeeName,
+                    'amount' => $amount,
+                    'order_created' => strtotime($check->created_at)
+                ];
+            }
+        }
+
+        if (isset($billPayments) && count($billPayments) > 0) {
+            foreach ($billPayments as $payment) {
+                $payee = $this->vendors_model->get_vendor_by_id($payment->payee_id);
+                $payeeName = $payee->display_name;
+
+                $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
+
+                if (strpos($payment->total_amount, '-') !== false) {
+                    $total = str_replace('-', '', floatval(str_replace(',', '', $payment->total_amount)));
+                    $amount = '-$'.number_format($total, 2, '.', ',');
+                } else {
+                    $amount = '$'.number_format(floatval(str_replace(',', '', $payment->total_amount)), 2, '.', ',');
+                }
+
+                $data[] = [
+                    'id' => $payment->id,
+                    'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'type' => 'Bill Payment ('.$paymentType.')',
+                    'payee' => $payeeName,
+                    'amount' => $amount,
+                    'order_created' => strtotime($payment->created_at)
+                ];
+            }
+        }
+
+        usort($data, function ($a, $b) use ($sort) {
+            switch ($sort) {
+                case 'payee':
+                    return strcmp($b['payee'], $a['payee']);
+                break;
+                case 'order-created':
+                    return $a['order_created'] > $b['order_created'];
+                break;
+                case 'date-payee':
+                    return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && strcmp($b['payee'], $a['payee']);
+                break;
+                case 'date-order-created':
+                    return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && $a['order_created'] > $b['order_created'];
+                break;
+            }
+        });
+
+        echo json_encode($data);
+    }
+
     public function remove_to_print()
     {
         $post = $this->input->post();

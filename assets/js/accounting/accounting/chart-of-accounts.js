@@ -9,6 +9,10 @@ $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
 
     $(this).parent().parent().prev().find('span').html(count);
     $('.dropdown-menu#table-rows').prev().dropdown('toggle');
+
+    $("#accounts-table").nsmPagination({
+        itemsPerPage: parseInt(count)
+    });
 });
 
 $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
@@ -33,7 +37,7 @@ $('#inc_inactive').on('change', function() {
     }
 });
 
-$(".nsm-table").nsmPagination({
+$("#accounts-table").nsmPagination({
     itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
 });
 
@@ -57,5 +61,36 @@ $('#accounts-table tbody tr input[type="checkbox"]').on('change', function() {
         $('#make-inactive').removeClass('disabled');
     } else {
         $('#make-inactive').addClass('disabled');
+    }
+});
+
+$('#make-inactive').on('click', function(e) {
+    e.preventDefault();
+    if($(this).hasClass('disabled') === false) {
+        var data = new FormData();
+
+        $('#accounts-table tbody tr input.select-one:checked').each(function() {
+            data.append('ids[]', $(this).val());
+        });
+
+        $.ajax({
+            url:"/accounting/chart-of-accounts/inactive-batch",
+            method:"post",
+            data: data,
+            contentType:false,
+            cache:false,
+            processData:false,
+            success:function(data){
+                $('#accounts-table tbody tr input.select-one:checked').each(function() {
+                    if($('#inc_inactive').prop('checked')) {
+                        $(this).closest('tr').find('td:nth-child(2)').html($(this).closest('tr').find('td:nth-child(2)').text() + ' (deleted)');
+                    } else {
+                        $(this).closest('tr').remove();
+                    }
+                });
+            }
+        });
+
+        $('#accounts-table thead .select-all').prop('checked', false);
     }
 });
