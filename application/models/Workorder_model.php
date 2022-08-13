@@ -1745,9 +1745,10 @@ class Workorder_model extends MY_Model
     }
 
     public function getById($id)
-    {
-        $this->db->select('*','ls_name');
+    {        
+        $this->db->select('work_orders.*,ls_name, CONCAT(users.LName," ",users.FName)AS agent_name');
 		$this->db->from('work_orders');
+        $this->db->join('users', 'work_orders.employee_id  = users.id', 'left');
         $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id', 'left');
 		$this->db->where('work_orders.id', $id);
         $query = $this->db->get();

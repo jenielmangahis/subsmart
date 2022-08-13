@@ -78,9 +78,9 @@
                   </label>
                 </div>
             </li>
-            <li class="edit-grp-send-assigned-agent" style="<?= $autoSms->module_name == 'lead' ? 'display: inline-block;' : 'display: none'; ?>">
+            <li class="edit-grp-send-assigned-agent" style="<?= $autoSms->module_name == 'lead' || $autoSms->module_name == 'workorder' ? 'display: inline-block;' : 'display: none'; ?>">
                 <div class="form-check">
-                  <input <?= $autoSms->send_to_assgned_agent == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_assigned_agent" id="edit-chk-assigned-agent">
+                  <input <?= $autoSms->send_to_assigned_agent == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_assigned_agent" id="edit-chk-assigned-agent">
                   <label class="form-check-label" for="edit-chk-assigned-agent">
                     Send to Assigned Agent
                   </label>
@@ -192,7 +192,7 @@ $(document).on('change', '#edit-module-name', function(e){
         $('.edit-grp-send-assigned-user').hide();
     }
 
-    if( module_name == 'lead' ){
+    if( module_name == 'lead' || module_name == 'workorder' ){
         $('.edit-grp-send-assigned-agent').show();
     }else{
         $('.edit-grp-send-assigned-agent').hide();

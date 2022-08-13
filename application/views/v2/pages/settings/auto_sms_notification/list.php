@@ -360,7 +360,7 @@
             $('.grp-send-assigned-user').hide();
         }
 
-        if( module_name == 'lead' ){
+        if( module_name == 'lead' || module_name == 'workorder' ){
             $('.grp-send-assigned-agent').show();
         }else{
             $('.grp-send-assigned-agent').hide();

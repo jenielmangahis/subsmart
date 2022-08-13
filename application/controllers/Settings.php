@@ -1171,7 +1171,7 @@ class Settings extends MY_Controller {
             }
 
             $send_to_assigned_agent = 0;
-            if( isset($post['send_assigned_agent']) && $post['module_name'] == 'lead' ){
+            if( isset($post['send_assigned_agent']) && ($post['module_name'] == 'lead' || $post['module_name'] == 'workorder') ){
                 $send_to_assigned_agent = 1;
             }
 
@@ -1336,7 +1336,7 @@ class Settings extends MY_Controller {
                 }
 
                 $send_to_assigned_agent = 0;
-                if( isset($post['send_assigned_agent']) && $post['module_name'] == 'taskhub' ){
+                if( isset($post['send_assigned_agent']) && ($post['module_name'] == 'lead' || $post['module_name'] == 'workorder') ){
                     $send_to_assigned_agent = 1;
                 }
 

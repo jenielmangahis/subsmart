@@ -705,7 +705,7 @@ class Workorder extends MY_Controller
 
     public function editWorkorderSolar($id)
     {
-        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $this->page_data['workorder'] = $wo = $this->workorder_model->getById($id);
         $work =  $this->workorder_model->getById($id);
         
         $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
@@ -9116,6 +9116,8 @@ class Workorder extends MY_Controller
             'payment_method'                        => $this->input->post('payment_method'),
             'payment_amount'                        => $this->input->post('payment_amount'),
 
+            'status'                                => $this->input->post('status'), //Added Bryann Revina 08132022
+
             'lead_source_id'                        => $this->input->post('lead_source'),
             'panel_communication'                   => $this->input->post('system_type'),
 
@@ -9134,6 +9136,10 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->update_workorder_solar($new_data);
+
+        //SMS Notification      
+        $smsWo = $this->workorder_model->getById($id);          
+        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id);
 
 
         $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id'));
