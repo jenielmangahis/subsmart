@@ -285,15 +285,50 @@ table input.form-control {
                                         </div>    
                                     </div> 
                                     <div class="form-group col-md-2">
-												<div class="select-wrap">
-													<label for="job_tags">Jobs Tags</label>
-                                                    <select id="job_tags" name="job_tags" class="form-control custom-select m_select">
-                                                        <?php foreach($job_tags as $jb){ ?>
-                                                        <option value="<?php echo $jb->id; ?>" <?php if($workorder->job_tags == $jb->id){ echo 'selected'; }else{ echo ''; } ?>><?php echo $jb->name; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-												</div>    
-											</div> 
+										<div class="select-wrap">
+											<label for="job_tags">Jobs Tags</label>
+                                            <select id="job_tags" name="job_tags" class="form-control custom-select m_select">
+                                                <?php foreach($job_tags as $jb){ ?>
+                                                <option value="<?php echo $jb->id; ?>" <?php if($workorder->job_tags == $jb->id){ echo 'selected'; }else{ echo ''; } ?>><?php echo $jb->name; ?></option>
+                                                <?php } ?>
+                                            </select>
+										</div>    
+									</div> 
+                                </div>
+                                <div class="row">    
+                                    <div class="form-group col-md-2">
+                                        <div class="select-wrap">
+                                            <label for="lead_source">Status</label>
+                                            <select name="status" id="workorder_status" class="form-control custom-select m_select">
+                                                <option <?= $workorder->w_status == 'New' ? 'selected="selected"' : ''; ?> value="New">New</option>
+                                                <option <?= $workorder->w_status == 'Draft' ? 'selected="selected"' : ''; ?> value="Draft">Draft</option>
+                                                <option <?= $workorder->w_status == 'Scheduled' ? 'selected="selected"' : ''; ?> value="Scheduled">Scheduled</option>
+                                                <option <?= $workorder->w_status == 'Started' ? 'selected="selected"' : ''; ?> value="Started">Started</option>
+                                                <option <?= $workorder->w_status == 'Paused' ? 'selected="selected"' : ''; ?> value="Paused">Paused</option>
+                                                <option <?= $workorder->w_status == 'Completed' ? 'selected="selected"' : ''; ?> value="Completed">Completed</option>
+                                                <option <?= $workorder->w_status == 'Invoiced' ? 'selected="selected"' : ''; ?> value="Invoiced">Invoiced</option>
+                                                <option <?= $workorder->w_status == 'Withdrawn' ? 'selected="selected"' : ''; ?> value="Withdrawn">Withdrawn</option>
+                                                <option <?= $workorder->w_status == 'Closed' ? 'selected="selected"' : ''; ?> value="Closed">Closed</option>
+                                            </select>
+                                        </div>    
+                                    </div> 
+                                    <div class="form-group col-md-2">
+                                        <div class="select-wrap">
+                                            <label for="lead_source">Agent Name</label>
+                                            <select class="form-control mb-3" name="agent_id">
+                                                <option value="0">Select Agent</option>
+                                                <?php foreach($users_lists as $ulist){ ?>
+                                                    <option <?php if(isset($workorder)){ if($workorder->agent_id == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>    
+                                    </div> 
+                                    <div class="form-group col-md-2">
+                                        <div class="select-wrap">
+                                            <label for="lead_source">Created By</label>
+                                            <input type="text" readonly="" class="form-control" disabled="" value="<?= $workorder->agent_name; ?>">
+                                        </div>    
+                                    </div> 
                                 </div>
                                 <br>
                                 <!-- <a class="btn btn-sm btn-primary btn-edit-header" href="javascript:void(0);">Edit</a> -->
@@ -721,7 +756,7 @@ table input.form-control {
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->mobile_number; ?>" placeholder="Enter Mobile">>
+                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->mobile_number; ?>" placeholder="Enter Mobile">
                                         <b>Mobile:</b>
                                     </div>
                                 </div>

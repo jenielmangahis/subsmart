@@ -173,11 +173,11 @@ img.company-logo2 {
                                             </li>
                                         </ol>   
                                         <div class="row">                   
-                                            <div class="col-md-2 form-group">
+                                            <div class="col-md-4 form-group">
                                                 <label for="contact_name" class="label-element">Work Order #</label>
                                                     <input type="text" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo $workorder->work_order_number; ?>" required readonly/>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-md-4">
                                                 <div class="select-wrap">
                                                     <label for="lead_source">Lead Source</label>
                                                         <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
@@ -189,7 +189,7 @@ img.company-logo2 {
                                                 </div>    
                                             </div>   
                                             
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-md-4">
                                                 <div class="select-wrap">
                                                     <label for="lead_source">System Type</label>
                                                     <select id="system_type" name="system_type" class="form-control custom-select m_select">
@@ -200,7 +200,9 @@ img.company-logo2 {
                                                     </select>
                                                 </div>    
                                             </div>
-                                            <div class="form-group col-md-2">
+                                        </div>
+                                        <div class="row"> 
+                                            <div class="form-group col-md-3">
                                                 <div class="select-wrap">
                                                     <label for="lead_source">Status</label>
                                                     <select name="status" id="workorder_status" class="form-control custom-select m_select">
@@ -216,7 +218,18 @@ img.company-logo2 {
                                                     </select>
                                                 </div>    
                                             </div> 
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-md-3">
+                                                <div class="select-wrap">
+                                                    <label for="lead_source">Agent Name</label>
+                                                    <select class="form-control mb-3" name="agent_id">
+                                                        <option value="0">Select Agent</option>
+                                                        <?php foreach($users_lists as $ulist){ ?>
+                                                            <option <?php if(isset($workorder)){ if($workorder->agent_id == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>    
+                                            </div> 
+                                            <div class="form-group col-md-3">
                                                 <div class="select-wrap">
                                                     <label for="lead_source">Created By</label>
                                                     <input type="text" readonly="" class="form-control" disabled="" value="<?= $workorder->agent_name; ?>">

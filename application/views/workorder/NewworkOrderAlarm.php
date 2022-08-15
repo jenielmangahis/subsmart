@@ -1304,23 +1304,35 @@ border: none;
                                 
 
                                 <div class="col-md-4 form-group">
-                                <div class="select-wrap">
-                                    <!-- <div class=""> -->
-                                        <label for="status_id"> Status:</label>
-                                        <select name="status" id="workorder_status" class="form-control custom-select m_select">
-                                        <option value="New">New</option>
-                                        <option value="Draft">Draft</option>
-                                        <option value="Scheduled">Scheduled</option>
-                                        <option value="Started">Started</option>
-                                        <option value="Paused">Paused</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="Invoiced">Invoiced</option>
-                                        <option value="Withdrawn">Withdrawn</option>
-                                        <option value="Closed">Closed</option>
-                                    </select>
-                                    <!-- </div> -->
+                                    <div class="select-wrap">
+                                        <!-- <div class=""> -->
+                                            <label for="status_id"> Status:</label>
+                                            <select name="status" id="workorder_status" class="form-control custom-select m_select">
+                                            <option value="New">New</option>
+                                            <option value="Draft">Draft</option>
+                                            <option value="Scheduled">Scheduled</option>
+                                            <option value="Started">Started</option>
+                                            <option value="Paused">Paused</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="Invoiced">Invoiced</option>
+                                            <option value="Withdrawn">Withdrawn</option>
+                                            <option value="Closed">Closed</option>
+                                        </select>
+                                        <!-- </div> -->
+                                    </div>
                                 </div>
-                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <div class="select-wrap">
+                                        <label for="lead_source">Agent Name</label>
+                                        <select class="form-control mb-3" name="agent_id">
+                                            <option value="0">Select Agent</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if(isset($workorder)){ if($workorder->agent_id == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>    
+                                </div> 
 
                                 <div class="col-md-4 form-group">
                                 <div class="select-wrap">
