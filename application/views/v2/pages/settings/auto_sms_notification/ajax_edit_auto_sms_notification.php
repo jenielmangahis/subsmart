@@ -44,32 +44,49 @@
                 <?php } ?>
                 <?php } ?>
             </select>
-        </span>                                        
-        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
-          <input <?= $is_send_all ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_to_all" id="edit-chk-send-all">
-          <label class="form-check-label" for="flexCheckDefault">
-            Send to all
-          </label>
-        </div>
-        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
-          <input <?= $autoSms->send_to_creator == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_creator" id="chk-send-creator">
-          <label class="form-check-label" for="flexCheckDefault">
-            Send to Module Item Creator
-          </label>
-        </div>
-        <div class="form-check" style="margin-top:5px; display: inline-block;margin-left: 10px;">
-          <input <?= $autoSms->send_to_company_admin == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="chk-send-company-admin">
-          <label class="form-check-label" for="flexCheckDefault">
-            Send to Company Admin
-          </label>
-        </div>        
-        <div class="form-check edit-grp-send-assigned-user" style="margin-top:5px; margin-left: 10px;<?= $autoSms->module_name != 'taskhub' ? 'display: none;' : 'display: inline-block'; ?>">
-          <input <?= $autoSms->send_to_assigned_user == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_assigned_user" id="chk-assigned-user">
-          <label class="form-check-label" for="flexCheckDefault">
-            Send to Assigned User
-          </label>
-        </div>
-        
+        </span>        
+        <ul class="list-chk-options">
+            <li>
+                <div class="form-check">
+                  <input <?= $is_send_all ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_to_all" id="edit-chk-send-all">
+                  <label class="form-check-label" for="edit-chk-send-all">
+                    Send to all
+                  </label>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                  <input <?= $autoSms->send_to_creator == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_creator" id="edit-chk-send-creator">
+                  <label class="form-check-label" for="edit-chk-send-creator">
+                    Send to Module Item Creator
+                  </label>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                  <input <?= $autoSms->send_to_company_admin == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_company_admin" id="edit-chk-send-company-admin">
+                  <label class="form-check-label" for="edit-chk-send-company-admin">
+                    Send to Company Admin
+                  </label>
+                </div>   
+            </li>
+            <li class="edit-grp-send-assigned-user" style="<?= $autoSms->module_name == 'lead' || $autoSms->module_name == 'taskhub' ? 'display: inline-block;' : 'display: none'; ?>">
+                <div class="form-check">
+                  <input <?= $autoSms->send_to_assigned_user == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_assigned_user" id="edit-chk-assigned-user">
+                  <label class="form-check-label" for="edit-chk-assigned-user">
+                    Send to Assigned User
+                  </label>
+                </div>
+            </li>
+            <li class="edit-grp-send-assigned-agent" style="<?= $autoSms->module_name == 'lead' || $autoSms->module_name == 'workorder' ? 'display: inline-block;' : 'display: none'; ?>">
+                <div class="form-check">
+                  <input <?= $autoSms->send_to_assigned_agent == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_assigned_agent" id="edit-chk-assigned-agent">
+                  <label class="form-check-label" for="edit-chk-assigned-agent">
+                    Send to Assigned Agent
+                  </label>
+                </div>
+            </li>
+        </ul>   
     </div>
     <div class="col-md-12 mt-3">
         <label for="">Status</label>
@@ -170,9 +187,15 @@ $(document).on('change', '#edit-module-name', function(e){
 
     if( module_name == 'taskhub' || module_name == 'lead' ){
         $('.edit-grp-send-assigned-user').show();
-        $('.edit-grp-send-assigned-user').css('display', 'inline-block');
+        //$('.edit-grp-send-assigned-user').css('display', 'inline-block');
     }else{
         $('.edit-grp-send-assigned-user').hide();
+    }
+
+    if( module_name == 'lead' || module_name == 'workorder' ){
+        $('.edit-grp-send-assigned-agent').show();
+    }else{
+        $('.edit-grp-send-assigned-agent').hide();
     }
 
     setTimeout(function () {

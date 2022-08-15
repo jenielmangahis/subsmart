@@ -75,7 +75,6 @@ class Accounting extends MY_Controller
         ));
 
         add_footer_js(array(
-            "assets/plugins/jqueryUI/jquery-ui.min.js",
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",

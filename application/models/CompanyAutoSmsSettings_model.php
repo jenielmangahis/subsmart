@@ -237,7 +237,9 @@ class CompanyAutoSmsSettings_model extends MY_Model
             '{{customer.email}}' => 'Customer Email',
             '{{customer.phone}}' => 'Customer Phone',
             '{{business.name}}' => "Company Name",
-
+            '{{creator.name}}' => "Creator Name",
+            '{{tags}}' => "Tags",
+            '{{installation.date}}' => "Installation Date",
         ];
 
         return $smartTags;

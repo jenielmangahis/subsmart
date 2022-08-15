@@ -96,7 +96,7 @@ input[type="radio"]:checked {
 						<div class="col-md-8">
 								<div class="order-right text-right">
 									<div class="user-menu mobile_btn">
-										<a href="<?php echo base_url('workorder/work_order_pdf_solar/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<a href="<?php echo base_url('share_Link/work_order_pdf_solar/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
           								<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
 									
 									

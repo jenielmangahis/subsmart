@@ -7,17 +7,24 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const { FormAutoSave, FormAutoSaveConfig } = await import(
     "../customer/add_advance/FormAutoSave.js"
   );
+
   let errorTimeout = null;
+  let hasChangedUrl = false;
 
   const config = new FormAutoSaveConfig({
     onChange: async () => {
       try {
         const response = await autoSaveForm();
         const { id } = response;
-        window.history.replaceState({}, "", `/workorder/editInstallation/${id}`); // prettier-ignore
+
+        if (!hasChangedUrl) {
+          window.history.replaceState({}, "", `/workorder/editInstallation/${id}`); // prettier-ignore
+          hasChangedUrl = true;
+        }
+
         $form.setAttribute("edit", true);
       } catch (error) {
-        if (error.toString().includes("is not valid JSON")) {
+        if (error.toString().toLowerCase().includes("is not valid json")) {
           return;
         }
 
@@ -40,15 +47,12 @@ async function autoSaveForm() {
     "form[action$=savenewWorkorderAgreement]"
   );
 
-  const prefixURL = "";
-  // const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-
   const formdata = new FormData($form);
   formdata.append("action", "submit");
 
-  let url = `${prefixURL}/workorder/savenewWorkorderAgreement?json=1`;
+  let url = "/workorder/savenewWorkorderAgreement?json=1";
   if ($form.hasAttribute("edit")) {
-    url = `${prefixURL}/workorder/updateWorkorderAgreement?json=1`;
+    url = "/workorder/updateWorkorderAgreement?json=1";
   }
 
   const response = await fetch(url, {

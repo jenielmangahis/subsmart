@@ -445,11 +445,11 @@ body
 								<div class="order-right text-right">
 									<div class="user-menu mobile_btn">
 									<?php if($workorder->work_order_type_id == 1){ ?>
-                       					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+                       					<a href="<?php echo base_url('share_Link/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php }else if($workorder->work_order_type_id == 4){ ?>
-										<a href="<?php echo base_url('workorder/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss logo" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<a href="<?php echo base_url('share_Link/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss logo" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 										<?php } else{ ?>
-										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<a href="<?php echo base_url('share_Link/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
 
           								<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>

@@ -8546,7 +8546,7 @@ class Accounting_modals extends MY_Controller
                     'Bank',
                     'Credit Card'
                 ];
-//
+
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
             case 'bank-credit-account':
@@ -9733,7 +9733,8 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['field'] = $this->input->get('field');
             break;
         }
-        $this->load->view("accounting/modals/$modal", $this->page_data);
+        // $this->load->view("accounting/modals/$modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/$modal", $this->page_data);
     }
 
     public function ajax_add_payment_method()

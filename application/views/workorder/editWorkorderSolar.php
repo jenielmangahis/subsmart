@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
+
+<!-- Script for autosaving form -->
+<script src="<?=base_url("assets/js/workorder/autosave-solar-update.js")?>"></script>
+
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
@@ -158,7 +162,7 @@ img.company-logo2 {
                             <div id="header_area">
                                 <h4 class="mt-0 header-title mb-5">Header</h4>
                                 <div class="row">
-                                    <div class="col-md-9">
+                                    <div class="col-md-10">
                                         <ol class="breadcrumb" style="margin-top:-30px;"></i>
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $workorder->header; ?></label>
@@ -169,7 +173,7 @@ img.company-logo2 {
                                             </li>
                                         </ol>   
                                         <div class="row">                   
-                                            <div class="col-md-3 form-group">
+                                            <div class="col-md-2 form-group">
                                                 <label for="contact_name" class="label-element">Work Order #</label>
                                                     <input type="text" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo $workorder->work_order_number; ?>" required readonly/>
                                             </div>
@@ -195,10 +199,32 @@ img.company-logo2 {
                                                         <?php } ?>
                                                     </select>
                                                 </div>    
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="select-wrap">
+                                                    <label for="lead_source">Status</label>
+                                                    <select name="status" id="workorder_status" class="form-control custom-select m_select">
+                                                        <option <?= $workorder->status == 'New' ? 'selected="selected"' : ''; ?> value="New">New</option>
+                                                        <option <?= $workorder->status == 'Draft' ? 'selected="selected"' : ''; ?> value="Draft">Draft</option>
+                                                        <option <?= $workorder->status == 'Scheduled' ? 'selected="selected"' : ''; ?> value="Scheduled">Scheduled</option>
+                                                        <option <?= $workorder->status == 'Started' ? 'selected="selected"' : ''; ?> value="Started">Started</option>
+                                                        <option <?= $workorder->status == 'Paused' ? 'selected="selected"' : ''; ?> value="Paused">Paused</option>
+                                                        <option <?= $workorder->status == 'Completed' ? 'selected="selected"' : ''; ?> value="Completed">Completed</option>
+                                                        <option <?= $workorder->status == 'Invoiced' ? 'selected="selected"' : ''; ?> value="Invoiced">Invoiced</option>
+                                                        <option <?= $workorder->status == 'Withdrawn' ? 'selected="selected"' : ''; ?> value="Withdrawn">Withdrawn</option>
+                                                        <option <?= $workorder->status == 'Closed' ? 'selected="selected"' : ''; ?> value="Closed">Closed</option>
+                                                    </select>
+                                                </div>    
+                                            </div> 
+                                            <div class="form-group col-md-2">
+                                                <div class="select-wrap">
+                                                    <label for="lead_source">Created By</label>
+                                                    <input type="text" readonly="" class="form-control" disabled="" value="<?= $workorder->agent_name; ?>">
+                                                </div>    
                                             </div> 
                                         </div>                                     
                                     </div> 
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div style="margin-top:-30px;"><img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo2"/> </div>                            
                                     </div> 
                                 </div>

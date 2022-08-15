@@ -1,7 +1,5 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
-  const $form = document.querySelector(
-    "form[action$=updateWorkorderAgreement]"
-  );
+  const $form = document.querySelector("form[action$=savenewWorkorderSolar]");
   if (!$form) return;
 
   const { FormAutoSave, FormAutoSaveConfig } = await import(
@@ -9,10 +7,20 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   );
 
   let errorTimeout = null;
+  let hasChangedUrl = false;
+
   const config = new FormAutoSaveConfig({
     onChange: async () => {
       try {
-        await autoSaveForm();
+        const response = await autoSaveForm();
+        const { id } = response;
+
+        if (!hasChangedUrl) {
+          window.history.replaceState({}, "", `/workorder/editWorkorderSolar/${id}`); // prettier-ignore
+          hasChangedUrl = true;
+        }
+
+        $form.setAttribute("edit", true);
       } catch (error) {
         if (error.toString().toLowerCase().includes("is not valid json")) {
           return;
@@ -33,14 +41,17 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function autoSaveForm() {
-  const $form = document.querySelector(
-    "form[action$=updateWorkorderAgreement]"
-  );
+  const $form = document.querySelector("form[action$=savenewWorkorderSolar]");
 
   const formdata = new FormData($form);
   formdata.append("action", "submit");
 
-  const response = await fetch("/workorder/updateWorkorderAgreement?json=1", {
+  let url = "/workorder/savenewWorkorderSolar?json=1";
+  if ($form.hasAttribute("edit")) {
+    url = "/workorder/updateWorkorderSolar?json=1";
+  }
+
+  const response = await fetch(url, {
     method: "post",
     body: formdata,
   });

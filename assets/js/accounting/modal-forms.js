@@ -1801,6 +1801,20 @@ $(function() {
         });
     });
 
+    $(document).on('change', '#printChecksModal [name="col_chk"]', function() {
+        var chk = $(this);
+        var dataName = $(this).next().html();
+        var index = $(`#printChecksModal #checks-table tr td[data-name="${dataName}"]`).index();
+
+        $(`#printChecksModal #checks-table tr`).each(function() {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index]).show();
+            } else {
+                $($(this).find('td')[index]).hide();
+            }
+        });
+    });
+
     $(document).on('change', '#printChecksModal #payment_account', function() {
         var id = $(this).val();
 
@@ -4500,7 +4514,7 @@ $(function() {
         var value = $(this).val();
         if (value === 'add-new') {
             dropdownEl = $(this);
-            var form = $(this).attr('name').includes('account') ? 'account' : $(this).attr('name').replaceAll('[]', '');
+            var form = $(this).attr('name').includes('account') ? 'add_account' : $(this).attr('name').replaceAll('[]', '');
             form = form === 'category' ? 'item_category' : form;
 
             if(form === 'account') {
@@ -4546,24 +4560,23 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container #account-modal #account_type', function() {
-        var el = $(this);
-        $.get('/accounting/get-first-detail-type/' + el.val(), function(result) {
+    $(document).on('change', '#account-modal #account_type', function() {
+        $.get('/accounting/get-first-detail-type/' + $(this).val(), function(result) {
             var res = JSON.parse(result);
 
-            el.parent().next().find('#detail_type').append(`<option value="${res.acc_detail_id}" selected>${res.acc_detail_name}</option>`).trigger('change');
+            $('#account-modal #detail_type').append(`<option value="${res.acc_detail_id}" selected>${res.acc_detail_name}</option>`).trigger('change');
         });
     });
 
-    $(document).on('change', '#modal-container #account-modal #detail_type', function() {
+    $(document).on('change', '#account-modal #detail_type', function() {
         var el = $(this);
         var id = el.val();
 
         $.get('/accounting/chart-of-accounts/get-detail-type/' + id, function(result) {
             var res = JSON.parse(result);
 
-            el.parent().next().html(res.description);
-            $('#modal-container #name').val(res.acc_detail_name);
+            el.parent().find('div:last-child()').html(res.description);
+            $('#account-modal #name').val(res.acc_detail_name);
         });
     });
 
@@ -4611,10 +4624,10 @@ $(function() {
         $('#item-category-modal').modal('hide');
     });
 
-    $(document).on('hidden.bs.modal', '#modal-container #account-modal', function() {
+    $(document).on('hidden.bs.modal', '#account-modal', function() {
         dropdownEl = null;
 
-        $('#modal-container #account-modal').remove();
+        $('#account-modal').remove();
     });
 
     $(document).on('hidden.bs.modal', '#modal-container #payment-method-modal', function() {
@@ -10602,7 +10615,7 @@ const showBalance = (el) => {
 }
 
 const initAccountModal = () => {
-$('#modal-container #account-modal select').each(function() {
+    $('#modal-container #account-modal select').each(function() {
         var id = $(this).attr('id').replaceAll('_', '-');
         switch (id) {
             case 'account-type':
@@ -10644,7 +10657,7 @@ $('#modal-container #account-modal select').each(function() {
                                 search: params.term,
                                 type: 'public',
                                 field: id,
-                                accType: $(this).parent().prev().find('#account_type').val()
+                                accType: $('#account-modal #account_type').val()
                             }
 
                             if(dropdownEl !== null) {
@@ -10696,13 +10709,13 @@ $('#modal-container #account-modal select').each(function() {
             break;
         }
     });
-    var switchEl = $('#modal-container #account-modal #check_sub').get(0);
+    var switchEl = $('#modal-container #account-modal #check_sub')[0];
     var switchery = new Switchery(switchEl, { size: 'small' });
 
-    $('#modal-container #account-modal .date_picker input').datepicker({
-        uiLibrary: 'bootstrap',
-        todayBtn: "linked",
-        language: "de"
+    $('#modal-container #account-modal .datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 
     if(dropdownEl !== null) {
@@ -11872,5 +11885,18 @@ const getInvoiceLinkableTransactions = (transactionType, transactionDate) => {
                 `);
             }
         });
+    });
+}
+
+const checkTableRows = (el) => {
+    var count = $(el).html();
+    $('#printChecksModal #checks-table-rows a.dropdown-item.active').removeClass('active');
+    $(el).addClass('active');
+
+    $(el).parent().parent().prev().find('span').html(count);
+    $('#printChecksModal #checks-table-rows').prev().dropdown('toggle');
+
+    $("#printChecksModal #checks-table").nsmPagination({
+        itemsPerPage: parseInt(count)
     });
 }

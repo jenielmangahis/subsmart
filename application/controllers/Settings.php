@@ -1040,7 +1040,11 @@ class Settings extends MY_Controller {
 
                     if( $asms->send_to_assigned_user == 1 ){
                         $recipients[$asms->id][] = 'Send to Assigned User';
-                    }                    
+                    }
+
+                    if( $asms->send_to_assigned_agent == 1 ){
+                        $recipients[$asms->id][] = 'Send to Assigned Agent';
+                    }                   
                 }
             }            
         }
@@ -1133,7 +1137,7 @@ class Settings extends MY_Controller {
             $msg = 'Please specify sms message';
         }elseif( $post['module_status'] == '' ){
             $msg = 'Please specify status of the module that will trigger auto sms';
-        }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) ){
+        }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) && !isset($post['send_assigned_agent']) ){
             $msg = 'Please specify recipient of the sms notification';
         }else{            
             if( isset($post['send_to_all']) ){
@@ -1162,8 +1166,13 @@ class Settings extends MY_Controller {
             }
 
             $send_to_assigned_user = 0;
-            if( isset($post['send_assigned_user']) && $post['module_name'] == 'taskhub' ){
+            if( isset($post['send_assigned_user']) && ($post['module_name'] == 'taskhub' || $post['module_name'] == 'lead') ){
                 $send_to_assigned_user = 1;
+            }
+
+            $send_to_assigned_agent = 0;
+            if( isset($post['send_assigned_agent']) && ($post['module_name'] == 'lead' || $post['module_name'] == 'workorder') ){
+                $send_to_assigned_agent = 1;
             }
 
             $data = [
@@ -1175,6 +1184,7 @@ class Settings extends MY_Controller {
                 'send_to_creator' => $send_to_creator,
                 'send_to_company_admin' => $send_to_company_admin,                
                 'send_to_assigned_user' => $send_to_assigned_user,
+                'send_to_assigned_agent' => $send_to_assigned_agent,
                 'is_enabled' => $post['is_enabled']
             ];
 
@@ -1292,7 +1302,7 @@ class Settings extends MY_Controller {
                 $msg = 'Please specify sms message';
             }elseif( $post['module_status'] == '' ){
                 $msg = 'Please specify status of the module that will trigger auto sms';
-            }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) ){
+            }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) && !isset($post['send_assigned_agent']) ){
                 $msg = 'Please specify recipient of the sms notification';
             }else{  
                 if( isset($post['send_to_all']) ){
@@ -1321,8 +1331,13 @@ class Settings extends MY_Controller {
                 }
 
                 $send_to_assigned_user = 0;
-                if( isset($post['send_assigned_user']) && $post['module_name'] == 'taskhub' ){
+                if( isset($post['send_assigned_user']) && ($post['module_name'] == 'lead' || $post['module_name'] == 'taskhub') ){
                     $send_to_assigned_user = 1;
+                }
+
+                $send_to_assigned_agent = 0;
+                if( isset($post['send_assigned_agent']) && ($post['module_name'] == 'lead' || $post['module_name'] == 'workorder') ){
+                    $send_to_assigned_agent = 1;
                 }
 
                 $data = [
@@ -1333,6 +1348,7 @@ class Settings extends MY_Controller {
                     'send_to_creator' => $send_to_creator,
                     'send_to_company_admin' => $send_to_company_admin,                
                     'send_to_assigned_user' => $send_to_assigned_user,
+                    'send_to_assigned_agent' => $send_to_assigned_agent,
                     'is_enabled' => $post['is_enabled']
                 ];
 

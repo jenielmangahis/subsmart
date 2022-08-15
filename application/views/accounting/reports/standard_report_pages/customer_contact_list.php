@@ -177,44 +177,18 @@
                                             <option value="state">Billing State</option>
                                             <option value="street">Billing Street</option>
                                             <option value="zip">Billing ZIP</option>
-                                            <option value="last-name">Last Name</option>
+                                            <option value="zip">Customer Type</option>
                                         </select>
                                         </div>
                                         <h6 class="change-col" onclick="ccl()">Change Columns</h6>
                                         <div class="changeCol" id="changeCol">
                                             <h6 class="fw-bold">Select and reorder columns</h6>
+                                            <?php foreach(customCols() as $customCols) : ?>
                                             <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="first_name, last_name">
-                                                <label for="sort-asc" class="form-check-label">Customer</label>
+                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="<?= $customCols['description'] ?>">
+                                                <label for="sort-asc" class="form-check-label"><?= $customCols['name'] ?></label>
                                             </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="phone_h">
-                                                <label for="sort-asc" class="form-check-label">Phone Number</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="email">
-                                                <label for="sort-asc" class="form-check-label">Email</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="first_name, last_name">
-                                                <label for="sort-asc" class="form-check-label">Full Name</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="city">
-                                                <label for="sort-asc" class="form-check-label">Billing Address</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="status">
-                                                <label for="sort-asc" class="form-check-label">Status</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="notes">
-                                                <label for="sort-asc" class="form-check-label">Notes</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="status">
-                                                <label for="sort-asc" class="form-check-label">Address</label>
-                                            </div>
+                                            <?php endforeach; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -604,13 +578,9 @@
                                     <thead>
                                         <tr>
                                         <?php foreach($custExp as $cust) : 
-                                            if($cust == 'first_name, last_name'){
-                                                $col = 'Customer';
-                                            }elseif($cust == 'phone_h'){
-                                                $col = 'Phone Number';
-                                            }
+                                            
                                         ?>
-                                            <td data-name="Customer"><?= !empty($col) ? strtoupper($col) : strtoupper($cust) ?></td>
+                                            <td data-name="Customer"><?= custom($cust) ?></td>
                                         <?php 
                                             $col='';
                                             endforeach; ?>
@@ -621,6 +591,7 @@
                                         <tr>
                                             <td><?= $acsProfile->first_name.' '. $acsProfile->last_name ?></td>
                                             <td><?= $acsProfile->phone_h ?></td>
+                                            <td><?= $acsProfile->state ?></td>
                                             <td><?= $acsProfile->email ?></td>
                                             <td><?= $acsProfile->status ?></td>
                                         </tr>

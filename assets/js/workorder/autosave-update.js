@@ -2,20 +2,27 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $form = document.querySelector("form[action$=UpdateWorkorder]");
   if (!$form) return;
 
-  console.clear();
-  console.log($form);
-
   const { FormAutoSave, FormAutoSaveConfig } = await import(
     "../customer/add_advance/FormAutoSave.js"
   );
 
+  let errorTimeout = null;
   const config = new FormAutoSaveConfig({
-    onChange: async (name, value) => {
+    onChange: async () => {
       try {
-        const response = await autoSaveForm();
-        console.log(response);
+        await autoSaveForm();
       } catch (error) {
+        if (error.toString().toLowerCase().includes("is not valid json")) {
+          return;
+        }
+
         console.error(error);
+        window.clearTimeout(errorTimeout);
+
+        FormAutoSave.toggleSavingErrorIndicator();
+        errorTimeout = window.setTimeout(() => {
+          FormAutoSave.toggleSavingErrorIndicator(false);
+        }, 5000);
       }
     },
   });
@@ -26,19 +33,13 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 async function autoSaveForm() {
   const $form = document.querySelector("form[action$=UpdateWorkorder]");
 
-  const prefixURL = "";
-  // const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-
   const formdata = new FormData($form);
   formdata.append("action", "submit");
 
-  const response = await fetch(
-    `${prefixURL}/workorder/UpdateWorkorder?json=1`,
-    {
-      method: "post",
-      body: formdata,
-    }
-  );
+  const response = await fetch("/workorder/UpdateWorkorder?json=1", {
+    method: "post",
+    body: formdata,
+  });
 
   return response.json();
 }

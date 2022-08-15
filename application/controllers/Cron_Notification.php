@@ -140,6 +140,9 @@ class Cron_Notification extends MYF_Controller {
         $lead_email = '';
         $lead_phone = '';
         $sales_agent = '';
+        $tags = '';
+        $installation_date = '';
+        $creator_name = '';
 
         if( $module_name == $this->CompanyAutoSmsSettings_model->moduleJob() ){
             $job = $this->Jobs_model->get_specific_job($object_id);
@@ -175,6 +178,14 @@ class Cron_Notification extends MYF_Controller {
                 $customer_name = $workorder->first_name . ' ' . $workorder->last_name;
                 $customer_email = $workorder->email;
                 $customer_phone = $workorder->phone_m;
+
+                $workorderCreator = $this->Users_model->getUserByID($workorder->employee_id);
+                if( $workorderCreator ){
+                    $creator_name = $workorderCreator->FName . ' ' . $workorderCreator->LName;
+                }
+
+                $tags = $workorder->job_tags;
+                $installation_date = date("m/d/Y",strtotime($workorder->installation_date)) . ' at ' . $workorder->intall_time;
             }
         }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
             $event = $this->Event_model->get_specific_event($object_id);
@@ -247,6 +258,9 @@ class Cron_Notification extends MYF_Controller {
         $sms_message = str_replace("{{lead.phone}}", $lead_phone, $sms_message);
         $sms_message = str_replace("{{lead.email}}", $lead_email, $sms_message);
 
+        $sms_message = str_replace("{{creator.name}}", $creator_name, $sms_message);
+        $sms_message = str_replace("{{tags}}", $tags, $sms_message);
+        $sms_message = str_replace("{{installation.date}}", $installation_date, $sms_message);
 
         return $sms_message;
     }

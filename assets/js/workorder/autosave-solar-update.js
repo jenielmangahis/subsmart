@@ -1,7 +1,5 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
-  const $form = document.querySelector(
-    "form[action$=updateWorkorderAgreement]"
-  );
+  const $form = document.querySelector("form[action$=updateWorkorderSolar]");
   if (!$form) return;
 
   const { FormAutoSave, FormAutoSaveConfig } = await import(
@@ -9,6 +7,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   );
 
   let errorTimeout = null;
+
   const config = new FormAutoSaveConfig({
     onChange: async () => {
       try {
@@ -33,14 +32,12 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function autoSaveForm() {
-  const $form = document.querySelector(
-    "form[action$=updateWorkorderAgreement]"
-  );
+  const $form = document.querySelector("form[action$=updateWorkorderSolar]");
 
   const formdata = new FormData($form);
   formdata.append("action", "submit");
 
-  const response = await fetch("/workorder/updateWorkorderAgreement?json=1", {
+  const response = await fetch("/workorder/updateWorkorderSolar?json=1", {
     method: "post",
     body: formdata,
   });

@@ -284,6 +284,16 @@ table input.form-control {
                                             </select>
                                         </div>    
                                     </div> 
+                                    <div class="form-group col-md-2">
+												<div class="select-wrap">
+													<label for="job_tags">Jobs Tags</label>
+                                                    <select id="job_tags" name="job_tags" class="form-control custom-select m_select">
+                                                        <?php foreach($job_tags as $jb){ ?>
+                                                        <option value="<?php echo $jb->id; ?>" <?php if($workorder->job_tags == $jb->id){ echo 'selected'; }else{ echo ''; } ?>><?php echo $jb->name; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+												</div>    
+											</div> 
                                 </div>
                                 <br>
                                 <!-- <a class="btn btn-sm btn-primary btn-edit-header" href="javascript:void(0);">Edit</a> -->

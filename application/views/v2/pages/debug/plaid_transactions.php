@@ -43,18 +43,18 @@ var linkHandler = Plaid.create({
   clientName: '<?= $client_name; ?>',
   //key: '8a630fc17e537b72fe56911d4a11cb',
   token: '<?= $plaidToken['token']; ?>',
-  product: ['auth','transactions','balance'],
+  product: ['transactions'],
   selectAccount: true,
   onSuccess: function(public_token, metadata) {
     console.log('public_token: ' + public_token);
     console.log('metadata: ' + JSON.stringify(metadata));
     $('.plaid-info-container').html('Loading data');
-
+    
     $('#public-token').val(public_token);
     $('#account-id').val(metadata.account.id);
     //var url = base_url + 'debug/plaidAuth';
     //var url = base_url + 'debug/plaidIdentityGet';
-    var url = base_url + 'debug/plaidInfoView';
+    var url = base_url + 'debug/plaidTransactions';
     var token = public_token;
     var account_id = metadata.account.id;
     $.ajax({

@@ -82,6 +82,10 @@
                     <?php echo $panel_type; ?><hr style="margin-top:0px;margin-bottom:0px;">
                     Panel Type
                 </td>
+                <td style="border: 0px solid white;border-collapse: collapse;">
+                    <?php echo $job_tags; ?><hr style="margin-top:0px;margin-bottom:0px;">
+                    Job Tags
+                </td>
             </tr>
         </table>
         <br>
@@ -92,7 +96,7 @@
                         <h6>Items</h6>
                     </div>
                 </center><br> -->
-                <div class="table" style="font-size:10px;">
+                <div class="table" style="font-size:9px;">
                     <center>
 						<div class="front" style="text-align:center;background-color:#4a5594;color:white;width:350px;font-size:8px;padding:2px;">
 							<b>Items</b>
@@ -292,7 +296,7 @@
 							</div>
 					</center>
                     <br>
-                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;font-size:9px;">
+                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;font-size:8px;">
                         <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr> -->
@@ -413,15 +417,15 @@
                 {
 
                 }else{
-                    echo '<br><br><br><br><br><br><br><br>';
+                    echo '<br><br><br><br><br><br><br><br><br><br><br>';
                 }
                 ?>
-                
+                <br><br><br><br><br><br>
                 <b style="font-size:8px;">Agreement</b>
                 <br>
-                <div style="font-size:7px;"><?php echo $terms_and_conditions; ?></div>
+                <div style="font-size:6px;"><?php echo $terms_and_conditions; ?></div>
         
-                <b style="font-size:8px;">ASSIGNED TO:</b>
+                <b style="font-size:7px;">ASSIGNED TO:</b>
                 <hr>
                 <table style="border: 0px solid white;border-collapse: collapse;width:100%;">
                     <tr>

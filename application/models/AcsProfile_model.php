@@ -5,6 +5,7 @@ class AcsProfile_model extends MY_Model
 {
 
     public $table = 'acs_profile';
+    public $table2 = 'acs_billing';
 
     public function getAllByCompanyId($company_id, $conditions=array(), $filters=array())
     {
@@ -72,7 +73,8 @@ class AcsProfile_model extends MY_Model
         }elseif($prof_id != null && $col != null){
             $this->db->select($col);
             $this->db->from($this->table);
-            $this->db->where_in('prof_id', $prof_id);
+            $this->db->where_in('acs_profile.prof_id', $prof_id);
+            $this->db->join('acs_billing', 'acs_profile.prof_id = acs_billing.fk_prof_id');
     
             $fl = $this->db->get();
             return $fl->result();

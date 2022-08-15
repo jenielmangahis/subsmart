@@ -53,7 +53,6 @@ class Reports extends MY_Controller {
         ));
 
         add_footer_js(array(
-            "assets/plugins/jqueryUI/jquery-ui.min.js",
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
@@ -307,8 +306,11 @@ class Reports extends MY_Controller {
             }
             $custImp = implode(", ", $cust);
             $custExp = explode(",", $custImp);
-            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $custExp);
-            $this->page_data['tblDefault'] = false;   
+            $billPro = billPro($custExp);
+            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $billPro);
+            $this->page_data['tblDefault'] = false;  
+            print_r($this->page_data['acs_profile']);
+            
         //when sort are NOT empty
         }elseif(($sort_by != 'default' && !empty($sort_by)) && empty($cust)){
             $getBill = $this->AcsBilling_model->getBilling($sort_by);
