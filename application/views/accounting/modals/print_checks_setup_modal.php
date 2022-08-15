@@ -253,3 +253,5 @@
     <!--end of modal-->
 </form>
 </div>
+
+<script src="<?php echo $url->assets ?>plugins/jqueryUI/jquery-ui.min.js"></script>

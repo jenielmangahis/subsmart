@@ -636,7 +636,7 @@ class Workorder extends MY_Controller
         $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
         
         $WOitems = $this->workorder_model->getworkorderItems($id);
-        $this->page_data['workorder_items'] = $WOitems;
+        $this->page_data['workorder_items'] = $this->workorder_model->getworkorderItems($id);
 
         $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
         $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
@@ -646,6 +646,7 @@ class Workorder extends MY_Controller
         $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
         $this->page_data['solars'] = $this->workorder_model->get_solar($id);
         $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
+        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         
         $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
         $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
@@ -4595,12 +4596,12 @@ class Workorder extends MY_Controller
                 $this->WorkorderSettings->updateByCompanyId($company_id,$data);
 
 
-            if (!is_null($this->input->get('json', TRUE))) {
-                header('content-type: application/json');
-                exit(json_encode(['id' => $addQuery]));
-            }
-
-            redirect('workorder');
+                if (!is_null($this->input->get('json', TRUE))) {
+                    header('content-type: application/json');
+                    exit(json_encode(['id' => $addQuery]));
+                } else {
+                    redirect('workorder');
+                }
             }
             else{
                 echo json_encode(0);
@@ -6331,7 +6332,12 @@ class Workorder extends MY_Controller
         //     echo json_encode(0);
         // }
 
-        redirect('workorder');
+        if (!is_null($this->input->get('json', TRUE))) {
+            header('content-type: application/json');
+            exit(json_encode(['id' => $addQuery]));
+        } else {
+            redirect('workorder');
+        }
     }
     
         if($action == 'preview') {
@@ -7514,7 +7520,7 @@ class Workorder extends MY_Controller
         file_put_contents($file3, $image_base643);
         }
 
-        $options = implode(',',$_POST['options']);
+        $options = implode(',', array_key_exists('options', $_POST) ? $_POST['options'] : []);
         // dd($service_name);
 
 
@@ -7925,7 +7931,12 @@ class Workorder extends MY_Controller
             $this->WorkorderSettings->updateByCompanyId($company_id,$data);
 
 
-           redirect('workorder');
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            } else {
+                redirect('workorder');
+            }
         }
         else{
             echo json_encode(0);
@@ -8062,6 +8073,7 @@ class Workorder extends MY_Controller
             'monthly_monitoring'                    => $this->input->post('monthlyMonitoring'),
             'grand_total'                           => $this->input->post('totalDue'),
             'terms_and_conditions'                  => $this->input->post('terms_conditions'),
+            'job_tags'                              => $this->input->post('job_tags'),
 
              //signature
              'company_representative_signature'     => $file_save,
@@ -8460,9 +8472,9 @@ class Workorder extends MY_Controller
             if (!is_null($this->input->get('json', TRUE))) {
                 header('content-type: application/json');
                 exit(json_encode(['id' => $addQuery]));
+            } else {
+                redirect('workorder');
             }
-
-           redirect('workorder');
         }
         else{
             echo json_encode(0);
@@ -8712,6 +8724,7 @@ class Workorder extends MY_Controller
             'panel_type'                            => $this->input->post('panel_type'),
             'panel_communication'                   => $this->input->post('communication_type'),
             'account_type'                          => $this->input->post('account_type'),
+            'job_tags'                              => $this->input->post('job_tags'),
 
             'comments'                              => $this->input->post('notes'),
             'password'                              => $this->input->post('password'),
@@ -8997,7 +9010,13 @@ class Workorder extends MY_Controller
             $i++;
         }
 
-        redirect('workorder');
+        if (!is_null($this->input->get('json', TRUE))) {
+            header('content-type: application/json');
+            exit(json_encode(['id' => $addQuery]));
+        } else {
+            redirect('workorder');
+        }
+
         // }
         
         //     if($action == 'preview') {
@@ -9324,7 +9343,12 @@ class Workorder extends MY_Controller
         }
 
         
-        redirect('workorder');
+        if (!is_null($this->input->get('json', TRUE))) {
+            header('content-type: application/json');
+            exit(json_encode(['id' => $addQuery]));
+        } else {
+            redirect('workorder');
+        }
     }
 
 

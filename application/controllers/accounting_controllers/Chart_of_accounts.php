@@ -55,7 +55,6 @@ class Chart_of_accounts extends MY_Controller {
         ));
 
         add_footer_js(array(
-            "assets/plugins/jqueryUI/jquery-ui.min.js",
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
@@ -121,7 +120,9 @@ class Chart_of_accounts extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/accounting/chart-of-accounts.js?v=".rand()
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/accounting/chart_of_accounts/list.js?v=".rand()
+            // "assets/js/accounting/accounting/chart-of-accounts.js?v=".rand()
         ));
 
         $accountTypes = $this->account_model->getAccounts();
@@ -228,7 +229,12 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/chart_of_accounts/index', $this->page_data);
+
+        $accountType = $this->account_model->getAccTypeByName('Bank');
+        $this->page_data['accountType'] = $accountType;
+        $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
+        $this->load->view('v2/pages/accounting/accounting/chart_of_accounts/list', $this->page_data);
+        // $this->load->view('accounting/chart_of_accounts/index', $this->page_data);
     }
 
     public function get_detail_type($id)

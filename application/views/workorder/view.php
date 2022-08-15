@@ -727,11 +727,11 @@ table input.form-control {
                                         <?php } ?>
 
 									<?php if($workorder->work_order_type_id == 1){ ?>
-                       					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+                       					<a href="<?php echo base_url('share_Link/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 										   <?php }else if($workorder->work_order_type_id == 4){ ?>
-										<a href="<?php echo base_url('workorder/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<a href="<?php echo base_url('share_Link/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 										<?php } else{ ?>
-										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<a href="<?php echo base_url('share_Link/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
 
 
@@ -912,9 +912,9 @@ table input.form-control {
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
 																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
 																</li>
-															<li><span class="ul-text"><?php echo $workorder->job_location .'<br>'. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code;  ?></span></li>
-															<li><span class="ul-text">Email: <?php echo $workorder->email ?></span></li>
-															<li><span class="ul-text">Phone: <span class="phoneFormat2"> <?php echo $workorder->phone_number ?></span></span></li>
+															<li><span class="ul-text"><?php echo $customer->mail_add .'<br>'. $customer->city .', '. $customer->state .' '. $customer->zip_code;  ?></span></li>
+															<li><span class="ul-text">Email: <?php echo $customer->email ?></span></li>
+															<li><span class="ul-text">Phone: <span class="phoneFormat2"> <?php echo $customer->phone_h ?></span></span></li>
 		         							   			
 		         							   			</ul>
 		         							   		</div><br>
@@ -1368,20 +1368,20 @@ table input.form-control {
 									<?php }elseif($workorder->work_order_type_id == '4'){ ?>
 
 										<div class="row">
-											<div class="form-group col-md-3">
+											<div class="form-group col-md-2">
 												<div class="select-wrap">
 													<label for="lead_source">Lead Source</label>
-													<select id="lead_source" name="lead_source" class="form-control custom-select m_select">
+													<select id="lead_source" name="lead_source" class="form-control custom-select m_select" disabled>
 														<?php foreach($lead_source as $leads){ ?>
 														<option value="<?php echo $leads->ls_id; ?>" <?php if($workorder->lead_source_id == $leads->ls_id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $leads->ls_name; ?></option>
 														<?php } ?>
 													</select>
 												</div>    
 											</div> 
-											<div class="form-group col-md-3">
+											<div class="form-group col-md-2">
 												<div class="select-wrap">
 													<label for="lead_source">Account Type</label>
-													<select id="account_type" name="account_type" class="form-control custom-select m_select">
+													<select id="account_type" name="account_type" class="form-control custom-select m_select" disabled>
 														<option value="<?php echo $workorder->account_type; ?>"><?php echo $workorder->account_type; ?></option>
 														<!-- <option value="Residential">Residential</option>
 														<option value="Commercial">Commercial</option>
@@ -1391,20 +1391,20 @@ table input.form-control {
 													<input type="hidden" value="<?php echo $workorder->account_type; ?>" class="account_typeClass">
 												</div>    
 											</div> 
-											<div class="form-group col-md-3">
+											<div class="form-group col-md-2">
 												<div class="select-wrap">
 													<label for="lead_source">Communication Type</label>
-													<select id="communication_type" name="communication_type" class="form-control custom-select m_select">
+													<select id="communication_type" name="communication_type" class="form-control custom-select m_select" disabled>
 														<?php //oreach($system_package_type as $lead){ ?>
 														<option value=""><?php echo $workorder->panel_communication; ?></option>
 														<?php //} ?>
 													</select>
 												</div>    
 											</div> 
-											<div class="form-group col-md-3">
+											<div class="form-group col-md-2">
 												<div class="select-wrap">
 													<label for="lead_source">Panel Type</label>
-													<select name="panel_type" id="panel_type" class="form-control m_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>">
+													<select name="panel_type" id="panel_type" class="form-control m_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>" disabled>
 														<option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
 														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
 														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
@@ -1436,7 +1436,18 @@ table input.form-control {
 													</select>
 												</div> 
 											</div>   
+											<div class="form-group col-md-2">
+												<div class="select-wrap">
+													<label for="lead_source">Jobs Tags</label>
+													<select id="job_tags" name="job_tags" class="form-control custom-select m_select" disabled>
+														<?php foreach($job_tags as $jb){ ?>
+														<option value="<?php echo $jb->id; ?>" <?php if($workorder->job_tags == $jb->id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $jb->name; ?></option>
+														<?php } ?>
+													</select>
+												</div>    
+											</div> 
 										</div>
+										
 										<div class="row" style="font-size:;">                   
 											<div class=" col-md-6 box-left-mini">
 												<center>
@@ -1878,27 +1889,27 @@ table input.form-control {
 															<table class="table table-bordered table-sm" style="width:80%;">
 																<tr>
 																	<td>Equipment Cost</td>
-																	<td><h5>$ <?php echo number_format($workorder->subtotal,2); ?></h5> </td>
+																	<td><h5>$ <?php echo number_format((Float)$workorder->subtotal,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>Sales Tax</td>
-																	<td><h5>$ <?php echo number_format($workorder->taxes,2); ?></h5> </td>
+																	<td><h5>$ <?php echo number_format((Float)$workorder->taxes,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>Installation Cost</td>
-																	<td><h5>$ <?php echo number_format($workorder->installation_cost,2); ?></h5> </td>
+																	<td><h5>$ <?php echo number_format((Float)$workorder->installation_cost,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>One time (Program and Setup)</td>
-																	<td><h5>$ <?php echo number_format($workorder->otp_setup,2); ?></h5> </td>
+																	<td><h5>$ <?php echo number_format((Float)$workorder->otp_setup,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>Monthly Monitoring</td>
-																	<td><h5>$ <?php echo number_format($workorder->monthly_monitoring,2); ?></h5></td>
+																	<td><h5>$ <?php echo number_format((Float)$workorder->monthly_monitoring,2); ?></h5></td>
 																</tr>
 																<tr>
 																	<td>Total Due</td>
-																	<td><h5>$ <?php echo number_format($workorder->grand_total,2); ?></h5></td>
+																	<td><h5>$ <?php echo number_format((Float)$workorder->grand_total,2); ?></h5></td>
 																</tr>
 															</table>
 														</div>

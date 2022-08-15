@@ -88,19 +88,36 @@
                                             <i class="bx bx-fw bx-cog"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
+                                            <p class="m-0">Columns</p>
+                                            <div class="form-check">
+                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_date" class="form-check-input">
+                                                <label for="chk_date" class="form-check-label">Date</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                                                <label for="chk_type" class="form-check-label">Type</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_payee" class="form-check-input">
+                                                <label for="chk_payee" class="form-check-label">Payee</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_amount" class="form-check-input">
+                                                <label for="chk_amount" class="form-check-label">Amount</label>
+                                            </div>
                                             <p class="m-0">Rows</p>
                                             <div class="dropdown d-inline-block">
                                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                                     <span>
-                                                        150
+                                                        50
                                                     </span> <i class='bx bx-fw bx-chevron-down'></i>
                                                 </button>
-                                                <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                                    <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
+                                                <ul class="dropdown-menu dropdown-menu-end" id="checks-table-rows">
+                                                    <li><a class="dropdown-item active" href="javascript:void(0);" onclick="checkTableRows(this)">50</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="checkTableRows(this)">75</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="checkTableRows(this)">100</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="checkTableRows(this)">150</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="checkTableRows(this)">300</a></li>
                                                 </ul>
                                             </div>
                                         </ul>

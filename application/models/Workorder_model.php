@@ -417,6 +417,7 @@ class Workorder_model extends MY_Model
             'otp_setup'             => $otp_setup,//
             'monthly_monitoring'    => $monthly_monitoring,//
             'grand_total'           => $grand_total,//
+            'job_tags'              => $job_tags,//
 
             'lead_source_id'        => $lead_source_id,//
 
@@ -948,10 +949,20 @@ class Workorder_model extends MY_Model
         // $this->db->select('*');
 		// $this->db->from('work_orders');
 		// $this->db->where('id', $id);
-        $this->db->select('*','ls_name');
+        $this->db->select('*','ls_name','jbname');
 		$this->db->from('work_orders');
         $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id');
+        $this->db->join('job_tags', 'work_orders.job_tags  = job_tags.id');
 		$this->db->where('work_orders.id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function get_job_tags_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('job_tags');
+		$this->db->where('id', $id);
 		$query = $this->db->get();
 		return $query->row();
     }
@@ -2038,7 +2049,7 @@ class Workorder_model extends MY_Model
         // $this->db->join('items', 'item_package.item_id  = items.id');
         // $this->db->where('package_id', $id);
 
-        $this->db->select('*, work_orders_items.cost as costing');
+        $this->db->select('*, work_orders_items.cost as costing, work_orders_items.items_id');
 		$this->db->from('work_orders_items');
         $this->db->join('items', 'work_orders_items.items_id  = items.id');
         // $this->db->join('package_details', 'work_orders_items.package_id  = package_details.id');

@@ -6,13 +6,19 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     "../customer/add_advance/FormAutoSave.js"
   );
 
+  let errorTimeout = null;
+  let hasChangedUrl = false;
+
   const config = new FormAutoSaveConfig({
     onChange: async () => {
       try {
         const response = await autoSaveForm();
         const { id } = response;
 
-        window.history.replaceState({}, "", `/workorder/edit/${id}`);
+        if (!hasChangedUrl) {
+          window.history.replaceState({}, "", `/workorder/edit/${id}`);
+          hasChangedUrl = true;
+        }
 
         let $workorderId = $form.querySelector("[name=wo_id]");
         if (!$workorderId) {
@@ -23,7 +29,17 @@ window.document.addEventListener("DOMContentLoaded", async () => {
           $form.appendChild($workorderId);
         }
       } catch (error) {
+        if (error.toString().toLowerCase().includes("is not valid json")) {
+          return;
+        }
+
         console.error(error);
+        window.clearTimeout(errorTimeout);
+
+        FormAutoSave.toggleSavingErrorIndicator();
+        errorTimeout = window.setTimeout(() => {
+          FormAutoSave.toggleSavingErrorIndicator(false);
+        }, 5000);
       }
     },
   });
@@ -34,15 +50,12 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 async function autoSaveForm() {
   const $form = document.querySelector("form[action$=savenewWorkorder]");
 
-  const prefixURL = "";
-  // const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-
   const formdata = new FormData($form);
   formdata.append("action", "submit");
 
-  let url = `${prefixURL}/workorder/savenewWorkorder?json=1`;
+  let url = "/workorder/savenewWorkorder?json=1";
   if (formdata.has("wo_id")) {
-    url = `${prefixURL}/workorder/UpdateWorkorder?json=1`;
+    url = "/workorder/UpdateWorkorder?json=1";
   }
 
   const response = await fetch(url, {

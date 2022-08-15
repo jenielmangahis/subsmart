@@ -3,6 +3,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <?php include viewPath('includes/workorder/sign-modal'); ?>
+
+<!-- Script for autosaving form -->
+<script src="<?=base_url("assets/js/workorder/autosave-solar.js")?>"></script>
+
 <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
 <style>

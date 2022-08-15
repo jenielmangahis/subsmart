@@ -65,6 +65,9 @@
     <!-- Fancybox -->
     <script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
 
+    <!-- Switchery -->
+    <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script>
+
     <!-- Main Script -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>

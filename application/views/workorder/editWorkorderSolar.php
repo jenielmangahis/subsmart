@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
+
+<!-- Script for autosaving form -->
+<script src="<?=base_url("assets/js/workorder/autosave-solar-update.js")?>"></script>
+
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>

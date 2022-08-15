@@ -45,9 +45,9 @@ $(document).ready(function () {
                 $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).remove();
             }
 
-            // if (modal_element === '#printChecksModal') {
-            //     loadChecksTable();
-            // }
+            if (modal_element === '#printChecksModal') {
+                $('#printChecksModal #checks-table').nsmPagination({itemsPerPage: parseInt($('#printChecksModal #checks-table-rows li a.dropdown-item.active').html().trim())})
+            }
 
             // $(`${modal_element} select`).each(function() {
             //     var type = $(this).attr('id');
