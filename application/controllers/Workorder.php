@@ -8097,7 +8097,7 @@ class Workorder extends MY_Controller
             // 'primary_account_holder_name' => 'primary_account_holder_name',
             // 'secondary_account_holder_signature' => 'secondary_account_holder_signature',
             // 'secondary_account_holder_name' => 'secondary_account_holder_name',
-            
+            'status'                                => 'New',
             'employee_id'                           => $user_id,
             'is_template'                           => '1',
             'company_id'                            => $company_id,
@@ -8109,6 +8109,9 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        //SMS Notification        
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', 'New', $user_id, $user_id);   
 
         $solarItems = array(
             'firstname'                 => $this->input->post('firstname'),
@@ -8462,10 +8465,6 @@ class Workorder extends MY_Controller
             );
 
             $notification = $this->workorder_model->save_notification($notif);
-
-            //SMS Notification        
-            createCronAutoSmsNotification(getLoggedCompanyID(), $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);        
-
 
 
             //Updated workorder settings
