@@ -1321,19 +1321,6 @@ border: none;
                                         <!-- </div> -->
                                     </div>
                                 </div>
-
-                                <div class="col-md-4 form-group">
-                                    <div class="select-wrap">
-                                        <label for="lead_source">Agent Name</label>
-                                        <select class="form-control mb-3" name="agent_id">
-                                            <option value="0">Select Agent</option>
-                                            <?php foreach($users_lists as $ulist){ ?>
-                                                <option <?php if(isset($workorder)){ if($workorder->agent_id == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>    
-                                </div> 
-
                                 <div class="col-md-4 form-group">
                                 <div class="select-wrap">
                                     <!-- <div class=""> -->

@@ -422,7 +422,7 @@ class Workorder_model extends MY_Model
             'lead_source_id'        => $lead_source_id,//
 
             'status'                => $status, //Added by Bryann Revina
-            'agent_id'              => $agent_id, //Added by Bryann Revina
+            //'agent_id'              => $agent_id, //Added by Bryann Revina
 
             'company_representative_signature'      => $company_representative_signature,
             'company_representative_name'           => $company_representative_name,
@@ -463,7 +463,7 @@ class Workorder_model extends MY_Model
             'lead_source_id'        => $lead_source_id,//
 
             'status'                => $status, //Added Bryann Revina 08152022
-            'agent_id'              => $agent_id, //Added Bryann Revina 08152022
+            //'agent_id'              => $agent_id, //Added Bryann Revina 08152022
 
             'company_representative_signature'      => $company_representative_signature,
             'company_representative_name'           => $company_representative_name,

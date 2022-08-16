@@ -312,23 +312,6 @@ table input.form-control {
                                             </select>
                                         </div>    
                                     </div> 
-                                    <div class="form-group col-md-2">
-                                        <div class="select-wrap">
-                                            <label for="lead_source">Agent Name</label>
-                                            <select class="form-control mb-3" name="agent_id">
-                                                <option value="0">Select Agent</option>
-                                                <?php foreach($users_lists as $ulist){ ?>
-                                                    <option <?php if(isset($workorder)){ if($workorder->agent_id == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>    
-                                    </div> 
-                                    <div class="form-group col-md-2">
-                                        <div class="select-wrap">
-                                            <label for="lead_source">Created By</label>
-                                            <input type="text" readonly="" class="form-control" disabled="" value="<?= $workorder->agent_name; ?>">
-                                        </div>    
-                                    </div> 
                                 </div>
                                 <br>
                                 <!-- <a class="btn btn-sm btn-primary btn-edit-header" href="javascript:void(0);">Edit</a> -->

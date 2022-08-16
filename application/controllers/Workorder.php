@@ -4256,7 +4256,7 @@ class Workorder extends MY_Controller
             'instructions'                          => $this->input->post('instructions'),
             'header'                                => $this->input->post('header'),
 
-            'agent_id'                              => $this->input->post('agent_id'), //Added by Bryann Revina
+            //'agent_id'                              => $this->input->post('agent_id'), //Added by Bryann Revina
 
             //signature
             'company_representative_signature'      => $file_save,
@@ -4301,7 +4301,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
         //SMS Notification        
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $this->input->post('agent_id'));        
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);        
 
         if($this->input->post('payment_method') == 'Cash'){
             $payment_data = array(
@@ -6924,7 +6924,7 @@ class Workorder extends MY_Controller
             'plan_type'                             => $this->input->post('plan_type'),
             'lead_source_id'                        => $this->input->post('lead_source'),
 
-            'agent_id'                              => $this->input->post('agent_id'),
+            //'agent_id'                              => $this->input->post('agent_id'),
 
             'job_name'                              => $this->input->post('job_name'),
             'job_description'                       => $this->input->post('job_description'),
@@ -6974,7 +6974,7 @@ class Workorder extends MY_Controller
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $this->input->post('agent_id'));
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);
 
         customerAuditLog(logged('id'), $w_acs, $addQuery, 'Workorder', 'Created workorder #'.$this->input->post('workorder_number'));
 
@@ -7604,7 +7604,7 @@ class Workorder extends MY_Controller
             // 'secondary_account_holder_name' => 'secondary_account_holder_name',
 
             'status'                                => $this->input->post('status'), //Added Bryann Revina 
-            'agent_id'                              => $this->input->post('agent_id'), //Added Bryann Revina 
+            //'agent_id'                              => $this->input->post('agent_id'), //Added Bryann Revina 
             
             'employee_id'                           => $user_id,
             'is_template'                           => '1',
@@ -7619,7 +7619,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $this->input->post('agent_id'));
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);
 
         $solarItems = array(
             'tor'                 => $this->input->post('tor'),
@@ -8738,7 +8738,7 @@ class Workorder extends MY_Controller
             'security_number'                       => $this->input->post('ssn'),
 
             'status'                                => $this->input->post('status'), //Added by Bryann Revina
-            'agent_id'                              => $this->input->post('agent_id'), //Added by Bryann Revina
+            //'agent_id'                              => $this->input->post('agent_id'), //Added by Bryann Revina
 
             'subtotal'                              => $this->input->post('equipmentCost'),
             'taxes'                                 => $this->input->post('salesTax'),
@@ -8764,7 +8764,7 @@ class Workorder extends MY_Controller
 
         //SMS Notification   
         $smsWo = $this->workorder_model->getById($id);      
-        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, $smsWo->agent_id);        
+        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, $smsWo->employee_id);        
 
         $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id'));
         if( $objWorkOrder ){
@@ -9150,7 +9150,7 @@ class Workorder extends MY_Controller
             'payment_amount'                        => $this->input->post('payment_amount'),
 
             'status'                                => $this->input->post('status'), //Added Bryann Revina 08132022
-            'agent_id'                              => $this->input->post('agent_id'), //Added Bryann Revina 08152022
+            //'agent_id'                              => $this->input->post('agent_id'), //Added Bryann Revina 08152022
 
             'lead_source_id'                        => $this->input->post('lead_source'),
             'panel_communication'                   => $this->input->post('system_type'),
@@ -9173,7 +9173,7 @@ class Workorder extends MY_Controller
 
         //SMS Notification      
         $smsWo = $this->workorder_model->getById($id);          
-        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, $smsWo->agent_id);
+        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, $smsWo->employee_id);
 
 
         $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id'));
