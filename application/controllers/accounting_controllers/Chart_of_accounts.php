@@ -457,7 +457,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['account'] = $account;
         $this->page_data['accountType'] = $this->account_model->getById($account->account_id);
         $this->page_data['detailType'] = $this->account_detail_model->getById($account->acc_detail_id);
-        $this->load->view('accounting/modals/account_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/account_modal', $this->page_data);
     }
 
     public function update($id)

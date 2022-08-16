@@ -321,6 +321,12 @@ if ($this->session->userdata('usertimezone') == null) {
                     </ul>
                 </li>
             </ul>
+
+            <div class="nsm-back-to-main-dashboard">
+                <a href="<?=base_url("dashboard")?>">
+                    <i class='bx bx-fw bx-arrow-back'></i> Go to main Dashboard
+                </a>
+            </div>
         </div>
         <div class="nsm-main general-transition">
             <div class="nsm-nav">
@@ -622,6 +628,104 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                         <li>
                             <div class="dropdown d-flex">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class="bx bx-fw bx-cog"></i></a>
+                                <div class="dropdown-menu dropdown-list nsm-nav-dropdown" style="width: max-content; padding: 1.5em">
+                                    <div class="row">
+                                        <div class="col-12 col-md-3">
+                                            <div class="list-header">
+                                                <h6 class="dropdown-header fw-bold">YOUR COMPANY</h6>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Account and settings</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Manage users</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Custom form styles</span>
+                                            </div>
+                                            <div class="list-item" onclick="location.href='<?=base_url('accounting/chart-of-accounts'); ?>'">
+                                                <span class="content-title">Chart of accounts</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Payroll settings</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">nSmarTrac labs</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="list-header">
+                                                <h6 class="dropdown-header fw-bold">LISTS</h6>
+                                            </div>
+                                            <div class="list-item" onclick="location.href='<?=base_url('accounting/lists'); ?>'">
+                                                <span class="content-title">All lists</span>
+                                            </div>
+                                            <div class="list-item" onclick="location.href='<?=base_url('accounting/products-and-services'); ?>'">
+                                                <span class="content-title">Products and services</span>
+                                            </div>
+                                            <div class="list-item" onclick="location.href='<?=base_url('accounting/recurring-transactions'); ?>'">
+                                                <span class="content-title">Recurring transactions</span>
+                                            </div>
+                                            <div class="list-item" onclick="location.href='<?=base_url('accounting/attachments'); ?>'">
+                                                <span class="content-title">Attachments</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Custom fields</span>
+                                            </div>
+                                            <div class="list-item" onclick="location.href='<?=base_url('accounting/tags'); ?>'">
+                                                <span class="content-title">Tags</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3 border-end">
+                                            <div class="list-header">
+                                                <h6 class="dropdown-header fw-bold">TOOLS</h6>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Import data</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Import desktop data</span>
+                                            </div>
+                                            <div class="list-item" onclick="location.href='<?=base_url('accounting/reconcile'); ?>'">
+                                                <span class="content-title">Reconcile</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Budgeting</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Audit log</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">SmartLook</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Resolution center</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="list-header">
+                                                <h6 class="dropdown-header fw-bold">PROFILE</h6>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Feedback</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Refer a friend</span>
+                                            </div>
+                                            <div class="list-item">
+                                                <span class="content-title">Privacy</span>
+                                            </div>
+                                            <!-- <div class="list-item">
+                                                <span class="content-title">Switch company</span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown d-flex">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                     <?php
                                     $image = userProfilePicture(logged('id'));
@@ -680,3 +784,64 @@ if ($this->session->userdata('usertimezone') == null) {
             </div>
             <div class="nsm-content-container">
                 <div class="nsm-content">
+                    <div class="nsm-fab-container">
+                        <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+                            <i class="bx bx-plus"></i>
+                        </div>
+                        <ul class="nsm-fab-options">
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <span class="nsm-fab-label">Add Invoice</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-money"></i>
+                                </div>
+                                <span class="nsm-fab-label">Receive Payment</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-book-content"></i>
+                                </div>
+                                <span class="nsm-fab-label">Add Expense</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-book-content"></i>
+                                </div>
+                                <span class="nsm-fab-label">Add Check</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <span class="nsm-fab-label">Add Bill</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-money"></i>
+                                </div>
+                                <span class="nsm-fab-label">Pay bills</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-time"></i>
+                                </div>
+                                <span class="nsm-fab-label">Single time activity</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-file"></i>
+                                </div>
+                                <span class="nsm-fab-label">Bank Deposit</span>
+                            </li>
+                            <li>
+                                <div class="nsm-fab-icon">
+                                    <i class="bx bx-transfer"></i>
+                                </div>
+                                <span class="nsm-fab-label">Transfer</span>
+                            </li>
+                        </ul>
+                    </div>

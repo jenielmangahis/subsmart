@@ -39,6 +39,7 @@ class Wizard extends MY_Controller {
     }
 
     public function index() {
+        $this->page_data['page']->title = 'Wizard';
         $company_id = logged('company_id');
         $this->page_data['wizards_workspace'] = $this->wizard_model->getCompanyAllIndustries($company_id);
         //$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();

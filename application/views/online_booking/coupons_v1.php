@@ -1,6 +1,6 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-include viewPath('v2/includes/header'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php include viewPath('includes/header'); ?>
 <style>
 .row-header{
     background-color: #32243d;
@@ -21,46 +21,45 @@ include viewPath('v2/includes/header'); ?>
     width: 100%;
 }
 </style>
-
-<div class="row page-content g-0">
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/upgrades_tabs'); ?>
-    </div>
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/online_booking_subtabs'); ?>
-    </div>
-    <!-- end tabs -->
-    <div class="col-12">
-        <div class="row">
-            <div class="col">
-                <h3 class="page-title mt-0">Online Booking</h3>
-            </div>
-            <div class="col-auto">
-                <div class="h1-spacer">
-                    <a class="nsm-button primary" href="#modalAddCoupon" data-toggle="modal" data-target="#modalAddCoupon"><i class='bx bx-plus-circle'></i> Add Coupon</a>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/upgrades'); ?>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <div class="container-fluid p-20">
+            <div class="row">
+                <div class="col">
+                  <h3 class="page-title mt-0">Online Booking</h3>
+                </div>
+                <div class="col-auto">
+                    <div class="h1-spacer">
+                        <a class="btn btn-primary btn-md" href="#modalAddCoupon" data-toggle="modal" data-target="#modalAddCoupon"><span class="fa fa-plus-square fa-margin-right"></span> Add Coupon</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-12">
-        <div class="nsm-page">
-            <div class="nsm-page-content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nsm-callout primary">
-                            Manage coupons that users can input on the booking form.
+            <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage coupons that users can input on the booking form.</span>
+              </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card" style="min-height: 400px !important;">
+                        <?php include viewPath('includes/booking_tabs'); ?>   
+                        <div class="tabs">
+                            <ul class="clearfix">
+                                <li class="<?php echo $active_tab == 'active' ? 'active' : ''; ?>">
+                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/active') ?>">Active <span>(<?php echo $total_active; ?>)</span></a>
+                                </li>
+                                <li class="<?php echo $active_tab == 'closed' ? 'active' : ''; ?>">
+                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/closed') ?>">Closed <span>(<?php echo $total_closed; ?>)</span></a>
+                                </li>
+                            </ul>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 mb-3">
-                        <?php include viewPath('v2/includes/page_navigations/coupons_subtabs'); ?>
-                    </div>
-                    <div class="col-md-12" style="margin-top: 20px;">
                         <?php include viewPath('flash'); ?>
-                        <table class="nsm-table" data-id="coupons">
+                        <table class="table table-hover tbl-coupons" data-id="coupons">
                             <thead>
-                                <tr>
+                                <tr class="row-header">
                                     <th style="width:60%;">Coupon</th>
                                     <th>Code</th>
                                     <th>Discount</th>
@@ -92,26 +91,26 @@ include viewPath('v2/includes/header'); ?>
                                                     }
                                                 ?>
                                                 <?php if( $is_expired == 1 ){ ?>    
-                                                    <span class="nsm-badge secondary">Expired</span>
+                                                    <span class="badge badge-warning" style="background-color:#ec4561; padding:10px;font-size: 14px;">Expired</span>
                                                 <?php }else{ ?>
-                                                    <span class="nsm-badge success">Active</span>
+                                                    <span class="badge badge-primary" style="background-color:#007bff; padding:10px;font-size: 14px;">Active</span>
                                                 <?php } ?>
                                                 
                                             <?php }else{ ?>
-                                                <span class="nsm-badge secondary">Closed</span>
+                                                <span class="badge badge-danger" style="background-color: #ec4561; padding: 10px;font-size: 14px;">Closed</span>
                                             <?php } ?>
                                         </td>
                                         <td class="text-right">
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
+                                            <div class="dropdown dropdown-btn">
+                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">   
                                                     <li role="presentation">
-                                                        <a class="dropdown-item coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);"><span class="fa fa-pencil icon"></span> Edit</a>
+                                                        <a role="menuitem" class="coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);"><span class="fa fa-pencil icon"></span> Edit</a>
                                                     </li>
                                                     <li role="presentation">
-                                                        <a class="dropdown-item coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                        <a role="menuitem" class="coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -121,14 +120,15 @@ include viewPath('v2/includes/header'); ?>
                             </tbody>
                         </table>
                     </div>
+                    <!-- end card -->
                 </div>
             </div>
+            <!-- end row -->
         </div>
+        <!-- end container-fluid -->
     </div>
+    <!-- page wrapper end -->
 </div>
-
-
-
 <?php include viewPath('includes/booking_modals'); ?> 
 <?php include viewPath('includes/footer_booking'); ?>
 <script>
@@ -181,4 +181,3 @@ $(function(){
     });
 });
 </script>
-<?php include viewPath('v2/includes/footer'); ?>

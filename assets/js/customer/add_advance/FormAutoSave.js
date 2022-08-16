@@ -61,6 +61,14 @@ export class FormAutoSave {
     }
 
     if (this.isTextBox($input)) {
+      if ($input.hasAttribute("type")) {
+        const inputType = $input.getAttribute("type").toLowerCase();
+        if (inputType === "date") {
+          $input.addEventListener("change", this.onChange);
+          return;
+        }
+      }
+
       $input.addEventListener("keyup", this.onChange);
       return;
     }

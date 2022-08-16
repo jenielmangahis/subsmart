@@ -120,11 +120,66 @@ $(document).on('click', '#add-account-button', function(e) {
 
     $.get('/accounting/get-dropdown-modal/account_modal', function(result) {
         if ($('#modal-container').length > 0) {
-            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+            $('div#modal-container').html(`${result}`);
         } else {
             $('body').append(`
                 <div id="modal-container">
                     ${result}
+                </div>
+            `);
+        }
+
+        initAccountModal();
+    });
+});
+
+$(document).on("change", "#account-modal #choose_time", function() {
+    if($(this).val() === 'other') {
+        $("#account-modal #balance").val('');
+        $("#account-modal #balance").parent().addClass("d-none");
+        $("#account-modal #time_date").parent().parent().removeClass("d-none");
+    } else {
+        $("#account-modal #time_date").val('');
+        $("#account-modal #time_date").parent().parent().addClass("d-none");
+        $("#account-modal #balance").parent().removeClass("d-none");
+
+        switch($(this).val()) {
+            case 'beginning-of-year' :
+                var date = new Date();
+                date.setMonth(11);
+                date.setDate(31);
+                date.setFullYear(date.getFullYear() - 1);
+            break;
+            case 'beginning-of-month' :
+                var date = new Date();
+                date.setDate(1);
+                date.setDate(date.getDate() - 1);
+            break;
+            case 'today' :
+                var date = new Date();
+                date.setDate(date.getDate() - 1);
+            break;
+        }
+
+        var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        $("#account-modal #selected-date").html(dateString);
+    }
+});
+
+$(document).on("change", "#account-modal #time_date", function() {
+    $("#account-modal #selected-date").html($(this).val());
+    $("#account-modal #balance").parent().removeClass("d-none");
+});
+
+$("#accounts-table tbody .edit-account").on("click", function() {
+    var id = $(this).closest('tr').find('.select-one').val();
+    $.get('/accounting/chart-of-accounts/edit/'+id, function(html) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`${html}`);
+        } else {
+            $('body').append(`
+                <div id="modal-container">
+                    ${html}
                 </div>
             `);
         }

@@ -1,6 +1,6 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed');
+include viewPath('v2/includes/header'); ?>
 <style>
 .row-header{
     background-color: #32243d;
@@ -13,63 +13,58 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   padding-left: 39px !important;
   margin-top: 55px !important;
 }
+.add-text{
+    padding-left: 9px; 
+    float: right;
+    text-decoration: none;
+    color: #259e57;
+}
 </style>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/upgrades'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid p-20">
-            <div class="row">
-                <div class="col">
-                  <h3 class="page-title mt-0">Online Booking</h3>
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/upgrades_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/online_booking_subtabs'); ?>
+    </div>
+
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            Customize the way the form looks and get notifications on new booking inquiries.
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
-              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Customize the way the form looks and get notifications on new booking inquiries.</span>
-              </div>
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card" style="min-height: 400px !important;">
-                        <?php include viewPath('includes/booking_tabs'); ?> 
+                <div class="row">
+                    <div class="col-lg-6" id="app-builder">
+                    <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
+                        <div class="margin-bottom">
+                            
 
-                        <?php if($this->session->flashdata('message')) { ?>
-                            <div class="row dashboard-container-1">
-                                <div class="col-md-12">
-                                    <div class="alert <?php echo $this->session->flashdata('alert_class'); ?>">
-                                      <button type="button" class="close" data-dismiss="alert">&times</button>
-                                      <?php echo $this->session->flashdata('message'); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>                         
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
-                                    <div class="row dashboard-container-1">                                        
+                            <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-content">
+                                    <div class="col-md-12" style="margin-top: 20px;">
+                                        <div class="text-ter margin-bottom-sec fw-bold">Customize Form Fields</div>
                                         <div class="col-md-12">
-                                            <strong>Customize Form Fields</strong>
-                                            <br />
                                             Select the fields that will be part of the form and required ones.
-                                            <a style="padding-left: 9px; float: right;" id="" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
-                                                <span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field
+                                            <a class="add-text" id="" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
+                                            <i class='bx bx-plus-circle'></i>Add Form Field
                                             </a>
                                         </div>
-
-                                        <div class="col-md-12" style="margin-top: 20px;">
-                                            <table class="table tbl-custom-fields">
-                                              <thead>
-                                                <tr class="row-header">
-                                                  <th width="40%" scope="col"><strong>Field</strong></th>
-                                                  <th width="20%" scope="col"><strong>Visible</strong></th>
-                                                  <th width="20%" scope="col"><strong>Required</strong></th>
-                                                  <th width="20%" scope="col"></th>
+                                        <table class="nsm-table" style="margin-top: 20px;">
+                                            <thead>
+                                                <tr>
+                                                    <th width="40%" scope="col"><strong>Field</strong></th>
+                                                    <th width="20%" scope="col"><strong>Visible</strong></th>
+                                                    <th width="20%" scope="col"><strong>Required</strong></th>
+                                                    <th width="20%" scope="col"></th>
                                                 </tr>
-                                              </thead>
-                                              <tbody>
+                                            </thead>
+                                            <tbody>
                                                 <?php if(!isset($booking_forms)) { ?>                                       
                                                     <?php foreach($default_form_fields as $dff_key => $default_form_field) { ?>
                                                         <?php 
@@ -167,100 +162,91 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                  <?php  $row_count++; }
                                                   } ?>
                                               </tbody>
-                                            </table>   
-                                            <button class="btn btn-primary">Save</button>
-                                            <div class="field-name-container" id="field-name-container" style="display: none;">
-                                                <div class="form-group" id="">
-                                                    <label>Field Name</label> <span class="help">(e.g. Do you have pets)</span>
-                                                    <input type="text" name="field_name" value="" class="form-control" autocomplete="off">
-                                                </div>
-                                                <div class="form-group" id="">
-                                                    <button class="btn btn-success">Add</button>
-                                                    <a style="padding-left: 9px;" id="hide-add-form-field-row" data-time-slot="btn-add" href="javascript:void(0);">I'm done adding fields</a>
-                                                </div>
-
-                                            </div>
-
-                                            <!-- <a style="padding-left: 9px;" id="add-form-field-row" data-time-slot="btn-add" href="javascript:void(0);"><span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field</a> -->                                                  
-                                            <span class="form-message-saving"></span>
-                                        </div>
-                                    </div>                                 
-                                </form>
-                            </div>
-                            <div class="col-md-6">
-
-                                <div class="row dashboard-container-1">
-                                    <div class="col-md-12">
-
-                                        <div style="padding: 40px; border: 0px solid rgb(221, 221, 221); background: rgb(242, 242, 242) none repeat scroll 0% 0%;">
-                                            <h3 style="background-color: #32243d; color:#ffffff; padding: 10px;font-size: 17px;margin-bottom: 0px;">Form Preview</h3> 
-                                            <div style="background: #cccccc none repeat scroll 0% 0%; padding: 30px;">
-                                                <div id="app" class="markate-widget-contact" style="color: rgb(34, 34, 34); font-size: 16px; font-family: &quot;roboto&quot;, Arial, Helvetica, sans-serif;">
-                                                    <form name="widget-contact" method="post">
-                                                        <div class="form-fileds-container">
-                                                            <div class="form-group form-group-full_name">
-                                                                <label>Full Name</label> <span class="form-required">*</span> 
-                                                                <input type="text" id="full_name" name="full_name" class="form-control">
-                                                            </div>
-                                                            <div class="form-group form-group-contact_number">
-                                                                <label>Contact Number</label> <span class="form-required">*</span> 
-                                                                <input type="tel" id="contact_number" name="contact_number" class="form-control">
-                                                            </div>
-                                                            <div class="form-group form-group-email">
-                                                                <label>Email</label>
-                                                                <input type="text" id="email" name="email" class="form-control">
-                                                            </div>
-                                                            <div class="form-group form-group-address">
-                                                                <label>Address</label>
-                                                                <input type="text" id="address" name="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
-                                                            </div>
-                                                            <div class="form-group form-group-message">
-                                                                <label>Message</label>
-                                                                <textarea style="min-height: 100px;" name="message" id="message" rows="2" class="form-control"></textarea>
-                                                            </div>
-                                                            <div class="form-group form-group-preferred_time_to_contact">
-                                                                <label>Preferred time to contact</label>
-                                                                <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
-                                                                    <option value="0" selected="selected">Any time</option> 
-                                                                    <option value="1">7am to 10am</option> 
-                                                                    <option value="2">10am to Noon</option> 
-                                                                    <option value="3">Noon to 4pm</option> 
-                                                                    <option value="4">4pm to 7pm</option>
-                                                                </select>
-                                                            </div>                                                        
-                                                            <div class="form-group form-group-how_did_you_hear_about_us">
-                                                                <label>How did you hear about us</label>
-                                                                <input type="text" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us" class="form-control">
-                                                            </div>
-                                                            <?php foreach($booking_forms_custom as $form_custom) { ?>
-                                                                <div class="form-group form-group-<?php echo $form_custom->field_name; ?>">
-                                                                    <label><?php echo $form_custom->label; ?></label>
-                                                                    <input type="text" name="<?php echo $form_custom->field_name; ?>" id="<?php echo $form_custom->field_name; ?>" class="form-control">
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </form> 
-                                                    <hr class="card-hr"> 
-                                                    <div class="widget-contact-submit"><button class="btn btn-primary btn-lg">Book Now</button></div>
-                                                </div>
-                                            </div>
-                                        </div> 
-
+                                        </table>
+                                        <hr class="card-hr"> 
+                                        <button class="nsm-button primary">Save</button>
                                     </div>
-                                </div>  
-                                
+                                </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
-                    <!-- end card -->
+                    </form>
                 </div>
+                <div class="col-lg-6" id="app-builder">
+                    <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
+                        <div class="margin-bottom">
+                            <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-content">
+                                        <h3 class="weight-medium margin-bottom">Form Preview</h3> 
+                                        <div>
+                                            <div id="app" class="markate-widget-contact">
+                                                <form name="widget-contact" method="post">
+                                                    <div class="form-fileds-container">
+                                                        <div class="form-group form-group-full_name">
+                                                            <label>Full Name</label> <span class="form-required">*</span> 
+                                                            <input type="text" id="full_name" name="full_name" class="form-control">
+                                                        </div>
+                                                        <div class="form-group form-group-contact_number">
+                                                            <label>Contact Number</label> <span class="form-required">*</span> 
+                                                            <input type="tel" id="contact_number" name="contact_number" class="form-control">
+                                                        </div>
+                                                        <div class="form-group form-group-email">
+                                                            <label>Email</label>
+                                                            <input type="text" id="email" name="email" class="form-control">
+                                                        </div>
+                                                        <div class="form-group form-group-address">
+                                                            <label>Address</label>
+                                                            <input type="text" id="address" name="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
+                                                        </div>
+                                                        <div class="form-group form-group-message">
+                                                            <label>Message</label>
+                                                            <textarea style="min-height: 100px;" name="message" id="message" rows="2" class="form-control"></textarea>
+                                                        </div>
+                                                        <div class="form-group form-group-preferred_time_to_contact">
+                                                            <label>Preferred time to contact</label>
+                                                            <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
+                                                                <option value="0" selected="selected">Any time</option> 
+                                                                <option value="1">7am to 10am</option> 
+                                                                <option value="2">10am to Noon</option> 
+                                                                <option value="3">Noon to 4pm</option> 
+                                                                <option value="4">4pm to 7pm</option>
+                                                            </select>
+                                                        </div>                                                        
+                                                        <div class="form-group form-group-how_did_you_hear_about_us">
+                                                            <label>How did you hear about us</label>
+                                                            <input type="text" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us" class="form-control">
+                                                        </div>
+                                                        <?php foreach($booking_forms_custom as $form_custom) { ?>
+                                                            <div class="form-group form-group-<?php echo $form_custom->field_name; ?>">
+                                                                <label><?php echo $form_custom->label; ?></label>
+                                                                <input type="text" name="<?php echo $form_custom->field_name; ?>" id="<?php echo $form_custom->field_name; ?>" class="form-control">
+                                                            </div>
+                                                        <?php } ?>
+                                                    </div>
+                                                </form> 
+                                                <hr class="card-hr"> 
+                                                <div class="widget-contact-submit"><button class="nsm-button primary">Book Now</button></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
             </div>
-            <!-- end row -->
+            <!-- end custom form -->
+
+
         </div>
-        <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
-</div><?php include viewPath('includes/booking_modals'); ?>   
+</div>
+
+
+
+<?php include viewPath('includes/booking_modals'); ?>   
 <?php include viewPath('includes/footer_booking'); ?>
 <script>
 $(function(){

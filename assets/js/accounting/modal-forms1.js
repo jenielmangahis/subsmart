@@ -200,6 +200,10 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on("click", "#print_printable_checks_modal #btn_print_printable_checks", function() {
+        $("#print_preview_printable_checks_modal #printable_checks_table_print").printThis();
+    });
+
     $(document).on('click', '#printSetupModal #continue-setup', function(e) {
         $('#printSetupModal .nsm-progressbar .progressbar ul li.active').removeClass('active').next().addClass('active');
         var index = $('#printSetupModal .nsm-progressbar .progressbar ul li.active').index();
