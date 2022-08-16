@@ -265,7 +265,12 @@ class Estimate extends MY_Controller
     
                 $notification = $this->estimate_model->save_notification($notif);
 
-            redirect('estimate');
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            } else {
+                redirect('estimate');
+            }
         } else {
             echo json_encode(0);
         }
@@ -1254,7 +1259,12 @@ class Estimate extends MY_Controller
 
             // }
 
-            redirect('estimate');
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            } else {
+                redirect('estimate');
+            }
         // } else {
         //     echo json_encode(0);
         // }

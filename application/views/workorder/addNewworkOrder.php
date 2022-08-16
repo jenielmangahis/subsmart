@@ -1439,6 +1439,17 @@ border: none;
                                     </select>
                                 </div>
                                 </div>
+                                <div class="form-group col-md-3">
+                                    <div class="select-wrap">
+                                        <label for="lead_source">Agent Name</label>
+                                        <select class="form-control mb-3" name="agent_id">
+                                            <option value="0">Select Agent</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>    
+                                </div> 
                                 <!-- <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
                                     <select name="priority" id="workorder_priority" class="form-control custom-select">

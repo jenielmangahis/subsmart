@@ -105,10 +105,12 @@ class Booking extends MY_Controller {
 		if($booking_forms){
 			$this->page_data['booking_forms'] = $booking_forms;
 		}
-
+        $this->page_data['page']->tab = "Booking Form";
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['default_form_fields'] = $default_form_fields;
 		$this->page_data['booking_forms_custom'] = $booking_forms_custom;
+        $this->page_data['page']->title = 'Booking Form';
+
 		$this->load->view('online_booking/form', $this->page_data);
 	}
 
@@ -202,6 +204,9 @@ class Booking extends MY_Controller {
     }
 
 	public function coupons( $param = '' ) {
+        $this->page_data['page']->tab = "Coupons";
+        $this->page_data['page']->title = 'Coupons';
+
 		if( $param == '' ){
 			$param = 'active';
 		}
@@ -223,9 +228,11 @@ class Booking extends MY_Controller {
 		$this->page_data['active_tab'] = $param;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/coupons', $this->page_data);
+
 	}
 
 	public function settings() {
+        $this->page_data['page']->title = 'Settings';
 		$user = $this->session->userdata('logged');
 		$bookingSetting = $this->BookingSetting_model->findByUserId($user['id']);
 
@@ -285,6 +292,7 @@ class Booking extends MY_Controller {
 		$this->page_data['employees'] = $employees;
 		$this->page_data['setting'] = $setting;
 		$this->page_data['users']   = $this->users_model->getUser(logged('id'));
+        $this->page_data['page']->tab = "Settings";
 		$this->load->view('online_booking/settings', $this->page_data);
 	}
 

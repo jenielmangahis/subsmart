@@ -6,6 +6,8 @@
                 <span class="modal-title content-title" id="account-modal-label">Accounts</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
+            <?php $action = isset($account) ? '/accounting/chart-of-accounts/update/'.$account->id : '/accounting/chart-of-accounts/add'; ?>
+            <form action="<?=$action?>" method="post" class="form-validate" novalidate="novalidate">
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12 col-md-6 mt-3">
@@ -32,17 +34,22 @@
                     </div>
                     <div class="col-12 col-md-6 mt-3">
                         <label for="description">Description</label>
-                        <textarea type="text" class="form-control nsm-field mb-2" name="description" id="description" placeholder="Enter Description" rows="3" required></textarea>
+                        <textarea type="text" class="form-control nsm-field mb-2" name="description" id="description" placeholder="Enter Description" rows="3" required><?=isset($account) ? $account->description : ''?></textarea>
 
                         <div class="mt-3 mb-2">
-                            <input type="checkbox" name="sub_account" class="js-switch" id="check_sub"/>
-                            <label for="formClient-Status">Is sub account</label>
+                            <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" <?=isset($parentAcc) ? 'checked' : ''?>/>
+                            <label for="check_sub">Is sub account</label>
                         </div>
 
                         <div class="mt-3">
-                            <select name="parent_account" id="parent_account" class="nsm-field mb-2 form-control d-select2-detail-type" required disabled></select>
+                            <select name="parent_account" id="parent_account" class="nsm-field mb-2 form-control d-select2-detail-type" <?=isset($account) && in_array($account->parent_acc_id, ['', null, 0]) || !isset($account) ? 'disabled' : ''?>>
+                                <?php if(isset($parentAcc)) : ?>
+                                    <option value="<?=$parentAcc->id?>" selected><?=$parentAcc->name?></option>
+                                <?php endif; ?>
+                            </select>
                         </div>
 
+                        <?php if(!isset($account)) : ?>
                         <div class="mt-3">
                             <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
                             <select name="choose_time" id="choose_time" class="nsm-field mb-2 form-control d-select2-detail-type" required>
@@ -54,16 +61,23 @@
                             </select>
                         </div>
 
-                        <div class="mt-3 hide-date d-none">
+                        <div class="mt-3 d-none">
                             <label for="time_date">Date</label>
                             <div class="nsm-field-group calendar">
                                 <input type="text" name="time_date" id="time_date" class="nsm-field form-control datepicker" onchange="showBalance(this)">
                             </div>
                         </div>
-                        <div class="mt-3 hide-div d-none">
-                            <label for="balance">Balance</label>
+
+                        <div class="mt-3 d-none">
+                            <label for="balance">Account balance at end of <span id="selected-date"></span></label>
                             <input type="text" class="form-control nsm-field mb-2" name="balance" id="balance" required placeholder="Enter Balance"/>
                         </div>
+                        <?php else : ?>
+                        <div class="mt-3">
+                            <label for="balance">Balance</label>
+                            <p id="balance"><?=str_replace("$-", "-$", "$".number_format($account->balance, 2, '.', ','))?></p>
+                        </div>
+                        <?php endif;?>
                     </div>
                 </div>
             </div>
@@ -77,6 +91,7 @@
                     </div>
                 </div>
             </div>
+            </form>
         </div>
     </div>
 </div>

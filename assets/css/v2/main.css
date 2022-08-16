@@ -67,6 +67,33 @@ body {
 	color: #505050;
 }
 
+.nsm-sidebar .nsm-back-to-main-dashboard {
+	padding: 0.5em 1em;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 2em;
+	left: 2em;
+	right: 2em;
+	text-align: center;
+}
+
+.nsm-sidebar .nsm-back-to-main-dashboard a {
+	text-decoration: none !important;
+    font-weight: 700;
+    color: #b4b4b4;
+    display: block;
+    width: 100%;
+    font-size: 16px;
+}
+
+.nsm-sidebar .nsm-back-to-main-dashboard:hover {
+	background-color: #7f7f7f1a;
+}
+
+.nsm-sidebar .nsm-back-to-main-dashboard a:hover {
+	color: inherit !important;
+}
+
 .nsm-sidebar-bg {
 	opacity: 0;
 	position: absolute;

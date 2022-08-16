@@ -1,12 +1,6 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/chart_of_accounts_modals'); ?>
 
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
-        <i class='bx bx-user-plus'></i>
-    </div>
-</div>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/accounting'); ?>
@@ -134,6 +128,11 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        <?php if($account['type'] === 'Bank') : ?>
+                                        <li>
+                                            <a class="dropdown-item" href="#">Connect bank</a>
+                                        </li>
+                                        <?php endif; ?>
                                         <?php if($account['status'] === "1") : ?>
                                         <?php if(!in_array($account['type'], ['Income', 'Cost of Goods Sold', 'Expenses', 'Other Income', 'Other Expense'])) : ?>
                                         <li>
@@ -141,7 +140,7 @@
                                         </li>
                                         <?php endif; ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item edit-account" href="#">Edit</a>
                                         </li>
                                         <?php endif;?>
                                         <li>

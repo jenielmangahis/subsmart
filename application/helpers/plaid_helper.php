@@ -12,7 +12,7 @@ function linkTokenCreate($client_id, $client_secret, $client_user_id, $client_na
         'secret' => $client_secret,
         'client_name' => $client_name,
         'user' => ['client_user_id' => $client_user_id],
-        'products' => ["auth"],
+        'products' => ["auth","transactions"],
         'country_codes' => ["US"],
         'language' => 'en',
         'webhook' => PLAID_API_WEBHOOK_URL,
@@ -75,6 +75,141 @@ function exchangeToken($client_id, $client_secret, $public_token)
     ];
 
     $url = PLAID_API_URL . '/item/public_token/exchange';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Generate access token*/
+function processorToken($client_id, $client_secret, $access_token, $account_id)
+{
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,
+        'account_id' => $account_id,
+        'processor' => "achq"
+    ];
+
+    $url = PLAID_API_URL . '/processor/token/create';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Get processor auth account*/
+function processorAuthGet($client_id, $client_secret, $processor_token){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'processor_token' => $processor_token,        
+    ];
+
+    $url = PLAID_API_URL . '/processor/auth/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Get account  holder information*/
+function identityGet($client_id, $client_secret, $access_token){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,        
+    ];
+
+    $url = PLAID_API_URL . '/identity/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Get transactions*/
+function transactionGet($client_id, $client_secret, $access_token, $start_date, $end_date, $account_id){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'options' => ['account_ids' => [$account_id],'count' => 50, 'offset' => 0]    
+    ];
+
+    $url = PLAID_API_URL . '/transactions/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Get balance*/
+function balanceGet($client_id, $client_secret, $access_token, $account_id){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,
+        'options' => ['account_ids' => [$account_id]]    
+    ];
+
+    $url = PLAID_API_URL . '/accounts/balance/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Get recurring transactions*/
+function recurringTransactionsGet($client_id, $client_secret, $access_token, $account_id){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,
+        'account_ids' => [$account_id],
+        'options' => ['include_personal_finance_category' => true]    
+    ];
+
+    $url = PLAID_API_URL . '/transactions/recurring/get';
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

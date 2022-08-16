@@ -421,6 +421,9 @@ class Workorder_model extends MY_Model
 
             'lead_source_id'        => $lead_source_id,//
 
+            'status'                => $status, //Added by Bryann Revina
+            'agent_id'              => $agent_id, //Added by Bryann Revina
+
             'company_representative_signature'      => $company_representative_signature,
             'company_representative_name'           => $company_representative_name,
             'primary_account_holder_signature'      => $primary_account_holder_signature,
@@ -458,6 +461,9 @@ class Workorder_model extends MY_Model
             'payment_amount'        => $payment_amount,//
 
             'lead_source_id'        => $lead_source_id,//
+
+            'status'                => $status, //Added Bryann Revina 08152022
+            'agent_id'              => $agent_id, //Added Bryann Revina 08152022
 
             'company_representative_signature'      => $company_representative_signature,
             'company_representative_name'           => $company_representative_name,
@@ -1798,17 +1804,17 @@ class Workorder_model extends MY_Model
 
     public function getworkorder($id)
     {
-        $company_id = logged('company_id');
-        
+        $company_id = logged('company_id');        
         $where = array(
             // 'work_orders.company_id' => $company_id,
             'work_orders.id'   => $id
           );
 
-        $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status, acs_profile.first_name AS acs_first_name, acs_profile.last_name AS acs_last_name, acs_profile.middle_name AS acs_middle_name');
+        $this->db->select('work_orders.*, work_orders.email AS w_email, work_orders.status AS w_status, acs_profile.first_name AS acs_first_name, acs_profile.last_name AS acs_last_name, acs_profile.middle_name AS acs_middle_name, CONCAT(users.LName," ",users.FName)AS agent_name');
         $this->db->from('work_orders');
         $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
-		$this->db->where('id',$id);
+        $this->db->join('users', 'work_orders.employee_id  = users.id', 'left');
+		$this->db->where('work_orders.id',$id);
         $query = $this->db->get();
         return $query->row();
     }

@@ -1813,6 +1813,22 @@ $(function() {
                 $($(this).find('td')[index]).hide();
             }
         });
+
+        $(`#print_printable_checks_modal table tr`).each(function() {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 1]).show();
+            } else {
+                $($(this).find('td')[index - 1]).hide();
+            }
+        });
+    
+        $(`#print_preview_printable_checks_modal #printable_checks_table_print tr`).each(function() {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 1]).show();
+            } else {
+                $($(this).find('td')[index - 1]).hide();
+            }
+        });
     });
 
     $(document).on('change', '#printChecksModal #payment_account', function() {
@@ -4045,11 +4061,25 @@ $(function() {
                 var checks = JSON.parse(result);
 
                 $('#printChecksModal #checks-table tbody tr').remove();
+                $('#print_printable_checks_modal table tbody tr').remove();
+                $('#print_preview_printable_checks_modal #printable_checks_table_print tbody tr').remove();
 
                 if(checks.length < 1) {
                     $('#printChecksModal #checks-table tbody').append(`
                     <tr>
                         <td colspan="5"><div class="nsm-empty"><span>No results found.</span></div></td>
+                    </tr>
+                    `);
+
+                    $('#print_printable_checks_modal table tbody').append(`
+                    <tr>
+                        <td colspan="4"><div class="nsm-empty"><span>No results found.</span></div></td>
+                    </tr>
+                    `);
+
+                    $('#print_preview_printable_checks_modal #printable_checks_table_print tbody').append(`
+                    <tr>
+                        <td colspan="4"><div class="nsm-empty"><span>No results found.</span></div></td>
                     </tr>
                     `);
                 } else {
@@ -4067,8 +4097,30 @@ $(function() {
                             <td>${check.amount}</td>
                         </tr>
                         `);
+
+                        $('#print_printable_checks_modal table tbody').append(`
+                        <tr>
+                            <td>${check.date}</td>
+                            <td>${check.type}</td>
+                            <td>${check.payee}</td>
+                            <td>${check.amount}</td>
+                        </tr>
+                        `);
+
+                        $('#print_preview_printable_checks_modal #printable_checks_table_print tbody').append(`
+                        <tr>
+                            <td>${check.date}</td>
+                            <td>${check.type}</td>
+                            <td>${check.payee}</td>
+                            <td>${check.amount}</td>
+                        </tr>
+                        `);
                     });
                 }
+
+                $('#printChecksModal #checks-table').nsmPagination({
+                    itemsPerPage: parseInt($('#printChecksModal #checks-table-rows li a.dropdown-item.active').html().trim())
+                });
             }
         });
     });

@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/reports/reports_modals'); ?>
 
 <style>
 
@@ -98,6 +99,7 @@
         color: black !important;
         font-size: 13px;
     }
+    
 
 </style>
 <div class="nsm-fab-container">
@@ -106,7 +108,7 @@
     </div>
 </div>
 
-<div class="row page-content g-0">
+<div class="row page-content g-0" id="container">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -171,14 +173,14 @@
                                     <div class="col-lg-12 groupby" id="groupby">
                                         <h6>Group by</h6>
                                         <div class="col-lg-6">
-                                        <select name="sort_by" id="sort_by" class="nsm-field form-select">
-                                            <option value="default">Default</option>
-                                            <option value="city">Billing City</option>
-                                            <option value="state">Billing State</option>
-                                            <option value="street">Billing Street</option>
-                                            <option value="zip">Billing ZIP</option>
-                                            <option value="zip">Customer Type</option>
-                                        </select>
+                                            <select name="sort_by" id="sort_by" class="nsm-field form-select">
+                                                <option value="default">Default</option>
+                                                <option value="city">Billing City</option>
+                                                <option value="state">Billing State</option>
+                                                <option value="street">Billing Street</option>
+                                                <option value="zip">Billing ZIP</option>
+                                                <option value="zip">Customer Type</option>
+                                            </select>
                                         </div>
                                         <h6 class="change-col" onclick="ccl()">Change Columns</h6>
                                         <div class="changeCol" id="changeCol">
@@ -547,7 +549,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="nsm-card-content h-auto grid-mb">
+                            <div class="nsm-card-content h-auto grid-mb" id="tbl_print_accounts_modal">
                                 <?php
                                     if($tblDefault){
                                 ?>
@@ -615,6 +617,27 @@
 
 <script type="text/javascript">
 
+    function printTbl(){
+        var printWindow = window.open('', '', 'height=200,width=400');
+        printWindow.document.write('<html><head>');
+ 
+        var table_style = document.getElementById("head").innerHTML;
+        printWindow.document.write(table_style);
+        printWindow.document.write('</head>');
+
+        printWindow.document.write('<body>');
+        var divContents = document.getElementById("tbl_print_accounts_modal").innerHTML;
+        alert(divContents);
+        printWindow.document.write('<div>');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</div>');
+        printWindow.document.write('</body>');
+ 
+        printWindow.document.write('</html>');
+        printWindow.print();
+
+        
+    }
     function rwcl() {
         var x = document.getElementById("groupby");
         var rcright = document.getElementById("rcRightArrow");
@@ -730,3 +753,4 @@
         }
     }
 </script>
+<?php include viewPath('v2/includes/footer'); ?>

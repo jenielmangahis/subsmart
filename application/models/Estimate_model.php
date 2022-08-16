@@ -687,7 +687,7 @@ class Estimate_model extends MY_Model
     {
         $this->db->select('*,estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
-        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
+        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id', 'left');
         $this->db->where("estimates.id", $id);
         $query = $this->db->get();
         return $query->row();
