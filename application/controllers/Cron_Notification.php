@@ -113,6 +113,14 @@ class Cron_Notification extends MYF_Controller {
                                 ];
                                 $this->CronAutoSmsNotification_model->update($sms->id, $data);
                             }      
+                        }else{
+                            $err_msg = $isSent['msg'];
+                                $data = [
+                                    'is_sent' => 0,
+                                    'is_with_error' => 1,
+                                    'err_msg' => 'Duplicate Number'
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
                         }
                         
                     }           
