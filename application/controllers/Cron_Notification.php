@@ -23,7 +23,7 @@ class Cron_Notification extends MYF_Controller {
         $sent_numbers = array();
         $filter[] = ['field' => 'cron_auto_sms_notification.is_sent', 'value' => 0];
         $filter[] = ['field' => 'cron_auto_sms_notification.is_with_error', 'value' => 0];
-        $cronAutoSms  = $this->CronAutoSmsNotification_model->getAll($filter, 5); 
+        $cronAutoSms  = $this->CronAutoSmsNotification_model->getAll($filter, 15); 
         foreach($cronAutoSms as $sms){
             $is_with_valid_sms_account = false;
             $smsApi = '';
