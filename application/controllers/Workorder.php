@@ -8464,7 +8464,7 @@ class Workorder extends MY_Controller
             $notification = $this->workorder_model->save_notification($notif);
 
             //SMS Notification        
-            createCronAutoSmsNotification(getLoggedCompanyID(), $addQuery, 'workorder', $this->input->post('status'), $user_id);        
+            createCronAutoSmsNotification(getLoggedCompanyID(), $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);        
 
 
 
