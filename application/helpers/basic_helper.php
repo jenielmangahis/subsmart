@@ -4720,11 +4720,11 @@ if(!function_exists('set_expense_graph_data')) {
         $autoSms  = $CI->CompanyAutoSmsSettings_model->getByCompanyId($company_id, $filter);
         if( $autoSms ){
 
-            $filter[] = ['field' => 'company_id', 'value' => $company_id];
-            $filter[] = ['field' => 'module_name', 'value' => $module_name];
-            //$filter[] = ['field' => 'is_sent', 'value' => 0];
-            $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-            $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
+            $cronFilter[] = ['field' => 'company_id', 'value' => $company_id];
+            $cronFilter[] = ['field' => 'module_name', 'value' => $module_name];
+            //$cronFilter[] = ['field' => 'is_sent', 'value' => 0];
+            $cronFilter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
+            $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $cronFilter);
 
             if( !$isExists ){
                 if( $autoSms->send_to_creator == 1 ){
