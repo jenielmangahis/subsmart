@@ -4719,14 +4719,12 @@ if(!function_exists('set_expense_graph_data')) {
         $filter[] = ['field' => 'is_enabled', 'value' => 1];
         $autoSms  = $CI->CompanyAutoSmsSettings_model->getByCompanyId($company_id, $filter);
         if( $autoSms ){
-
-            $cronFilter[] = ['field' => 'company_id', 'value' => $company_id];
+            //$cronFilter[] = ['field' => 'company_id', 'value' => $company_id];
             $cronFilter[] = ['field' => 'module_name', 'value' => $module_name];
             //$cronFilter[] = ['field' => 'is_sent', 'value' => 0];
             $cronFilter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-            $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $cronFilter);
-
-            if( !$isExists ){
+            $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $cronFilter);            
+            if( !$isExists ){                
                 if( $autoSms->send_to_creator == 1 ){
                     if( $user_id > 0 ){
                         $itemCreator = $CI->Users_model->getUserByID($user_id);
