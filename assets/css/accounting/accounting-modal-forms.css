@@ -2,9 +2,14 @@
     font-size: 1.25rem !important;
 }
 
-/* #modal-container .modal .modal-body table {
-    background: #f4f5f8;
-} */
+#modal-container .modal .modal-header .recent-transactions-button {
+    color: #8b8b8b;
+}
+
+#modal-container .modal .modal-header .recent-transactions-table tbody tr td {
+    padding: 0.5rem;
+    font-size: 13px;
+}
 
 #modal-container .modal .attachments-container span.select2.select2-container, #existing-attachments-modal .attachments-container span.select2.select2-container {
     width: 50% !important;

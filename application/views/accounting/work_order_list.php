@@ -1,32 +1,6 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
-        <i class="bx bx-plus"></i>
-    </div>
-    <ul class="nsm-fab-options">
-        <li onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-window-alt"></i>
-            </div>
-            <span class="nsm-fab-label">Industry Templates</span>
-        </li>
-        <li data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-task"></i>
-            </div>
-            <span class="nsm-fab-label">New Work Order</span>
-        </li>
-        <li onclick="location.href='<?php echo base_url('workorder/settings') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-cog"></i>
-            </div>
-            <span class="nsm-fab-label">Settings</span>
-        </li>
-    </ul>
-</div>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>

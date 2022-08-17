@@ -207,6 +207,42 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'check_modal':
                     $this->page_data['balance'] = '$0.00';
+
+                    $transactions = $this->expenses_model->get_company_check_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $check) {
+                        switch ($check->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($check->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $check->id,
+                                'type' => !in_array($check->check_no, ['', null, '0']) ? 'Check No.'.$check->check_no : 'Check',
+                                'date' => date("m/d/Y", strtotime($check->payment_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_checks'] = $data;
                 break;
                 case 'bill_modal':
                     $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
@@ -256,25 +292,19 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $count = 1;
-                    $paymentAccounts = [];
                     foreach ($accountTypes as $typeName) {
                         $accType = $this->account_model->getAccTypeByName($typeName);
 
                         $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
                         if (count($accounts) > 0) {
-                            $paymentAccounts[$typeName] = [];
                             foreach ($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->child_accounts = $childAccs;
-                                $paymentAccounts[$typeName][] = $account;
                                 if ($count === 1) {
                                     $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
 
                                     $this->page_data['startingCheckNo'] = intval($lastAssignedCheck->check_no) + 1;
                                     $this->page_data['account'] = $account;
-                                    $this->page_data['balance'] = '$'.number_format(floatval($account->balance), 2, '.', ',');
+                                    $this->page_data['balance'] = str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ','));
                                 }
     
                                 $count++;
@@ -375,7 +405,7 @@ class Accounting_modals extends MY_Controller
                 break;
             }
 
-            $this->load->view("accounting/modals/". $view, $this->page_data);
+            $this->load->view("v2/includes/accounting/modal_forms/". $view, $this->page_data);
         }
     }
 
@@ -4492,7 +4522,8 @@ class Accounting_modals extends MY_Controller
         }, ARRAY_FILTER_USE_BOTH);
 
         $this->page_data['items'] = $items;
-        $this->load->view('accounting/modals/products_list_modal', $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/products_list_modal", $this->page_data);
+        // $this->load->view('accounting/modals/products_list_modal', $this->page_data);
     }
 
     public function items_list_modal()
@@ -9734,7 +9765,7 @@ class Accounting_modals extends MY_Controller
             break;
         }
         // $this->load->view("accounting/modals/$modal", $this->page_data);
-        $this->load->view("v2/includes/accounting/$modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/$modal", $this->page_data);
     }
 
     public function ajax_add_payment_method()
