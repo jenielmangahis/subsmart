@@ -114,11 +114,6 @@ add_css(array(
     // 'assets/css/beforeafter.css',
 ));
 ?>
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
-        <i class='bx bx-user-plus'></i>
-    </div>
-</div>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

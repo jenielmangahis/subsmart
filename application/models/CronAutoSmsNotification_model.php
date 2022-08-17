@@ -39,6 +39,21 @@ class CronAutoSmsNotification_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    public function getByObjectId($obj_id, $filter = array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('obj_id', $obj_id);
+        if( !empty($filter) ){
+            foreach($filter as $value){                
+                $this->db->where($value['field'], $value['value']);
+            }
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
 
 /* End of file CronAutoSmsNotification_model.php */

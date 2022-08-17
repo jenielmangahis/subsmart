@@ -254,8 +254,7 @@ img.company-logo2 {
                                                     </select>
                                                 </div>    
                                             </div> 
-                                        </div>     
-                                        <div class="row">
+
                                             <div class="form-group col-md-3">
                                                 <div class="select-wrap">
                                                     <label for="lead_source">Status</label>
@@ -271,19 +270,8 @@ img.company-logo2 {
                                                         <option <?= $workorder->w_status == 'Closed' ? 'selected="selected"' : ''; ?> value="Closed">Closed</option>
                                                     </select>
                                                 </div>    
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <div class="select-wrap">
-                                                    <label for="lead_source">Agent Name</label>
-                                                    <select class="form-control mb-3" name="agent_id">
-                                                        <option value="0">Select Agent</option>
-                                                        <?php foreach($users_lists as $ulist){ ?>
-                                                            <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>    
-                                            </div> 
-                                        </div>                                
+                                            </div>   
+                                        </div>                               
                                     </div> 
                                     <div class="col-md-3">
                                         <div style="margin-top:-30px;"><img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo2"/> </div>                            

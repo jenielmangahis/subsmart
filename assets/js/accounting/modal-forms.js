@@ -711,22 +711,19 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container .modal-body table#category-details-table tbody tr', function() {
-        if ($(this).find('input').length < 1) {
-            var rowNum = $(this).children().next().html();
+    $(document).on('click', 'div#modal-container .modal-body table#category-details-table tbody tr td:not(:last-child)', function() {
+        var row = $(this).parent();
+        if (row.find('input').length < 1) {
+            var rowNum = row.children().html();
 
-            $(this).html(catDetailsInputs);
-            $(this).children('td:nth-child(2)').html(rowNum);
+            row.html(catDetailsInputs);
+            row.children('td:first-child()').html(rowNum);
 
             if ($('#modal-container .modal-body #category-details-table thead tr th').length === 12) {
                 $(`<td></td>`).insertBefore($('#modal-container .modal .modal-body table#category-details-table tbody tr:last-child td:last-child'));
             }
 
-            $(this).find('#category-billable-1').next().attr('for', `category-billable-${rowNum}`);
-            $(this).find('#category-billable-1').attr('id', `category-billable-${rowNum}`);
-            $(this).find('#category-tax-1').next().attr('for', `category-tax-${rowNum}`);
-            $(this).find('#category-tax-1').attr('id', `category-tax-${rowNum}`);
-            $(this).find('select').each(function() {
+            row.find('select').each(function() {
                 var type = $(this).attr('id');
                 if (type === undefined) {
                     type = $(this).attr('name').includes('expense_account') ? 'expense-account' : type;
@@ -753,15 +750,19 @@ $(function() {
                             }
                         },
                         templateResult: formatResult,
-                        templateSelection: optionSelect
+                        templateSelection: optionSelect,
+                        dropdownParent: $('#modal-container .modal')
                     });
                 } else {
                     var options = $(this).find('option');
                     if (options.length > 10) {
-                        $(this).select2();
+                        $(this).select2({
+                            dropdownParent: $('#modal-container .modal')
+                        });
                     } else {
                         $(this).select2({
-                            minimumResultsForSearch: -1
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container .modal')
                         });
                     }
                 }
@@ -802,11 +803,11 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container .modal-body #category-details-table tbody tr td a.deleteRow', function() {
+    $(document).on('click', '#modal-container .modal-body #category-details-table tbody tr td button.delete-row', function() {
         var el = $(this);
 
-        if(el.parent().parent().parent().find('input[name="category_linked_transaction[]"]').length < 1) {
-            el.parent().parent().parent().remove();
+        if(el.closest('tr').find('input[name="category_linked_transaction[]"]').length < 1) {
+            el.closest('tr').remove();
 
             if ($('#category-details-table tbody tr').length < rowCount) {
                 $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
@@ -818,13 +819,13 @@ $(function() {
             var num = 1;
 
             $('#category-details-table tbody tr').each(function() {
-                $(this).children('td:nth-child(2)').html(num);
+                $(this).children('td:first-child()').html(num);
                 num++;
             });
 
             computeTransactionTotal();
         } else {
-            var linkedTransac = el.parent().parent().parent().find('input[name="category_linked_transaction[]"]').val();
+            var linkedTransac = el.closest('tr').find('input[name="category_linked_transaction[]"]').val();
             var linkedTransacType = linkedTransac.split('-')[0].replace('_', ' ');
             var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
             var transacType = $('#modal-container form .modal').attr('id').replace('Modal', '');
@@ -855,9 +856,9 @@ $(function() {
                 cancelButtonColor: '#d33'
             }).then((result) => {
                 if(result.isConfirmed) {
-                    el.parent().parent().parent().find('.unlink-transaction').trigger('click');
+                    el.closest('tr').find('.unlink-transaction').trigger('click');
                 } else {
-                    el.parent().parent().parent().remove();
+                    el.closest('tr').remove();
 
                     if ($('#category-details-table tbody tr').length < rowCount) {
                         $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
@@ -869,7 +870,7 @@ $(function() {
                     var num = 1;
 
                     $('#category-details-table tbody tr').each(function() {
-                        $(this).children('td:nth-child(2)').html(num);
+                        $(this).children('td:first-child()').html(num);
                         num++;
                     });
 
@@ -879,12 +880,14 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#modal-container #item-details-table tbody tr td a.deleteRow', function() {
+    $(document).on('click', '#modal-container #item-details-table tbody tr td button.delete-row', function() {
         var el = $(this);
-        if($(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').length < 1) {
-            $(this).parent().parent().parent().remove();
+        if(el.closest('tr').find('input[name="item_linked_transaction[]"]').length < 1) {
+            el.closest('tr').remove();
+
+            computeTransactionTotal();
         } else {
-            var linkedTransac = $(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').val();
+            var linkedTransac = el.closest('tr').find('input[name="item_linked_transaction[]"]').val();
             var linkedTransacType = linkedTransac.split('-')[0].replace('_', ' ');
             var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
             var transacType = $('#modal-container form .modal').attr('id').replace('Modal', '');
@@ -1868,21 +1871,25 @@ $(function() {
         computeTransactionTotal();
     });
 
-    $(document).on('click', '#modal-container a#add_another_items', function(e) {
+    $(document).on('click', '#modal-container button#add_another_items', function(e) {
         e.preventDefault();
 
         if ($('#modal-container #products_list.modal').length === 0) {
             $.get('/accounting/get-products-list-modal', function(res) {
                 $('#modal-container').append(res);
 
-                $('#modal-container #products_list table').DataTable({
-                    autoWidth: false,
-                    searching: false,
-                    processing: true,
-                    lengthChange: false,
-                    info: false,
-                    pageLength: 10,
-                    ordering: false
+                // $('#modal-container #products_list table').DataTable({
+                //     autoWidth: false,
+                //     searching: false,
+                //     processing: true,
+                //     lengthChange: false,
+                //     info: false,
+                //     pageLength: 10,
+                //     ordering: false
+                // });
+
+                $('#modal-container #products_lsit table').nsmPagination({
+                    itemsPerPage: 10
                 });
 
                 $('#modal-container #products_list').modal('show');
@@ -1916,38 +1923,38 @@ $(function() {
                 var fields = `
                     <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                     <td>Product</td>
-                    <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                    <td><select name="location[]" class="nsm-field form-control" required>${locs}</select></td>
                     <td>${qtyField}</td>
-                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
-                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
-                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item.price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="0.00"></td>
+                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="7.50"></td>
                     <td><span class="row-total">$0.00</span></td>
-                    <td class="text-right">0</td>
+                    <td class="text-end">0</td>
                     <td>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <input type="checkbox" name="item_closed[]" class="form-check" value="1">
+                        <div class="table-row-icon table-checkbox">
+                            <input class="form-check-input table-select" name="item_closed[]" type="checkbox" value="1">
                         </div>
                     </td>
                     <td>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                        </div>
+                        <button type="button" class="nsm-button delete-row">
+                            <i class='bx bx-fw bx-trash'></i>
+                        </button>
                     </td>
                 `;
             } else {
                 var fields = `
                     <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                     <td>Product</td>
-                    <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                    <td><select name="location[]" class="nsm-field form-control" required>${locs}</select></td>
                     <td>${qtyField}</td>
-                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
-                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
-                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item.price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="0.00"></td>
+                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="7.50"></td>
                     <td><span class="row-total">$0.00</span></td>
                     <td>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                        </div>
+                        <button type="button" class="nsm-button delete-row">
+                            <i class='bx bx-fw bx-trash'></i>
+                        </button>
                     </td>
                 `;
             }
@@ -1960,10 +1967,13 @@ $(function() {
 
             $('#modal-container form .modal #item-details-table tbody tr:last-child select').each(function() {
                 if($(this).find('option').length > 10) {
-                    $(this).select2();
+                    $(this).select2({
+                        dropdownParent: $('#modal-container #modal-form .modal')
+                    });
                 } else {
                     $(this).select2({
-						minimumResultsForSearch: -1
+						minimumResultsForSearch: -1,
+                        dropdownParent: $('#modal-container #modal-form .modal')
 					});
                 }
             });
@@ -1972,6 +1982,8 @@ $(function() {
                 $('<td></td>').insertBefore('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child td:last-child');
             }
         });
+
+        $('#modal-container #products_list').modal('hide');
     });
 
     $(document).on('change', '#creditCardCreditModal #item-details-table select[name="location[]"]', function() {
@@ -4192,6 +4204,10 @@ $(function() {
                 $('#printChecksModal #checks-table .select-all').prop('checked', false);
                 $('#printChecksModal #selected-checks-total').html('$0.00');
                 $('#printChecksModal #selected-checks').html('0');
+
+                $('#printChecksModal #checks-table').nsmPagination({
+                    itemsPerPage: parseInt($('#printChecksModal #checks-table-rows li a.dropdown-item.active').html().trim())
+                });
             }
         });
     });
@@ -4340,6 +4356,8 @@ $(function() {
             contentType: false,
             success: function(result) {
                 $('#successPrintCheck').modal('hide');
+
+                $('#printChecksModal #payment_account').trigger('change');
             }
         });
     });
@@ -4562,7 +4580,7 @@ $(function() {
         $('#weeklyTimesheetModal').parent('form').submit();
     });
 
-    $(document).on('change', '#modal-container select', function() {
+    $(document).on('change', '#modal-container #modal-form select', function() {
         var value = $(this).val();
         if (value === 'add-new') {
             dropdownEl = $(this);
@@ -6498,60 +6516,60 @@ $(function() {
         });
     });
 
-    $(document).on('show.bs.dropdown', '#modal-container .modal .modal-header .dropdown', function() {
-        var tableId = $(this).find('table').attr('id');
-        if($.fn.DataTable.isDataTable(`#${tableId}`)) {
-            $(`#${tableId}`).DataTable().clear();
-            $(`#${tableId}`).DataTable().destroy();
-        }
+    // $(document).on('show.bs.dropdown', '#modal-container .modal .modal-header .dropdown', function() {
+    //     var tableId = $(this).find('table').attr('id');
+    //     if($.fn.DataTable.isDataTable(`#${tableId}`)) {
+    //         $(`#${tableId}`).DataTable().clear();
+    //         $(`#${tableId}`).DataTable().destroy();
+    //     }
 
-        $(`#${tableId}`).DataTable({
-            autoWidth: false,
-            searching: false,
-            processing: true,
-            serverSide: true,
-            lengthChange: false,
-            pageLength: 10,
-            info: false,
-            ordering: false,
-            paging: false,
-            ajax: {
-                url: '/accounting/load-recent-transactions',
-                dataType: 'json',
-                contentType: 'application/json',
-                type: 'POST',
-                data: function(d) {
-                    d.transaction_type = tableId.replace('recent-', '');
-                    return JSON.stringify(d);
-                },
-                pagingType: 'full_numbers'
-            },
-            columns: [
-                {
-                    data: 'type',
-                    name: 'type'
-                },
-                {
-                    data: 'date',
-                    name: 'date'
-                },
-                {
-                    data: 'amount',
-                    name: 'amount'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                }
-            ],
-            fnCreatedRow: function(row, data, dataIndex) {
-                $(row).attr('onclick', 'viewTransaction(this)');
-            },
-            language: {
-                emptyTable: `Once you enter some ${tableId.replace('recent-', '').replace('-', ' ')}, they'll appear here.`
-            }
-        });
-    });
+    //     $(`#${tableId}`).DataTable({
+    //         autoWidth: false,
+    //         searching: false,
+    //         processing: true,
+    //         serverSide: true,
+    //         lengthChange: false,
+    //         pageLength: 10,
+    //         info: false,
+    //         ordering: false,
+    //         paging: false,
+    //         ajax: {
+    //             url: '/accounting/load-recent-transactions',
+    //             dataType: 'json',
+    //             contentType: 'application/json',
+    //             type: 'POST',
+    //             data: function(d) {
+    //                 d.transaction_type = tableId.replace('recent-', '');
+    //                 return JSON.stringify(d);
+    //             },
+    //             pagingType: 'full_numbers'
+    //         },
+    //         columns: [
+    //             {
+    //                 data: 'type',
+    //                 name: 'type'
+    //             },
+    //             {
+    //                 data: 'date',
+    //                 name: 'date'
+    //             },
+    //             {
+    //                 data: 'amount',
+    //                 name: 'amount'
+    //             },
+    //             {
+    //                 data: 'name',
+    //                 name: 'name'
+    //             }
+    //         ],
+    //         fnCreatedRow: function(row, data, dataIndex) {
+    //             $(row).attr('onclick', 'viewTransaction(this)');
+    //         },
+    //         language: {
+    //             emptyTable: `Once you enter some ${tableId.replace('recent-', '').replace('-', ' ')}, they'll appear here.`
+    //         }
+    //     });
+    // });
 
     $(document).on('click', '#viewPrintPurchaseOrderModal #print-pdf', function(e) {
         e.preventDefault();
@@ -6704,7 +6722,8 @@ $(function() {
                                     }
                                 },
                                 templateResult: formatResult,
-                                templateSelection: optionSelect
+                                templateSelection: optionSelect,
+                                dropdownParent: $('#weeklyTimesheetModal')
                             });
                         });
 
@@ -8408,7 +8427,7 @@ const computeBankDepositeTotal = () => {
 const addTableLines = (e) => {
     e.preventDefault();
     var table = e.currentTarget.dataset.target;
-    var lastRow = $(`table${table} tbody tr:last-child() td:nth-child(2)`)
+    var lastRow = $(`table${table} tbody tr:last-child() td:first-child()`)
     var lastRowCount = parseInt(lastRow.html());
 
     for(var i = 0; i < rowCount; i++) {
@@ -8422,9 +8441,9 @@ const addTableLines = (e) => {
                 $(`<td></td>`).insertBefore($(`table${table} tbody tr:last-child td:last-child`));
             }
         }
-        $(`table${table} tbody tr:last-child() td:nth-child(2)`).html(lastRowCount);
+        $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
 
-        $(`table${table} tbody tr:last-child() td select`).select2();
+        // $(`table${table} tbody tr:last-child() td select`).select2();
     }
 }
 
@@ -8440,7 +8459,7 @@ const clearTableLines = (e) => {
 
     if(table !== '#previous-adjustments-table') {
         $(`table${table} tbody tr`).each(function(index, value) {
-            var count = $(this).find('td:nth-child(2)').html();
+            var count = $(this).find('td:first-child()').html();
             if(index < rowCount) {
                 if(table !== '#category-details-table' && table !== '#item-details-table') {
                     $(this).html(blankRow);
@@ -8451,7 +8470,7 @@ const clearTableLines = (e) => {
                         $(this).html(itemDetailsBlank);
                     }
                 }
-                $(this).find('td:nth-child(2)').html(count);
+                $(this).find('td:first-child()').html(count);
             }
             if(index >= rowCount) {
                 $(this).remove();
@@ -11951,4 +11970,228 @@ const checkTableRows = (el) => {
     $("#printChecksModal #checks-table").nsmPagination({
         itemsPerPage: parseInt(count)
     });
+}
+
+const printcheck = () => {
+	$.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+		$(`#printChecksModal select`).each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+
+				if (type.includes('transfer')) {
+					type = 'transfer-account';
+				}
+			}
+
+			if (type === 'payment-account') {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'printChecksModal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect,
+					dropdownParent: $('#printChecksModal')
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2();
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1,
+						dropdownParent: $('#printChecksModal')
+					});
+				}
+			}
+		});
+
+		if ($(`#printChecksModal .dropdown`).length > 0) {
+			$(`#printChecksModal .dropdown-menu`).on('click', function(e) {
+				e.stopPropagation();
+			});
+		}
+
+		$('#printChecksModal').on('hidden.bs.modal', function() {
+			$('#modal-container').remove();
+			$('.modal-backdrop').remove();
+		});
+
+		$('#printChecksModal').modal('show');
+	});
+}
+
+const addcheck = () => {
+	$.get(GET_OTHER_MODAL_URL + 'check_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+		rowCount = 2;
+		catDetailsInputs = $(`#checkModal .modal-body table#category-details-table tbody tr:first-child()`).html();
+		catDetailsBlank = $(`#checkModal .modal-body table#category-details-table tbody tr:last-child()`).html();
+
+		$(`#checkModal .modal-body table#category-details-table tbody tr:first-child()`).remove();
+		$(`#checkModal .modal-body table#category-details-table tbody tr:last-child()`).remove();
+
+		$(`#checkModal select`).each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+
+				if (type.includes('transfer')) {
+					type = 'transfer-account';
+				}
+			}
+
+			const dropdownFields = [
+				'customer',
+				'payee',
+				'expense-account',
+				'bank-account',
+			];
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'checkModal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect,
+					dropdownParent: $('#checkModal')
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2();
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1,
+						dropdownParent: $('#checkModal')
+					});
+				}
+			}
+		});
+
+		if ($('div#modal-container select#tags').length > 0) {
+			$('div#modal-container select#tags').select2({
+				placeholder: 'Start typing to add a tag',
+				dropdownParent: $('#checkModal'),
+				allowClear: true,
+				ajax: {
+					url: '/accounting/get-job-tags',
+					dataType: 'json'
+				}
+			});
+		}
+
+		if ($(`#checkModal .date`).length > 0) {
+			$(`#checkModal .date`).each(function() {
+				$(this).datepicker({
+					format: 'mm/dd/yyyy',
+					orientation: 'bottom',
+					autoclose: true
+				});
+			});
+		}
+
+		if ($(`#checkModal .attachments`).length > 0) {
+			var attachmentContId = $(`#checkModal .attachments .dropzone`).attr('id');
+			modalAttachments = new Dropzone(`#${attachmentContId}`, {
+				url: '/accounting/attachments/attach',
+				maxFilesize: 20,
+				uploadMultiple: true,
+				// maxFiles: 1,
+				addRemoveLinks: true,
+				init: function() {
+					this.on("success", function(file, response) {
+						var ids = JSON.parse(response)['attachment_ids'];
+						var modal = $(`#checkModal`);
+
+						for (i in ids) {
+							if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+								modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+							}
+
+							modalAttachmentId.push(ids[i]);
+						}
+						modalAttachedFiles.push(file);
+					});
+				},
+				removedfile: function(file) {
+					var ids = modalAttachmentId;
+					var index = modalAttachedFiles.map(function(d, index) {
+						if (d == file) return index;
+					}).filter(isFinite)[0];
+
+					$(`#checkModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+					if($('#modal-container form .modal .attachments-container').length > 0) {
+						$('#modal-container form .modal .attachments-container #attachment-types').trigger('change');
+					}
+
+					//remove thumbnail
+					var previewElement;
+					return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+				}
+			});
+		}
+
+		if ($(`#checkModal .dropdown`).length > 0) {
+			$(`#checkModal .dropdown-menu`).on('click', function(e) {
+				e.stopPropagation();
+			});
+		}
+
+		$('#checkModal').on('hidden.bs.modal', function() {
+			$('#modal-container').remove();
+			$('.modal-backdrop').remove();
+		});
+
+		$('#checkModal').modal('show');
+	});
 }

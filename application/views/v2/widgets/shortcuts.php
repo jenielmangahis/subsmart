@@ -33,7 +33,15 @@
                 <div class="carousel-item active">
                     <div class="row shortcut-container">
                         <div class="col-4 col-md-3">
-                            <div class="shortcut-item">
+                            <div class="shortcut-item" onclick="addcheck()">
+                                <div class="nsm-list-icon secondary">
+                                    <i class='bx bx-file-blank'></i>
+                                </div>
+                                <label class="content-subtitle">Add a Check</label>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="shortcut-item" onclick="printcheck()">
                                 <div class="nsm-list-icon success">
                                     <i class='bx bx-printer'></i>
                                 </div>
@@ -120,6 +128,10 @@
                                 <label class="content-subtitle">Add Credit Notes</label>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row shortcut-container">
                         <div class="col-4 col-md-3">
                             <div class="shortcut-item" onclick="location.href='<?= base_url('events') ?>'">
                                 <div class="nsm-list-icon success">
@@ -128,10 +140,6 @@
                                 <label class="content-subtitle">Add Calendar Events</label>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row shortcut-container">
                         <div class="col-4 col-md-3">
                             <div class="shortcut-item">
                                 <div class="nsm-list-icon">
@@ -220,6 +228,10 @@
                                 <label class="content-subtitle">Add a Job Tag</label>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row shortcut-container">
                         <div class="col-4 col-md-3">
                             <div class="shortcut-item" onclick="location.href='<?= base_url('estimate') ?>">
                                 <div class="nsm-list-icon success">
@@ -228,10 +240,6 @@
                                 <label class="content-subtitle">Add an Estimate</label>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row shortcut-container">
                         <div class="col-4 col-md-3">
                             <div class="shortcut-item" onclick="location.href='<?= base_url('workorder/NewworkOrderAlarm') ?>'">
                                 <div class="nsm-list-icon secondary">
@@ -320,6 +328,10 @@
                                 <label class="content-subtitle">Schedule a Demo</label>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row shortcut-container">
                         <div class="col-4 col-md-3">
                             <div class="shortcut-item" onclick="location.href='<?= base_url('inventory/add') ?>'">
                                 <div class="nsm-list-icon success">
@@ -328,10 +340,6 @@
                                 <label class="content-subtitle">Add Item</label>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row shortcut-container">
                         <div class="col-4 col-md-3">
                             <div class="shortcut-item" onclick="location.href='<?= base_url('inventory/import') ?>'">
                                 <div class="nsm-list-icon">

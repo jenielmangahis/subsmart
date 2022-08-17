@@ -20,9 +20,10 @@ class Cron_Notification extends MYF_Controller {
         $this->load->model('CronAutoSmsNotification_model');
 
         $total_sent = 0;  
+        $sent_numbers = array();
         $filter[] = ['field' => 'cron_auto_sms_notification.is_sent', 'value' => 0];
         $filter[] = ['field' => 'cron_auto_sms_notification.is_with_error', 'value' => 0];
-        $cronAutoSms  = $this->CronAutoSmsNotification_model->getAll($filter, 5); 
+        $cronAutoSms  = $this->CronAutoSmsNotification_model->getAll($filter, 15); 
         foreach($cronAutoSms as $sms){
             $is_with_valid_sms_account = false;
             $smsApi = '';
@@ -89,26 +90,39 @@ class Cron_Notification extends MYF_Controller {
                         }    
                     }*/
                     if( $smsApi == 'ring_central' ){
-                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
-                        //$isSent['is_sent'] = true;
-                        if( $isSent['is_success'] == 1 ){
-                            $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
-                            $data = [
-                                'is_sent' => 1,
-                                'date_sent' => date('Y-m-d H:i:s')
-                            ];
-                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                        if( !array_key_exists($sms->mobile_number, $sent_numbers) ){
+                            $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
+                            //$isSent['is_sent'] = true;
+                            if( $isSent['is_success'] == 1 ){
+                                $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
+                                $data = [
+                                    'is_sent' => 1,
+                                    'date_sent' => date('Y-m-d H:i:s')
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
 
-                            $total_sent++;
+                                $total_sent++;
+                                
+                                $sent_numbers[$sms->mobile_number] = $sms->mobile_number;
+                            }else{
+                                $err_msg = $isSent['msg'];
+                                $data = [
+                                    'is_sent' => 0,
+                                    'is_with_error' => 1,
+                                    'err_msg' => $err_msg
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                            }      
                         }else{
                             $err_msg = $isSent['msg'];
-                            $data = [
-                                'is_sent' => 0,
-                                'is_with_error' => 1,
-                                'err_msg' => $err_msg
-                            ];
-                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
-                        }    
+                                $data = [
+                                    'is_sent' => 0,
+                                    'is_with_error' => 1,
+                                    'err_msg' => 'Duplicate Number'
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                        }
+                        
                     }           
                 } 
             }                               
@@ -184,8 +198,18 @@ class Cron_Notification extends MYF_Controller {
                     $creator_name = $workorderCreator->FName . ' ' . $workorderCreator->LName;
                 }
 
-                $tags = $workorder->job_tags;
-                $installation_date = date("m/d/Y",strtotime($workorder->installation_date)) . ' at ' . $workorder->intall_time;
+                if($workorder->job_tags != ''){
+                    $tags = $workorder->job_tags;
+                }else{
+                    $tags = 'Not Specified';
+                }
+                
+                if($workorder->intall_time != ''){
+                    $installation_date = date("m/d/Y",strtotime($workorder->installation_date)) . ' at ' . $workorder->intall_time;    
+                }else{
+                    $installation_date = 'Not Specified';
+                }
+                
             }
         }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
             $event = $this->Event_model->get_specific_event($object_id);
