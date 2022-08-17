@@ -358,7 +358,7 @@ class Api extends MYF_Controller
         $data  = $this->input->post();
         echo "<pre>";
         print_r($data);
-        $is_success = createCronAutoSmsNotification($data['company_id'], $data['object_id'], $data['module_name'], $data['status'], $data['user_id'], $data['agent_id']);
+        $is_success = createCronAutoSmsNotification($data['company_id'], $data['object_id'], $data['module_name'], $data['status'], $data['user_id'], $data['assigned_user_id'], $data['agent_id']);
 
         $result = ['is_success' => $is_success];
 
