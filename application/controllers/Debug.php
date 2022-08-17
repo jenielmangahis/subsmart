@@ -957,6 +957,8 @@
             $client_user_id = 'user_good';
             $plaidToken = linkTokenCreate($client_id, $client_secret, $client_user_id, $client_name);
 
+            $this->session->set_userdata('plaid_token', $plaidToken['token']);
+
             $this->page_data['plaidToken'] = $plaidToken;        
             $this->page_data['client_name'] = $client_name;    
             $this->load->view('v2/pages/debug/plaid_demo', $this->page_data);
@@ -1079,14 +1081,14 @@
         {
             $post = [
                 'company_id' => 1,
-                'object_id' => 33,
-                'module_name' => 'workorder',
-                'status' => 'New',
-                'user_id' => 5,
-                'agent_id' => 5
+                'object_id' => 3,
+                'module_name' => 'estimate',
+                'status' => 'Draft',
+                'user_id' => 81,
+                'agent_id' => 81
             ];
 
-            $url = 'https://localhost/ci/nsmart_v2/api/create_auto_sms_notification';
+            $url = 'https://nsmartrac.com/api/create_auto_sms_notification';
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1096,8 +1098,7 @@
             
             $response = curl_exec($ch);
             $data = json_decode($response);
-            
-            echo 'data';
+
             echo "<pre>";
             print_r($data);
             exit;
@@ -1105,10 +1106,17 @@
 
         public function plaid_process_data()
         {
-            $post = $this->input->post();
-            echo "<pre>";
-            print_r($post);
-            exit;
+            $this->load->helper(array('plaid_helper'));
+
+            $client_id = '62cd17c4e7bf0f001347726e';
+            $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
+            $client_name = 'NsmarTrac';
+            $client_user_id = 'user_good';
+            $plaidToken = linkTokenCreate($client_id, $client_secret, $client_user_id, $client_name);
+            $token = $this->session->userdata('plaid_token');
+            $this->page_data['token'] = $token;        
+            $this->page_data['client_name'] = $client_name;    
+            $this->load->view('v2/pages/debug/plaid_demo_2', $this->page_data);
         }
 
     }
