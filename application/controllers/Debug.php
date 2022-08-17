@@ -1075,6 +1075,34 @@
             exit;
         }
 
+        public function autoSmsApi()
+        {
+            $post = [
+                'company_id' => 1,
+                'object_id' => 33,
+                'module_name' => 'workorder',
+                'status' => 'New',
+                'user_id' => 5,
+                'agent_id' => 5
+            ];
+
+            $url = 'https://localhost/ci/nsmart_v2/api/create_auto_sms_notification';
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+            
+            $response = curl_exec($ch);
+            $data = json_decode($response);
+            
+            echo 'data';
+            echo "<pre>";
+            print_r($data);
+            exit;
+        }
+
     }
     /* End of file Debug.php */
 

@@ -4858,7 +4858,7 @@ if(!function_exists('set_expense_graph_data')) {
                     }                    
                 }
             }else{
-                if( $autoSms->send_to != '' ){
+                if( $autoSms->send_to != '' ){                    
                     $a_send_to = unserialize($autoSms->send_to);
                     foreach($a_send_to as $uid){
                         $user = $CI->Users_model->getUserByID($uid);
@@ -4890,6 +4890,15 @@ if(!function_exists('set_expense_graph_data')) {
                 }                
             }
         }
+
+        $total_sent = count($sent_numbers);
+        if( $total_sent > 0 ){
+            $is_success = 1;
+        }else{
+            $is_success = 0;
+        }
+
+        return $is_success;
     }
 
     function maskString($string, $length = 5){
