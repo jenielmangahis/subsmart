@@ -34,12 +34,6 @@ foreach ($jobs as $job) {
 }
 ?>
 
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new_job1') ?>'">
-        <i class='bx bx-briefcase'></i>
-    </div>
-</div>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>

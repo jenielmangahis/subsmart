@@ -1,10 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
-        <i class='bx bx-user-plus'></i>
-    </div>
-</div>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

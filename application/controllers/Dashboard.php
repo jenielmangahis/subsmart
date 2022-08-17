@@ -31,7 +31,8 @@ class Dashboard extends Widgets {
             'assets/barcharts/css/chart.min.css',
             'assets/barcharts/css/chart.min.css',
             'assets/fa-5/css/fontawesome.min.css',
-            'assets/fa-5/css/all.min.css'
+            "assets/plugins/dropzone/dist/dropzone.css",
+            'assets/fa-5/css/all.min.css',
         ));
         add_header_js(array(
             'assets/barcharts/js/chart.min.js',
@@ -48,7 +49,10 @@ class Dashboard extends Widgets {
             'assets/ringcentral/fetch.umd.js',
             'assets/ringcentral/pubnub.4.20.1.js',
             'assets/ringcentral/ringcentral.js',
-            'assets/ringcentral/rc_authentication.js'
+            'assets/ringcentral/rc_authentication.js',
+            "assets/plugins/dropzone/dist/dropzone.js",
+            "assets/js/accounting/modal-forms.js",
+            "assets/js/accounting/modal-forms1.js",
         ));
     }
     

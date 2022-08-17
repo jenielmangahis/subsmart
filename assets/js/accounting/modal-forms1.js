@@ -49,53 +49,56 @@ $(document).ready(function () {
                 $('#printChecksModal #checks-table').nsmPagination({itemsPerPage: parseInt($('#printChecksModal #checks-table-rows li a.dropdown-item.active').html().trim())})
             }
 
-            // $(`${modal_element} select`).each(function() {
-            //     var type = $(this).attr('id');
-            //     if (type === undefined) {
-            //         type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
-            //     } else {
-            //         type = type.replaceAll('_', '-');
+            $(`${modal_element} select`).each(function() {
+                var type = $(this).attr('id');
+                if (type === undefined) {
+                    type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+                } else {
+                    type = type.replaceAll('_', '-');
 
-            //         if (type.includes('transfer')) {
-            //             type = 'transfer-account';
-            //         }
-            //     }
+                    if (type.includes('transfer')) {
+                        type = 'transfer-account';
+                    }
+                }
 
-            //     if (dropdownFields.includes(type)) {
-            //         $(this).select2({
-            //             ajax: {
-            //                 url: '/accounting/get-dropdown-choices',
-            //                 dataType: 'json',
-            //                 data: function(params) {
-            //                     var query = {
-            //                         search: params.term,
-            //                         type: 'public',
-            //                         field: type,
-            //                         modal: modal_element.replaceAll('#', '')
-            //                     }
+                if (dropdownFields.includes(type)) {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: type,
+                                    modal: modal_element.replaceAll('#', '')
+                                }
 
-            //                     // Query parameters will be ?search=[term]&type=public&field=[type]
-            //                     return query;
-            //                 }
-            //             },
-            //             templateResult: formatResult,
-            //             templateSelection: optionSelect
-            //         });
-            //     } else {
-            //         var options = $(this).find('option');
-            //         if (options.length > 10) {
-            //             $(this).select2();
-            //         } else {
-            //             $(this).select2({
-            //                 minimumResultsForSearch: -1
-            //             });
-            //         }
-            //     }
-            // });
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect,
+                        dropdownParent: $(modal_element)
+                    });
+                } else {
+                    var options = $(this).find('option');
+                    if (options.length > 10) {
+                        $(this).select2();
+                    } else {
+                        $(this).select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $(modal_element)
+                        });
+                    }
+                }
+            });
 
             if ($('div#modal-container select#tags').length > 0) {
                 $('div#modal-container select#tags').select2({
                     placeholder: 'Start typing to add a tag',
+                    dropdownParent: $(modal_element),
                     allowClear: true,
                     ajax: {
                         url: '/accounting/get-job-tags',
@@ -110,7 +113,9 @@ $(document).ready(function () {
             if ($(`${modal_element} .date`).length > 0) {
                 $(`${modal_element} .date`).each(function() {
                     $(this).datepicker({
-                        uiLibrary: 'bootstrap'
+                        format: 'mm/dd/yyyy',
+                        orientation: 'bottom',
+                        autoclose: true
                     });
                 });
             }
@@ -202,6 +207,11 @@ $(document).ready(function () {
 
     $(document).on("click", "#print_printable_checks_modal #btn_print_printable_checks", function() {
         $("#print_preview_printable_checks_modal #printable_checks_table_print").printThis();
+    });
+
+    $(document).on('hidden.bs.modal', '#printSetupModal', function() {
+        $('#modal-container').remove();
+        $('.modal-backdrop').remove();
     });
 
     $(document).on('click', '#printSetupModal #continue-setup', function(e) {
