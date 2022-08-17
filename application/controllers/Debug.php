@@ -1089,18 +1089,17 @@
             ];
 
             $url = 'https://nsmartrac.com/api/create_auto_sms_notification';
-
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+            $ch = curl_init();        
+            curl_setopt($ch, CURLOPT_URL,$url);
+            curl_setopt($ch, CURLOPT_POST, 1);            
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);            
             
             $response = curl_exec($ch);
             $data = json_decode($response);
 
             echo "<pre>";
-            print_r($data);
+            print_r($response);
             exit;
         }
 
