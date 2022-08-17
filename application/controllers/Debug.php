@@ -1103,6 +1103,14 @@
             exit;
         }
 
+        public function plaid_process_data()
+        {
+            $post = $this->input->post();
+            echo "<pre>";
+            print_r($post);
+            exit;
+        }
+
     }
     /* End of file Debug.php */
 

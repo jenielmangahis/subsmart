@@ -216,7 +216,7 @@ img.company-logo2 {
                                             </li>
                                         </ol>   
                                         <div class="row">                   
-                                            <div class="col-md-3 form-group">
+                                            <div class="col-md-2 form-group">
                                                 <label for="contact_name" class="label-element">Work Order #</label>
                                                     <input type="text" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
                                                             foreach ($number as $num):
@@ -231,7 +231,7 @@ img.company-logo2 {
                                                             ?>" required readonly/>
                                                     <!-- <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $val; ?>" required readonly/> -->
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-md-2">
                                                 <div class="select-wrap">
                                                     <label for="lead_source">Lead Source</label>
                                                         <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
@@ -255,7 +255,7 @@ img.company-logo2 {
                                                 </div>    
                                             </div> 
 
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-md-2">
                                                 <div class="select-wrap">
                                                     <label for="lead_source">Status</label>
                                                     <select name="status" id="workorder_status" class="form-control custom-select m_select">
@@ -268,6 +268,17 @@ img.company-logo2 {
                                                         <option <?= $workorder->w_status == 'Invoiced' ? 'selected="selected"' : ''; ?> value="Invoiced">Invoiced</option>
                                                         <option <?= $workorder->w_status == 'Withdrawn' ? 'selected="selected"' : ''; ?> value="Withdrawn">Withdrawn</option>
                                                         <option <?= $workorder->w_status == 'Closed' ? 'selected="selected"' : ''; ?> value="Closed">Closed</option>
+                                                    </select>
+                                                </div>    
+                                            </div> 
+                                            <div class="form-group col-md-2">
+                                                <div class="select-wrap">
+                                                    <label for="lead_source">Jobs Tags</label>
+                                                    <select id="job_tags" name="job_tags" class="form-control custom-select m_select">
+                                                        <option value="0">- none -</option>
+                                                        <?php foreach($job_tags as $jb){ ?>
+                                                        <option value="<?php echo $jb->id; ?>"><?php echo $jb->name; ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>    
                                             </div>   

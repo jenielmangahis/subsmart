@@ -198,16 +198,19 @@ class Cron_Notification extends MYF_Controller {
                     $creator_name = $workorderCreator->FName . ' ' . $workorderCreator->LName;
                 }
 
-                if($workorder->job_tags != ''){
-                    $tags = $workorder->job_tags;
-                }else{
-                    $tags = 'Not Specified';
+                $tags = 'Not Specified';
+                if($workorder->job_tags > 0 ){
+                    $jobTag = $this->Workorder_model->get_job_tags_data($workorder->job_tags);
+                    if( $jobTag ){
+                        $tags = $jobTag->name;
+                    }
+                    
                 }
                 
-                if($workorder->intall_time != ''){
-                    $installation_date = date("m/d/Y",strtotime($workorder->installation_date)) . ' at ' . $workorder->intall_time;    
-                }else{
-                    $installation_date = 'Not Specified';
+                $installation_date  = 'Not Specified';
+                $workOrderAgreement = $this->Workorder_model->get_agreements($workorder->id);
+                if( $workOrderAgreement && $workOrderAgreement->intall_time != '' ){
+                    $installation_date = date("m/d/Y",strtotime($workOrderAgreement->installation_date)) . ' at ' . $workOrderAgreement->intall_time;    
                 }
                 
             }
