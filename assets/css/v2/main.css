@@ -2114,3 +2114,14 @@ span.select2-selection {
 .select2 .select2-selection__arrow{
 	top: unset !important;
 }
+
+.nsm-nav-pills .nav-link{
+	font-weight: 600;
+	color: #888888 !important;
+}
+
+.nsm-nav-pills .nav-link.active{
+	background-color: #dad1e0 !important;
+    color: #6a4a86 !important; 
+	
+}

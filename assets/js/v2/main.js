@@ -56,7 +56,7 @@ $(document).ready(function () {
 		resizeSidebar();
 	});
 
-	$(".nsm-sidebar-menu .dropdown-menu#new-popup").on("click", function(e) {
+	$(".nsm-sidebar-menu .dropdown-menu#new-popup").on("click", function (e) {
 		e.stopPropagation();
 	});
 
@@ -81,13 +81,21 @@ $(document).ready(function () {
 
 	$(document).on("change", ".nsm-img-upload .nsm-upload", function (e) {
 		let _this = $(this);
+		let _parent = _this.closest(".nsm-img-upload");
+		let _isFileDocument = _parent.hasClass("file-upload");
 		let reader = new FileReader();
 
-		reader.onload = function () {
-			let imgPreview = _this.closest(".nsm-img-upload");
-			imgPreview.css("background-image", "url('" + reader.result + "')");
-		};
-		reader.readAsDataURL(e.target.files[0]);
+		if (_isFileDocument) {
+			console.log(_this.val().split('\\').pop());
+			_parent.find(".nsm-upload-label").html(_this.val().split('\\').pop());
+		}
+		else {
+			reader.onload = function () {
+				let imgPreview = _parent;
+				imgPreview.css("background-image", "url('" + reader.result + "')");
+			};
+			reader.readAsDataURL(e.target.files[0]);
+		}
 	});
 
 	$(document).on("click", ".nsm-color-picker li", function () {
@@ -111,7 +119,7 @@ function toggleSidebar() {
 	let mobileView = $(".nsm-container").hasClass("nsm-mobile");
 
 	resizeSidebar();
-	
+
 	if (mobileView && isShown) {
 		_sidebar.removeClass("shown");
 		_sidebarBG.removeClass("shown");

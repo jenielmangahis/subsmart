@@ -176,11 +176,8 @@
 <div class="modal fade bd-example-modal-lg" id="modalAddCoupon" tabindex="-1" role="dialog" aria-labelledby="modalAddCouponTitle" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-plus"></i> Add New Coupon</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+      <div class="modal-header border-0fw-bold">
+        <h5 class="modal-title fw-bold" id="exampleModalLongTitle"><i class="fa fa-plus fw-bold"></i> Add New Coupon</h5>
       </div>
       <?php echo form_open_multipart('booking/create_coupon', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
       <div class="modal-body">        
@@ -224,7 +221,7 @@
               </div>
           </div>
           <div class="row">
-            <div class="col-5">
+            <div class="col-6">
               <div class="form-group">
                 <label>Valid From</label>
                 <div class="input-group">
@@ -235,7 +232,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-5">
+            <div class="col-6">
               <div class="form-group">
                 <label>Valid To</label>
                 <div class="input-group">
@@ -263,8 +260,8 @@
           </div>      
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Add</button>
+        <button type="button" class="nsm-button" data-dismiss="modal">Close</button>
+        <button type="submit" class="nsm-button primary">Add</button>
       </div>
       <?php echo form_close(); ?>
     </div>
@@ -423,18 +420,15 @@
   <?php echo form_open_multipart('booking/create_form', [ 'id' => 'frm-booking-add-field', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLongTitle">Field Name</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
+	      <div class="modal-header border-0">
+        <span class="modal-title content-title">Field Name</span>
 	      </div>
 	      <div class="modal-body body-add-form-field">
 	        <input type="text" name="field_name" id="field_name" value="" class="form-control" autocomplete="off">
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary add-custom-field">Add</button>
+	        <button type="button" class="nsm-button" data-dismiss="modal">Close</button>
+	        <button type="button" class="nsm-button primary add-custom-field">Add</button>
 	      </div>
 	    </div>
 	  </div>

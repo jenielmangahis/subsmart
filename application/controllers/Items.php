@@ -33,6 +33,23 @@ class Items extends MY_Controller
         exit();
     }
 
+    public function getitemsV2(){
+        $company_id = logged('company_id');
+        $res = $this->db->where('company_id', $company_id)->get('items')->result();
+
+        foreach ($res as $row) {
+            if( $row->discount == '' ){
+                $discount = 0;
+            }else{
+                $discount = $row->discount;
+            }
+            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
+
+            echo '<option value="'.$row->title.'" data-price="'. $row->price .'" data-discount="'. $discount .'" data-id="'.$row->id.'">'. $row->title .'</option>';
+        }
+        exit();
+    }
+
     public function getitemsPackage()
     {
         $keyword = get('sk');

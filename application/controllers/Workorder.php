@@ -3654,6 +3654,14 @@ class Workorder extends MY_Controller
 
     public function NewworkOrder()
     {
+		add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+			'assets/js/jquery.signaturepad.js'
+        ]);
+
+        $this->page_data['page']->title = 'New Workorder';
+		$this->page_data['page']->parent = 'Sales';
+
         $this->load->model('AcsProfile_model');
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -3780,7 +3788,8 @@ class Workorder extends MY_Controller
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['lead_source']);
 
-        $this->load->view('workorder/addNewworkOrder', $this->page_data);
+        // $this->load->view('workorder/addNewworkOrder', $this->page_data);
+        $this->load->view('v2/pages/workorder/addNewworkOrder', $this->page_data);
     }
 
     public function addSolarWorkorder()
