@@ -180,7 +180,7 @@ define('TWILIO_TOKEN', '503645bbef7fcd46ac6f6b04ce5c0188');
 define('TWILIO_NUMBER', '+18509035118');
 
 define('PLAID_API_URL', 'https://sandbox.plaid.com');
-//define('PLAID_API_REDIRECT_URL', 'https://nsmartrac.com/');
-define('PLAID_API_REDIRECT_URL', 'https://localhost/ci/nsmart_v2/debug/plaid_process_data');
+define('PLAID_API_REDIRECT_URL', 'https://nsmartrac.com/debug/plaid_process_data');
+//define('PLAID_API_REDIRECT_URL', 'https://localhost/ci/nsmart_v2/debug/plaid_process_data');
 define('PLAID_API_WEBHOOK_URL', 'https://sample-web-hook.com');
 define('PLAID_API_ENV', 'sandbox');
