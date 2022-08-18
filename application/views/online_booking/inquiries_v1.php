@@ -1,6 +1,6 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-include viewPath('v2/includes/header'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php include viewPath('includes/header'); ?>
 <style>
 .row-header{
     background-color: #32243d;
@@ -32,30 +32,28 @@ include viewPath('v2/includes/header'); ?>
     background-color: #28a745;
 }
 </style>
-
-<div class="row page-content g-0">
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/upgrades_tabs'); ?>
-    </div>
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/online_booking_subtabs'); ?>
-    </div>
-
-    <div class="col-12">
-        <div class="nsm-page">
-            <div class="nsm-page-content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nsm-callout primary">
-                            Manage inquiries from your online booking form.
-                        </div>
-                    </div>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/upgrades'); ?>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <div class="container-fluid p-20">
+            <div class="row">
+                <div class="col">
+                  <h3 class="page-title mt-0">Online Booking</h3>
                 </div>
-                <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-9 tbl">
-                    <?php include viewPath('flash'); ?>
-                        <table class="nsm-table" data-id="coupons">
+            </div>
+            <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage inquiries from your online booking form.</span>
+              </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card" style="min-height: 400px !important;">
+                        <?php include viewPath('includes/booking_tabs'); ?>                           
+                        <?php include viewPath('flash'); ?>
+                        <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
                                     <th style="width:10%;">Date</th>
@@ -67,7 +65,7 @@ include viewPath('v2/includes/header'); ?>
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php foreach( $inquiries as $i ){ ?>
+                                <?php foreach( $inquiries as $i ){ ?>
                                     <?php 
                                         $status = "";
                                         if($i->status == 1) {
@@ -111,14 +109,17 @@ include viewPath('v2/includes/header'); ?>
                             </tbody>
                         </table>
                     </div>
+                    <!-- end card -->
                 </div>
             </div>
+            <!-- end row -->
         </div>
+        <!-- end container-fluid -->
     </div>
+    <!-- page wrapper end -->
 </div>
-
 <?php include viewPath('includes/booking_modals'); ?> 
-<?php //include viewPath('includes/footer_booking'); ?>
+<?php include viewPath('includes/footer_booking'); ?>
 <script>
 $(function(){
     var base_url = "<?php echo base_url(); ?>";
@@ -174,4 +175,3 @@ $(function(){
 
 });
 </script>
-<?php include viewPath('v2/includes/footer'); ?>

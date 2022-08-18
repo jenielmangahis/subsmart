@@ -1,5 +1,11 @@
-<?php include viewPath('v2/includes/accounting_header'); ?>
-<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css">
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+include viewPath('v2/includes/accounting_header'); 
+
+?>
+<!-- <link rel="stylesheet" href="<?= base_url("assets/frontend/css/accounting_dashboard.css") ?>"> -->
+
 
 <?php
 add_css(array(
@@ -11,6 +17,42 @@ add_css(array(
     // 'assets/css/beforeafter.css',
 ));
 ?>
+
+<style>
+    #exTab1 .tab-content {
+    color : white;
+    background-color: #428bca;
+    padding : 5px 15px;
+  }
+  #exTab3 .tab-content {
+    color : white;
+    background-color: #428bca;
+    padding : 5px 15px;
+  }
+  .project-tab #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+      color: #0062cc;
+      background-color: transparent;
+      border-color: transparent transparent #f3f3f3;
+      border-bottom: 3px solid !important;
+      font-size: 16px;
+      font-weight: bold;
+  }
+  .project-tab thead{
+      background: #f3f3f3;
+      color: #333;
+  }
+  .project-tab a{
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+  }
+</style>
+
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
+        <i class='bx bx-user-plus'></i>
+    </div>
+</div>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -24,13 +66,17 @@ add_css(array(
                     <section id="tabs" class="project-tab" style="padding-left: 0px;padding-right: 0px;">
                         <div class="">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-5">
                                     <nav>
                                         <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" style="color:#666666;display: inline-block;">Get things done</a>
                                             <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false" style="color:#666666;display: inline-block;">Business overview</a> 
                                         </div>
                                     </nav>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="tab-content" id="nav-tabContent">
                                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                             <br>
@@ -80,12 +126,12 @@ add_css(array(
                                             <br><br>
 
                                             <div style="background-color:#f9fafb;width:80%;border-radius:15px;" id="dashboardDivs">
-                                                <div class="row" style="">
+                                                <div class="row">
                                                     <div class="col-md-1" style="background-color:#eceef1;padding: 80px 0;border-radius:15px 0 0 15px;">
                                                         <center><h6>Money in</h6></center>
                                                     </div>
                                                     <div class="col-md-11" style="padding:0 3% 3% 3%;">
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="<?php echo base_url('accounting/products-and-services') ?>">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -99,7 +145,7 @@ add_css(array(
                                                                 <div class="point"></div> -->
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="<?php echo base_url('accounting/customers') ?>">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -113,7 +159,7 @@ add_css(array(
                                                                 <div class="point"></div>
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#" class="ajax-" data-toggle="modal" data-target="#newJobModal">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -127,7 +173,7 @@ add_css(array(
                                                                 <div class="point"></div>
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="<?php echo base_url('accounting/addnewInvoice') ?>" class="notification">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -142,7 +188,7 @@ add_css(array(
                                                                 <div class="point"></div>
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -156,7 +202,7 @@ add_css(array(
                                                                 <div class="point"></div> -->
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -174,7 +220,7 @@ add_css(array(
                                                         <center><h6>Money out</h6></center>
                                                     </div>
                                                     <div class="col-md-11" style="padding:0 3% 3% 3%;">
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -188,7 +234,7 @@ add_css(array(
                                                                 <div class="point"></div> -->
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;width:125px;">
+                                                        <div align="center" style="display: inline-block;width:125px;">
                                                             <!-- <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -202,7 +248,7 @@ add_css(array(
                                                                 <div class="point"></div> -->
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;width:125px;">
+                                                        <div align="center" style="display: inline-block;width:125px;">
                                                             <!-- <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -222,7 +268,7 @@ add_css(array(
                                                                 <div class="point"></div> -->
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -236,7 +282,7 @@ add_css(array(
                                                                 <div class="point"></div>
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -254,7 +300,7 @@ add_css(array(
                                                         <center><h6>Accounting and reports</h6></center>
                                                     </div>
                                                     <div class="col-md-11" style="padding:0 3% 3% 3%;">
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -268,7 +314,7 @@ add_css(array(
                                                                 <div class="point"></div>
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="#" class="notification">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -277,13 +323,13 @@ add_css(array(
                                                             </a>
                                                             <p>Review transactions</p>
                                                         </div>
-                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <div class="arrow">
                                                                 <!-- <div class="line"></div>
                                                                 <div class="point"></div> -->
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="padding:;display: inline-block;">
+                                                        <div align="center" style="display: inline-block;">
                                                             <a href="<?php echo base_url('accounting/reports') ?>">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
@@ -455,7 +501,7 @@ add_css(array(
                                                                                     <h3 class="header-content">Expenses</h3>
                                                                                     <div class="header-separator">
                                                                                         <div class="hs-content">
-                                                                                            <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
+                                                                                            <div class="dropdown" style="position: relative; float: right; display: inline-block;margin-left: 10px;">
                                                                                                 <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
                                                                                                     Last 30 Days&nbsp;<span class="fa fa-caret-down"></span></span>
                                                                                                 <ul class="dropdown-menu dropdown-menu-right">
@@ -839,5 +885,4 @@ add_css(array(
         </div>
     </div>
 </div>
-
 <?php include viewPath('v2/includes/footer'); ?>

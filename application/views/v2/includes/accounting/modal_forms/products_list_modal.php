@@ -26,7 +26,7 @@
                                     <td><?=$item->price?></td>
                                     <td>
                                         <button data-id="<?=$item->id?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item">
-                                            <i class="bx bx-fw bx-plus-medical"></i>
+                                            <i class="bx bx-fw bx-plus"></i>
                                         </button>
                                     </td>
                                 </tr>

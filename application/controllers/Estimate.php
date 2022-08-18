@@ -596,6 +596,10 @@ class Estimate extends MY_Controller
 
             $i = 0;
             foreach($a as $row){
+                if (empty($a[$i])) {
+                    continue;
+                }
+
                 $data['items_id']       = $a[$i];
                 // $data['package_id ']    = $packageID[$i];
                 $data['qty']            = $quantity[$i];
@@ -664,7 +668,12 @@ class Estimate extends MY_Controller
     
                 $notification = $this->estimate_model->save_notification($notif);
                 
-        redirect('estimate');
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            } else {
+                redirect('estimate');
+            }
         } else {
             echo json_encode(0);
         }
@@ -789,6 +798,10 @@ class Estimate extends MY_Controller
 
             $i = 0;
             foreach($a as $row){
+                if (empty($a[$i])) {
+                    continue;
+                }
+
                 $data['items_id']       = $a[$i];
                 // $data['package_id ']    = $packageID[$i];
                 $data['qty']            = $quantity[$i];
@@ -813,6 +826,10 @@ class Estimate extends MY_Controller
 
             $i2 = 0;
             foreach($a2 as $row2){
+                if (empty($a2[$i2])) {
+                    continue;
+                }
+
                 $data2['items_id']       = $a2[$i2];
                 // $data['package_id ']    = $packageID[$i];
                 $data2['qty']            = $quantity2[$i2];
@@ -1354,6 +1371,10 @@ class Estimate extends MY_Controller
 
                 $i = 0;
                 foreach($a as $row){
+                    if (empty($a[$i])) {
+                        continue;
+                    }
+
                     $data['items_id']       = $a[$i];
                     // $data['package_id ']    = $packageID[$i];
                     $data['qty']            = $quantity[$i];
@@ -1378,6 +1399,10 @@ class Estimate extends MY_Controller
 
                 $i2 = 0;
                 foreach($a2 as $row2){
+                    if (empty($a2[$i2])) {
+                        continue;
+                    }
+
                     $data2['items_id']       = $a2[$i2];
                     // $data['package_id ']    = $packageID[$i];
                     $data2['qty']            = $quantity2[$i2];
@@ -1393,7 +1418,12 @@ class Estimate extends MY_Controller
                 }
 
 
-            redirect('estimate');
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            } else {
+                redirect('estimate');
+            }
         }else{
             $this->session->set_flashdata('alert-type', 'danger');
             $this->session->set_flashdata('alert', 'Please select customer.');
@@ -1479,6 +1509,10 @@ class Estimate extends MY_Controller
 
             $i = 0;
             foreach($a as $row){
+                if (empty($a[$i])) {
+                    continue;
+                }
+
                 $data['items_id']       = $a[$i];
                 // $data['package_id ']    = $packageID[$i];
                 $data['qty']            = $quantity[$i];
@@ -1503,6 +1537,10 @@ class Estimate extends MY_Controller
 
             $i2 = 0;
             foreach($a2 as $row2){
+                if (empty($a2[$i2])) {
+                    continue;
+                }
+
                 $data2['items_id']       = $a2[$i2];
                 // $data['package_id ']    = $packageID[$i];
                 $data2['qty']            = $quantity2[$i2];
@@ -1518,7 +1556,12 @@ class Estimate extends MY_Controller
             }
 
 
-        redirect('estimate');
+        if (!is_null($this->input->get('json', TRUE))) {
+            header('content-type: application/json');
+            exit(json_encode(['id' => $addQuery]));
+        } else {
+            redirect('estimate');
+        }
         // } else {
         //     echo json_encode(0);
         // }

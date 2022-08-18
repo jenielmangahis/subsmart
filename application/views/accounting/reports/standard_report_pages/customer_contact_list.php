@@ -1,5 +1,4 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-<?php include viewPath('v2/includes/reports/reports_modals'); ?>
 
 <style>
 
@@ -100,7 +99,37 @@
         font-size: 13px;
     }
     
+    
 
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes, #checkboxes1 {
+  display: none;
+  border: 1px #dadada solid;
+}
+
+#checkboxes label, #checkboxes1 label {
+  display: block;
+}
+
+#checkboxes label:hover, #checkboxes1 label:hover {
+  background-color: #1e90ff;
+}
 </style>
 
 <div class="row page-content g-0" id="container">
@@ -189,11 +218,88 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="f">
+                                <div class="f row">
                                     <h6 onclick="filter()" class="czLabel" id="fRightArrow"><i class='bx bx-fw bxs-right-arrow'></i>Filter</h6>
                                     <h6 onclick="filter()" class="czLabel" id="fDownArrow"><i class='bx bx-fw bxs-down-arrow'></i>Filter</h6>
-                                    <div class="filter" id="filter">
-                                        <p>Group by</p>
+                                    <div class="row filter" id="filter">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <input type="checkbox" id="checkCustomer1">
+                                                <label class="form-check-label">Customer</label>
+                                            </div>
+                                            <div class="col-5">
+                                                <button type="button" class="nsm-button block" data-bs-toggle="dropdown">
+                                                    <span>All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" id="sort-asc" name="fl_customer[]" value="*" class="form-check-input">
+                                                        <label for="sort-asc" class="form-check-label">All</label>
+                                                    </div>
+                                                    <?php foreach($customer as $resCustomer) : ?>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" onchange="checkCustomer()" name="fl_customer[]" value="<?= $resCustomer->prof_id ?>" class="form-check-input">
+                                                        <label for="sort-asc" class="form-check-label"><?= $resCustomer->last_name ?></label>
+                                                    </div>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                        <div class="col-7">
+                                                <input type="checkbox" id="checkType1">
+                                                <label class="form-check-label">Customer Type</label>
+                                            </div>
+                                            <div class="col-5">
+                                                <button type="button" class="nsm-button block" data-bs-toggle="dropdown">
+                                                    <span>All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" onchange="checkType()" name="fl_type[]" value="*" class="form-check-input">
+                                                        <label for="sort-asc" class="form-check-label">All</label>
+                                                    </div>
+                                                    <?php foreach($customerType as $resCustType) : 
+                                                        if($resCustType->customer_type == NULL) {
+                                                            continue;
+                                                        }else{
+                                                        ?>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" onchange="checkType()" name="fl_type" value="<?= $resCustType->customer_type ?>" class="form-check-input">
+                                                        <label for="sort-asc" class="form-check-label"><?= $resCustType->customer_type ?></label>
+                                                    </div>
+                                                    <?php } endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <input type="checkbox" id="checkStatus1">
+                                                <label class="form-check-label">Status</label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                    <span>All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" onchange="checkStatus()" id="sort-asc" name="fl_status[]" value="*" class="form-check-input">
+                                                        <label for="sort-asc" class="form-check-label">All</label>
+                                                    </div>
+                                                    <?php foreach($status as $resStat) :
+                                                        if($resStat->status == NULL) {
+                                                            continue;
+                                                        }else{
+                                                        ?>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" onchange="checkStatus()" name="fl_status[]" value="<?= $resStat->status ?>" class="form-check-input">
+                                                        <label for="sort-asc" class="form-check-label"><?= $resStat->status ?></label>
+                                                    </div>
+                                                    <?php }
+                                                endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="hf2">
@@ -544,7 +650,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="nsm-card-content h-auto grid-mb" id="tbl_print_accounts_modal">
+                            <div class="col-12 nsm-card-content h-auto grid-mb" id="tbl_print_accounts_modal">
                                 <?php
                                     if($tblDefault){
                                 ?>
@@ -586,11 +692,46 @@
                                     <tbody>
                                     <?php foreach($acs_profile as $acsProfile) : ?>
                                         <tr>
-                                            <td><?= $acsProfile->first_name.' '. $acsProfile->last_name ?></td>
-                                            <td><?= $acsProfile->phone_h ?></td>
-                                            <td><?= $acsProfile->state ?></td>
-                                            <td><?= $acsProfile->email ?></td>
-                                            <td><?= $acsProfile->status ?></td>
+                                            <?php if(!empty($acsProfile->Empty)){ ?>
+                                            <td><? echo $acsProfile->Empty ?></td>
+                                            <?php }else{ ?>
+                                            <?php if(array_key_exists('first_name', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->first_name == null && !empty($acsProfile->first_name)) ? "N/A" : $acsProfile->first_name.' '. $acsProfile->last_name?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('state', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->state == null && !empty($acsProfile->state)) ? "N/A" : $acsProfile->state ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('phone_h', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->phone_h == null) ? "N/A" : $acsProfile->phone_h ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('email', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->email == null && !empty($acsProfile->email)) ? "N/A" : $acsProfile->email ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('status', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->status == null && !empty($acsProfile->status)) ? "N/A" : $acsProfile->status ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('phone_h', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->notes == null && !empty($acsProfile->notes)) ? "N/A" : $acsProfile->notes ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('bill_start_date', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->bill_start_date == null && !empty($acsProfile->bill_start_date)) ? "N/A" : $acsProfile->bill_start_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('bill_end_date', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->bill_end_date == null && !empty($acsProfile->bill_end_date)) ? "N/A" : $acsProfile->bill_end_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('recurring_start_date', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->recurring_start_date == null && !empty($acsProfile->recurring_start_date)) ? "N/A" : $acsProfile->recurring_start_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('recurring_end_date', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->recurring_end_date == null && !empty($acsProfile->recurring_end_date)) ? "N/A" : $acsProfile->recurring_end_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('last_payment_date', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->last_payment_date == null && !empty($acsProfile->last_payment_date)) ? "N/A" : $acsProfile->last_payment_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('next_billing_date', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->next_billing_date == null && !empty($acsProfile->next_billing_date)) ? "N/A" : $acsProfile->next_billing_date ?></td>
+                                            <?php endif; ?>
+                                            <?php } ?>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -607,11 +748,32 @@
         </div>
     </div>
 </div>
-
+<?php include viewPath('v2/includes/reports/reports_modals'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 
 <script type="text/javascript">
+var expanded = false;
 
+function showCheckboxes() {
+  var checkboxes = document.getElementById("checkboxes");
+  if (!expanded) {
+    checkboxes.style.display = "block";
+    expanded = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = false;
+  }
+}
+function showCheckboxes1() {
+  var checkboxes = document.getElementById("checkboxes1");
+  if (!expanded) {
+    checkboxes.style.display = "block";
+    expanded = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = false;
+  }
+}
     function printTbl(){
         var printWindow = window.open('', '', 'height=200,width=400');
         printWindow.document.write('<html><head>');
@@ -629,7 +791,7 @@
         printWindow.document.write('</body>');
  
         printWindow.document.write('</html>');
-        printWindow.print();
+        window.print();
 
         
     }
@@ -747,5 +909,14 @@
             x.style.display = "block";
         }
     }
+
+    function checkCustomer(){
+        document.getElementById("checkCustomer1").checked = true;    
+    }
+    function checkType(){
+        document.getElementById("checkType1").checked = true;    
+    }
+    function checkStatus(){
+        document.getElementById("checkStatus1").checked = true;    
+    }
 </script>
-<?php include viewPath('v2/includes/footer'); ?>
