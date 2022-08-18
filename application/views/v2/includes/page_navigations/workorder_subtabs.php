@@ -1,6 +1,6 @@
 <div class="nsm-page-subnav">
     <ul>
-        <li class="<?php if($page->title == 'Workorder'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('workorder') ?>'">
+        <li class="<?php if($page->title == 'Workorder' || $page->title == 'New Workorder'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('workorder') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Work Orders</span>
             </a>

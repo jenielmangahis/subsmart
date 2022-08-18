@@ -291,13 +291,20 @@ class Reports extends MY_Controller {
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['customer'] = $this->AcsProfile_model->getCustomer();
+        $this->page_data['customerType'] = $this->AcsProfile_model->getCustomerType();
+        $this->page_data['status'] = $this->AcsProfile_model->getStatus();
         $this->page_data['reportTypeId'] = $reportTypeId;
 
         $sort_by = $this->input->post('sort_by');
         $cust = $this->input->post('customer');
+        $fl_cust = $this->input->post('fl_customer');
+        $fl_type = $this->input->post('fl_type');
+        $fl_status = $this->input->post('fl_status');
 
-        // when sort and columns are NOT empty
-        if(($sort_by != 'default' && !empty($sort_by)) && !empty($cust)){
+
+        // when sort, columns, filters are NOT empty
+        if(($sort_by != 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
             $getBill = $this->AcsBilling_model->getBilling($sort_by);
             $gb = json_decode(json_encode($getBill), true);
             $gbArray = array();
@@ -307,12 +314,19 @@ class Reports extends MY_Controller {
             $custImp = implode(", ", $cust);
             $custExp = explode(",", $custImp);
             $billPro = billPro($custExp);
-            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $billPro);
+            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $billPro, $fl_cust, $fl_status, $fl_type);
             $this->page_data['tblDefault'] = false;  
             print_r($this->page_data['acs_profile']);
-            
+        }
+        // when sort and filters are NOT empty
+        elseif(($sort_by == 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
+            $custImp = implode(", ", $cust);
+            $custExp = explode(",", $custImp);
+            $billPro = billPro($custExp);
+            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $billPro, $fl_cust, $fl_status, $fl_type);
+            $this->page_data['tblDefault'] = false; 
         //when sort are NOT empty
-        }elseif(($sort_by != 'default' && !empty($sort_by)) && empty($cust)){
+        }elseif(($sort_by != 'default' && !empty($sort_by)) && empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
             $getBill = $this->AcsBilling_model->getBilling($sort_by);
             $gb = json_decode(json_encode($getBill), true);
             $gbArray = array();
@@ -323,7 +337,7 @@ class Reports extends MY_Controller {
             $this->page_data['tblDefault'] = true;  
         
             //when columns are NOT empty
-        }elseif(($sort_by === 'default') && !empty($cust)){
+        }elseif(($sort_by === 'default') && !empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
             $custImp = implode(", ", $cust);
             $custExp = explode(",", $custImp);
             $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $custExp);
@@ -340,7 +354,6 @@ class Reports extends MY_Controller {
         $this->page_data['page']->title = $reportType->name;
         $this->page_data['page']->parent = 'Reports';
         $this->page_data['custExp'] = $cust;
-
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
 }

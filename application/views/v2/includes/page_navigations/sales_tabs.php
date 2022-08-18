@@ -18,7 +18,7 @@
                 <span>Estimates</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Workorder' || $page->title == 'Workorder Settings' || $page->title == 'Workorder Checklist'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Workorder' || $page->title == 'Workorder Settings' || $page->title == 'Workorder Checklist' || $page->title == 'New Workorder'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('workorder') ?>">
                 <i class='bx bx-fw bx-task'></i>
                 <span>Work Orders</span>

@@ -29,7 +29,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div id="sign_area">
-
                             <canvas id="canvas-a" class="nsm-sign-canvas"></canvas>
                             <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative" />
                             <input type="hidden" id="saveUserSignatureDB1aMb" name="user_approval_signature1aM">

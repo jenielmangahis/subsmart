@@ -5,7 +5,7 @@
 <?php else : ?>
 <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/check/<?=$check->id?>">
 <?php endif; ?>
-    <div id="checkModal" class="modal fade modal-fluid nsm-modal" role="dialog">
+    <div id="checkModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -638,11 +638,11 @@
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-end">
-                                <button type="button" class="btn btn-success" onclick="saveAndNewForm(event)">
+                                <button type="button" class="nsm-button success" onclick="saveAndNewForm(event)">
                                     Save and new
                                 </button>
-                                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-fw bx-chevron-up"></i>
+                                <button type="button" class="nsm-button success dropdown-toggle dropdown-toggle-split" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bx-fw bx-chevron-up text-white"></i>
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>

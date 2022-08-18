@@ -1427,7 +1427,7 @@ border: none;
                                 <div class="select-wrap">
                                     <label for="workorder_status">Status</label>
                                     <select name="status" id="workorder_status" class="form-control custom-select m_select">
-                                        <option value="New">New</option>
+                                        <option value="New">Neasw</option>
                                         <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
                                         <option value="Started">Started</option>

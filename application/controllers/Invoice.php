@@ -1374,7 +1374,8 @@ class Invoice extends MY_Controller
             // print_r($this->page_data['service_address']); die;
         }
 
-        die($this->load->view('invoice/new_customer_form', $this->page_data, true));
+        // die($this->load->view('invoice/new_customer_form', $this->page_data, true));
+        die($this->load->view('v2/pages/invoice/new_customer_form', $this->page_data, true));
     }
 
     public function record_payment_form()

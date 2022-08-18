@@ -297,6 +297,8 @@ class Booking extends MY_Controller {
 	}
 
 	public function preview() {
+        $this->page_data['page']->title = 'Web Integration';
+        $this->page_data['page']->tab = "Preview";
 		$user = $this->session->userdata('logged');
 		$cid  = logged('company_id');
     	//$eid  = hashids_encrypt($user['id'], '', 15);
@@ -849,6 +851,8 @@ class Booking extends MY_Controller {
     {
     	$cid = logged('company_id');
     	$inquiries = $this->BookingInquiry_model->findAllByCompanyId($cid);
+		$this->page_data['page']->title = 'Inquiry';
+        $this->page_data['page']->tab = "Inquiry";
 
     	$this->page_data['inquiries'] = $inquiries;
 		$this->load->view('online_booking/inquiries', $this->page_data);

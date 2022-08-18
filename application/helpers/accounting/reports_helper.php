@@ -5,15 +5,41 @@ function custom($col){
         $colName = "Customer";
     }elseif($col === 'email'){
         $colName = 'Email';
+    }elseif($col == 'city, state, zip_code, cross_street, subdivision'){
+        $colName = 'Address';
     }elseif($col === 'phone_h'){
         $colName = 'Phone';
-    }elseif($col === 'city'){
-        $colName = 'Address';
+    }elseif($col === 'status'){
+        $colName = 'Status';
+    }elseif($col === 'notes'){
+        $colName = 'Notes';
+    }elseif($col === 'bill_start_date'){
+        $colName = 'Bill Start Date';
+    }elseif($col === 'bill_end_date'){
+        $colName = 'Bill End Date';
+    }elseif($col === 'recurring_start_date'){
+        $colName = 'Recurring Start Dtae';
+    }elseif($col === 'recurring_end_date'){
+        $colName = 'Recurring End Date';
+    }elseif($col === 'last_payment_date'){
+        $colName = 'Last Payment Date';
+    }elseif($col === 'next_billing_date'){
+        $colName = 'Next Billing Date';
     }
 
     return $colName;
 }
-
+if(!function_exists('filter')){
+    function filter($cust, $stat, $type){
+        if($stat != null && $cust == null && $type == null){
+            return "`status` IN ('".$stat."')";
+        }elseif($stat == null && $cust != null && $type == null){
+            return "prof_id IN ('".$cust."')";
+        }elseif($stat == null && $cust == null && $type != null){
+            return "`customer_type` IN ('".$type."')";
+        }
+    }
+}
 if(!function_exists('customCols')){
     function customCols(){
         $customCols = array(

@@ -3654,6 +3654,14 @@ class Workorder extends MY_Controller
 
     public function NewworkOrder()
     {
+		add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+			'assets/js/jquery.signaturepad.js'
+        ]);
+
+        $this->page_data['page']->title = 'New Workorder';
+		$this->page_data['page']->parent = 'Sales';
+
         $this->load->model('AcsProfile_model');
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -3780,7 +3788,8 @@ class Workorder extends MY_Controller
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['lead_source']);
 
-        $this->load->view('workorder/addNewworkOrder', $this->page_data);
+        // $this->load->view('workorder/addNewworkOrder', $this->page_data);
+        $this->load->view('v2/pages/workorder/addNewworkOrder', $this->page_data);
     }
 
     public function addSolarWorkorder()
@@ -4301,7 +4310,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
         //SMS Notification        
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);        
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, 0, $user_id);        
 
         if($this->input->post('payment_method') == 'Cash'){
             $payment_data = array(
@@ -5449,7 +5458,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->update_workorder($update_data);
 
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id);
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, 0, $user_id);
         
 
         if($this->input->post('payment_method') == 'Cash'){
@@ -6974,7 +6983,7 @@ class Workorder extends MY_Controller
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, 0, $user_id);
 
         customerAuditLog(logged('id'), $w_acs, $addQuery, 'Workorder', 'Created workorder #'.$this->input->post('workorder_number'));
 
@@ -7619,7 +7628,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
         //SMS Notification
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, $user_id);
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, 0, $user_id);
 
         $solarItems = array(
             'tor'                 => $this->input->post('tor'),
@@ -8111,7 +8120,7 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
         //SMS Notification        
-        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', 'New', $user_id, $user_id);   
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', 'New', $user_id, 0, $user_id);   
 
         $solarItems = array(
             'firstname'                 => $this->input->post('firstname'),
@@ -8763,7 +8772,7 @@ class Workorder extends MY_Controller
 
         //SMS Notification   
         $smsWo = $this->workorder_model->getById($id);      
-        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, $smsWo->employee_id);        
+        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, 0, $smsWo->employee_id);        
 
         $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id'));
         if( $objWorkOrder ){
@@ -9172,7 +9181,7 @@ class Workorder extends MY_Controller
 
         //SMS Notification      
         $smsWo = $this->workorder_model->getById($id);          
-        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, $smsWo->employee_id);
+        createCronAutoSmsNotification($company_id, $smsWo->id, 'workorder', $this->input->post('status'), $smsWo->employee_id, 0, $smsWo->employee_id);
 
 
         $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id'));

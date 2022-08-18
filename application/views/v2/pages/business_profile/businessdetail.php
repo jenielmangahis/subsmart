@@ -78,9 +78,9 @@
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block">Business Phone <span class="nsm-text-error">*</span></label>
-                                                <label class="content-subtitle text-muted mb-2">We'll send you text/sms notifications to this number.</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">Business Phone <span class="nsm-text-error">*</span></label>
                                                 <input type="text" name="business_phone" id="business_phone" class="nsm-field form-control" autocomplete="off" value="<?php echo $profiledata->business_phone ?>" required/>
+                                                <label class="content-subtitle text-muted">We'll send you text/sms notifications to this number.</label>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Suite/Unit</label>
