@@ -218,7 +218,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-chart'></i> Estimates
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == 'Workorder' || $page->title == 'Workorder Settings' || $page->title == 'Workorder Checklist') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Workorder' || $page->title == 'Workorder Settings' || $page->title == 'Workorder Checklist' || $page->title == 'New Workorder' || $page->title == 'Solar Stimulus Data Control / 2022 - 2024') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("workorder") ?>">
                                 <i class='bx bx-fw bx-task'></i> Work Orders

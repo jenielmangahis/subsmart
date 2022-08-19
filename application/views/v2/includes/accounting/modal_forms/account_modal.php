@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="account-modal-label">Accounts</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                <button type="button" class="close-account-modal" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <?php $action = isset($account) ? '/accounting/chart-of-accounts/update/'.$account->id : '/accounting/chart-of-accounts/add'; ?>
             <form action="<?=$action?>" method="post" class="form-validate" novalidate="novalidate">
@@ -64,7 +64,7 @@
                         <div class="mt-3 d-none">
                             <label for="time_date">Date</label>
                             <div class="nsm-field-group calendar">
-                                <input type="text" name="time_date" id="time_date" class="nsm-field form-control datepicker" onchange="showBalance(this)">
+                                <input type="text" name="time_date" id="time_date" class="nsm-field form-control date" onchange="showBalance(this)">
                             </div>
                         </div>
 

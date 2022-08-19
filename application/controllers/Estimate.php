@@ -237,7 +237,12 @@ class Estimate extends MY_Controller
                 $gtotal     = $this->input->post('total');
 
                 $i = 0;
-                foreach($a as $row){                    
+                $a = is_array($a) ? $a : [];
+                foreach($a as $row){    
+                    if (empty($a[$i])) {
+                        continue;
+                    }
+    
                     $data['items_id'] = $a[$i];
                     $data['qty']   = $quantity[$i];
                     $data['cost']  = $price[$i];
@@ -1268,7 +1273,12 @@ class Estimate extends MY_Controller
                 $gtotal     = $this->input->post('total');
 
                 $i = 0;
+                $a = is_array($a) ? $a : [];
                 foreach($a as $row){
+                    if (empty($a[$i])) {
+                        continue;
+                    }
+
                     $data['items_id'] = $a[$i];
                     $data['qty'] = $quantity[$i];
                     $data['cost'] = $price[$i];
@@ -1370,6 +1380,7 @@ class Estimate extends MY_Controller
                 $total      = $this->input->post('total');
 
                 $i = 0;
+                $a = is_array($a) ? $a : [];
                 foreach($a as $row){
                     if (empty($a[$i])) {
                         continue;
@@ -1398,6 +1409,7 @@ class Estimate extends MY_Controller
                 $total2      = $this->input->post('total2');
 
                 $i2 = 0;
+                $a2 = is_array($a2) ? $a2 : [];
                 foreach($a2 as $row2){
                     if (empty($a2[$i2])) {
                         continue;
@@ -1508,6 +1520,7 @@ class Estimate extends MY_Controller
             $total      = $this->input->post('total');
 
             $i = 0;
+            $a = is_array($a) ? $a : [];
             foreach($a as $row){
                 if (empty($a[$i])) {
                     continue;
@@ -1536,6 +1549,7 @@ class Estimate extends MY_Controller
             $total2      = $this->input->post('total2');
 
             $i2 = 0;
+            $a2 = is_array($a2) ? $a2 : [];
             foreach($a2 as $row2){
                 if (empty($a2[$i2])) {
                     continue;

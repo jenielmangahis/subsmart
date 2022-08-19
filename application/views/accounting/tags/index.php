@@ -101,7 +101,7 @@
                         </tr>
                         <?php if($tag['type'] === 'group') : ?>
                         <?php foreach($tag['tags'] as $groupTag) : ?>
-                        <tr class="collapse collapse-<?=$index?> bg-light">
+                        <tr class="collapse collapse-<?=$index?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox">

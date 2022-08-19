@@ -422,11 +422,21 @@ class Chart_of_accounts extends MY_Controller {
             break;
         }
 
+        $name = $post['name'];
+
+        do {
+            $nameExists = $this->chart_of_accounts_model->get_by_name($name);
+
+            if(!empty($nameExists)) {
+                $name = $post['name'].'-'.count($nameExists);
+            }
+        } while(!empty($nameExists));
+
         $data = [
             'company_id' => logged('company_id'),
             'account_id' => $post['account_type'],
             'acc_detail_id' => $post['detail_type'],
-            'name' => $post['name'],
+            'name' => $name,
             'description' => $post['description'],
             'parent_acc_id' => $post['sub_account_type'],
             'time' => $post['choose_time'],
@@ -435,7 +445,6 @@ class Chart_of_accounts extends MY_Controller {
         ];
 
         $account = $this->chart_of_accounts_model->saverecords($data);
-        $name = $data['name'];
 
         if($account > 0) {
             $this->session->set_flashdata('success', "$name created successfully!");

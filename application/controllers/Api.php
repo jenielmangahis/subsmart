@@ -355,10 +355,20 @@ class Api extends MYF_Controller
 
     public function create_auto_sms_notification()
     {
-        $data  = $this->input->post();
-        $is_success = createCronAutoSmsNotification($data['company_id'], $data['object_id'], $data['module_name'], $data['status'], $data['user_id'], $data['assigned_user_id'], $data['agent_id']);
+        $is_success = 0;
+        $msg = 'Empty POST data';
 
-        $result = ['is_success' => $is_success];
+        $data  = $this->input->post();
+        if( $data['company_id'] > 0 ){
+            $is_success = createCronAutoSmsNotification($data['company_id'], $data['object_id'], $data['module_name'], $data['status'], $data['user_id'], $data['assigned_user_id'], $data['agent_id']);
+            if( $is_success == 1 ){
+                $msg = '';
+            }else{
+                $msg = 'Cannot find auto sms setting';
+            }
+        }
+        
+        $result = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($result);
         
         exit;   

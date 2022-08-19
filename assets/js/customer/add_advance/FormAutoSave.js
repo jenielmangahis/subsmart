@@ -42,6 +42,7 @@ export class FormAutoSave {
   }
 
   setInputListener($input) {
+    // if (!this.$form.checkValidity()) return;
     if (!$input.name || !$input.name.length) return;
 
     if (
