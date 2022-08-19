@@ -49,6 +49,7 @@ class Tags extends MY_Controller {
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
+            "assets/js/accounting/modal-forms1.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
@@ -309,12 +310,13 @@ class Tags extends MY_Controller {
 
         $new_data = array(
             'name' => $this->input->post('tag_name'),
+            'group_tag_id' => isset($group_id) && $group_id ? $group_id : null,
             'company_id' => $company_id,
             'status' => 1,
             'created_at' => date("Y-m-d H:i:s"),
         );
         
-        if (isset($group_id) && $group_id) $new_data['group_tag_id'] = $group_id;
+        // if (isset($group_id) && $group_id) $new_data['group_tag_id'] = $group_id;
 
 
         $tags = $this->tags_model->add($new_data);

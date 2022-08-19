@@ -411,98 +411,139 @@ class Accounting_modals extends MY_Controller
 
     public function load_job_tags()
     {
-        $postData = json_decode(file_get_contents('php://input'), true);
+        $search = $this->input->get('search');
+        $getTags = $this->tags_model->getTags();
 
-        $tags = $this->tags_model->getTags();
-
-        $data = [];
-        $search = $postData['columns'][0]['search']['value'];
-
-        foreach ($tags as $tag) {
-            if ($search !== "") {
-                if (stripos($tag['name'], $search) !== false) {
-                    if ($tag['type'] === 'group-tag') {
-                        $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
-
-                        if ($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
-                            $data[] = [
-                                'id' => $tags[$tag['parentIndex']]['id'],
-                                'tag_name' => $tags[$tag['parentIndex']]['name'],
-                                'type' => $tags[$tag['parentIndex']]['type'],
-                                'parentIndex' => $tags[$tag['parentIndex']]['type'] === 'group-tag' ? $tags[$tag['parentIndex']]['parentIndex'] : null,
-                                'tags' => $tags[$tag['parentIndex']]['type'] === 'group' ? $tags[$tag['parentIndex']]['tags'] : null
-                            ];
-                        }
-
-                        $idExists = array_search($tag['id'], array_column($data, 'id'));
-
-                        if ($idExists === false || $idExists !== false && $data[$idExists]['type'] !== 'group-tag') {
-                            $groupIndex = array_key_last($data);
-                            $data[] = [
-                                'id' => $tag['id'],
-                                'tag_name' => $tag['name'],
-                                'type' => $tag['type'],
-                                'group_tag_id' => $tag['group_tag_id'],
-                                'parentIndex' => $groupIndex,
-                                'tags' => null
-                            ];
-                        }
-                    } elseif ($tag['type'] === 'group') {
-                        $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
-
-                        if ($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
-                            $data[] = [
-                                'id' => $tag['id'],
-                                'tag_name' => $tag['name'],
-                                'type' => $tag['type'],
-                                'parentIndex' => null,
-                                'tags' => $tag['tags']
-                            ];
-
-                            $parentIndex = array_key_last($data);
-                            foreach ($tag['tags'] as $groupTag) {
-                                $data[] = [
-                                    'id' => $groupTag['id'],
-                                    'tag_name' => $groupTag['name'],
-                                    'type' => 'group-tag',
-                                    'group_tag_id' => $tag['group_tag_id'],
-                                    'parentIndex' => $parentIndex,
-                                    'tags' => null
-                                ];
-                            }
-                        }
-                    } else {
-                        $data[] = [
+        $tags = [];
+        foreach($getTags as $key => $tag) {
+            if($search !== "") {
+                if($tag['type' !== 'group-tag']) {
+                    if (stripos($tag['name'], $search) !== false) {
+                        $tags[] = [
                             'id' => $tag['id'],
-                            'tag_name' => $tag['name'],
+                            'name' => $tag['name'],
+                            'transactions' => '',
                             'type' => $tag['type'],
-                            'group_tag_id' => $tag['group_tag_id'],
-                            'parentIndex' => null,
-                            'tags' => null
+                            'parentIndex' => $tag['parentIndex'],
                         ];
+                    }
+                } else {
+                    if (stripos($tag['name'], $search) !== false) {
+
                     }
                 }
             } else {
-                $data[] = [
-                    'id' => $tag['id'],
-                    'tag_name' => $tag['name'],
-                    'type' => $tag['type'],
-                    'group_tag_id' => $tag['group_tag_id'],
-                    'parentIndex' => $tag['type'] === 'group-tag' ? $tag['parentIndex'] : null,
-                    'tags' => $tag['type'] === 'group' ? $tag['tags'] : null
-                ];
+                if($tag['type'] !== 'group-tag') {
+                    $tags[] = [
+                        'id' => $tag['id'],
+                        'name' => $tag['name'],
+                        'transactions' => '',
+                        'type' => $tag['type'],
+                        'parentIndex' => $tag['parentIndex'],
+                    ];
+        
+                    if($tag['type'] === 'group') {
+                        $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                    }
+                }
             }
         }
-
-        $result = [
-            'draw' => $postData['draw'],
-            'recordsTotal' => count($tags),
-            'recordsFiltered' => count($data),
-            'data' => $data
-        ];
-
-        echo json_encode($result);
     }
+
+    // public function load_job_tags()
+    // {
+    //     $postData = json_decode(file_get_contents('php://input'), true);
+
+    //     $tags = $this->tags_model->getTags();
+
+    //     $data = [];
+    //     $search = $postData['columns'][0]['search']['value'];
+
+    //     foreach ($tags as $tag) {
+    //         if ($search !== "") {
+    //             if (stripos($tag['name'], $search) !== false) {
+    //                 if ($tag['type'] === 'group-tag') {
+    //                     $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
+
+    //                     if ($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
+    //                         $data[] = [
+    //                             'id' => $tags[$tag['parentIndex']]['id'],
+    //                             'tag_name' => $tags[$tag['parentIndex']]['name'],
+    //                             'type' => $tags[$tag['parentIndex']]['type'],
+    //                             'parentIndex' => $tags[$tag['parentIndex']]['type'] === 'group-tag' ? $tags[$tag['parentIndex']]['parentIndex'] : null,
+    //                             'tags' => $tags[$tag['parentIndex']]['type'] === 'group' ? $tags[$tag['parentIndex']]['tags'] : null
+    //                         ];
+    //                     }
+
+    //                     $idExists = array_search($tag['id'], array_column($data, 'id'));
+
+    //                     if ($idExists === false || $idExists !== false && $data[$idExists]['type'] !== 'group-tag') {
+    //                         $groupIndex = array_key_last($data);
+    //                         $data[] = [
+    //                             'id' => $tag['id'],
+    //                             'tag_name' => $tag['name'],
+    //                             'type' => $tag['type'],
+    //                             'group_tag_id' => $tag['group_tag_id'],
+    //                             'parentIndex' => $groupIndex,
+    //                             'tags' => null
+    //                         ];
+    //                     }
+    //                 } elseif ($tag['type'] === 'group') {
+    //                     $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
+
+    //                     if ($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
+    //                         $data[] = [
+    //                             'id' => $tag['id'],
+    //                             'tag_name' => $tag['name'],
+    //                             'type' => $tag['type'],
+    //                             'parentIndex' => null,
+    //                             'tags' => $tag['tags']
+    //                         ];
+
+    //                         $parentIndex = array_key_last($data);
+    //                         foreach ($tag['tags'] as $groupTag) {
+    //                             $data[] = [
+    //                                 'id' => $groupTag['id'],
+    //                                 'tag_name' => $groupTag['name'],
+    //                                 'type' => 'group-tag',
+    //                                 'group_tag_id' => $tag['group_tag_id'],
+    //                                 'parentIndex' => $parentIndex,
+    //                                 'tags' => null
+    //                             ];
+    //                         }
+    //                     }
+    //                 } else {
+    //                     $data[] = [
+    //                         'id' => $tag['id'],
+    //                         'tag_name' => $tag['name'],
+    //                         'type' => $tag['type'],
+    //                         'group_tag_id' => $tag['group_tag_id'],
+    //                         'parentIndex' => null,
+    //                         'tags' => null
+    //                     ];
+    //                 }
+    //             }
+    //         } else {
+    //             $data[] = [
+    //                 'id' => $tag['id'],
+    //                 'tag_name' => $tag['name'],
+    //                 'type' => $tag['type'],
+    //                 'group_tag_id' => $tag['group_tag_id'],
+    //                 'parentIndex' => $tag['type'] === 'group-tag' ? $tag['parentIndex'] : null,
+    //                 'tags' => $tag['type'] === 'group' ? $tag['tags'] : null
+    //             ];
+    //         }
+    //     }
+
+    //     $result = [
+    //         'draw' => $postData['draw'],
+    //         'recordsTotal' => count($tags),
+    //         'recordsFiltered' => count($data),
+    //         'data' => $data
+    //     ];
+
+    //     echo json_encode($result);
+    // }
 
     public function submit_job_tag()
     {
@@ -538,17 +579,40 @@ class Accounting_modals extends MY_Controller
 
     public function group_job_tag_form()
     {
-        $this->load->view("accounting/modals/group_tag_form");
+        $this->load->view('v2/includes/accounting/modal_forms/group_tag_form');
+        // $this->load->view("accounting/modals/group_tag_form");
     }
 
     public function job_tag_modal()
     {
-        $this->load->view("accounting/modals/job_tags_modal");
+        $getTags = $this->tags_model->getTags();
+
+        $tags = [];
+        foreach($getTags as $key => $tag) {
+            if($tag['type'] !== 'group-tag') {
+                $tags[] = [
+                    'id' => $tag['id'],
+                    'name' => $tag['name'],
+                    'transactions' => '',
+                    'type' => $tag['type'],
+                    'parentIndex' => $tag['parentIndex'],
+                ];
+    
+                if($tag['type'] === 'group') {
+                    $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                }
+            }
+        }
+
+        $this->page_data['tags'] = $tags;
+        $this->load->view('v2/includes/accounting/modal_forms/job_tags_modal', $this->page_data);
+        // $this->load->view("accounting/modals/job_tags_modal");
     }
 
     public function job_tag_form()
     {
-        $this->load->view("accounting/modals/job_tag_modal_form");
+        $this->load->view('v2/includes/accounting/modal_forms/job_tag_modal_form');
+        // $this->load->view("accounting/modals/job_tag_modal_form");
     }
 
     public function edit_group_tag_form()
@@ -9703,17 +9767,26 @@ class Accounting_modals extends MY_Controller
             break;
         }
 
+        $name = $post['name'];
+
+        do {
+            $nameExists = $this->chart_of_accounts_model->get_by_name($name);
+
+            if(!empty($nameExists)) {
+                $name = $post['name'].'-'.count($nameExists);
+            }
+        } while(!empty($nameExists));
+
         $data = [
             'company_id' => logged('company_id'),
             'account_id' => $post['account_type'],
             'acc_detail_id' => $post['detail_type'],
-            'name' => $post['name'],
+            'name' => $name,
             'description' => $post['description'],
-            'parent_acc_id' => isset($post['sub_account']) ? $post['parent_account'] : null,
+            'parent_acc_id' => $post['sub_account_type'],
             'time' => $post['choose_time'],
-            'balance' => floatval(str_replace(',', '', $post['balance'])),
-            'time_date' => $date,
-            'active' => 1
+            'balance' => $post['balance'],
+            'time_date' => $date
         ];
 
         $accountId = $this->chart_of_accounts_model->saverecords($data);

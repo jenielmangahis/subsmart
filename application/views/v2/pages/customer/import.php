@@ -66,8 +66,14 @@
                                     <p>Map Headings</p>
                                     <?php $fieldsValue = $import_settings->value ? explode(',', $import_settings->value) : array() ; ?>
                                     <?php $headers = $importFieldsList;?>
-                                    <?php foreach ($headers as $header): ?>
-                                        <?php if (in_array($header->id, $fieldsValue)) : ?>
+                                    <?php 
+                                            $i = 0;
+
+                                    foreach ($headers as $header): 
+                                            ?>
+                                        
+                                        <?php if (in_array($header->id, $fieldsValue)) : 
+                                            ?>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -76,14 +82,17 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <select name="headers[]" class="form-control headersSelector">
+                                                        <select name="headers[]" class="form-control headersSelector" onchange="test()" id="headersSelector<?= $i ?>">
                                                             <option value="">Select Heading</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                         <?php endif; ?>
-                                    <?php endforeach; ?>
+                                    <?php  
+                                    $i++;
+                                endforeach; ?>
+                                    <div class="result"></div>
                                     <br>
                                     <button type="button" class="btn btn-primary btn-sm step step01" ><span class="fa fa-arrow-left"></span> Back</button>
                                     <button type="button" class="btn btn-primary btn-sm step step03" ><span class="fa fa-arrow-right"></span> Next</button>
@@ -125,6 +134,7 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+    
     $(".step").click(function () {
         $(this).addClass("active").prevAll().addClass("active");
         $(this).nextAll().removeClass("active");
@@ -144,11 +154,15 @@
         $("#line-progress").css("width", "100%");
         $(".step3").addClass("active").siblings().removeClass("active");
     });
-
+    
+//     $('#headersSelector').change(function() {
+//   alert('yawa');
+// });
     const $overlay = document.getElementById('overlay');
     var customerData = csvHeaders = [];
     $(document).ready(function() {
-
+        
+        
         $("#importCustomer").click(function(e) {
             // prepare form data to be posted
             
@@ -207,6 +221,8 @@
                 if(!success){
                     sweetAlert('Sorry!','error',message);
                 }else{
+                    // $('.headersSelector').attr("onchange", "test()");
+                    
                     $.each(headers,function(i,o){
                         $('.headersSelector').append(
                             '<option value="'+i+'">'+o+'</option>'
@@ -215,7 +231,10 @@
                             '<th><strong>'+o+'</strong></th>'
                         );
                     });
-
+                    // $('.headersSelector').on('change', function() {
+                    //     var test = $(".headersSelector").val();
+                    //     alert( test );
+                    // });
                     csvHeaders = headers;
                     customerData = data; // save customer array data
 
@@ -238,6 +257,8 @@
             
         });
 
+        
+
         function sweetAlert(title,icon,information,is_reload){
             Swal.fire({
                 title: title,
@@ -256,4 +277,42 @@
             });
         }
     });
+    // function test(){
+    //     var t = document.getElementById('headersSelector');
+    //     var e = t.options[t.selectedIndex].text;
+    //     alert(e);
+    //     //$("#headersSelector option:selected").remove();
+
+    // }
+        function test(){
+            //var t = $(".headersSelector");
+            // $("#headersSelector option:selected").remove();
+            
+            var selectedHeader = [];
+            var head = [];
+            $('select[name="headers[]"]').each(function() {
+                selectedHeader.push(this.value);
+            });
+
+            var ar = selectedHeader.length;
+            for(var x=0; x<ar; x++){
+                head.push(x);
+            }
+            console.log(head);
+            var arHead = head.length;
+
+            for(var x=0; x<ar; x++){
+                if(selectedHeader[x] != ""){
+                    var inc = x+1;
+                    document.getElementById('headersSelector'+x).value = selectedHeader[x];
+                    var text = "headersSelector"+x+"";
+                    for(var i=0; i<arHead; i++){
+                        var text1 = "headersSelector"+i+"";
+                        if(text != text1){
+                            $("#headersSelector"+i+" option[value='"+selectedHeader[x]+"'").remove();
+                        }
+                    }
+                }
+            }
+        }
 </script>

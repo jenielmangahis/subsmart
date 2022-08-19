@@ -645,11 +645,11 @@ $(function() {
 
             $('div#modal-container').append(res);
             tagsListModal = $('#tags-modal div.modal-dialog div#tags-list').html();
-            if (!$.fn.dataTable.isDataTable('#tags-table')) {
-                loadTagsDataTable();
-            } else {
-                $('#tags-table').DataTable().ajax.reload(null, true);
-            }
+            // if (!$.fn.dataTable.isDataTable('#tags-table')) {
+            //     loadTagsDataTable();
+            // } else {
+            //     $('#tags-table').DataTable().ajax.reload(null, true);
+            // }
             $(modal_element).modal('show');
         });
     });
@@ -751,18 +751,18 @@ $(function() {
                         },
                         templateResult: formatResult,
                         templateSelection: optionSelect,
-                        dropdownParent: $('#modal-container .modal')
+                        dropdownParent: $('#modal-container #modal-form .modal')
                     });
                 } else {
                     var options = $(this).find('option');
                     if (options.length > 10) {
                         $(this).select2({
-                            dropdownParent: $('#modal-container .modal')
+                            dropdownParent: $('#modal-container #modal-form .modal')
                         });
                     } else {
                         $(this).select2({
                             minimumResultsForSearch: -1,
-                            dropdownParent: $('#modal-container .modal')
+                            dropdownParent: $('#modal-container #modal-form .modal')
                         });
                     }
                 }
@@ -934,11 +934,26 @@ $(function() {
         computeTransactionTotal();
     });
 
-    $(document).on('keyup', '#search-tag', function() {
-        $('#tags-table').DataTable().ajax.reload(null, true);
+    // $(document).on('keyup', '#tags-modal #search-tag', function() {
+    //     var val = $(this).val();
+    //     $.get('/accounting/load-job-tags?search='+val, function(res) {
+
+    //     });
+    // });
+
+    $(document).on('click', '#tags-modal #tags-table tr[data-toggle="collapse"]', function(e) {
+        var target = e.currentTarget.dataset.target;
+
+        $(target).collapse('toggle');
+
+        if($(this).find('td:first-child').find('i').hasClass('bx-chevron-down')) {
+            $(this).find('td:first-child').find('i').removeClass('bx-chevron-down').addClass('bx-chevron-up');
+        } else {
+            $(this).find('td:first-child').find('i').removeClass('bx-chevron-up').addClass('bx-chevron-down');
+        }
     });
 
-    $(document).on('click', 'div#tags-modal table#tags-table tbody tr td a.edit', function(e) {
+    $(document).on('click', 'div#tags-modal table#tags-table tbody tr td .edit', function(e) {
         e.preventDefault();
 
         if (e.currentTarget.dataset.type === 'group') {
@@ -1553,7 +1568,7 @@ $(function() {
         var data = new FormData(document.getElementById(form.attr('id')));
 
         $.ajax({
-            url: '/accounting/addTagsGroup',
+            url: '/accounting/tags/add-group-tag',
             data: data,
             type: 'post',
             processData: false,
@@ -1562,15 +1577,20 @@ $(function() {
                 var result = JSON.parse(res);
 
                 form.addClass('hide');
-                form.next().children('tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
-                form.next().removeClass('hide');
+                $('#tags-modal #tags_group tbody').append(`
+                    <tr>
+                        <td><span>${data.get('tags_group_name')}</span></td>
+                        <td><button class="nsm-button float-end">Edit</button></td>
+                    </tr>
+                `);
+                $('#tags-modal #tags_group').removeClass('hide');
                 $('#tags-modal #tags-form').prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
                 form.prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
             }
         });
     });
 
-    $(document).on('click', '#tags-modal table#tags_group tbody a', function() {
+    $(document).on('click', '#tags-modal table#tags_group tbody button', function() {
         if ($('#tags-modal #update-group-form').length === 0) {
             $('#tags-modal #tags-group-form').attr('id', 'update-group-form');
         }
@@ -1616,28 +1636,31 @@ $(function() {
         var data = new FormData(document.getElementById(form.attr('id')));
 
         $.ajax({
-            url: '/accounting/addTags',
+            url: '/accounting/tags/add-tag',
             data: data,
             type: 'post',
             processData: false,
             contentType: false,
             success: function(res) {
                 var result = JSON.parse(res);
-                form.next().children('tbody').append(`
+                $('#tags-modal #group_tags tbody').append(`
                 <tr>
                     <td>
                         <div class="tag-name-cont">
-                            <span>${data.get('tag_name')}</span><a href="#" class="float-right text-info">Edit</a>
+                            <div class="row">
+                                <div class="col-12 col-md-8"><span>${data.get('tag_name')}</span></div>
+                                <div class="col-12 col-md-4"><button class="nsm-button float-end">Edit</button></div>
+                            </div>
                         </div>
                         <form class="hide" id="form-tag-${result.data}">
                             <input type="hidden" name="tag_id" value="${result.data}">
-                            <div class="form-row">
-                                <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-12 col-md-8">
                                     <label for="tag_name">Tag name</label>
-                                    <input type="text" name="update_tag_name" value="${data.get('tag_name')}" class="form-control">
+                                    <input type="text" name="update_tag_name" value="${data.get('tag_name')}" class="form-control nsm-field mb-2">
                                 </div>
-                                <div class="col-md-4 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-success w-100">Save</button>
+                                <div class="col-12 col-md-4">
+                                    <button type="submit" class="nsm-button success float-end">Save</button>
                                 </div>
                             </div>
                         </form>
@@ -1645,7 +1668,7 @@ $(function() {
                 </tr>`);
 
                 $('#tags-modal #tags-form input#tag-name').val('');
-                form.next().removeClass('hide');
+                $('#tags-modal #group_tags').removeClass('hide');
             }
         });
     });
@@ -1788,7 +1811,7 @@ $(function() {
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
-            $.get('/accounting/get-account-balance/' + id, function(res) {
+            $.get('/accounting/get-account-balance/' + val, function(res) {
                 var result = JSON.parse(res);
 
                 $('#creditCardCreditModal span#account-balance').html(result.balance);
@@ -1800,7 +1823,7 @@ $(function() {
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
-            $.get('/accounting/get-account-balance/' + id, function(res) {
+            $.get('/accounting/get-account-balance/' + val, function(res) {
                 var result = JSON.parse(res);
 
                 $('#checkModal span#account-balance').html(result.balance);
@@ -4697,9 +4720,9 @@ $(function() {
         e.preventDefault();
 
         if(dropdownEl !== null) {
-            dropdownEl.val('').trigger('change');
+            dropdownEl.html('').trigger('change');
+            $('#modal-container #modal-form .modal span#account-balance').html('$0.00');
         }
-        $('#account-modal').modal('hide');
     });
 
     $(document).on('click', '#payment-method-modal .close-payment-method', function(e) {
@@ -5418,38 +5441,38 @@ $(function() {
             $.get('/accounting/get-add-customer-details-modal', function(result) {
                 $('#modal-container').append(result);
 
-                // var customerAttachment = new Dropzone(`#customerAttachment`, {
-                //     url: '/accounting/attachments/attach',
-                //     maxFilesize: 20,
-                //     uploadMultiple: true,
-                //     // maxFiles: 1,
-                //     addRemoveLinks: true,
-                //     init: function() {
-                //         this.on("success", function(file, response) {
-                //             var ids = JSON.parse(response)['attachment_ids'];
-                //             for (i in ids) {
-                //                 if ($('#customer-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                //                     $('#modal-container #customer-modal #custAttachment').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                //                 }
+                var customerAttachment = new Dropzone(`#customerAttachment`, {
+                    url: '/accounting/attachments/attach',
+                    maxFilesize: 20,
+                    uploadMultiple: true,
+                    // maxFiles: 1,
+                    addRemoveLinks: true,
+                    init: function() {
+                        this.on("success", function(file, response) {
+                            var ids = JSON.parse(response)['attachment_ids'];
+                            for (i in ids) {
+                                if ($('#customer-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                                    $('#modal-container #customer-modal #custAttachment').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                                }
 
-                //                 custAttIds.push(ids[i]);
-                //             }
-                //             custAttFiles.push(file);
-                //         });
-                //     },
-                //     removedfile: function(file) {
-                //         var ids = custAttIds;
-                //         var index = custAttFiles.map(function(d, index) {
-                //             if (d == file) return index;
-                //         }).filter(isFinite)[0];
+                                custAttIds.push(ids[i]);
+                            }
+                            custAttFiles.push(file);
+                        });
+                    },
+                    removedfile: function(file) {
+                        var ids = custAttIds;
+                        var index = custAttFiles.map(function(d, index) {
+                            if (d == file) return index;
+                        }).filter(isFinite)[0];
 
-                //         $('#modal-container #customer-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                        $('#modal-container #customer-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
-                //         //remove thumbnail
-                //         var previewElement;
-                //         return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-                //     }
-                // });
+                        //remove thumbnail
+                        var previewElement;
+                        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+                    }
+                });
 
                 $('#modal-container #customer-modal select').select2({
                     dropdownParent: $('#modal-container #customer-modal')
@@ -8312,47 +8335,47 @@ const computeTotalHours = () => {
     }
 }
 
-const loadTagsDataTable = () => {
-    $('#tags-table').DataTable({
-        autoWidth: false,
-        searching: false,
-        processing: true,
-        serverSide: true,
-        lengthChange: false,
-        ordering: false,
-        info: false,
-        ajax: {
-            url: '/accounting/load-job-tags/',
-            dataType: 'json',
-            contentType: 'application/json',
-            type: 'POST',
-            data: function(d) {
-                d.columns[0].search.value = $('input#search-tag').val();
-                return JSON.stringify(d);
-            },
-            pagingType: 'full_numbers',
-        },
-        columns: [
-            {
-                data: 'tag_name',
-                name: 'tag_name',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<span>${rowData.tag_name} ${rowData.type === 'group' ? `(${rowData.tags.length})` : ''}</span><a href="#" class="float-right text-info edit" data-group-tag="${rowData.group_tag_id}" data-type="${rowData.type}" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
+// const loadTagsDataTable = () => {
+//     $('#tags-table').DataTable({
+//         autoWidth: false,
+//         searching: false,
+//         processing: true,
+//         serverSide: true,
+//         lengthChange: false,
+//         ordering: false,
+//         info: false,
+//         ajax: {
+//             url: '/accounting/load-job-tags/',
+//             dataType: 'json',
+//             contentType: 'application/json',
+//             type: 'POST',
+//             data: function(d) {
+//                 d.columns[0].search.value = $('input#search-tag').val();
+//                 return JSON.stringify(d);
+//             },
+//             pagingType: 'full_numbers',
+//         },
+//         columns: [
+//             {
+//                 data: 'tag_name',
+//                 name: 'tag_name',
+//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
+//                     $(td).html(`<span>${rowData.tag_name} ${rowData.type === 'group' ? `(${rowData.tags.length})` : ''}</span><a href="#" class="float-right text-info edit" data-group-tag="${rowData.group_tag_id}" data-type="${rowData.type}" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
 
-                    if(rowData.type === 'group') {
-                        $(td).prepend(`<a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-${row}"><i class="fa fa-chevron-down"></i></a>`);
-                    }
-                }
-            }
-        ],
-        fnCreatedRow: function(nRow, aData, iDataIndex) {
-            if(aData['type'] === 'group-tag') {
-                $(nRow).attr('id', `child-${aData['parentIndex']}`);
-                $(nRow).addClass('collapse bg-light');
-            }
-        }
-    });
-}
+//                     if(rowData.type === 'group') {
+//                         $(td).prepend(`<a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-${row}"><i class="fa fa-chevron-down"></i></a>`);
+//                     }
+//                 }
+//             }
+//         ],
+//         fnCreatedRow: function(nRow, aData, iDataIndex) {
+//             if(aData['type'] === 'group-tag') {
+//                 $(nRow).attr('id', `child-${aData['parentIndex']}`);
+//                 $(nRow).addClass('collapse bg-light');
+//             }
+//         }
+//     });
+// }
 
 const editGroupTagForm = (data) => {
     $.get('/accounting/edit-group-tag-form', function(res) {
@@ -8376,7 +8399,7 @@ const getTagForm = (data = {}, method) => {
         $('#tags-modal div.modal-dialog div#tags-list').remove();
 
         if(method === 'create') {
-            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create_tag_form" onsubmit="submitTagsForm(this, 'create', event)"></form>`);
+            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create-tag-form" onsubmit="submitTagsForm(this, 'create', event)"></form>`);
         } else {
             $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="update-tag-form" onsubmit="submitTagsForm(this, 'update', event)"></form>`);
         }
@@ -8420,7 +8443,7 @@ const showTagsList = (el) => {
 
     $('#tags-modal div.modal-dialog').append('<div class="modal-content" id="tags-list"></div>');
     $('#tags-modal div.modal-dialog div#tags-list').append(tagsListModal);
-    loadTagsDataTable();
+    // loadTagsDataTable();
 }
 
 const submitTagsForm = (el, method = "", e) => {
@@ -8430,7 +8453,7 @@ const submitTagsForm = (el, method = "", e) => {
     data.append('method', method);
 
     $.ajax({
-        url: '/accounting/addTags',
+        url: '/accounting/tags/add-tag',
         data: data,
         type: 'post',
         processData: false,
@@ -8440,7 +8463,7 @@ const submitTagsForm = (el, method = "", e) => {
 
             toast(res.success, res.message);
 
-            showTagsList($(el).children().children('.modal-header').children('a'));
+            showTagsList($(el).children().children('.modal-header').children('button'));
         }
     });
 }
@@ -10853,7 +10876,7 @@ const initAccountModal = () => {
     var switchEl = $('#modal-container #account-modal #check_sub')[0];
     var switchery = new Switchery(switchEl, { size: 'small' });
 
-    $('#modal-container #account-modal .datepicker').datepicker({
+    $('#modal-container #account-modal .date').datepicker({
         format: 'mm/dd/yyyy',
         orientation: 'bottom',
         autoclose: true
@@ -10864,6 +10887,8 @@ const initAccountModal = () => {
         $('#modal-container #account-modal form').removeAttr('action');
         $('#modal-container #account-modal form').removeAttr('method');
         $('#modal-container #account-modal form').removeAttr('novalidate');
+        $('#modal-container #account-modal').attr('data-bs-backdrop', 'static');
+        $('#modal-container #account-modal').attr('data-bs-keyboard', 'false');
         // $('#modal-container #account-modal').modal({
         //     backdrop: 'static',
         //     keyboard: false

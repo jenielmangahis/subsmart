@@ -41,6 +41,14 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function get_by_name($name)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('name', $name);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
+
 	public function getByAccAndDetailType($status, $accTypeId, $accDetailId)
 	{
 		$this->db->where('company_id', logged('company_id'));

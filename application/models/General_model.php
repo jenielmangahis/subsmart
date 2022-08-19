@@ -90,6 +90,10 @@ class General_model extends MY_Model {
         }
     }
 
+    public function get_business_name($val){
+        
+    }
+
     public function get_column_sum($params = array())
     {
 

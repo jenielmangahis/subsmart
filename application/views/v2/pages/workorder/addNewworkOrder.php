@@ -1,6 +1,9 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 
+<!-- Script for autosaving form -->
+<!-- <script src="<?=base_url("assets/js/workorder/autosave.js")?>"></script> -->
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
@@ -33,7 +36,7 @@
                                                 <?php echo $headers->content; ?>
                                             </label>
                                         </div>
-                                        <div class="nsm-card-controls">
+                                        <div class="nsm-card-controls align-items-start">
                                             <a role="button" class="nsm-button btn-sm m-0 me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#update_header_modal">
                                                 Update Header
                                             </a>
@@ -771,6 +774,7 @@
     </div>
 </div>
 
+<script src="<?=base_url("assets/js/workorder/autosave.js")?>"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         initPopover();
@@ -1844,7 +1848,7 @@
                 success: function(result) {
                     Swal.fire({
                         title: 'Save Successful!',
-                        text: "New Customer has been added successfully.",
+                        text: "Workorder has been saved successfully.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
