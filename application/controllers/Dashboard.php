@@ -121,7 +121,7 @@ class Dashboard extends Widgets {
         $this->load->view('v2/widgets/add_widgets_details', $this->page_data);
     }
 
-    public function index() {
+    public function index() {        
         // load necessary model and functions
         $this->load->model('widgets_model');
         $this->load->helper('functions');
@@ -469,8 +469,6 @@ class Dashboard extends Widgets {
 
         redirect('dashboard');
     }
-   
-
 }
 
 /* End of file Dashboard.php */

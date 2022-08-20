@@ -10,6 +10,9 @@ endif;
             <span>Bank Accounts</span>
         </div>
         <div class="nsm-card-controls">
+            <a href="javascript:void(0);" role="button" class="nsm-button btn-sm m-0 me-2 btn-connect-plaid" id="table-modal">
+                Connect Bank Account
+            </a>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -40,6 +43,7 @@ endif;
                     </div>
                 </div>
             <?php endforeach; ?>
+            <div class="plaid-accounts"></div>
             <!-- <div class="widget-item">
                 <div class="nsm-list-icon">
                     <i class='bx bx-wallet'></i>
@@ -72,6 +76,25 @@ endif;
             </div> -->
         </div>
     </div>
+
+    <div class="modal fade nsm-modal fade" id="modalPlaidConnectBankAccount" aria-labelledby="modalEditAutoSmsNotificationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title" id="new_feed_modal_label">Edit Auto SMS Notification Setting</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <form action="" id="frm-edit-auto-sms-notification">
+                <div class="modal-body modal-edit-auto-sms-container"></div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="nsm-button primary btn-update-auto-sms">Save</button>
+                </div>
+                </form>                      
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <?php
@@ -79,3 +102,84 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '</div>';
 endif;
 ?>
+<script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+<script>
+//load_plaid_accounts();
+/*function load_plaid_accounts(){
+    var url = base_url + '_load_connected_bank_accounts';
+    $('.plaid-accounts').html('<span class="bx bx-loader bx-spin"></span>');
+    setTimeout(function () {
+      $.ajax({
+         type: "POST",
+         url: url,
+         success: function(o)
+         {          
+            $('.plaid-accounts').html(o);
+         }
+      });
+    }, 800);
+}*/
+$(document).on('click', '.btn-connect-plaid', function(){
+    var url = base_url + '_launch_plaid_accounts';
+    $.ajax({
+         type: "POST",
+         url: url,
+         dataType:'json',
+         success: function(o)
+         {          
+            if( o.is_valid == 1 ){
+                var linkHandler = Plaid.create({
+                    env: '<?= PLAID_API_ENV ?>',
+                    clientName: o.client_name,
+                    token: o.plaid_token,
+                    product: ['auth','transactions'],
+                    selectAccount: true,
+                    onSuccess: function(public_token, metadata) {
+                        if( public_token != '' ){
+                            var url = base_url + '_create_plaid_account';
+                            var account_id = metadata.account.id;
+                            var ins_id     = metadata.institution.institution_id;
+                            var ins_name   = metadata.institution.name;
+                            var meta_data   = JSON.stringify(metadata);
+                            console.log('metadata: ' + JSON.stringify(metadata));
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                data: {public_token:public_token,meta_data:meta_data},
+                                dataType:'json',
+                                success: function(result) {
+                                    if( result.is_success == 1 ){
+                                        //load bank details
+                                        //load_plaid_accounts();
+                                    }else{
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error!',
+                                            html: result.msg
+                                        });
+                                    }
+                                }
+                            }); 
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: 'Cannot connect to Plaid. Please try again later.'
+                            });
+                        }                        
+                    },
+                });
+                linkHandler.open();
+            }else{
+                var api_connect_url = base_url + 'tools/api_connectors';
+                var html_message = o.msg + "<br />To check your Plaid API credentials click <a href='"+api_connect_url+"'>API Connectors</a>";
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: html_message
+                });
+            }            
+         }
+    });
+});
+</script>

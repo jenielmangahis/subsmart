@@ -716,7 +716,6 @@ class Tools extends MY_Controller {
 
         //Check if plaid account is valid
         $plaidToken = linkTokenCreate($post['client_id'], $post['client_secret'], $post['client_user_id'], $post['client_name']);
-
         if( $plaid ){            
             if( $plaidToken['is_valid'] == true ){
                 $plaid_data = [
