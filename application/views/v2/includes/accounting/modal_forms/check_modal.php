@@ -22,7 +22,7 @@
                                         <tbody>
                                             <?php if(!empty($recent_checks)) : ?>
                                                 <?php foreach($recent_checks as $recentCheck) : ?>
-                                                    <tr data-id="<?=$recentCheck['id']?>">
+                                                    <tr data-id="<?=$recentCheck['id']?>" onclick="viewTransaction(this, event)">
                                                         <td><?=$recentCheck['type']?></td>
                                                         <td><?=$recentCheck['date']?></td>
                                                         <td><?=$recentCheck['amount']?></td>
@@ -30,11 +30,13 @@
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else : ?>
-                                                <td>
-                                                    <div class="nsm-empty">
-                                                        <span>Once you enter some transactions, they’ll appear here.</span>
-                                                    </div>
-                                                </td>
+                                                <tr class="empty-table">
+                                                    <td>
+                                                        <div class="nsm-empty">
+                                                            <span>Once you enter some transactions, they’ll appear here.</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             <?php endif; ?>
                                         </tbody>
                                     </table>
@@ -209,7 +211,7 @@
                                 <div class="col-12 col-md-6 grid-mb">
                                     <div id="label">
                                         <label for="tags">Tags</label>
-                                        <span class="float-end"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
+                                        <span class="float-end"><a href="#" class="text-decoration-none" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                     </div>
                                     <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                         <?php if(isset($tags) && count($tags) > 0) : ?>
@@ -432,11 +434,11 @@
                                     <div class="accordion mb-2">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
-                                                <button class="accordion-button content-title collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-item-details" aria-expanded="false" aria-controls="collapse-item-details">
+                                                <button class="accordion-button content-title <?=isset($items) && count($items) > 0 ? '' : ' collapsed'?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-item-details" aria-expanded="false" aria-controls="collapse-item-details">
                                                     Item details
                                                 </button>
                                             </h2>
-                                            <div id="collapse-item-details" class="accordion-collapse collapse">
+                                            <div id="collapse-item-details" class="accordion-collapse collapse <?=isset($items) && count($items) > 0 ? 'show' : ''?>">
                                                 <div class="accordion-body">
                                                     <table class="nsm-table" id="item-details-table">
                                                         <thead>
@@ -554,7 +556,7 @@
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="check-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="check-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>

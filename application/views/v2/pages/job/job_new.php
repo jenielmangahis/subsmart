@@ -12,6 +12,10 @@
 <!-- add css for this page -->
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
 
+<!-- Script for autosaving form -->
+<script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
+
+
 <style>
     .nsm-table {
         display: none;

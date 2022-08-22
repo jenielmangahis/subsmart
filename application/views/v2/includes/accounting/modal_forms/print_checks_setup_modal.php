@@ -254,4 +254,4 @@
 </form>
 </div>
 
-<script src="<?php echo $url->assets ?>plugins/jqueryUI/jquery-ui.min.js"></script>
+<script src="<?php echo $url->assets ?>plugins/jqueryUi/jquery-ui.min.js"></script>
