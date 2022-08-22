@@ -417,8 +417,8 @@ class Accounting_modals extends MY_Controller
         $tags = [];
         foreach($getTags as $key => $tag) {
             if($search !== "") {
-                if($tag['type' !== 'group-tag']) {
-                    if (stripos($tag['name'], $search) !== false) {
+                if (stripos($tag['name'], $search) !== false) {
+                    if($tag['type'] !== 'group-tag') {
                         $tags[] = [
                             'id' => $tag['id'],
                             'name' => $tag['name'],
@@ -426,10 +426,41 @@ class Accounting_modals extends MY_Controller
                             'type' => $tag['type'],
                             'parentIndex' => $tag['parentIndex'],
                         ];
-                    }
-                } else {
-                    if (stripos($tag['name'], $search) !== false) {
 
+                        if($tag['type'] === 'group') {
+                            $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                        }
+                    } else {
+                        if (stripos($tag['name'], $search) !== false) {
+                            $parentKey = array_key_last(array_filter($tags, function($value, $key) use ($tag) {
+                                return ($tag['group_tag_id'] === $value['id'] && $value['type'] === 'group');
+                            }, ARRAY_FILTER_USE_BOTH));
+
+                            if(!is_null($parentKey)) {
+                                $keyExists = array_key_last(array_filter($tags[$parentKey]['tags'], function($value, $key) use ($tag) {
+                                    return ($tag['id'] === $value['id'] && $value['type'] === 'group-tag');
+                                }, ARRAY_FILTER_USE_BOTH));
+
+                                if(!is_null($keyExists)) {
+                                    $tags[$parentKey]['tags'][] = $tag;
+                                }
+                            } else {
+                                $queryParentKey = array_key_last(array_filter($getTags, function($value, $key) use ($tag) {
+                                    return ($tag['group_tag_id'] === $value['id'] && $value['type'] === 'group');
+                                }, ARRAY_FILTER_USE_BOTH));
+
+                                $tags[] = [
+                                    'id' => $getTags[$queryParentKey]['id'],
+                                    'name' => $getTags[$queryParentKey]['name'],
+                                    'transactions' => '',
+                                    'type' => $getTags[$queryParentKey]['type'],
+                                    'parentIndex' => $getTags[$queryParentKey]['parentIndex'],
+                                    'tags' => [
+                                        $tag
+                                    ]
+                                ];
+                            }
+                        }
                     }
                 }
             } else {
@@ -448,6 +479,8 @@ class Accounting_modals extends MY_Controller
                 }
             }
         }
+
+        echo json_encode($tags);
     }
 
     // public function load_job_tags()
@@ -550,7 +583,8 @@ class Accounting_modals extends MY_Controller
         $data = [
             'name' => $this->input->post('tag_name'),
             'group_tag_id' => $this->input->post('group_id') !== "" ? $this->input->post('group_id') : null,
-            'company_id' => logged('company_id')
+            'company_id' => logged('company_id'),
+            'status' => 1
         ];
 
         try {
@@ -611,13 +645,14 @@ class Accounting_modals extends MY_Controller
 
     public function job_tag_form()
     {
-        $this->load->view('v2/includes/accounting/modal_forms/job_tag_modal_form');
+        $this->load->view('v2/includes/accounting/modal_forms/new_job_tag_modal_form');
         // $this->load->view("accounting/modals/job_tag_modal_form");
     }
 
     public function edit_group_tag_form()
     {
-        $this->load->view("accounting/modals/edit_group_form");
+        $this->load->view('v2/includes/accounting/modal_forms/edit_group_tag_form');
+        // $this->load->view("accounting/modals/edit_group_form");
     }
 
     public function get_job_tags()
@@ -10570,7 +10605,8 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view("accounting/modals/check_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/check_modal", $this->page_data);
+        // $this->load->view("accounting/modals/check_modal", $this->page_data);
     }
 
     private function view_bill($billId)

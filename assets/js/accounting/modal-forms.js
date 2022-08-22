@@ -934,12 +934,82 @@ $(function() {
         computeTransactionTotal();
     });
 
-    // $(document).on('keyup', '#tags-modal #search-tag', function() {
-    //     var val = $(this).val();
-    //     $.get('/accounting/load-job-tags?search='+val, function(res) {
+    $(document).on('submit', '#tags-modal #create-tag-form, #tags-modal #update-tag-form', function(e) {
+        e.preventDefault();
+    
+        var data = new FormData(this);
+        data.append('method', $(this).attr('id').includes('create') ? 'create' : 'update');
 
-    //     });
-    // });
+        $.ajax({
+            url: '/accounting/submit-job-tag-form',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+    
+                $('#tags-modal #back-to-tags-list').trigger('click');
+                $('#tags-modal #search-tag').trigger('keyup');
+            }
+        });
+    });
+
+    $(document).on('click', '#tags-modal #back-to-tags-list', function() {
+        $(this).parent().parent().parent().remove();
+
+        $('#tags-modal div.modal-dialog').append('<div class="modal-content" id="tags-list"></div>');
+        $('#tags-modal div.modal-dialog div#tags-list').append(tagsListModal);
+
+        $('#tags-modal #search-tag').trigger('change');
+    });
+
+    $(document).on('keyup', '#tags-modal #search-tag', function() {
+        var val = $(this).val();
+        $.get('/accounting/load-job-tags?search='+val, function(res) {
+            var tags = JSON.parse(res);
+
+            $('#tags-modal #tags-table tbody tr').remove();
+            if(tags.length > 0) {
+                $.each(tags, function(index, tag) {
+                    $('#tags-modal #tags-table tbody').append(`
+                    <tr ${tag.type === 'group' ? 'data-toggle="collapse" data-target=".collapse-'+index+'"' : ''}>
+                        <td>
+                            <span>
+                                ${tag.type === 'group' ? '<i class="bx bx-fw bx-chevron-down"></i>' : ''}
+                                ${tag.name} ${tag['type'] === 'group' ? '('+tag.tags.length+')' : ''}
+                            </span>
+                        </td>
+                        <td><button class="nsm-button edit float-end" data-group-tag="${tag.group_tag_id}" data-type="${tag.type}" data-id="${tag.id}" data-name="${tag.name}">Edit</button></td>
+                    </tr>
+                    `);
+    
+                    if(tag.type === 'group') {
+                        $.each(tag.tags, function(key, groupTag) {
+                            $('#tags-modal #tags-table tbody').append(`
+                            <tr class="collapse collapse-${index}">
+                                <td>
+                                    <span>&emsp;${groupTag.name}</span>
+                                </td>
+                                <td><button class="nsm-button edit float-end" data-group-tag="${groupTag.group_tag_id}" data-type="group-tag" data-id="${groupTag.id}" data-name="${groupTag.name}">Edit</button></td>
+                            </tr>
+                            `);
+                        });
+                    }
+                });
+            } else {
+                $('#tags-modal #tags-table tbody').append(`
+                <tr>
+                    <td>
+                        <div class="nsm-empty">
+                            <span>No results found.</span>
+                        </div>
+                    </td>
+                </tr>
+                `)
+            }
+        });
+    });
 
     $(document).on('click', '#tags-modal #tags-table tr[data-toggle="collapse"]', function(e) {
         var target = e.currentTarget.dataset.target;
@@ -1287,69 +1357,79 @@ $(function() {
 
     $(document).on('change', 'div.modal select#recurringType', function() {
         var modalId = $('form#modal-form, form#update-recurring-form').children('.modal').attr('id');
-        if ($(this).val() === 'reminder') {
-            if ($(this).parent().next().hasClass('col-md-3')) {
-                $(this).parent().next().removeClass('col-md-3');
-                $(this).parent().next().addClass('col-md-4');
-            }
 
-            $(this).parent().next().children('div').children('div').html(`
-                <span>Remind &nbsp;</span>
-                <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
-                <span>&nbsp; days before the transaction date</span>
-            `);
-
-            if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
-                if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
-                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
-                } else if(vendorModals.includes(`#${modalId}`)) {
-                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
-                } else {
-                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div.modal div.modal-body div.recurring-details'));
+        switch($(this).val()) {
+            case 'reminder' :
+                if ($(this).parent().next().hasClass('col-md-2')) {
+                    $(this).parent().next().removeClass('col-md-2');
+                    $(this).parent().next().addClass('col-md-3');
                 }
+    
+                $(this).parent().next().html(`
+                    <span>Remind &emsp;</span>
+                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
+                    <span>&emsp; days before the transaction date</span>
+                `);
 
-                $(`div.modal input.date`).datepicker({
-                    uiLibrary: 'bootstrap'
-                });
-            }
-        } else if ($(this).val() === 'unscheduled') {
-            $('div.modal div.modal-body div.recurring-interval-container').remove();
-            $(this).parent().next().removeClass('col-md-4');
-            $(this).parent().next().addClass('col-md-3');
-            $(this).parent().next().children('div').children('div').html(`
-                <p class="m-0">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</p>
-            `);
-        } else {
-            if ($(this).parent().next().hasClass('col-md-3')) {
-                $(this).parent().next().removeClass('col-md-3');
-                $(this).parent().next().addClass('col-md-4');
-            }
-
-            $(this).parent().next().children('div').children('div').html(`
-                <span>Create &nbsp;</span>
-                <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
-                <span>&nbsp; days in advance</span>
-            `);
-
-            if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
-                if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
-                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
-                } else if(vendorModals.includes(`#${modalId}`)) {
-                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
-                } else {
-                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div.modal div.modal-body div.recurring-details'));
+                if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
+                    if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
+                        $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
+                    } else if(vendorModals.includes(`#${modalId}`)) {
+                        $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
+                    } else {
+                        $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div.modal div.modal-body div.recurring-details'));
+                    }
+    
+                    $(`div.modal input.date`).datepicker({
+                        format: 'mm/dd/yyyy',
+                        orientation: 'bottom',
+                        autoclose: true
+                    });
                 }
-
-                $(`div.modal input.date`).datepicker({
-                    uiLibrary: 'bootstrap'
-                });
-            }
+            break;
+            case 'unscheduled' :
+                $('div.modal div.modal-body div.recurring-interval-container').remove();
+                $(this).parent().next().removeClass('col-md-3');
+                $(this).parent().next().addClass('col-md-2');
+                $(this).parent().next().html(`
+                    <p class="m-0">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</p>
+                `);
+            break;
+            case 'scheduled' :
+                if ($(this).parent().next().hasClass('col-md-3')) {
+                    $(this).parent().next().removeClass('col-md-3');
+                    $(this).parent().next().addClass('col-md-2');
+                }
+    
+                $(this).parent().next().html(`
+                    <span>Create &emsp;</span>
+                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
+                    <span>&emsp; days in advance</span>
+                `);
+    
+                if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
+                    if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
+                        $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
+                    } else if(vendorModals.includes(`#${modalId}`)) {
+                        $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
+                    } else {
+                        $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div.modal div.modal-body div.recurring-details'));
+                    }
+    
+                    $(`div.modal input.date`).datepicker({
+                        format: 'mm/dd/yyyy',
+                        orientation: 'bottom',
+                        autoclose: true
+                    });
+                }
+            break;
         }
 
         var modalId = $('div#modal-container form div.modal:first-child()').attr('id');
 
         $(`div#${modalId} select:not(.select2-hidden-accessible)`).select2({
-            minimumResultsForSearch: -1
+            minimumResultsForSearch: -1,
+            dropdownParent: $('#modal-container #modal-form .modal')
         });
     });
 
@@ -1366,13 +1446,15 @@ $(function() {
                 <option value="saturday">Saturday</option>
             `);
             $(this).parent().next().find('select[name="recurring_day"]').select2({
-                minimumResultsForSearch: -1
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #modal-form .modal')
             });
         } else {
             $(this).parent().next().find('select[name="recurring_day"]').next().remove();
             $(this).parent().next().find('select[name="recurring_day"]').html(recurringDays);
             $(this).parent().next().find('select[name="recurring_day"]').select2({
-                minimumResultsForSearch: -1
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #modal-form .modal')
             });
         }
     });
@@ -1381,24 +1463,28 @@ $(function() {
         if ($(this).val() === 'by') {
             $(this).parent().next().remove();
             $(this).parent().parent().append(`
-                <div class="col-md-2 form-group">
+                <div class="col-12 col-md-1">
                     <label for="endDate">End date</label>
-                    <input type="text" class="form-control date" name="end_date" id="endDate"/>
+                    <div class="nsm-field-group calendar">
+                        <input type="text" class="form-control nsm-field date" name="end_date" id="endDate"/>
+                    </div>
                 </div>
             `);
 
             $(`div.modal input#endDate`).datepicker({
-                uiLibrary: 'bootstrap'
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
             });
         } else if ($(this).val() === 'after') {
             $(this).parent().next().remove();
             $(this).parent().parent().append(`
-                <div class="col-md-2 form-group">
-                    <div class="row m-0 h-100 d-flex">
-                        <div class="align-self-end d-flex align-items-center">
-                            <input type="number" name="max_occurence" id="maxOccurence" class="form-control" style="width: 50%">
-                            <span>&nbsp; occurrences</span>
+                <div class="col-12 col-md-1">
+                    <div class="row h-100">
+                        <div class="col-6 d-flex align-items-end">
+                            <input type="number" name="max_occurence" id="maxOccurence" class="form-control nsm-field">
                         </div>
+                        <div class="col-6 d-flex align-items-end">occurrences</div>
                     </div>
                 </div>
             `);
@@ -1409,103 +1495,110 @@ $(function() {
 
     $(document).on('change', 'div.modal select#recurringInterval', function() {
         var fields = '';
-        if ($(this).val() === 'daily') {
-            if ($(this).parent().next().hasClass('col-md-4')) {
-                $(this).parent().next().removeClass('col-md-4');
-            } else if ($(this).parent().next().hasClass('col-md-3')) {
-                $(this).parent().next().removeClass('col-md-3');
-            }
-
-            if ($(this).parent().next().hasClass('col-md-2') === false) {
-                $(this).parent().next().addClass('col-md-2');
-            }
-
-            fields = `
-                <div class="align-items-center col-md-2 d-flex justify-content-center">every</div>
-                <div class="col"><input type="number" value="1" class="form-control" name="recurr_every"></div>
-                <div class="align-items-center col-md-1 d-flex">day</div>
-            `;
-        } else if ($(this).val() === 'weekly') {
-            if ($(this).parent().next().hasClass('col-md-4')) {
-                $(this).parent().next().removeClass('col-md-4');
-            } else if ($(this).parent().next().hasClass('col-md-2')) {
-                $(this).parent().next().removeClass('col-md-2');
-            }
-
-            if ($(this).parent().next().hasClass('col-md-3') === false) {
-                $(this).parent().next().addClass('col-md-3');
-            }
-
-            fields = `
-                <div class="align-items-center col-md-1 d-flex justify-content-center">every</div>
-                <div class="col"><input type="number" value="1" class="form-control" name="recurr_every"></div>
-                <div class="align-items-center col-md-2 d-flex justify-content-center">week(s) on</div>
-                <div class="col">
-                    <select class="form-control" name="recurring_day">
-                        <option value="sunday">Sunday</option>
-                        <option value="monday" selected>Monday</option>
-                        <option value="tuesday">Tuesday</option>
-                        <option value="wednesday">Wednesday</option>
-                        <option value="thursday">Thursday</option>
-                        <option value="friday">Friday</option>
-                        <option value="saturday">Saturday</option>
-                    </select>
-                </div>
-            `;
-        } else if ($(this).val() === 'yearly') {
-            if ($(this).parent().next().hasClass('col-md-4')) {
-                $(this).parent().next().removeClass('col-md-4');
-            } else if ($(this).parent().next().hasClass('col-md-2')) {
-                $(this).parent().next().removeClass('col-md-2');
-            }
-
-            if ($(this).parent().next().hasClass('col-md-3') === false) {
-                $(this).parent().next().addClass('col-md-3');
-            }
-
-            fields = `
-                <div class="align-items-center col-md-1 d-flex justify-content-center">every</div>
-                <div class="col">
-                    <select class="form-control" name="recurring_month">
-                        <option value="01">January</option>
-                        <option value="02">February</option>
-                        <option value="03">March</option>
-                        <option value="04">April</option>
-                        <option value="05">May</option>
-                        <option value="06">June</option>
-                        <option value="07">July</option>
-                        <option value="08">August</option>
-                        <option value="09">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <select class="form-control" name="recurring_day">
-                        ${recurringDays}
-                    </select>
-                </div>
-            `;
-        } else {
-            if ($(this).parent().next().hasClass('col-md-3')) {
-                $(this).parent().next().removeClass('col-md-3');
-            } else if ($(this).parent().next().hasClass('col-md-2')) {
-                $(this).parent().next().removeClass('col-md-2');
-            }
-
-            if ($(this).parent().next().hasClass('col-md-4') === false) {
-                $(this).parent().next().addClass('col-md-4');
-            }
-
-            fields = monthlyRecurrFields;
+        switch($(this).val()) {
+            case 'daily' :
+                
+                if ($(this).parent().next().hasClass('col-md-4')) {
+                    $(this).parent().next().removeClass('col-md-4');
+                } else if ($(this).parent().next().hasClass('col-md-3')) {
+                    $(this).parent().next().removeClass('col-md-3');
+                }
+    
+                if ($(this).parent().next().hasClass('col-md-2') === false) {
+                    $(this).parent().next().addClass('col-md-2');
+                }
+    
+                fields = `
+                    <div class="col-2 d-flex align-items-end justify-content-center">every</div>
+                    <div class="col-8 d-flex align-items-end"><input type="number" value="1" class="form-control nsm-field" name="recurr_every"></div>
+                    <div class="col-2 align-items-end d-flex">day</div>
+                `;
+            break;
+            case 'weekly' :
+                if ($(this).parent().next().hasClass('col-md-4')) {
+                    $(this).parent().next().removeClass('col-md-4');
+                } else if ($(this).parent().next().hasClass('col-md-2')) {
+                    $(this).parent().next().removeClass('col-md-2');
+                }
+    
+                if ($(this).parent().next().hasClass('col-md-3') === false) {
+                    $(this).parent().next().addClass('col-md-3');
+                }
+    
+                fields = `
+                    <div class="col-2 d-flex align-items-end justify-content-center">every</div>
+                    <div class="col-10 col-md-4 d-flex align-items-end"><input type="number" value="1" class="form-control nsm-field" name="recurr_every"></div>
+                    <div class="col-2 d-flex align-items-end justify-content-center">week(s) on</div>
+                    <div class="col-10 col-md-4 d-flex align-items-end">
+                        <select class="form-control nsm-field" name="recurring_day">
+                            <option value="sunday">Sunday</option>
+                            <option value="monday" selected>Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                        </select>
+                    </div>
+                `;
+            break;
+            case 'yearly' :
+                if ($(this).parent().next().hasClass('col-md-4')) {
+                    $(this).parent().next().removeClass('col-md-4');
+                } else if ($(this).parent().next().hasClass('col-md-3')) {
+                    $(this).parent().next().removeClass('col-md-3');
+                }
+    
+                if ($(this).parent().next().hasClass('col-md-2') === false) {
+                    $(this).parent().next().addClass('col-md-2');
+                }
+    
+                fields = `
+                    <div class="col-2 d-flex align-items-end justify-content-center">every</div>
+                    <div class="col-10 col-md-6 d-flex align-items-end">
+                        <select class="form-control nsm-field" name="recurring_month">
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4 d-flex align-items-end">
+                        <select class="form-control nsm-field" name="recurring_day">
+                            ${recurringDays}
+                        </select>
+                    </div>
+                `;
+            break;
+            case 'monthly' :
+                if ($(this).parent().next().hasClass('col-md-3')) {
+                    $(this).parent().next().removeClass('col-md-3');
+                } else if ($(this).parent().next().hasClass('col-md-2')) {
+                    $(this).parent().next().removeClass('col-md-2');
+                }
+    
+                if ($(this).parent().next().hasClass('col-md-4') === false) {
+                    $(this).parent().next().addClass('col-md-4');
+                }
+    
+                fields = monthlyRecurrFields;
+            break;
         }
 
         $(this).parent().next().children().html(fields);
 
         $(this).parent().next().children().find('select').each(function() {
             $(this).select2({
-                minimumResultsForSearch: -1
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #modal-form .modal')
             });
         });
     });
@@ -1576,14 +1669,14 @@ $(function() {
             success: function(res) {
                 var result = JSON.parse(res);
 
-                form.addClass('hide');
+                form.addClass('d-none');
                 $('#tags-modal #tags_group tbody').append(`
                     <tr>
                         <td><span>${data.get('tags_group_name')}</span></td>
                         <td><button class="nsm-button float-end">Edit</button></td>
                     </tr>
                 `);
-                $('#tags-modal #tags_group').removeClass('hide');
+                $('#tags-modal #tags_group').removeClass('d-none');
                 $('#tags-modal #tags-form').prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
                 form.prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
             }
@@ -1595,9 +1688,9 @@ $(function() {
             $('#tags-modal #tags-group-form').attr('id', 'update-group-form');
         }
 
-        $('#tags-modal #update-group-form').removeClass('hide');
+        $('#tags-modal #update-group-form').removeClass('d-none');
 
-        $('#tags-modal table#tags_group').addClass('hide');
+        $('#tags-modal table#tags_group').addClass('d-none');
     });
 
     $(document).on('submit', '#tags-modal #update-group-form, #tags-modal #edit_group_tag', function(e) {
@@ -1605,24 +1698,23 @@ $(function() {
 
         var form = $(this);
 
-        var data = new FormData(document.getElementById(form.attr('id')));
+        var data = new FormData(this);
 
         $.ajax({
-            url: `/accounting/update-group-tag/${data.get('group_id')}/group`,
+            url: `/accounting/tags/update/${data.get('group_id')}/group`,
             data: { name: data.get('tags_group_name') },
             type: "POST",
             dataType: "json",
             success: function(res) {
                 if (form.attr('id') === 'update-group-form') {
-                    form.addClass('hide');
-                    form.next().children('tbody').children('tr').remove();
-                    form.next().children('tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
+                    form.addClass('d-none');
+                    $('#tags-modal #tags_group tbody tr').remove();
+                    $('#tags-modal #tags_group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span></td><td><button class="nsm-button float-end">Edit</button></td></tr>`);
 
-                    form.next().removeClass('hide');
+                    $('#tags-modal #tags_group').removeClass('d-none');
                 } else {
-                    toast(res.success, res.message);
-
-                    showTagsList(form.children().children('.modal-header').children('a'));
+                    $('#tags-modal #back-to-tags-list').trigger('click');
+                    $('#tags-modal #search-tags').trigger('keyup');
                 }
             }
         });
@@ -1652,14 +1744,14 @@ $(function() {
                                 <div class="col-12 col-md-4"><button class="nsm-button float-end">Edit</button></div>
                             </div>
                         </div>
-                        <form class="hide" id="form-tag-${result.data}">
-                            <input type="hidden" name="tag_id" value="${result.data}">
+                        <form class="d-none" id="form-tag-${result.data}">
+                            <input type="hidden" name="id" value="${result.data}">
                             <div class="row">
                                 <div class="col-12 col-md-8">
                                     <label for="tag_name">Tag name</label>
-                                    <input type="text" name="update_tag_name" value="${data.get('tag_name')}" class="form-control nsm-field mb-2">
+                                    <input type="text" name="tag_name" value="${data.get('tag_name')}" class="form-control nsm-field">
                                 </div>
-                                <div class="col-12 col-md-4">
+                                <div class="col-12 col-md-4 justify-content-end align-items-end d-flex">
                                     <button type="submit" class="nsm-button success float-end">Save</button>
                                 </div>
                             </div>
@@ -1668,32 +1760,35 @@ $(function() {
                 </tr>`);
 
                 $('#tags-modal #tags-form input#tag-name').val('');
-                $('#tags-modal #group_tags').removeClass('hide');
+                $('#tags-modal #group_tags').removeClass('d-none');
             }
         });
     });
 
-    $(document).on('click', '#tags-modal table#group_tags tbody .tag-name-cont a', function() {
-        $(this).parent().addClass('hide');
-        $(this).parent().next().removeClass('hide');
+    $(document).on('click', '#tags-modal table#group_tags tbody .tag-name-cont button', function() {
+        $(this).closest('.tag-name-cont').addClass('d-none');
+        $(this).closest('.tag-name-cont').next().removeClass('d-none');
     });
 
     $(document).on('submit', '#tags-modal table#group_tags tbody form', function(e) {
         e.preventDefault();
 
         var form = $(this);
-        var data = new FormData(document.getElementById(form.attr('id')));
+        var data = new FormData(this);
+        data.append('group_id', $('#tags-modal #tags-form [name="group_id"]').val());
+        data.append('method', 'update');
 
         $.ajax({
-            url: `/accounting/update-group-tag/${data.get('tag_id')}/tag`,
-            data: { name: data.get('update_tag_name') },
-            type: "POST",
-            dataType: "json",
+            url: '/accounting/submit-job-tag-form',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
             success: function(res) {
-                form.addClass('hide');
+                form.addClass('d-none');
 
-                form.prev().children('span').html(data.get('update_tag_name'));
-                form.prev().removeClass('hide');
+                form.prev().find('span').html(data.get('tag_name'));
+                form.prev().removeClass('d-none');
             }
         });
     });
@@ -8392,16 +8487,18 @@ const editGroupTagForm = (data) => {
 const getTagForm = (data = {}, method) => {
     $.get('/accounting/get-job-tag-form/', function(res) {
         if(method === 'update' && data.groupTag !== null && data.type === 'group-tag') {
-            var groupTagName = $(`#tags-modal #tags-table tbody tr td a[data-id="${data.groupTag}"][data-type="group"]`).prev().html();
+            var groupTagName = $(`#tags-modal #tags-table tbody tr td .edit[data-id="${data.groupTag}"][data-type="group"]`).parent().prev().find('span').text().trim();
 
             groupTagName = groupTagName.slice(0, -4);
         }
         $('#tags-modal div.modal-dialog div#tags-list').remove();
 
         if(method === 'create') {
-            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create-tag-form" onsubmit="submitTagsForm(this, 'create', event)"></form>`);
+            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create-tag-form"></form>`);
+            // $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create-tag-form" onsubmit="submitTagsForm(this, 'create', event)"></form>`);
         } else {
-            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="update-tag-form" onsubmit="submitTagsForm(this, 'update', event)"></form>`);
+            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="update-tag-form"></form>`);
+            // $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="update-tag-form" onsubmit="submitTagsForm(this, 'update', event)"></form>`);
         }
 
         $('#tags-modal div.modal-dialog form').append(res);
@@ -8446,27 +8543,27 @@ const showTagsList = (el) => {
     // loadTagsDataTable();
 }
 
-const submitTagsForm = (el, method = "", e) => {
-    e.preventDefault();
+// const submitTagsForm = (el, method = "", e) => {
+//     e.preventDefault();
     
-    var data = new FormData(document.getElementById($(el).attr('id')));
-    data.append('method', method);
+//     var data = new FormData(document.getElementById($(el).attr('id')));
+//     data.append('method', method);
 
-    $.ajax({
-        url: '/accounting/tags/add-tag',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-            var res = JSON.parse(result);
+//     $.ajax({
+//         url: '/accounting/tags/add-tag',
+//         data: data,
+//         type: 'post',
+//         processData: false,
+//         contentType: false,
+//         success: function(result) {
+//             var res = JSON.parse(result);
 
-            toast(res.success, res.message);
+//             toast(res.success, res.message);
 
-            showTagsList($(el).children().children('.modal-header').children('button'));
-        }
-    });
-}
+//             showTagsList($(el).children().children('.modal-header').children('button'));
+//         }
+//     });
+// }
 
 const updateBankDepositTotal = (el) => {
     var val = parseFloat($(el).val()).toFixed(2).toString();
@@ -9412,29 +9509,25 @@ const makeRecurring = (modalName) => {
     var modalId = '';
 
     var templateFields = `<div class="row recurring-details">
-        <div class="col-md-12">
+        <div class="col-12 grid-mb">
             <h3>Recurring Bank Deposit</h3>
-            <div class="form-row">
-                <div class="col-md-3 form-group">
+            <div class="row">
+                <div class="col-12 col-md-3">
                     <label for="templateName">Template name</label>
-                    <input type="text" class="form-control" id="templateName" name="template_name">
+                    <input type="text" class="form-control nsm-field" id="templateName" name="template_name">
                 </div>
-                <div class="col-md-2 form-group">
+                <div class="col-12 col-md-2">
                     <label for="recurringType">Type</label>
-                    <select class="form-control" id="recurringType" name="recurring_type">
+                    <select class="form-control nsm-field" id="recurringType" name="recurring_type">
                         <option value="scheduled">Scheduled</option>
                         <option value="reminder">Reminder</option>
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-md-4 form-group">
-                    <div class="row m-0 h-100 d-flex">
-                        <div class="align-self-end d-flex align-items-center">
-                            <span>Create &nbsp;</span>
-                            <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
-                            <span>&nbsp; days in advance</span>
-                        </div>
-                    </div>
+                <div class="col-12 col-md-2 d-flex align-items-end">
+                    <span>Create &emsp;</span>
+                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
+                    <span>&emsp; days in advance</span>
                 </div>
             </div>
         </div>
@@ -9458,22 +9551,22 @@ const makeRecurring = (modalName) => {
     options += '<option value="last">Last</option>';
 
     var intervalFields = `<div class="row recurring-interval-container">
-        <div class="col-md-12">
-            <div class="form-row">
-                <div class="col-md-2 form-group">
-                    <label>Interval</label>
-                    <select class="form-control" name="recurring_interval" id="recurringInterval">
+        <div class="col-12 grid-mb">
+            <div class="row">
+                <div class="col-12 col-md-2">
+                    <label for="recurringInterval">Interval</label>
+                    <select class="form-control nsm-field" name="recurring_interval" id="recurringInterval">
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
-                        <option value="monthly" selected="">Monthly</option>
+                        <option value="monthly" selected>Monthly</option>
                         <option value="yearly">Yearly</option>
                     </select>
                 </div>
-                <div class="col-md-4 form-group d-flex align-items-end">
-                    <div class="form-row w-100">
-                        <div class="align-items-center col-md-1 d-flex" style="max-width: 4%">on</div>
-                        <div class="col">
-                            <select name="recurring_week" class="form-control">
+                <div class="col-12 col-md-4">
+                    <div class="row h-100">
+                        <div class="col-1 d-flex align-items-end justify-content-center">on</div>
+                        <div class="col-11 col-md-2 d-flex align-items-end">
+                            <select name="recurring_week" class="form-control nsm-field">
                                 <option value="day">day</option>
                                 <option value="first">first</option>
                                 <option value="second">second</option>
@@ -9482,25 +9575,27 @@ const makeRecurring = (modalName) => {
                                 <option value="last">last</option>
                             </select>
                         </div>
-                        <div class="col">
-                            <select class="form-control" name="recurring_day">
+                        <div class="col-12 col-md-3 d-flex align-items-end">
+                            <select class="form-control nsm-field" name="recurring_day">
                             ${options}
                             </select>
                         </div>
-                        <div class="align-items-center col-md-1 d-flex">of every</div>
-                        <div class="col">
-                            <input type="number" value="1" class="form-control" name="recurr_every">
+                        <div class="col-2 d-flex align-items-end justify-content-center">of every</div>
+                        <div class="col-8 col-md-2 d-flex align-items-end">
+                            <input type="number" value="1" class="form-control nsm-field" name="recurr_every">
                         </div>
-                        <div class="align-items-center col d-flex">month(s)</div>
+                        <div class="col-2 align-items-end d-flex">month(s)</div>
                     </div>
                 </div>
-                <div class="col-md-2 form-group">
+                <div class="col-12 col-md-1">
                     <label for="startDate">Start date</label>
-                    <input type="text" class="form-control date" name="start_date" id="startDate"/>
+                    <div class="nsm-field-group calendar">
+                        <input type="text" class="form-control nsm-field date" name="start_date" id="startDate"/>
+                    </div>
                 </div>
-                <div class="col-md-1 form-group">
+                <div class="col-12 col-md-1">
                     <label for="endType">End</label>
-                    <select name="end_type" class="form-control" id="endType">
+                    <select name="end_type" class="form-control nsm-field" id="endType">
                         <option value="none">None</option>
                         <option value="by">By</option>
                         <option value="after">After</option>
@@ -9509,6 +9604,7 @@ const makeRecurring = (modalName) => {
             </div>
         </div>
     </div>`;
+
     switch(modalName) {
         case 'bank_deposit' :
             modalId = 'depositModal';
@@ -9535,7 +9631,7 @@ const makeRecurring = (modalName) => {
             modalId = 'expenseModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #payment_date`).parent().parent().parent().remove();
             $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Expense');
@@ -9544,15 +9640,15 @@ const makeRecurring = (modalName) => {
             modalId = 'checkModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
         break;
         case 'bill' :
             modalId = 'billModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #bill_date`).parent().parent().remove();
             $(`div#${modalId} div.modal-body #due_date`).parent().parent().remove();
             $(`div#${modalId} div.modal-body #bill_no`).parent().remove();
@@ -9562,7 +9658,7 @@ const makeRecurring = (modalName) => {
             modalId = 'purchaseOrderModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #purchase_order_date`).parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Purchase Order');
         break;
@@ -9570,7 +9666,7 @@ const makeRecurring = (modalName) => {
             modalId = 'vendorCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
             $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Vendor Credit');
@@ -9579,7 +9675,7 @@ const makeRecurring = (modalName) => {
             modalId = 'creditCardCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
             $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
@@ -9663,14 +9759,16 @@ const makeRecurring = (modalName) => {
     $(`#${modalId} .close-transactions-container`).parent().remove();
 
     $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
-    $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" id="save-template">Save template</button>');
+    $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="nsm-button success float-end" id="save-template">Save template</button>');
 
     recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
     recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();
-    monthlyRecurrFields = $(`div#${modalId} div.modal-body div.recurring-interval-container div div.form-row div.form-group:nth-child(2) div.form-row`).html();
+    monthlyRecurrFields = $(`div#${modalId} div.modal-body div.recurring-interval-container div div.row div:nth-child(2) div`).html();
 
     $(`div#${modalId} input.date`).datepicker({
-        uiLibrary: 'bootstrap'
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 
     $(`div#${modalId} select:not(.select2-hidden-accessible)`).each(function() {
@@ -9703,11 +9801,13 @@ const makeRecurring = (modalName) => {
                     }
                 },
                 templateResult: formatResult,
-                templateSelection: optionSelect
+                templateSelection: optionSelect,
+                dropdownParent: $('#modal-container #modal-form .modal')
             });
         } else {
             $(this).select2({
-                minimumResultsForSearch: -1
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #modal-form .modal')
             });
         }
     });
@@ -10407,15 +10507,19 @@ const initModalFields = (modalName, data = {}) => {
                         }
                     },
                     templateResult: formatResult,
-                    templateSelection: optionSelect
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#modal-container #modal-form .modal')
                 });
             } else {
                 var options = $(this).find('option');
                 if (options.length > 10) {
-                    $(this).select2();
+                    $(this).select2({
+                        dropdownParent: $('#modal-container #modal-form .modal')
+                    });
                 } else {
                     $(this).select2({
-                        minimumResultsForSearch: -1
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#modal-container #modal-form .modal')
                     });
                 }
             }
@@ -10426,6 +10530,7 @@ const initModalFields = (modalName, data = {}) => {
         $(`div#${modalName} select#tags`).select2({
             placeholder: 'Start typing to add a tag',
             allowClear: true,
+            dropdownParent: $('#modal-container #modal-form .modal'),
             ajax: {
                 url: '/accounting/get-job-tags',
                 dataType: 'json'
@@ -10436,7 +10541,9 @@ const initModalFields = (modalName, data = {}) => {
     if($(`div#${modalName} .date`).length > 0) {
         $(`div#${modalName} .date`).each(function(){
             $(this).datepicker({
-                uiLibrary: 'bootstrap'
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
             });
         });
     }
@@ -11128,12 +11235,12 @@ const resetCreditsFilter = () => {
     applyCreditsFilter();
 }
 
-const viewTransaction = (el) => {
+const viewTransaction = (el, e) => {
     $('#modal-container #modal-form .modal').modal('hide');
     $('.modal-backdrop:last-child').remove();
 
     var table = $(el).parent().parent();
-    var data = table.DataTable().row($(el)).data();
+    var data = e.currentTarget.dataset;
     var type = table.attr('id').replace('recent-', '').slice(0, -1).toLowerCase();
     if(type === 'journal-entrie') {
         type = 'journal';

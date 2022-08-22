@@ -44,7 +44,7 @@
                                             <td>
                                                 <span>&emsp;<?=$groupTag['name']?></span>
                                             </td>
-                                            <td><button class="nsm-button edit float-end" data-group-tag="<?=$groupTag['group_tag_id']?>" data-type="<?=$groupTag['type']?>" data-id="<?=$groupTag['id']?>" data-name="<?=$groupTag['name']?>">Edit</button></td>
+                                            <td><button class="nsm-button edit float-end" data-group-tag="<?=$groupTag['group_tag_id']?>" data-type="group-tag" data-id="<?=$groupTag['id']?>" data-name="<?=$groupTag['name']?>">Edit</button></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     <?php endif; ?>

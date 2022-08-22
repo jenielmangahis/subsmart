@@ -1368,3 +1368,8 @@ $route['tools/_validate_auth_key'] = 'Tools/ajax_validate_auth_key';
 
 //Image tracker email
 $route['tracker/estimate_image_tracker'] = 'Tracker/estimateImageTracker';
+
+//Dashboard : Bank Plaid
+$route['_launch_plaid_accounts'] = 'PlaidAccount/ajax_plaid_api';
+$route['_create_plaid_account'] = 'PlaidAccount/ajax_create_plaid_account';
+$route['_load_connected_bank_accounts'] = 'PlaidAccount/ajax_load_connected_bank_accounts';

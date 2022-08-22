@@ -44,6 +44,9 @@ if ($this->session->userdata('usertimezone') == null) {
     <!-- Switchery -->
     <link rel="stylesheet" href="<?= base_url("assets/plugins/switchery/switchery.min.css") ?>">
 
+    <!-- Dropzone -->
+    <link rel="stylesheet" href="<?=base_url("assets/plugins/dropzone/dist/dropzone.css")?>">
+
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
     <script>

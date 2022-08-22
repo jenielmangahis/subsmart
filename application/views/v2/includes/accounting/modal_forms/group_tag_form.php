@@ -1,6 +1,6 @@
 <div class="modal-content" id="group-tag-form">
     <div class="modal-header">
-        <button type="button" onclick="showTagsList(this)"><i class="bx bx-fw bx-chevron-left"></i> Back</a>
+        <button type="button" id="back-to-tags-list"><i class="bx bx-fw bx-chevron-left"></i> Back</a>
         <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
     </div>
     <div class="modal-body">
@@ -16,7 +16,7 @@
                 </form>
             </div>
             <div class="col-12 mt-3">
-                <table id="tags_group" class="nsm-table hide">
+                <table id="tags_group" class="nsm-table d-none">
                     <tbody></tbody>
                 </table>
             </div>
@@ -35,7 +35,7 @@
                 </form>
             </div>
             <div class="col-12">
-                <table id="group_tags" class="nsm-table hide">
+                <table id="group_tags" class="nsm-table d-none">
                     <tbody></tbody>
                 </table>
             </div>
