@@ -2295,6 +2295,7 @@ class Customer extends MY_Controller
     {
         //$this->hasAccessModule(9);
         $this->hasAccessModule(43);
+        $this->page_data['page']->title = 'New Lead Form';
         
         if(isset($lead_id)){
             $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
@@ -3043,7 +3044,9 @@ class Customer extends MY_Controller
                 foreach ($csvData as $row) {
                     $customerElement = [];
                     for($x=0; $x<count($csvHeader); $x++){
-                        $customerElement[$csvHeader[$x]] = $row[$csvHeader[$x]];
+                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:","", str_replace("$","",$row[$csvHeader[$x]]))));
+                        $data = preg_replace('/\s+/', '', $trimmedData);
+                        $customerElement[$csvHeader[$x]] = $data;
                         //echo $csvHeader[$x]. PHP_EOL;
                         //echo $row[$csvHeader[$x]]. PHP_EOL;
                     }
@@ -4051,6 +4054,8 @@ class Customer extends MY_Controller
 
     public function group_add()
     {
+        $this->page_data['page']->title = 'Add Group';
+
         $is_allowed = $this->isAllowedModuleAccess(11);
         if (!$is_allowed) {
             $this->page_data['module'] = 'customer_group';
@@ -5776,7 +5781,7 @@ class Customer extends MY_Controller
             if( $customer && $customer->email != '' ){
                 //Send mail
                 $customer_login_url = base_url('login/customer');
-                $business = $this->Business_model->getByCompanyId($cid);
+                //$business = $this->Business_model->getByCompanyId($cid);
 
                 $subject  = 'nSmarTrac : Customer Login Details';
                 $body     = "<p>Hi ".$customer->first_name.",</p><br /><p>Below is your login details.</p><br /><p>Username : ".$customerAccess->access_login."<br /> Password : ".$customerAccess->access_password."</p><br />";

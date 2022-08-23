@@ -63,5 +63,9 @@ async function autoSaveForm() {
     body: formdata,
   });
 
+  if (response.status === 500) {
+    throw new Error("500");
+  }
+
   return response.json();
 }

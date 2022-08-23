@@ -46,7 +46,14 @@ class Wizard extends MY_Controller {
         //$this->load->view('wizard/list', $this->page_data);
         $this->load->view('wizard/index', $this->page_data);
     }
-    
+    public function v1() {
+        $this->page_data['page']->title = 'Wizard';
+        $company_id = logged('company_id');
+        $this->page_data['wizards_workspace'] = $this->wizard_model->getCompanyAllIndustries($company_id);
+        //$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
+        //$this->load->view('wizard/list', $this->page_data);
+        $this->load->view('wizard/index_v1', $this->page_data);
+    }
     
     public function savepaymethod(){
         
