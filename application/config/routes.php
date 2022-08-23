@@ -1373,3 +1373,8 @@ $route['tracker/estimate_image_tracker'] = 'Tracker/estimateImageTracker';
 $route['_launch_plaid_accounts'] = 'PlaidAccount/ajax_plaid_api';
 $route['_create_plaid_account'] = 'PlaidAccount/ajax_create_plaid_account';
 $route['_load_connected_bank_accounts'] = 'PlaidAccount/ajax_load_connected_bank_accounts';
+
+//Plaid Accounts
+$route['plaid_accounts'] = 'PlaidAccount/list';
+$route['plaid_account/_delete_bank_account'] = 'PlaidAccount/ajax_delete_bank_account';
+$route['plaid_account/_bank_account_transactions'] = 'PlaidAccount/ajax_bank_account_transactions';

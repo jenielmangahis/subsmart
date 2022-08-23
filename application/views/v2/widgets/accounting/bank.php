@@ -76,25 +76,6 @@ endif;
             </div> -->
         </div>
     </div>
-
-    <div class="modal fade nsm-modal fade" id="modalPlaidConnectBankAccount" aria-labelledby="modalEditAutoSmsNotificationLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title" id="new_feed_modal_label">Edit Auto SMS Notification Setting</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <form action="" id="frm-edit-auto-sms-notification">
-                <div class="modal-body modal-edit-auto-sms-container"></div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary btn-update-auto-sms">Save</button>
-                </div>
-                </form>                      
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <?php
@@ -104,8 +85,8 @@ endif;
 ?>
 <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 <script>
-//load_plaid_accounts();
-/*function load_plaid_accounts(){
+load_plaid_accounts();
+function load_plaid_accounts(){
     var url = base_url + '_load_connected_bank_accounts';
     $('.plaid-accounts').html('<span class="bx bx-loader bx-spin"></span>');
     setTimeout(function () {
@@ -118,7 +99,7 @@ endif;
          }
       });
     }, 800);
-}*/
+}
 $(document).on('click', '.btn-connect-plaid', function(){
     var url = base_url + '_launch_plaid_accounts';
     $.ajax({
@@ -141,7 +122,7 @@ $(document).on('click', '.btn-connect-plaid', function(){
                             var ins_id     = metadata.institution.institution_id;
                             var ins_name   = metadata.institution.name;
                             var meta_data   = JSON.stringify(metadata);
-                            console.log('metadata: ' + JSON.stringify(metadata));
+                            //console.log('metadata: ' + JSON.stringify(metadata));
                             $.ajax({
                                 type: "POST",
                                 url: url,
@@ -150,7 +131,7 @@ $(document).on('click', '.btn-connect-plaid', function(){
                                 success: function(result) {
                                     if( result.is_success == 1 ){
                                         //load bank details
-                                        //load_plaid_accounts();
+                                        load_plaid_accounts();
                                     }else{
                                         Swal.fire({
                                             icon: 'error',
