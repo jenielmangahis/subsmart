@@ -82,15 +82,16 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <select name="headers[]" class="form-control headersSelector" onchange="test()" id="headersSelector<?= $i ?>">
+                                                        <select name="headers[]" class="form-control headersSelector" id="headersSelector<?= $i ?>" onclick="test()">
                                                             <option value="">Select Heading</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php endif; ?>
-                                    <?php  
+                                        <?php 
                                     $i++;
+                                     endif; ?>
+                                    <?php  
                                 endforeach; ?>
                                     <div class="result"></div>
                                     <br>
@@ -215,14 +216,12 @@
                 method: 'POST',
                 body: formData
             }) .then(response => response.json() ).then(response => {
-                console.log(response);
                 var { data, headers, success, message }  = response;
                 if ($overlay) $overlay.style.display = "none";
                 if(!success){
                     sweetAlert('Sorry!','error',message);
                 }else{
-                    // $('.headersSelector').attr("onchange", "test()");
-                    
+                    console.log(response);                    
                     $.each(headers,function(i,o){
                         $('.headersSelector').append(
                             '<option value="'+i+'">'+o+'</option>'
@@ -237,7 +236,6 @@
                     // });
                     csvHeaders = headers;
                     customerData = data; // save customer array data
-
                     // process mapping preview
                     $.each(data,function(i,o){
                         var toAppend = '';
@@ -276,6 +274,71 @@
                 }
             });
         }
+        var previous;
+        var previousTxt;
+        var selectedHeader = [];
+        var head = [];
+
+    // $("#headersSelector0").on('focus', function () {
+    //     selectedHeader = [];
+    //     head = [];
+    //         $('select[name="headers[]"]').each(function() {
+    //             selectedHeader.push(this.value);
+    //         });
+    //         var ar = selectedHeader.length;
+    //         for(var x=0; x<ar; x++){
+    //             head.push(x);
+    //             if(selectedHeader[x] != ""){
+    //                 previousTxt = $('#headersSelector'+x+' :selected').text();
+
+    //             }
+    //         }
+
+    // }).change(function() {
+    //     var firstAr = selectedHeader.length;
+    //     var arHead1 = head.length;
+
+    //     for(var x=0; x<firstAr; x++){
+    //         if(selectedHeader[x] != ""){
+    //             previous = selectedHeader[x];
+    //             var t = "headersSelector"+x+"";
+    //             for(var i=0; i<arHead1; i++){
+    //                 var t1 = "headersSelector"+i+"";
+    //                 if(t != t1){
+    //                     $('#headersSelector'+i).append('<option value="'+selectedHeader[x]+'">'+previousTxt+'</option>');
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     selectedHeader.length= 0;
+    //     head = [];
+
+    //     $('select[name="headers[]"]').each(function() {
+    //         selectedHeader.push(this.value);
+    //     });
+    //     var ar = selectedHeader.length;
+    
+    //     for(var x=0; x<ar; x++){
+    //         head.push(x);
+    //     }
+    //     var arHead = head.length;
+
+    //     console.log(selectedHeader);
+
+
+    //     for(var x=0; x<ar; x++){
+    //         if(selectedHeader[x] != ""){
+    //             document.getElementById('headersSelector'+x).value = selectedHeader[x];
+    //             var text = "headersSelector"+x+"";
+    //             for(var i=0; i<arHead; i++){
+    //                 var text1 = "headersSelector"+i+"";
+    //                 if(text != text1){
+    //                     $("#headersSelector"+i+" option[value='"+selectedHeader[x]+"'").remove();
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
     });
     // function test(){
     //     var t = document.getElementById('headersSelector');
@@ -284,6 +347,7 @@
     //     //$("#headersSelector option:selected").remove();
 
     // }
+    
         function test(){
             //var t = $(".headersSelector");
             // $("#headersSelector option:selected").remove();
@@ -293,17 +357,16 @@
             $('select[name="headers[]"]').each(function() {
                 selectedHeader.push(this.value);
             });
-
             var ar = selectedHeader.length;
             for(var x=0; x<ar; x++){
                 head.push(x);
             }
-            console.log(head);
+
             var arHead = head.length;
+            console.log(selectedHeader);
 
             for(var x=0; x<ar; x++){
                 if(selectedHeader[x] != ""){
-                    var inc = x+1;
                     document.getElementById('headersSelector'+x).value = selectedHeader[x];
                     var text = "headersSelector"+x+"";
                     for(var i=0; i<arHead; i++){

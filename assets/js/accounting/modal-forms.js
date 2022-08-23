@@ -2357,17 +2357,15 @@ $(function() {
                             $('#expenseModal a.open-transactions-container').parent().remove();
                         }
 
-                        $('#expenseModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                            <div class="col-md-12 px-0 pb-2">
-                                <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                                    <i class="fa fa-chevron-right"></i>
-                                </a>
+                        $('#expenseModal .modal-body .row .col').children('.row:first-child').prepend(`
+                            <div class="col-12">
+                                <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                             </div>
                         `);
 
                         $('#expenseModal .modal-body').children('.row').append(`
-                            <div class="col-xl-2">
-                                <div class="transactions-container bg-white h-100" style="padding: 15px">
+                            <div class="w-auto nsm-callout primary">
+                                <div class="transactions-container h-100 p-3">
                                     <div class="row">
                                         <div class="col-12">
                                             <h4>Add to Expense</h4>
@@ -2381,19 +2379,19 @@ $(function() {
                             var title = transaction.type;
                             title += transaction.number !== '' ? ' #' + transaction.number : '';
                             if($(`#expenseModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
-                                $('#expenseModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                $('#expenseModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                                     <div class="col-12">
-                                        <div class="card border">
-                                            <div class="card-body p-0">
+                                        <div class="card">
+                                            <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong> ${transaction.total}
-                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                    <strong>Total</strong>&emsp'${transaction.total}
+                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
-                                                <ul class="d-flex justify-content-around">
-                                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                <ul class="d-flex justify-content-around list-unstyle">
+                                                    <li><a href="#" class="add-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="open-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -2439,17 +2437,15 @@ $(function() {
                             $('#checkModal a.open-transactions-container').parent().remove();
                         }
 
-                        $('#checkModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                            <div class="col-md-12 px-0 pb-2">
-                                <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                                    <i class="fa fa-chevron-right"></i>
-                                </a>
+                        $('#checkModal .modal-body .row .col').children('.row:first-child').prepend(`
+                            <div class="col-12">
+                                <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                             </div>
                         `);
 
                         $('#checkModal .modal-body').children('.row').append(`
-                            <div class="col-xl-2">
-                                <div class="transactions-container bg-white h-100" style="padding: 15px">
+                            <div class="w-auto nsm-callout primary">
+                                <div class="transactions-container h-100 p-3">
                                     <div class="row">
                                         <div class="col-12">
                                             <h4>Add to Check</h4>
@@ -2463,19 +2459,19 @@ $(function() {
                             var title = transaction.type;
                             title += transaction.number !== '' ? '#' + transaction.number : '';
                             if($(`#checkModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
-                                $('#checkModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                $('#checkModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                                     <div class="col-12">
-                                        <div class="card border">
-                                            <div class="card-body p-0">
+                                        <div class="card">
+                                            <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong> ${transaction.total}
-                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                    <strong>Total</strong>&emsp'${transaction.total}
+                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
-                                                <ul class="d-flex justify-content-around">
-                                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                <ul class="d-flex justify-content-around list-unstyled">
+                                                    <li><a href="#" class="add-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="open-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -2519,17 +2515,15 @@ $(function() {
                         $('#billModal a.open-transactions-container').parent().remove();
                     }
 
-                    $('#billModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                        <div class="col-md-12 px-0 pb-2">
-                            <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                                <i class="fa fa-chevron-right"></i>
-                            </a>
+                    $('#billModal .modal-body .row .col').children('.row:first-child').prepend(`
+                        <div class="col-12">
+                            <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                         </div>
                     `);
 
                     $('#billModal .modal-body').children('.row').append(`
-                        <div class="col-xl-2">
-                            <div class="transactions-container bg-white h-100" style="padding: 15px">
+                        <div class="w-auto nsm-callout primary">
+                            <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
                                         <h4>Add to Bill</h4>
@@ -2543,19 +2537,19 @@ $(function() {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#' + transaction.number : '';
                         if($(`#billModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
-                            $('#billModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                            $('#billModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                                 <div class="col-12">
-                                    <div class="card border">
-                                        <div class="card-body p-0">
+                                    <div class="card">
+                                        <div class="card-body">
                                             <h5 class="card-title">${title}</h5>
                                             <p class="card-subtitle">${transaction.formatted_date}</p>
                                             <p class="card-text">
-                                                <strong>Total</strong> ${transaction.total}
-                                                ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                <strong>Total</strong>&emsp'${transaction.total}
+                                                ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                             </p>
-                                            <ul class="d-flex justify-content-around">
-                                                <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                            <ul class="d-flex justify-content-around list-unstyled">
+                                                <li><a href="#" class="add-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                <li><a href="#" class="open-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -2598,17 +2592,15 @@ $(function() {
                         $('#billPaymentModal a.open-transactions-container').parent().remove();
                     }
 
-                    $('#billPaymentModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                        <div class="col-md-12 px-0 pb-2">
-                            <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                                <i class="fa fa-chevron-right"></i>
-                            </a>
+                    $('#billPaymentModal .modal-body .row .col').children('.row:first-child').prepend(`
+                        <div class="col-12">
+                            <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                         </div>
                     `);
 
                     $('#billPaymentModal .modal-body').children('.row').append(`
-                        <div class="col-xl-2">
-                            <div class="transactions-container bg-white h-100" style="padding: 15px">
+                        <div class="w-auto nsm-callout primary">
+                            <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
                                         <h4>Add to Bill Payment</h4>
@@ -2625,19 +2617,19 @@ $(function() {
                         ) {
                             var title = transaction.type;
                             title += transaction.number !== '' ? '#' + transaction.number : '';
-                            $('#billPaymentModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                            $('#billPaymentModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                                 <div class="col-12">
-                                    <div class="card border">
-                                        <div class="card-body p-0">
+                                    <div class="card">
+                                        <div class="card-body">
                                             <h5 class="card-title">${title}</h5>
                                             <p class="card-subtitle">${transaction.formatted_date}</p>
                                             <p class="card-text">
-                                                <strong>Total</strong> ${transaction.total}
-                                                ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                <strong>Total</strong>&emsp'${transaction.total}
+                                                ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                             </p>
-                                            <ul class="d-flex justify-content-around">
-                                                <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                            <ul class="d-flex justify-content-around list-unstyled">
+                                                <li><a href="#" class="add-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                <li><a href="#" class="open-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -2702,18 +2694,26 @@ $(function() {
                             var link = `
                             <td>
                                 <div class="dropdown">
-                                    <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                        <div class="row">
-                                            <div class="col-3"><strong>Type</strong></div>
-                                            <div class="col-3"><strong>Date</strong></div>
-                                            <div class="col-3"><strong>Amount</strong></div>
-                                            <div class="col-3"></div>
-                                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                            <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                            <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                                        </div>
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                    <div class="dropdown-menu">
+                                        <table class="nsm-table">
+                                            <thead>
+                                                <tr>
+                                                    <td data-name="Type">Type</td>
+                                                    <td data-name="Date">Date</td>
+                                                    <td data-name="Amount">Amount</td>
+                                                    <td data-name="Action"></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                    <td>${dateString}</td>
+                                                    <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                    <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                                 <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="category_linked_transaction[]">
@@ -2723,7 +2723,7 @@ $(function() {
 
                             count++;
                             $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count);
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child td:first-child').html(count);
                             $(link).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
                             $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_account[]"]').append(`<option value="${category.expense_account_id}">${category.expense_account}</option>`);
                             $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
@@ -2762,15 +2762,19 @@ $(function() {
                                         }
                                     },
                                     templateResult: formatResult,
-                                    templateSelection: optionSelect
+                                    templateSelection: optionSelect,
+                                    dropdownParent: $('#modal-container #modal-form .modal')
                                 });
                             } else {
                                 var options = $(this).find('option');
                                 if (options.length > 10) {
-                                    $(this).select2();
+                                    $(this).select2({
+                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                    });
                                 } else {
                                     $(this).select2({
-                                        minimumResultsForSearch: -1
+                                        minimumResultsForSearch: -1,
+                                        dropdownParent: $('#modal-container #modal-form .modal')
                                     });
                                 }
                             }
@@ -2790,8 +2794,9 @@ $(function() {
                     }
 
                     if (items.length > 0) {
-                        if ($('#modal-container .modal #item-details').hasClass('show') === false) {
-                            $('#modal-container .modal button[data-target="#item-details"]').trigger('click');
+                        if ($('#modal-container .modal #collapse-item-details').hasClass('show') === false) {
+                            $('#modal-container .modal #collapse-item-details').collapse('toggle');
+                            // $('#modal-container .modal button[data-target="#item-details"]').trigger('click');
                         }
 
                         $.each(items, function(index, item) {
@@ -2801,30 +2806,38 @@ $(function() {
                             }
 
                             if ($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
-                                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${item.locations[0].qty}">`;
+                                var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" max="${item.locations[0].qty}">`;
                             } else {
-                                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+                                var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0">`;
                             }
 
                             var link = `
                             <td>
                                 <div class="dropdown">
-                                    <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                        <div class="row">
-                                            <div class="col-3"><strong>Type</strong></div>
-                                            <div class="col-3"><strong>Date</strong></div>
-                                            <div class="col-3"><strong>Amount</strong></div>
-                                            <div class="col-3"></div>
-                                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                            <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                            <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                                        </div>
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                    <div class="dropdown-menu">
+                                        <table class="nsm-table">
+                                            <thead>
+                                                <tr>
+                                                    <td data-name="Type">Type</td>
+                                                    <td data-name="Date">Date</td>
+                                                    <td data-name="Amount">Amount</td>
+                                                    <td data-name="Action"></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                    <td>${dateString}</td>
+                                                    <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                    <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
-                                <input type="hidden" value="${item.id}" name="transaction_item_id[]">
+                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="category_linked_transaction[]">
+                                <input type="hidden" value="${category.id}" name="transaction_category_id[]">
                             </td>
                             `;
 
@@ -2832,19 +2845,30 @@ $(function() {
                                 <tr>
                                     <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
                                     <td>Product</td>
-                                    <td><select name="location[]" class="form-control" required>${locs}</select></td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
-                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
-                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
-                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                    <td><select name="location[]" class="form-control nsm-field" required>${locs}</select></td>
+                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="${item.quantity}"></td>
+                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
+                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                     <td><span class="row-total">${formatter.format(parseFloat(item.total))}</span></td>
                                     ${link}
-                                    <td><div class="d-flex align-items-center justify-content-center"><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></div></td>
+                                    <td><button type="button" class="nsm-button delete-row"><i class="bx bx-fw bx-trash"></i></button></td>
                                 </tr>
                             `);
-                        });
 
-                        $('#modal-container .modal table#item-details-table tbody select').select2();
+                            $('#modal-container form .modal #item-details-table tbody tr:last-child select').each(function() {
+                                if($(this).find('option').length > 10) {
+                                    $(this).select2({
+                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                    });
+                                } else {
+                                    $(this).select2({
+                                        minimumResultsForSearch: -1,
+                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                    });
+                                }
+                            });
+                        });
                     }
 
                     computeTransactionTotal();
@@ -2856,34 +2880,39 @@ $(function() {
                     }
 
                     if($('#modal-container .modal #linked-transaction').length > 0) {
-                        $('#modal-container .modal #linked-transaction').next().append(`<div class="row my-1">
-                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                            <div class="col-3 d-flex align-items-center">${dateString}</div>
-                            <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
-                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                        </div>`);
+                        $('#modal-container .modal #linked-transaction').next().find('table tbody').append(`<tr>
+                            <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                            <td>${dateString}</td>
+                            <td>${remainingBalance.replace('$-', '-$')}</td>
+                            <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                        </tr>`);
 
                         var linkedCount = $('#modal-container .modal input[name="linked_transaction[]"]').length;
 
                         $('#modal-container .modal #linked-transaction').html(`${linkedCount + 1} linked Purchase Orders`);
                     } else {
-                        button.parent().removeClass('px-0');
                         button.parent().append(`
                             <div class="dropdown">
-                                <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked Purchase Order</a>
-                                <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                    <div class="row">
-                                        <div class="col-3"><strong>Type</strong></div>
-                                        <div class="col-3"><strong>Date</strong></div>
-                                        <div class="col-3"><strong>Amount</strong></div>
-                                        <div class="col-3"></div>
-                                    </div>
-                                    <div class="row my-1">
-                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                        <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                        <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
-                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                                    </div>
+                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Purchase Order</a>
+                                <div class="dropdown-menu">
+                                    <table class="nsm-table">
+                                        <thead>
+                                            <tr>
+                                                <td data-name="Type">Type</td>
+                                                <td data-name="Date">Date</td>
+                                                <td data-name="Amount">Amount</td>
+                                                <td data-name="Action"></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                <td>${dateString}</td>
+                                                <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                <td><button type="button" class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         `);
@@ -2931,7 +2960,7 @@ $(function() {
 
                         $(`#billPaymentModal #payee`).trigger('change');
 
-                        $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${data.id}">`);
+                        $('#billPaymentModal .modal-body .row .col').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${data.id}">`);
 
                         loadBillPaymentBills();
                         loadBillPaymentCredits();
@@ -2939,13 +2968,13 @@ $(function() {
                         $(`#billPaymentModal`).modal('show');
                     });
                 } else {
-                    $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${data.id}">`);
+                    $('#billPaymentModal .modal-body .row .col').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${data.id}">`);
 
                     if ($(`#billPaymentModal #bills-table input[type="checkbox"][value="${data.id}"]`).length > 0) {
                         $(`#billPaymentModal #bills-table input[type="checkbox"][value="${data.id}"]`).prop('checked', true);
                         var row = $(`#billPaymentModal #bills-table input[type="checkbox"][value="${data.id}"]`).parent().parent().parent();
-                        var rowData = $('#billPaymentModal #bills-table').DataTable().row(row).data();
-                        row.find('input[name="bill_payment[]"]').val(rowData.payment).trigger('change');
+                        // var rowData = $('#billPaymentModal #bills-table').DataTable().row(row).data();
+                        // row.find('input[name="bill_payment[]"]').val(rowData.payment).trigger('change');
                     }
 
                     $(this).parent().parent().parent().parent().parent().remove();
@@ -2958,14 +2987,14 @@ $(function() {
                 }
             break;
             case 'vendor-credit':
-                if ($('#modal-container .modal').attr('id') === 'billPaymentModal') {
-                    $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
+                if ($('#modal-container #modal-form .modal').attr('id') === 'billPaymentModal') {
+                    $('#billPaymentModal .modal-body .row .col').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
 
                     if ($(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).length > 0) {
                         $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).prop('checked', true);
                         var row = $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).parent().parent().parent();
-                        var rowData = $('#billPaymentModal #vendor-credits-table').DataTable().row(row).data();
-                        row.find('input[name="credit_payment[]"]').val(rowData.payment).trigger('change');
+                        // var rowData = $('#billPaymentModal #vendor-credits-table').DataTable().row(row).data();
+                        // row.find('input[name="credit_payment[]"]').val(rowData.payment).trigger('change');
                     }
 
                     $(this).parent().parent().parent().parent().parent().remove();
@@ -3000,18 +3029,26 @@ $(function() {
                                 var link = `
                                 <td>
                                     <div class="dropdown">
-                                        <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                        <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                            <div class="row">
-                                                <div class="col-3"><strong>Type</strong></div>
-                                                <div class="col-3"><strong>Date</strong></div>
-                                                <div class="col-3"><strong>Amount</strong></div>
-                                                <div class="col-3"></div>
-                                                <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                                <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                                <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                                <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                                            </div>
+                                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                        <div class="dropdown-menu">
+                                            <table class="nsm-table">
+                                                <thead>
+                                                    <tr>
+                                                        <td data-name="Type">Type</td>
+                                                        <td data-name="Date">Date</td>
+                                                        <td data-name="Amount">Amount</td>
+                                                        <td data-name="Action"></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                        <td>${dateString}</td>
+                                                        <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                        <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                     <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
@@ -3024,13 +3061,13 @@ $(function() {
                                     var locations = item.locations;
                                     var locs = '';
                                     if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
-                                        locs += '<select name="location[]" class="form-control" required>';
+                                        locs += '<select name="location[]" class="form-control nsm-field" required>';
                                         for (var i in locations) {
                                             locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
                                         }
                                         locs += '</select>';
                                     }
-        
+
                                     var type = itemDetails.type;
 
                                     var total = item.total;
@@ -3045,23 +3082,20 @@ $(function() {
                                         <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
                                         <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                                         <td>${locs}</td>
-                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
-                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
-                                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
-                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="-${item.quantity}"></td>
+                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
+                                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                         <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
                                         ${link}
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                            </div>
-                                        </td>
+                                        <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
         
                                     $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
                     
                                     $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                                        minimumResultsForSearch: -1
+                                        minimumResultsForSearch: -1,
+                                        dropdownParent: $('#modal-container #modal-form .modal')
                                     });
                                 } else {
                                     var packageDetails = item.packageDetails;
@@ -3079,24 +3113,20 @@ $(function() {
                                         <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
                                         <td>Package</td>
                                         <td></td>
-                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
+                                        <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="-${item.quantity}"></td>
                                         <td><span class="item-amount">${parseFloat(item.price).toFixed(2)}</span></td>
                                         <td></td>
-                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                         <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
                                         ${link}
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                            </div>
-                                        </td>
+                                        <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
 
                                     $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
 
                                     var packageItems = `
                                         <td colspan="3">
-                                            <table class="table m-0 bg-white">
+                                            <table class="nsm-table">
                                                 <thead>
                                                     <tr class="package-item-header">
                                                         <th>Item Name</th>
@@ -3140,34 +3170,40 @@ $(function() {
                     button.parent().append(`<input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction[]">`);
 
                     if($('#modal-container .modal #linked-transaction').length > 0) {
-                        $('#modal-container .modal #linked-transaction').next().append(`<div class="row my-1">
-                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                            <div class="col-3 d-flex align-items-center">${dateString}</div>
-                            <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
-                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                        </div>`);
+                        $('#modal-container .modal #linked-transaction').next().find('table tbody').append(`<tr>
+                            <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                            <td>${dateString}</td>
+                            <td>${remainingBalance.replace('$-', '-$')}</td>
+                            <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                        </tr>`);
+
 
                         var linkedCount = $('#modal-container .modal input[name="linked_transaction[]"]').length;
 
                         $('#modal-container .modal #linked-transaction').html(`${linkedCount} linked transactions`);
                     } else {
-                        button.parent().removeClass('px-0');
                         button.parent().append(`
                             <div class="dropdown">
-                                <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType}</a>
-                                <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                    <div class="row">
-                                        <div class="col-3"><strong>Type</strong></div>
-                                        <div class="col-3"><strong>Date</strong></div>
-                                        <div class="col-3"><strong>Amount</strong></div>
-                                        <div class="col-3"></div>
-                                    </div>
-                                    <div class="row my-1">
-                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                        <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                        <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
-                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                                    </div>
+                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Purchase Order</a>
+                                <div class="dropdown-menu">
+                                    <table class="nsm-table">
+                                        <thead>
+                                            <tr>
+                                                <td data-name="Type">Type</td>
+                                                <td data-name="Date">Date</td>
+                                                <td data-name="Amount">Amount</td>
+                                                <td data-name="Action"></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                <td>${dateString}</td>
+                                                <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                <td><button type="button" class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         `);
@@ -3197,18 +3233,26 @@ $(function() {
                                 var link = `
                                 <td>
                                     <div class="dropdown">
-                                        <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                        <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                            <div class="row">
-                                                <div class="col-3"><strong>Type</strong></div>
-                                                <div class="col-3"><strong>Date</strong></div>
-                                                <div class="col-3"><strong>Amount</strong></div>
-                                                <div class="col-3"></div>
-                                                <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                                <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                                <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                                <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                                            </div>
+                                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                        <div class="dropdown-menu">
+                                            <table class="nsm-table">
+                                                <thead>
+                                                    <tr>
+                                                        <td data-name="Type">Type</td>
+                                                        <td data-name="Date">Date</td>
+                                                        <td data-name="Amount">Amount</td>
+                                                        <td data-name="Action"></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                        <td>${dateString}</td>
+                                                        <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                        <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                     <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
@@ -3221,7 +3265,7 @@ $(function() {
                                     var locations = item.locations;
                                     var locs = '';
                                     if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
-                                        locs += '<select name="location[]" class="form-control" required>';
+                                        locs += '<select name="location[]" class="form-control nsm-field" required>';
                                         for (var i in locations) {
                                             locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
                                         }
@@ -3239,23 +3283,20 @@ $(function() {
                                         <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
                                         <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                                         <td>${locs}</td>
-                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
-                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(price).toFixed(2)}"></td>
-                                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
-                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="-${item.quantity}"></td>
+                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
+                                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                         <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
                                         ${link}
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                            </div>
-                                        </td>
+                                        <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
         
                                     $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
                     
                                     $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                                        minimumResultsForSearch: -1
+                                        minimumResultsForSearch: -1,
+                                        dropdownParent: $('#modal-container #modal-form .modal')
                                     });
                                 } else {
                                     var packageDetails = item.packageDetails;
@@ -3276,24 +3317,20 @@ $(function() {
                                         <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
                                         <td>Package</td>
                                         <td></td>
-                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
-                                        <td><span class="item-amount">${parseFloat(price).toFixed(2)}</span></td>
+                                        <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="-${item.quantity}"></td>
+                                        <td><span class="item-amount">${parseFloat(item.price).toFixed(2)}</span></td>
                                         <td></td>
-                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                         <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
                                         ${link}
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                            </div>
-                                        </td>
+                                        <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
 
                                     $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
 
                                     var packageItems = `
                                         <td colspan="3">
-                                            <table class="table m-0 bg-white">
+                                            <table class="nsm-table">
                                                 <thead>
                                                     <tr class="package-item-header">
                                                         <th>Item Name</th>
@@ -3337,34 +3374,40 @@ $(function() {
                     button.parent().append(`<input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction[]">`);
 
                     if($('#modal-container .modal #linked-transaction').length > 0) {
-                        $('#modal-container .modal #linked-transaction').next().append(`<div class="row my-1">
-                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                            <div class="col-3 d-flex align-items-center">${dateString}</div>
-                            <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
-                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                        </div>`);
+                        $('#modal-container .modal #linked-transaction').next().find('table tbody').append(`<tr>
+                            <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                            <td>${dateString}</td>
+                            <td>${remainingBalance.replace('$-', '-$')}</td>
+                            <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                        </tr>`);
+
 
                         var linkedCount = $('#modal-container .modal input[name="linked_transaction[]"]').length;
 
                         $('#modal-container .modal #linked-transaction').html(`${linkedCount} linked transactions`);
                     } else {
-                        button.parent().removeClass('px-0');
                         button.parent().append(`
                             <div class="dropdown">
-                                <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType}</a>
-                                <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                    <div class="row">
-                                        <div class="col-3"><strong>Type</strong></div>
-                                        <div class="col-3"><strong>Date</strong></div>
-                                        <div class="col-3"><strong>Amount</strong></div>
-                                        <div class="col-3"></div>
-                                    </div>
-                                    <div class="row my-1">
-                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                        <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                        <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
-                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
-                                    </div>
+                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Purchase Order</a>
+                                <div class="dropdown-menu">
+                                    <table class="nsm-table">
+                                        <thead>
+                                            <tr>
+                                                <td data-name="Type">Type</td>
+                                                <td data-name="Date">Date</td>
+                                                <td data-name="Amount">Amount</td>
+                                                <td data-name="Action"></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                <td>${dateString}</td>
+                                                <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                <td><button type="button" class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         `);
@@ -3441,7 +3484,7 @@ $(function() {
 
                 var i = 1;
                 $('#expenseModal #category-details-table tbody tr').each(function() {
-                    $(this).find('td:nth-child(2)').html(i);
+                    $(this).find('td:first-child').html(i);
 
                     i++;
                 });
@@ -3501,19 +3544,19 @@ $(function() {
                             transaction.data_type !== 'bill' &&
                             transaction.data_type !== 'vendor-credit' &&
                             $(`#expenseModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
-                                $('#expenseModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                $('#expenseModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                                     <div class="col-12">
-                                        <div class="card border">
-                                            <div class="card-body p-0">
+                                        <div class="card">
+                                            <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong> ${transaction.total}
-                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                    <strong>Total</strong>&emsp;${transaction.total}
+                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
-                                                <ul class="d-flex justify-content-around">
-                                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                <ul class="d-flex justify-content-around list-unstyled">
+                                                    <li><a href="#" class="text-decoration-none add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="text-decoration-none open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -3553,7 +3596,7 @@ $(function() {
 
                 var i = 1;
                 $('#checkModal #category-details-table tbody tr').each(function() {
-                    $(this).find('td:nth-child(2)').html(i);
+                    $(this).find('td:first-child').html(i);
 
                     i++;
                 });
@@ -3613,19 +3656,19 @@ $(function() {
                             transaction.data_type !== 'bill' &&
                             transaction.data_type !== 'vendor-credit' &&
                             $(`#checkModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
-                                $('#checkModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                $('#checkModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                                     <div class="col-12">
-                                        <div class="card border">
-                                            <div class="card-body p-0">
+                                        <div class="card">
+                                            <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong> ${transaction.total}
-                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                    <strong>Total</strong>&emsp;${transaction.total}
+                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
-                                                <ul class="d-flex justify-content-around">
-                                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                <ul class="d-flex justify-content-around list-unstyled">
+                                                    <li><a href="#" class="text-decoration-none add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="text-decoration-none open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -3665,7 +3708,7 @@ $(function() {
 
                 var i = 1;
                 $('#billModal #category-details-table tbody tr').each(function() {
-                    $(this).find('td:nth-child(2)').html(i);
+                    $(this).find('td:first-child').html(i);
 
                     i++;
                 });
@@ -3722,19 +3765,19 @@ $(function() {
                             if($('#billModal input[name="linked_transaction[]"]').length === 0 ||
                             $('#billModal input[name="linked_transaction[]"]').length > 0 &&
                             $(`#billModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
-                                $('#billModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                $('#billModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                                     <div class="col-12">
-                                        <div class="card border">
-                                            <div class="card-body p-0">
+                                        <div class="card">
+                                            <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong> ${transaction.total}
-                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                    <strong>Total</strong>&emsp;${transaction.total}
+                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
-                                                <ul class="d-flex justify-content-around">
-                                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                <ul class="d-flex justify-content-around list-unstyled">
+                                                    <li><a href="#" class="text-decoration-none add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="text-decoration-none open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -3803,6 +3846,7 @@ $(function() {
 
             $(`#${modalName} #payee`).trigger('change');
             $(`#${modalName} #customer`).trigger('change');
+            $(`#${modalName} #vendor`).trigger('change');
 
             $(`#${modalName}`).modal('show');
         });
@@ -3815,8 +3859,8 @@ $(function() {
 
         $(this).removeClass('close-transactions-container');
         $(this).addClass('open-transactions-container');
-        $(this).children().removeClass('fa-chevron-right');
-        $(this).children().addClass('fa-chevron-left');
+        $(this).children().removeClass('bx-chevron-right');
+        $(this).children().addClass('bx-chevron-left');
     });
 
     $(document).on('click', '#modal-container .modal a.open-transactions-container', function(e) {
@@ -3826,8 +3870,8 @@ $(function() {
 
         $(this).removeClass('open-transactions-container');
         $(this).addClass('close-transactions-container');
-        $(this).children().removeClass('fa-chevron-left');
-        $(this).children().addClass('fa-chevron-right');
+        $(this).children().removeClass('bx-chevron-left');
+        $(this).children().addClass('bx-chevron-right');
     });
 
     $(document).on('click', '#billPaymentModal .dropdown-menu', function(e) {
@@ -5835,23 +5879,23 @@ $(function() {
         $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
 
-    $(document).on('click', '#modal-container form .modal #show-existing-attachments', function() {
-        if($('#modal-container form .modal .transactions-container').length > 0) {
-            $('#modal-container form .modal .transactions-container').parent().remove();
-            $('#modal-container form .modal a.close-transactions-container').parent().remove();
-            $('#modal-container form .modal a.open-transactions-container').parent().remove();
+    $(document).on('click', '#modal-container #modal-form .modal #show-existing-attachments', function() {
+        if($('#modal-container #modal-form .modal .transactions-container').length > 0) {
+            $('#modal-container #modal-form .modal .transactions-container').parent().remove();
+            $('#modal-container #modal-form .modal a.close-transactions-container').parent().remove();
+            $('#modal-container #modal-form .modal a.open-transactions-container').parent().remove();
         }
 
-        if($('#modal-container form .modal .attachments-container').length < 1) {
-            var transactionType = $('#modal-container form .modal .modal-title').text();
-            $('#modal-container form .modal .modal-body').children('.row').append(`
-                <div class="col-xl-2">
-                    <div class="bg-white h-100" style="padding: 15px">
-                        <div class="row attachments-container">
-                            <div class="col-12 pb-3">
+        if($('#modal-container #modal-form .modal .attachments-container').length < 1) {
+            var transactionType = $('#modal-container #modal-form .modal .modal-title').text();
+            $('#modal-container #modal-form .modal .modal-body').children('.row').append(`
+                <div class="col-2 nsm-callout primary">
+                    <div class="attachments-container h-100 p-3">
+                        <div class="row">
+                            <div class="col-12 mb-3">
                                 <h4>Add to ${transactionType}</h4>
                                 <div class="d-flex justify-content-center">
-                                    <select class="form-control" id="attachment-types">
+                                    <select class="form-control nsm-field" id="attachment-types">
                                         <option value="unlinked">Unlinked</option>
                                         <option value="all">All</option>
                                     </select>
@@ -5862,11 +5906,12 @@ $(function() {
                 </div>
             `);
 
-            $('#modal-container form .modal #attachment-types').select2({
-                minimumResultsForSearch: -1
+            $('#modal-container #modal-form .modal #attachment-types').select2({
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #modal-form .modal')
             });
 
-            var attachmentType = $('#modal-container form .modal #attachment-types').val();
+            var attachmentType = $('#modal-container #modal-form .modal #attachment-types').val();
             $.get(`/accounting/attachments/get-${attachmentType}-attachments-ajax`, function(res) {
                 var attachments = JSON.parse(res);
         
@@ -5874,11 +5919,11 @@ $(function() {
                     var dateUploaded = new Date(attachment.created_at);
                     var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
 
-                    if($('#modal-container form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
-                        $('#modal-container form .modal .attachments-container').append(`
-                            <div class="col-12">
-                                <div class="card border">
-                                    <div class="card-body p-0">
+                    if($('#modal-container #modal-form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
+                        $('#modal-container #modal-form .modal .attachments-container').children().append(`
+                            <div class="col-12 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
                                         <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
                                         <div class="card-subtitle">
                                             <div class="row">
@@ -5886,9 +5931,9 @@ $(function() {
                                                 <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
                                             </div>
                                         </div>
-                                        <ul class="d-flex justify-content-around">
-                                            <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
-                                            <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
+                                        <ul class="d-flex justify-content-around list-unstyled">
+                                            <li><a href="#" class="text-decoration-none add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
+                                            <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-decoration-none">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -5900,7 +5945,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container form .modal #attachment-types, #existing-attachments-modal #attachment-types', function() {
+    $(document).on('change', '#modal-container #modal-form .modal #attachment-types, #existing-attachments-modal #attachment-types', function() {
         var cont = $(this).parent().parent().parent();
         $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function(res) {
             var attachments = JSON.parse(res);
@@ -5910,11 +5955,11 @@ $(function() {
                 var dateUploaded = new Date(attachment.created_at);
                 var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
 
-                if($('#modal-container form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
+                if($('#modal-container #modal-form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
                     cont.append(`
-                        <div class="col-12">
-                            <div class="card border">
-                                <div class="card-body p-0">
+                        <div class="col-12 mb-3">
+                            <div class="card">
+                                <div class="card-body">
                                     <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
                                     <div class="card-subtitle">
                                         <div class="row">
@@ -5922,9 +5967,9 @@ $(function() {
                                             <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
                                         </div>
                                     </div>
-                                    <ul class="d-flex justify-content-around">
-                                        <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
-                                        <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
+                                    <ul class="d-flex justify-content-around list-unstyled">
+                                        <li><a href="#" class="text-decoration-none add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
+                                        <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-decoration-none">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -5935,10 +5980,10 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container form .modal .attachments-container a.add-attachment', function(e) {
+    $(document).on('click', '#modal-container #modal-form .modal .attachments-container a.add-attachment', function(e) {
         var id = e.currentTarget.dataset.id;
-        if($('#modal-container form .modal .attachments').parent().find(`input[value="${id}"]`).length < 1) {
-            $('#modal-container form .modal .attachments').parent().append(`<input type="hidden" name="attachments[]" value="${id}">`);
+        if($('#modal-container #modal-form .modal .attachments').parent().find(`input[value="${id}"]`).length < 1) {
+            $('#modal-container #modal-form .modal .attachments').parent().append(`<input type="hidden" name="attachments[]" value="${id}">`);
 
             $.get('/accounting/get-attachment/'+id, function(res) {
                 var attachment = JSON.parse(res);
@@ -12138,18 +12183,18 @@ const getInvoiceLinkableTransactions = (transactionType, transactionDate) => {
             }
 
             if(flag) {
-                $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                $('#invoiceModal .modal-body .row .nsm-callout .transactions-container .row').append(`
                     <div class="col-12">
-                        <div class="card border">
-                            <div class="card-body p-0">
+                        <div class="card">
+                            <div class="card-body">
                                 <h5 class="card-title">${title}</h5>
                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                 <p class="card-text">
                                     ${transaction.balance}
                                 </p>
-                                <ul class="d-flex justify-content-around">
-                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                <ul class="d-flex justify-content-around list-unstyled">
+                                    <li><a href="#" class="add-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                    <li><a href="#" class="open-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                 </ul>
                             </div>
                         </div>

@@ -64,41 +64,45 @@
                         <div class="col">
                             <div class="row payee-details">
                                 <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
-                                <div class="col-md-12">
-                                    <a href="#" class="float-right btn btn-transparent rounded-0 open-transactions-container" style="padding:12px 15px !important">
-                                        <i class="fa fa-chevron-left"></i>
-                                    </a>
+                                <div class="col-12">
+                                    <button class="nsm-button open-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-left"></i></button>
 
                                     <div class="dropdown">
-                                        <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">
                                             <?php if(count($check->linked_transacs) > 1) : ?>
                                                 <?=count($check->linked_transacs)?> linked Purchase Orders
                                             <?php else : ?>
                                                 1 linked Purchase Order
                                             <?php endif; ?>
                                         </a>
-                                        <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                            <div class="row">
-                                                <div class="col-3"><strong>Type</strong></div>
-                                                <div class="col-3"><strong>Date</strong></div>
-                                                <div class="col-3"><strong>Amount</strong></div>
-                                                <div class="col-3"></div>
-                                            </div>
-                                            <?php foreach($check->linked_transacs as $linkedTransac) : ?>
-                                            <div class="row my-1">
-                                                <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="<?=$linkedTransac['transaction']->id?>" data-type="purchase-order">Purchase Order</a></div>
-                                                <div class="col-3 d-flex align-items-center"><?=date("m/d/Y", strtotime($linkedTransac['transaction']->purchase_order_date))?></div>
-                                                <div class="col-3 d-flex align-items-center">
-                                                    <?php
-                                                    $transacAmount = $linkedTransac['transaction']->total_amount;
-                                                    $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+                                        <div class="dropdown-menu">
+                                            <table class="nsm-table">
+                                                <thead>
+                                                    <tr>
+                                                        <td data-name="Type">Type</td>
+                                                        <td data-name="Date">Date</td>
+                                                        <td data-name="Amount">Amount</td>
+                                                        <td data-name="Action"></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach($check->linked_transacs as $linkedTransac) : ?>
+                                                    <tr>
+                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac['transaction']->id?>" data-type="purchase-order">Purchase Order</a></td>
+                                                        <td><?=date("m/d/Y", strtotime($linkedTransac['transaction']->purchase_order_date))?></td>
+                                                        <td>
+                                                                <?php
+                                                            $transacAmount = $linkedTransac['transaction']->total_amount;
+                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
 
-                                                    echo str_replace('$-', '-$', $transacAmount);
-                                                    ?>
-                                                </div>
-                                                <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="purchase-order" data-id="<?=$linkedTransac['transaction']->id?>" style="font-size: 13px !important">Remove</button></div>
-                                            </div>
-                                            <?php endforeach; ?>
+                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                            ?>
+                                                        </td>
+                                                        <td><button type="button" class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$linkedTransac['transaction']->id?>">Remove</button></td>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
 
@@ -338,25 +342,33 @@
                                                                 <td>
                                                                 <?php if(!is_null($category->linked_transaction_type) && !is_null($category->linked_transaction_id)) : ?>
                                                                     <div class="dropdown">
-                                                                        <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                                                        <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                                                            <div class="row">
-                                                                                <div class="col-3"><strong>Type</strong></div>
-                                                                                <div class="col-3"><strong>Date</strong></div>
-                                                                                <div class="col-3"><strong>Amount</strong></div>
-                                                                                <div class="col-3"></div>
-                                                                                <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="<?=$category->linked_transaction_id?>" data-type="purchase-order">Purchase Order</a></div>
-                                                                                <div class="col-3 d-flex align-items-center"><?=date("m/d/Y", strtotime($category->linked_transac->purchase_order_date))?></div>
-                                                                                <div class="col-3 d-flex align-items-center">
-                                                                                    <?php
-                                                                                    $transacAmount = $category->linked_transac->total_amount;
-                                                                                    $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+                                                                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                                                        <div class="dropdown-menu">
+                                                                            <table class="nsm-table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <td data-name="Type">Type</td>
+                                                                                        <td data-name="Date">Date</td>
+                                                                                        <td data-name="Amount">Amount</td>
+                                                                                        <td data-name="Action"></td>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$category->linked_transaction_id?>" data-type="purchase-order">Puchase Order</a></td>
+                                                                                        <td><?=date("m/d/Y", strtotime($category->linked_transac->purchase_order_date))?></td>
+                                                                                        <td>
+                                                                                            <?php
+                                                                                            $transacAmount = $category->linked_transac->total_amount;
+                                                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
 
-                                                                                    echo str_replace('$-', '-$', $transacAmount);
-                                                                                    ?>
-                                                                                </div>
-                                                                                <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="purchase-order" data-id="<?=$category->linked_transaction_id?>" style="font-size: 13px !important">Remove</button></div>
-                                                                            </div>
+                                                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                                                            ?>
+                                                                                        </td>
+                                                                                        <td><button class="nsm-button unlink-transaction" data-type="puchase-order" data-id="<?=$category->linked_transaction_id?>">Remove</button></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
                                                                         </div>
                                                                     </div>
                                                                     <input type="hidden" value="<?=$category->linked_transaction_type?>-<?=$category->linked_transaction_id?>" name="category_linked_transaction[]">
@@ -489,25 +501,33 @@
                                                                         <td>
                                                                         <?php if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id)) : ?>
                                                                             <div class="dropdown">
-                                                                                <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                                                                <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                                                                    <div class="row">
-                                                                                        <div class="col-3"><strong>Type</strong></div>
-                                                                                        <div class="col-3"><strong>Date</strong></div>
-                                                                                        <div class="col-3"><strong>Amount</strong></div>
-                                                                                        <div class="col-3"></div>
-                                                                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="<?=$item->linked_transaction_id?>" data-type="purchase-order">Purchase Order</a></div>
-                                                                                        <div class="col-3 d-flex align-items-center"><?=date("m/d/Y", strtotime($item->linked_transac->purchase_order_date))?></div>
-                                                                                        <div class="col-3 d-flex align-items-center">
-                                                                                            <?php
-                                                                                            $transacAmount = $item->linked_transac->total_amount;
-                                                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+                                                                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                                                                <div class="dropdown-menu">
+                                                                                    <table class="nsm-table">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <td data-name="Type">Type</td>
+                                                                                                <td data-name="Date">Date</td>
+                                                                                                <td data-name="Amount">Amount</td>
+                                                                                                <td data-name="Action"></td>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$item->linked_transaction_id?>" data-type="purchase-order">Puchase Order</a></td>
+                                                                                                <td><?=date("m/d/Y", strtotime($item->linked_transac->purchase_order_date))?></td>
+                                                                                                <td>
+                                                                                                    <?php
+                                                                                                    $transacAmount = $item->linked_transac->total_amount;
+                                                                                                    $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
 
-                                                                                            echo str_replace('$-', '-$', $transacAmount);
-                                                                                            ?>
-                                                                                        </div>
-                                                                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="purchase-order" data-id="<?=$item->linked_transaction_id?>" style="font-size: 13px !important">Remove</button></div>
-                                                                                    </div>
+                                                                                                    echo str_replace('$-', '-$', $transacAmount);
+                                                                                                    ?>
+                                                                                                </td>
+                                                                                                <td><button class="nsm-button unlink-transaction" data-type="puchase-order" data-id="<?=$item->linked_transaction_id?>">Remove</button></td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
                                                                                 </div>
                                                                             </div>
                                                                             <input type="hidden" value="<?=$item->linked_transaction_type?>-<?=$item->linked_transaction_id?>" name="item_linked_transaction[]">
@@ -573,29 +593,34 @@
                         </div>
 
                         <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
-                        <div class="col-xl-2" style="display: none">
-                            <div class="transactions-container bg-white h-100" style="padding: 15px">
+                        <div class="w-auto nsm-callout primary" style="display: none">
+                            <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
                                         <h4>Add to Check</h4>
                                     </div>
+
                                     <?php foreach($linkableTransactions as $linkableTransac) : ?>
                                     <?php
                                     $title = $linkableTransac['type'];
                                     $title .= $linkableTransac['number'] !== '' ? ' #' . $linkableTransac['number'] : '';
                                     ?>
+
                                     <div class="col-12">
-                                        <div class="card border">
-                                            <div class="card-body p-0">
+                                        <div class="card">
+                                            <div class="card-body">
                                                 <h5 class="card-title"><?=$title?></h5>
                                                 <p class="card-subtitle"><?=$linkableTransac['formatted_date']?></p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong> <?=$linkableTransac['total']?>
-                                                    <br><strong>Balance</strong> <?=$linkableTransac['balance']?>
+                                                    <strong>Total</strong>&emsp;<?=$linkableTransac['total']?>
+                                                    <?php if($linkableTransac['type'] === 'Purchase Order') : ?>
+                                                    <br>
+                                                    <strong>Balance</strong>&emsp;<?=$linkableTransac['balance']?>
+                                                    <?php endif; ?>
                                                 </p>
-                                                <ul class="d-flex justify-content-around">
-                                                    <li><a href="#" class="text-info add-transaction" data-id="<?=$linkableTransac['id']?>" data-type="purchase-order"><strong>Add</strong></a></li>
-                                                    <li><a href="#" class="text-info open-transaction" data-id="<?=$linkableTransac['id']?>" data-type="purchase-order">Open</a></li>
+                                                <ul class="d-flex justify-content-around list-unstyled">
+                                                    <li><a href="#" class="add-transaction text-decoration-none" data-id="<?=$linkableTransac['id']?>" data-type="<?=$linkableTransac['type']?>"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="open-transaction text-decoration-none" data-id="<?=$linkableTransac['id']?>" data-type="<?=$linkableTransac['type']?>"><strong>Open</strong></a></li>
                                                 </ul>
                                             </div>
                                         </div>
