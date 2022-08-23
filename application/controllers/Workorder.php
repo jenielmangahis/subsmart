@@ -4590,6 +4590,10 @@ class Workorder extends MY_Controller
 
                 $i = 0;
                 foreach($a as $row){
+                    if ($a[$i] == 0) {
+                        continue;
+                    }
+
                     $data['items_id']       = $a[$i];
                     $data['package_id ']    = $packageID[$i];
                     $data['qty']            = $quantity[$i];

@@ -306,7 +306,54 @@
                                     <h6 onclick="hf()" class="czLabel" id="hfRightArrow"><i class='bx bx-fw bxs-right-arrow'></i>Header/Footer</h6>
                                     <h6 onclick="hf()" class="czLabel" id="hfDownArrow"><i class='bx bx-fw bxs-down-arrow'></i>Header/Footer</h6>
                                     <div class="hf" id="hf">
-                                        <p>Group by</p>
+                                        <h6 class="fw-bold" style="margin-top: 20px;">Header</h6>
+                                        <div class="form-check" style="margin-top: 20px;">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <input type="checkbox" id="sort-asc" name="header[]" value="isLogo" class="form-check-input">
+                                                    <label for="sort-asc" class="form-check-label">Show Logo</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-check" style="margin-top: 20px;">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <input type="checkbox" id="changeCompany1" name="header[]" value="isCompany" class="form-check-input">
+                                                    <label for="sort-asc" class="form-check-label">Company Name</label>
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="text" onchange="changeCompany()" value="<?=$clients->business_name?>" name="header[company]" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-check" style="margin-top: 20px;">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <input type="checkbox" id="changeReport1" name="header[]" value="isReport" class="form-check-input" >
+                                                    <label for="sort-asc" class="form-check-label">Report Title</label>
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="text" id="sort-asc" onchange="changeReport()" name="header[report]" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h6 class="fw-bold" style="margin-top: 20px;">Footer</h6>
+                                        <div class="form-check" style="margin-top: 20px;">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <input type="checkbox" id="sort-asc" name="header[]" value="isDate" class="form-check-input">
+                                                    <label for="sort-asc" class="form-check-label">Date Prepared</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-check" style="margin-top: 20px;">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <input type="checkbox" id="sort-asc" name="header[]" value="isTime" class="form-check-input">
+                                                    <label for="sort-asc" class="form-check-label">Time Prepared</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>  
                             </div>
@@ -643,10 +690,10 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold"><span class="company-name"><?= (!empty($header)) ? $company_title : $clients->business_name; ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
-                                        <p class="fw-bold">Customer Contact List</p>
+                                        <p class="fw-bold"><?= (!empty($header)) ? $report_title : $page->title; ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -739,7 +786,7 @@
                                 <?php } ?>
                             </div>
                             <div class="nsm-card-footer text-center">
-                                <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>
+                                <p class="m-0"><?= (!empty($header)) ? $date_prepared : date("l, F j, Y"); ?> <?= (!empty($header)) ? $time_prepared : date("h:i A eP"); ?></p>
                             </div>
                         </div>
                     </div>
@@ -754,6 +801,14 @@
 <script type="text/javascript">
 var expanded = false;
 
+// var selectedHeader = [];
+
+// $('input[name="header[]"]').change(function() { 
+//     $('input[name="header[]"]').each(function() {
+//         selectedHeader.push(this.value);
+//     });
+//     console.log(selectedHeader);
+//  });
 function showCheckboxes() {
   var checkboxes = document.getElementById("checkboxes");
   if (!expanded) {
@@ -918,5 +973,12 @@ function showCheckboxes1() {
     }
     function checkStatus(){
         document.getElementById("checkStatus1").checked = true;    
+    }
+
+    function changeCompany(){
+        document.getElementById("changeCompany1").checked = true;    
+    }
+    function changeReport(){
+        document.getElementById("changeReport1").checked = true;    
     }
 </script>

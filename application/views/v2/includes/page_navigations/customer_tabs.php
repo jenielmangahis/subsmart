@@ -12,7 +12,7 @@
                 <span>Customer Dashboard</span>
             </a>
         </li> -->
-        <li class="<?php if($page->title == 'Customer Subscriptions'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Customer Subscriptions' || $page->title == 'Add Group'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/subscriptions') ?>">
                 <i class='bx bx-fw bx-user-pin'></i>
                 <span>Customer Subscriptions</span>
@@ -24,7 +24,7 @@
                 <span>Customer Groups</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Leads Manager List' || $page->title == 'New Lead Form'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/leads') ?>">
                 <i class='bx bx-fw bx-notepad'></i>
                 <span>Leads</span>

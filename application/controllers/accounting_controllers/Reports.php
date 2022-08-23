@@ -301,8 +301,37 @@ class Reports extends MY_Controller {
         $fl_cust = $this->input->post('fl_customer');
         $fl_type = $this->input->post('fl_type');
         $fl_status = $this->input->post('fl_status');
+        $header = $this->input->post('header');
 
+        $this->page_data['report_title'] = $reportType->name;
+        $this->page_data['header'] = $header;
+        //$this->page_data['company_title'] = $this->page_data['clients']->business_name;
+        if(!empty($header)){
+            if(in_array('isCompany', $header)){
+                $this->page_data['company_title'] = $header['company'];
+            }else{
+                $this->page_data['company_title'] = "";
+            }
 
+            if(in_array('isReport', $header)){
+                $this->page_data['report_title'] = $header['report'];
+            }else{
+                $this->page_data['report_title'] = "";
+            }
+
+            if(in_array('isDate', $header)){
+                $this->page_data['date_prepared'] = date("l, F j, Y");
+            }else{
+                $this->page_data['date_prepared'] = "";
+            }
+
+            if(in_array('isTime', $header)){
+                $this->page_data['time_prepared'] = date("h:i A eP");
+            }else{
+                $this->page_data['time_prepared'] = "";
+            }
+        }
+        
         // when sort, columns, filters are NOT empty
         if(($sort_by != 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
             $getBill = $this->AcsBilling_model->getBilling($sort_by);
