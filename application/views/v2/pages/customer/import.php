@@ -274,10 +274,10 @@
                 }
             });
         }
-        var previous;
-        var previousTxt;
-        var selectedHeader = [];
-        var head = [];
+        // var previous;
+        // var previousTxt;
+        // var selectedHeader = [];
+        // var head = [];
 
     // $("#headersSelector0").on('focus', function () {
     //     selectedHeader = [];

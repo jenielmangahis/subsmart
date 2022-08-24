@@ -325,6 +325,4 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     position: absolute;
     cursor: move;
     background-position: 0 -606px;
-    top: 113px;
-    left: 100px;
 }
