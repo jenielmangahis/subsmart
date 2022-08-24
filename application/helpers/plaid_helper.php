@@ -1,11 +1,15 @@
 <?php
 
-/*Create public token*/
-function linkTokenCreate($client_id, $client_secret, $client_user_id, $client_name)
+/*Create link token*/
+function linkTokenCreate($client_id, $client_secret, $client_user_id, $client_name, $return_url = '')
 {   
     $is_valid = false;
     $token    = '';
     $err_msg  = '';
+
+    if( $return_url == '' ){
+        $return_url = PLAID_API_REDIRECT_URL;
+    }
 
     $post = [
         'client_id' => $client_id,
@@ -16,7 +20,7 @@ function linkTokenCreate($client_id, $client_secret, $client_user_id, $client_na
         'country_codes' => ["US"],
         'language' => 'en',
         'webhook' => PLAID_API_WEBHOOK_URL,
-        'redirect_uri' => PLAID_API_REDIRECT_URL,
+        'redirect_uri' => $return_url,
 
     ];
 
@@ -39,6 +43,43 @@ function linkTokenCreate($client_id, $client_secret, $client_user_id, $client_na
     }
 
     $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg, 'token' => $token];
+    return $return;
+}
+
+/*Create public token*/
+function publicTokenCreate($client_id, $client_secret, $institution_id)
+{   
+    $is_valid = false;
+    $token    = '';
+    $err_msg  = '';
+
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'institution_id' => $institution_id,
+        'initial_products' => ["auth","transactions"],
+        //'options' => []
+
+    ];
+
+    $url = PLAID_API_URL . '/sandbox/public_token/create';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    if( isset($data->error_type) ){
+        $err_msg = $data->error_message;
+    }else{
+        $is_valid = true;
+        $public_token = $data->public_token;
+    }
+
+    $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg, 'public_token' => $public_token];
     return $return;
 }
 
@@ -210,6 +251,70 @@ function recurringTransactionsGet($client_id, $client_secret, $access_token, $ac
     ];
 
     $url = PLAID_API_URL . '/transactions/recurring/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Stripe bank token*/
+function stripeBankAccountTokenCreate($client_id, $client_secret, $access_token, $account_id){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,
+        'account_id' => $account_id
+    ];
+
+    $url = PLAID_API_URL . '/processor/stripe/bank_account_token/create';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Processing Payment : Recipient List*/
+function recipientList($client_id, $client_secret){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+    ];
+
+    $url = PLAID_API_URL . '/payment_initiation/recipient/list';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+/*Get Institution*/
+function institutionGetById($institution_id, $client_id, $client_secret){
+    $post = [
+        'institution_id' => $institution_id,
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'country_codes' => ['US']
+    ];
+
+    $url = PLAID_API_URL . '/institutions/get_by_id';
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

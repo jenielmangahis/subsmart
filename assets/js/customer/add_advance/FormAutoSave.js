@@ -19,6 +19,8 @@ export class FormAutoSave {
   inputs = [];
   inputTimeouts = {};
 
+  errorTimeout = null;
+
   /**
    *
    * @param {HTMLFormElement} $form
@@ -42,7 +44,6 @@ export class FormAutoSave {
   }
 
   setInputListener($input) {
-    // if (!this.$form.checkValidity()) return;
     if (!$input.name || !$input.name.length) return;
 
     if (
@@ -83,6 +84,16 @@ export class FormAutoSave {
   }
 
   onChange(event) {
+    if (!this.$form.checkValidity()) {
+      window.clearTimeout(this.errorTimeout);
+      FormAutoSave.toggleSavingErrorIndicator(true, "Missing required fields.");
+
+      this.errorTimeout = window.setTimeout(() => {
+        FormAutoSave.toggleSavingErrorIndicator(false);
+      }, 5000);
+      return;
+    }
+
     const $input = event.target;
     let { name, value } = $input;
 
@@ -165,13 +176,15 @@ export class FormAutoSave {
     return $div;
   }
 
-  static toggleSavingErrorIndicator(show = true) {
+  static toggleSavingErrorIndicator(show = true, message = null) {
     const id = "formautosavemessage--error";
     let $div = document.getElementById(id);
 
     if (!$div) {
       $div = FormAutoSave.createIndicatorElement();
-      $div.textContent = "Saving failed, something went wrong.";
+      $div.textContent = message
+        ? message
+        : "Saving failed, something went wrong.";
       $div.setAttribute("id", id);
 
       $div.style.backgroundColor = "#e3778f47";

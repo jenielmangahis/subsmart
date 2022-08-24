@@ -79,12 +79,18 @@ class PlaidBankAccount_model extends MY_Model
         return $query;
     }
 
-    public function getByAccountNameAndSubType($account_name, $subtype)
+    public function getByAccountNameAndSubType($account_name, $subtype, $filters=array())
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('account_name', $account_name);
         $this->db->where('subtype', $subtype);
+
+        if ( !empty($filters['search']) ){
+            foreach($filters['search'] as $f){
+                $this->db->or_like($f['field'], $f['value'], 'both');            
+            } 
+        }
 
         $query = $this->db->get()->row();
         return $query;

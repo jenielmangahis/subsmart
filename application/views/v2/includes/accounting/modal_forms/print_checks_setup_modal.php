@@ -172,7 +172,7 @@
                                                                     <p><b>Drag the grid</b> inside the large square to the place where it appears on your printout. This lets nSmarTrac figure out how to adjust the alignment.</p>
                                                                     <div class="printsetup-container">
                                                                         <div class="printsetup-amountbox"></div>
-                                                                        <div class="printsetup-amountgrid"></div>
+                                                                        <div class="printsetup-amountgrid" style="top: <?=$amountGridMargin['top']?>px; left: <?=$amountGridMargin['left']?>px"></div>
                                                                     </div>
                                                                     <div class="offset-fields">
                                                                         <div class="row">

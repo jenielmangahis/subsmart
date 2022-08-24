@@ -203,7 +203,6 @@
                                                 <option value="state">Billing State</option>
                                                 <option value="street">Billing Street</option>
                                                 <option value="zip">Billing ZIP</option>
-                                                <option value="zip">Customer Type</option>
                                             </select>
                                         </div>
                                         <h6 class="change-col" onclick="ccl()">Change Columns</h6>
@@ -436,7 +435,7 @@
                                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                            <button type="button" class="nsm-button" id="exportReport" name="exportReport">
                                                 <i class="bx bx-fw bx-export"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end export-dropdown">
@@ -690,10 +689,10 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?= (!empty($header)) ? $company_title : $clients->business_name; ?></span></h4>
+                                        <h4 class="text-center fw-bold"><span class="company-name"><?= ($head) ? $company_title : $clients->business_name; ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
-                                        <p class="fw-bold"><?= (!empty($header)) ? $report_title : $page->title; ?></p>
+                                        <p class="fw-bold"><?= ($head) ? $report_title : $page->title; ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -724,16 +723,24 @@
                                     </tbody>
                                 </table>
                                 <?php }else{ ?>
-                                <table class="nsm-table">
+                                <table class="nsm-table" id="exportTbl">
                                     <thead>
                                         <tr>
-                                        <?php foreach($custExp as $cust) : 
+                                        <?php
+                                        if(!empty($custExp)){
+                                            foreach($custExp as $cust) : 
                                             
                                         ?>
                                             <td data-name="Customer"><?= custom($cust) ?></td>
                                         <?php 
                                             $col='';
-                                            endforeach; ?>
+                                            endforeach; 
+                                        }else{?>
+                                            <td data-name="Customer">CUSTOMER</td>
+                                            <td data-name="Phone Numbers">PHONE NUMBERS</td>
+                                            <td data-name="Email">EMAIL</td>
+                                            <td data-name="Billing Address">STATUS</td>
+                                            <?php } ?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -745,7 +752,7 @@
                                             <?php if(array_key_exists('first_name', $acsProfile)) : ?>
                                                 <td><?= ($acsProfile->first_name == null && !empty($acsProfile->first_name)) ? "N/A" : $acsProfile->first_name.' '. $acsProfile->last_name?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('state', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('state', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->state == null && !empty($acsProfile->state)) ? "N/A" : $acsProfile->state ?></td>
                                             <?php endif; ?>
                                             <?php if(array_key_exists('phone_h', $acsProfile)) : ?>
@@ -757,25 +764,25 @@
                                             <?php if(array_key_exists('status', $acsProfile)) : ?>
                                                 <td><?= ($acsProfile->status == null && !empty($acsProfile->status)) ? "N/A" : $acsProfile->status ?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('phone_h', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('phone_h', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->notes == null && !empty($acsProfile->notes)) ? "N/A" : $acsProfile->notes ?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('bill_start_date', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('bill_start_date', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->bill_start_date == null && !empty($acsProfile->bill_start_date)) ? "N/A" : $acsProfile->bill_start_date ?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('bill_end_date', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('bill_end_date', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->bill_end_date == null && !empty($acsProfile->bill_end_date)) ? "N/A" : $acsProfile->bill_end_date ?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('recurring_start_date', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('recurring_start_date', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->recurring_start_date == null && !empty($acsProfile->recurring_start_date)) ? "N/A" : $acsProfile->recurring_start_date ?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('recurring_end_date', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('recurring_end_date', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->recurring_end_date == null && !empty($acsProfile->recurring_end_date)) ? "N/A" : $acsProfile->recurring_end_date ?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('last_payment_date', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('last_payment_date', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->last_payment_date == null && !empty($acsProfile->last_payment_date)) ? "N/A" : $acsProfile->last_payment_date ?></td>
                                             <?php endif; ?>
-                                            <?php if(array_key_exists('next_billing_date', $acsProfile)) : ?>
+                                            <?php if(array_key_exists('next_billing_date', $acsProfile) && !empty($custExp)) : ?>
                                                 <td><?= ($acsProfile->next_billing_date == null && !empty($acsProfile->next_billing_date)) ? "N/A" : $acsProfile->next_billing_date ?></td>
                                             <?php endif; ?>
                                             <?php } ?>
@@ -786,7 +793,11 @@
                                 <?php } ?>
                             </div>
                             <div class="nsm-card-footer text-center">
-                                <p class="m-0"><?= (!empty($header)) ? $date_prepared : date("l, F j, Y"); ?> <?= (!empty($header)) ? $time_prepared : date("h:i A eP"); ?></p>
+                                <?php  if($foot){?>
+                                <p class="m-0"><?= $date_prepared ?> <?= $time_prepared ?></p>
+                                <?php }else{?>
+                                <p><?= date("l, F j, Y h:i A eP") ?></p>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -809,6 +820,74 @@ var expanded = false;
 //     });
 //     console.log(selectedHeader);
 //  });
+
+// $('#exportReport').click(function(e){
+//     var rowCount = $('#exportTbl >tbody >tr').length;
+//     var tblList = [];
+//     $('#exportTbl tr').each(function() {
+//         customerId = $(this).find("td:first").html();  
+//         tblList.push(customerId);
+// });
+//     alert(tblList);
+// })
+
+$(document).ready(function () {  
+    $('#exportReport').click(function () {  
+        var row = $('#exportTbl >tbody >tr').length;
+
+        var header = [];  
+        var customerData = [];  
+        var bRowStarted = true;  
+        $('#exportTbl thead>tr').each(function () {  
+            $('td', this).each(function () {  
+                if (header.length == 0 || bRowStarted == true) {  
+                    header.push($(this).text());  
+                    bRowStarted = false;  
+                }  
+                else  
+                header.push($(this).text());  
+            });  
+            bRowStarted = true;  
+        }); 
+        $('#exportTbl tbody>tr').each(function () {  
+            $('td', this).each(function () {  
+                if (customerData.length == 0 || bRowStarted == true) {  
+                    customerData.push($(this).text());  
+                    bRowStarted = false;  
+                }  
+                else  
+                customerData.push($(this).text());  
+            });  
+            bRowStarted = true;  
+        });  
+
+        let dataTbl = [];
+        var rowCount = header.length * row; 
+        for(var x=0; x<=customerData.length; x++){
+            dataTbl.push([]);
+
+            for(var i=0; i<header.length; i++){
+                dataTbl[x][i] = customerData[0];
+                customerData.shift();
+            }
+        }
+        console.log(dataTbl);
+        console.log(JSON.stringify(dataTbl));
+        var test = JSON.stringify(dataTbl);
+        fetch('<?= base_url('reports/export_report/') ?>', {
+                method: 'POST',
+                body: test,
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+            }) .then(response => response.json() ).then(response => {
+                
+            }).catch((error) => {
+                console.log('Error:', error);
+            }); 
+    });  
+});  
 function showCheckboxes() {
   var checkboxes = document.getElementById("checkboxes");
   if (!expanded) {

@@ -8176,6 +8176,7 @@ class Workorder extends MY_Controller
         
         $item       = $this->input->post("item");
         $qty        = $this->input->post("qty");
+        $existing   = $this->input->post("existing");
         $location   = $this->input->post("location");
         $price      = $this->input->post("price");
 
@@ -8211,6 +8212,7 @@ class Workorder extends MY_Controller
         foreach($item as $row){
             $data['item']           = $item[$i];
             $data['qty']            = $qty[$i];
+            $data['existing']       = $existing[$i];
             $data['location']       = $location[$i];
             $data['price']          = $price[$i];
             $data['check_data']     = $checkValue[$i];

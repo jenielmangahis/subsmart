@@ -5082,7 +5082,7 @@ class Customer extends MY_Controller
                 $data = array();
                 $data['value'] = implode(",",$importFields);
                 if ($this->general->update_with_key_field($data, $customer_settings->customer_settings_id, $table, 'customer_settings_id')) {
-                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Import updated.');
+                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export updated.');
                 }else{
                     $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
                 }
@@ -5093,7 +5093,7 @@ class Customer extends MY_Controller
                 $customer_setting['status'] = 1;
                 $customer_setting['company_id'] = logged('company_id');
                 if($this->general->add_($customer_setting, $table)){
-                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Import added.');
+                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export added.');
                 }else{
                     $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
                 }

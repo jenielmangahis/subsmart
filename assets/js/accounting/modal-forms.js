@@ -645,11 +645,6 @@ $(function() {
 
             $('div#modal-container').append(res);
             tagsListModal = $('#tags-modal div.modal-dialog div#tags-list').html();
-            // if (!$.fn.dataTable.isDataTable('#tags-table')) {
-            //     loadTagsDataTable();
-            // } else {
-            //     $('#tags-table').DataTable().ajax.reload(null, true);
-            // }
             $(modal_element).modal('show');
         });
     });
@@ -1396,9 +1391,9 @@ $(function() {
                 `);
             break;
             case 'scheduled' :
-                if ($(this).parent().next().hasClass('col-md-3')) {
-                    $(this).parent().next().removeClass('col-md-3');
-                    $(this).parent().next().addClass('col-md-2');
+                if ($(this).parent().next().hasClass('col-md-2')) {
+                    $(this).parent().next().removeClass('col-md-2');
+                    $(this).parent().next().addClass('col-md-3');
                 }
     
                 $(this).parent().next().html(`
@@ -4868,7 +4863,7 @@ $(function() {
         e.preventDefault();
 
         if(dropdownEl !== null) {
-            dropdownEl.val('').trigger('change');
+            dropdownEl.html('').trigger('change');
         }
         $('#payment-method-modal').modal('hide');
     });
@@ -4877,7 +4872,7 @@ $(function() {
         e.preventDefault();
 
         if(dropdownEl !== null) {
-            dropdownEl.val('').trigger('change');
+            dropdownEl.html('').trigger('change');
         }
         $('#term-modal').modal('hide');
     });
@@ -4886,7 +4881,7 @@ $(function() {
         e.preventDefault();
 
         if(dropdownEl !== null) {
-            dropdownEl.val('').trigger('change');
+            dropdownEl.html('').trigger('change');
         }
         $('#item-modal').modal('hide');
     });
@@ -4894,7 +4889,7 @@ $(function() {
     $(document).on('click', '#item-category-modal #cancel-add-category', function(e) {
         e.preventDefault();
 
-        dropdownEl.val('').trigger('change');
+        dropdownEl.html('').trigger('change');
 
         $('#item-category-modal').modal('hide');
     });
@@ -9569,7 +9564,7 @@ const makeRecurring = (modalName) => {
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-2 d-flex align-items-end">
+                <div class="col-12 col-md-3 d-flex align-items-end">
                     <span>Create &emsp;</span>
                     <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
                     <span>&emsp; days in advance</span>
@@ -9677,7 +9672,9 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
             $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().parent().remove();
+            $(`div#${modalId} #account-balance`).parent().parent().remove();
+            $(`div#${modalId} label[for="expense_payment_account"]`).html('Account');
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
             $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Expense');
         break;
@@ -9686,6 +9683,8 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
             $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`div#${modalId} #account-balance`).parent().parent().remove();
+            $(`div#${modalId} label[for="bank_account"]`).html('Account');
             $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
         break;

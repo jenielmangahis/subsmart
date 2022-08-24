@@ -56,6 +56,7 @@ input:focus {
 } */
 table input[type=text],
     input[type=email],
+    input[type=number],
     input[type=url],
     /* input[type=checkbox], */
     input[type=password] {
@@ -128,6 +129,10 @@ table input.form-control {
     .itemTable td
     {
         padding:0;
+    }
+    .itemTable th
+    {
+        font-size:9px;
     }
     .itemTable input[type=text]
     {
@@ -401,9 +406,10 @@ table input.form-control {
                             </center><br>
                             <div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
                                 <table  class="table-bordered itemTable" width="100%">
-                                    <thead align="center">
+                                    <thead align="center" style="font-size:14px;">
                                         <th>Items</th>
                                         <th>Qty</th>
+                                        <th>Existing on Inventory</th>
                                         <th>Location</th>
                                         <th>Price</th>
                                     </thead>
@@ -425,87 +431,101 @@ table input.form-control {
                                                     <input type="hidden" class="checkedDataOne" name="dataValue[]">
                                                 </div>
                                             </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="LTE - Communicator"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Recessed Door Contact"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Surface Contact"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Keyless Remote"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Motion Detector"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Smoke Communicator"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Glass Break Detector"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Carbon Monoxide"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Medical Pendant"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Door Bell Camera"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"  value="Z-Thermostat"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Wifi-Card"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Z-Card"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -520,45 +540,52 @@ table input.form-control {
                                                     <input type="hidden" class="checkedDataTwo" name="dataValue[]">
                                                 </div>
                                             </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="WAP"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="IP-CAM (Indoor)"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="IP-CAM (Outdoor)"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Warranty ePaperwork"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Advertising Kit"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Certificate of Insurance"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -573,28 +600,30 @@ table input.form-control {
                                                     <input type="hidden" class="checkedDataThree" name="dataValue[]">
                                                 </div>
                                             </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <?php for ($i=1; $i<=2; $i++ ) { ?>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <?php } ?>
                                     </table>
                                     <table  class="table-bordered itemTable2" >
                                         <tr>
-                                            <td colspan="4" align="center">ENHANCED SERVICES</td>
+                                            <td colspan="5" align="center">ENHANCED SERVICES</td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="DVR"><input type="hidden" class="dtrans_check" name="dataValue[]">
                                             </td>
-                                            <td colspan="2">
+                                            <td colspan="3">
                                                 <div class="input-group">
                                                     <!-- <input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="DVR"> -->
                                                     <div class="input-group-append" style="height:25px !important;">
@@ -605,13 +634,13 @@ table input.form-control {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Cameras"><input type="hidden" class="dcam_check" name="dataValue[]">
                                             </td>
-                                            <td colspan="2"  class="item">
+                                            <td colspan="3"  class="item">
                                                 <div class="input-group">
                                                     <div class="input-group-append" style="height:25px !important;">
                                                         <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="2" />2</span> 
@@ -632,7 +661,7 @@ table input.form-control {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -646,16 +675,18 @@ table input.form-control {
                                                 </div>
                                                 <!-- <input type="hidden" class="" name="dataValue[]"> -->
                                             </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <?php for ($i=1; $i<=2; $i++ ) { ?>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                            <td><input type="number" style="background-color:#ced4e4;" class="form-  border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <?php } ?>
                                     </tbody>
@@ -1083,7 +1114,7 @@ table input.form-control {
                                 <br>
                                 <div class="row"> 
                                     <div class="col-md-12 summaryTanan">
-                                        <table class="summary_total" style="width:80%;">
+                                        <table class="summary_total" style="width:100%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
                                                 <td>
