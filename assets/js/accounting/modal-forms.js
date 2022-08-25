@@ -645,11 +645,6 @@ $(function() {
 
             $('div#modal-container').append(res);
             tagsListModal = $('#tags-modal div.modal-dialog div#tags-list').html();
-            // if (!$.fn.dataTable.isDataTable('#tags-table')) {
-            //     loadTagsDataTable();
-            // } else {
-            //     $('#tags-table').DataTable().ajax.reload(null, true);
-            // }
             $(modal_element).modal('show');
         });
     });
@@ -1396,9 +1391,9 @@ $(function() {
                 `);
             break;
             case 'scheduled' :
-                if ($(this).parent().next().hasClass('col-md-3')) {
-                    $(this).parent().next().removeClass('col-md-3');
-                    $(this).parent().next().addClass('col-md-2');
+                if ($(this).parent().next().hasClass('col-md-2')) {
+                    $(this).parent().next().removeClass('col-md-2');
+                    $(this).parent().next().addClass('col-md-3');
                 }
     
                 $(this).parent().next().html(`
@@ -4868,7 +4863,7 @@ $(function() {
         e.preventDefault();
 
         if(dropdownEl !== null) {
-            dropdownEl.val('').trigger('change');
+            dropdownEl.html('').trigger('change');
         }
         $('#payment-method-modal').modal('hide');
     });
@@ -4877,7 +4872,7 @@ $(function() {
         e.preventDefault();
 
         if(dropdownEl !== null) {
-            dropdownEl.val('').trigger('change');
+            dropdownEl.html('').trigger('change');
         }
         $('#term-modal').modal('hide');
     });
@@ -4886,7 +4881,7 @@ $(function() {
         e.preventDefault();
 
         if(dropdownEl !== null) {
-            dropdownEl.val('').trigger('change');
+            dropdownEl.html('').trigger('change');
         }
         $('#item-modal').modal('hide');
     });
@@ -4894,7 +4889,7 @@ $(function() {
     $(document).on('click', '#item-category-modal #cancel-add-category', function(e) {
         e.preventDefault();
 
-        dropdownEl.val('').trigger('change');
+        dropdownEl.html('').trigger('change');
 
         $('#item-category-modal').modal('hide');
     });
@@ -9569,7 +9564,7 @@ const makeRecurring = (modalName) => {
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-2 d-flex align-items-end">
+                <div class="col-12 col-md-3 d-flex align-items-end">
                     <span>Create &emsp;</span>
                     <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
                     <span>&emsp; days in advance</span>
@@ -9677,7 +9672,9 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
             $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().parent().remove();
+            $(`div#${modalId} #account-balance`).parent().parent().remove();
+            $(`div#${modalId} label[for="expense_payment_account"]`).html('Account');
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
             $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Expense');
         break;
@@ -9686,6 +9683,8 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
             $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`div#${modalId} #account-balance`).parent().parent().remove();
+            $(`div#${modalId} label[for="bank_account"]`).html('Account');
             $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
         break;
@@ -9704,7 +9703,9 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
             $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #purchase_order_date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #purchase_order_date`).parent().prev().remove();
+            $(`div#${modalId} div.modal-body #purchase_order_date`).parent().remove();
+            $(`div#${modalId} div.modal-body #status`).parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Purchase Order');
         break;
         case 'vendor_credit' :
@@ -9712,8 +9713,9 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
             $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
-            $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
+            $(`div#${modalId} div.modal-body #ref_no`).prev().remove();
+            $(`div#${modalId} div.modal-body #ref_no`).remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Vendor Credit');
         break;
         case 'credit_card_credit' :
@@ -9721,8 +9723,11 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
             $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
-            $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
+            $(`div#${modalId} div.modal-body #ref_no`).prev().remove();
+            $(`div#${modalId} div.modal-body #ref_no`).remove();
+            $(`div#${modalId} #account-balance`).parent().parent().remove();
+            $(`div#${modalId} label[for="bank_credit_account"]`).html('Account');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
         break;
         case 'credit_memo' :
@@ -9989,108 +9994,108 @@ const computeTransactionTotal = () => {
     $('#modal-container .transaction-total-amount').html(formatter.format(parseFloat(total)));
 }
 
-const loadBills = () => {
-    $('#payBillsModal table#bills-table').DataTable({
-        autoWidth: false,
-        searching: false,
-        processing: true,
-        serverSide: true,
-        lengthChange: false,
-        info: false,
-        pageLength: $('#table_rows').val(),
-        order: [[3, 'asc']],
-        ajax: {
-            url: '/accounting/load-bills/',
-            dataType: 'json',
-            contentType: 'application/json',
-            type: 'POST',
-            data: function(d) {
-                d.due_date = $(`${modalName} #due_date`).val();
-                d.from_date = $(`${modalName} #from`).val();
-                d.to_date = $(`${modalName} #to`).val();
-                d.payee = $(`${modalName} #pay-bills-vendor`).val();
-                d.overdue_only = $(`${modalName} #overdue_only`).prop('checked') ? "1" : "0";
-                d.length = $(`${modalName} #table_rows`).val();
-                return JSON.stringify(d);
-            },
-            pagingType: 'full_numbers'
-        },
-        columns: [
-            {
-                data: null,
-                name: 'checkbox',
-                orderable: false,
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`
-                    <div class="d-flex align-items-center justify-content-center">
-                        <input type="checkbox" value="${rowData.id}">
-                    </div>
-                    `);
-                }
-            },
-            {
-                data: 'payee',
-                name: 'payee',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`${cellData} <input type="hidden" value="${rowData.payee_id}">`);
-                }
-            },
-            {
-                data: 'ref_no',
-                name: 'ref_no'
-            },
-            {
-                data: 'due_date',
-                name: 'due_date'
-            },
-            {
-                data: 'open_balance',
-                name: 'open_balance',
-            },
-            {
-                orderable: false,
-                data: null,
-                name: 'credit_applied',
-                orderable: false,
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    if(rowData.vendor_credits !== null && rowData.vendor_credits !== "" && rowData.vendor_credits !== "0.00") {
-                        var max = parseFloat(rowData.vendor_credits) > parseFloat(rowData.open_balance) ? rowData.open_balance : rowData.vendorCredits;
+// const loadBills = () => {
+//     $('#payBillsModal table#bills-table').DataTable({
+//         autoWidth: false,
+//         searching: false,
+//         processing: true,
+//         serverSide: true,
+//         lengthChange: false,
+//         info: false,
+//         pageLength: $('#table_rows').val(),
+//         order: [[3, 'asc']],
+//         ajax: {
+//             url: '/accounting/load-bills/',
+//             dataType: 'json',
+//             contentType: 'application/json',
+//             type: 'POST',
+//             data: function(d) {
+//                 d.due_date = $(`${modalName} #due_date`).val();
+//                 d.from_date = $(`${modalName} #from`).val();
+//                 d.to_date = $(`${modalName} #to`).val();
+//                 d.payee = $(`${modalName} #pay-bills-vendor`).val();
+//                 d.overdue_only = $(`${modalName} #overdue_only`).prop('checked') ? "1" : "0";
+//                 d.length = $(`${modalName} #table_rows`).val();
+//                 return JSON.stringify(d);
+//             },
+//             pagingType: 'full_numbers'
+//         },
+//         columns: [
+//             {
+//                 data: null,
+//                 name: 'checkbox',
+//                 orderable: false,
+//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
+//                     $(td).html(`
+//                     <div class="d-flex align-items-center justify-content-center">
+//                         <input type="checkbox" value="${rowData.id}">
+//                     </div>
+//                     `);
+//                 }
+//             },
+//             {
+//                 data: 'payee',
+//                 name: 'payee',
+//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
+//                     $(td).html(`${cellData} <input type="hidden" value="${rowData.payee_id}">`);
+//                 }
+//             },
+//             {
+//                 data: 'ref_no',
+//                 name: 'ref_no'
+//             },
+//             {
+//                 data: 'due_date',
+//                 name: 'due_date'
+//             },
+//             {
+//                 data: 'open_balance',
+//                 name: 'open_balance',
+//             },
+//             {
+//                 orderable: false,
+//                 data: null,
+//                 name: 'credit_applied',
+//                 orderable: false,
+//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
+//                     if(rowData.vendor_credits !== null && rowData.vendor_credits !== "" && rowData.vendor_credits !== "0.00") {
+//                         var max = parseFloat(rowData.vendor_credits) > parseFloat(rowData.open_balance) ? rowData.open_balance : rowData.vendorCredits;
 
-                        $(td).html(`
-                        <div class="row">
-                            <div class="col-sm-9">
-                                <input type="number" class="form-control text-right credit-applied" step=".01" max="${max}" onchange="convertToDecimal(this)">
-                            </div>
-                            <div class="col-sm-3 d-flex align-items-center">
-                                <span class="available-credit">${rowData.vendor_credits}</span> &nbsp;available
-                            </div>
-                        </div>
-                        `);
-                    } else {
-                        $(td).addClass('text-right');
-                        $(td).html('Not available');
-                    }
-                }
-            },
-            {
-                orderable: false,
-                data: null,
-                name: 'payment',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html('<input type="number" class="form-control text-right payment-amount" onchange="convertToDecimal(this)">');
-                }
-            },
-            {
-                orderable: false,
-                data: null,
-                name: 'total_amount',
-                fnCreatedCell: function(td, cellData, rowData,row, col) {
-                    $(td).html(`$<span>0.00</span>`);
-                }
-            }
-        ]
-    });
-}
+//                         $(td).html(`
+//                         <div class="row">
+//                             <div class="col-sm-9">
+//                                 <input type="number" class="form-control text-right credit-applied" step=".01" max="${max}" onchange="convertToDecimal(this)">
+//                             </div>
+//                             <div class="col-sm-3 d-flex align-items-center">
+//                                 <span class="available-credit">${rowData.vendor_credits}</span> &nbsp;available
+//                             </div>
+//                         </div>
+//                         `);
+//                     } else {
+//                         $(td).addClass('text-right');
+//                         $(td).html('Not available');
+//                     }
+//                 }
+//             },
+//             {
+//                 orderable: false,
+//                 data: null,
+//                 name: 'payment',
+//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
+//                     $(td).html('<input type="number" class="form-control text-right payment-amount" onchange="convertToDecimal(this)">');
+//                 }
+//             },
+//             {
+//                 orderable: false,
+//                 data: null,
+//                 name: 'total_amount',
+//                 fnCreatedCell: function(td, cellData, rowData,row, col) {
+//                     $(td).html(`$<span>0.00</span>`);
+//                 }
+//             }
+//         ]
+//     });
+// }
 
 const resetbillsfilter = () => {
     $('#payBillsModal #due_date').val('last-365-days').trigger('change');
@@ -12214,6 +12219,19 @@ const checkTableRows = (el) => {
     $('#printChecksModal #checks-table-rows').prev().dropdown('toggle');
 
     $("#printChecksModal #checks-table").nsmPagination({
+        itemsPerPage: parseInt(count)
+    });
+}
+
+const billTableRows = (el) => {
+    var count = $(el).html();
+    $('#payBillsModal #bills-table-rows a.dropdown-item.active').removeClass('active');
+    $(el).addClass('active');
+
+    $(el).parent().parent().prev().find('span').html(count);
+    $('#payBillsModal #bills-table-rows').prev().dropdown('toggle');
+
+    $("#payBillsModal #bills-table").nsmPagination({
         itemsPerPage: parseInt(count)
     });
 }

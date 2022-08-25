@@ -203,7 +203,7 @@
                                 <div class="col-12 col-md-2">
                                     <div class="mb-2">
                                         <label for="check_no">Check no.</label>
-                                        <input type="text" name="check_no" id="check_no" class="form-control" <?=isset($check) && !is_null($check->to_print) ? "value='To Print' disabled" : "value='$check->check_no'"?>>
+                                        <input type="text" name="check_no" id="check_no" class="form-control nsm-field" <?=isset($check) && !is_null($check->to_print) ? "value='To Print' disabled" : "value='$check->check_no'"?>>
                                         <div class="form-check">
                                             <input type="checkbox" name="print_later" id="print_later" class="form-check-input" value="1" <?=isset($check) && !is_null($check->to_print) ? 'checked' : ''?>>
                                             <label for="print_later" class="form-check-label">Print later</label>
@@ -212,10 +212,13 @@
                                     <label for="permit_number">Permit no.</label>
                                     <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($check) ? "value='$check->permit_no'" : ''?>> 
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-12 col-md-6 grid-mb">
                                     <div id="label">
                                         <label for="tags">Tags</label>
-                                        <span class="float-end"><a href="#" class="text-decoration-none" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
+                                        <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
                                     </div>
                                     <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                         <?php if(isset($tags) && count($tags) > 0) : ?>
@@ -235,7 +238,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-12">
                                     <div class="accordion grid-mb">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
@@ -574,7 +577,7 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="attachments">
-                                                <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
+                                                <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
                                                 <div id="check-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                     <div class="dz-message" style="margin: 20px;border">
@@ -583,7 +586,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
+                                                    <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -664,15 +667,17 @@
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
-                            <div class="btn-group dropup float-end">
+                            <div class="btn-group float-end" role="group">
                                 <button type="button" class="nsm-button success" onclick="saveAndNewForm(event)">
                                     Save and new
                                 </button>
-                                <button type="button" class="nsm-button success dropdown-toggle dropdown-toggle-split" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-fw bx-chevron-up text-white"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-fw bx-chevron-up text-white"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

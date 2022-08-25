@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 class Customer extends MY_Controller
 {
 
@@ -3146,11 +3149,12 @@ class Customer extends MY_Controller
                     $acsProfileData['company_id'] = logged('company_id');
                     $fk_prod_id = $this->customer_ad_model->add($acsProfileData,"acs_profile");
                     $insert++;
+                    
                     if($fk_prod_id){
                         $acsAlarmData['fk_prof_id'] = $fk_prod_id;
                         $acsBillingData['fk_prof_id'] = $fk_prod_id;
                         $acsOfficeData['fk_prof_id'] = $fk_prod_id;
-                    
+                        
                         $this->customer_ad_model->add($acsAlarmData,"acs_alarm");
                         $this->customer_ad_model->add($acsBillingData,"acs_billing");
                         $this->customer_ad_model->add($acsOfficeData,"acs_office");
@@ -3158,6 +3162,7 @@ class Customer extends MY_Controller
                 }
 
             }
+            
             $data_arr = array("success" => TRUE,"message" => 'There are '.$exist . ' existing customer and '.$insert . ' inserted new customer.');
         }else{
             $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
@@ -5082,7 +5087,7 @@ class Customer extends MY_Controller
                 $data = array();
                 $data['value'] = implode(",",$importFields);
                 if ($this->general->update_with_key_field($data, $customer_settings->customer_settings_id, $table, 'customer_settings_id')) {
-                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Import updated.');
+                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export updated.');
                 }else{
                     $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
                 }
@@ -5093,7 +5098,7 @@ class Customer extends MY_Controller
                 $customer_setting['status'] = 1;
                 $customer_setting['company_id'] = logged('company_id');
                 if($this->general->add_($customer_setting, $table)){
-                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Import added.');
+                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export added.');
                 }else{
                     $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
                 }

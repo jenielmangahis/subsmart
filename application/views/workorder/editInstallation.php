@@ -344,6 +344,7 @@ table input.form-control {
                                     <thead align="center">
                                         <th>Items</th>
                                         <th>Qty</th>
+                                        <th>Existing on Inventory</th>
                                         <th>Location</th>
                                         <th>Price</th>
                                     </thead>
@@ -352,6 +353,7 @@ table input.form-control {
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="<?php echo $items->item; ?>"><input type="hidden" class="" value="<?php echo $items->check_data; ?>" name="dataValue[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" value="<?php echo $items->qty; ?>"class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" value="<?php echo $items->existing; ?>" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="existing[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" value="<?php echo $items->location; ?>" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" value="<?php echo $items->price; ?>" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>

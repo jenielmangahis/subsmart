@@ -55,8 +55,8 @@ class AcsProfile_model extends MY_Model
 
     public function getProfile($prof_id=null, $col=null, $cust=null, $stat = null, $type = null)
     {
-        if($prof_id != null && $col != null && ($cust != null || $stat != null)){
-            $test = filter($cust, $stat, $type);
+        //if($prof_id != null && $col != null && ($cust != null || $stat != null)){
+            //$test = filter($cust, $stat, $type);
             // if(!empty($stat) && empty($cust)){
             //     $query = $this->db->query("SELECT prof_id FROM `acs_profile` WHERE `status` IN ('".$stat."')");
             // }elseif(empty($stat) && !empty($cust)){
@@ -65,13 +65,22 @@ class AcsProfile_model extends MY_Model
             //     $query = $this->db->query("SELECT prof_id FROM `acs_profile` WHERE prof_id IN ('".$cust."') AND status IN ('".$stat."')");
             // }
             //$query = $this->db->query("SELECT prof_id FROM `acs_profile` WHERE $test");
+            if($col != null){
+                array_push($col, 'prof_id');
+                $this->db->select($col);
+            }else{
+                $this->db->select('*');
+            }
 
-                $this->db->select('prof_id');
-                 $this->db->from($this->table);
-                 $this->db->where_in('prof_id', $cust);
-                 $query = $this->db->get();
-                 
-             if($query){
+            $this->db->from($this->table);
+
+            if($cust != null){
+                $this->db->where_in('prof_id', $cust);
+            }
+            
+            $query = $this->db->get();
+            
+             if($query && $prof_id != null ){
                  $res = $query->result();
                  $idArray = Array();
                  foreach($res as $resId):
@@ -79,67 +88,72 @@ class AcsProfile_model extends MY_Model
                      array_push($idArray, $resId->prof_id);
                      }
                  endforeach;
+                 if($col != null){
                  return $this->test($idArray, $col);
+                 }else{
+                    return $this->test($idArray, null);
+                 }
                  
             }else{
-                 echo "error";
+                return $query->result();
              }
-         }
-        elseif($prof_id != null && $col == null && ($cust == null && $stat == null)){
-            $this->db->select('*');
-            $this->db->from($this->table);
-            $this->db->where_in('prof_id', $prof_id);
+    //     elseif($prof_id != null && $col == null && ($cust == null && $stat == null)){
+    //         $this->db->select('*');
+    //         $this->db->from($this->table);
+    //         $this->db->where_in('prof_id', $prof_id);
     
-            $query = $this->db->get();
-            return $query->result();
+    //         $query = $this->db->get();
+    //         return $query->result();
 
-        }elseif($prof_id == null && $col != null && ($cust == null && $stat == null)){
-            $this->db->select($col);
-            $this->db->from($this->table);
+    //     }elseif($prof_id == null && $col != null && ($cust == null && $stat == null)){
+    //         $this->db->select($col);
+    //         $this->db->from($this->table);
 
-            $query = $this->db->get();
-            return $query->result();
+    //         $query = $this->db->get();
+    //         return $query->result();
 
-        }elseif($prof_id == null && $col == null && $cust != null){
-            $this->db->select('*');
-            $this->db->from($this->table);
-            $this->db->where_in('prof_id', $cust);
+    //     }elseif($prof_id == null && $col == null && $cust != null){
+    //         $this->db->select('*');
+    //         $this->db->from($this->table);
+    //         $this->db->where_in('prof_id', $cust);
 
-            $query = $this->db->get();
-            return $query->result();
+    //         $query = $this->db->get();
+    //         return $query->result();
 
-        }elseif($prof_id == null && $col != null && ($cust != null || $stat != null)){
-                 $this->db->select($col);
-                 $this->db->from($this->table);
-                 if($stat != null && $cust == null){
-                    $this->db->where_in('status', $stat);
-                }elseif(empty($stat) && !empty($cust)){
-                    $this->db->where_in('prof_id', $cust);
-                }
-                $this->db->join('acs_billing', 'acs_profile.prof_id = acs_billing.fk_prof_id');
-                 $fl = $this->db->get();
-                 return $fl->result();
+    //     }elseif($prof_id == null && $col != null && ($cust != null || $stat != null)){
+    //              $this->db->select($col);
+    //              $this->db->from($this->table);
+    //              if($stat != null && $cust == null){
+    //                 $this->db->where_in('status', $stat);
+    //             }elseif(empty($stat) && !empty($cust)){
+    //                 $this->db->where_in('prof_id', $cust);
+    //             }
+    //             $this->db->join('acs_billing', 'acs_profile.prof_id = acs_billing.fk_prof_id');
+    //              $fl = $this->db->get();
+    //              return $fl->result();
 
-         }elseif($prof_id != null && $col != null && $cust == null){
-            $this->db->select($col);
-            $this->db->from($this->table);
-            $this->db->where_in('acs_profile.prof_id', $prof_id);
-            $this->db->join('acs_billing', 'acs_profile.prof_id = acs_billing.fk_prof_id');
+    //      }elseif($prof_id != null && $col != null && $cust == null){
+    //         $this->db->select($col);
+    //         $this->db->from($this->table);
+    //         $this->db->where_in('acs_profile.prof_id', $prof_id);
+    //         $this->db->join('acs_billing', 'acs_profile.prof_id = acs_billing.fk_prof_id');
     
-            $fl = $this->db->get();
-            return $fl->result();
+    //         $fl = $this->db->get();
+    //         return $fl->result();
 
-    }
-         else{
-            $this->db->select('*');
-            $this->db->from($this->table);
+    // }
+    //      else{
+    //         $this->db->select('*');
+    //         $this->db->from($this->table);
 
-            $query = $this->db->get();
-            return $query->result();
-        }
+    //         $query = $this->db->get();
+    //         return $query->result();
+    //     }
     }
-    public function test($idArray, $col){
-        if(!empty($idArray)){
+
+    public function test($idArray, $col)
+    {
+        if(!empty($col)){
             $this->db->select($col);
             $this->db->from($this->table);
             $this->db->where_in('acs_profile.prof_id', $idArray);
@@ -148,7 +162,13 @@ class AcsProfile_model extends MY_Model
             $fl = $this->db->get();
             return $fl->result();
         }else{
-           $message= Array();
+            $this->db->select('*');
+            $this->db->from($this->table);
+            $this->db->where_in('acs_profile.prof_id', $idArray);
+            $this->db->join('acs_billing', 'acs_profile.prof_id = acs_billing.fk_prof_id');
+    
+            $fl = $this->db->get();
+            return $fl->result();
            //return $message;
         }
     }

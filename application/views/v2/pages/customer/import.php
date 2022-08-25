@@ -274,10 +274,10 @@
                 }
             });
         }
-        var previous;
-        var previousTxt;
-        var selectedHeader = [];
-        var head = [];
+        // var previous;
+        // var previousTxt;
+        // var selectedHeader = [];
+        // var head = [];
 
     // $("#headersSelector0").on('focus', function () {
     //     selectedHeader = [];
@@ -363,7 +363,6 @@
             }
 
             var arHead = head.length;
-            console.log(selectedHeader);
 
             for(var x=0; x<ar; x++){
                 if(selectedHeader[x] != ""){

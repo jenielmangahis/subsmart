@@ -204,6 +204,45 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'expense_modal':
                     $this->page_data['balance'] = '$0.00';
+
+                    $transactions = $this->expenses_model->get_company_expense_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $expense) {
+                        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+                        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                        switch ($expense->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($expense->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $expense->id,
+                                'type' => $paymentAccType->account_name !== 'Credit Card' ? 'Expense' : 'Credit Card Expense',
+                                'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_expenses'] = $data;
                 break;
                 case 'check_modal':
                     $this->page_data['balance'] = '$0.00';
@@ -270,19 +309,125 @@ class Accounting_modals extends MY_Controller
                     }
 
                     $this->page_data['due_date'] = $dueDate;
+
+                    $transactions = $this->expenses_model->get_company_bill_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $bill) {
+                        $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                        $payeeName = $payee->display_name;
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $bill->id,
+                                'type' => !in_array($bill->bill_no, ['', null, '0']) ? 'Bill No.'.$bill->bill_no : 'Bill',
+                                'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_bills'] = $data;
                 break;
                 case 'pay_bills_modal':
                     $this->page_data['balance'] = '$0.00';
                 break;
                 case 'vendor_credit_modal':
+                    $transactions = $this->expenses_model->get_company_vendor_credit_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $vCredit) {
+                        $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                        $payeeName = $payee->display_name;
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $vCredit->id,
+                                'type' => !in_array($vCredit->ref_no, ['', null, '0']) ? 'Vendor Credit No.'.$vCredit->ref_no : 'Vendor Credit',
+                                'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_vcredits'] = $data;
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                 break;
                 case 'purchase_order_modal':
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+
+                    $transactions = $this->expenses_model->get_company_purch_order_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $purchaseOrder) {
+                        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+                        $payeeName = $payee->display_name;
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $purchaseOrder->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $purchaseOrder->id,
+                                'type' => !in_array($purchaseOrder->purchase_order_no, ['', null, '0']) ? 'Purchase Order No.'.$purchaseOrder->purchase_order_no : 'Purchase Order',
+                                'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_purchase_orders'] = $data;
                 break;
                 case 'credit_card_credit_modal':
+                    $transactions = $this->expenses_model->get_company_cc_credit_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $ccCredit) {
+                        switch ($ccCredit->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($ccCredit->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $ccCredit->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $ccCredit->id,
+                                'type' => !in_array($ccCredit->ref_no, ['', null, '0']) ? 'Credit Card Credit No.'.$ccCredit->ref_no : 'Credit Card Credit',
+                                'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_cc_credits'] = $data;
                     $this->page_data['balance'] = '$0.00';
                 break;
                 case 'print_checks_modal':
@@ -401,6 +546,12 @@ class Accounting_modals extends MY_Controller
                 case 'print_checks_setup_modal' :
                     $settings = $this->accounting_print_checks_settings_model->get_by_company_id(logged('company_id'));
 
+                    $amountGridMargin = [
+                        'left' => 100 - intval($settings->horizontal),
+                        'top' => 113 + intval($settings->vertical)
+                    ];
+
+                    $this->page_data['amountGridMargin'] = $amountGridMargin;
                     $this->page_data['settings'] = $settings;
                 break;
             }
@@ -10522,6 +10673,44 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        $transactions = $this->expenses_model->get_company_expense_transactions(['company_id' => logged('company_id')]);
+        usort($transactions, function($a, $b) {
+            return strtotime($b->created_at) > strtotime($a->created_at);
+        });
+
+        $data = [];
+        foreach($transactions as $expense) {
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+            switch ($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $amount = '$'.number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ',');
+            if(count($data) < 10) {
+                $data[] = [
+                    'id' => $expense->id,
+                    'type' => $paymentAccType->account_name !== 'Credit Card' ? 'Expense' : 'Credit Card Expense',
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'amount' => str_replace('$-', '-$', $amount),
+                    'name' => $payeeName
+                ];
+            }
+        }
+
+        $this->page_data['recent_expenses'] = $data;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Expense', $expenseId);
         $this->page_data['expense'] = $expense;
@@ -10529,7 +10718,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view("accounting/modals/expense_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/expense_modal", $this->page_data);
     }
 
     private function view_check($checkId)
@@ -10598,6 +10787,41 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        $transactions = $this->expenses_model->get_company_check_transactions(['company_id' => logged('company_id')]);
+        usort($transactions, function($a, $b) {
+            return strtotime($b->created_at) > strtotime($a->created_at);
+        });
+
+        $data = [];
+        foreach($transactions as $check) {
+            switch ($check->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($check->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $amount = '$'.number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
+            if(count($data) < 10) {
+                $data[] = [
+                    'id' => $check->id,
+                    'type' => !in_array($check->check_no, ['', null, '0']) ? 'Check No.'.$check->check_no : 'Check',
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'amount' => str_replace('$-', '-$', $amount),
+                    'name' => $payeeName
+                ];
+            }
+        }
+
+        $this->page_data['recent_checks'] = $data;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Check', $checkId);
         $this->page_data['check'] = $check;
@@ -10677,6 +10901,29 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        $transactions = $this->expenses_model->get_company_bill_transactions(['company_id' => logged('company_id')]);
+        usort($transactions, function($a, $b) {
+            return strtotime($b->created_at) > strtotime($a->created_at);
+        });
+
+        $data = [];
+        foreach($transactions as $bill) {
+            $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+            $payeeName = $payee->display_name;
+
+            $amount = '$'.number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ',');
+            if(count($data) < 10) {
+                $data[] = [
+                    'id' => $bill->id,
+                    'type' => !in_array($bill->bill_no, ['', null, '0']) ? 'Bill No.'.$bill->bill_no : 'Bill',
+                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                    'amount' => str_replace('$-', '-$', $amount),
+                    'name' => $payeeName
+                ];
+            }
+        }
+
+        $this->page_data['recent_bills'] = $data;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Bill', $billId);
         $this->page_data['bill_payments'] = $billPayments;
@@ -10687,7 +10934,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['term'] = $term;
 
-        $this->load->view("accounting/modals/bill_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/bill_modal", $this->page_data);
     }
 
     private function view_vendor_credit($vendorCreditId)

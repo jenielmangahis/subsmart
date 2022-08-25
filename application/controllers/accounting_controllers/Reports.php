@@ -302,79 +302,115 @@ class Reports extends MY_Controller {
         $fl_type = $this->input->post('fl_type');
         $fl_status = $this->input->post('fl_status');
         $header = $this->input->post('header');
+        $exportBtn = $this->input->post('exportReport');
 
         $this->page_data['report_title'] = $reportType->name;
         $this->page_data['header'] = $header;
+        $this->page_data['foot'] = false;
+        $this->page_data['head'] = false;
         //$this->page_data['company_title'] = $this->page_data['clients']->business_name;
         if(!empty($header)){
             if(in_array('isCompany', $header)){
                 $this->page_data['company_title'] = $header['company'];
+                $this->page_data['head'] = true;
             }else{
                 $this->page_data['company_title'] = "";
             }
 
             if(in_array('isReport', $header)){
                 $this->page_data['report_title'] = $header['report'];
+                $this->page_data['head'] = true;
             }else{
                 $this->page_data['report_title'] = "";
             }
 
             if(in_array('isDate', $header)){
                 $this->page_data['date_prepared'] = date("l, F j, Y");
+                $this->page_data['foot'] = true;
+
+
             }else{
                 $this->page_data['date_prepared'] = "";
             }
 
             if(in_array('isTime', $header)){
                 $this->page_data['time_prepared'] = date("h:i A eP");
+                $this->page_data['foot'] = true;
             }else{
                 $this->page_data['time_prepared'] = "";
             }
         }
+
+        $gbArray = array();
+
+        
+
+        if($sort_by != 'default' && !empty($sort_by)){
+            $getBill = $this->AcsBilling_model->getBilling($sort_by);
+            $gb = json_decode(json_encode($getBill), true);
+            foreach($gb as $g_b){
+                array_push($gbArray, $g_b['fk_prof_id']);
+            }
+        }
+        if(!empty($cust)){
+            $custImp = implode(", ", $cust);
+            $custExp = explode(",", $custImp);
+            $column = billPro($custExp);
+        $this->page_data['custExp'] = $cust;
+
+        }
+        $this->page_data['tblDefault'] = true;  
+
+
+        if(!empty($sort_by) || !empty($cust) || !empty($fl_cust) || !empty($fl_type) || !empty($fl_status)){
+             $this->page_data['tblDefault'] = false;  
+        }
+
+        $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $column, $fl_cust, $fl_status, $fl_type);
         
         // when sort, columns, filters are NOT empty
-        if(($sort_by != 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
-            $getBill = $this->AcsBilling_model->getBilling($sort_by);
-            $gb = json_decode(json_encode($getBill), true);
-            $gbArray = array();
-            foreach($gb as $g_b){
-                array_push($gbArray, $g_b['fk_prof_id']);
-            }
-            $custImp = implode(", ", $cust);
-            $custExp = explode(",", $custImp);
-            $billPro = billPro($custExp);
-            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $billPro, $fl_cust, $fl_status, $fl_type);
-            $this->page_data['tblDefault'] = false;  
-            print_r($this->page_data['acs_profile']);
-        }
-        // when sort and filters are NOT empty
-        elseif(($sort_by == 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
-            $custImp = implode(", ", $cust);
-            $custExp = explode(",", $custImp);
-            $billPro = billPro($custExp);
-            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $billPro, $fl_cust, $fl_status, $fl_type);
-            $this->page_data['tblDefault'] = false; 
-        //when sort are NOT empty
-        }elseif(($sort_by != 'default' && !empty($sort_by)) && empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
-            $getBill = $this->AcsBilling_model->getBilling($sort_by);
-            $gb = json_decode(json_encode($getBill), true);
-            $gbArray = array();
-            foreach($gb as $g_b){
-                array_push($gbArray, $g_b['fk_prof_id']);
-            }
-            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, null);
-            $this->page_data['tblDefault'] = true;  
+        // if(($sort_by != 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
+        //     $getBill = $this->AcsBilling_model->getBilling($sort_by);
+        //     $gb = json_decode(json_encode($getBill), true);
+        //     $gbArray = array();
+        //     foreach($gb as $g_b){
+        //         array_push($gbArray, $g_b['fk_prof_id']);
+        //     }
+        //     $custImp = implode(", ", $cust);
+        //     $custExp = explode(",", $custImp);
+        //     $billPro = billPro($custExp);
+        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $billPro, $fl_cust, $fl_status, $fl_type);
+        //     $this->page_data['tblDefault'] = false;  
+        //     print_r($this->page_data['acs_profile']);
+        // }
+        // // when sort and filters are NOT empty
+        // elseif(($sort_by == 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
+        //     $custImp = implode(", ", $cust);
+        //     $custExp = explode(",", $custImp);
+        //     $billPro = billPro($custExp);
+        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $billPro, $fl_cust, $fl_status, $fl_type);
+        //     $this->page_data['tblDefault'] = false; 
+        // //when sort are NOT empty
+        // }elseif(($sort_by != 'default' && !empty($sort_by)) && empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
+        //     $getBill = $this->AcsBilling_model->getBilling($sort_by);
+        //     $gb = json_decode(json_encode($getBill), true);
+        //     $gbArray = array();
+        //     foreach($gb as $g_b){
+        //         array_push($gbArray, $g_b['fk_prof_id']);
+        //     }
+        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, null);
+        //     $this->page_data['tblDefault'] = true;  
         
-            //when columns are NOT empty
-        }elseif(($sort_by === 'default') && !empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
-            $custImp = implode(", ", $cust);
-            $custExp = explode(",", $custImp);
-            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $custExp);
-            $this->page_data['tblDefault'] = false;   
-        }else {      
-            $this->page_data['tblDefault'] = true;
-            $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile();
-        }
+        //     //when columns are NOT empty
+        // }elseif(($sort_by === 'default') && !empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
+        //     $custImp = implode(", ", $cust);
+        //     $custExp = explode(",", $custImp);
+        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $custExp);
+        //     $this->page_data['tblDefault'] = false;   
+        // }else {      
+        //     $this->page_data['tblDefault'] = true;
+        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile();
+        // }
 
         if($reportType->name === 'Profit and Loss by Tag Group') {
             $this->page_data['group_tags'] = $this->tags_model->getGroup();
@@ -382,7 +418,16 @@ class Reports extends MY_Controller {
 
         $this->page_data['page']->title = $reportType->name;
         $this->page_data['page']->parent = 'Reports';
-        $this->page_data['custExp'] = $cust;
+
+        if(!empty($exportBtn)){
+            $this->export_report($view, $this->page_data);
+        }
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
+    }
+
+    public function export_report(){
+        $input = $this->input->post();
+        print_r($input);
+
     }
 }

@@ -156,6 +156,7 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -175,14 +176,35 @@
                 body: formData,
             }) .then(response => response.json() ).then(response => {
                 var { message, success }  = response;
+                console.log(response);
                 if(success){
-                    //window.location.reload();
+                    sweetAlert('Awesome!', 'success', message, 1);
+                }else{
+                    sweetAlert('Sorry!','error',message);
                 }
             }).catch((error) => {
                 console.log('Error:', error);
             });
             
         });
+        function sweetAlert(title,icon,information,is_reload){
+            Swal.fire({
+                title: title,
+                text: information,
+                icon: icon,
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(is_reload === 1){
+                    if (result.value) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
     });
+    
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
