@@ -104,6 +104,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $("#btn_save_headers").on("click", function() {
@@ -114,15 +116,43 @@
                 data: $("#customer_headers_form").serialize(),
                 success: function(result) {
                     Swal.fire({
-                        title: 'Update Successful!',
-                        text: "Customer headers has been updated successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    });
-                },
+                    title: title,
+                    text: information,
+                    icon: icon,
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if(is_reload === 1){
+                        if (result.value) {
+                            window.location.reload();
+                        }
+                    }
+                });
+                },error: function() {
+                             //Your Error Message   
+                     console.log("error received from server");
+                }
             });
         });
+        function sweetAlert(title,icon,information,is_reload){
+            Swal.fire({
+                title: title,
+                text: information,
+                icon: icon,
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(is_reload === 1){
+                    if (result.value) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

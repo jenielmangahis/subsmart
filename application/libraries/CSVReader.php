@@ -59,7 +59,7 @@ class CSVReader {
             // Skip empty lines
             if($row != NULL){
                 $values = explode(',', $row[0]);
-                if(count($keys) == count($values)){
+                if((count($keys) <= count($values))){
                     $arr        = array();
                     $new_values = array();
                     $new_values = $this->escape_string($values);

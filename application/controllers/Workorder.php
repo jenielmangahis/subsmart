@@ -8270,6 +8270,7 @@ class Workorder extends MY_Controller
                 'amount'                => $this->input->post('payment_amount'),
                 'check_number'          => $this->input->post('check_number'),
                 'routing_number'        => $this->input->post('routing_number'),
+                'account_number'        => $this->input->post('account_number'),
                 'billing_date'          => $this->input->post('billing_date'),
                 'billing_frequency'     => $this->input->post('billing_frequency'),
                 'work_order_id'         => $addQuery,
@@ -8823,6 +8824,7 @@ class Workorder extends MY_Controller
                 'amount'            => $this->input->post('payment_amount'),
                 'check_number'      => $this->input->post('check_number'),
                 'routing_number'    => $this->input->post('routing_number'),
+                'account_number'    => $this->input->post('account_number'),
                 'work_order_id'     => $id,
                 'date_updated'      => date("Y-m-d H:i:s")
             );
@@ -9014,6 +9016,7 @@ class Workorder extends MY_Controller
         $qty        = $this->input->post("qty");
         $location   = $this->input->post("location");
         $price      = $this->input->post("price");
+        $existing   = $this->input->post("existing");
 
         $toi_check = $this->input->post("toi_check");
         $zl_check  = $this->input->post("zl_check");
@@ -9047,6 +9050,7 @@ class Workorder extends MY_Controller
         foreach($item as $row){
             $data['item']           = $item[$i];
             $data['qty']            = $qty[$i];
+            $data['existing']       = $existing[$i];
             $data['location']       = $location[$i];
             $data['price']          = $price[$i];
             $data['check_data']     = $checkValue[$i];
