@@ -914,7 +914,7 @@ class Workorder_model extends MY_Model
 		$this->db->from('work_order_payments');
 		$this->db->where('work_order_id', $id);
 		$query = $this->db->get();
-		return $query->result();
+		return $query->row();
     }
 
     function getRows($name){

@@ -85,8 +85,20 @@ export class FormAutoSave {
 
   onChange(event) {
     if (!this.$form.checkValidity()) {
+      const $input = this.$form.querySelector(":invalid");
+      const fieldName = toTitleCase($input.name);
+
+      const $message = htmlToElement(
+        `<span>Autosaving failed, missing or invalid field <a href="#">${fieldName}</a>.</span>`
+      );
+      const $link = $message.querySelector("a");
+      $link.addEventListener("click", (event) => {
+        event.preventDefault();
+        $input.focus();
+      });
+
       window.clearTimeout(this.errorTimeout);
-      FormAutoSave.toggleSavingErrorIndicator(true, "Missing required fields.");
+      FormAutoSave.toggleSavingErrorIndicator(true, $message);
 
       this.errorTimeout = window.setTimeout(() => {
         FormAutoSave.toggleSavingErrorIndicator(false);
@@ -182,15 +194,29 @@ export class FormAutoSave {
 
     if (!$div) {
       $div = FormAutoSave.createIndicatorElement();
-      $div.textContent = message
-        ? message
-        : "Saving failed, something went wrong.";
       $div.setAttribute("id", id);
 
       $div.style.backgroundColor = "#e3778f47";
       $div.style.color = "#dc3545";
 
       document.body.appendChild($div);
+    }
+
+    let hasMessage = false;
+
+    if (typeof message === "string") {
+      hasMessage = true;
+      $div.textContent = message;
+    }
+
+    if (message instanceof HTMLElement) {
+      hasMessage = true;
+      $div.innerHTML = "";
+      $div.append(message);
+    }
+
+    if (!hasMessage) {
+      $div.textContent = "Autosaving failed, something went wrong.";
     }
 
     $div.style.display = show ? "flex" : "none";
@@ -235,4 +261,18 @@ export class FormAutoSave {
       $element.tagName.toLowerCase() === "select"
     );
   }
+}
+
+// https://stackoverflow.com/a/64489760/8062659
+function toTitleCase(string) {
+  return string
+    .replace(/^[-_]*(.)/, (_, c) => c.toLowerCase()) // Initial char (after -/_)
+    .replace(/[-_]+(.)/g, (_, c) => " " + c.toLowerCase()); // First char after each -/_
+}
+
+// https://stackoverflow.com/a/35385518/8062659
+function htmlToElement(html) {
+  const $template = document.createElement("template");
+  $template.innerHTML = html;
+  return $template.content.firstChild;
 }

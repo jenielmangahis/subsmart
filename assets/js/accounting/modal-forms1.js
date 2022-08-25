@@ -169,7 +169,10 @@ $(document).ready(function () {
             }
 
             if (modal_element === '#payBillsModal') {
-                loadBills();
+                $('#payBillsModal #checks-table').nsmPagination({
+                    itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
+                })
+                // loadBills();
             }
 
             $(modal_element).modal('show');

@@ -338,6 +338,29 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['balance'] = '$0.00';
                 break;
                 case 'vendor_credit_modal':
+                    $transactions = $this->expenses_model->get_company_vendor_credit_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $vCredit) {
+                        $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                        $payeeName = $payee->display_name;
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $vCredit->id,
+                                'type' => !in_array($vCredit->ref_no, ['', null, '0']) ? 'Vendor Credit No.'.$vCredit->ref_no : 'Vendor Credit',
+                                'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_vcredits'] = $data;
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                 break;
@@ -370,6 +393,41 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['recent_purchase_orders'] = $data;
                 break;
                 case 'credit_card_credit_modal':
+                    $transactions = $this->expenses_model->get_company_cc_credit_transactions(['company_id' => logged('company_id')]);
+                    usort($transactions, function($a, $b) {
+                        return strtotime($b->created_at) > strtotime($a->created_at);
+                    });
+
+                    $data = [];
+                    foreach($transactions as $ccCredit) {
+                        switch ($ccCredit->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($ccCredit->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+
+                        $amount = '$'.number_format(floatval(str_replace(',', '', $ccCredit->total_amount)), 2, '.', ',');
+                        if(count($data) < 10) {
+                            $data[] = [
+                                'id' => $ccCredit->id,
+                                'type' => !in_array($ccCredit->ref_no, ['', null, '0']) ? 'Credit Card Credit No.'.$ccCredit->ref_no : 'Credit Card Credit',
+                                'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                                'amount' => str_replace('$-', '-$', $amount),
+                                'name' => $payeeName
+                            ];
+                        }
+                    }
+
+                    $this->page_data['recent_cc_credits'] = $data;
                     $this->page_data['balance'] = '$0.00';
                 break;
                 case 'print_checks_modal':

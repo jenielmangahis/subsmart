@@ -363,7 +363,6 @@
             }
 
             var arHead = head.length;
-            console.log(selectedHeader);
 
             for(var x=0; x<ar; x++){
                 if(selectedHeader[x] != ""){

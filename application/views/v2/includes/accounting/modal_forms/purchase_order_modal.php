@@ -65,7 +65,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label for="email">Email</label>
-                                            <input type="email" id="email" name="email" class="form-control nsm-field" <?=isset($purchaseOrder) ? "value='$purchaseOrder->email'" : ''?>>
+                                            <input type="email" id="email" name="email" class="form-control nsm-field mb-2" <?=isset($purchaseOrder) ? "value='$purchaseOrder->email'" : ''?>>
                                         </div>
                                     </div>
                                     <div class="row">
