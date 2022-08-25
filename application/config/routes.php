@@ -1378,3 +1378,4 @@ $route['_load_connected_bank_accounts'] = 'PlaidAccount/ajax_load_connected_bank
 $route['plaid_accounts'] = 'PlaidAccount/list';
 $route['plaid_account/_delete_bank_account'] = 'PlaidAccount/ajax_delete_bank_account';
 $route['plaid_account/_bank_account_transactions'] = 'PlaidAccount/ajax_bank_account_transactions';
+$route['plaid_account/_bank_account_recurring_transactions'] = 'PlaidAccount/ajax_bank_account_recurring_transactions';

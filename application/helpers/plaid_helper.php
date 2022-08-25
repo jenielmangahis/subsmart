@@ -8,7 +8,7 @@ function linkTokenCreate($client_id, $client_secret, $client_user_id, $client_na
     $err_msg  = '';
 
     if( $return_url == '' ){
-        $return_url = PLAID_API_REDIRECT_URL;
+        $return_url = PLAID_API_REDIRECT_URL_MAIN;
     }
 
     $post = [

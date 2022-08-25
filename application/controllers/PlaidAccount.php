@@ -42,7 +42,22 @@ class PlaidAccount extends MY_Controller {
         }else{
             $is_valid = 0;
         }
+
+        $plaid_handler_open = 0;
+        $plaid_token = '';
+        $client_name = '';
+        $get = $this->input->get();
+        if( isset($get['oauth_state_id']) ){
+            $plaid_handler_open = 1;                     
+            $plaid_token        = $this->session->userdata('plaid_token');
+
+            $plaidAccount = $this->PlaidAccount_model->getByCompanyId($companyId);
+            $client_name  = $plaidAccount->client_name;
+        }
         
+        $this->page_data['client_name'] = $plaid_token;
+        $this->page_data['plaid_token'] = $plaid_token;
+        $this->page_data['plaid_handler_open'] = $plaid_handler_open;
         $this->page_data['page']->title = 'Plaid : Bank Accounts';
         $this->page_data['page']->parent = 'Accounting';
         $this->page_data['is_valid'] = $is_valid;
@@ -57,11 +72,13 @@ class PlaidAccount extends MY_Controller {
         $is_valid = 0;
         $plaid_token = ''; 
         $msg = 'Cannot connect to Plaid.';   
-        $cid = logged('company_id');    
+
+        $cid  = logged('company_id');    
+        $post = $this->input->post();
 
         $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
         if( $plaidAccount ){
-            $plaidToken = linkTokenCreate($plaidAccount->client_id, $plaidAccount->client_secret, $plaidAccount->client_user_id, $plaidAccount->client_name);
+            $plaidToken = linkTokenCreate($plaidAccount->client_id, $plaidAccount->client_secret, $plaidAccount->client_user_id, $plaidAccount->client_name, $post['redirect_url']);
             if( isset($plaidToken['token']) && $plaidToken['token'] != '' ){
                 $is_valid = 1;
                 $msg      = '';
@@ -214,22 +231,54 @@ class PlaidAccount extends MY_Controller {
         $post= $this->input->post();    
         $cid = logged('company_id');    
 
-        $plaidTransactions = array();
+        $apiPlaidTransactions = array();
+        $apiPlaidAccount      = array();
         $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
         $plaidBankAccount = $this->PlaidBankAccount_model->getById($post['pid']);
         if( $plaidAccount && $plaidBankAccount ){            
             $start_date = '2022-01-01';
             $end_date   = '2022-08-25';
-            $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $start_date, $end_date, $plaidBankAccount->account_id);
+            $apiPlaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $start_date, $end_date, $plaidBankAccount->account_id);
+            $apiPlaidAccount  = authGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);
             $is_valid = 1;
         }else{
             $msg = 'Invalid Plaid Credentials';
         }       
 
         $this->page_data['is_valid'] = $is_valid;
-        $this->page_data['plaidTransactions'] = $plaidTransactions;
+        $this->page_data['apiPlaidTransactions'] = $apiPlaidTransactions;
+        $this->page_data['apiPlaidAccount'] = $apiPlaidAccount;
         $this->load->view('v2/pages/plaid_account/ajax_bank_account_transactions', $this->page_data);
         
+    }
+
+    public function ajax_bank_account_recurring_transactions()
+    {
+        $this->load->model('PlaidAccount_model');
+        $this->load->model('PlaidBankAccount_model');
+
+        $is_valid = 0;
+        $msg = 'Cannot connect to Plaid.';  
+
+        $post= $this->input->post();    
+        $cid = logged('company_id');    
+        
+        $apiPlaidAccount      = array();
+        $apiPlaidRecurringTransactions = array();
+        $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
+        $plaidBankAccount = $this->PlaidBankAccount_model->getById($post['pid']);
+        if( $plaidAccount && $plaidBankAccount ){                        
+            $apiPlaidAccount  = authGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);
+            $apiPlaidRecurringTransactions = recurringTransactionsGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);
+            $is_valid = 1;
+        }else{
+            $msg = 'Invalid Plaid Credentials';
+        }       
+
+        $this->page_data['is_valid'] = $is_valid;
+        $this->page_data['apiPlaidAccount'] = $apiPlaidAccount;
+        $this->page_data['apiPlaidRecurringTransactions'] = $apiPlaidRecurringTransactions;
+        $this->load->view('v2/pages/plaid_account/ajax_bank_account_recurring_transactions', $this->page_data);
     }
 }
 

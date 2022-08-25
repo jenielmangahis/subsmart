@@ -279,6 +279,24 @@ class Dashboard extends Widgets {
         $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();    
         $this->page_data['total_agreements_to_expire_in_30_days'] = $this->getAgreementsToExpireIn30Days();
 
+        //Plaid
+        $this->load->model('PlaidAccount_model');
+        $plaid_handler_open = 0;
+        $plaid_token = '';
+        $client_name = '';
+        $get = $this->input->get();
+        if( isset($get['oauth_state_id']) ){
+            $plaid_handler_open = 1;                     
+            $plaid_token        = $this->session->userdata('plaid_token');
+
+            $plaidAccount = $this->PlaidAccount_model->getByCompanyId($companyId);
+            $client_name  = $plaidAccount->client_name;
+        }
+
+        $this->page_data['client_name'] = $plaid_token;
+        $this->page_data['plaid_token'] = $plaid_token;
+        $this->page_data['plaid_handler_open'] = $plaid_handler_open;
+
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }
