@@ -46,6 +46,17 @@ export class FormAutoSave {
   setInputListener($input) {
     if (!$input.name || !$input.name.length) return;
 
+    if ($input.classList.contains("ckeditor")) {
+      const name = $input.getAttribute("name");
+      if (window.CKEDITOR && window.CKEDITOR.instances[name]) {
+        window.CKEDITOR.instances[name].on("change", () => {
+          $input.value = window.CKEDITOR.instances[name].getData();
+          this.onChange({ target: $input });
+        });
+        return;
+      }
+    }
+
     if (
       $input.classList.contains("timepicker") &&
       $.isFunction($().timepicker)
