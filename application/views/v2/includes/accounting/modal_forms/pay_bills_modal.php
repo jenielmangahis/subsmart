@@ -87,7 +87,7 @@
                                     <div class="dropdown">
                                         <button class="nsm-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="bx bx-fw bx-chevron-right"></i></button>
 
-                                        <div class="dropdown-menu p-3">
+                                        <div class="dropdown-menu p-3" style="width: max-content">
                                             <div class="row">
                                                 <div class="col-12 col-md-4">
                                                     <label for="due_date">Due date</label>
@@ -110,7 +110,7 @@
                                                 <div class="col-12 col-md-4">
                                                     <label for="from">From</label>
                                                     <div class="nsm-field-group calendar">
-                                                        <input type="text" name="from" id="from" class="form-control nsm-field date">
+                                                        <input type="text" name="from" id="from" class="form-control nsm-field date" value="<?=date("m/d/Y", strtotime(" -365 days"))?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-4">
@@ -136,8 +136,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <button class="nsm-button" onclick="resetbillsfilter()">Reset</button>
-                                                    <button class="nsm-button success float-end" onclick="applybillsfilter()">Apply</button>
+                                                    <button class="nsm-button" type="button" onclick="resetbillsfilter()">Reset</button>
+                                                    <button class="nsm-button success float-end" type="button" onclick="applybillsfilter()">Apply</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,7 +187,46 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                        <?php if (count($bills) > 0) : ?>
+                                            <?php foreach($bills as $bill) : ?>
+                                            <tr data-vcredits="<?=$bill['vendor_credits']?>" data-payeeid="<?=$bill['payee_id']?>">
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?=$bill['id']?>">
+                                                    </div>
+                                                </td>
+                                                <td><?=$bill['payee']?></td>
+                                                <td><?=$bill['ref_no']?></td>
+                                                <td><?=$bill['due_date']?></td>
+                                                <td><?=$bill['open_balance']?></td>
+                                                <td>
+                                                    <?php if(!in_array($bill['vendor_credits'], ['', '0.00', null])) : ?>
+                                                    <?php $max = floatval($bill['vendor_credits']) > floatval($bill['open_balance']) ? $bill['open_balance'] : $bill['vendor_credits'];?>
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-9">
+                                                            <input type="number" class="form-control nsm-field text-end credit-applied" step=".01" max="<?=$max?>" onchange="convertToDecimal(this)">
+                                                        </div>
+                                                        <div class="col-12 col-md-3 d-md-flex align-items-center">
+                                                            <span class="available-credit"><?=$bill['vendor_credits']?></span> &nbsp;available
+                                                        </div>
+                                                    </div>
+                                                    <?php else : ?>
+                                                    <span class="float-end">Not available</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><input type="number" class="form-control nsm-field text-end payment-amount" onchange="convertToDecimal(this)"></td>
+                                                <td><span>$0.00</span></td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <tr>
+                                                <td colspan="8">
+                                                    <div class="nsm-empty">
+                                                        <span>No results found.</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
                                         </tbody>
                                     </table>
                                 </div>

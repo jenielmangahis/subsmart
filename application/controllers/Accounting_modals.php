@@ -336,6 +336,33 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'pay_bills_modal':
                     $this->page_data['balance'] = '$0.00';
+
+                    $filters = [
+                        'start_date' => date("Y-m-d", strtotime(date("m/d/Y")." -365 days"))
+                    ];
+
+                    $bills = $this->expenses_model->get_open_bills($filters);
+
+                    $data = [];
+                    foreach ($bills as $bill) {
+                        $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+
+                        $data[] = [
+                            'id' => $bill->id,
+                            'payee_id' => $bill->vendor_id,
+                            'payee' => $vendor->display_name,
+                            'ref_no' => $bill->bill_no !== null && $bill->bill_no !== "" ? $bill->bill_no : "",
+                            'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                            'open_balance' => number_format($bill->remaining_balance, 2, '.', ','),
+                            'vendor_credits' => number_format(floatval(str_replace(',', '', $vendor->vendor_credits)), 2, '.', ',')
+                        ];
+                    }
+
+                    usort($data, function ($a, $b) use ($order, $columnName) {
+                        return strtotime($a[$columnName]) > strtotime($b[$columnName]);
+                    });
+
+                    $this->page_data['bills'] = $data;
                 break;
                 case 'vendor_credit_modal':
                     $transactions = $this->expenses_model->get_company_vendor_credit_transactions(['company_id' => logged('company_id')]);
@@ -456,8 +483,6 @@ class Accounting_modals extends MY_Controller
                             }
                         }
                     }
-
-                    $this->page_data['paymentAccounts'] = $paymentAccounts;
 
                     $filters = [
                         'payment_account' => $this->page_data['account']->id
@@ -4115,121 +4140,26 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    public function load_bills()
+    public function get_payable_bills()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $column = $post['order'][0]['column'];
-        $order = $post['order'][0]['dir'];
-        $columnName = $post['columns'][$column]['name'];
-        $start = $post['start'];
-        $limit = $post['length'];
+        $post = $this->input->post();
 
         $filters = [];
 
-        if ($post['payee'] !== 'all') {
+        if ($post['vendor'] !== 'all') {
             $filters['vendor_id'] = $post['payee'];
         }
 
-        switch ($post['due_date']) {
-            case 'last-365-days':
-                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
-                // $filters['end_date'] = date("Y-m-d");
-            break;
-            case 'custom':
-                if ($post['from_date'] !== '') {
-                    $filters['start_date'] = date("Y-m-d", strtotime($post['from_date']));
-                }
+        if ($post['from'] !== '') {
+            $filters['start_date'] = date("Y-m-d", strtotime($post['from']));
+        }
 
-                if ($post['to_date'] !== '') {
-                    $filters['end_date'] = date("Y-m-d", strtotime($post['to_date']));
-                }
-            break;
-            case 'today':
-                $filters['start_date'] = date("Y-m-d");
-                $filters['end_date'] = date("Y-m-d");
-            break;
-            case 'yesterday':
-                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-            break;
-            case 'yesterday':
-                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-            break;
-            case 'this-week':
-                $filters['start_date'] = date("Y-m-d", strtotime("this week -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 day"));
-            break;
-            case 'this-month':
-                $filters['start_date'] = date("Y-m-01");
-                $filters['end_date'] = date("Y-m-t");
-            break;
-            case 'this-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
+        if ($post['to'] !== '') {
+            $filters['end_date'] = date("Y-m-d", strtotime($post['to']));
+        }
 
-                $filters['start_date'] = $quarters[$quarter]['start'];
-                $filters['end_date'] = $quarters[$quarter]['end'];
-            break;
-            case 'this-year':
-                $filters['start_date'] = date("Y-01-01");
-                $filters['end_date'] = date("Y-12-t");
-            break;
-            case 'last-week':
-                $filters['start_date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
-            break;
-            case 'last-month':
-                $filters['start_date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
-                $filters['end_date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
-            break;
-            case 'last-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
-
-                $filters['start_date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
-                $filters['end_date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
-            break;
-            case 'last-year':
-                $filters['start_date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
-                $filters['end_date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
-            break;
+        if($post['due_date'] === 'last-365-days') {
+            $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
         }
 
         $bills = $this->expenses_model->get_open_bills($filters);
@@ -4249,44 +4179,17 @@ class Accounting_modals extends MY_Controller
             ];
         }
 
-        if ($post['overdue_only'] === "1") {
+        if ($post['overdue'] === 'true') {
             $data = array_filter($data, function ($v, $k) {
                 return strtotime(date("Y-m-d")) > strtotime($v['due_date']);
             }, ARRAY_FILTER_USE_BOTH);
         }
 
         usort($data, function ($a, $b) use ($order, $columnName) {
-            if ($columnName !== 'due_date') {
-                if ($columnName === 'open_balance') {
-                    if ($order === 'asc') {
-                        return floatval(str_replace(',', '', $a[$columnName])) > floatval(str_replace(',', '', $b[$columnName]));
-                    } else {
-                        return floatval(str_replace(',', '', $b[$columnName])) > floatval(str_replace(',', '', $a[$columnName]));
-                    }
-                } else {
-                    if ($order === 'asc') {
-                        return strcmp($a[$columnName], $b[$columnName]);
-                    } else {
-                        return strcmp($b[$columnName], $a[$columnName]);
-                    }
-                }
-            } else {
-                if ($order === 'asc') {
-                    return strtotime($a[$columnName]) > strtotime($b[$columnname]);
-                } else {
-                    return strtotime($a[$columnName]) < strtotime($b[$columnname]);
-                }
-            }
+            return strtotime($a[$columnName]) > strtotime($b[$columnname]);
         });
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($bills),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     private function pay_bills($data)

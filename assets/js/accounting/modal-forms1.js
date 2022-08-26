@@ -85,7 +85,9 @@ $(document).ready(function () {
                 } else {
                     var options = $(this).find('option');
                     if (options.length > 10) {
-                        $(this).select2();
+                        $(this).select2({
+                            dropdownParent: $(modal_element)
+                        });
                     } else {
                         $(this).select2({
                             minimumResultsForSearch: -1,
@@ -169,7 +171,7 @@ $(document).ready(function () {
             }
 
             if (modal_element === '#payBillsModal') {
-                $('#payBillsModal #checks-table').nsmPagination({
+                $('#payBillsModal #bills-table').nsmPagination({
                     itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
                 })
                 // loadBills();

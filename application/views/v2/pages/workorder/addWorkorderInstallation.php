@@ -1,5 +1,6 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
+<?php include viewPath('includes/workorder/sign-modal'); ?>
 <style>
 @media only screen and (max-width: 480px) {
     /* horizontal scrollbar for tables if mobile screen */
@@ -968,7 +969,7 @@ tr {
                                         <!-- <tr> -->
                                             <th style="text-align:center;" data-name="Items">Items</th>
                                             <th style="text-align:center;" data-name="Quantity">QTY</th>
-                                            <th style="text-align:center;" data-name="Existing">Existing on Inventory</th>
+                                            <th style="text-align:center;" data-name="Existing">Existing Devices</th>
                                             <th style="text-align:center;" data-name="Location">Location</th>
                                             <th style="text-align:center;" data-name="Price">Price</th>
                                         <!-- </tr> -->
@@ -993,10 +994,10 @@ tr {
                                                 </div>
                                                 <input type="hidden" class="checkedDataOne" name="dataValue[]">
                                             </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="qty[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="existing[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="location[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1006,7 +1007,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1016,7 +1017,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1026,7 +1027,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1036,7 +1037,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1046,7 +1047,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1056,7 +1057,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1066,7 +1067,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1076,7 +1077,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1086,7 +1087,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1096,7 +1097,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1106,7 +1107,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1116,7 +1117,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1126,7 +1127,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1151,10 +1152,10 @@ tr {
                                                 </div>
                                                 <input type="hidden" class="checkedDataTwo" name="dataValue[]">
                                             </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="qty[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="existing[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="location[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1164,7 +1165,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1174,7 +1175,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1184,7 +1185,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1194,7 +1195,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1204,7 +1205,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1214,7 +1215,7 @@ tr {
                                             <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1239,10 +1240,10 @@ tr {
                                                 </div>
                                                 <input type="hidden" class="checkedDataThree" name="dataValue[]">
                                             </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="qty[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="existing[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="location[]"></td>
+                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <?php for ($i = 1; $i <= 2; $i++) { ?>
                                             <tr>
@@ -1253,7 +1254,7 @@ tr {
                                                 <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                                 <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                                <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                                <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                             </tr>
                                         <?php } ?>
                                     </table>
@@ -1284,7 +1285,7 @@ tr {
                                                     <label class="form-check-label" for="trans_check_4">32ch</label>
                                                 </div>
                                             </td>
-                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td  style="vertical-align: top;width:10%;">
@@ -1357,7 +1358,7 @@ tr {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4">
@@ -1381,7 +1382,7 @@ tr {
                                             <!-- <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                             <td><input type="text" class="nsm-field form-control" name="location[]"></td>-->
-                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td> 
+                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td> 
                                         </tr>
                                         <?php for ($i = 1; $i <= 2; $i++) { ?>
                                             <tr>
@@ -1392,7 +1393,7 @@ tr {
                                                 <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
                                                 <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
                                                 <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                                <td><input type="text" class="nsm-field form-control all-price-field" name="price[]"></td>
+                                                <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
@@ -1531,7 +1532,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price" value="0.00">
+                                                    <input type="number" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1540,7 +1541,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" name="otps" id="otps" class="nsm-field form-control text-end total-price" value="0.00">
+                                                    <input type="number" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1549,7 +1550,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price" value="0.00">
+                                                    <input type="number" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1865,29 +1866,38 @@ tr {
                                                                 } ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName . ' ' . $ulist->LName; ?></option>
                                                     <?php } ?>
                                                 </select>
-
+                                                
+                                                <div id="companyrep"></div>
+                                                <div id="company_representative_div"></div>
                                                 <input type="hidden" id="saveCompanySignatureDB1a" name="company_representative_approval_signature1a">
-                                                <div class="d-flex mt-2" id="cra_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 150px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#add_cra_sign_modal">
+                                                <div class="d-flex mt-2" id="cra_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#company-representative-approval-signature">
                                                     <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
-                                                    <img src="" id="companyrep" class="m-auto d-none">
+                                                    <!-- <img src="" id="companyrep" class="m-auto d-none"> -->
+                                                    <!-- <div id="companyrep"></div> -->
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Primary Account Holder</label>
                                                 <input type="text" name="primary_account_holder_name" id="primary_account_holder_name" class="nsm-field form-control" placeholder="Printed Name" />
+                                                
+                                                <div id="primaryrep"></div>
+                                                <div id="primary_representative_div"></div>
                                                 <input type="hidden" id="savePrimaryAccountSignatureDB2a" name="primary_account_holder_signature2a">
-                                                <div class="d-flex mt-2" id="pah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 150px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#add_pah_sign_modal">
+                                                <div class="d-flex mt-2" id="pah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#primary-account-holder-signature">
                                                     <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
-                                                    <img src="" id="primaryrep" class="m-auto d-none">
+                                                    <!-- <img src="" id="primaryrep" class="m-auto d-none"> -->
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Secondary Account Holder</label>
                                                 <input type="text" name="secondery_account_holder_name" class="nsm-field form-control" placeholder="Printed Name" />
+
+                                                <div id="secondaryrep"></div>
+                                                <div id="secondary_representative_div"></div>
                                                 <input type="hidden" id="saveSecondaryAccountSignatureDB3a" name="secondary_account_holder_signature3a">
-                                                <div class="d-flex mt-2" id="sah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 150px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#add_sah_sign_modal">
+                                                <div class="d-flex mt-2" id="sah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#secondary-account-holder-signature">
                                                     <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
-                                                    <img src="" id="secondaryrep" class="m-auto d-none">
+                                                    <!-- <img src="" id="secondaryrep" class="m-auto d-none"> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -1908,8 +1918,32 @@ tr {
     </div>
 </div>
 
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 <script type="text/javascript">
+    
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$(".nsm-subtitle").html(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).html().replace("{curr_date}", currentDate);  
+
+});
+});
     $(document).ready(function() {
+        const numInputs = document.querySelectorAll('input[type=number]')
+
+        numInputs.forEach(function(input) {
+            input.addEventListener('change', function(e) {
+                if (e.target.value == '') {
+                e.target.value = 0
+                }
+            })
+        });
+
         $(".name-field").on("keyup", function() {
             var one = $('#firstname').val();
             var two = $('#lastname').val();
@@ -1926,7 +1960,26 @@ tr {
             }
         });
 
-        $(".total-price").on("keyup", function() {
+        $(".total-price").on("blur", function() {
+            getTotalPrice();
+        });
+
+        // $(".total-price-click").on("click", function() {
+        //     $(this).val('');
+        // });
+
+        // $(".total-price-click").on("blur", function() {
+        //     var a = $(this).val();
+        //     if (empty(a))
+        //     {
+        //         $(this).val('0');
+        //     }else
+        //     {
+        //         $(this).val(a);
+        //     }
+        // });
+
+        $(".all-price-field").on("keyup", function() {
             getTotalPrice();
         });
 
@@ -2056,80 +2109,80 @@ tr {
             }
         });
 
-        var signaturePad;
-        jQuery(document).ready(function() {
-            var signaturePadCanvas = document.querySelector('#canvasb');
-            signaturePad = new SignaturePad(signaturePadCanvas);
-            signaturePadCanvas.height = 300;
-            signaturePadCanvas.width = 680;
-        });
+        // var signaturePad;
+        // jQuery(document).ready(function() {
+        //     var signaturePadCanvas = document.querySelector('#canvasb');
+        //     signaturePad = new SignaturePad(signaturePadCanvas);
+        //     signaturePadCanvas.height = 300;
+        //     signaturePadCanvas.width = 680;
+        // });
 
-        $(document).on('click touchstart', '#canvasb', function() {
-            var canvas_web = document.getElementById("canvasb");
-            var dataURL = canvas_web.toDataURL("image/png");
-            $("#saveCompanySignatureDB1a").val(dataURL);
-        });
+        // $(document).on('click touchstart', '#canvasb', function() {
+        //     var canvas_web = document.getElementById("canvasb");
+        //     var dataURL = canvas_web.toDataURL("image/png");
+        //     $("#saveCompanySignatureDB1a").val(dataURL);
+        // });
 
-        $("#btn_save_cra_signature").on("click", function() {
-            $("#companyrep").attr("src", $("#saveCompanySignatureDB1a").val());
-            $("#companyrep").removeClass("d-none");
-            $("#cra_sign_container").find("span").addClass("d-none");
-            $("#add_cra_sign_modal").modal("hide");
-        });
+        // $("#btn_save_cra_signature").on("click", function() {
+        //     $("#companyrep").attr("src", $("#saveCompanySignatureDB1a").val());
+        //     $("#companyrep").removeClass("d-none");
+        //     $("#cra_sign_container").find("span").addClass("d-none");
+        //     $("#add_cra_sign_modal").modal("hide");
+        // });
 
-        $('#btn_clear_cra_signature').click(function() {
-            $('#cra_sign_area').signaturePad().clearCanvas();
-        });
+        // $('#btn_clear_cra_signature').click(function() {
+        //     $('#cra_sign_area').signaturePad().clearCanvas();
+        // });
 
-        var signaturePad;
-        jQuery(document).ready(function() {
-            var signaturePadCanvas = document.querySelector('#canvas2b');
-            signaturePad = new SignaturePad(signaturePadCanvas);
-            signaturePadCanvas.height = 300;
-            signaturePadCanvas.width = 680;
-        });
+        // var signaturePad;
+        // jQuery(document).ready(function() {
+        //     var signaturePadCanvas = document.querySelector('#canvas2b');
+        //     signaturePad = new SignaturePad(signaturePadCanvas);
+        //     signaturePadCanvas.height = 300;
+        //     signaturePadCanvas.width = 680;
+        // });
 
-        $(document).on('click touchstart', '#canvas2b', function() {
-            var canvas_web = document.getElementById("canvas2b");
-            var dataURL = canvas_web.toDataURL("image/png");
-            $("#savePrimaryAccountSignatureDB2a").val(dataURL);
-        });
+        // $(document).on('click touchstart', '#canvas2b', function() {
+        //     var canvas_web = document.getElementById("canvas2b");
+        //     var dataURL = canvas_web.toDataURL("image/png");
+        //     $("#savePrimaryAccountSignatureDB2a").val(dataURL);
+        // });
 
-        $("#btn_save_pah_signature").on("click", function() {
-            $("#primaryrep").attr("src", $("#savePrimaryAccountSignatureDB2a").val());
-            $("#primaryrep").removeClass("d-none");
-            $("#pah_sign_container").find("span").addClass("d-none");
-            $("#add_pah_sign_modal").modal("hide");
-        });
+        // $("#btn_save_pah_signature").on("click", function() {
+        //     $("#primaryrep").attr("src", $("#savePrimaryAccountSignatureDB2a").val());
+        //     $("#primaryrep").removeClass("d-none");
+        //     $("#pah_sign_container").find("span").addClass("d-none");
+        //     $("#add_pah_sign_modal").modal("hide");
+        // });
 
-        $('#btn_clear_pah_signature').click(function() {
-            $('#pah_sign_area').signaturePad().clearCanvas();
-        });
+        // $('#btn_clear_pah_signature').click(function() {
+        //     $('#pah_sign_area').signaturePad().clearCanvas();
+        // });
 
-        var signaturePad;
-        jQuery(document).ready(function() {
-            var signaturePadCanvas = document.querySelector('#canvas3b');
-            signaturePad = new SignaturePad(signaturePadCanvas);
-            signaturePadCanvas.height = 300;
-            signaturePadCanvas.width = 680;
-        });
+        // var signaturePad;
+        // jQuery(document).ready(function() {
+        //     var signaturePadCanvas = document.querySelector('#canvas3b');
+        //     signaturePad = new SignaturePad(signaturePadCanvas);
+        //     signaturePadCanvas.height = 300;
+        //     signaturePadCanvas.width = 680;
+        // });
 
-        $(document).on('click touchstart', '#canvas3b', function() {
-            var canvas_web = document.getElementById("canvas3b");
-            var dataURL = canvas_web.toDataURL("image/png");
-            $("#saveSecondaryAccountSignatureDB3a").val(dataURL);
-        });
+        // $(document).on('click touchstart', '#canvas3b', function() {
+        //     var canvas_web = document.getElementById("canvas3b");
+        //     var dataURL = canvas_web.toDataURL("image/png");
+        //     $("#saveSecondaryAccountSignatureDB3a").val(dataURL);
+        // });
 
-        $("#btn_save_sah_signature").on("click", function() {
-            $("#secondaryrep").attr("src", $("#saveSecondaryAccountSignatureDB3a").val());
-            $("#secondaryrep").removeClass("d-none");
-            $("#sah_sign_container").find("span").addClass("d-none");
-            $("#add_sah_sign_modal").modal("hide");
-        });
+        // $("#btn_save_sah_signature").on("click", function() {
+        //     $("#secondaryrep").attr("src", $("#saveSecondaryAccountSignatureDB3a").val());
+        //     $("#secondaryrep").removeClass("d-none");
+        //     $("#sah_sign_container").find("span").addClass("d-none");
+        //     $("#add_sah_sign_modal").modal("hide");
+        // });
 
-        $('#btn_clear_sah_signature').click(function() {
-            $('#sah_sign_area').signaturePad().clearCanvas();
-        });
+        // $('#btn_clear_sah_signature').click(function() {
+        //     $('#sah_sign_area').signaturePad().clearCanvas();
+        // });
 
         $("#payment_method").on("change", function() {
             let paymentMethod = $(this).val();
@@ -2200,6 +2253,7 @@ tr {
     }
 
     function getTotalPrice() {
+        // alert('test');
         let val2 = 0;
         $('.allprices').each(function() {
 

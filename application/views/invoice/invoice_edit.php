@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
+
+<!-- Script for autosaving form -->
+<script src="<?=base_url("assets/js/invoice/autosave-update.js")?>"></script>
+
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/invoice'); ?>
@@ -614,7 +618,7 @@ input:checked + .slider:before {
                                                 <tr>
                                                     <td>Subtotal</td>
                                                     <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo number_format($invoice->sub_total,2); ?></span>
+                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo number_format((float) $invoice->sub_total,2); ?></span>
                                                         <input type="hidden" name="subtotal" id="item_total" value="<?php echo $invoice->sub_total; ?>"></td>
                                                 </tr>
                                                 <tr>
