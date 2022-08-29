@@ -645,7 +645,7 @@ $(function() {
 
             $('div#modal-container').append(res);
             tagsListModal = $('#tags-modal div.modal-dialog div#tags-list').html();
-            $(modal_element).modal('show');
+            $('#tags-modal').modal('show');
         });
     });
 
@@ -737,7 +737,7 @@ $(function() {
                                     search: params.term,
                                     type: 'public',
                                     field: type,
-                                    modal: $('#modal-container #modal-form .modal').attr('id')
+                                    modal: $('#modal-container form .modal').attr('id')
                                 }
 
                                 // Query parameters will be ?search=[term]&type=public
@@ -746,18 +746,18 @@ $(function() {
                         },
                         templateResult: formatResult,
                         templateSelection: optionSelect,
-                        dropdownParent: $('#modal-container #modal-form .modal')
+                        dropdownParent: $('#modal-container form .modal')
                     });
                 } else {
                     var options = $(this).find('option');
                     if (options.length > 10) {
                         $(this).select2({
-                            dropdownParent: $('#modal-container #modal-form .modal')
+                            dropdownParent: $('#modal-container form .modal')
                         });
                     } else {
                         $(this).select2({
                             minimumResultsForSearch: -1,
-                            dropdownParent: $('#modal-container #modal-form .modal')
+                            dropdownParent: $('#modal-container form .modal')
                         });
                     }
                 }
@@ -1424,7 +1424,7 @@ $(function() {
 
         $(`div#${modalId} select:not(.select2-hidden-accessible)`).select2({
             minimumResultsForSearch: -1,
-            dropdownParent: $('#modal-container #modal-form .modal')
+            dropdownParent: $('#modal-container form .modal')
         });
     });
 
@@ -1442,14 +1442,14 @@ $(function() {
             `);
             $(this).parent().next().find('select[name="recurring_day"]').select2({
                 minimumResultsForSearch: -1,
-                dropdownParent: $('#modal-container #modal-form .modal')
+                dropdownParent: $('#modal-container form .modal')
             });
         } else {
             $(this).parent().next().find('select[name="recurring_day"]').next().remove();
             $(this).parent().next().find('select[name="recurring_day"]').html(recurringDays);
             $(this).parent().next().find('select[name="recurring_day"]').select2({
                 minimumResultsForSearch: -1,
-                dropdownParent: $('#modal-container #modal-form .modal')
+                dropdownParent: $('#modal-container form .modal')
             });
         }
     });
@@ -1593,7 +1593,7 @@ $(function() {
         $(this).parent().next().children().find('select').each(function() {
             $(this).select2({
                 minimumResultsForSearch: -1,
-                dropdownParent: $('#modal-container #modal-form .modal')
+                dropdownParent: $('#modal-container form .modal')
             });
         });
     });
@@ -2073,20 +2073,14 @@ $(function() {
             }
 
             $('#modal-container form .modal #item-details-table tbody tr:last-child select').each(function() {
-                if($(this).find('option').length > 10) {
-                    $(this).select2({
-                        dropdownParent: $('#modal-container #modal-form .modal')
-                    });
-                } else {
-                    $(this).select2({
-						minimumResultsForSearch: -1,
-                        dropdownParent: $('#modal-container #modal-form .modal')
-					});
-                }
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#modal-container form .modal')
+                });
             });
 
-            if($('#modal-container form#modal-form #linked-transaction').length > 0) {
-                $('<td></td>').insertBefore('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child td:last-child');
+            if($('#modal-container form #linked-transaction').length > 0) {
+                $('<td></td>').insertBefore('#modal-container form .modal #item-details-table tbody tr:last-child td:last-child');
             }
         });
 
@@ -2233,7 +2227,7 @@ $(function() {
     });
 
     $(document).on('change', '#purchaseOrderModal #vendor, #billModal #vendor, #vendorCreditModal #vendor', function() {
-        var modalId = $('#modal-container form#modal-form .modal').attr('id');
+        var modalId = $('#modal-container form .modal').attr('id');
         $.get('/accounting/get-vendor-details/' + $(this).val(), function(res) {
             var vendor = JSON.parse(res);
 
@@ -2536,7 +2530,7 @@ $(function() {
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong>&emsp'${transaction.total}
+                                                    <strong>Total</strong>&emsp;${transaction.total}
                                                     ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
                                                 <ul class="d-flex justify-content-around list-unstyle">
@@ -2616,7 +2610,7 @@ $(function() {
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong>&emsp'${transaction.total}
+                                                    <strong>Total</strong>&emsp;${transaction.total}
                                                     ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
                                                 <ul class="d-flex justify-content-around list-unstyled">
@@ -2694,7 +2688,7 @@ $(function() {
                                             <h5 class="card-title">${title}</h5>
                                             <p class="card-subtitle">${transaction.formatted_date}</p>
                                             <p class="card-text">
-                                                <strong>Total</strong>&emsp'${transaction.total}
+                                                <strong>Total</strong>&emsp;${transaction.total}
                                                 ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                             </p>
                                             <ul class="d-flex justify-content-around list-unstyled">
@@ -2774,7 +2768,7 @@ $(function() {
                                             <h5 class="card-title">${title}</h5>
                                             <p class="card-subtitle">${transaction.formatted_date}</p>
                                             <p class="card-text">
-                                                <strong>Total</strong>&emsp'${transaction.total}
+                                                <strong>Total</strong>&emsp;${transaction.total}
                                                 ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                             </p>
                                             <ul class="d-flex justify-content-around list-unstyled">
@@ -2904,7 +2898,7 @@ $(function() {
                                                 search: params.term,
                                                 type: 'public',
                                                 field: type,
-                                                modal: $('#modal-container #modal-form .modal').attr('id')
+                                                modal: $('#modal-container form .modal').attr('id')
                                             }
 
                                             // Query parameters will be ?search=[term]&type=public
@@ -2913,18 +2907,18 @@ $(function() {
                                     },
                                     templateResult: formatResult,
                                     templateSelection: optionSelect,
-                                    dropdownParent: $('#modal-container #modal-form .modal')
+                                    dropdownParent: $('#modal-container form .modal')
                                 });
                             } else {
                                 var options = $(this).find('option');
                                 if (options.length > 10) {
                                     $(this).select2({
-                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                        dropdownParent: $('#modal-container form .modal')
                                     });
                                 } else {
                                     $(this).select2({
                                         minimumResultsForSearch: -1,
-                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                        dropdownParent: $('#modal-container form .modal')
                                     });
                                 }
                             }
@@ -2955,7 +2949,7 @@ $(function() {
                                 locs += `<option value="${item.locations[i].id}" data-quantity="${item.locations[i].qty === "null" ? 0 : item.locations[i].qty}" ${item.locations[i].id === item.location_id ? 'selected' : ''}>${item.locations[i].name}</option>`;
                             }
 
-                            if ($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
+                            if ($('#modal-container form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form .modal').attr('id') === 'vendorCreditModal') {
                                 var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" max="${item.locations[0].qty}">`;
                             } else {
                                 var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0">`;
@@ -3009,12 +3003,12 @@ $(function() {
                             $('#modal-container form .modal #item-details-table tbody tr:last-child select').each(function() {
                                 if($(this).find('option').length > 10) {
                                     $(this).select2({
-                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                        dropdownParent: $('#modal-container form .modal')
                                     });
                                 } else {
                                     $(this).select2({
                                         minimumResultsForSearch: -1,
-                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                        dropdownParent: $('#modal-container form .modal')
                                     });
                                 }
                             });
@@ -3073,18 +3067,18 @@ $(function() {
 
                 $(this).parent().parent().parent().parent().parent().remove();
 
-                $('#modal-container #modal-form .modal .transactions-container .row div.col-12 .add-transaction[data-type="bill"]').each(function() {
+                $('#modal-container form .modal .transactions-container .row div.col-12 .add-transaction[data-type="bill"]').each(function() {
                     $(this).parent().parent().parent().parent().parent().remove();
                 });
 
-                $('#modal-container #modal-form .modal .transactions-container .row div.col-12 .add-transaction[data-type="vendor-credit"]').each(function() {
+                $('#modal-container form .modal .transactions-container .row div.col-12 .add-transaction[data-type="vendor-credit"]').each(function() {
                     $(this).parent().parent().parent().parent().parent().remove();
                 });
             break;
             case 'bill':
-                if ($('#modal-container #modal-form .modal').attr('id') !== 'billPaymentModal') {
-                    var modalId = $('#modal-container #modal-form .modal').attr('id');
-                    $('#modal-container #modal-form .modal').modal('hide');
+                if ($('#modal-container form .modal').attr('id') !== 'billPaymentModal') {
+                    var modalId = $('#modal-container form .modal').attr('id');
+                    $('#modal-container form .modal').modal('hide');
 
                     $.get('/accounting/bill-payment-form/' + data.id, function(res) {
                         if ($('div#modal-container').length > 0) {
@@ -3137,7 +3131,7 @@ $(function() {
                 }
             break;
             case 'vendor-credit':
-                if ($('#modal-container #modal-form .modal').attr('id') === 'billPaymentModal') {
+                if ($('#modal-container form .modal').attr('id') === 'billPaymentModal') {
                     $('#billPaymentModal .modal-body .row .col').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
 
                     if ($(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).length > 0) {
@@ -3165,8 +3159,8 @@ $(function() {
                     var items = result.items;
 
                     if (items.length > 0) {
-                        if($('#modal-container form#modal-form .modal #item-table thead tr th').length < 10) {
-                            $('#modal-container form#modal-form .modal #item-table thead tr').append('<th width="3%"></th>');
+                        if($('#modal-container form .modal #item-table thead tr th').length < 10) {
+                            $('#modal-container form .modal #item-table thead tr').append('<th width="3%"></th>');
                         }
 
                         var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
@@ -3241,11 +3235,11 @@ $(function() {
                                         <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
         
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
                     
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
                                         minimumResultsForSearch: -1,
-                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                        dropdownParent: $('#modal-container form .modal')
                                     });
                                 } else {
                                     var packageDetails = item.packageDetails;
@@ -3272,7 +3266,7 @@ $(function() {
                                         <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
 
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
 
                                     var packageItems = `
                                         <td colspan="3">
@@ -3303,12 +3297,12 @@ $(function() {
                                         <td></td>
                                     `;
                         
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
                                 }
                             }
                         });
 
-                        $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child input[name="quantity[]"]').trigger('change');
+                        $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child input[name="quantity[]"]').trigger('change');
                     }
 
                     if ($('#modal-container .modal a.close-transactions-container').length > 0) {
@@ -3369,8 +3363,8 @@ $(function() {
                     var items = result.items;
 
                     if (items.length > 0) {
-                        if($('#modal-container form#modal-form .modal #item-table thead tr th').length < 10) {
-                            $('#modal-container form#modal-form .modal #item-table thead tr').append('<th width="3%"></th>');
+                        if($('#modal-container form .modal #item-table thead tr th').length < 10) {
+                            $('#modal-container form .modal #item-table thead tr').append('<th width="3%"></th>');
                         }
 
                         var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
@@ -3442,11 +3436,11 @@ $(function() {
                                         <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
         
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
                     
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
                                         minimumResultsForSearch: -1,
-                                        dropdownParent: $('#modal-container #modal-form .modal')
+                                        dropdownParent: $('#modal-container form .modal')
                                     });
                                 } else {
                                     var packageDetails = item.packageDetails;
@@ -3476,7 +3470,7 @@ $(function() {
                                         <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
 
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
 
                                     var packageItems = `
                                         <td colspan="3">
@@ -3507,12 +3501,12 @@ $(function() {
                                         <td></td>
                                     `;
                         
-                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
                                 }
                             }
                         });
 
-                        $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child input[name="quantity[]"]').trigger('change');
+                        $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child input[name="quantity[]"]').trigger('change');
                     }
 
                     if ($('#modal-container .modal a.close-transactions-container').length > 0) {
@@ -4002,10 +3996,10 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container .modal a.close-transactions-container', function(e) {
+    $(document).on('click', '#modal-container form .modal button.close-transactions-container', function(e) {
         e.preventDefault();
 
-        $('#modal-container .modal .transactions-container').parent().hide();
+        $('#modal-container form .modal .transactions-container').parent().hide();
 
         $(this).removeClass('close-transactions-container');
         $(this).addClass('open-transactions-container');
@@ -4013,10 +4007,10 @@ $(function() {
         $(this).children().addClass('bx-chevron-left');
     });
 
-    $(document).on('click', '#modal-container .modal a.open-transactions-container', function(e) {
+    $(document).on('click', '#modal-container form .modal button.open-transactions-container', function(e) {
         e.preventDefault();
 
-        $('#modal-container .modal .transactions-container').parent().show();
+        $('#modal-container form .modal .transactions-container').parent().show();
 
         $(this).removeClass('open-transactions-container');
         $(this).addClass('close-transactions-container');
@@ -4684,7 +4678,7 @@ $(function() {
         submitType = 'save-and-print';
 
         $(this).attr('id', 'print-purchase-order');
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
     });
 
     $(document).on('click', '#purchaseOrderModal .modal-footer #save-and-send', function(e) {
@@ -4692,7 +4686,7 @@ $(function() {
 
         submitType = 'save-and-send';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
     });
 
     // $(document).on('click', '#purchaseOrderModal .modal-footer #print-purchase-order', function(e) {
@@ -4701,12 +4695,12 @@ $(function() {
     //     printPurchaseOrder();
     // });
 
-    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save', function(e) {
+    $(document).on('click', '#modal-container form .modal .modal-footer #save', function(e) {
         e.preventDefault();
 
         submitType = $(this).attr('id');
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
     });
 
     $(document).on('click', '#singleTimeModal #time-activity-settings-button, #weeklyTimesheetModal #time-activity-settings-button', function(e) {
@@ -4896,7 +4890,7 @@ $(function() {
         $('#weeklyTimesheetModal').parent('form').submit();
     });
 
-    $(document).on('change', '#modal-container #modal-form select', function() {
+    $(document).on('change', '#modal-container form select', function() {
         var value = $(this).val();
         if (value === 'add-new') {
             dropdownEl = $(this);
@@ -5010,7 +5004,7 @@ $(function() {
 
         if(dropdownEl !== null) {
             dropdownEl.html('').trigger('change');
-            $('#modal-container #modal-form .modal span#account-balance').html('$0.00');
+            $('#modal-container form .modal span#account-balance').html('$0.00');
         }
     });
 
@@ -5480,7 +5474,7 @@ $(function() {
         });
     });
 
-    // $(document).on('change', '#modal-container #modal-form #payee', function() {
+    // $(document).on('change', '#modal-container form #payee', function() {
     //     if ($(this).val() === 'add-new') {
     //         dropdownEl = $(this);
 
@@ -5515,7 +5509,7 @@ $(function() {
     //     }
     // });
 
-    // $(document).on('change', '#modal-container #modal-form #person_tracking', function() {
+    // $(document).on('change', '#modal-container form #person_tracking', function() {
     //     if ($(this).val() === 'add-new') {
     //         dropdownEl = $(this);
 
@@ -5530,7 +5524,7 @@ $(function() {
     //     }
     // });
 
-    // $(document).on('change', '#modal-container #modal-form [name="category_customer[]"], #modal-container #modal-form #customer, #modal-container #modal-form [name="customer[]"]', function() {
+    // $(document).on('change', '#modal-container form [name="category_customer[]"], #modal-container form #customer, #modal-container form [name="customer[]"]', function() {
     //     if ($(this).val() === 'add-new') {
     //         dropdownEl = $(this);
 
@@ -5546,7 +5540,7 @@ $(function() {
     //     }
     // });
 
-    // $(document).on('change', '#modal-container #modal-form [name="received_from[]"]', function() {
+    // $(document).on('change', '#modal-container form [name="received_from[]"]', function() {
     //     if ($(this).val() === 'add-new') {
     //         dropdownEl = $(this);
 
@@ -5565,7 +5559,7 @@ $(function() {
     //     }
     // });
 
-    // $(document).on('change', '#modal-container #modal-form [name="names[]"]', function() {
+    // $(document).on('change', '#modal-container form [name="names[]"]', function() {
     //     if ($(this).val() === 'add-new') {
     //         dropdownEl = $(this);
 
@@ -6029,16 +6023,16 @@ $(function() {
         // $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
 
-    $(document).on('click', '#modal-container #modal-form .modal #show-existing-attachments', function() {
-        if($('#modal-container #modal-form .modal .transactions-container').length > 0) {
-            $('#modal-container #modal-form .modal .transactions-container').parent().remove();
-            $('#modal-container #modal-form .modal a.close-transactions-container').parent().remove();
-            $('#modal-container #modal-form .modal a.open-transactions-container').parent().remove();
+    $(document).on('click', '#modal-container form .modal #show-existing-attachments', function() {
+        if($('#modal-container form .modal .transactions-container').length > 0) {
+            $('#modal-container form .modal .transactions-container').parent().remove();
+            $('#modal-container form .modal a.close-transactions-container').parent().remove();
+            $('#modal-container form .modal a.open-transactions-container').parent().remove();
         }
 
-        if($('#modal-container #modal-form .modal .attachments-container').length < 1) {
-            var transactionType = $('#modal-container #modal-form .modal .modal-title').text();
-            $('#modal-container #modal-form .modal .modal-body').children('.row').append(`
+        if($('#modal-container form .modal .attachments-container').length < 1) {
+            var transactionType = $('#modal-container form .modal .modal-title').text();
+            $('#modal-container form .modal .modal-body').children('.row').append(`
                 <div class="col-2 nsm-callout primary">
                     <div class="attachments-container h-100 p-3">
                         <div class="row">
@@ -6056,12 +6050,12 @@ $(function() {
                 </div>
             `);
 
-            $('#modal-container #modal-form .modal #attachment-types').select2({
+            $('#modal-container form .modal #attachment-types').select2({
                 minimumResultsForSearch: -1,
-                dropdownParent: $('#modal-container #modal-form .modal')
+                dropdownParent: $('#modal-container form .modal')
             });
 
-            var attachmentType = $('#modal-container #modal-form .modal #attachment-types').val();
+            var attachmentType = $('#modal-container form .modal #attachment-types').val();
             $.get(`/accounting/attachments/get-${attachmentType}-attachments-ajax`, function(res) {
                 var attachments = JSON.parse(res);
         
@@ -6069,8 +6063,8 @@ $(function() {
                     var dateUploaded = new Date(attachment.created_at);
                     var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
 
-                    if($('#modal-container #modal-form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
-                        $('#modal-container #modal-form .modal .attachments-container').children().append(`
+                    if($('#modal-container form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
+                        $('#modal-container form .modal .attachments-container').children().append(`
                             <div class="col-12 mb-3">
                                 <div class="card">
                                     <div class="card-body">
@@ -6095,7 +6089,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container #modal-form .modal #attachment-types, #existing-attachments-modal #attachment-types', function() {
+    $(document).on('change', '#modal-container form .modal #attachment-types, #existing-attachments-modal #attachment-types', function() {
         var cont = $(this).parent().parent().parent();
         $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function(res) {
             var attachments = JSON.parse(res);
@@ -6105,7 +6099,7 @@ $(function() {
                 var dateUploaded = new Date(attachment.created_at);
                 var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
 
-                if($('#modal-container #modal-form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
+                if($('#modal-container form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
                     cont.append(`
                         <div class="col-12 mb-3">
                             <div class="card">
@@ -6130,10 +6124,10 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container #modal-form .modal .attachments-container a.add-attachment', function(e) {
+    $(document).on('click', '#modal-container form .modal .attachments-container a.add-attachment', function(e) {
         var id = e.currentTarget.dataset.id;
-        if($('#modal-container #modal-form .modal .attachments').parent().find(`input[value="${id}"]`).length < 1) {
-            $('#modal-container #modal-form .modal .attachments').parent().append(`<input type="hidden" name="attachments[]" value="${id}">`);
+        if($('#modal-container form .modal .attachments').parent().find(`input[value="${id}"]`).length < 1) {
+            $('#modal-container form .modal .attachments').parent().append(`<input type="hidden" name="attachments[]" value="${id}">`);
 
             $.get('/accounting/get-attachment/'+id, function(res) {
                 var attachment = JSON.parse(res);
@@ -6161,7 +6155,7 @@ $(function() {
     $(document).on('click', '#modal-container form #depositModal #delete-deposit', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/deposit/${split[1]}`,
@@ -6175,7 +6169,7 @@ $(function() {
     $(document).on('click', '#modal-container form #transferModal #delete-transfer', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/transfer/${split[1]}`,
@@ -6189,7 +6183,7 @@ $(function() {
     $(document).on('click', '#modal-container form #transferModal #void-transfer', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/transfer/'+split[1], function(res) {
             location.reload();
@@ -6199,9 +6193,9 @@ $(function() {
     $(document).on('click', '#modal-container form #journalEntryModal #copy-journal-entry', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.journal-entry-details').prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.journal-entry-details').prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6209,13 +6203,13 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('journal_entry')">Make Recurring</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('journal_entry')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #journalEntryModal #delete-journal-entry', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/journal/${split[1]}`,
@@ -6229,9 +6223,9 @@ $(function() {
     $(document).on('click', '#modal-container form #expenseModal #copy-expense', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6239,13 +6233,13 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('expense')">Make Recurring</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('expense')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #expenseModal #delete-expense', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/expense/${split[1]}`,
@@ -6259,7 +6253,7 @@ $(function() {
     $(document).on('click', '#modal-container form #expenseModal #void-expense', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/expense/'+split[1], function(res) {
             location.reload();
@@ -6269,9 +6263,9 @@ $(function() {
     $(document).on('click', '#modal-container form #checkModal #copy-check', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6279,13 +6273,13 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').html(`<a class="dropdown-item" href="#" onclick="saveAndVoid(event)" id="save-and-void">Void</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').html(`<a class="dropdown-item" href="#" onclick="saveAndVoid(event)" id="save-and-void">Void</a>`);
     });
 
     $(document).on('click', '#modal-container form #checkModal #delete-check', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/check/${split[1]}`,
@@ -6299,7 +6293,7 @@ $(function() {
     $(document).on('click', '#modal-container form #checkModal #void-check', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/check/'+split[1], function(res) {
             location.reload();
@@ -6313,7 +6307,7 @@ $(function() {
 
         submitType = 'save-and-close';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
 
         $('#new-popup #accounting_vendors .ajax-modal[data-view="print_checks_modal"]').trigger('click');
     });
@@ -6325,7 +6319,7 @@ $(function() {
 
         submitType = 'save-and-close';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
 
         $('#new-popup #accounting_vendors .ajax-modal[data-view="print_checks_modal"]').trigger('click');
     });
@@ -6333,9 +6327,9 @@ $(function() {
     $(document).on('click', '#modal-container form #billModal #copy-bill', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible my-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6343,13 +6337,13 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('bill')">Make Recurring</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('bill')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #billModal #delete-bill', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/bill/${split[1]}`,
@@ -6363,7 +6357,7 @@ $(function() {
     $(document).on('click', '#modal-container form #billPaymentModal #void-bill-payment', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/bill-payment/'+split[1], function(res) {
             location.reload();
@@ -6373,7 +6367,7 @@ $(function() {
     $(document).on('click', '#modal-container form #billPaymentModal #delete-bill-payment', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/bill-payment/${split[1]}`,
@@ -6387,9 +6381,9 @@ $(function() {
     $(document).on('click', '#modal-container form #purchaseOrderModal #copy-purchase-order', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6397,14 +6391,14 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
     });
 
     $(document).on('click', '#modal-container form #purchaseOrderModal #delete-purchase-order', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/purchase-order/${split[1]}`,
@@ -6418,9 +6412,9 @@ $(function() {
     $(document).on('click', '#modal-container form #vendorCreditModal #copy-vendor-credit', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6428,13 +6422,13 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('vendor_credit')">Make Recurring</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('vendor_credit')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #vendorCreditModal #delete-vendor-credit', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/vendor-credit/${split[1]}`,
@@ -6448,9 +6442,9 @@ $(function() {
     $(document).on('click', '#modal-container form #creditCardCreditModal #copy-cc-credit', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6458,13 +6452,13 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('credit_card_credit')">Make Recurring</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('credit_card_credit')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #creditCardCreditModal #delete-cc-credit', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/cc-credit/${split[1]}`,
@@ -6478,7 +6472,7 @@ $(function() {
     $(document).on('click', '#modal-container form #creditCardCreditModal #void-cc-credit', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/cc-credit/'+split[1], function(res) {
             location.reload();
@@ -6488,7 +6482,7 @@ $(function() {
     $(document).on('click', '#modal-container form #payDownCreditModal #delete-credit-card-payment', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/credit-card-payment/${split[1]}`,
@@ -6502,7 +6496,7 @@ $(function() {
     $(document).on('click', '#modal-container form #payDownCreditModal #void-credit-card-payment', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/credit-card-payment/'+split[1], function(res) {
             location.reload();
@@ -6512,7 +6506,7 @@ $(function() {
     $(document).on('click', '#modal-container form #singleTimeModal #delete-time-activity', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/time-activity/${split[1]}`,
@@ -6526,7 +6520,7 @@ $(function() {
     $(document).on('click', '#modal-container form #receivePaymentModal #void-payment', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/receive-payment/'+split[1], function(res) {
             location.reload();
@@ -6536,7 +6530,7 @@ $(function() {
     $(document).on('click', '#modal-container form #receivePaymentModal #delete-payment', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/receive-payment/${split[1]}`,
@@ -6552,9 +6546,9 @@ $(function() {
 
         submitType = 'save-and-print';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/print-payment-modal/'+split[1], function(result) {
             $('div#modal-container').append(result);
@@ -6581,9 +6575,9 @@ $(function() {
     $(document).on('click', '#modal-container form #invoiceModal #copy-invoice', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6591,8 +6585,8 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
 
         $('#invoiceModal .modal-title span').html('');
         $.get('/accounting/get-last-invoice-number', function(result) {
@@ -6603,7 +6597,7 @@ $(function() {
     $(document).on('click', '#modal-container form #invoiceModal #void-invoice', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/invoice/'+split[1], function(res) {
             location.reload();
@@ -6613,7 +6607,7 @@ $(function() {
     $(document).on('click', '#modal-container form #invoiceModal #delete-invoice', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/invoice/${split[1]}`,
@@ -6629,7 +6623,7 @@ $(function() {
 
         submitType = 'save-and-print';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
     });
 
     $(document).on('hidden.bs.modal', '#viewPrintInvoiceModal', function() {
@@ -6650,9 +6644,9 @@ $(function() {
     $(document).on('click', '#modal-container form #creditMemoModal #copy-credit-memo', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6660,14 +6654,14 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
     });
 
     $(document).on('click', '#modal-container form #creditMemoModal #void-credit-memo', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/credit-memo/'+split[1], function(res) {
             location.reload();
@@ -6677,7 +6671,7 @@ $(function() {
     $(document).on('click', '#modal-container form #creditMemoModal #delete-credit-memo', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/credit-memo/${split[1]}`,
@@ -6693,7 +6687,7 @@ $(function() {
 
         submitType = 'save-and-print';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
     });
 
     $(document).on('hidden.bs.modal', '#viewPrintCreditMemoModal', function() {
@@ -6714,9 +6708,9 @@ $(function() {
     $(document).on('click', '#modal-container form #salesReceiptModal #copy-sales-receipt', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6724,14 +6718,14 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
     });
 
     $(document).on('click', '#modal-container #salesReceiptModal #void-sales-receipt', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/sales-receipt/'+split[1], function(res) {
             location.reload();
@@ -6741,7 +6735,7 @@ $(function() {
     $(document).on('click', '#modal-container form #salesReceiptModal #delete-sales-receipt', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/sales-receipt/${split[1]}`,
@@ -6757,7 +6751,7 @@ $(function() {
 
         submitType = 'save-and-print';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
     });
 
     $(document).on('hidden.bs.modal', '#viewPrintSalesReceiptModal', function() {
@@ -6778,9 +6772,9 @@ $(function() {
     $(document).on('click', '#modal-container form #refundReceiptModal #copy-refund-receipt', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6788,14 +6782,14 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
     });
 
     $(document).on('click', '#modal-container #refundReceiptModal #void-refund-receipt', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.get('/accounting/void-transaction/refund-receipt/'+split[1], function(res) {
             location.reload();
@@ -6805,7 +6799,7 @@ $(function() {
     $(document).on('click', '#modal-container form #refundReceiptModal #delete-refund-receipt', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/refund-receipt/${split[1]}`,
@@ -6821,7 +6815,7 @@ $(function() {
 
         submitType = 'save-and-print';
 
-        $('#modal-container form#modal-form').submit();
+        $('#modal-container form').submit();
     });
 
     $(document).on('hidden.bs.modal', '#viewPrintRefundReceiptModal', function() {
@@ -6842,9 +6836,9 @@ $(function() {
     $(document).on('click', '#modal-container form #delayedCreditModal #copy-delayed-credit', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6852,13 +6846,13 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_credit')">Make Recurring</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_credit')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #delayedCreditModal #delete-delayed-credit', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/delayed-credit/${split[1]}`,
@@ -6872,9 +6866,9 @@ $(function() {
     $(document).on('click', '#modal-container form #delayedChargeModal #copy-delayed-charge', function(e) {
         e.preventDefault();
 
-        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
-        $('#modal-container form#modal-form').removeAttr('data-href');
-        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+        $('#modal-container form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form').removeAttr('data-href');
+        $('#modal-container form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h6 class="mt-0">This is a copy</h6>
@@ -6882,19 +6876,48 @@ $(function() {
             </div>
         </div>`);
 
-        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_charge')">Make Recurring</a>`);
+        $('#modal-container form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_charge')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #delayedChargeModal #delete-delayed-charge', function(e) {
         e.preventDefault();
 
-        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+        var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
             url: `/accounting/delete-transaction/delayed-charge/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
+            }
+        });
+    });
+
+    $(document).on('show.bs.dropdown', '#modal-container form .modal .modal-header .dropdown', function() {
+        var table = $(this).find('table.recent-transactions-table');
+        var tableId = table.attr('id');
+
+        $.get('/accounting/load-recent-transactions?type='+tableId.replace('recent-', ''), function(res) {
+            var transactions = JSON.parse(res);
+
+            if(transactions.length < 1) {
+                table.children('tbody').html(`<tr class="empty-table">
+                    <td>
+                        <div class="nsm-empty">
+                            <span>Once you enter some transactions, they’ll appear here.</span>
+                        </div>
+                    </td>
+                </tr>`);
+            } else {
+                table.children('tbody').html('');
+                $.each(transactions, function(key, transaction) {
+                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="viewTransaction(this, event)">
+                        <td>${transaction.type}</td>
+                        <td>${transaction.date}</td>
+                        <td>${transaction.amount}</td>
+                        <td>${transaction.name}</td>
+                    </tr>`);
+                });
             }
         });
     });
@@ -7128,7 +7151,7 @@ $(function() {
 
         submitType = 'save-and-close';
 
-        if($('#modal-container #modal-form').length > 0) {
+        if($('#modal-container form').length > 0) {
             $('#modal-form').submit();
         } else {
             $('#update-recurring-form').submit();
@@ -7606,7 +7629,7 @@ $(function() {
         $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').val('');
     });
 
-    $(document).on('change', '#modal-container #modal-form #receivePaymentModal #customer', function(e) {
+    $(document).on('change', '#modal-container form #receivePaymentModal #customer', function(e) {
         var id = $(this).val();
 
         loadCustomerInvoices(id);
@@ -7679,7 +7702,7 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container a#add_item', function(e) {
+    $(document).on('click', '#modal-container form .modal #add_item', function(e) {
         e.preventDefault();
 
         if ($('#modal-container #item_list.modal').length === 0) {
@@ -7709,7 +7732,7 @@ $(function() {
             var locs = '';
 
             if(item.type.toLowerCase() === 'product' || item.type.toLowerCase() === 'inventory') {
-                locs += '<select name="location[]" class="form-control" required>';
+                locs += '<select name="location[]" class="form-control nsm-field" required>';
                 for (var i in locations) {
                     locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
                 }
@@ -7720,39 +7743,34 @@ $(function() {
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                 <td>${locs}</td>
-                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
-                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
-                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
-                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
+                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${item.price}"></td>
+                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="0.00"></td>
+                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                 <td><span class="row-total">$0.00</span></td>
                 <td>
-                    <div class="d-flex align-items-center justify-content-center">
-                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                    </div>
+                    <button type="button" class="nsm-button delete-row">
+                        <i class='bx bx-fw bx-trash'></i>
+                    </button>
                 </td>
             `;
 
-            if($('#modal-container form#modal-form').length > 0) {
-                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+            $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
 
-                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                    minimumResultsForSearch: -1
+            $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child select').each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#modal-container form .modal')
                 });
-            } else {
-                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
-
-                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                    minimumResultsForSearch: -1
-                });
-            }
+            });
             
-            if($('#modal-container form#modal-form #linked-transaction').length > 0) {
-                $('<td></td>').insertBefore('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
+            if($('#modal-container form #linked-transaction').length > 0) {
+                $('<td></td>').insertBefore('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
             }
         });
     });
 
-    $(document).on('click', '#modal-container a#add_group', function(e) {
+    $(document).on('click', '#modal-container form #add_group', function(e) {
         e.preventDefault();
 
         if ($('#modal-container #item_category_list.modal').length === 0) {
@@ -7770,7 +7788,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#modal-container a#add_create_package', function(e) {
+    $(document).on('click', '#modal-container form #add_create_package', function(e) {
         e.preventDefault();
 
         if ($('#modal-container #package_list.modal').length === 0) {
@@ -7808,34 +7826,29 @@ $(function() {
                     <td>${items[i].title}<input type="hidden" name="item[]" value="${items[i].id}"></td>
                     <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                     <td>${locs}</td>
-                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
-                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${items[i].price}"></td>
-                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
-                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${items[i].price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="0.00"></td>
+                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                     <td><span class="row-total">$0.00</span></td>
                     <td>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                        </div>
+                        <button type="button" class="nsm-button delete-row">
+                            <i class='bx bx-fw bx-trash'></i>
+                        </button>
                     </td>
                 `;
 
-                if($('#modal-container form#modal-form').length > 0) {
-                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
 
-                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                        minimumResultsForSearch: -1
+                $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child select').each(function() {
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#modal-container form .modal')
                     });
-                } else {
-                    $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                });
 
-                    $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                        minimumResultsForSearch: -1
-                    });
-                }
-
-                if($('#modal-container form#modal-form #linked-transaction').length > 0) {
-                    $('<td></td>').insertBefore('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
+                if($('#modal-container form #linked-transaction').length > 0) {
+                    $('<td></td>').insertBefore('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
                 }
             }
         });
@@ -7854,31 +7867,27 @@ $(function() {
                 <td>${details.name}<input type="hidden" name="package[]" value="${details.id}"></td>
                 <td>Package</td>
                 <td></td>
-                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
                 <td><span class="item-amount">${parseFloat(details.amount_set).toFixed(2)}</span></td>
                 <td></td>
-                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                 <td><span class="row-total">$0.00</span></td>
                 <td>
-                    <div class="d-flex align-items-center justify-content-center">
-                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                    </div>
+                    <button type="button" class="nsm-button delete-row">
+                        <i class='bx bx-fw bx-trash'></i>
+                    </button>
                 </td>
             `;
 
-            if($('#modal-container form#modal-form').length > 0) {
-                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
-            } else {
-                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
-            }
+            $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
 
-            if($('#modal-container form#modal-form #linked-transaction').length > 0) {
-                $('<td></td>').insertBefore('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
+            if($('#modal-container form #linked-transaction').length > 0) {
+                $('<td></td>').insertBefore('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
             }
 
             var packageItems = `
                 <td colspan="3">
-                    <table class="table m-0 bg-white">
+                    <table class="nsm-table">
                         <thead>
                             <tr class="package-item-header">
                                 <th>Item Name</th>
@@ -7904,14 +7913,10 @@ $(function() {
                 <td></td>
             `;
 
-            if($('#modal-container form#modal-form').length > 0) {
-                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
-            } else {
-                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
-            }
+            $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
 
-            if($('#modal-container form#modal-form #linked-transaction').length > 0) {
-                $('<td></td>').insertBefore('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
+            if($('#modal-container form #linked-transaction').length > 0) {
+                $('<td></td>').insertBefore('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child td:last-child');
             }
         });
     });
@@ -7946,13 +7951,29 @@ $(function() {
 
             var fields = `
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
-                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
-                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
-                <td><a href="#" class="remove btn btn-sm btn-success" id="149"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0"></td>
+                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${item.price}"></td>
+                <td><button type="button" class="remove nsm-button"><i class="bx bx-fw bx-trash" aria-hidden="true"></i></a></td>
             `;
 
             $('#modal-container #package_list #package-items-table tbody').append(`<tr>${fields}</tr>`);
         });
+    });
+
+    $(document).on('click', '#modal-container #package_list #package-items-table tbody button.remove', function() {
+        $(this).parent().parent().remove();
+
+        var total = 0.00;
+
+        $('#modal-container #package_list #package-items-table tbody tr').each(function() {
+            var quantity = $(this).find('[name="quantity[]"]').val();
+            var amount = $(this).find('[name="item_amount[]"]').val();
+            var rowTotal = parseFloat(amount) * parseFloat(quantity);
+
+            total = parseFloat(total) + parseFloat(rowTotal);
+        });
+
+        $('#modal-container #package_list #package_price').val(parseFloat(total).toFixed(2));
     });
 
     $(document).on('click', '#modal-container #package_list #create-package', function(e) {
@@ -7990,21 +8011,25 @@ $(function() {
                         <td>${res.id}</td>
                         <td>${data.get('name')}</td>
                         <td></td>
-                        <td class="text-success"></td>
-                        <td class="text-success">${data.get('amount_set')}</td>
-                        <td class="text-error">
-                            <button id="${res.id}" data-id="${res.id}" type="button" data-dismiss="modal" class="btn btn-sm btn-default addNewPackageToList">
-                                <span class="fa fa-plus"></span>
+                        <td></td>
+                        <td>${data.get('amount_set')}</td>
+                        <td>
+                            <button id="${res.id}" data-id="${res.id}" type="button" data-bs-dismiss="modal" class="nsm-button addNewPackageToList">
+                                <span class="bx bx-fw bx-plus"></span>
                             </button>
                         </td>
-                        <td><a href="#" data-toggle="collapse" data-target="#demo${res.id}" data-parent="#package-table" id="packageID" data-id="${res.id}"><i class="fa fa-sort-down" style="font-size:24px"></i></a></td>
+                        <td>
+                            <button type="button" class="nsm-button" data-bs-toggle="collapse" data-bs-target="#demo${res.id}" data-parent="#package-table" id="packageID" data-id="${res.id}">
+                                <i class="bx bx-fw bx-caret-down"></i>
+                            </button>
+                        </td>
                     </tr>`;
-                    $('#modal-container #package_list #package-table tbody').append(appendPackage);
+                    $('#modal-container #package_list #package-table tbody.panel').append(appendPackage);
 
                     var appendPackageItems = `<tr id="demo${res.id}" class="collapse">
-                        <td colspan="6" class="hiddenRow">
-                            <div id="packageItems<?=$pItems->id?>">
-                                <table>
+                        <td colspan="7" class="hiddenRow">
+                            <div id="packageItems${res.id}">
+                                <table class="nsm-table">
                                     <tbody>`;
 
                     $('#modal-container #package_list #package-items-table tbody tr').each(function() {
@@ -8022,7 +8047,7 @@ $(function() {
                         </td>
                     </tr>`;
 
-                    $('#modal-container #package_list #package-table tbody').append(appendPackageItems);
+                    $('#modal-container #package_list #package-table tbody.panel').append(appendPackageItems);
 
                     $('#modal-container #package_list #package_name').val('')
                     $('#modal-container #package_list #package_price').val('');
@@ -8106,22 +8131,22 @@ $(function() {
         $('#modal-container form .modal span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
     });
 
-    $(document).on('click', '#modal-container form .modal #item-table .deleteRow', function() {
+    $(document).on('click', '#modal-container form .modal #item-table .delete-row', function() {
         var el = $(this);
-        if($(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').length < 1) {
-            if($(this).parent().parent().parent().hasClass('package')) {
-                $(this).parent().parent().parent().next().remove();
+        if($(this).parent().parent().find('input[name="item_linked_transaction[]"]').length < 1) {
+            if($(this).parent().parent().hasClass('package')) {
+                $(this).parent().parent().next().remove();
             }
-            $(this).parent().parent().parent().remove();
+            $(this).parent().parent().remove();
     
             var subtotal = 0.00;
             var taxes = 0.00;
             var discounts = 0.00;
-            $('#modal-container form .modal #item-table tbody tr').each(function() {
-                var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
-                var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
-                var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
-                var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+            $('#modal-container form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header)').each(function() {
+                var itemAmount = $(this).hasClass('package') ? $(this).find('.item-amount').html().trim() : $(this).find('input[name="item_amount[]"]').val();
+                var itemQty = $(this).find('input[name="quantity[]"]').val();
+                var itemDisc = $(this).hasClass('package') ? 0.00 : $(this).find('input[name="discount[]"]').val();
+                var itemTax = $(this).find('input[name="item_tax[]"]').val();
     
                 var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
                 var taxAmount = parseFloat(itemTax) * itemTotal / 100;
@@ -8136,7 +8161,7 @@ $(function() {
             $('#modal-container form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
             $('#modal-container form .modal #adjustment_input_cm').trigger('change');
         } else {
-            var linkedTransac = $(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').val();
+            var linkedTransac = $(this).parent().parent().find('input[name="item_linked_transaction[]"]').val();
             var linkedTransacType = linkedTransac.split('-')[0].replace('delayed_');
             var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
             if($(`#modal-container form .modal #item-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
@@ -8230,7 +8255,7 @@ $(function() {
     });
 
     $(document).on('change', '#refundReceiptModal #refund-from-account', function() {
-        var rowEl = $(this).parent().parent().parent();
+        var rowEl = $(this).parent().parent();
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
@@ -8238,10 +8263,10 @@ $(function() {
                 var result = JSON.parse(res);
 
                 if(rowEl.find('#check-no').length > 0) {
-                    rowEl.children('div.col-md-2:nth-child(3)').find('h4').html(result.balance);
+                    rowEl.children('div.col-md-1:nth-child(3)').find('h4').html(result.balance);
                 } else {
-                    rowEl.append(`<div class="col-md-2"><div class="form-group"><label>Balance</label><h4>${result.balance}</h4></div></div>`);
-                    rowEl.append(`<div class="col-md-2"><div class="form-group"><label for="check-no">Check no.</label><input type="text" class="form-control" name="check_no" id="check-no" value="To print" disabled><div class="form-check"><div class="checkbox checkbox-sec"><input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" checked><label class="form-check-label" for="print-later">Print later</label></div></div></div></div>`);
+                    rowEl.append(`<div class="col-12 col-md-1"><label>Balance</label><h4>${result.balance}</h4></div>`);
+                    rowEl.append(`<div class="col-12 col-md-2"><label for="check-no">Check no.</label><input type="text" class="form-control nsm-field mb-2" name="check_no" id="check-no" value="To print" disabled><div class="form-check"><input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" checked><label class="form-check-label" for="print-later">Print later</label></div></div>`);
                 }
             });
         }
@@ -9407,8 +9432,8 @@ const submitModalForm = (event, el) => {
                         break;
                     }
 
-                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
-                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
+                    $('#modal-container form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container form').attr('onsubmit', 'updateTransaction(event, this)');
                 }
 
                 if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
@@ -9872,7 +9897,8 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
             $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
-            $(`div#${modalId} div.modal-body #credit_memo_date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #credit_memo_date`).parent().prev().remove();
+            $(`div#${modalId} div.modal-body #credit_memo_date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Memo');
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
@@ -9883,33 +9909,33 @@ const makeRecurring = (modalName) => {
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Sales Receipt');
             $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
-            $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().prev().remove();
+            $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
-            
-            var addedFields = `<div class="col-md-3">`;
+
+            var addedFields = `<div class="col-12 col-md-3">`;
             addedFields += `<div class="form-group">`;
             addedFields += `<label>Options</label>`;
             addedFields += `<div class="form-check">`;
-            addedFields += `<div class="checkbox checkbox-sec mr-3">`;
             addedFields += `<input type="checkbox" name="auto_send_emails" value="1" class="form-check-input" id="auto-send-emails">`;
             addedFields += `<label class="form-check-label" for="auto-send-emails">Automatically send emails</label>`;
             addedFields += `</div>`;
-            addedFields += `<div class="checkbox checkbox-sec">`;
+            addedFields += `<div class="form-check">`;
             addedFields += `<input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later">`;
             addedFields += `<label class="form-check-label" for="print-later">Print later</label>`;
             addedFields += `</div>`;
             addedFields += `</div>`;
             addedFields += `</div>`;
-            addedFields += `</div>`;
-            $(addedFields).insertAfter($(`#${modalId} #email`).parent().parent());
+            $(addedFields).insertAfter($(`#${modalId} #email`).parent());
         break;
         case 'refund_receipt' :
             modalId = 'refundReceiptModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
             $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
-            $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().prev().remove();
+            $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Refund Receipt');
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
         break;
@@ -9936,8 +9962,8 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
             $(`div#${modalId} div.modal-body div.row.date-row`).remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice');
-            $(`div#${modalId} div.modal-body #shipping-date`).parent().parent().remove();
-            $(`div#${modalId} div.modal-body #invoice-no`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #shipping-date`).parent().parent().html('');
+            $(`div#${modalId} div.modal-body #invoice-no`).parent().remove();
         break;
     }
 
@@ -9989,12 +10015,12 @@ const makeRecurring = (modalName) => {
                 },
                 templateResult: formatResult,
                 templateSelection: optionSelect,
-                dropdownParent: $('#modal-container #modal-form .modal')
+                dropdownParent: $('#modal-container form .modal')
             });
         } else {
             $(this).select2({
                 minimumResultsForSearch: -1,
-                dropdownParent: $('#modal-container #modal-form .modal')
+                dropdownParent: $('#modal-container form .modal')
             });
         }
     });
@@ -10122,7 +10148,7 @@ const computeTransactionTotal = () => {
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    if($('#modal-container #modal-form .modal').attr('id') === 'billModal') {
+    if($('#modal-container form .modal').attr('id') === 'billModal') {
         if($('#billModal #total-payment-amount').length > 0) {
             total = parseFloat(total) - parseFloat($('#billModal #total-payment-amount').html());
         }
@@ -10260,14 +10286,14 @@ const applybillsfilter = () => {
         success: function(result) {
             var bills = JSON.parse(result);
 
-            if(bills.length > 1) {
+            if(bills.length < 1) {
                 $('#payBillsModal #bills-table tbody').html(`<tr>
-                <td colspan="8">
-                    <div class="nsm-empty">
-                        <span>No results found.</span>
-                    </div>
-                </td>
-            </tr>`);
+                    <td colspan="8">
+                        <div class="nsm-empty">
+                            <span>No results found.</span>
+                        </div>
+                    </td>
+                </tr>`);
             } else {
                 $('#payBillsModal #bills-table tbody').html('');
                 $.each(bills, function(key, bill) {
@@ -10760,18 +10786,18 @@ const initModalFields = (modalName, data = {}) => {
                     },
                     templateResult: formatResult,
                     templateSelection: optionSelect,
-                    dropdownParent: $('#modal-container #modal-form .modal')
+                    dropdownParent: $('#modal-container form .modal')
                 });
             } else {
                 var options = $(this).find('option');
                 if (options.length > 10) {
                     $(this).select2({
-                        dropdownParent: $('#modal-container #modal-form .modal')
+                        dropdownParent: $('#modal-container form .modal')
                     });
                 } else {
                     $(this).select2({
                         minimumResultsForSearch: -1,
-                        dropdownParent: $('#modal-container #modal-form .modal')
+                        dropdownParent: $('#modal-container form .modal')
                     });
                 }
             }
@@ -10782,7 +10808,7 @@ const initModalFields = (modalName, data = {}) => {
         $(`div#${modalName} select#tags`).select2({
             placeholder: 'Start typing to add a tag',
             allowClear: true,
-            dropdownParent: $('#modal-container #modal-form .modal'),
+            dropdownParent: $('#modal-container form .modal'),
             ajax: {
                 url: '/accounting/get-job-tags',
                 dataType: 'json'
@@ -11026,7 +11052,7 @@ const savePayBills = (e) => {
     e.preventDefault();
 
     submitType = 'save';
-    $('#modal-container form#modal-form').submit();
+    $('#modal-container form').submit();
 
     applybillsfilter();
     $('#payBillsModal .transaction-total-amount').html('$0.00');
@@ -11036,7 +11062,7 @@ const savePrintPayBills = (e) => {
     e.preventDefault();
 
     $('#payBillsModal #print_later').prop('checked', true).trigger('change');
-    $('#modal-container form#modal-form').submit();
+    $('#modal-container form').submit();
     var paymentAcc = $('#payBillsModal #payment_account').val();
     $('#payBillsModal').modal('hide');
 
@@ -11047,7 +11073,7 @@ const savePrintPayBills = (e) => {
 const saveClosePayBills = (e) => {
     e.preventDefault();
 
-    $('#modal-container form#modal-form').submit();
+    $('#modal-container form').submit();
 
     $('#modal-container .modal').modal('hide');
 }
@@ -11430,7 +11456,7 @@ const resetCreditsFilter = () => {
 }
 
 const viewTransaction = (el, e) => {
-    $('#modal-container #modal-form .modal').modal('hide');
+    $('#modal-container form .modal').modal('hide');
     $('.modal-backdrop:last-child').remove();
 
     var table = $(el).parent().parent();
@@ -11604,7 +11630,7 @@ const saveAndVoid = (e) => {
         cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
-            $('#modal-container form#modal-form').submit();
+            $('#modal-container form').submit();
         }
     });
 }
@@ -11742,7 +11768,7 @@ const clearForm = () => {
 }
 
 const printPurchaseOrder = () => {
-    var id = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/purchase-order/', '');
+    var id = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/purchase-order/', '');
 
     $.get(`/accounting/print-purchase-order-modal/${id}`, function(result) {
         $('div#modal-container').append(result);
@@ -11797,7 +11823,7 @@ const applyInvoicesFilter = (e) => {
 const resetInvoicesFilter = (e) => {
     e.preventDefault();
 
-    var href = $('#modal-container #modal-form').attr('data-href');
+    var href = $('#modal-container form').attr('data-href');
     if(href === false || typeof href === 'undefined') {
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -11830,7 +11856,7 @@ const applyCreditMemoFilter = (e) => {
 const resetCreditMemoFilter = (e) => {
     e.preventDefault();
 
-    var href = $('#modal-container #modal-form').attr('data-href');
+    var href = $('#modal-container form').attr('data-href');
     if(href === false || typeof href === 'undefined') {
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -12191,7 +12217,7 @@ const resetCreditMemoFilter = (e) => {
 // }
 
 const printPreviewInvoice = () => {
-    var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+    var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
     $.get('/accounting/print-invoice-modal/'+split[1], function(result) {
         $('div#modal-container').append(result);
@@ -12201,7 +12227,7 @@ const printPreviewInvoice = () => {
 }
 
 const printPreviewCreditMemo = () => {
-    var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+    var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
     $.get('/accounting/print-credit-memo-modal/'+split[1], function(result) {
         $('div#modal-container').append(result);
@@ -12211,7 +12237,7 @@ const printPreviewCreditMemo = () => {
 }
 
 const printPreviewSalesReceipt = () => {
-    var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+    var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
     $.get('/accounting/print-sales-receipt-modal/'+split[1], function(result) {
         $('div#modal-container').append(result);
@@ -12221,7 +12247,7 @@ const printPreviewSalesReceipt = () => {
 }
 
 const printPreviewRefundReceipt = () => {
-    var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+    var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
     $.get('/accounting/print-refund-receipt-modal/'+split[1], function(result) {
         $('div#modal-container').append(result);

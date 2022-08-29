@@ -17,7 +17,7 @@ $(document).ready(function () {
                 `);
             }
 
-            $(`${modal_element} [data-toggle="popover"]`).popover();
+            $(`${modal_element} [data-bs-toggle="popover"]`).popover();
 
             if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
                 rowInputs = $('div#modal-container table tbody tr:first-child()').html();

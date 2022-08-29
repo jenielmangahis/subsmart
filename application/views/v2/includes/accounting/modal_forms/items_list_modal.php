@@ -1,9 +1,9 @@
 <!-- Modal -->
-<div class="modal fade nsm-modal" id="products_list" role="dialog">
+<div class="modal fade nsm-modal" id="item_list" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="products-lists-modal-label">Products Lists</span>
+                <span class="modal-title content-title" id="items-lists-modal-label">Item Lists</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
@@ -12,10 +12,10 @@
                         <table id="items_table" class="nsm-table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <td> Name</td>
-                                    <td> Qty</td>
-                                    <td> Price</td>
-                                    <td> Action</td>
+                                    <td>Name</td>
+                                    <td>Qty</td>
+                                    <td>Price</td>
+                                    <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>

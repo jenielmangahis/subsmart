@@ -335,7 +335,34 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['recent_bills'] = $data;
                 break;
                 case 'pay_bills_modal':
-                    $this->page_data['balance'] = '$0.00';
+                    $accountTypes = [
+                        'Bank',
+                        'Credit Card',
+                        'Other Current Assets'
+                    ];
+
+                    $count = 1;
+                    foreach ($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if (count($accounts) > 0) {
+                            foreach ($accounts as $account) {
+                                if ($count === 1) {
+                                    $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
+
+                                    $this->page_data['startingCheckNo'] = intval($lastAssignedCheck->check_no) + 1;
+                                    $this->page_data['account'] = $account;
+                                    $this->page_data['balance'] = str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ','));
+                                }
+    
+                                $count++;
+                            }
+                        }
+                    }
+
+                    // $this->page_data['balance'] = '$0.00';
 
                     $filters = [
                         'start_date' => date("Y-m-d", strtotime(date("m/d/Y")." -365 days"))
@@ -4147,7 +4174,7 @@ class Accounting_modals extends MY_Controller
         $filters = [];
 
         if ($post['vendor'] !== 'all') {
-            $filters['vendor_id'] = $post['payee'];
+            $filters['vendor_id'] = $post['vendor'];
         }
 
         if ($post['from'] !== '') {
@@ -4689,7 +4716,7 @@ class Accounting_modals extends MY_Controller
         $items = $this->items_model->getItemsWithFilter($filter);
 
         $this->page_data['items'] = $items;
-        $this->load->view('accounting/modals/item_list_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/items_list_modal', $this->page_data);
     }
 
     public function get_items_categories_list_modal()
@@ -4697,7 +4724,7 @@ class Accounting_modals extends MY_Controller
         $categories = $this->items_model->getItemCategories();
 
         $this->page_data['categories'] = $categories;
-        $this->load->view('accounting/modals/item_category_list_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/item_category_list_modal', $this->page_data);
     }
 
     public function get_category_items($categoryId)
@@ -4742,7 +4769,7 @@ class Accounting_modals extends MY_Controller
         }
 
         $this->page_data['itemPackages'] = $packages;
-        $this->load->view('accounting/modals/package_list_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/package_list_modal', $this->page_data);
     }
 
     public function get_term_details($termId)
@@ -10852,7 +10879,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
 
-        $this->load->view("accounting/modals/vendor_credit_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/vendor_credit_modal", $this->page_data);
     }
 
     private function view_cc_payment($ccPaymentId)
@@ -10887,7 +10914,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view("accounting/modals/credit_card_credit_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/credit_card_credit_modal", $this->page_data);
     }
 
     private function view_bill_payment($billPaymentId)
@@ -11038,7 +11065,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
 
-        $this->load->view("accounting/modals/purchase_order_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/purchase_order_modal", $this->page_data);
     }
 
     private function view_time_activity($timeActivityId)
@@ -11163,7 +11190,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['totalPayment'] = $totalPayment;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Credit Memo', $creditMemoId);
 
-        $this->load->view("accounting/modals/credit_memo_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/credit_memo_modal", $this->page_data);
     }
 
     private function view_sales_receipt($salesReceiptId)
@@ -11184,7 +11211,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['receipt'] = $salesReceipt;
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Sales Receipt', $salesReceiptId);
-        $this->load->view("accounting/modals/sales_receipt_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/sales_receipt_modal", $this->page_data);
     }
 
     private function view_refund_receipt($refundReceiptId)
@@ -11207,7 +11234,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Refund Receipt', $refundReceiptId);
         $this->page_data['refundAcc'] = $refundAcc;
-        $this->load->view("accounting/modals/refund_receipt_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/refund_receipt_modal", $this->page_data);
     }
 
     private function view_delayed_credit($delayedCreditId)
@@ -11236,7 +11263,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['credit'] = $delayedCredit;
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Credit', $delayedCreditId);
-        $this->load->view("accounting/modals/delayed_credit_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/delayed_credit_modal", $this->page_data);
     }
 
     private function view_delayed_charge($delayedChargeId)
@@ -11265,7 +11292,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['charge'] = $delayedCharge;
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Charge', $delayedChargeId);
-        $this->load->view("accounting/modals/delayed_charge_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/delayed_charge_modal", $this->page_data);
     }
 
     private function view_invoice($invoiceId)
@@ -11372,7 +11399,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['payments'] = $paymentRecords;
         $this->page_data['term'] = $term;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
-        $this->load->view("accounting/modals/invoice_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
 
     public function load_bills_payed($billPaymentId)
@@ -16336,12 +16363,12 @@ class Accounting_modals extends MY_Controller
 
     public function load_recent_transactions()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
+        $type = $this->input->get('type');
         $start = 0;
         $length = 10;
         $data = [];
 
-        switch($post['transaction_type']) {
+        switch($type) {
             case 'expenses' :
                 $transactions = $this->expenses_model->get_company_expense_transactions(['company_id' => logged('company_id')]);
                 usort($transactions, function($a, $b) {
@@ -16834,14 +16861,14 @@ class Accounting_modals extends MY_Controller
             break;
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($transactions),
-            'recordsFiltered' => count($data),
-            'data' => $data
-        ];
+        // $result = [
+        //     'draw' => $post['draw'],
+        //     'recordsTotal' => count($transactions),
+        //     'recordsFiltered' => count($data),
+        //     'data' => $data
+        // ];
 
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     public function delete_transaction($transactionType, $transactionId)

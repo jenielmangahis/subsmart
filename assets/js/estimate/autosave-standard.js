@@ -43,8 +43,15 @@ window.document.addEventListener("DOMContentLoaded", async () => {
       }
     },
   });
-  const form = new FormAutoSave($form, config);
-  form.listen();
+
+  if (window.CKEDITOR && window.CKEDITOR) {
+    const form = new FormAutoSave($form, config);
+    form.listen();
+
+    window.CKEDITOR.on("instanceReady", () => {
+      form.listenCKEDITOR();
+    });
+  }
 });
 
 async function autoSaveForm() {

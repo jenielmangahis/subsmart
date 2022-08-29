@@ -15,26 +15,7 @@
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Transactions</h5>
                                     <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-transactions">
-                                        <tbody>
-                                            <?php if(!empty($recent_payments)) : ?>
-                                                <?php foreach($recent_payments as $recentPayment) : ?>
-                                                    <tr data-id="<?=$recentPayment['id']?>" onclick="viewTransaction(this, event)">
-                                                        <td><?=$recentPayment['type']?></td>
-                                                        <td><?=$recentPayment['date']?></td>
-                                                        <td><?=$recentPayment['amount']?></td>
-                                                        <td><?=$recentPayment['name']?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php else : ?>
-                                                <tr class="empty-table">
-                                                    <td>
-                                                        <div class="nsm-empty">
-                                                            <span>Once you enter some transactions, they’ll appear here.</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -53,7 +34,9 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="payment_account">Payment account</label>
-                                            <select name="payment_account" id="payment_account" class="form-control nsm-field" required></select>
+                                            <select name="payment_account" id="payment_account" class="form-control nsm-field" required>
+                                                <option value="<?=$account->id?>"><?=$account->name?></option>
+                                            </select>
                                         </div>
                                         <div class="col-12 col-md-3 d-flex ">
                                             <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p>
@@ -66,9 +49,9 @@
                                         </div>
                                         <div class="col-12 col-md-2">
                                             <label for="starting_check_no">Starting check no.</label>
-                                            <input type="text" name="starting_check_no" id="starting_check_no" class="form-control nsm-field">
+                                            <input type="text" name="starting_check_no" id="starting_check_no" value="<?=$startingCheckNo?>" class="form-control nsm-field">
                                         </div>
-                                        <div class="col-12 col-md-2 d-flex align-items-center">
+                                        <div class="col-12 col-md-2 d-flex align-items-end">
                                             <div class="form-check">
                                                 <input type="checkbox" name="print_later" id="print_later" class="form-check-input" value="1">
                                                 <label for="print_later" class="form-check-label">Print later</label>
