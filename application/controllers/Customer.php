@@ -3084,13 +3084,15 @@ class Customer extends MY_Controller
             'table' => 'customer_settings',
             'select' => '*',
         );
-        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
+        //1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,62,17,18,19,20,21,22,23,24,25,26,27,28,29,
+        //30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,63,64,53,54,55,56,57,58,59,60,61
+        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false); 
         
         $input = $this->input->post();
         if ($input) {
-            $customers = json_decode($input['customers']);
-            $mappingSelected = json_decode($input['mapHeaders'], true);
-            $csvHeaders = json_decode($input['csvHeaders'], true);
+            $customers = json_decode($input['customers']); //data CSV
+            $mappingSelected = json_decode($input['mapHeaders'], true); //selected Headers
+            $csvHeaders = json_decode($input['csvHeaders'], true); //CSV Headers
             
             // intialize array
             $acsProfileData = array();
@@ -3098,21 +3100,25 @@ class Customer extends MY_Controller
             $acsOfficeData = array();
             $acsBillingData = array();
 
-            $fieldCompanyValues = explode(',', $importFieldSettings->value);
-
+            $settingsValue = explode(',', $importFieldSettings->value); //convert values from database to array
+            sort($settingsValue);
+            $fieldCompanyValue = implode(",", $settingsValue);
+            $fieldCompanyValues = explode(",", $fieldCompanyValue);
             $exist = $insert = 0;
+
             foreach($customers as $data) {
                 $counter = 0;
                 foreach($fieldCompanyValues as $field) {
                     $fieldname = "";
                     $category = "";
-                    foreach($importFieldsList as $importSetting) {
+
+                    foreach($importFieldsList as $importSetting) { //values from acs_import_fields database
                         if($field == $importSetting->id) {
-                            $fieldname = $importSetting->field_name;
-                            $category = $importSetting->field_category;
-                        }
-                    }
-                    $dataValue = $csvHeaders[$mappingSelected[$counter]];
+                            $fieldname = $importSetting->field_name; //name of the header such as Status, First name Sale Date
+                            $category = $importSetting->field_category; //category no. where the header belong, usefull for inserting in diff tables
+                        
+                    $dataValue = $csvHeaders[$mappingSelected[$counter]]; // name of the selected header in the csv fle eg. "Sales Date"
+
                     switch($category){
                         case 1:
                             $acsProfileData[$fieldname] = $data->$dataValue;
@@ -3122,6 +3128,7 @@ class Customer extends MY_Controller
                             break;    
                         case 3:
                             $acsOfficeData[$fieldname] = $data->$dataValue;
+                            
                             break;    
                         case 4:
                             $acsAlarmData[$fieldname] = $data->$dataValue;
@@ -3132,6 +3139,8 @@ class Customer extends MY_Controller
                         default:
                             break;    
                     }
+                }
+            }
                     $counter++;
                 }
                 $check_user = array(
@@ -3163,7 +3172,7 @@ class Customer extends MY_Controller
 
             }
             
-            $data_arr = array("success" => TRUE,"message" => 'There are '.$exist . ' existing customer and '.$insert . ' inserted new customer.');
+            $data_arr = array("success" => TRUE, "message", "Successfully imported".$insert." users", "alar" => $acsAlarmData, "profile" => $acsProfileData, "billing" => $acsBillingData, "office" => $acsOfficeData, "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "customers" => $customers);
         }else{
             $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
         }

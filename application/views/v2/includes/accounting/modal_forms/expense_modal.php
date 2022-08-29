@@ -19,26 +19,7 @@
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Expenses</h5>
                                     <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-expenses">
-                                        <tbody>
-                                            <?php if(!empty($recent_expenses)) : ?>
-                                                <?php foreach($recent_expenses as $recentExpense) : ?>
-                                                    <tr data-id="<?=$recentExpense['id']?>" onclick="viewTransaction(this, event)">
-                                                        <td><?=$recentExpense['type']?></td>
-                                                        <td><?=$recentExpense['date']?></td>
-                                                        <td><?=$recentExpense['amount']?></td>
-                                                        <td><?=$recentExpense['name']?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php else : ?>
-                                                <tr class="empty-table">
-                                                    <td>
-                                                        <div class="nsm-empty">
-                                                            <span>Once you enter some transactions, they’ll appear here.</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>

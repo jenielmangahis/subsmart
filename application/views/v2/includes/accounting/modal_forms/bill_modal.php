@@ -19,26 +19,7 @@
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Bills</h5>
                                     <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-bills">
-                                        <tbody>
-                                            <?php if(!empty($recent_bills)) : ?>
-                                                <?php foreach($recent_bills as $recentBill) : ?>
-                                                    <tr data-id="<?=$recentBill['id']?>" onclick="viewTransaction(this, event)">
-                                                        <td><?=$recentBill['type']?></td>
-                                                        <td><?=$recentBill['date']?></td>
-                                                        <td><?=$recentBill['amount']?></td>
-                                                        <td><?=$recentBill['name']?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php else : ?>
-                                                <tr class="empty-table">
-                                                    <td>
-                                                        <div class="nsm-empty">
-                                                            <span>Once you enter some transactions, they’ll appear here.</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -409,7 +390,7 @@
                                                                                             echo str_replace('$-', '-$', $transacAmount);
                                                                                             ?>
                                                                                         </td>
-                                                                                        <td><button class="nsm-button unlink-transaction" data-type="puchase-order" data-id="<?=$category->linked_transaction_id?>">Remove</button></td>
+                                                                                        <td><button class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$category->linked_transaction_id?>">Remove</button></td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -568,7 +549,7 @@
                                                                                                     echo str_replace('$-', '-$', $transacAmount);
                                                                                                     ?>
                                                                                                 </td>
-                                                                                                <td><button class="nsm-button unlink-transaction" data-type="puchase-order" data-id="<?=$item->linked_transaction_id?>">Remove</button></td>
+                                                                                                <td><button class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$item->linked_transaction_id?>">Remove</button></td>
                                                                                             </tr>
                                                                                         </tbody>
                                                                                     </table>

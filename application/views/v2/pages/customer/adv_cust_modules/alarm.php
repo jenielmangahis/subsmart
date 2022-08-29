@@ -74,6 +74,14 @@
                                 <?php if(isset($alarm_info)){ echo $alarm_info->mcn; } ?>
                             </span>
                         </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Account Cost</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($alarm_info)){ echo $alarm_info->account_cost; } ?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
@@ -148,6 +156,14 @@
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php if(isset($alarm_info)){ echo $alarm_info->scn; } ?>
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Pass Thru Cost</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($alarm_info)){ echo $alarm_info->pass_thru_cost; } ?>
                             </span>
                         </div>
                     </div>

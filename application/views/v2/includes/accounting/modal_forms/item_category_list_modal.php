@@ -1,31 +1,27 @@
 <!-- Modal -->
-<div class="modal fade nsm-modal" id="products_list" role="dialog">
+<div class="modal fade nsm-modal" id="item_category_list" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="products-lists-modal-label">Products Lists</span>
+                <span class="modal-title content-title" id="items-categories-modal-label">Add By Group</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
-                        <table id="items_table" class="nsm-table" style="width: 100%;">
+                        <table id="item_categories_table" class="nsm-table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <td> Name</td>
-                                    <td> Qty</td>
-                                    <td> Price</td>
-                                    <td> Action</td>
+                                    <td>Name</td>
+                                    <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php foreach($items as $item) : ?>
+                            <?php foreach($categories as $category) : ?>
                                 <tr>
-                                    <td><?=$item->title?></td>
-                                    <td><?=$this->items_model->countQty($item->id)?></td>
-                                    <td><?=$item->price?></td>
+                                    <td><?=$category->name?></td>
                                     <td>
-                                        <button data-id="<?=$item->id?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item">
+                                        <button data-id="<?=$category->item_categories_id?>" type="button" data-bs-dismiss="modal" class="nsm-button select_category">
                                             <i class="bx bx-fw bx-plus"></i>
                                         </button>
                                     </td>
