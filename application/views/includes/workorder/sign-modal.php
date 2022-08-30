@@ -175,7 +175,7 @@
       'company-representative-approval-signature': (signature) => {
         const $wrapper = document.getElementById("companyrep");
         const $wrapperField = document.getElementById("company_representative_div");
-        $($wrapper).html(`<img src="${signature}">`);
+        $($wrapper).html(`<br><img src="${signature}">`);
         $($wrapperField).html(`<input type="hidden" name="company_representative_approval_signature1aM_web" value="${signature}">`);
         // $("#company_representative_approval_signature1aM_web").val(signature);
         // alert(signature);wrapperField
@@ -183,13 +183,13 @@
       'primary-account-holder-signature': (signature) => {
         const $wrapper = document.getElementById("primaryrep");
         const $wrapperField = document.getElementById("primary_representative_div");
-        $($wrapper).html(`<img src="${signature}">`);
+        $($wrapper).html(`<br><img src="${signature}">`);
         $($wrapperField).html(`<input type="hidden" name="primary_representative_approval_signature1aM_web" value="${signature}">`);
       },
       'secondary-account-holder-signature': (signature) => {
         const $wrapper = document.getElementById("secondaryrep");
         const $wrapperField = document.getElementById("secondary_representative_div");
-        $($wrapper).html(`<img src="${signature}">`);
+        $($wrapper).html(`<br><img src="${signature}">`);
         $($wrapperField).html(`<input type="hidden" name="secondary_representative_approval_signature1aM_web" value="${signature}">`);
       },
     };

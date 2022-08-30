@@ -295,7 +295,7 @@ class Estimate_v2 extends MY_Controller
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
-        $this->load->view('estimate/add', $this->page_data);
+        $this->load->view('estimate/v2/add', $this->page_data);
         // print_r($this->page_data['customers']);
     }
 
@@ -908,7 +908,7 @@ class Estimate_v2 extends MY_Controller
         $this->page_data['itemsDetails'] = $this->estimate_model->getItemlistByID($id);
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
-        $this->load->view('estimate/edit', $this->page_data);
+        $this->load->view('estimate/v2/edit', $this->page_data);
     }
 
     public function editOption($id)

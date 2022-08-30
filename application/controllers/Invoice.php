@@ -385,7 +385,12 @@ class Invoice extends MY_Controller
             $notification = $this->invoice_model->save_notification($notif);
 
 
-        redirect('invoice');
+            if (!is_null($this->input->get('json', TRUE))) {
+                header('content-type: application/json');
+                exit(json_encode(['id' => $addQuery]));
+            } else {
+                redirect('invoice');
+            }
         }
         else{
             echo json_encode(0);
@@ -1028,6 +1033,7 @@ class Invoice extends MY_Controller
         $total      = $this->input->post('total');
     
         $i = 0;
+        $a = is_array($a) ? $a : [];
         foreach ($a as $row) {
             $data['items_id'] = $a[$i];
             $data['qty'] = $quantity[$i];
@@ -1039,7 +1045,12 @@ class Invoice extends MY_Controller
             $i++;
         }
 
-        redirect('accounting/invoices');
+        if (!is_null($this->input->get('json', TRUE))) {
+            header('content-type: application/json');
+            exit(json_encode(['id' => $addQuery]));
+        } else {
+            redirect('accounting/invoices');
+        }
     }
 
     public function edit($id)

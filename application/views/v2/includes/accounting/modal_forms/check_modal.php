@@ -19,26 +19,7 @@
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Checks</h5>
                                     <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-checks">
-                                        <tbody>
-                                            <?php if(!empty($recent_checks)) : ?>
-                                                <?php foreach($recent_checks as $recentCheck) : ?>
-                                                    <tr data-id="<?=$recentCheck['id']?>" onclick="viewTransaction(this, event)">
-                                                        <td><?=$recentCheck['type']?></td>
-                                                        <td><?=$recentCheck['date']?></td>
-                                                        <td><?=$recentCheck['amount']?></td>
-                                                        <td><?=$recentCheck['name']?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php else : ?>
-                                                <tr class="empty-table">
-                                                    <td>
-                                                        <div class="nsm-empty">
-                                                            <span>Once you enter some transactions, they’ll appear here.</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -368,7 +349,7 @@
                                                                                             echo str_replace('$-', '-$', $transacAmount);
                                                                                             ?>
                                                                                         </td>
-                                                                                        <td><button class="nsm-button unlink-transaction" data-type="puchase-order" data-id="<?=$category->linked_transaction_id?>">Remove</button></td>
+                                                                                        <td><button class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$category->linked_transaction_id?>">Remove</button></td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -527,7 +508,7 @@
                                                                                                     echo str_replace('$-', '-$', $transacAmount);
                                                                                                     ?>
                                                                                                 </td>
-                                                                                                <td><button class="nsm-button unlink-transaction" data-type="puchase-order" data-id="<?=$item->linked_transaction_id?>">Remove</button></td>
+                                                                                                <td><button class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$item->linked_transaction_id?>">Remove</button></td>
                                                                                             </tr>
                                                                                         </tbody>
                                                                                     </table>
@@ -568,10 +549,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($check) ? str_replace("<br />", "", $check->memo) : ''?></textarea>
-                                            </div>
+                                            <label for="memo">Memo</label>
+                                            <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($check) ? str_replace("<br />", "", $check->memo) : ''?></textarea>
                                         </div>
                                     </div>
                                     <div class="row">

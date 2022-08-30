@@ -1,5 +1,5 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
-  const $form = document.querySelector("form[action$=savenewestimate]");
+  const $form = document.querySelector("form[action$=addNewInvoice]");
   if (!$form) return;
 
   const { FormAutoSave, FormAutoSaveConfig } = await import(
@@ -12,30 +12,27 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const config = new FormAutoSaveConfig({
     onChange: async () => {
       try {
-        const { id } = await autoSaveForm();
-
+        const response = await autoSaveForm();
+        const { id } = response;
         if (!hasChangedUrl) {
-          window.history.replaceState({}, "", `/estimate/edit/${id}`); // prettier-ignore
+          window.history.replaceState({}, "", `/invoice/invoice_edit/${id}`);
           hasChangedUrl = true;
         }
 
-        $form.setAttribute("edit", true);
-        let $estimateId = $form.querySelector("[name=est_id]");
-        if (!$estimateId) {
-          $estimateId = document.createElement("input");
-          $estimateId.setAttribute("type", "hidden");
-          $estimateId.setAttribute("name", "est_id");
-          $estimateId.value = id;
-          $form.appendChild($estimateId);
+        let $invoiceId = $form.querySelector("[name=invoiceDataID]");
+        if (!$invoiceId) {
+          $invoiceId = document.createElement("input");
+          $invoiceId.setAttribute("type", "hidden");
+          $invoiceId.setAttribute("name", "invoiceDataID");
+          $invoiceId.value = id;
+          $form.appendChild($invoiceId);
         }
       } catch (error) {
         if (error.toString().toLowerCase().includes("is not valid json")) {
           return;
         }
-
         console.error(error);
         window.clearTimeout(errorTimeout);
-
         FormAutoSave.toggleSavingErrorIndicator();
         errorTimeout = window.setTimeout(() => {
           FormAutoSave.toggleSavingErrorIndicator(false);
@@ -43,33 +40,33 @@ window.document.addEventListener("DOMContentLoaded", async () => {
       }
     },
   });
+  const form = new FormAutoSave($form, config);
+  form.listen();
 
-  if (window.CKEDITOR && window.CKEDITOR) {
-    const form = new FormAutoSave($form, config);
-    form.listen();
-
-    window.CKEDITOR.on("instanceReady", () => {
-      form.listenCKEDITOR();
-    });
-  }
+  window.CKEDITOR.on("instanceReady", () => {
+    form.listenCKEDITOR();
+  });
 });
 
 async function autoSaveForm() {
-  const $form = document.querySelector("form[action$=savenewestimate]");
+  const $form = document.querySelector("form[action$=addNewInvoice]");
 
   const formdata = new FormData($form);
-  const estimateId = formdata.get("est_id");
   formdata.append("action", "submit");
 
-  let url = "/estimate/savenewestimate?json=1";
-  if (estimateId !== null) {
-    url = `/estimate/update/${estimateId}?json=1`;
+  let url = "/Invoice/addNewInvoice?json=1";
+  if (formdata.has("invoiceDataID")) {
+    url = "/invoice/updateInvoice?json=1";
   }
 
   const response = await fetch(url, {
     method: "post",
     body: formdata,
   });
+
+  if (response.status === 500) {
+    throw new Error("500");
+  }
 
   return response.json();
 }

@@ -19,26 +19,7 @@
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Purchase Orders</h5>
                                     <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-purchase-orders">
-                                        <tbody>
-                                            <?php if(!empty($recent_purchase_orders)) : ?>
-                                                <?php foreach($recent_purchase_orders as $recentPurchaseOrder) : ?>
-                                                    <tr data-id="<?=$recentPurchaseOrder['id']?>" onclick="viewTransaction(this, event)">
-                                                        <td><?=$recentPurchaseOrder['type']?></td>
-                                                        <td><?=$recentPurchaseOrder['date']?></td>
-                                                        <td><?=$recentPurchaseOrder['amount']?></td>
-                                                        <td><?=$recentPurchaseOrder['name']?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php else : ?>
-                                                <tr class="empty-table">
-                                                    <td>
-                                                        <div class="nsm-empty">
-                                                            <span>Once you enter some transactions, they’ll appear here.</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>

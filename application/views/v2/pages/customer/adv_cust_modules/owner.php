@@ -162,7 +162,7 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->country; }; ?>
+                                <?php if(isset($profile_info)){ echo $profile_info->cross_street; }; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">

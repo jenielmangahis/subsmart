@@ -39,6 +39,20 @@ export class FormAutoSave {
     this.seInputListeners();
   }
 
+  listenCKEDITOR() {
+    if (!window.CKEDITOR) return;
+
+    Object.keys(window.CKEDITOR.instances).forEach((key) => {
+      const instance = window.CKEDITOR.instances[key];
+      const $input = instance.element.$;
+
+      instance.on("change", () => {
+        $input.value = window.CKEDITOR.instances[key].getData();
+        this.onChange({ target: $input });
+      });
+    });
+  }
+
   seInputListeners() {
     this.inputs.forEach(this.setInputListener);
   }

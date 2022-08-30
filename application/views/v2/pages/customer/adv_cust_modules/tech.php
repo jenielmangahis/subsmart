@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->technician; }; ?>
+                                <?php if(isset($office_info)){ echo getUser($office_info->technician); }; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">

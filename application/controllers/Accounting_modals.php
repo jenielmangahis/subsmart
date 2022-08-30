@@ -335,7 +335,61 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['recent_bills'] = $data;
                 break;
                 case 'pay_bills_modal':
-                    $this->page_data['balance'] = '$0.00';
+                    $accountTypes = [
+                        'Bank',
+                        'Credit Card',
+                        'Other Current Assets'
+                    ];
+
+                    $count = 1;
+                    foreach ($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if (count($accounts) > 0) {
+                            foreach ($accounts as $account) {
+                                if ($count === 1) {
+                                    $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
+
+                                    $this->page_data['startingCheckNo'] = intval($lastAssignedCheck->check_no) + 1;
+                                    $this->page_data['account'] = $account;
+                                    $this->page_data['balance'] = str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ','));
+                                }
+    
+                                $count++;
+                            }
+                        }
+                    }
+
+                    // $this->page_data['balance'] = '$0.00';
+
+                    $filters = [
+                        'start_date' => date("Y-m-d", strtotime(date("m/d/Y")." -365 days"))
+                    ];
+
+                    $bills = $this->expenses_model->get_open_bills($filters);
+
+                    $data = [];
+                    foreach ($bills as $bill) {
+                        $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+
+                        $data[] = [
+                            'id' => $bill->id,
+                            'payee_id' => $bill->vendor_id,
+                            'payee' => $vendor->display_name,
+                            'ref_no' => $bill->bill_no !== null && $bill->bill_no !== "" ? $bill->bill_no : "",
+                            'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                            'open_balance' => number_format($bill->remaining_balance, 2, '.', ','),
+                            'vendor_credits' => number_format(floatval(str_replace(',', '', $vendor->vendor_credits)), 2, '.', ',')
+                        ];
+                    }
+
+                    usort($data, function ($a, $b) use ($order, $columnName) {
+                        return strtotime($a[$columnName]) > strtotime($b[$columnName]);
+                    });
+
+                    $this->page_data['bills'] = $data;
                 break;
                 case 'vendor_credit_modal':
                     $transactions = $this->expenses_model->get_company_vendor_credit_transactions(['company_id' => logged('company_id')]);
@@ -456,8 +510,6 @@ class Accounting_modals extends MY_Controller
                             }
                         }
                     }
-
-                    $this->page_data['paymentAccounts'] = $paymentAccounts;
 
                     $filters = [
                         'payment_account' => $this->page_data['account']->id
@@ -2811,8 +2863,10 @@ class Accounting_modals extends MY_Controller
         }
         $this->pdf->save_pdf($view, ['data' => $post], $fileName, 'portrait');
 
-        echo json_encode(['filename' => $fileName]);
-        exit;
+        $this->page_data['filename'] = $fileName;
+        $this->load->view('v2/includes/accounting/modal_forms/print_deposit_summary_modal', $this->page_data);
+        // echo json_encode(['filename' => $fileName]);
+        // exit;
     }
 
     private function generateStatementPdfData($post)
@@ -4115,121 +4169,26 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    public function load_bills()
+    public function get_payable_bills()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $column = $post['order'][0]['column'];
-        $order = $post['order'][0]['dir'];
-        $columnName = $post['columns'][$column]['name'];
-        $start = $post['start'];
-        $limit = $post['length'];
+        $post = $this->input->post();
 
         $filters = [];
 
-        if ($post['payee'] !== 'all') {
-            $filters['vendor_id'] = $post['payee'];
+        if ($post['vendor'] !== 'all') {
+            $filters['vendor_id'] = $post['vendor'];
         }
 
-        switch ($post['due_date']) {
-            case 'last-365-days':
-                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
-                // $filters['end_date'] = date("Y-m-d");
-            break;
-            case 'custom':
-                if ($post['from_date'] !== '') {
-                    $filters['start_date'] = date("Y-m-d", strtotime($post['from_date']));
-                }
+        if ($post['from'] !== '') {
+            $filters['start_date'] = date("Y-m-d", strtotime($post['from']));
+        }
 
-                if ($post['to_date'] !== '') {
-                    $filters['end_date'] = date("Y-m-d", strtotime($post['to_date']));
-                }
-            break;
-            case 'today':
-                $filters['start_date'] = date("Y-m-d");
-                $filters['end_date'] = date("Y-m-d");
-            break;
-            case 'yesterday':
-                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-            break;
-            case 'yesterday':
-                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
-            break;
-            case 'this-week':
-                $filters['start_date'] = date("Y-m-d", strtotime("this week -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 day"));
-            break;
-            case 'this-month':
-                $filters['start_date'] = date("Y-m-01");
-                $filters['end_date'] = date("Y-m-t");
-            break;
-            case 'this-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
+        if ($post['to'] !== '') {
+            $filters['end_date'] = date("Y-m-d", strtotime($post['to']));
+        }
 
-                $filters['start_date'] = $quarters[$quarter]['start'];
-                $filters['end_date'] = $quarters[$quarter]['end'];
-            break;
-            case 'this-year':
-                $filters['start_date'] = date("Y-01-01");
-                $filters['end_date'] = date("Y-12-t");
-            break;
-            case 'last-week':
-                $filters['start_date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
-                $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
-            break;
-            case 'last-month':
-                $filters['start_date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
-                $filters['end_date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
-            break;
-            case 'last-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
-
-                $filters['start_date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
-                $filters['end_date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
-            break;
-            case 'last-year':
-                $filters['start_date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
-                $filters['end_date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
-            break;
+        if($post['due_date'] === 'last-365-days') {
+            $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
         }
 
         $bills = $this->expenses_model->get_open_bills($filters);
@@ -4249,44 +4208,17 @@ class Accounting_modals extends MY_Controller
             ];
         }
 
-        if ($post['overdue_only'] === "1") {
+        if ($post['overdue'] === 'true') {
             $data = array_filter($data, function ($v, $k) {
                 return strtotime(date("Y-m-d")) > strtotime($v['due_date']);
             }, ARRAY_FILTER_USE_BOTH);
         }
 
         usort($data, function ($a, $b) use ($order, $columnName) {
-            if ($columnName !== 'due_date') {
-                if ($columnName === 'open_balance') {
-                    if ($order === 'asc') {
-                        return floatval(str_replace(',', '', $a[$columnName])) > floatval(str_replace(',', '', $b[$columnName]));
-                    } else {
-                        return floatval(str_replace(',', '', $b[$columnName])) > floatval(str_replace(',', '', $a[$columnName]));
-                    }
-                } else {
-                    if ($order === 'asc') {
-                        return strcmp($a[$columnName], $b[$columnName]);
-                    } else {
-                        return strcmp($b[$columnName], $a[$columnName]);
-                    }
-                }
-            } else {
-                if ($order === 'asc') {
-                    return strtotime($a[$columnName]) > strtotime($b[$columnname]);
-                } else {
-                    return strtotime($a[$columnName]) < strtotime($b[$columnname]);
-                }
-            }
+            return strtotime($a[$columnName]) > strtotime($b[$columnname]);
         });
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($bills),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     private function pay_bills($data)
@@ -4786,7 +4718,7 @@ class Accounting_modals extends MY_Controller
         $items = $this->items_model->getItemsWithFilter($filter);
 
         $this->page_data['items'] = $items;
-        $this->load->view('accounting/modals/item_list_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/items_list_modal', $this->page_data);
     }
 
     public function get_items_categories_list_modal()
@@ -4794,7 +4726,7 @@ class Accounting_modals extends MY_Controller
         $categories = $this->items_model->getItemCategories();
 
         $this->page_data['categories'] = $categories;
-        $this->load->view('accounting/modals/item_category_list_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/item_category_list_modal', $this->page_data);
     }
 
     public function get_category_items($categoryId)
@@ -4839,7 +4771,7 @@ class Accounting_modals extends MY_Controller
         }
 
         $this->page_data['itemPackages'] = $packages;
-        $this->load->view('accounting/modals/package_list_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/package_list_modal', $this->page_data);
     }
 
     public function get_term_details($termId)
@@ -10949,7 +10881,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
 
-        $this->load->view("accounting/modals/vendor_credit_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/vendor_credit_modal", $this->page_data);
     }
 
     private function view_cc_payment($ccPaymentId)
@@ -10984,7 +10916,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view("accounting/modals/credit_card_credit_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/credit_card_credit_modal", $this->page_data);
     }
 
     private function view_bill_payment($billPaymentId)
@@ -11135,7 +11067,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
 
-        $this->load->view("accounting/modals/purchase_order_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/purchase_order_modal", $this->page_data);
     }
 
     private function view_time_activity($timeActivityId)
@@ -11260,7 +11192,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['totalPayment'] = $totalPayment;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Credit Memo', $creditMemoId);
 
-        $this->load->view("accounting/modals/credit_memo_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/credit_memo_modal", $this->page_data);
     }
 
     private function view_sales_receipt($salesReceiptId)
@@ -11281,7 +11213,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['receipt'] = $salesReceipt;
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Sales Receipt', $salesReceiptId);
-        $this->load->view("accounting/modals/sales_receipt_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/sales_receipt_modal", $this->page_data);
     }
 
     private function view_refund_receipt($refundReceiptId)
@@ -11304,7 +11236,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Refund Receipt', $refundReceiptId);
         $this->page_data['refundAcc'] = $refundAcc;
-        $this->load->view("accounting/modals/refund_receipt_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/refund_receipt_modal", $this->page_data);
     }
 
     private function view_delayed_credit($delayedCreditId)
@@ -11333,7 +11265,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['credit'] = $delayedCredit;
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Credit', $delayedCreditId);
-        $this->load->view("accounting/modals/delayed_credit_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/delayed_credit_modal", $this->page_data);
     }
 
     private function view_delayed_charge($delayedChargeId)
@@ -11362,7 +11294,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['charge'] = $delayedCharge;
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Charge', $delayedChargeId);
-        $this->load->view("accounting/modals/delayed_charge_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/delayed_charge_modal", $this->page_data);
     }
 
     private function view_invoice($invoiceId)
@@ -11469,7 +11401,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['payments'] = $paymentRecords;
         $this->page_data['term'] = $term;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
-        $this->load->view("accounting/modals/invoice_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
 
     public function load_bills_payed($billPaymentId)
@@ -16433,12 +16365,12 @@ class Accounting_modals extends MY_Controller
 
     public function load_recent_transactions()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
+        $type = $this->input->get('type');
         $start = 0;
         $length = 10;
         $data = [];
 
-        switch($post['transaction_type']) {
+        switch($type) {
             case 'expenses' :
                 $transactions = $this->expenses_model->get_company_expense_transactions(['company_id' => logged('company_id')]);
                 usort($transactions, function($a, $b) {
@@ -16931,14 +16863,14 @@ class Accounting_modals extends MY_Controller
             break;
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($transactions),
-            'recordsFiltered' => count($data),
-            'data' => $data
-        ];
+        // $result = [
+        //     'draw' => $post['draw'],
+        //     'recordsTotal' => count($transactions),
+        //     'recordsFiltered' => count($data),
+        //     'data' => $data
+        // ];
 
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     public function delete_transaction($transactionType, $transactionId)

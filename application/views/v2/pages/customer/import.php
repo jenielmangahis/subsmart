@@ -184,12 +184,14 @@
                 body: formData,
             }) .then(response => response.json() ).then(response => {
                 if ($overlay) $overlay.style.display = "none";
-                var { message, success }  = response;
+                var { customer, csv, mapping, fields, dataValue, office, billing, profile, message, success }  = response;
                 if(success){
                     sweetAlert('Awesome!','success',message ,1);
                 }else{
                     sweetAlert('Sorry!','error',message);
                 }
+
+                console.log(response);
             }).catch((error) => {
                 console.log('Error:', error);
             });
@@ -230,10 +232,6 @@
                             '<th><strong>'+o+'</strong></th>'
                         );
                     });
-                    // $('.headersSelector').on('change', function() {
-                    //     var test = $(".headersSelector").val();
-                    //     alert( test );
-                    // });
                     csvHeaders = headers;
                     customerData = data; // save customer array data
                     // process mapping preview

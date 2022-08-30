@@ -17,23 +17,23 @@ $(document).ready(function () {
                 `);
             }
 
-            $(`${modal_element} [data-toggle="popover"]`).popover();
+            $(`${modal_element} [data-bs-toggle="popover"]`).popover();
 
             if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
-                rowInputs = $('div#modal-container table tbody tr:first-child()').html();
+                rowInputs = $('div#modal-container form .modal table tbody tr:first-child()').html();
                 if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
-                    blankRow = $('div#modal-container table tbody tr:last-child()').html();
+                    blankRow = $('div#modal-container form .modal table tbody tr:last-child()').html();
 
-                    $('div#modal-container table.clickable tbody tr:first-child()').remove();
-                    $('div#modal-container table tbody tr:last-child()').remove();
+                    $('div#modal-container form .modal table tbody tr:first-child()').remove();
+                    $('div#modal-container form .modal table tbody tr:last-child()').remove();
                 } else {
-                    blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+                    blankRow = $('div#modal-container form .modal table tbody tr:nth-child(2)').html();
                 }
 
-                rowCount = $('div#modal-container table tbody tr').length;
+                rowCount = $('div#modal-container form .modal table tbody tr').length;
 
-                $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);
-                $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
+                $('div#modal-container form .modal table tbody tr:first-child()').html(blankRow);
+                $('div#modal-container form .modal table tbody tr:first-child() td:first-child()').html(1);
             }
 
             if (vendorModals.includes(modal_element)) {
@@ -85,7 +85,9 @@ $(document).ready(function () {
                 } else {
                     var options = $(this).find('option');
                     if (options.length > 10) {
-                        $(this).select2();
+                        $(this).select2({
+                            dropdownParent: $(modal_element)
+                        });
                     } else {
                         $(this).select2({
                             minimumResultsForSearch: -1,
@@ -169,7 +171,7 @@ $(document).ready(function () {
             }
 
             if (modal_element === '#payBillsModal') {
-                $('#payBillsModal #checks-table').nsmPagination({
+                $('#payBillsModal #bills-table').nsmPagination({
                     itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
                 })
                 // loadBills();
