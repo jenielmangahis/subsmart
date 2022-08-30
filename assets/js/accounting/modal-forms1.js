@@ -20,20 +20,20 @@ $(document).ready(function () {
             $(`${modal_element} [data-bs-toggle="popover"]`).popover();
 
             if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
-                rowInputs = $('div#modal-container table tbody tr:first-child()').html();
+                rowInputs = $('div#modal-container form .modal table tbody tr:first-child()').html();
                 if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
-                    blankRow = $('div#modal-container table tbody tr:last-child()').html();
+                    blankRow = $('div#modal-container form .modal table tbody tr:last-child()').html();
 
-                    $('div#modal-container table.clickable tbody tr:first-child()').remove();
-                    $('div#modal-container table tbody tr:last-child()').remove();
+                    $('div#modal-container form .modal table tbody tr:first-child()').remove();
+                    $('div#modal-container form .modal table tbody tr:last-child()').remove();
                 } else {
-                    blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+                    blankRow = $('div#modal-container form .modal table tbody tr:nth-child(2)').html();
                 }
 
-                rowCount = $('div#modal-container table tbody tr').length;
+                rowCount = $('div#modal-container form .modal table tbody tr').length;
 
-                $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);
-                $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
+                $('div#modal-container form .modal table tbody tr:first-child()').html(blankRow);
+                $('div#modal-container form .modal table tbody tr:first-child() td:first-child()').html(1);
             }
 
             if (vendorModals.includes(modal_element)) {

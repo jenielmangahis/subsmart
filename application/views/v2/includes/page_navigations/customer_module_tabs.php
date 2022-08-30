@@ -18,7 +18,7 @@
                 <span>Jobs</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Services'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('customer/addTicket?cus_id='.$cus_id); ?>');">
                 <i class='bx bx-fw bx-wrench'></i>
                 <span>Services</span>

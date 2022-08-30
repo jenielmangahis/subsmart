@@ -891,6 +891,25 @@ class Users_model extends MY_Model
 
         return $roles;
     }
+
+    public function getByOfficeId($fname, $lname)
+    {
+        $this->db->select('id');
+        $this->db->from('users');
+        $this->db->where('FName', $fname);
+        $this->db->where('LName', $lname);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function get_user_name($id)
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
     
 }
 

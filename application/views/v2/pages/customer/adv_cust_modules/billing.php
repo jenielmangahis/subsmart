@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->mmr; }; ?>
+                            $<?php if(isset($billing_info)){ echo $billing_info->mmr; }; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -22,7 +22,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->card_fname; }; ?>
+                                <?php if(isset($billing_info)){ echo (!empty($billing_info->card_fname)) ? $billing_info->card_fname : $profile_info->first_name." ".$profile_info->last_name ; }; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->city; }; ?>
+                                <?php if(isset($billing_info)){ echo $profile_info->cross_street; }; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -82,7 +82,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->mmr; }; ?>
+                            $<?php if(isset($billing_info)){ echo $billing_info->mmr; }; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">

@@ -232,10 +232,6 @@
                             '<th><strong>'+o+'</strong></th>'
                         );
                     });
-                    // $('.headersSelector').on('change', function() {
-                    //     var test = $(".headersSelector").val();
-                    //     alert( test );
-                    // });
                     csvHeaders = headers;
                     customerData = data; // save customer array data
                     // process mapping preview

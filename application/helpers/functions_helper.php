@@ -464,5 +464,27 @@ function csvHeaderToMap($start , $end){
         'Phone Number 3',
     );
     return array_slice($headers, $start, $end);
-}											
+}	
+
+if (!function_exists('getOfficeId')){
+    function getOfficeId($name){
+        $CI = &get_instance();
+        $CI->load->model('users_model');
+
+        $tech = explode(' ', $name);
+
+        $user = $CI->users_model->getByOfficeId($tech[0], $tech[1]);
+        return $user->id;
+    }
+}
+
+if (!function_exists('getUser')){
+    function getUser($id){
+        $CI = &get_instance();
+        $CI->load->model('users_model');
+
+        $user = $CI->users_model->get_user_name($id);
+        return $user->FName." ".$user->LName;
+    }
+}										
 ?>

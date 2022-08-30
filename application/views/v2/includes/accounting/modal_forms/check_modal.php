@@ -549,10 +549,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($check) ? str_replace("<br />", "", $check->memo) : ''?></textarea>
-                                            </div>
+                                            <label for="memo">Memo</label>
+                                            <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($check) ? str_replace("<br />", "", $check->memo) : ''?></textarea>
                                         </div>
                                     </div>
                                     <div class="row">

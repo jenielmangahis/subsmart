@@ -66,10 +66,12 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
+                            <?php if(isset($office_info)){ echo getUser($office_info->fk_sales_rep_office); }; ?>
+
                                 <?php
-                                    $sales_rep = !empty($office_info->fk_sales_rep_office) ?  get_employee_name($office_info->fk_sales_rep_office) : '---';
+                                    //$sales_rep = !empty($office_info->fk_sales_rep_office) ?  get_employee_name($office_info->fk_sales_rep_office) : '---';
                                 ?>
-                                <?= $sales_rep->FName. ' ' . $sales_rep->LName; ?>
+                                <?php //$sales_rep->FName. ' ' . $sales_rep->LName; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">

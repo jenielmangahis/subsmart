@@ -58,6 +58,7 @@
                                                             <i class="bx bx-fw <?=is_null($favorite) ? 'bx-star' : 'bxs-star'?>"></i>
                                                         </a>
                                                         <?php endif; ?>
+                                                        
                                                         <div class="accordion-collapse collapse" id="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse">
                                                             <div class="accordion-body">
                                                                 <p class="m-0"><?=$reportType->description?></p>

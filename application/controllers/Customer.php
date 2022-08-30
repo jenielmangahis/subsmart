@@ -92,6 +92,10 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/list', $this->page_data);
     }
 
+    public function getCustomer(){
+
+    }
+
     public function preview_($id=null){
         $this->load->model('IndustryType_model');
 
@@ -2272,6 +2276,7 @@ class Customer extends MY_Controller
 
     public function import_customer()
     {
+        echo logged('company_id');
         $get_company_settings = array(
             'where' => array(
                 'company_id' => logged('company_id'),
@@ -3048,8 +3053,8 @@ class Customer extends MY_Controller
                     $customerElement = [];
                     for($x=0; $x<count($csvHeader); $x++){
                         $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:","", str_replace("$","",$row[$csvHeader[$x]]))));
-                        $data = preg_replace('/\s+/', '', $trimmedData);
-                        $customerElement[$csvHeader[$x]] = $data;
+                        //$data = preg_replace('/\s+/', '', $trimmedData);
+                        $customerElement[$csvHeader[$x]] = $trimmedData;
                         //echo $csvHeader[$x]. PHP_EOL;
                         //echo $row[$csvHeader[$x]]. PHP_EOL;
                     }
@@ -3057,7 +3062,7 @@ class Customer extends MY_Controller
                     //echo 'fasdf' . PHP_EOL;
                     $customerArray[] = $customerElement;
                 }
-                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader);
+                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
             }else{
                 $data_arr = array("success" => FALSE,"message" => 'Something is wrong with your CSV file.');
             }
@@ -3099,6 +3104,7 @@ class Customer extends MY_Controller
             $acsAlarmData = array();
             $acsOfficeData = array();
             $acsBillingData = array();
+            $dataVal = [];
 
             $settingsValue = explode(',', $importFieldSettings->value); //convert values from database to array
             sort($settingsValue);
@@ -3118,7 +3124,7 @@ class Customer extends MY_Controller
                             $category = $importSetting->field_category; //category no. where the header belong, usefull for inserting in diff tables
                         
                     $dataValue = $csvHeaders[$mappingSelected[$counter]]; // name of the selected header in the csv fle eg. "Sales Date"
-
+                    array_push($dataVal, $dataValue);
                     switch($category){
                         case 1:
                             $acsProfileData[$fieldname] = $data->$dataValue;
@@ -3127,8 +3133,11 @@ class Customer extends MY_Controller
                             $acsBillingData[$fieldname] = $data->$dataValue;
                             break;    
                         case 3:
+                            if($fieldname == 'technician' || $fieldname == 'fk_sales_rep_office'){
+                                $acsOfficeData[$fieldname] = getOfficeId($data->$dataValue);
+                            }else{
                             $acsOfficeData[$fieldname] = $data->$dataValue;
-                            
+                            }
                             break;    
                         case 4:
                             $acsAlarmData[$fieldname] = $data->$dataValue;
@@ -3172,7 +3181,8 @@ class Customer extends MY_Controller
 
             }
             
-            $data_arr = array("success" => TRUE, "message", "Successfully imported".$insert." users", "alar" => $acsAlarmData, "profile" => $acsProfileData, "billing" => $acsBillingData, "office" => $acsOfficeData, "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "customers" => $customers);
+            $data_arr = array("success" => TRUE, "message" => "Successfully imported ".$insert." users!", "alarm" => $acsAlarmData, "profile" => $acsProfileData, "billing" => $acsBillingData, "office" => $acsOfficeData, "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "customers" => $customers);
+            //$data_arr = array("success" => TRUE, "alarm" => $acsAlarmData, "profile" => $acsProfileData, "billing" => $acsBillingData, "office" => $acsOfficeData, "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "customers" => $customers);
         }else{
             $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
         }
@@ -4180,6 +4190,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
+        $this->page_data['page']->title = 'Services';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();

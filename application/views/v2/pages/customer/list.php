@@ -48,6 +48,28 @@
                     </div>
                 </div>
                 <?php if (!empty($enabled_table_headers)) : ?>
+                    
+                    <table class="nsm-table usersTable" id="usersTable">
+                        <thead>
+                            <tr>
+                                <td class="table-icon"></td>
+                                <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
+                                <?php if (in_array('industry', $enabled_table_headers)) : ?><td data-name="Name">Industry</td><?php endif; ?>
+                                <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
+                                <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
+                                <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
+                                <?php if (in_array('added', $enabled_table_headers)) : ?><td data-name="Added">Added</td><?php endif; ?>
+                                <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
+                                <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
+                                <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
+                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </td><?php endif; ?>
+                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
+                                <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
+                                <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                    </table>
                     <table class="nsm-table customer-list" id="customer-list">
                         <thead>
                             <tr>
@@ -216,6 +238,7 @@
                         </tbody>
                     </table>
                 <?php else : ?>
+                    
                     <table class="nsm-table " id="customer-list">
                         <thead>
                             <tr>
@@ -368,6 +391,24 @@
 <script type="text/javascript">
     $(document).ready(function() {
        // $(".customer-list").nsmPagination();
+        $('#usersTable').DataTable({
+            // Processing indicator
+            "processing": true,
+            // DataTables server-side processing mode
+            "serverSide": true,
+            // Initial no order.
+            "order": [],
+            // Load data from an Ajax source
+            "ajax": {
+                "url": "<?= base_url('customer/getCustomer'); ?>",
+                "type": "POST"
+            },
+            //Set column definition initialisation properties
+            "columnDefs": [{ 
+                "targets": [0],
+                "orderable": false
+            }]
+        });
         $('#customer-list').DataTable({
             "lengthChange": true,
             "searching" : true,

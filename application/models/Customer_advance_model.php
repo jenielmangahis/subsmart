@@ -15,12 +15,22 @@ class Customer_advance_model extends MY_Model {
     
     public function add($input,$tablename)
     {
-        if ($this->db->insert($tablename, $input)) {
-            return $this->db->insert_id();
-            //return true;
-        } else {
-            return false;
+        if($tablename == 'acs_office'){
+            $input['time_entered'] = date("m/d/Y");
+            if(array_key_exists('entered_by', $input)){
+                if($input['entered_by'] == null){
+                    $input['entered_by'] = getLoggedFullName(logged('id'));
+                }
+            }else{
+                $input['entered_by'] = getLoggedFullName(logged('id'));
+            }
         }
+            if ($this->db->insert($tablename, $input)) {
+                return $this->db->insert_id();
+                //return true;
+            } else {
+                return false;
+            }
     }
 
     public function update_data($input,$tablename,$update_id)
