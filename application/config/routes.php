@@ -1379,3 +1379,6 @@ $route['plaid_accounts'] = 'PlaidAccount/list';
 $route['plaid_account/_delete_bank_account'] = 'PlaidAccount/ajax_delete_bank_account';
 $route['plaid_account/_bank_account_transactions'] = 'PlaidAccount/ajax_bank_account_transactions';
 $route['plaid_account/_bank_account_recurring_transactions'] = 'PlaidAccount/ajax_bank_account_recurring_transactions';
+
+//ADT Portal
+$route['user/_loggedin_adt_sales_portal'] = 'Users/ajax_loggedin_adt_sales_portal';

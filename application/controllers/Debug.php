@@ -1145,6 +1145,15 @@ class Debug extends MY_Controller {
 
     }
 
+    public function plaid_transfer()
+    {
+        $this->load->model('PlaidAccount_model');
+        $this->load->helper(array('plaid_helper'));
+
+        $cid = logged('company_id');    
+        $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
+    }
+
 }
 /* End of file Debug.php */
 
