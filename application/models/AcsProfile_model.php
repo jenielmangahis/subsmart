@@ -55,19 +55,10 @@ class AcsProfile_model extends MY_Model
 
     public function getProfile($prof_id=null, $col=null, $cust=null, $stat = null, $type = null)
     {
-        //if($prof_id != null && $col != null && ($cust != null || $stat != null)){
-            //$test = filter($cust, $stat, $type);
-            // if(!empty($stat) && empty($cust)){
-            //     $query = $this->db->query("SELECT prof_id FROM `acs_profile` WHERE `status` IN ('".$stat."')");
-            // }elseif(empty($stat) && !empty($cust)){
-            //$query = $this->db->query("SELECT * FROM `acs_profile` WHERE prof_id IN ('$cust')");
-            // }else{
-            //     $query = $this->db->query("SELECT prof_id FROM `acs_profile` WHERE prof_id IN ('".$cust."') AND status IN ('".$stat."')");
-            // }
-            //$query = $this->db->query("SELECT prof_id FROM `acs_profile` WHERE $test");
             if($col != null){
-                array_push($col, 'prof_id');
-                $this->db->select($col);
+                $selectedColumns = str_replace("acs_billing.", "", $col );
+                array_push($selectedColumns, 'prof_id');
+                $this->db->select($selectedColumns);
             }else{
                 $this->db->select('*');
             }
@@ -85,7 +76,7 @@ class AcsProfile_model extends MY_Model
                  $idArray = Array();
                  foreach($res as $resId):
                      if(in_array($resId->prof_id, $prof_id)){
-                     array_push($idArray, $resId->prof_id);
+                        array_push($idArray, $resId->prof_id);
                      }
                  endforeach;
                  if($col != null){

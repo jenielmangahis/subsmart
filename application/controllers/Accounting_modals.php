@@ -2863,8 +2863,10 @@ class Accounting_modals extends MY_Controller
         }
         $this->pdf->save_pdf($view, ['data' => $post], $fileName, 'portrait');
 
-        echo json_encode(['filename' => $fileName]);
-        exit;
+        $this->page_data['filename'] = $fileName;
+        $this->load->view('v2/includes/accounting/modal_forms/print_deposit_summary_modal', $this->page_data);
+        // echo json_encode(['filename' => $fileName]);
+        // exit;
     }
 
     private function generateStatementPdfData($post)

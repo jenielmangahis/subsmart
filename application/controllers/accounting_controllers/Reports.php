@@ -309,6 +309,8 @@ class Reports extends MY_Controller {
         $this->page_data['foot'] = false;
         $this->page_data['head'] = false;
         //$this->page_data['company_title'] = $this->page_data['clients']->business_name;
+
+        //header and footer
         if(!empty($header)){
             if(in_array('isCompany', $header)){
                 $this->page_data['company_title'] = $header['company'];
@@ -355,7 +357,12 @@ class Reports extends MY_Controller {
         if(!empty($cust)){
             $custImp = implode(", ", $cust);
             $custExp = explode(",", $custImp);
-            $column = billPro($custExp);
+
+            if(!empty($sort_by)){
+                $column = billPro($custExp);
+            }else{
+                $column = $custExp;
+            }
         $this->page_data['custExp'] = $cust;
 
         }
@@ -365,53 +372,8 @@ class Reports extends MY_Controller {
         if(!empty($sort_by) || !empty($cust) || !empty($fl_cust) || !empty($fl_type) || !empty($fl_status)){
              $this->page_data['tblDefault'] = false;  
         }
-
         $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $column, $fl_cust, $fl_status, $fl_type);
         
-        // when sort, columns, filters are NOT empty
-        // if(($sort_by != 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
-        //     $getBill = $this->AcsBilling_model->getBilling($sort_by);
-        //     $gb = json_decode(json_encode($getBill), true);
-        //     $gbArray = array();
-        //     foreach($gb as $g_b){
-        //         array_push($gbArray, $g_b['fk_prof_id']);
-        //     }
-        //     $custImp = implode(", ", $cust);
-        //     $custExp = explode(",", $custImp);
-        //     $billPro = billPro($custExp);
-        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $billPro, $fl_cust, $fl_status, $fl_type);
-        //     $this->page_data['tblDefault'] = false;  
-        //     print_r($this->page_data['acs_profile']);
-        // }
-        // // when sort and filters are NOT empty
-        // elseif(($sort_by == 'default') && !empty($cust) && (!empty($fl_cust) || !empty($fl_status) || !empty($fl_type))){
-        //     $custImp = implode(", ", $cust);
-        //     $custExp = explode(",", $custImp);
-        //     $billPro = billPro($custExp);
-        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $billPro, $fl_cust, $fl_status, $fl_type);
-        //     $this->page_data['tblDefault'] = false; 
-        // //when sort are NOT empty
-        // }elseif(($sort_by != 'default' && !empty($sort_by)) && empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
-        //     $getBill = $this->AcsBilling_model->getBilling($sort_by);
-        //     $gb = json_decode(json_encode($getBill), true);
-        //     $gbArray = array();
-        //     foreach($gb as $g_b){
-        //         array_push($gbArray, $g_b['fk_prof_id']);
-        //     }
-        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, null);
-        //     $this->page_data['tblDefault'] = true;  
-        
-        //     //when columns are NOT empty
-        // }elseif(($sort_by === 'default') && !empty($cust) && (empty($fl_cust) && empty($fl_status) && empty($fl_type))){
-        //     $custImp = implode(", ", $cust);
-        //     $custExp = explode(",", $custImp);
-        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile(null, $custExp);
-        //     $this->page_data['tblDefault'] = false;   
-        // }else {      
-        //     $this->page_data['tblDefault'] = true;
-        //     $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile();
-        // }
-
         if($reportType->name === 'Profit and Loss by Tag Group') {
             $this->page_data['group_tags'] = $this->tags_model->getGroup();
         }
@@ -427,7 +389,11 @@ class Reports extends MY_Controller {
 
     public function export_report(){
         $input = $this->input->post();
-        print_r($input);
+        $header = json_decode($input['headers']); //headers from table
+        $customerData = json_decode($input['customerDatas'], true); //data from table
 
+        
+        $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export added.');
+        die(json_encode($data_arr));
     }
 }

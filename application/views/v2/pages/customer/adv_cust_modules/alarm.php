@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->account_cost; } ?>
+                            $<?php if(isset($alarm_info)){ echo $alarm_info->account_cost; } ?>
                             </span>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->credit_score_alarm; } ?>
+                                <?php if(isset($office_info)){ echo $office_info->credit_score; } ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -163,7 +163,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->pass_thru_cost; } ?>
+                                $<?php if(isset($alarm_info)){ echo $alarm_info->pass_thru_cost; } ?>
                             </span>
                         </div>
                     </div>

@@ -198,7 +198,7 @@
                                         <h6>Group by</h6>
                                         <div class="col-lg-6">
                                             <select name="sort_by" id="sort_by" class="nsm-field form-select">
-                                                <option value="default">Default</option>
+                                                <option value="">Default</option>
                                                 <option value="city">Billing City</option>
                                                 <option value="state">Billing State</option>
                                                 <option value="street">Billing Street</option>
@@ -862,30 +862,28 @@ $(document).ready(function () {
         });  
 
         let dataTbl = [];
-        var rowCount = header.length * row; 
-        for(var x=0; x<=customerData.length; x++){
-            dataTbl.push([]);
+        // var rowCount = header.length * row; 
+        // for(var x=0; x<=customerData.length; x++){
+        //     dataTbl.push([]);
 
-            for(var i=0; i<header.length; i++){
-                dataTbl[x][i] = customerData[0];
-                customerData.shift();
-            }
-        }
-        console.log(dataTbl);
-        console.log(JSON.stringify(dataTbl));
-        var test = JSON.stringify(dataTbl);
-        fetch('<?= base_url('reports/export_report/') ?>', {
+        //     for(var i=0; i<header.length; i++){
+        //         dataTbl[header[i]] = customerData[0];
+        //         customerData.shift();
+        //     }
+        // }
+        const formData = new FormData();
+        formData.append('headers', JSON.stringify(header));
+        formData.append('customerDatas', JSON.stringify(customerData));
+        fetch('<?= base_url('accounting_controllers/reports/export_report') ?>', {
                 method: 'POST',
-                body: test,
-                headers: {
-                    'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                    },
+                body: formData,
             }) .then(response => response.json() ).then(response => {
                 
+
             }).catch((error) => {
                 console.log('Error:', error);
-            }); 
+            });
+
     });  
 });  
 function showCheckboxes() {

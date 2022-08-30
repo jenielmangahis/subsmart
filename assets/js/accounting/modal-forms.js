@@ -658,14 +658,15 @@ $(function() {
         }
     });
 
-    $(document).on('click', `div#modal-container .full-screen-modal .modal-body table.clickable:not(#category-details-table,#item-details-table,#previous-adjustments-table) tbody tr`, function() {
-        if ($(this).find('input').length < 1) {
-            var rowNum = $(this).children().next().html();
+    $(document).on('click', `div#modal-container form .modal table:not(#category-details-table,#item-details-table,#previous-adjustments-table) tbody tr td:not(:last-child)`, function() {
+        var row = $(this).parent();
+        if (row.find('input').length < 1) {
+            var rowNum = row.find('td:first-child').html();
 
-            $(this).html(rowInputs);
-            $(this).children('td:nth-child(2)').html(rowNum);
+            row.html(rowInputs);
+            row.find('td:first-child()').html(rowNum);
 
-            $(this).find('select').each(function() {
+            row.find('select').each(function() {
                 var type = $(this).attr('id');
                 if (type === undefined) {
                     type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
@@ -690,15 +691,19 @@ $(function() {
                             }
                         },
                         templateResult: formatResult,
-                        templateSelection: optionSelect
+                        templateSelection: optionSelect,
+                        dropdownParent: $('#modal-container form .modal')
                     });
                 } else {
                     var options = $(this).find('option');
                     if (options.length > 10) {
-                        $(this).select2();
+                        $(this).select2({
+                            dropdownParent: $('#modal-container form .modal')
+                        });
                     } else {
                         $(this).select2({
-                            minimumResultsForSearch: -1
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container form .modal')
                         });
                     }
                 }
@@ -8812,7 +8817,7 @@ const computeBankDepositeTotal = () => {
     var totalDepositAmount = (parseFloat(otherFundsTotal) - parseFloat(cashBackAmount)).toFixed(2);
 
     $('div#depositModal span.other-funds-total').html(formatter.format(parseFloat(otherFundsTotal)));
-    $('div#depositModal h2.transaction-total-amount').html(formatter.format(parseFloat(totalDepositAmount)));
+    $('div#depositModal .transaction-total-amount').html(formatter.format(parseFloat(totalDepositAmount)));
     $('div#depositModal span.total-cash-back').html(formatter.format(parseFloat(totalDepositAmount)));
 }
 
@@ -9896,7 +9901,7 @@ const makeRecurring = (modalName) => {
             modalId = 'creditMemoModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #credit_memo_date`).parent().prev().remove();
             $(`div#${modalId} div.modal-body #credit_memo_date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Memo');
@@ -9908,14 +9913,13 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Sales Receipt');
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().prev().remove();
             $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
 
             var addedFields = `<div class="col-12 col-md-3">`;
-            addedFields += `<div class="form-group">`;
             addedFields += `<label>Options</label>`;
             addedFields += `<div class="form-check">`;
             addedFields += `<input type="checkbox" name="auto_send_emails" value="1" class="form-check-input" id="auto-send-emails">`;
@@ -9926,14 +9930,13 @@ const makeRecurring = (modalName) => {
             addedFields += `<label class="form-check-label" for="print-later">Print later</label>`;
             addedFields += `</div>`;
             addedFields += `</div>`;
-            addedFields += `</div>`;
             $(addedFields).insertAfter($(`#${modalId} #email`).parent());
         break;
         case 'refund_receipt' :
             modalId = 'refundReceiptModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().prev().remove();
             $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Refund Receipt');
@@ -9943,23 +9946,23 @@ const makeRecurring = (modalName) => {
             modalId = 'delayedCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
-            $(`div#${modalId} div.modal-body #delayed-credit-date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`div#${modalId} div.modal-body #delayed-credit-date`).parent().parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Credit');
         break;
         case 'delayed_charge' :
             modalId = 'delayedChargeModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
-            $(`div#${modalId} div.modal-body #delayed-charge-date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`div#${modalId} div.modal-body #delayed-charge-date`).parent().parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Charge');
         break;
         case 'invoice' :
             modalId = 'invoiceModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`div#${modalId} div.modal-body div.row.date-row`).remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice');
             $(`div#${modalId} div.modal-body #shipping-date`).parent().parent().html('');
@@ -10107,12 +10110,19 @@ const viewPrint = (id, title = "") => {
             type: 'post',
             dataType: "JSON",
             success: function(res) {
-                if (res.filename != "") {
-                    $('iframe#showPdf').attr('src', "/accounting/show-pdf?pdf=" +res.filename);
-                    $('#showPdfModal').modal('show');
-
-                    $('#showPdfModal div.modal-footer a#download-pdf').attr('href', '/accounting/download-pdf?filename='+res.filename);
+                if($('#modal-container #showPdfModal').length > 0) {
+                    $('#modal-container #showPdfModal').parent().remove();
                 }
+
+                $('#modal-container').append(res);
+
+                $('#showPdfModal').modal('show');
+                // if (res.filename != "") {
+                //     $('iframe#showPdf').attr('src', "/accounting/show-pdf?pdf=" +res.filename);
+                //     $('#showPdfModal').modal('show');
+
+                //     $('#showPdfModal div.modal-footer a#download-pdf').attr('href', '/accounting/download-pdf?filename='+res.filename);
+                // }
             }
         });
     } else {
