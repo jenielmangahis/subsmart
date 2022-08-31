@@ -5,203 +5,213 @@
 <?php else : ?>
 <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/inventory-qty-adjust/<?=$adjustment->id?>">
 <?php endif; ?>
-    <div id="inventoryModal" class="modal fade modal-fluid" role="dialog">
+    <div id="inventoryModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
             <!-- Modal content-->
-            <div class="modal-content" style="height: 100%;">
-                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+            <div class="modal-content">
+                <div class="modal-header">
                     <div class="row w-100">
                         <div class="col-6 d-flex align-items-center">
                             <div class="dropdown mr-1">
-                                <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-history fa-lg"></i>
+                                <a href="javascript:void(0);" class="h4 recent-transactions-button" data-bs-toggle="dropdown">
+                                    <i class="bx bx-fw bx-history"></i>
                                 </a>
-                                <div class="dropdown-menu" style="width: 500px">
+                                <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Transactions</h5>
-                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-qty-adjustments">
+                                    <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-qty-adjustments">
                                         <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
-                            <h4 class="modal-title">
-                                Inventory Quantity Adjustment #<?=$adjustment_no?>
-                            </h4>
+                            <span class="modal-title content-title">
+                                Inventory Quantity Adjustment <span>#<?=$adjustment_no?></span>
+                            </span>
                         </div>
                     </div>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body" style="padding-bottom: 1.25rem">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="adjustmentDate">Adjustment Date</label>
-                                                <input type="text" class="form-control date" name="adjustment_date" id="adjustmentDate" value="<?=!isset($adjustment) ? date('m/d/Y') : date('m/d/Y', strtotime($adjustment->adjustment_date)) ?>"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-2 offset-md-8">
-                                            <div class="form-group">
-                                                <label for="referenceNo">Reference no.</label>
-                                                <input type="number" required name="reference_no" id="referenceNo" class="form-control" value="<?=$adjustment_no?>">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
-                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control" required>
-                                                    <?php if(isset($adjustment)) : ?>
-                                                    <option value="<?=$adjustment->account->id?>"><?=$adjustment->account->name?></option>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </div>
-                                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-12 col-md-2 grid-mb">
+                                    <label for="adjustmentDate">Adjustment Date</label>
+                                    <div class="nsm-field-group calendar">
+                                        <input type="text" class="form-control nsm-field date" name="adjustment_date" id="adjustmentDate" value="<?=!isset($adjustment) ? date('m/d/Y') : date('m/d/Y', strtotime($adjustment->adjustment_date)) ?>"/>
                                     </div>
+                                </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12 mb-5">
-                                            <?php if(isset($adjustment)) : ?>
-                                            <div class="new-adjustments">
-                                                <button class="btn" type="button" data-toggle="collapse" data-target="#new-adjustments" aria-expanded="true" aria-controls="new-adjustments">
-                                                    <i class="fa fa-caret-down"></i> New adjustments
-                                                </button>
-                                                <div class="collapse show" id="new-adjustments">
-                                            <?php endif; ?>
-                                                    <div class="inventory-table-container w-100">
-                                                        <div class="inventory-table">
-                                                            <table class="table table-bordered table-hover clickable" id="inventory-adjustments-table">
-                                                                <thead>
-                                                                    <th></th>
-                                                                    <th>#</th>
-                                                                    <th width="20%">PRODUCT</th>
-                                                                    <th width="20%">DESCRIPTION</th>
-                                                                    <th width="15%">LOCATION</th>
-                                                                    <th width="10%">QTY ON HAND</th>
-                                                                    <th width="10%">NEW QTY</th>
-                                                                    <th width="10%">CHANGE IN QTY</th>
-                                                                    <th></th>
-                                                                </thead>
-                                                                <tbody class="cursor-pointer">
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td>1</td>
-                                                                        <td>
-                                                                            <select name="product[]" class="form-control" required></select>
-                                                                        </td>
-                                                                        <td></td>
-                                                                        <td>
-                                                                            <select name="location[]" class="form-control" required></select>
-                                                                        </td>
-                                                                        <td></td>
-                                                                        <td><input type="number" name="new_qty[]" class="form-control text-right" required></td>
-                                                                        <td><input type="number" name="change_in_qty[]" class="form-control text-right" required></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td>2</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                        <div class="table-footer">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#inventory-adjustments-table" onclick="addTableLines(event)">Add lines</button>
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#inventory-adjustments-table" onclick="clearTableLines(event)">Clear all lines</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                            <?php if(isset($adjustment)) : ?>
-                                                </div>
-                                            </div>
+                                <div class="col-12 col-md-2 offset-md-8 grid-mb">
+                                    <label for="referenceNo">Reference no.</label>
+                                    <input type="number" required name="reference_no" id="referenceNo" class="form-control nsm-field" value="<?=$adjustment_no?>">
+                                </div>
 
-                                            <div class="previous-adjustments">
-                                                <button class="btn" type="button" data-toggle="collapse" data-target="#previous-adjustments" aria-expanded="true" aria-controls="previous-adjustments">
-                                                    <i class="fa fa-caret-down"></i> Previous adjustments
-                                                </button>
+                                <div class="col-12 col-md-3 grid-mb">
+                                    <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
+                                    <select name="inventory_adj_account" id="inventory_adj_account" class="form-control nsm-field" required>
+                                        <?php if(isset($adjustment)) : ?>
+                                        <option value="<?=$adjustment->account->id?>"><?=$adjustment->account->name?></option>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                            </div>
 
-                                                <div class="collapse show" id="previous-adjustments">
-                                                    <div class="previous-adjustment-table-container w-100">
-                                                        <div class="previous-adjustment-table">
-                                                            <table class="table table-bordered table-hover" id="previous-adjustments-table">
-                                                                <thead>
-                                                                    <th>#</th>
-                                                                    <th width="20%">PRODUCT</th>
-                                                                    <th width="20%">DESCRIPTION</th>
-                                                                    <th width="15%">LOCATION</th>
-                                                                    <th width="10%">CHANGE IN QTY</th>
-                                                                    <th></th>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <?php $count = 1; ?>
-                                                                    <?php foreach($adjustedProds as $adjustedProd) : ?>
-                                                                    <tr>
-                                                                        <td><?=$count?></td>
-                                                                        <td>
-                                                                            <select name="adjusted_product[]" class="form-control" required>
-                                                                                <option value="<?=$adjustedProd->product_id?>"><?=$adjustedProd->product->title?></option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td><?=$adjustedProd->product->description?></td>
-                                                                        <td>
-                                                                            <select name="adjusted_location[]" class="form-control" required>
-                                                                                <?php foreach($adjustedProd->locations as $location) : ?>
-                                                                                    <option value="<?=$location['id']?>" <?=$location['id'] === $adjustedProd->location_id ? 'selected' : ''?>><?=$location['name']?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="number" name="adjusted_change_in_qty[]" class="form-control text-right" value="<?=$adjustedProd->change_in_quantity?>" required>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <?php $count++; endforeach; ?>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                        <div class="table-footer">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#previous-adjustments-table" onclick="clearTableLines(event)">Clear all lines</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                            <div class="row">
+                                <div class="col-12 grid-mb">
+                                    <?php if(isset($adjustment)) : ?>
+                                        <div class="accordion grid-mb">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-new-adjustments" aria-expanded="true" aria-controls="collapse-new-adjustments">
+                                                        New adjustments
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse-new-adjustments" class="accordion-collapse collapse show">
+                                                    <div class="accordion-body">
+                                    <?php endif; ?>
+                                                        <table class="nsm-table" id="inventory-adjustments-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td data-name="Num">#</td>
+                                                                    <td data-name="Product">PRODUCT</td>
+                                                                    <td data-name="Description">DESCRIPTION</td>
+                                                                    <td data-name="Location">LOCATION</td>
+                                                                    <td data-name="Qty on Hand">QTY ON HAND</td>
+                                                                    <td data-name="New Qty">NEW QTY</td>
+                                                                    <td data-name="Change in Qty">CHANGE IN QTY</td>
+                                                                    <td data-name="Manage"></td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td>
+                                                                        <select name="product[]" class="form-control nsm-field" required></select>
+                                                                    </td>
+                                                                    <td></td>
+                                                                    <td>
+                                                                        <select name="location[]" class="form-control nsm-field" required></select>
+                                                                    </td>
+                                                                    <td></td>
+                                                                    <td><input type="number" name="new_qty[]" class="form-control nsm-field text-end" required></td>
+                                                                    <td><input type="number" name="change_in_qty[]" class="form-control nsm-field text-end" required></td>
+                                                                    <td>
+                                                                        <button type="button" class="nsm-button delete-row">
+                                                                            <i class='bx bx-fw bx-trash'></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>2</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>
+                                                                        <button type="button" class="nsm-button delete-row">
+                                                                            <i class='bx bx-fw bx-trash'></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td colspan="11">
+                                                                        <div class="nsm-page-buttons page-buttons-container">
+                                                                            <button type="button" class="nsm-button" onclick="addTableLines(event)" data-target="#inventory-adjustments-table">
+                                                                                Add lines
+                                                                            </button>
+                                                                            <button type="button" class="nsm-button" onclick="clearTableLines(event)" data-target="#inventory-adjustments-table">
+                                                                                Clear all lines
+                                                                            </button>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                    <?php if(isset($adjustment)) : ?>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <?php endif; ?>
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="form-control"><?=$adjustment->memo?></textarea>
+                                        <div class="accordion">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-previous-adjustments" aria-expanded="true" aria-controls="collapse-previous-adjustments">
+                                                        Previous adjustments
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse-previous-adjustments" class="accordion-collapse collapse show">
+                                                    <div class="accordion-body">
+                                                        <table class="nsm-table" id="previous-adjustments-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td data-name="Num">#</td>
+                                                                    <td data-name="Product">PRODUCT</td>
+                                                                    <td data-name="Description">DESCRIPTION</td>
+                                                                    <td data-name="Location">LOCATION</td>
+                                                                    <td data-name="Change in Qty">CHANGE IN QTY</td>
+                                                                    <td data-name="Manage"></td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php $count = 1; ?>
+                                                                <?php foreach($adjustedProds as $adjustedProd) : ?>
+                                                                <tr>
+                                                                    <td><?=$count?></td>
+                                                                    <td>
+                                                                        <select name="adjusted_product[]" class="form-control nsm-field" required>
+                                                                            <option value="<?=$adjustedProd->product_id?>"><?=$adjustedProd->product->title?></option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><?=$adjustedProd->product->description?></td>
+                                                                    <td>
+                                                                        <select name="adjusted_location[]" class="form-control nsm-field" required>
+                                                                            <?php foreach($adjustedProd->locations as $location) : ?>
+                                                                                <option value="<?=$location['id']?>" <?=$location['id'] === $adjustedProd->location_id ? 'selected' : ''?>><?=$location['name']?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="number" name="adjusted_change_in_qty[]" class="form-control nsm-field text-end" value="<?=$adjustedProd->change_in_quantity?>" required>
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" class="nsm-button delete-row">
+                                                                            <i class='bx bx-fw bx-trash'></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                                <?php $count++; endforeach; ?>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <div class="nsm-page-buttons page-buttons-container">
+                                                                            <button type="button" class="nsm-button" onclick="clearTableLines(event)" data-target="#previous-adjustments-table">
+                                                                                Clear all lines
+                                                                            </button>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                            <label for="memo">Memo</label>
+                                            <textarea name="memo" id="memo" class="nsm-field form-control"><?=isset($adjustment) ? str_replace("<br />", "", $adjustment->memo) : ''?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -210,29 +220,28 @@
                     </div>
                 </div>
 
-                <div class="modal-footer bg-secondary">
+                <div class="modal-footer">
                     <div class="row w-100">
-                        <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                        <div class="col-md-6">
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
                         </div>
-                        <div class="col-md-4 d-flex">
-
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <!-- Split dropup button -->
-                            <div class="btn-group dropup float-right ml-2">
-                                <button type="button" class="btn btn-success" onclick="saveAndCloseForm(event)">
+                            <div class="btn-group float-end" role="group">
+                                <button type="button" class="nsm-button success" onclick="saveAndCloseForm(event)">
                                     Save and close
                                 </button>
-                                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-fw bx-chevron-up text-white"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-secondary btn-rounded border float-right" id="save">Save</button>
+                            <button type="button" class="nsm-button float-end" id="save">Save</button>
                         </div>
                     </div>
                 </div>

@@ -102,7 +102,7 @@
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                    <div class="col-12 col-md-12 offset-md-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -293,37 +293,25 @@
                                 <table class="nsm-table">
                                     <thead>
                                         <tr>
-                                            <td data-name="Date">DATE</td>
-                                            <td data-name="Transaction Type">TRANSACTION TYPE</td>
-                                            <td data-name="Num">NUM</td>
-                                            <td data-name="Customer">CUSTOMER</td>
-                                            <td data-name="Vendor">VENDOR</td>
-                                            <td data-name="Memo/Description">MEMO/DESCRIPTION</td>
-                                            <td data-name="Clr">CLR</td>
-                                            <td data-name="Amount">AMOUNT</td>
+                                            <td>Customer</td>
+                                            <td>Payment Method</td>
+                                            <td>Reference No.</td>
+                                            <td>nSmartrac Record</td>
+                                            <td>Fees</td>
+                                            <td>Amount</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Account</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;06/16/2022</td>
-                                            <td>Payment</td>
-                                            <td>123</td>
-                                            <td>Test Customer</td>
-                                            <td>Test Vendor</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>$22,544.77</td>
-                                        </tr>
+                                        <?php foreach($invoices as $invoice): ?>
+                                            <tr>
+                                                <td><?php echo $invoice->first_name .' '. $invoice->last_name; ?></td>
+                                                <td><?php echo $invoice->payment_method; ?></td>
+                                                <td><?php echo $invoice->reference_number; ?></td>
+                                                <td><a target="_blank" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>" style="color:blue;">Invoice</a></td>
+                                                <td>Tip: $<?php echo number_format($invoice->invoice_tip,2); ?></td>
+                                                <td>$<?php echo number_format($invoice->invoice_amount,2); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>

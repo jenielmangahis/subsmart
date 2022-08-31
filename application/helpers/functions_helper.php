@@ -486,5 +486,23 @@ if (!function_exists('getUser')){
         $user = $CI->users_model->get_user_name($id);
         return $user->FName." ".$user->LName;
     }
-}										
+}	
+if (!function_exists('getDataByHeader')){
+    function getDataByHeader($arr){
+        $CI = &get_instance();
+        $CI->load->model('users_model');
+
+        $user = $CI->users_model->get_user_name($arr);
+        return $user->FName." ".$user->LName;
+    }
+}
+if (!function_exists('getCustomerName')){
+    function getCustomerName($id){
+        $CI = &get_instance();
+        $CI->load->model('users_model');
+
+        $user = $CI->users_model->get_user_name($id);
+        return $user->FName." ".$user->LName;
+    }
+}									
 ?>

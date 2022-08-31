@@ -68,26 +68,30 @@ class AcsProfile_model extends MY_Model
             if($cust != null){
                 $this->db->where_in('prof_id', $cust);
             }
+
+            if($prof_id != null){
+                $this->db->order_by($prof_id, 'DESC');
+            }
             
             $query = $this->db->get();
             
-             if($query && $prof_id != null ){
-                 $res = $query->result();
-                 $idArray = Array();
-                 foreach($res as $resId):
-                     if(in_array($resId->prof_id, $prof_id)){
-                        array_push($idArray, $resId->prof_id);
-                     }
-                 endforeach;
-                 if($col != null){
-                 return $this->test($idArray, $col);
-                 }else{
-                    return $this->test($idArray, null);
-                 }
+            //  if($query && $prof_id != null ){
+            //      $res = $query->result();
+            //      $idArray = Array();
+            //      foreach($res as $resId):
+            //          if(in_array($resId->prof_id, $prof_id)){
+            //             array_push($idArray, $resId->prof_id);
+            //          }
+            //      endforeach;
+            //      if($col != null){
+            //      return $this->test($idArray, $col);
+            //      }else{
+            //         return $this->test($idArray, null);
+            //      }
                  
-            }else{
+            // }else{
                 return $query->result();
-             }
+             //}
     //     elseif($prof_id != null && $col == null && ($cust == null && $stat == null)){
     //         $this->db->select('*');
     //         $this->db->from($this->table);

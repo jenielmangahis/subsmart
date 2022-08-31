@@ -19,7 +19,7 @@ $(document).ready(function () {
 
             $(`${modal_element} [data-bs-toggle="popover"]`).popover();
 
-            if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
+            if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table, #item-table)').length > 0) {
                 rowInputs = $('div#modal-container form .modal table tbody tr:first-child()').html();
                 if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
                     blankRow = $('div#modal-container form .modal table tbody tr:last-child()').html();
