@@ -248,6 +248,7 @@ class Customer_advance_model extends MY_Model {
             //$this->db->limit(10);
             $this->db->order_by('prof_id', "DESC");
         }
+        $this->db->limit($search['length'], $search['start']);
         $this->db->where("acs_profile.company_id", $cid);
         //$this->db->limit(20);
         $query = $this->db->get();
@@ -448,5 +449,14 @@ class Customer_advance_model extends MY_Model {
         $this->db->where('acs_transaction_history.customer_id', $customer_id);  
         $query = $this->db->get(); 
         return $query->result();
+    }
+
+    public function get_row_count(){
+        $this->db->select('*');
+        $this->db->from('acs_profile');
+        $query = $this->db->count_all_results();
+        //$query = $this->db->get($this->table);
+        return $query;
+    
     }
 }

@@ -50,12 +50,6 @@ span.select2-selection.select2-selection--single {
     height: 46px !important;
 }
 
-/* Transfer Modal */
-#transferModal h3 {
-    height: 46px;
-    margin: 0;
-}
-
 /* Statements Modal */
 #statementModal #recipientsTab {
     display: inline-flex;

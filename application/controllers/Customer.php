@@ -54,6 +54,55 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/adv_cust_modules/add_module_details', $this->page_data);
     }
 
+    // public function getCustomer(){
+    //     $data = array();
+    //     $input = $this->input->post();
+           
+    //     $users = $this->customer_ad_model->get_customer_data($input);
+        
+
+    //     $get_company_settings = array(
+    //         'where' => array(
+    //             'company_id' => logged('company_id')
+    //         ),
+    //         'table' => 'customer_settings_headers',
+    //         'select' => '*',
+    //     );
+    //     $customer_settings = $this->general->get_data_with_param($get_company_settings);
+    //     $countUsers = $this->customer_ad_model->get_row_count();
+    //     $enabled_table_headers = array();
+    //     if( $customer_settings[0] ){
+    //         $enabled_table_headers = unserialize($customer_settings[0]->headers);
+    //     }
+        
+    //     foreach($users as $user){
+    //         if (in_array('name', $enabled_table_headers)){
+    //             if ($user->customer_type === 'Business'){
+    //                 $parts = explode(' ', strtoupper(trim($user->business_name)));
+    //                 $name = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+    //             }else{
+    //                 $name = ucwords($user->first_name[0]) . ucwords($user->last_name[0]);
+    //             }
+    //         }
+    //         $data[] = array(
+
+    //             $name,
+    //             $user->city,
+    //             $user->phone_m
+    //         );
+    //     }
+        
+
+    //     $output = array(
+    //         "draw" => $_POST['draw'],
+    //         "recordsTotal" => '10',
+    //         "recordsFiltered" => '10',
+    //         "data" => $data
+    //     );
+
+    //     echo json_encode($output);
+        
+    // }
     public function index()
     {
         $this->page_data['page']->title = 'Customers';
@@ -92,9 +141,7 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/list', $this->page_data);
     }
 
-    public function getCustomer(){
 
-    }
 
     public function preview_($id=null){
         $this->load->model('IndustryType_model');
@@ -2276,7 +2323,6 @@ class Customer extends MY_Controller
 
     public function import_customer()
     {
-        echo logged('company_id');
         $get_company_settings = array(
             'where' => array(
                 'company_id' => logged('company_id'),

@@ -427,7 +427,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="accordion mb-2">
+                                    <div class="accordion grid-mb">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                                 <button class="accordion-button content-title <?=isset($items) && count($items) > 0 ? '' : ' collapsed'?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-item-details" aria-expanded="false" aria-controls="collapse-item-details">

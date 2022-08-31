@@ -294,6 +294,10 @@ class Estimate_v2 extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
+        add_css([
+            'assets/plugins/font-awesome/css/font-awesome.min.css',
+        ]);
+
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/v2/add', $this->page_data);
         // print_r($this->page_data['customers']);
@@ -341,8 +345,12 @@ class Estimate_v2 extends MY_Controller
         $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();
 
+        add_css([
+            'assets/plugins/font-awesome/css/font-awesome.min.css',
+        ]);
+
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
-        $this->load->view('estimate/addoptions', $this->page_data);
+        $this->load->view('estimate/v2/addoptions', $this->page_data);
     }
 
     public function delete_estimate()
@@ -402,7 +410,7 @@ class Estimate_v2 extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
-        $this->load->view('estimate/addbundle', $this->page_data);
+        $this->load->view('estimate/v2/addbundle', $this->page_data);
     }
 
     public function savenewestimateBundle()
@@ -942,7 +950,7 @@ class Estimate_v2 extends MY_Controller
         $this->page_data['itemsOption2'] = $this->estimate_model->getItemlistByIDOption2($id);
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
-        $this->load->view('estimate/editOption', $this->page_data);
+        $this->load->view('estimate/v2/editOption', $this->page_data);
     }
 
     public function editBundle($id)
@@ -978,7 +986,7 @@ class Estimate_v2 extends MY_Controller
 
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
-        $this->load->view('estimate/editBundle', $this->page_data);
+        $this->load->view('estimate/v2/editBundle', $this->page_data);
     }
 
 
