@@ -51,7 +51,7 @@
                                         <div class="col-12 col-md-3">
                                             <label for="date">Date</label>
                                             <div class="nsm-field-group calendar">
-                                                <input type="text" class="form-control nsm-field mb-2 date" name="date" id="date" value="<?=!isset($deposit) ? date('m/d/Y') : ($deposit->date !== "" && !is_null($deposit->date) ? date("m/d/Y", strtotime($deposit->date)) : "")?>"/>
+                                                <input type="text" class="form-control nsm-field date" name="date" id="date" value="<?=!isset($deposit) ? date('m/d/Y') : ($deposit->date !== "" && !is_null($deposit->date) ? date("m/d/Y", strtotime($deposit->date)) : "")?>"/>
                                             </div>
                                         </div>
                                     </div>
@@ -192,7 +192,7 @@
                                                                     <select name="payment_method[]" class="form-control nsm-field"></select>
                                                                 </td>
                                                                 <td><input type="text" name="reference_no[]" class="form-control nsm-field"></td>
-                                                                <td><input type="number" name="amount[]" class="form-control nsm-field text-end" step=".01" onchange="updateBankDepositTotal(this)" required></td>
+                                                                <td><input type="number" name="amount[]" class="form-control nsm-field text-end" step=".01" onchange="convertToDecimal(this)" required></td>
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">
                                                                         <i class='bx bx-fw bx-trash'></i>
@@ -274,6 +274,10 @@
                                                                             Clear all lines
                                                                         </button>
                                                                     </div>
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox" class="form-check-input" value="1" name="track_returns_for_customers" id="track-returns-for-customers">
+                                                                        <label for="track-returns-for-customers" class="form-check-label">Track returns for customers</label>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                         </tfoot>
@@ -313,36 +317,55 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <label for="cashBackTarget">Cash back goes to</label>
-                                            <select name="cash_back_account" id="cash_back_account" class="form-control nsm-field" required>
-                                                <?php if(isset($deposit) && !is_null($cash_back_account)) : ?>
-                                                <option value="<?=$cash_back_account->id?>"><?=$cash_back_account->name?></option>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-md-4">
-                                            <label for="cashBackMemo">Cash back memo</label>
-                                            <textarea name="cash_back_memo" id="cashBackMemo" class="form-control nsm-field"><?=isset($deposit) ? $deposit->cash_back_memo : ''?></textarea>
-                                        </div>
-                                        <div class="col-12 col-md-4">
-                                            <label for="cashBackAmount">Cash back amount</label>
-                                            <input type="number" name="cash_back_amount" value="<?=isset($deposit) && $deposit->cash_back_amount !== "0" ? number_format(floatval($deposit->cash_back_amount), 2, '.', ',') : ''?>" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control nsm-field text-end">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <span class="float-end total-cash-back">
-                                                <?php if(isset($deposit)) :
-                                                    $amount = '$'.number_format(floatval($deposit->total_amount), 2, '.', ',');
-                                                    $amount = str_replace('$-', '-$', $amount);
-                                                ?>
-                                                <?=$amount?>
-                                                <?php else : ?>
-                                                $0.00
-                                                <?php endif; ?>
-                                            </span>
-                                            <span class="float-end">Total </span>
+                                        <div class="col-12 col-md-8 offset-md-4">
+                                            <table class="nsm-table" id="bank-deposit-cashback">
+                                                <tfoot>
+                                                    <tr>
+                                                        <td class="border-0">
+                                                            <div class="row">
+                                                                <div class="col-12 col-md-4">
+                                                                    <label for="cashBackTarget">Cash back goes to</label>
+                                                                    <select name="cash_back_account" id="cash_back_account" class="form-control nsm-field" required>
+                                                                        <?php if(isset($deposit) && !is_null($cash_back_account)) : ?>
+                                                                        <option value="<?=$cash_back_account->id?>"><?=$cash_back_account->name?></option>
+                                                                        <?php endif; ?>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <label for="cashBackMemo">Cash back memo</label>
+                                                                    <textarea name="cash_back_memo" id="cashBackMemo" class="form-control nsm-field"><?=isset($deposit) ? $deposit->cash_back_memo : ''?></textarea>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <label for="cashBackAmount">Cash back amount</label>
+                                                                    <input type="number" name="cash_back_amount" value="<?=isset($deposit) && $deposit->cash_back_amount !== "0" ? number_format(floatval($deposit->cash_back_amount), 2, '.', ',') : ''?>" id="cashBackAmount" step=".01" onchange="convertToDecimal(this)" class="form-control nsm-field text-end">
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-12 col-md-4"></div>
+                                                                <div class="col-12 col-md-4 text-end">
+                                                                    Total
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <span class="float-end total-cash-back">
+                                                                        <?php if(isset($deposit)) :
+                                                                            $amount = '$'.number_format(floatval($deposit->total_amount), 2, '.', ',');
+                                                                            $amount = str_replace('$-', '-$', $amount);
+                                                                        ?>
+                                                                        <?=$amount?>
+                                                                        <?php else : ?>
+                                                                        $0.00
+                                                                        <?php endif; ?>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>

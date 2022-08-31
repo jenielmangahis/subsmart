@@ -608,10 +608,10 @@ $(function() {
             $.get('/accounting/get-account-balance/' + value, function(res) {
                 var result = JSON.parse(res);
 
-                el.parent().parent().next().find('h3').html(result.balance);
+                el.parent().next().find('h3').html(result.balance);
             });
         } else {
-            el.parent().parent().next().find('h3').html('');
+            el.parent().next().find('h3').html('');
         }
     });
 
@@ -652,9 +652,9 @@ $(function() {
     $(document).on('keyup', 'div#journalEntryModal input#journalNo', function() {
         if ($(this).val() !== "") {
             var val = $(this).val();
-            $('div#journalEntryModal h4.modal-title span').html(`#${val}`);
+            $('div#journalEntryModal .modal-title span').html(`#${val}`);
         } else {
-            $('div#journalEntryModal h4.modal-title span').html('');
+            $('div#journalEntryModal .modal-title span').html('');
         }
     });
 
@@ -683,7 +683,8 @@ $(function() {
                                 var query = {
                                     search: params.term,
                                     type: 'public',
-                                    field: type
+                                    field: type,
+                                    modal: $('#modal-container form .modal').attr('id')
                                 }
 
                                 // Query parameters will be ?search=[term]&type=public&field=[type]
@@ -770,9 +771,13 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container .modal-body table.clickable:not(#category-details-table,#item-details-table) tbody tr td a.deleteRow', function() {
-        var parentTable = $(this).parent().parent().parent().parent().parent();
-        $(this).parent().parent().parent().remove();
+    $(document).on('change', '#depositModal #bank-deposit-table [name="amount[]"], #depositModal #cashBackAmount', function() {
+        computeBankDepositeTotal();
+    });
+
+    $(document).on('click', 'div#modal-container .modal-body table:not(#category-details-table,#item-details-table, #item-table) tbody tr td button.delete-row', function() {
+        var parentTable = $(this).parent().parent().parent().parent();
+        $(this).parent().parent().remove();
         if (parentTable.find('tbody tr').length < rowCount) {
             parentTable.find('tbody').append(`<tr>${blankRow}</tr>`);
         }
@@ -780,12 +785,43 @@ $(function() {
         var num = 1;
 
         parentTable.find('tbody tr').each(function() {
-            $(this).children('td:nth-child(2)').html(num);
+            $(this).children('td:first-child()').html(num);
             num++;
         });
 
-        if (modalName === '#depositModal') {
-            updateBankDepositTotal();
+        switch(modalName) {
+            case '#depositModal' :
+                computeBankDepositeTotal();
+            break;
+            case '#journalEntryModal' :
+                var debit = 0.00;
+                var credit = 0.00;
+
+                $('div#journalEntryModal table#journal-table input[name="debits[]"]').each(function() {
+                    var rowDebit = $(this).val();
+                    if (rowDebit !== "" && rowDebit !== undefined) {
+                        rowDebit = parseFloat(rowDebit);
+                    } else {
+                        rowDebit = 0.00;
+                    }
+
+                    debit = parseFloat(parseFloat(debit) + rowDebit).toFixed(2);
+                });
+
+                $('div#journalEntryModal table#journal-table input[name="credits[]"]').each(function() {
+                    var rowCredit = $(this).val();
+                    if (rowCredit !== "" && rowCredit !== undefined) {
+                        rowCredit = parseFloat(rowCredit);
+                    } else {
+                        rowCredit = 0.00;
+                    }
+
+                    credit = parseFloat(parseFloat(credit) + rowCredit).toFixed(2);
+                });
+
+                $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(3)').html(parseFloat(debit).toFixed(2));
+                $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(4)').html(parseFloat(credit).toFixed(2));
+            break;
         }
     });
 
@@ -1119,9 +1155,9 @@ $(function() {
         convertToDecimal($(this));
 
         if ($(this).attr('name') === 'debits[]') {
-            $(this).parent().parent().children('td:nth-child(5)').children('input').val('');
-        } else {
             $(this).parent().parent().children('td:nth-child(4)').children('input').val('');
+        } else {
+            $(this).parent().parent().children('td:nth-child(3)').children('input').val('');
         }
 
         var debit = 0.00;
@@ -1149,8 +1185,8 @@ $(function() {
             credit = parseFloat(parseFloat(credit) + rowCredit).toFixed(2);
         });
 
-        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(4)').html(debit);
-        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(5)').html(credit);
+        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(3)').html(parseFloat(debit).toFixed(2));
+        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(4)').html(parseFloat(credit).toFixed(2));
     });
 
     $(document).on('change', 'div#statementModal select#statementType, div#statementModal select#customerBalanceStatus', function() {
@@ -1371,8 +1407,8 @@ $(function() {
                     <span>&emsp; days before the transaction date</span>
                 `);
 
-                if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
-                    if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
+                if ($('#modal-container form div.modal div.modal-body select#recurringInterval').length === 0) {
+                    if ($('#modal-container form').children('.modal').attr('id') === 'depositModal') {
                         $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
                     } else if(vendorModals.includes(`#${modalId}`)) {
                         $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
@@ -1407,8 +1443,8 @@ $(function() {
                     <span>&emsp; days in advance</span>
                 `);
     
-                if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
-                    if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
+                if ($('#modal-container form div.modal div.modal-body select#recurringInterval').length === 0) {
+                    if ($('#modal-container form').children('.modal').attr('id') === 'depositModal') {
                         $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
                     } else if(vendorModals.includes(`#${modalId}`)) {
                         $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
@@ -1791,6 +1827,10 @@ $(function() {
                 form.prev().removeClass('d-none');
             }
         });
+    });
+
+    $(document).on('change', '#inventoryModal #referenceNo', function() {
+        $('#inventoryModal .modal-title span').html($(this).val() !== '' ? '#'+$(this).val() : '');
     });
 
     $(document).on('change', '#inventory-adjustments-table select[name="product[]"]', function() {
@@ -8772,32 +8812,6 @@ const showTagsList = (el) => {
 //     });
 // }
 
-const updateBankDepositTotal = (el) => {
-    var val = parseFloat($(el).val()).toFixed(2).toString();
-    var split = val.includes('.') ? val.split('.') : val;
-    var string = "0.00";
-
-    if(typeof split === "object") {
-        if(split[0].length === 0) {
-            split[0] = "0";
-        }
-
-        if(split[1].length === 1) {
-            split[1] = split[1]+"0";
-        }
-
-        string = split[0]+'.'+split[1];
-    } else {
-        if(split !== "NaN") {
-            string = split+'.00';
-        }
-    }
-
-    $(el).val(string);
-
-    computeBankDepositeTotal();
-}
-
 const computeBankDepositeTotal = () => {
     var otherFundsTotal = 0.00;
 
@@ -8839,8 +8853,6 @@ const addTableLines = (e) => {
             }
         }
         $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
-
-        // $(`table${table} tbody tr:last-child() td select`).select2();
     }
 }
 
@@ -9817,20 +9829,23 @@ const makeRecurring = (modalName) => {
             modalId = 'depositModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.bank-account-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.bank-account-details`));
-            $(`#${modalId} .bank-account-details #date`).parent().parent().parent().remove();
+            $(`#${modalId} .bank-account-details #date`).parent().parent().remove();
+            $(`#${modalId} #account-balance`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.row.bank-account-details`).children('div:last-child()').remove();
+            $(`#${modalId} #collapse-nsmartrac-payments`).parent().parent().remove();
         break;
         case 'transfer' :
             modalId = 'transferModal';
-            $(`div#${modalId} div.modal-body .card-body`).prepend(intervalFields);
-            $(`div#${modalId} div.modal-body .card-body`).prepend(templateFields);
+            $(`div#${modalId} div.modal-body`).children('.row').children(':first-child').prepend(intervalFields);
+            $(`div#${modalId} div.modal-body`).children('.row').children(':first-child').prepend(templateFields);
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Transfer');
             $(`div#${modalId} div.modal-body #date`).parent().parent().remove();
         break;
         case 'journal_entry' :
             modalId = 'journalEntryModal';
             $(`div#${modalId} div.modal-body div.row.journal-entry-details`).remove();
-            $(`div#${modalId} div.modal-body .card-body`).prepend(intervalFields);
-            $(`div#${modalId} div.modal-body .card-body`).prepend(templateFields);
+            $(`div#${modalId} div.modal-body`).children('.row').children(':first-child').prepend(intervalFields);
+            $(`div#${modalId} div.modal-body`).children('.row').children(':first-child').prepend(templateFields);
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Journal Entry');
             $(`#${modalId} div.modal-header .modal-title span`).html('');
         break;
@@ -9838,72 +9853,72 @@ const makeRecurring = (modalName) => {
             modalId = 'expenseModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} #account-balance`).parent().parent().remove();
-            $(`div#${modalId} label[for="expense_payment_account"]`).html('Account');
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
-            $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`#${modalId} #account-balance`).parent().parent().remove();
+            $(`#${modalId} label[for="expense_payment_account"]`).html('Account');
+            $(`#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Expense');
         break;
         case 'check' :
             modalId = 'checkModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} #account-balance`).parent().parent().remove();
-            $(`div#${modalId} label[for="bank_account"]`).html('Account');
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
+            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`#${modalId} #account-balance`).parent().parent().remove();
+            $(`#${modalId} label[for="bank_account"]`).html('Account');
+            $(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
         break;
         case 'bill' :
             modalId = 'billModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #bill_date`).parent().parent().remove();
-            $(`div#${modalId} div.modal-body #due_date`).parent().parent().remove();
-            $(`div#${modalId} div.modal-body #bill_no`).parent().remove();
+            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #bill_date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body #due_date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body #bill_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Bill');
         break;
         case 'purchase_order' :
             modalId = 'purchaseOrderModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #purchase_order_date`).parent().prev().remove();
-            $(`div#${modalId} div.modal-body #purchase_order_date`).parent().remove();
-            $(`div#${modalId} div.modal-body #status`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #purchase_order_date`).parent().prev().remove();
+            $(`#${modalId} div.modal-body #purchase_order_date`).parent().remove();
+            $(`#${modalId} div.modal-body #status`).parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Purchase Order');
         break;
         case 'vendor_credit' :
             modalId = 'vendorCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
-            $(`div#${modalId} div.modal-body #ref_no`).prev().remove();
-            $(`div#${modalId} div.modal-body #ref_no`).remove();
+            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
+            $(`#${modalId} div.modal-body #ref_no`).prev().remove();
+            $(`#${modalId} div.modal-body #ref_no`).remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Vendor Credit');
         break;
         case 'credit_card_credit' :
             modalId = 'creditCardCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`div#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().html('');
-            $(`div#${modalId} div.modal-body #ref_no`).prev().remove();
-            $(`div#${modalId} div.modal-body #ref_no`).remove();
-            $(`div#${modalId} #account-balance`).parent().parent().remove();
-            $(`div#${modalId} label[for="bank_credit_account"]`).html('Account');
+            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
+            $(`#${modalId} div.modal-body #ref_no`).prev().remove();
+            $(`#${modalId} div.modal-body #ref_no`).remove();
+            $(`#${modalId} #account-balance`).parent().parent().remove();
+            $(`#${modalId} label[for="bank_credit_account"]`).html('Account');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
         break;
         case 'credit_memo' :
             modalId = 'creditMemoModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #credit_memo_date`).parent().prev().remove();
-            $(`div#${modalId} div.modal-body #credit_memo_date`).parent().remove();
+            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #credit_memo_date`).parent().prev().remove();
+            $(`#${modalId} div.modal-body #credit_memo_date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Memo');
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
@@ -9913,9 +9928,9 @@ const makeRecurring = (modalName) => {
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Sales Receipt');
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().prev().remove();
-            $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().remove();
+            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #sales-receipt-date`).parent().prev().remove();
+            $(`#${modalId} div.modal-body #sales-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
 
@@ -9936,9 +9951,9 @@ const makeRecurring = (modalName) => {
             modalId = 'refundReceiptModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().prev().remove();
-            $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().remove();
+            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #refund-receipt-date`).parent().prev().remove();
+            $(`#${modalId} div.modal-body #refund-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Refund Receipt');
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
         break;
@@ -9946,27 +9961,27 @@ const makeRecurring = (modalName) => {
             modalId = 'delayedCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #delayed-credit-date`).parent().parent().parent().remove();
+            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #delayed-credit-date`).parent().parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Credit');
         break;
         case 'delayed_charge' :
             modalId = 'delayedChargeModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body #delayed-charge-date`).parent().parent().parent().remove();
+            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body #delayed-charge-date`).parent().parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Charge');
         break;
         case 'invoice' :
             modalId = 'invoiceModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`div#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
-            $(`div#${modalId} div.modal-body div.row.date-row`).remove();
+            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body div.row.date-row`).remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice');
-            $(`div#${modalId} div.modal-body #shipping-date`).parent().parent().html('');
-            $(`div#${modalId} div.modal-body #invoice-no`).parent().remove();
+            $(`#${modalId} div.modal-body #shipping-date`).parent().parent().html('');
+            $(`#${modalId} div.modal-body #invoice-no`).parent().remove();
         break;
     }
 

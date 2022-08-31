@@ -12,6 +12,7 @@ class Reports extends MY_Controller {
 
         //helper
         $this->load->helper('accounting/reports_helper');
+        $this->load->helper('functions_helper');
 
         $this->load->model('accounting_favorite_reports_model');
         $this->load->model('accounting_report_groups_model');
@@ -25,6 +26,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_invoices_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('AcsBilling_model');
+        $this->load->model('DepositDetail_model');
         $this->load->model('invoice_model');
         $this->load->model('workorder_model');
         $this->load->model('estimate_model');
@@ -288,6 +290,7 @@ class Reports extends MY_Controller {
             "assets/js/accounting/reports/standard_report_pages/$js.js"
         ]);
 
+// CUSTOMER CONTACT LIST
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
@@ -295,6 +298,11 @@ class Reports extends MY_Controller {
         $this->page_data['customerType'] = $this->AcsProfile_model->getCustomerType();
         $this->page_data['status'] = $this->AcsProfile_model->getStatus();
         $this->page_data['reportTypeId'] = $reportTypeId;
+        $this->page_data['page']->title = $reportType->name;
+        $this->page_data['page']->parent = 'Reports';
+        if(!empty($exportBtn)){
+            $this->export_report($view, $this->page_data);
+        }
 
         $sort_by = $this->input->post('sort_by');
         $cust = $this->input->post('customer');
@@ -342,11 +350,7 @@ class Reports extends MY_Controller {
                 $this->page_data['time_prepared'] = "";
             }
         }
-
         $gbArray = array();
-
-        
-
         if($sort_by != 'default' && !empty($sort_by)){
             $getBill = $this->AcsBilling_model->getBilling($sort_by);
             $gb = json_decode(json_encode($getBill), true);
@@ -364,26 +368,18 @@ class Reports extends MY_Controller {
                 $column = $custExp;
             }
         $this->page_data['custExp'] = $cust;
-
         }
         $this->page_data['tblDefault'] = true;  
-
-
         if(!empty($sort_by) || !empty($cust) || !empty($fl_cust) || !empty($fl_type) || !empty($fl_status)){
              $this->page_data['tblDefault'] = false;  
         }
-        $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($gbArray, $column, $fl_cust, $fl_status, $fl_type);
-        
+        $this->page_data['acs_profile'] = $this->AcsProfile_model->getProfile($sort_by, $column, $fl_cust, $fl_status, $fl_type);
         if($reportType->name === 'Profit and Loss by Tag Group') {
             $this->page_data['group_tags'] = $this->tags_model->getGroup();
         }
-
-        $this->page_data['page']->title = $reportType->name;
-        $this->page_data['page']->parent = 'Reports';
-
-        if(!empty($exportBtn)){
-            $this->export_report($view, $this->page_data);
-        }
+// DEPOSIT DETAILS
+        $this->page_data['payment_records'] = $this->DepositDetail_model->getPaymentRecord(logged('company_id'));
+        $this->page_data['invoices'] = $this->invoice_model->getPaidInv(getLoggedCompanyID());
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
 
