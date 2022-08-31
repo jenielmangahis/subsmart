@@ -1003,6 +1003,8 @@ $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 $route['users/export_list'] = 'Users/user_export';
 $route['users/_delete_user'] = 'Users/ajax_delete_user';
 $route['user/_admin_switch'] = 'Users/ajax_admin_switch'; //Switch to admin
+$route['user/_load_edit_adt_portal_login_details'] = 'Users/ajax_load_edit_adt_portal_login_details';
+$route['user/_update_adt_portal_login_details'] = 'Users/ajax_update_adt_portal_login_details';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';

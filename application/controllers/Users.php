@@ -802,7 +802,6 @@ class Users extends MY_Controller
 			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}*/
-
 		$this->page_data['show_pass'] = 1;
 		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
@@ -956,8 +955,11 @@ class Users extends MY_Controller
     }    
 
 	public function addNewEmployeeV2(){
+		$this->load->helper('adt_portal_helper');
+
     	$this->load->model('IndustryType_model');
     	$this->load->model('Clients_model');
+    	$this->load->model('UserPortalAccount_model');
 
 		// Upload profile picture
 		$config = array(
@@ -1020,66 +1022,97 @@ class Users extends MY_Controller
         if( $company->number_of_license <= 0 && $company->id != 1 ){
         	echo json_encode(3);
         }else{
-        	$add = array(
-	            'FName' => $fname,
-	            'LName' => $lname,
-	            'username' => $username,
-	            'email' => $username,
-	            'password' => hash("sha256",$password),
-	            'password_plain' => $password,
-	            'role' => $role,
-	            'user_type' => $user_type,
-	            'status' => $status,
-	            'company_id' => $cid,
-	            'profile_img' => $profile_img,
-	            'address' => $address,
-	            'mobile' => $mobile,
-	            'phone' => $phone,
-	            'state' => $state,
-	            'city' => $city,
-	            'postal_code' => $postal_code,
-	            'payscale_id' => $payscale_id,
-	            'employee_number' => $emp_number,
-	            'has_web_access' => $web_access,
-	            'has_app_access' => $app_access
-	        );
-	        $last_id = $this->users_model->addNewEmployee($add);
+        	$is_with_error = false;
+        	$create_portal_access = false;
+        	if( $this->input->post('portal_username') != '' ){
+        		if( $this->input->post('portal_password') != '' && ( $this->input->post('portal_password') == $this->input->post('portal_confirm_password') ) ){     
+        			$apiIsValid = portalValidateLogin($this->input->post('portal_username'), $this->input->post('portal_password'));
+        			if( $apiIsValid['is_valid'] == 1 ){
+        				$is_with_error = false;  
+        				$create_portal_access = true;				
+        			}
+        		}else{
+        			$is_with_error = true;
+        		}
+        	}
 
-	        //Deduct num license
-	        $new_num_license = $company->number_of_license;
-	        $company_data = ['number_of_license' => $new_num_license];
-	        $this->Clients_model->updateClient($cid, $company_data);
+        	if( $is_with_error ){
+        		echo json_encode(4);
+        	}else{
+        		$add = array(
+		            'FName' => $fname,
+		            'LName' => $lname,
+		            'username' => $username,
+		            'email' => $username,
+		            'password' => hash("sha256",$password),
+		            'password_plain' => $password,
+		            'role' => $role,
+		            'user_type' => $user_type,
+		            'status' => $status,
+		            'company_id' => $cid,
+		            'profile_img' => $profile_img,
+		            'address' => $address,
+		            'mobile' => $mobile,
+		            'phone' => $phone,
+		            'state' => $state,
+		            'city' => $city,
+		            'postal_code' => $postal_code,
+		            'payscale_id' => $payscale_id,
+		            'employee_number' => $emp_number,
+		            'has_web_access' => $web_access,
+		            'has_app_access' => $app_access
+		        );
+		        $last_id = $this->users_model->addNewEmployee($add);
 
-	        //Create timesheet record
-			$this->load->model('TimesheetTeamMember_model');
-			$this->TimesheetTeamMember_model->create([
-				'user_id' => $last_id,
-				'name' => $fname . ' ' . $lname,
-				'email' => $username,
-				'role' => 'Employee',
-				'department_id' => 0,
-				'department_role' => 'Member',
-				'will_track_location' => 1,
-				'status' => 1,
-				'company_id' => $cid
-			]);
-			//End Timesheet		
+		        if( $create_portal_access ){
+		        	//Create portal access 
+		        	$data_portal = [
+		        		'user_id' => $last_id,
+		        		'username' => trim($this->input->post('portal_username')),
+		        		//'password' => hash("sha256",$this->input->post('portal_password')),
+		        		'password_plain' => $this->input->post('portal_password'),
+		        		'created' => date("Y-m-d H:i:s")
+		        	];
 
-			//Create Trac360 record
-			$this->load->model('Trac360_model');
-			$data = [
-				'user_id' => $last_id,
-				'name' => $fname . ' ' . $lname,
-				'company_id' => $cid
-			];
-			$this->Trac360_model->add('trac360_people', $data);
-			//End Trac360
+		        	$this->UserPortalAccount_model->create($data_portal);
+		        }
 
-	        if ($last_id > 0 ){
-	            echo json_encode(1);
-	        }else{
-	            echo json_encode(0);
-	        }
+		        //Deduct num license
+		        $new_num_license = $company->number_of_license;
+		        $company_data = ['number_of_license' => $new_num_license];
+		        $this->Clients_model->updateClient($cid, $company_data);
+
+		        //Create timesheet record
+				$this->load->model('TimesheetTeamMember_model');
+				$this->TimesheetTeamMember_model->create([
+					'user_id' => $last_id,
+					'name' => $fname . ' ' . $lname,
+					'email' => $username,
+					'role' => 'Employee',
+					'department_id' => 0,
+					'department_role' => 'Member',
+					'will_track_location' => 1,
+					'status' => 1,
+					'company_id' => $cid
+				]);
+				//End Timesheet		
+
+				//Create Trac360 record
+				$this->load->model('Trac360_model');
+				$data = [
+					'user_id' => $last_id,
+					'name' => $fname . ' ' . $lname,
+					'company_id' => $cid
+				];
+				$this->Trac360_model->add('trac360_people', $data);
+				//End Trac360
+
+		        if ($last_id > 0 ){
+		            echo json_encode(1);
+		        }else{
+		            echo json_encode(0);
+		        }
+        	}
         }
         
     }   
@@ -1106,7 +1139,7 @@ class Users extends MY_Controller
 	{
 		$user_id = $this->input->post('user_id');
 		$get_user = $this->Users_model->getUser($user_id);
-		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));
+		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));		
 
 		$cid   = logged('company_id');
 		$roles = $this->users_model->getRoles($cid);
@@ -1119,7 +1152,7 @@ class Users extends MY_Controller
 
         $this->page_data['roles'] = $roles;
 	    $this->page_data['user'] = $get_user;
-	    $this->page_data['role'] = $get_role;
+	    $this->page_data['role'] = $get_role;	    
 	    // $this->load->view('users/modal_edit_form', $this->page_data);
 	    $this->load->view('v2/pages/users/modal_edit_form', $this->page_data);
 
@@ -2278,6 +2311,103 @@ class Users extends MY_Controller
 
 		$json_data = ['is_valid' => $is_valid, 'msg' => $msg];
 		echo json_encode($json_data);
+	}
+
+	public function ajax_loggedin_adt_sales_portal()
+	{
+		$this->load->model('UserPortalAccount_model');
+
+		$is_valid = '';
+		$msg = 'Invalid username / password';
+		$portal_username = '';
+
+		$uid = logged('id');
+		$userPortalAccount = $this->UserPortalAccount_model->getByUserId($uid);
+		if( $userPortalAccount ){
+			$post = [
+	            'portal_username' => $userPortalAccount->username,
+	            'portal_password' => $userPortalAccount->password_plain,
+	        ];
+
+	        $url = 'https://portal.urpowerpro.com/api/v1/user/validate_login';
+	        $ch = curl_init();        
+	        curl_setopt($ch, CURLOPT_URL,$url);
+	        curl_setopt($ch, CURLOPT_POST, 1);            
+	        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);            
+	        
+	        $response = curl_exec($ch);
+	        $data     = json_decode($response);
+
+	        if( $data->is_success == 1 ){
+	        	$is_valid = 1;
+	        	$portal_username = $data->portal_username;
+	        }
+		}
+
+		$json = ['is_valid' => $is_valid, 'msg' => $msg, 'portal_username' => $portal_username];
+		echo json_encode($json);
+		exit;	
+		
+	}
+
+	public function ajax_load_edit_adt_portal_login_details()
+	{
+		$this->load->model('UserPortalAccount_model');
+
+		$uid = $this->input->post('uid');
+		$userPortalAccess = $this->UserPortalAccount_model->getByUserId($uid);
+
+		$this->page_data['uid'] = $uid;
+        $this->page_data['userPortalAccess'] = $userPortalAccess;        
+	    $this->load->view('v2/pages/users/ajax_load_edit_adt_portal_login_details', $this->page_data);
+	}
+
+	public function ajax_update_adt_portal_login_details()
+	{
+		$this->load->helper('adt_portal_helper');
+		$this->load->model('UserPortalAccount_model');
+
+		$is_success = 0;
+		$msg = 'Password not match';
+
+		$post = $this->input->post();
+		if( $this->input->post('portal_password') != '' && ( $this->input->post('portal_password') != $this->input->post('portal_confirm_password') )){ 
+			$msg = 'Password not match';
+		}elseif( $this->input->post('portal_password') == '' ){
+			$msg = 'Please enter password';
+		}elseif( $this->input->post('portal_username') == '' ){
+			$msg = 'Please enter username';
+		}else{
+			$apiIsValid = portalValidateLogin($this->input->post('portal_username'), $this->input->post('portal_password'));
+			if( $apiIsValid['is_valid'] == 1 ){
+				$userPortalAccess = $this->UserPortalAccount_model->getByUserId($post['uid']);
+				if( $userPortalAccess ){
+					$data_portal = [
+						'username' => $post['portal_username'],
+						'password_plain' => $post['portal_password']
+					];
+
+					$this->UserPortalAccount_model->update($userPortalAccess->id, $data_portal);
+				}else{
+					$data_portal = [
+						'user_id' => $post['uid'],
+						'username' => $post['portal_username'],
+						'password_plain' => $post['portal_password']
+					];
+
+					$this->UserPortalAccount_model->create($data_portal);
+				}
+
+				$is_success = 1;
+				$msg = '';
+			}else{
+				$msg = $apiIsValid['msg'];
+			}
+		}	
+
+		$json = ['is_success' => $is_success, 'msg' => $msg];
+		echo json_encode($json);			
 	}
 }
 
