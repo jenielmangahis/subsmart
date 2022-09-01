@@ -10762,7 +10762,6 @@ class Accounting_modals extends MY_Controller
         $this->page_data['balance'] = $selectedBalance;
 
         $this->load->view("v2/includes/accounting/modal_forms/check_modal", $this->page_data);
-        // $this->load->view("accounting/modals/check_modal", $this->page_data);
     }
 
     private function view_bill($billId)
@@ -10890,7 +10889,7 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['ccPayment'] = $ccPayment;
 
-        $this->load->view("accounting/modals/pay_down_credit_card_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/pay_down_credit_card_modal", $this->page_data);
     }
 
     private function view_cc_credit($ccCreditId)
@@ -10936,7 +10935,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/view_bill_payment", $this->page_data);
     }
 
     private function view_journal($journalId)
@@ -10968,7 +10967,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['entries'] = $entries;
         $this->page_data['journal_entry'] = $journalEntry;
 
-        $this->load->view("accounting/modals/journal_entry_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/journal_entry_modal", $this->page_data);
     }
 
     private function view_transfer($transferId)
@@ -10978,7 +10977,7 @@ class Accounting_modals extends MY_Controller
         $transfer->transfer_to = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
 
         $this->page_data['transfer'] = $transfer;
-        $this->load->view("accounting/modals/transfer_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/transfer_modal", $this->page_data);
     }
 
     private function view_deposit($depositId)
@@ -11018,7 +11017,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['balance'] = $balance;
         $this->page_data['cash_back_account'] = $cashBackAccount;
 
-        $this->load->view("accounting/modals/bank_deposit_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/bank_deposit_modal", $this->page_data);
     }
 
     private function view_qty_adjustment($adjustmentId)
@@ -11036,7 +11035,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['adjustment'] = $adjustment;
         $this->page_data['adjustedProds'] = $adjustedProds;
 
-        $this->load->view("accounting/modals/inventory_qty_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/inventory_qty_modal", $this->page_data);
     }
 
     private function view_starting_value_adjustment($adjustmentId)
@@ -11053,7 +11052,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['locations'] = $this->items_model->getLocationByItemId($item->id);
         $this->page_data['adjustment'] = $adjustment;
 
-        $this->load->view('accounting/modals/adjust_starting_value', $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/adjust_starting_value", $this->page_data);
     }
 
     private function view_purchase_order($purchaseOrderId)
@@ -11125,7 +11124,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['timeActivity'] = $timeActivity;
         $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
 
-        $this->load->view("accounting/modals/single_time_activity_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/single_time_activity_modal", $this->page_data);
     }
 
     private function view_receive_payment($paymentId)
@@ -11149,7 +11148,7 @@ class Accounting_modals extends MY_Controller
         }
 
         $this->page_data['credits'] = $credits;
-        $this->load->view("accounting/modals/receive_payment_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/receive_payment_modal", $this->page_data);
     }
     
     private function view_unapplied_payment($paymentId)
@@ -11159,7 +11158,7 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['payment'] = $payment;
         $this->page_data['creditMemos'] = $creditMemos;
-        $this->load->view("accounting/modals/receive_payment_modal", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/receive_payment_modal", $this->page_data);
     }
 
     private function view_credit_memo($creditMemoId)
@@ -16648,7 +16647,7 @@ class Accounting_modals extends MY_Controller
                         $data[] = [
                             'id' => $adjustment->id,
                             'type' => 'Inventory Qty Adjust No.'.$adjustment->adjustment_no,
-                            'date' => date("m/d/Y", strtotime($entry->journal_date)),
+                            'date' => date("m/d/Y", strtotime($adjustment->adjustment_date)),
                             'amount' => '',
                             'name' => $name
                         ];

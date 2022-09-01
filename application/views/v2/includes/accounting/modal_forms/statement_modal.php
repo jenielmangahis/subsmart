@@ -1,162 +1,156 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
-    <div id="statementModal" class="modal fade modal-fluid" role="dialog">
+    <div id="statementModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
             <!-- Modal content-->
-            <div class="modal-content" style="height: 100%;">
-                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Create Statements</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Create Statements</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body" style="padding-bottom: 1.25rem">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="statementType">Statement Type</label>
-                                                <select name="statement_type" id="statementType" class="form-control">
-                                                    <option value="1">Balance Forward</option>
-                                                    <option value="2">Open Item (Last 365 days)</option>
-                                                    <option value="3">Transaction Statement</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 offset-md-6 text-right">
-                                            <p class="m-0">TOTAL BALANCE FOR <span id="total-customers"><?php echo count($customers); ?></span> CUSTOMERS</p>
-                                            <h2 class="m-0"><span id="total-amount">$<?php echo $total; ?></span></h2>
-                                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-12 col-md-2">
+                                    <label for="statementType">Statement Type</label>
+                                    <select name="statement_type" id="statementType" class="form-control nsm-field">
+                                        <option value="1">Balance Forward</option>
+                                        <option value="2">Open Item (Last 365 days)</option>
+                                        <option value="3">Transaction Statement</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-4 offset-md-6 text-end">
+                                    <h6>TOTAL BALANCE FOR <span id="total-customers"><?php echo count($customers); ?></span> CUSTOMERS</h6>
+                                    <h2><span id="total-amount">$<?php echo $total; ?></span></h2>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-md-2 grid-mb">
+                                    <label for="statementDate">Statement Date</label>
+                                    <div class="nsm-field-group calendar">
+                                        <input type="text" class="form-control nsm-field date" name="statement_date" id="statementDate" value="<?php echo date('m/d/Y') ?>"/>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="statementDate">Statement Date</label>
-                                                <input type="text" class="form-control date" name="statement_date" id="statementDate" value="<?php echo date('m/d/Y') ?>"/>
-                                            </div>
-                                        </div>
+                            <div class="row">
+                                <div class="col-12 col-md-2 grid-mb">
+                                    <label for="customerBalanceStatus">Customer Balance Status</label>
+                                    <select name="customer_balance_status" id="customerBalanceStatus" class="form-control nsm-field">
+                                        <option value="all">All</option>
+                                        <option value="open" selected>Open</option>
+                                        <option value="overdue">Overdue</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-2 grid-mb">
+                                    <label for="startDate">Start Date</label>
+                                    <div class="nsm-field-group calendar">
+                                        <input type="text" class="form-control nsm-field date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>                                        
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="customerBalanceStatus">Customer Balance Status</label>
-                                                <select name="customer_balance_status" id="customerBalanceStatus" class="form-control">
-                                                    <option value="all">All</option>
-                                                    <option value="open" selected>Open</option>
-                                                    <option value="overdue">Overdue</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="startDate">Start Date</label>
-                                                <input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="endDate">End Date</label>
-                                                <input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button type="button" class="btn btn-rounded apply-button hide">Apply</button>
-                                        </div>
+                                </div>
+                                <div class="col-12 col-md-2 grid-mb">
+                                    <label for="endDate">End Date</label>
+                                    <div class="nsm-field-group calendar">
+                                        <input type="text" class="form-control nsm-field date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h2>Recipients List</h2>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>Recipients List</h2>
+                                </div>
+
+                                <div class="col-12">
+                                    <ul class="nav nav-pills" id="recipients-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button type="button" id="missing-email-tab" data-bs-toggle="tab" data-bs-target="#missing-email" role="tab" aria-controls="missing-email" aria-selected="<?=count($withoutEmail) > 0 ? 'true' : 'false'?>" class="nav-link <?=count($withoutEmail) > 0 ? 'active' : ''?>">Missing email address (<span id="without-email-count"><?php echo count($withoutEmail); ?></span>)</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button type="button" id="statements-avail-tab" data-bs-toggle="tab" data-bs-target="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="<?=count($withoutEmail) < 1 ? 'true' : 'false'?>" class="nav-link <?=count($withoutEmail) < 1 ? 'active' : ''?>">Statements available (<span id="statements-count"><?php echo count($customers); ?></span>)</button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content" id="recipients-tab-content">
+                                        <div class="tab-pane fade <?=count($withoutEmail) > 0 ? 'show active' : ''?>" id="missing-email" role="tabpanel" aria-labelledby="missing-email-tab">
+                                            <table class="nsm-table" id="missing-email-table">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="table-icon text-center">
+                                                            <input class="form-check-input select-all table-select" type="checkbox">
+                                                        </td>
+                                                        <td data-name="Recipients">RECIPIENTS</td>
+                                                        <td data-name="Email Address">EMAIL ADDRESS</td>
+                                                        <td data-name="Balance">BALANCE</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php if(count($withoutEmail) > 0) : ?>
+                                                    <?php foreach($withoutEmail as $cust) : ?>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="table-row-icon table-checkbox">
+                                                                <input class="form-check-input select-one table-select" type="checkbox" name="missing_email_customer[]" value="<?=$cust['id']?>">
+                                                            </div>
+                                                        </td>
+                                                        <td><?=$cust['name']?></td>
+                                                        <td><input type="email" name="no_email[<?=$cust["id"]?>]" class="form-control nsm-field customer-email" value="<?=$cust['email']?>"></td>
+                                                        <td><?=str_replace('$-', '-$', '$'.number_format(floatval($cust['balance']), 2, '.', ','))?></td>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                    <?php else : ?>
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <div class="nsm-empty">
+                                                                <span>No customers found for the applied filters.</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <?php endif; ?>
+                                                </tbody>
+                                            </table>
                                         </div>
 
-                                        <div class="col-md-12">
-                                            <ul class="nav nav-tabs" id="recipientsTab" role="tablist">
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="missing-email-tab" data-toggle="tab" href="#missing-email" role="tab" aria-controls="missing-email" aria-selected="true">Missing email address (<span id="without-email-count"><?php echo count($withoutEmail); ?></span>)</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" id="statements-avail-tab" data-toggle="tab" href="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="true">Statements available (<span id="statements-count"><?php echo count($customers); ?></span>)</a>
-                                                </li>
-                                            </ul>
-
-                                            <div class="tab-content mt-3" id="myTabContent">
-                                                <div class="tab-pane fade" id="missing-email" role="tabpanel" aria-labelledby="missing-email-tab">
-                                                    <table class="table table-bordered table-hover" id="missing-email-table">
-                                                        <thead>
-                                                            <th>
-                                                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                                    <input class="m-auto" type="checkbox" name="select_all_missing" value="1" checked>
-                                                                </div>
-                                                            </th>
-                                                            <th>RECIPIENTS</th>
-                                                            <th>EMAIL ADDRESS</th>
-                                                            <th class="text-right">BALANCE</th>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php if(count($withoutEmail) > 0) :
-                                                            foreach($withoutEmail as $cust) : ?>
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                                            <input class="m-auto select-customer" type="checkbox" name="missing_email_customer[]" value="<?php echo $cust['id']; ?>" checked>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td><?php echo $cust['name']; ?></td>
-                                                                    <td><input type="email" name="no_email[<?php echo $cust["id"]; ?>]" class="form-control customer-email" value="<?php echo $cust['email']; ?>"></td>
-                                                                    <td class="text-right">$<?php echo $cust['balance']; ?></td>
-                                                                </tr>
-                                                            <?php endforeach;
-                                                            endif; ?>
-                                                        </tbody>
-                                                    </table>
-                                                    
-                                                    <?php if(count($withoutEmail) === 0) : ?>
-                                                    <div class="no-results text-center p-4">
-                                                        No customers found for the applied filters.
-                                                    </div>
-                                                    <?php endif?>
-                                                </div>
-                                                <div class="tab-pane fade show active" id="statements-avail" role="tabpanel" aria-labelledby="statements-avail-tab">
-                                                    <table class="table table-bordered table-hover" id="statements-table">
-                                                        <thead>
-                                                            <th>
-                                                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                                    <input class="m-auto" type="checkbox" name="select_all" value="1" checked>
-                                                                </div>
-                                                            </th>
-                                                            <th>RECIPIENTS</th>
-                                                            <th>EMAIL ADDRESS</th>
-                                                            <th class="text-right">BALANCE</th>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php if(count($customers) > 0) :
-                                                            foreach($customers as $customer) : ?>
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                                            <input class="m-auto select-customer" type="checkbox" name="customer[]" value="<?php echo $customer['id']; ?>" checked>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td><?php echo $customer['name']; ?></td>
-                                                                    <td><input type="email" name="email[<?php echo $customer["id"]; ?>]" class="form-control customer-email" value="<?php echo $customer['email']; ?>"></td>
-                                                                    <td class="text-right">$<?php echo $customer['balance']; ?></td>
-                                                                </tr>
-                                                            <?php endforeach;
-                                                            endif; ?>
-                                                        </tbody>
-                                                    </table>
-
-                                                    <?php if(count($customers) === 0) : ?>
-                                                    <div class="no-results text-center p-4">
-                                                        No customers found for the applied filters.
-                                                    </div>
-                                                    <?php endif?>
-                                                </div>
-                                            </div>
+                                        <div class="tab-pane fade <?=count($withoutEmail) < 1 ? 'show active' : ''?>" id="statements-avail" role="tabpanel" aria-labelledby="statements-avail-tab">
+                                            <table class="nsm-table" id="statements-table">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="table-icon text-center">
+                                                            <input class="form-check-input select-all table-select" type="checkbox">
+                                                        </td>
+                                                        <td data-name="Recipients">RECIPIENTS</td>
+                                                        <td data-name="Email Address">EMAIL ADDRESS</td>
+                                                        <td data-name="Balance">BALANCE</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php if(count($customers) > 0) : ?>
+                                                    <?php foreach($customer as $customer) : ?>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="table-row-icon table-checkbox">
+                                                                <input class="form-check-input select-one table-select" type="checkbox" name="customer[]" value="<?=$customer['id']?>">
+                                                            </div>
+                                                        </td>
+                                                        <td><?=$customer['name']?></td>
+                                                        <td><input type="email" name="email[<?=$customer["id"]?>]" class="form-control nsm-field customer-email" value="<?$customer['email']?>"></td>
+                                                        <td><?=str_replace('$-', '-$', '$'.number_format(floatval($customer['balance']), 2, '.', ','))?></td>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                    <?php else : ?>
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <div class="nsm-empty">
+                                                                <span>No customers found for the applied filters.</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <?php endif; ?>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -164,33 +158,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-secondary">
+                <div class="modal-footer">
                     <div class="row w-100">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
                         </div>
                         <div class="col-md-4">
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" onclick="viewPrint(2, 'statement-summary')" class="text-white">Print or preview</a></span>
+                                    <span><a href="#" onclick="viewPrint(2, 'statement-summary')" class="text-dark text-decoration-none">Print or preview</a></span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
-                            <div class="btn-group dropup float-right ml-2">
-                                <button type="button" class="btn btn-success" id="save-and-send">
+                            <div class="btn-group float-end" role="group">
+                                <button type="button" class="nsm-button success" id="save-and-send">
                                     Save and send
                                 </button>
-                                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-fw bx-chevron-up text-white"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-secondary btn-rounded border float-right">Save</button>
+                            <button type="submit" class="nsm-button float-end" id="save">Save</button>
                         </div>
                     </div>
                 </div>

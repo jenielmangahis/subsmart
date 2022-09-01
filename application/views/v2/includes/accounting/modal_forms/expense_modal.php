@@ -130,7 +130,7 @@
                                             AMOUNT
                                         <?php endif; ?>
                                     </h6>
-                                    <h2 class="mb-2">
+                                    <h2>
                                         <?php if(isset($expense)) : ?>
                                             <?php if($expense->status === "4") : ?>
                                             VOID

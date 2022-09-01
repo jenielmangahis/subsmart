@@ -140,7 +140,7 @@
                                         AMOUNT
                                         <?php endif; ?>
                                     </h6>
-                                    <h2 class="mb-2">
+                                    <h2>
                                         <?php if(isset($check)) : ?>
                                             <?php if($check->status === "4") : ?>
                                                 VOID
