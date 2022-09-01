@@ -1003,6 +1003,8 @@ $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 $route['users/export_list'] = 'Users/user_export';
 $route['users/_delete_user'] = 'Users/ajax_delete_user';
 $route['user/_admin_switch'] = 'Users/ajax_admin_switch'; //Switch to admin
+$route['user/_load_edit_adt_portal_login_details'] = 'Users/ajax_load_edit_adt_portal_login_details';
+$route['user/_update_adt_portal_login_details'] = 'Users/ajax_update_adt_portal_login_details';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
@@ -1379,3 +1381,6 @@ $route['plaid_accounts'] = 'PlaidAccount/list';
 $route['plaid_account/_delete_bank_account'] = 'PlaidAccount/ajax_delete_bank_account';
 $route['plaid_account/_bank_account_transactions'] = 'PlaidAccount/ajax_bank_account_transactions';
 $route['plaid_account/_bank_account_recurring_transactions'] = 'PlaidAccount/ajax_bank_account_recurring_transactions';
+
+//ADT Portal
+$route['user/_loggedin_adt_sales_portal'] = 'Users/ajax_loggedin_adt_sales_portal';

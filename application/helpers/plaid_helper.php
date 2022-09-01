@@ -326,3 +326,85 @@ function institutionGetById($institution_id, $client_id, $client_secret){
 
     return $data;
 }
+
+/*Transfer authorization token create*/
+function transferAuthorizationCreate(){
+    $post = [
+        'access_token' => $access_token,
+        'account_id' => $account_id,
+        'type' => $type,
+        'network' => $network,
+        'amount' => $amount,
+        'ach_class' => $ach_class,
+        'user' => [
+            'legal_name' => $legal_name,
+            'email_address' => $email_address,
+            'phone_number' => $phone_number,
+            'address' => [
+                'street' => $street,
+                'city' => $city,
+                'region' => $region,
+                'postal_code' => $postal_code,
+                'country' => $country
+            ]
+        ],
+        'device' => [
+            'ip_address' => $ip_address,
+            'user_agent' => $user_agent
+        ]
+    ];
+
+    $url = PLAID_API_URL . '/transfer/authorization/create';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+function transferCreate($access_token, $authorization_id, $account_id, $amount, $description){
+    $post = [
+        'access_token' => $access_token,
+        'authorization_id' => $authorization_id,
+        'account_id' => $account_id,
+        'amount' => $amount,
+        'description' => $description
+    ];
+
+    $url = PLAID_API_URL . '/transfer/create';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}
+
+function transferGet($client_id, $client_secret, $transfer_id){
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'transfer_id' => $transfer_id
+    ];
+
+    $url = PLAID_API_URL . '/transfer/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}

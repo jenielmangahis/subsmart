@@ -153,6 +153,7 @@ class Login extends CI_Controller
                     $this->session->set_userdata('deactivated_modules', $deactivated_modules);
                     $this->session->set_userdata('userAccessModules', $access_modules);
                     $this->session->set_userdata('is_plan_active', $client->is_plan_active);
+                    $this->session->set_userdata('client_industry', $client->industry_type_id);
                 }
             }
         } elseif ($attempt == 'invalid_password') {

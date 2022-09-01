@@ -502,6 +502,13 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-calendar-event'></i> Upgrades
                             </a>
                         </li>
+                        <?php if (logged('user_type') == 7 && isSolarCompany() == 1 ) { ?>
+                            <li class="btn-adt-sales-portal">
+                                <a href="javascript:void(0);">
+                                    <i class='bx bx-user-pin' ></i> ADT Sales Portal                                    
+                                </a>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </li>
             </ul>

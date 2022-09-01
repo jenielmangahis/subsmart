@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Clients_model extends MY_Model
 {
     public $table = 'clients';
+    public $solar_industry_id = 28;
    
     public function getAll($filters=array())
     {
@@ -45,7 +46,7 @@ class Clients_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('company_id');
+        //$user_id = logged('company_id');
 
         $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name');
         $this->db->from($this->table);
@@ -175,6 +176,10 @@ class Clients_model extends MY_Model
         $this->db->where('is_auto_renew', 0);
         $this->db->where('next_billing_date <=', $date);
         $this->db->update();
+    }
+
+    public function solarIndustryId(){
+        return $this->solar_industry_id;
     }
 }
 

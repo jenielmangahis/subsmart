@@ -392,6 +392,30 @@
             });
         });
         <?php } ?>
+
+        <?php if( logged('user_type') == 7 ){ ?>
+        $(document).on('click', '.btn-adt-sales-portal', function(){
+            $.ajax({
+                url: '<?php echo base_url(); ?>user/_loggedin_adt_sales_portal',
+                dataType: 'json',
+                success: function (e) {
+                    if( e.is_valid == 1 ){
+                        //var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?portal_username='+e.portal_username;
+                        var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?token='+e.token;
+                        window.open(portal_url, "_blank");
+                    }else{
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Error!',
+                          confirmButtonColor: '#32243d',
+                          html: e.msg
+                        });
+                    }
+                    
+                }
+            });
+        });
+        <?php } ?>
     </script>
 
     <!-- Added footer assets -->
