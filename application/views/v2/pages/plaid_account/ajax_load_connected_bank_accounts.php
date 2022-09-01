@@ -1,5 +1,5 @@
 <?php if($is_valid == 1){ ?>
-    <?php foreach($plaidAccounts as $pa){ ?>
+    <?php foreach($plaidBankAccounts as $pa){ ?>
     <div class="widget-item">
         <div class="nsm-list-icon">
             <i class='bx bx-building-house'></i>

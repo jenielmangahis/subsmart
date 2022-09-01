@@ -400,7 +400,9 @@
                 dataType: 'json',
                 success: function (e) {
                     if( e.is_valid == 1 ){
-                        location.href = 'http://portal.urpowerpro.com/api/v1/user/login?portal_username='+e.portal_username;
+                        //var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?portal_username='+e.portal_username;
+                        var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?token='+e.token;
+                        window.open(portal_url, "_blank");
                     }else{
                         Swal.fire({
                           icon: 'error',

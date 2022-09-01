@@ -273,7 +273,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-3">
+                    <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
@@ -299,7 +299,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row g-3 mt-3">
                     <div class="col-12">

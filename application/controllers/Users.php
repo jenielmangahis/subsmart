@@ -2320,6 +2320,7 @@ class Users extends MY_Controller
 		$is_valid = '';
 		$msg = 'Invalid username / password';
 		$portal_username = '';
+		$token = '';
 
 		$uid = logged('id');
 		$userPortalAccount = $this->UserPortalAccount_model->getByUserId($uid);
@@ -2342,10 +2343,11 @@ class Users extends MY_Controller
 	        if( $data->is_success == 1 ){
 	        	$is_valid = 1;
 	        	$portal_username = $data->portal_username;
+	        	$token = $data->token;
 	        }
 		}
 
-		$json = ['is_valid' => $is_valid, 'msg' => $msg, 'portal_username' => $portal_username];
+		$json = ['is_valid' => $is_valid, 'msg' => $msg, 'portal_username' => $portal_username, 'token' => $token];
 		echo json_encode($json);
 		exit;	
 		
