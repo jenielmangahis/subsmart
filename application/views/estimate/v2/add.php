@@ -1012,7 +1012,6 @@ echo put_header_assets();
             .empty() //empty select
             .append($("<option/>") //add option tag in select
                 .val(customer_id) //set value for option to post it
-
             .val(customer_id) //select option of select2
             .trigger("change"); //apply to select2*/
     });

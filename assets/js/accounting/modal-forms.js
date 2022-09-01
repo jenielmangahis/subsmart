@@ -1189,9 +1189,14 @@ $(function() {
         $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(4)').html(parseFloat(credit).toFixed(2));
     });
 
+    $(document).on('change', '#statementModal #startDate, #statementModal #endDate', function() {
+        $(this).parent().parent().parent().append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
+        $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
+    });
+
     $(document).on('change', 'div#statementModal select#statementType, div#statementModal select#customerBalanceStatus', function() {
-        $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
-        $('div#statementModal div.modal-body div.card-body div.row:last-child()').addClass('hide');
+        $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
+        $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
 
         if ($(this).attr('id') === 'statementType') {
             if ($(this).val() === '2') {
@@ -1206,8 +1211,8 @@ $(function() {
 
     $(document).on('change', 'div#statementModal div.modal-body select#statementType', function() {
         if ($(this).val() === '2') {
-            $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').remove();
-            $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').remove();
+            $('div#statementModal #startDate').parent().parent().remove();
+            $('div#statementModal #endDate').parent().parent().remove();
         } else {
             var today = new Date();
             var todayDate = String(today.getDate()).padStart(2, '0');
@@ -1220,29 +1225,33 @@ $(function() {
             var startDateMonth = String(startDate.getMonth() + 1).padStart(2, '0');
             startDate = startDateMonth + '/' + startDateDay + '/' + startDate.getFullYear();
 
-            if ($('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').length === 0) {
-                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2)').html('<div class="form-group"></div>');
-                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').append('<label for="startDate">Start Date</label>');
-                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="${startDate}"/>`);
+            if ($('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:nth-child(2)').length === 0) {
+                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append('<div class="col-12 col-md-2 grid-mb"></div>')
+                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:last-child').append('<label for="startDate">Start Date</label>');
+                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:last-child').append(`<div class="nsm-field-group calendar"><input type="text" class="form-control nsm-field date" name="start_date" id="startDate" value="${startDate}"/></div>`);
 
                 $(`#statementModal input#startDate`).datepicker({
-                    uiLibrary: 'bootstrap'
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
                 });
             }
 
-            if ($('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').length === 0) {
-                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3)').html('<div class="form-group"></div>');
-                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').append('<label for="endDate">End Date</label>');
-                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="${today}"/>`);
+            if ($('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:nth-child(3)').length === 0) {
+                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append('<div class="col-12 col-md-2 grid-mb"></div>')
+                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div.col-12:last-child').append('<label for="endDate">End Date</label>');
+                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div.col-12:last-child').append(`<div class="nsm-field-group calendar"><input type="text" class="form-control nsm-field date" name="end_date" id="endDate" value="${today}"/></div>`);
 
                 $(`#statementModal input#endDate`).datepicker({
-                    uiLibrary: 'bootstrap'
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
                 });
             }
         }
     });
 
-    $(document).on('click', 'div#statementModal div.modal-body div.card-body button.apply-button', function(e) {
+    $(document).on('click', 'div#statementModal button#apply-button', function(e) {
         e.preventDefault();
 
         var statementType = $('div#statementModal select#statementType').val();
@@ -1330,7 +1339,7 @@ $(function() {
                     $('div#statementModal table#statements-table').parent().append(noRecordMessage);
                 }
 
-                $('div#statementModal div.modal-body button.apply-button').addClass('hide');
+                $('div#statementModal div.modal-body button#apply-button').addClass('hide');
                 $('div#statementModal div.modal-body div.row:last-child()').removeClass('hide');
             }
         });
@@ -1835,16 +1844,20 @@ $(function() {
 
     $(document).on('change', '#inventory-adjustments-table select[name="product[]"]', function() {
         var input = $(this);
+        var row = $(this).parent().parent();
 
         if(input.val() !== 'add-new') {
             $.get(`/accounting/get-item-details/${input.val()}`, function(res) {
                 var result = JSON.parse(res);
     
-                input.parent().next().html(result.item.description);
+                row.children(':nth-child(3)').html(result.item.description);
     
-                input.parent().next().next().children('select').html('<option value="" disabled selected>&nbsp;</option>');
+                row.children(':nth-child(4)').children('select').html('<option value="" disabled selected>&nbsp;</option>');
+                row.children(':nth-child(5)').html('');
+                row.children(':nth-child(6)').children('input').val('');
+                row.children(':nth-child(7)').children('input').val('');
                 for (i in result.locations) {
-                    input.parent().next().next().children('select').append(`<option value="${result.locations[i].id}" data-quantity="${result.locations[i].qty}">${result.locations[i].name}</option>`);
+                    row.children(':nth-child(4)').children('select').append(`<option value="${result.locations[i].id}" data-quantity="${result.locations[i].qty}">${result.locations[i].name}</option>`);
                 }
             });
         }
@@ -8890,11 +8903,6 @@ const clearTableLines = (e) => {
     }
 }
 
-const showApplyButton = () => {
-    $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
-    $('div#statementModal div.modal-body div.card-body div.row:last-child()').addClass('hide');
-}
-
 const submitModalForm = (event, el) => {
     event.preventDefault();
 
@@ -11567,7 +11575,7 @@ const viewTransaction = (el, e) => {
                 rowCount = $('#inventoryModal table#inventory-adjustments-table tbody tr').length;
 
                 $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child()').html(blankRow);
-                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child() td:nth-child(2)').html(1);
+                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child() td:first-child').html(1);
 
                 initModalFields('inventoryModal', data);
 
