@@ -164,43 +164,58 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['dropdown']['weeks'] = $weeks;
                 break;
                 case 'statement_modal':
+                    $customers = $this->accounting_customers_model->getAllByCompany();
+
                     $data = [
                         'cust_bal_status' => 'open',
                         'company_id' => logged('company_id'),
                         'start_date' => date('Y-m-d', strtotime('-1 months')),
                         'end_date' => date('Y-m-d')
                     ];
-                    $customers = $this->accounting_invoices_model->getStatementInvoices($data);
 
-                    $display = [];
-                    foreach ($customers as $customer) {
-                        $index = array_search($customer->customer_id, array_column($display, 'id'));
-                        if ($index === false) {
-                            $display[] = [
-                                'id' => $customer->customer_id,
-                                'name' => $customer->first_name . ' ' . $customer->last_name,
+                    $rows = [];
+                    foreach($customers as $customer) {
+                        $data['customer_id'] = $customer->prof_id;
+                        $invoices = $this->accounting_invoices_model->getStatementInvoices($data);
+                        $creditMemos = $this->accounting_credit_memo_model->get_customer_credit_memos($data);
+
+                        if(count($invoices) > 0) {
+                            $invoiceTotal = array_sum(array_map(function($invoice) {
+                                return floatval($invoice->balance);
+                            }, $invoices));
+
+                            $creditMemosTotal = array_sum(array_map(function($memo) {
+                                return floatval($memo->balance);
+                            }, $creditMemos));
+
+                            $name = $customer->last_name.' '.$customer->first_name;
+                            $name = str_replace(' ', '', $name);
+                            $name = $name === '' ? $customer->business_name : $customer->last_name.', '.$customer->first_name;
+
+                            $rows[] = [
+                                'id' => $customer->prof_id,
+                                'name' => $name,
                                 'email' => $customer->email,
-                                'balance' => ($customer->status === '1') ? number_format($customer->amount, 2, '.', ',') : 0.00
+                                'balance' => floatval($invoiceTotal) - floatval($creditMemosTotal)
                             ];
-                        } else {
-                            if ($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
-                                $balance = (int)$display[$index]['balance'] + $customer->amount;
-                                $display[$index]['balance'] = number_format($balance, 2, '.', ',');
-                            }
                         }
                     }
 
+                    usort($rows, function($a, $b) {
+                        return strcmp($a['name'], $b['name']);
+                    });
+
                     $totalBalance = array_sum(array_map(function ($item) {
                         return $item['balance'];
-                    }, $display));
+                    }, $rows));
 
-                    $withoutEmail = array_filter($display, function ($value, $key) {
-                        return $value['email'] === '';
+                    $withoutEmail = array_filter($rows, function ($value, $key) {
+                        return $value['email'] === '' || $value['email'] === null;
                     }, ARRAY_FILTER_USE_BOTH);
 
                     $this->page_data['withoutEmail'] = $withoutEmail;
                     $this->page_data['total'] = number_format($totalBalance, 2, '.', ',');
-                    $this->page_data['customers'] = $display;
+                    $this->page_data['customers'] = $rows;
                 break;
                 case 'expense_modal':
                     $this->page_data['balance'] = '$0.00';
@@ -1368,51 +1383,58 @@ class Accounting_modals extends MY_Controller
         $input = $this->input->post();
         $company_id = logged('company_id');
 
+        $customers = $this->accounting_customers_model->getAllByCompany();
+
         $data = [
             'cust_bal_status' => $input['cust_bal_status'],
-            'company_id' => $company_id,
+            'company_id' => logged('company_id'),
             'start_date' => ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['start_date'])),
-            'end_date' => ($input['statement_type'] === '2') ? date('Y-m-d') : date('Y-m-d', strtotime($input['end_date']))
+            'end_date' => ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['start_date']))
         ];
 
-        if ($input['statement_type'] === '1' || $input['statement_type'] === '2') {
-            $customers = $this->accounting_invoices_model->getStatementInvoices($data);
-        } else {
-            $customers = $this->accounting_invoices_model->getTransactionInvoices($data);
-        }
-
-        $display = [];
-        foreach ($customers as $customer) {
-            $index = array_search($customer->customer_id, array_column($display, 'id'));
-            if ($index === false) {
-                $balance = ($customer->status === '1') ? floatval(str_replace(',', '', $customer->amount)) : 0.00;
-                $display[] = [
-                    'id' => $customer->customer_id,
-                    'name' => $customer->first_name . ' ' . $customer->last_name,
-                    'email' => $customer->email,
-                    'balance' => number_format($balance, 2, '.', ',')
-                ];
+        $rows = [];
+        foreach($customers as $customer) {
+            $data['customer_id'] = $customer->prof_id;
+            if ($input['statement_type'] === '1' || $input['statement_type'] === '2') {
+                $invoices = $this->accounting_invoices_model->getStatementInvoices($data);
+                $creditMemos = $this->accounting_credit_memo_model->get_customer_credit_memos($data);
             } else {
-                if ($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
-                    $balance = floatval(str_replace(',', '', $display[$index]['balance'])) + floatval(str_replace(',', '', $customer->amount));
-                    $display[$index]['balance'] = number_format($balance, 2, '.', ',');
-                }
+                $invoices = $this->accounting_invoices_model->getTransactionInvoices($data);
+                $creditMemos = [];
+            }
+
+            if(count($invoices) > 0) {
+                $invoiceTotal = array_sum(array_map(function($invoice) {
+                    return floatval($invoice->balance);
+                }, $invoices));
+
+                $creditMemosTotal = array_sum(array_map(function($memo) {
+                    return floatval($memo->balance);
+                }, $creditMemos));
+
+                $name = $customer->last_name.' '.$customer->first_name;
+                $name = str_replace(' ', '', $name);
+                $name = $name === '' ? $customer->business_name : $customer->last_name.', '.$customer->first_name;
+
+                $rows[] = [
+                    'id' => $customer->prof_id,
+                    'name' => $name,
+                    'email' => $customer->email,
+                    'balance' => floatval($invoiceTotal) - floatval($creditMemosTotal)
+                ];
             }
         }
 
         $totalBalance = array_sum(array_map(function ($item) {
             return $item['balance'];
-        }, $display));
+        }, $rows));
 
-        $withoutEmail = [];
-        foreach ($display as $cust) {
-            if ($cust['email'] === '') {
-                $withoutEmail[] = $cust;
-            }
-        }
+        $withoutEmail = array_filter($rows, function ($value, $key) {
+            return $value['email'] === '' || $value['email'] === null;
+        }, ARRAY_FILTER_USE_BOTH);
 
         $result = [
-            'customers' => $display,
+            'customers' => $rows,
             'total' => number_format(floatval(str_replace(',', '', $totalBalance)), 2, '.', ','),
             'withoutEmail' => $withoutEmail
         ];

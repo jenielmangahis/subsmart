@@ -1190,13 +1190,17 @@ $(function() {
     });
 
     $(document).on('change', '#statementModal #startDate, #statementModal #endDate', function() {
-        $(this).parent().parent().parent().append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
-        $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
+        if($('#statementModal #apply-button').length < 1) {
+            $(this).parent().parent().parent().append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
+            $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
+        }
     });
 
-    $(document).on('change', 'div#statementModal select#statementType, div#statementModal select#customerBalanceStatus', function() {
-        $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
-        $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
+    $(document).on('change', 'div#statementModal select#statementType, div#statementModal select#customerBalanceStatus, div#statementModal input#statementDate', function() {
+        if($('#statementModal #apply-button').length < 1) {
+            $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
+            $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
+        }
 
         if ($(this).attr('id') === 'statementType') {
             if ($(this).val() === '2') {
@@ -1225,10 +1229,15 @@ $(function() {
             var startDateMonth = String(startDate.getMonth() + 1).padStart(2, '0');
             startDate = startDateMonth + '/' + startDateDay + '/' + startDate.getFullYear();
 
-            if ($('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:nth-child(2)').length === 0) {
-                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append('<div class="col-12 col-md-2 grid-mb"></div>')
-                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:last-child').append('<label for="startDate">Start Date</label>');
-                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:last-child').append(`<div class="nsm-field-group calendar"><input type="text" class="form-control nsm-field date" name="start_date" id="startDate" value="${startDate}"/></div>`);
+            if ($('div#statementModal #startDate').length === 0) {
+                var el = $('#statementModal #customerBalanceStatus').parent();
+                var insert = `<div class="col-12 col-md-2 grid-mb">
+                    <label for="startDate">Start Date</label>
+                    <div class="nsm-field-group calendar">
+                        <input type="text" class="form-control nsm-field date" name="start_date" id="startDate" value="${startDate}"/>
+                    </div>
+                </div>`;
+                $(insert).insertAfter(el);
 
                 $(`#statementModal input#startDate`).datepicker({
                     format: 'mm/dd/yyyy',
@@ -1237,10 +1246,15 @@ $(function() {
                 });
             }
 
-            if ($('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div:nth-child(3)').length === 0) {
-                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append('<div class="col-12 col-md-2 grid-mb"></div>')
-                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div.col-12:last-child').append('<label for="endDate">End Date</label>');
-                $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').find('div.col-12:last-child').append(`<div class="nsm-field-group calendar"><input type="text" class="form-control nsm-field date" name="end_date" id="endDate" value="${today}"/></div>`);
+            if ($('div#statementModal #endDate').length === 0) {
+                var el = $('#statementModal #customerBalanceStatus').parent().next();
+                var insert = `<div class="col-12 col-md-2 grid-mb">
+                    <label for="endDate">End Date</label>
+                    <div class="nsm-field-group calendar">
+                        <input type="text" class="form-control nsm-field date" name="end_date" id="endDate" value="${today}"/>
+                    </div>
+                </div>`;
+                $(insert).insertAfter(el);
 
                 $(`#statementModal input#endDate`).datepicker({
                     format: 'mm/dd/yyyy',
@@ -1272,7 +1286,7 @@ $(function() {
         }
 
         $.ajax({
-            url: '/accounting/get-customers',
+            url: '/accounting/get-statement-customers',
             data: data,
             type: 'post',
             processData: false,
@@ -1282,65 +1296,66 @@ $(function() {
                 var customers = res.customers;
                 var withoutEmail = res.withoutEmail;
 
-                $('div#statementModal span#total-customers').html(customers.length);
-                $('div#statementModal span#total-amount').html(`$${res.total}`);
-                $('div#statementModal span#without-email-count').html(withoutEmail.length);
-                $('div#statementModal span#statements-count').html(customers.length);
-                $('div#statementModal table#statements-table tbody').html('');
-                $('div#statementModal table#missing-email-table tbody').html('');
+                // var total = '$'+res.total;
+                // $('div#statementModal span#total-customers').html(customers.length);
+                // $('div#statementModal span#total-amount').html(`${total.replace('$-', '-$')}`);
+                // $('div#statementModal span#without-email-count').html(withoutEmail.length);
+                // $('div#statementModal span#statements-count').html(customers.length);
+                // $('div#statementModal table#statements-table tbody').html('');
+                // $('div#statementModal table#missing-email-table tbody').html('');
 
-                if (withoutEmail.length > 0) {
-                    for (i in withoutEmail) {
-                        $('div#statementModal table#missing-email-table tbody').append(`<tr>
-                            <td>
-                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                    <input class="m-auto" type="checkbox" name="missing_email_customer[]" value="${withoutEmail[i]['id']}" checked>
-                                </div>
-                            </td>
-                            <td>${withoutEmail[i]['name']}</td>
-                            <td><input type="email" name="no_email[${withoutEmail[i]['id']}]" class="form-control customer-email" value="${withoutEmail[i]['email']}"></td>
-                            <td class="text-right">$${withoutEmail[i]['balance']}</td>
-                        </tr>`);
-                    }
+                // if (withoutEmail.length > 0) {
+                //     for (i in withoutEmail) {
+                //         $('div#statementModal table#missing-email-table tbody').append(`<tr>
+                //             <td>
+                //                 <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                //                     <input class="m-auto" type="checkbox" name="missing_email_customer[]" value="${withoutEmail[i]['id']}" checked>
+                //                 </div>
+                //             </td>
+                //             <td>${withoutEmail[i]['name']}</td>
+                //             <td><input type="email" name="no_email[${withoutEmail[i]['id']}]" class="form-control customer-email" value="${withoutEmail[i]['email']}"></td>
+                //             <td class="text-right">$${withoutEmail[i]['balance']}</td>
+                //         </tr>`);
+                //     }
 
-                    if ($('div#statementModal div#missing-email div.no-results').length > 0) {
-                        $('div#statementModal div#missing-email div.no-results').each(function() {
-                            $(this).remove();
-                        });
-                    }
-                }
+                //     if ($('div#statementModal div#missing-email div.no-results').length > 0) {
+                //         $('div#statementModal div#missing-email div.no-results').each(function() {
+                //             $(this).remove();
+                //         });
+                //     }
+                // }
 
-                if (customers.length > 0) {
-                    for (i in customers) {
-                        $('div#statementModal table#statements-table tbody').append(`<tr>
-                            <td>
-                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                    <input class="m-auto" type="checkbox" name="customer[]" value="${customers[i]['id']}" checked>
-                                </div>
-                            </td>
-                            <td>${customers[i]['name']}</td>
-                            <td><input type="email" name="email[${customers[i]['id']}]" class="form-control customer-email" value="${customers[i]['email']}"></td>
-                            <td class="text-right">$${customers[i]['balance']}</td>
-                        </tr>`);
-                    }
+                // if (customers.length > 0) {
+                //     for (i in customers) {
+                //         $('div#statementModal table#statements-table tbody').append(`<tr>
+                //             <td>
+                //                 <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                //                     <input class="m-auto" type="checkbox" name="customer[]" value="${customers[i]['id']}" checked>
+                //                 </div>
+                //             </td>
+                //             <td>${customers[i]['name']}</td>
+                //             <td><input type="email" name="email[${customers[i]['id']}]" class="form-control customer-email" value="${customers[i]['email']}"></td>
+                //             <td class="text-right">$${customers[i]['balance']}</td>
+                //         </tr>`);
+                //     }
 
-                    if ($('div#statementModal div#statements-avail div.no-results').length > 0) {
-                        $('div#statementModal div#statements-avail div.no-results').each(function() {
-                            $(this).remove();
-                        });
-                    }
-                }
+                //     if ($('div#statementModal div#statements-avail div.no-results').length > 0) {
+                //         $('div#statementModal div#statements-avail div.no-results').each(function() {
+                //             $(this).remove();
+                //         });
+                //     }
+                // }
 
-                if (withoutEmail.length === 0 && $('div#statementModal div#missing-email div.no-results').length === 0) {
-                    $('div#statementModal table#missing-email-table').parent().append(noRecordMessage);
-                }
+                // if (withoutEmail.length === 0 && $('div#statementModal div#missing-email div.no-results').length === 0) {
+                //     $('div#statementModal table#missing-email-table').parent().append(noRecordMessage);
+                // }
 
-                if (customers.length === 0 && $('div#statementModal div#statements-avail div.no-results').length === 0) {
-                    $('div#statementModal table#statements-table').parent().append(noRecordMessage);
-                }
+                // if (customers.length === 0 && $('div#statementModal div#statements-avail div.no-results').length === 0) {
+                //     $('div#statementModal table#statements-table').parent().append(noRecordMessage);
+                // }
 
-                $('div#statementModal div.modal-body button#apply-button').addClass('hide');
-                $('div#statementModal div.modal-body div.row:last-child()').removeClass('hide');
+                // $('div#statementModal div.modal-body button#apply-button').addClass('hide');
+                // $('div#statementModal div.modal-body div.row:last-child()').removeClass('hide');
             }
         });
     });

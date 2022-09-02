@@ -4,7 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
-
 <!-- Script for autosaving form -->
 <script src="<?= base_url("assets/js/estimate/autosave-options-update.js") ?>"></script>
 
@@ -329,7 +328,7 @@ echo put_header_assets();
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <br><br><a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
+                            <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal" data-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -549,7 +548,7 @@ echo put_header_assets();
                                     </tbody>
                                 </table>
                                 <!-- <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
-                                <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                             </div>
                         </div>
 
@@ -661,7 +660,7 @@ echo put_header_assets();
                                     </tbody>
                                 </table>
                                 <!-- <a href="#" id="add_another_option2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
-                                <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list2" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list2" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                             </div>
                         </div>
 
@@ -692,7 +691,7 @@ echo put_header_assets();
                                     </tr>
                                     <tr style="display:none;">
                                         <td>Markup $<span id="span_markup"></td>
-                                        <td><a href="#" data-bs-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
+                                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
                                         <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
                                     </tr>
                                     <tr>
@@ -797,13 +796,13 @@ echo put_header_assets();
         <?php echo form_close(); ?>
 
         <!-- Modal Service Address -->
-        <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade nsm-modal" id="modalServiceAddress" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body"></div>
@@ -816,13 +815,13 @@ echo put_header_assets();
         </div>
 
         <!-- Modal Additional Contact -->
-        <div class="modal fade" id="modalAdditionalContacts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade nsm-modal" id="modalAdditionalContacts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body"></div>
@@ -835,13 +834,13 @@ echo put_header_assets();
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+        <div class="modal fade nsm-modal" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -902,13 +901,13 @@ echo put_header_assets();
         </div>
 
         <!-- Modal New Customer -->
-        <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body pt-0 pl-3 pb-3"></div>
@@ -921,13 +920,13 @@ echo put_header_assets();
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="item_list2" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+        <div class="modal fade nsm-modal" id="item_list2" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -987,13 +986,13 @@ echo put_header_assets();
             </div>
         </div>
 
-        <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade nsm-modal" id="modalAddNewSource" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body">
