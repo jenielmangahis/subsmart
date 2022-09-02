@@ -128,7 +128,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php if(count($customers) > 0) : ?>
-                                                    <?php foreach($customer as $customer) : ?>
+                                                    <?php foreach($customers as $customer) : ?>
                                                     <tr>
                                                         <td>
                                                             <div class="table-row-icon table-checkbox">
@@ -136,7 +136,7 @@
                                                             </div>
                                                         </td>
                                                         <td><?=$customer['name']?></td>
-                                                        <td><input type="email" name="email[<?=$customer["id"]?>]" class="form-control nsm-field customer-email" value="<?$customer['email']?>"></td>
+                                                        <td><input type="email" name="email[<?=$customer["id"]?>]" class="form-control nsm-field customer-email" value="<?=$customer['email']?>"></td>
                                                         <td><?=str_replace('$-', '-$', '$'.number_format(floatval($customer['balance']), 2, '.', ','))?></td>
                                                     </tr>
                                                     <?php endforeach; ?>

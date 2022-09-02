@@ -43,7 +43,7 @@ var linkHandler = Plaid.create({
   clientName: '<?= $client_name; ?>',
   //key: '8a630fc17e537b72fe56911d4a11cb',
   token: '<?= $plaidToken['token']; ?>',
-  product: ['auth','transactions','balance'],
+  product: ['auth','transactions'],
   selectAccount: true,
   onSuccess: function(public_token, metadata) {
     console.log('public_token: ' + public_token);

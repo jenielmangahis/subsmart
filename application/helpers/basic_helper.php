@@ -4906,4 +4906,17 @@ if(!function_exists('set_expense_graph_data')) {
         
         return $mask_string;
     }
+
+    function isSolarCompany(){
+        $CI = &get_instance();
+        $CI->load->model('Clients_model');
+        $industry_type_id = $CI->session->userdata('client_industry');
+
+        $is_solar = 0;
+        if( $industry_type_id == $CI->Clients_model->solarIndustryId() ){
+            $is_solar = 1;
+        }
+
+        return $is_solar;
+    }
 }

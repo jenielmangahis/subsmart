@@ -6,7 +6,7 @@
                     <span class="modal-title content-title">Add Employee</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-x: auto;max-height: 800px;">
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-title">Basic Details</label>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
-                            <label class="content-title">Login Details</label>
+                            <label class="content-title">nSmart App Login Details</label>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Email <small>(Will be use as your username)</small></label>
@@ -57,6 +57,31 @@
                             </div>
                         </div>
                     </div>
+                    <?php if(isSolarCompany() == 1){ ?>
+                    <div class="row gy-3 mb-4">
+                        <div class="col-12">
+                            <label class="content-title">ADT Sales App Login Details</label>
+                        </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Username</label>
+                            <div class="nsm-field-group icon-right">
+                                <input type="text" class="nsm-field form-control" id="portal_username" name="portal_username" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Password</label>
+                            <div class="nsm-field-group show icon-right">
+                                <input type="password" class="nsm-field form-control password-field" id="portal_password" name="portal_password" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Confirm Password</label>
+                            <div class="nsm-field-group show icon-right">
+                                <input type="password" class="nsm-field form-control password-field" id="portal_confirm_password" name="portal_confirm_password" />
+                            </div>
+                        </div>
+                    </div>
+                    <?php } ?>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-title">Other Details</label>
@@ -211,7 +236,7 @@
                     <span class="modal-title content-title">Edit Employee</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body" id="edit_employee_container">
+                <div class="modal-body" id="edit_employee_container" style="overflow-x: auto;max-height: 800px;">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
@@ -253,6 +278,24 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="change_adt_portal_access_modal" tabindex="-1" aria-labelledby="change_password_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="POST" id="change-adt-portal-login">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Set ADT Sales Portal Login</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="adt-portal-access-container"></div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>

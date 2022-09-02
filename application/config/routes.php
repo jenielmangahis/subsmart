@@ -370,7 +370,7 @@ $route['accounting/get-group-tag-form'] = 'accounting_modals/group_job_tag_form'
 $route['accounting/edit-group-tag-form'] = 'accounting_modals/edit_group_tag_form';
 $route['accounting/get-payroll-form/(:any)'] = 'accounting_modals/get_payroll_form/$1';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
-$route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
+$route['accounting/get-statement-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
 $route['accounting/get-payable-bills']['post'] = 'accounting_modals/get_payable_bills';
 $route['accounting/get-products-list-modal'] = 'accounting_modals/products_list_modal';
@@ -1003,6 +1003,8 @@ $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 $route['users/export_list'] = 'Users/user_export';
 $route['users/_delete_user'] = 'Users/ajax_delete_user';
 $route['user/_admin_switch'] = 'Users/ajax_admin_switch'; //Switch to admin
+$route['user/_load_edit_adt_portal_login_details'] = 'Users/ajax_load_edit_adt_portal_login_details';
+$route['user/_update_adt_portal_login_details'] = 'Users/ajax_update_adt_portal_login_details';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
@@ -1379,3 +1381,6 @@ $route['plaid_accounts'] = 'PlaidAccount/list';
 $route['plaid_account/_delete_bank_account'] = 'PlaidAccount/ajax_delete_bank_account';
 $route['plaid_account/_bank_account_transactions'] = 'PlaidAccount/ajax_bank_account_transactions';
 $route['plaid_account/_bank_account_recurring_transactions'] = 'PlaidAccount/ajax_bank_account_recurring_transactions';
+
+//ADT Portal
+$route['user/_loggedin_adt_sales_portal'] = 'Users/ajax_loggedin_adt_sales_portal';

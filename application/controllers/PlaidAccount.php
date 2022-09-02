@@ -25,7 +25,7 @@ class PlaidAccount extends MY_Controller {
         $cid = logged('company_id');
 
         $plaidAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
-        $plaidAccount  = $this->PlaidAccount_model->getByCompanyId($cid);
+        $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
 
         if( $plaidAccount ){
             foreach($plaidAccounts as $pc){            
@@ -51,7 +51,7 @@ class PlaidAccount extends MY_Controller {
             $plaid_handler_open = 1;                     
             $plaid_token        = $this->session->userdata('plaid_token');
 
-            $plaidAccount = $this->PlaidAccount_model->getByCompanyId($companyId);
+            $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
             $client_name  = $plaidAccount->client_name;
         }
         
@@ -76,7 +76,7 @@ class PlaidAccount extends MY_Controller {
         $cid  = logged('company_id');    
         $post = $this->input->post();
 
-        $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
+        $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
         if( $plaidAccount ){
             $plaidToken = linkTokenCreate($plaidAccount->client_id, $plaidAccount->client_secret, $plaidAccount->client_user_id, $plaidAccount->client_name, $post['redirect_url']);
             if( isset($plaidToken['token']) && $plaidToken['token'] != '' ){
@@ -105,7 +105,7 @@ class PlaidAccount extends MY_Controller {
         $post = $this->input->post();
         $cid  = logged('company_id');
         $plaidData = json_decode($post['meta_data']);
-        $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
+        $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
         $accessToken = exchangeToken($plaidAccount->client_id, $plaidAccount->client_secret, $post['public_token']);
         if( $accessToken->access_token != '' ){
             foreach($plaidData->accounts as $account){
@@ -168,11 +168,11 @@ class PlaidAccount extends MY_Controller {
         $is_valid = 1;
         $cid = logged('company_id');
 
-        $plaidAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
-        $plaidAccount  = $this->PlaidAccount_model->getByCompanyId($cid);
+        $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
+        $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
 
         if( $plaidAccount ){
-            foreach($plaidAccounts as $pc){            
+            foreach($plaidBankAccounts as $pc){            
                 try{
                     $balance  = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);  
                     if( !empty($balance->accounts) ){
@@ -189,7 +189,7 @@ class PlaidAccount extends MY_Controller {
         
 
         $this->page_data['is_valid'] = $is_valid;
-        $this->page_data['plaidAccounts'] = $plaidAccounts;
+        $this->page_data['plaidBankAccounts'] = $plaidBankAccounts;
         $this->load->view('v2/pages/plaid_account/ajax_load_connected_bank_accounts', $this->page_data);
     }
 
@@ -233,7 +233,7 @@ class PlaidAccount extends MY_Controller {
 
         $apiPlaidTransactions = array();
         $apiPlaidAccount      = array();
-        $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
+        $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
         $plaidBankAccount = $this->PlaidBankAccount_model->getById($post['pid']);
         if( $plaidAccount && $plaidBankAccount ){            
             $start_date = '2022-01-01';
@@ -265,7 +265,7 @@ class PlaidAccount extends MY_Controller {
         
         $apiPlaidAccount      = array();
         $apiPlaidRecurringTransactions = array();
-        $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
+        $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
         $plaidBankAccount = $this->PlaidBankAccount_model->getById($post['pid']);
         if( $plaidAccount && $plaidBankAccount ){                        
             $apiPlaidAccount  = authGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);

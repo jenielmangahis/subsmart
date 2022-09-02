@@ -69,53 +69,46 @@ class Accounting_invoices_model extends MY_Model
     }
     public function getStatementInvoices($data)
     {
-        $this->db->select('accounting_invoice.*, acs_profile.first_name, acs_profile.last_name, acs_profile.email');
-        $this->db->join('acs_profile', 'accounting_invoice.customer_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_profile.company_id', $data['company_id']);
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('customer_id', $data['customer_id']);
 
         if ($data['cust_bal_status'] === 'open') {
-            $this->db->where('accounting_invoice.status', 1);
-            $this->db->where('accounting_invoice.invoice_date >=', $data['start_date']);
-            $this->db->where('accounting_invoice.invoice_date <=', $data['end_date']);
+            $this->db->where_not_in('status', ['Draft', 'Paid']);
+            $this->db->where('date_issued >=', $data['start_date']);
+            $this->db->where('date_issued <=', $data['end_date']);
 
-            $this->db->or_where('accounting_invoice.status', 1);
-            $this->db->where('acs_profile.company_id', $data['company_id']);
-            $this->db->where('accounting_invoice.due_date <=', $data['end_date']);
+            $this->db->or_where_not_in('status', ['Draft', 'Paid']);
+            $this->db->where('company_id', $data['company_id']);
+            $this->db->where('due_date <=', $data['end_date']);
+            $this->db->where('customer_id', $data['customer_id']);
         } elseif ($data['cust_bal_status'] === 'overdue') {
-            $this->db->where('accounting_invoice.status', 1);
-            $this->db->where('accounting_invoice.due_date <=', $data['end_date']);
+            $this->db->where_not_in('status', ['Draft', 'Paid']);
+            $this->db->where('due_date <=', $data['end_date']);
         }
 
-        $this->db->order_by('acs_profile.first_name', 'asc');
-        $this->db->order_by('acs_profile.last_name', 'asc');
-
-        $query = $this->db->get($this->table);
+        $query = $this->db->get('invoices');
 
         return $query->result();
     }
     public function getTransactionInvoices($data)
     {
-        $this->db->select('accounting_invoice.*, acs_profile.first_name, acs_profile.last_name, acs_profile.email');
-        $this->db->join('acs_profile', 'accounting_invoice.customer_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_profile.company_id', $data['company_id']);
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('customer_id', $data['customer_id']);
 
         if ($data['cust_bal_status'] === 'open') {
-            $this->db->where('accounting_invoice.status', 1);
-            $this->db->where('accounting_invoice.invoice_date >=', $data['start_date']);
-            $this->db->where('accounting_invoice.invoice_date <=', $data['end_date']);
+            $this->db->where_not_in('status', ['Draft', 'Paid']);
+            $this->db->where('date_issued >=', $data['start_date']);
+            $this->db->where('date_issued <=', $data['end_date']);
         } elseif ($data['cust_bal_status'] === 'overdue') {
-            $this->db->where_in('accounting_invoice.status', [1, 2]);
-            $this->db->where('accounting_invoice.invoice_date >=', $data['start_date']);
-            $this->db->where('accounting_invoice.due_date <', $data['end_date']);
+            $this->db->where_not_in('status', ['Draft', 'Paid']);
+            $this->db->where('date_issued >=', $data['start_date']);
+            $this->db->where('due_date <', $data['end_date']);
         } else {
-            $this->db->where('accounting_invoice.invoice_date >=', $data['start_date']);
-            $this->db->where('accounting_invoice.invoice_date <=', $data['end_date']);
+            $this->db->where('date_issued >=', $data['start_date']);
+            $this->db->where('date_issued <=', $data['end_date']);
         }
 
-        $this->db->order_by('acs_profile.first_name', 'asc');
-        $this->db->order_by('acs_profile.last_name', 'asc');
-
-        $query = $this->db->get($this->table);
+        $query = $this->db->get('invoices');
 
         return $query->result();
     }

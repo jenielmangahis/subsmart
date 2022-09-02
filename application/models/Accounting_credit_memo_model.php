@@ -138,4 +138,15 @@ class Accounting_credit_memo_model extends MY_Model {
 		$query = $this->db->get('accounting_customer_transaction_items');
 		return $query->row();
 	}
+
+	public function get_customer_credit_memos($data)
+    {
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('customer_id', $data['customer_id']);
+
+		$this->db->where('credit_memo_date >=', $data['start_date']);
+		$this->db->where('credit_memo_date <=', $data['end_date']);
+        $query = $this->db->get('accounting_credit_memo');
+        return $query->result();
+    }
 }

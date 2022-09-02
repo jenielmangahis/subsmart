@@ -8,7 +8,7 @@
         <table class="table">
             <tr>
                 <td>Account ID</td>
-                <td><?= $account->account_id; ?></td>
+                <td><B<?= $account->account_id; ?></td>
             </tr>
             <tr>
                 <td>Name</td>
