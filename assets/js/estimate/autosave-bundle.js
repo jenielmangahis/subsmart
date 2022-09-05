@@ -16,6 +16,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/estimate/editBundle/${id}`); // prettier-ignore
+          $form.setAttribute("action", `/estimate/updateestimateBundle/${id}`);
           hasChangedUrl = true;
         }
 

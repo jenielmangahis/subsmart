@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/invoice'); ?>
     <!-- page wrapper start -->

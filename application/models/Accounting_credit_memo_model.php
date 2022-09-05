@@ -108,7 +108,7 @@ class Accounting_credit_memo_model extends MY_Model {
         }
 
 		$this->db->where('balance >', 0);
-		$this->db->order_by('credit_memo_date', 'desc');
+		$this->db->order_by('credit_memo_date', 'asc');
 		$this->db->where('status', 1);
 		$query = $this->db->get($this->table);
 		return $query->result();

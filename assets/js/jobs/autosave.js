@@ -30,20 +30,20 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   form.listen();
 });
 
-async function autoSaveForm() {
-  const $form = document.getElementById("jobs_form");
+// async function autoSaveForm() {
+//   const $form = document.getElementById("jobs_form");
 
-  const formdata = new FormData($form);
-  formdata.append("action", "submit");
+//   const formdata = new FormData($form);
+//   formdata.append("action", "submit");
 
-  const response = await fetch("/job/save_job?json=1", {
-    method: "post",
-    body: formdata,
-  });
+//   const response = await fetch("/job/save_job?json=1", {
+//     method: "post",
+//     body: formdata,
+//   });
 
-  if (response.status === 500) {
-    throw new Error("500");
-  }
+//   if (response.status === 500) {
+//     throw new Error("500");
+//   }
 
-  return response.json();
-}
+//   return response.json();
+// }

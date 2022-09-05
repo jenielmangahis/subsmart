@@ -13,6 +13,7 @@ class Dashboard extends Widgets {
         $this->load->model('Users_model', 'user_model');
         $this->load->model('Feeds_model', 'feeds_model');
         $this->load->model('timesheet_model');
+        $this->load->model('AcsProfile_model');
         $this->load->model('users_model');
         $this->load->model('jobs_model');
         $this->load->model('event_model');
@@ -125,6 +126,7 @@ class Dashboard extends Widgets {
         // load necessary model and functions
         $this->load->model('widgets_model');
         $this->load->helper('functions');
+        $this->load->helper('functions_helper');
 
         $user_id = logged('id');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
@@ -171,14 +173,14 @@ class Dashboard extends Widgets {
         $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
         $this->page_data['subs']=$this->event_model->getAllsubs();
         $this->page_data['payment']=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
-        $this->page_data['paymentInvoices']=$this->event_model->getAllPInvoices();
+        //$this->page_data['paymentInvoice']=$this->event_model->getAllPInvoices();
+        $this->page_data['paymentInvoices']=$this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
         $this->page_data['lostAccounts']=$this->event_model->getAccountSituation('cancel_date'); // lost account count, if Cancel Date Office Info is set
         $this->page_data['collectedAccounts']=$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
         $this->page_data['techLeaderboards']=$this->event_model->getTechLeaderboards(); // fetch Technicians and customer they are assigned to
         $this->page_data['salesLeaderboards']=$this->event_model->getSalesLeaderboards(); // fetch Sales Rep and customer they are assigned to
         $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
         $this->page_data['jobsStatus']=$this->event_model->getJobStatusWithCount(); // fetch Sales Rep and customer they are assigned to\
-
 
         $this->page_data['latestJobs']=$this->event_model->getLatestJobs(); // fetch Sales Rep and customer they are assigned to
         $this->page_data['customerStatus']=$this->event_model->getCustomerStatusWithCount(); // fetch Sales Rep and customer they are assigned to
@@ -187,13 +189,30 @@ class Dashboard extends Widgets {
         $this->page_data['jobsDone']= $this->event_model->getAllJobs();
         $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
         $this->page_data['sales']=$this->event_model->getAllSales();
+        $this->page_data['mmr']=$this->AcsProfile_model->getCustomerMMR(logged('company_id'));
+        $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
-
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
             return $widget->wu_is_main == true;
         });
         $this->page_data['status_arr'] = $status_arr;
+
+        $datenow = array();
+            $sales = array();
+            foreach($mmr as $mmrs){
+                if(empty($mmrs->bill_start_date)){
+                    $start_date = getInstalledDate($mmrs->prof_id, 'acs_office');
+                    if(!empty($start_date)){
+                    array_push($datenow, $start_date);}
+                }else{
+                    $start_date = $mmrs->bill_start_date;
+                    array_push($datenow, $start_date);
+                }
+                array_push($sales, $mmrs->mmr);
+            }
+        $salee = implode(', ', $sales);
+        $dt = implode(', ', $datenow);
 
         // fetch open estimates
         $open_estimate_query = array(

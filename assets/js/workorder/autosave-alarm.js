@@ -19,6 +19,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/workorder/editInstallation/${id}`); // prettier-ignore
+          $form.setAttribute("action",`/workorder/updateWorkorderAgreement/${id}`);
           hasChangedUrl = true;
         }
 

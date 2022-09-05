@@ -468,16 +468,17 @@ class Accounting_invoices_model extends MY_Model
             $this->db->where('date_issued <=', $filters['to_date']);
         }
 
-        if($filters['overdue'] === 1) {
+        if($filters['overdue'] === "1") {
             $this->db->where_not_in('status', ['Draft', 'Submitted', 'Approved', 'Declined', 'Paid']);
             $this->db->where('due_date <', date('Y-m-d'));
         } else {
             $this->db->where_not_in('status', ['Draft', 'Submitted', 'Approved', 'Paid']);
         }
 
-        $this->db->where('voided', null);
+        $this->db->where('voided', 0);
+        $this->db->where('view_flag', 0);
 
-        $this->db->order_by('date_issued', 'desc');
+        $this->db->order_by('date_issued', 'asc');
 
         $query = $this->db->get('invoices');
         return $query->result();

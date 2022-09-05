@@ -1532,7 +1532,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
+                                                    <input type="text" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!(+this.value) && Math.abs(+this.value)>= 0 ? Math.abs(+this.value) : null;" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1541,7 +1541,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
+                                                    <input type="text" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1550,7 +1550,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
+                                                    <input type="text" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1962,6 +1962,11 @@ $(".nsm-subtitle").html(function() {
 
         $(".total-price").on("blur", function() {
             getTotalPrice();
+        });
+
+        $(document).on('keyup', '.number', function() {
+        var a = $(this).val();
+        $(this).val(numeral(a).format('0,0[.]00'));
         });
 
         // $(".total-price-click").on("click", function() {

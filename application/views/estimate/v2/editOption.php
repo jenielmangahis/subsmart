@@ -7,8 +7,10 @@ echo put_header_assets();
 <!-- Script for autosaving form -->
 <script src="<?= base_url("assets/js/estimate/autosave-options-update.js") ?>"></script>
 
+
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
 <style>
     .but:hover {
         font-weight: 900;
@@ -328,7 +330,7 @@ echo put_header_assets();
                                 </div>
                             </div>
                             <div class="col-md-3">
-                            <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal" data-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
+                            <br><br><a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -548,7 +550,7 @@ echo put_header_assets();
                                     </tbody>
                                 </table>
                                 <!-- <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
-                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                             </div>
                         </div>
 
@@ -660,7 +662,7 @@ echo put_header_assets();
                                     </tbody>
                                 </table>
                                 <!-- <a href="#" id="add_another_option2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
-                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list2" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list2" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                             </div>
                         </div>
 
@@ -801,13 +803,13 @@ echo put_header_assets();
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
@@ -820,13 +822,13 @@ echo put_header_assets();
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
@@ -839,7 +841,7 @@ echo put_header_assets();
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
@@ -893,7 +895,7 @@ echo put_header_assets();
                     </div>
                     <div class="modal-footer modal-footer-detail">
                         <div class="button-modal-list">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                         </div>
                     </div>
                 </div>
@@ -906,13 +908,13 @@ echo put_header_assets();
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
                     <div class="modal-body pt-0 pl-3 pb-3"></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
@@ -925,7 +927,7 @@ echo put_header_assets();
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
@@ -979,7 +981,7 @@ echo put_header_assets();
                     </div>
                     <div class="modal-footer modal-footer-detail">
                         <div class="button-modal-list">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                         </div>
                     </div>
                 </div>
@@ -991,7 +993,7 @@ echo put_header_assets();
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="bx bx-fw bx-x m-0"></i>
                         </button>
                     </div>
@@ -1005,7 +1007,7 @@ echo put_header_assets();
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary save">Save changes</button>
                     </div>
                 </div>
@@ -1019,7 +1021,7 @@ echo put_header_assets();
 </div>
 
 <?php echo $file_selection; ?>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('v2/includes/footer'); ?>
 <script src="<?php echo $url->assets ?>js/add.js"></script>
 
 <script>

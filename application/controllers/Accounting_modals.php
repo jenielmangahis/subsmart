@@ -1397,11 +1397,10 @@ class Accounting_modals extends MY_Controller
             $data['customer_id'] = $customer->prof_id;
             if ($input['statement_type'] === '1' || $input['statement_type'] === '2') {
                 $invoices = $this->accounting_invoices_model->getStatementInvoices($data);
-                $creditMemos = $this->accounting_credit_memo_model->get_customer_credit_memos($data);
             } else {
                 $invoices = $this->accounting_invoices_model->getTransactionInvoices($data);
-                $creditMemos = [];
             }
+            $creditMemos = $this->accounting_credit_memo_model->get_customer_credit_memos($data);
 
             if(count($invoices) > 0) {
                 $invoiceTotal = array_sum(array_map(function($invoice) {
@@ -1436,7 +1435,7 @@ class Accounting_modals extends MY_Controller
         $result = [
             'customers' => $rows,
             'total' => number_format(floatval(str_replace(',', '', $totalBalance)), 2, '.', ','),
-            'withoutEmail' => $withoutEmail
+            'withoutEmail' => array_values($withoutEmail)
         ];
 
         echo json_encode($result);
@@ -2743,26 +2742,16 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('statement_type', 'Statement Type', 'required');
         $this->form_validation->set_rules('statement_date', 'Statement Date', 'required');
         $this->form_validation->set_rules('customer_balance_status', 'Customer Balance Status', 'required');
+        $this->form_validation->set_rules('email[]', 'Email', 'required');
 
         if (isset($data['start_date']) && isset($data['end_date'])) {
             $this->form_validation->set_rules('start_date', 'Start Date', 'required');
             $this->form_validation->set_rules('end_date', 'End Date', 'required');
         }
 
-        if (isset($data['select_all'])) {
-            $this->form_validation->set_rules('email[]', 'Email', 'required');
-        } else {
-            foreach ($data['customer'] as $cust) {
-                if ($data['email'][$cust] === '') {
-                    $flag = false;
-                    break;
-                }
-            }
-        }
-
         $return = [];
 
-        if ($this->form_validation->run() === false || $flag === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
@@ -2886,7 +2875,7 @@ class Accounting_modals extends MY_Controller
         $this->pdf->save_pdf($view, ['data' => $post], $fileName, 'portrait');
 
         $this->page_data['filename'] = $fileName;
-        $this->load->view('v2/includes/accounting/modal_forms/print_deposit_summary_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/show_pdf_modal', $this->page_data);
         // echo json_encode(['filename' => $fileName]);
         // exit;
     }
@@ -10632,39 +10621,6 @@ class Accounting_modals extends MY_Controller
             return strtotime($b->created_at) > strtotime($a->created_at);
         });
 
-        $data = [];
-        foreach($transactions as $expense) {
-            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
-
-            switch ($expense->payee_type) {
-                case 'vendor':
-                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
-                    $payeeName = $payee->display_name;
-                break;
-                case 'customer':
-                    $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
-                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
-                break;
-                case 'employee':
-                    $payee = $this->users_model->getUser($expense->payee_id);
-                    $payeeName = $payee->FName . ' ' . $payee->LName;
-                break;
-            }
-
-            $amount = '$'.number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ',');
-            if(count($data) < 10) {
-                $data[] = [
-                    'id' => $expense->id,
-                    'type' => $paymentAccType->account_name !== 'Credit Card' ? 'Expense' : 'Credit Card Expense',
-                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                    'amount' => str_replace('$-', '-$', $amount),
-                    'name' => $payeeName
-                ];
-            }
-        }
-
-        $this->page_data['recent_expenses'] = $data;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Expense', $expenseId);
         $this->page_data['expense'] = $expense;
@@ -10746,36 +10702,6 @@ class Accounting_modals extends MY_Controller
             return strtotime($b->created_at) > strtotime($a->created_at);
         });
 
-        $data = [];
-        foreach($transactions as $check) {
-            switch ($check->payee_type) {
-                case 'vendor':
-                    $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
-                    $payeeName = $payee->display_name;
-                break;
-                case 'customer':
-                    $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
-                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
-                break;
-                case 'employee':
-                    $payee = $this->users_model->getUser($check->payee_id);
-                    $payeeName = $payee->FName . ' ' . $payee->LName;
-                break;
-            }
-
-            $amount = '$'.number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
-            if(count($data) < 10) {
-                $data[] = [
-                    'id' => $check->id,
-                    'type' => !in_array($check->check_no, ['', null, '0']) ? 'Check No.'.$check->check_no : 'Check',
-                    'date' => date("m/d/Y", strtotime($check->payment_date)),
-                    'amount' => str_replace('$-', '-$', $amount),
-                    'name' => $payeeName
-                ];
-            }
-        }
-
-        $this->page_data['recent_checks'] = $data;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Check', $checkId);
         $this->page_data['check'] = $check;
@@ -10859,24 +10785,6 @@ class Accounting_modals extends MY_Controller
             return strtotime($b->created_at) > strtotime($a->created_at);
         });
 
-        $data = [];
-        foreach($transactions as $bill) {
-            $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
-            $payeeName = $payee->display_name;
-
-            $amount = '$'.number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ',');
-            if(count($data) < 10) {
-                $data[] = [
-                    'id' => $bill->id,
-                    'type' => !in_array($bill->bill_no, ['', null, '0']) ? 'Bill No.'.$bill->bill_no : 'Bill',
-                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
-                    'amount' => str_replace('$-', '-$', $amount),
-                    'name' => $payeeName
-                ];
-            }
-        }
-
-        $this->page_data['recent_bills'] = $data;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Bill', $billId);
         $this->page_data['bill_payments'] = $billPayments;
@@ -19800,22 +19708,24 @@ class Accounting_modals extends MY_Controller
         $this->load->view("accounting/modals/$view", $this->page_data);
     }
 
-    public function load_customer_invoices($customerId)
+    public function get_customer_invoices($customerId)
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $search = $post['columns'][0]['search']['value'];
-        $start = $post['start'];
-        $limit = $post['length'];
+        $post = $this->input->post();
+        $search = $post['search'];
 
         $filters = [
             'customer_id' => $customerId
         ];
 
-        if($post['draw'] > 1) {
+        if(!in_array($post['from_date'], ['', null])) {
             $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
-            $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
-            $filters['overdue'] = $post['overdue'];
         }
+
+        if(!in_array($post['to_date'], ['', null])) {
+            $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
+        }
+
+        $filters['overdue'] = $post['overdue'];
 
         $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
         $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
@@ -19823,7 +19733,7 @@ class Accounting_modals extends MY_Controller
         $data = [];
         foreach($invoices as $invoice) {
             $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
-            $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+            $description = "<a href='/invoice/genview/$invoice->id' class='text-decoration-none'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
 
@@ -19837,6 +19747,7 @@ class Accounting_modals extends MY_Controller
                     $data[] = [
                         'id' => $invoice->id,
                         'description' => $description,
+                        'date_issued' => date("m/d/Y", strtotime($invoice->date_issued)),
                         'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
                         'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
                         'open_balance' => number_format(floatval($balance), 2, '.', ',')
@@ -19846,6 +19757,7 @@ class Accounting_modals extends MY_Controller
                 $data[] = [
                     'id' => $invoice->id,
                     'description' => $description,
+                    'date_issued' => date("m/d/Y", strtotime($invoice->date_issued)),
                     'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
                     'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
                     'open_balance' => number_format(floatval($balance), 2, '.', ',')
@@ -19853,29 +19765,23 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($invoices),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
-    public function load_customer_credits($customerId)
+    public function get_customer_credits($customerId)
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $search = $post['columns'][0]['search']['value'];
-        $start = $post['start'];
-        $limit = $post['length'];
+        $post = $this->input->post();
+        $search = $post['search'];
 
         $filters = [
             'customer_id' => $customerId
         ];
 
-        if($post['draw'] > 1) {
+        if(!in_array($post['from_date'], ['', null])) {
             $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
+        }
+
+        if(!in_array($post['to_date'], ['', null])) {
             $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
         }
 
@@ -19883,7 +19789,9 @@ class Accounting_modals extends MY_Controller
 
         $data = [];
         foreach($creditMemos as $creditMemo) {
-            $description = "<a href='/accounting/view-transaction/credit-memo/$creditMemo->id' class='text-info'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
+            $descriptionText = "Credit Memo";
+            $descriptionText .= !in_array($creditMemo->ref_no, ['', null]) ? ' #'.$creditMemo->ref_no : '';
+            $description = "<a href='/accounting/view-transaction/credit-memo/$creditMemo->id' class='text-decoration-none'>$descriptionText</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
 
             if($search !== "") {
                 if(stripos($creditMemo->ref_no, $search) !== false) {
@@ -19891,6 +19799,7 @@ class Accounting_modals extends MY_Controller
                         'id' => $creditMemo->id,
                         'type' => 'credit-memo',
                         'description' => $description,
+                        'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
                         'original_amount' => number_format(floatval($creditMemo->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($creditMemo->balance), 2, '.', ',')
                     ];
@@ -19900,6 +19809,7 @@ class Accounting_modals extends MY_Controller
                     'id' => $creditMemo->id,
                     'type' => 'credit-memo',
                     'description' => $description,
+                    'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
                     'original_amount' => number_format(floatval($creditMemo->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($creditMemo->balance), 2, '.', ',')
                 ];
@@ -19916,27 +19826,27 @@ class Accounting_modals extends MY_Controller
                     'id' => $unappliedPayment->id,
                     'type' => 'unapplied-payment',
                     'description' => $description,
+                    'date' => date("m/d/Y", strtotime($unappliedPayment->payment_date)),
                     'original_amount' => number_format(floatval($unappliedPayment->amount_to_credit), 2, '.', ','),
                     'open_balance' => number_format(floatval($unappliedPayment->credit_balance), 2, '.', ',')
                 ];
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($creditMemos),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
+        usort($data, function($a, $b) {
+            return strotime($a['date']) > strtotime($b['date']);
+        });
 
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     public function find_customer_by_invoice_no()
     {
         $invoiceNo = $this->input->post('invoice_no');
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        $invoiceNum = $invoiceSettings->invoice_num_prefix.''.$invoiceNo;
 
-        $customer = $this->accounting_invoices_model->get_customer_by_invoice_number('INV-'.$invoiceNo);
+        $customer = $this->accounting_invoices_model->get_customer_by_invoice_number($invoiceNum);
 
         if(!is_null($customer)) {
             $customerName = $customer->first_name . ' ' . $customer->last_name;

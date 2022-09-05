@@ -38,7 +38,9 @@ endif;
                             <h3>$<?php $totalPayments = 0;
                                     if(!empty($payment)):
                                         foreach ($payment as $p) {
-                                            $totalPayments += $p->amount;
+                                            if(date("Y-m-d")==date("Y-m-d",strtotime($p->date_issued))){
+                                                $totalPayments += $p->amount;
+                                            }
                                         }
                                     endif;
                                     echo $totalPayments;
@@ -58,9 +60,11 @@ endif;
                             <h3>$<?php $totalPayments = 0;
                                     if(!empty($paymentInvoices)):
                                         foreach ($paymentInvoices as $PI) {
-                                            if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
-                                                $totalPayments += $PI->payment_amount;
+                                            if(date("Y-m-d")==date("Y-m-d",strtotime($PI->date_issued))){
+                                                $totalPayments += $PI->amount;
                                             }
+                                            // $totalPayments += $PI->payment_amount;
+
                                         }
                                     endif;
                                     echo $totalPayments;
@@ -83,6 +87,7 @@ endif;
                                         if(date("Y-m-d") == date("Y-m-d",strtotime($JD->date_issued))) {
                                             $totalJobsComplete++;
                                         }
+
                                         
                                     }
                                 }

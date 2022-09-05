@@ -69,7 +69,7 @@
                                                 <div id="collapse-new-adjustments" class="accordion-collapse collapse show">
                                                     <div class="accordion-body">
                                     <?php endif; ?>
-                                                        <table class="nsm-table" id="inventory-adjustments-table">
+                                                        <table class="nsm-table clickable" id="inventory-adjustments-table">
                                                             <thead>
                                                                 <tr>
                                                                     <td data-name="Num">#</td>

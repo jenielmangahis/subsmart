@@ -19,7 +19,7 @@ $(document).ready(function () {
 
             $(`${modal_element} [data-bs-toggle="popover"]`).popover();
 
-            if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table, #item-table, #missing-email-table, #statements-table)').length > 0) {
+            if ($('div#modal-container .modal-body table.clickable:not(#category-details-table, #item-details-table)').length > 0) {
                 rowInputs = $('div#modal-container form .modal table tbody tr:first-child()').html();
                 if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
                     blankRow = $('div#modal-container form .modal table tbody tr:last-child()').html();
@@ -174,7 +174,12 @@ $(document).ready(function () {
                 $('#payBillsModal #bills-table').nsmPagination({
                     itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
                 })
-                // loadBills();
+            }
+
+            if(modal_element === '#receivePaymentModal') {
+                $('#receivePaymentModal #invoices-container').hide();
+                $('#receivePaymentModal #credits-container').hide();
+                $('#receivePaymentModal #payment-summary').hide();
             }
 
             $(modal_element).modal('show');

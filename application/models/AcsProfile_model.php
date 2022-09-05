@@ -33,6 +33,14 @@ class AcsProfile_model extends MY_Model
         $this->db->order_by('first_name', 'ASC');
 
         $query = $this->db->get();
+        // $query = $query1->result();
+        // $data = array();
+        // foreach($query as $q){
+        //     $data [] = array(
+        //         "id" => $q->prof_id,
+        //         "name" => $q->first_name
+        //     );
+        // }
         return $query->result();
     }
 
@@ -248,6 +256,23 @@ class AcsProfile_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getCustomerMMR($id){
+        $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id');
+        $this->db->where('acs_profile.company_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getInstalledDate($id, $table){
+        $this->db->select('install_date');
+        $this->db->from($table);
+        $this->db->where('fk_prof_id', $id);
+        $query = $this->db->get();
+        return $query->row();
     }
 }
 

@@ -264,7 +264,7 @@ class Accounting_receive_payment_model extends MY_Model
         $this->db->where('credit_balance >', 0);
 
 		$this->db->where('status', 1);
-        $this->db->order_by('payment_date', 'desc');
+        $this->db->order_by('payment_date', 'asc');
 		$query = $this->db->get('accounting_receive_payment');
 		return $query->result();
     }

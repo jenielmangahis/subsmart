@@ -62,7 +62,7 @@
 
                             <div class="row">
                                 <div class="col-12 grid-mb">
-                                    <table class="nsm-table" id="journal-table">
+                                    <table class="nsm-table clickable" id="journal-table">
                                         <thead>
                                             <tr>
                                                 <td data-name="Num">#</td>
