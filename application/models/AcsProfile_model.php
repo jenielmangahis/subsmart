@@ -249,6 +249,16 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function getByAdtSalesProjectId($adt_project_id)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('adt_sales_project_id', $adt_project_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file AcsProfile_model.php */
