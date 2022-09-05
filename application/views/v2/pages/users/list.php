@@ -168,6 +168,11 @@
                                                 <li>
                                                     <a class="dropdown-item update-profile-item" href="javascript:void(0);" data-id="<?php echo $row->id ?>" data-img="<?php echo $data_img; ?>">Update Profile Image</a>
                                                 </li>
+                                                <?php if(isSolarCompany() == 1){ ?>
+                                                    <li>
+                                                        <a class="dropdown-item change-adt-portal-access" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Change ADT Portal Access</a>
+                                                    </li>
+                                                <?php } ?>
                                                 <li>
                                                     <a class="dropdown-item change-password-item" href="javascript:void(0);" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>">Change Password</a>
                                                 </li>
@@ -304,7 +309,7 @@
                                 location.reload();
                             }
                         });
-                    } else if (data == 3) {
+                    } else if (result == 3) {
                         Swal.fire({
                             title: 'Failed',
                             text: "Insufficient license. Please purchase license to continue adding user.",
@@ -316,6 +321,15 @@
                                 window.location.href = base_url + 'mycrm/membership';
                             }
                         });
+                    } else if (result == 4) {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: "ADT Sales App password not same",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+
                     } else {
                         Swal.fire({
                             title: 'Failed',
@@ -579,5 +593,71 @@
             }
         });
     }
+
+    $(document).on('click', '.change-adt-portal-access', function(){
+        let uid = $(this).attr("data-id");
+        let _container = $("#adt-portal-access-container");
+        let url = "<?php echo base_url('user/_load_edit_adt_portal_login_details'); ?>";
+        $("#change_adt_portal_access_modal").modal("show");
+        showLoader(_container);
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: {uid:uid},
+            success: function(result) {
+                _container.html(result);
+               // _form.find("button[type=submit]").prop("disabled", false);                
+            }
+        });
+    });
+
+    $(document).on('submit', '#change-adt-portal-login', function(e){
+        let _this = $(this);
+        e.preventDefault();
+
+        let url = "<?php echo base_url(); ?>user/_update_adt_portal_login_details";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+        let formData = new FormData(_this[0]);   
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType: "json",
+            contentType: false,
+            cache: false,
+            processData:false,
+            data: formData,
+            success: function(result) {
+                if (result.is_success == 1) {
+                    $("#change_adt_portal_access_modal").modal("hide");
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Employee ADT Sales Portal Access was successfully updated.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {                        
+                        /*if (result.value) {
+                            location.reload();
+                        }*/
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: result.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
