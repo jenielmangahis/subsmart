@@ -193,7 +193,6 @@ class Job extends MY_Controller
             $default_customer_id = $this->input->get('cus_id');
 
         }
-
         $this->page_data['title'] = 'Job New';
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
@@ -1228,14 +1227,16 @@ class Job extends MY_Controller
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name',
             'where'  => array(
-                'company_id' => $company_id
+                'company_id' => $comp_id
             ),
             'order' => array(
                 'order_by' => 'first_name',
                 'ordering' => 'ASC',
             ),
         );
-        echo json_encode($this->general->get_data_with_param($get_customer), true);
+        $data = $this->general->get_data_with_param($get_customer);
+        $data_arr = array("data" => $data , "message" => "success");
+        echo json_encode($data_arr);
     }
 
     public function get_esign_template()
@@ -1503,7 +1504,6 @@ class Job extends MY_Controller
     }
 
 
-
     public function save_job()
     {
         $input = $this->input->post();
@@ -1561,15 +1561,17 @@ class Job extends MY_Controller
             'job_type' => $input['job_type'],
             'date_issued' => $input['start_date'],
         );
-        $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
 
+        // INSERT DATA TO JOBS TABLE
+        $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
         customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
 
+        // insert data to job items table (items_id, qty, jobs_id)
         if (isset($input['item_id'])) {
             $devices = count($input['item_id']);
             for ($xx=0;$xx<$devices;$xx++) {
                 $job_items_data = array();
-                $job_items_data['job_id'] = $jobs_id;
+                $job_items_data['job_id'] = $jobs_id; //from jobs table
                 $job_items_data['items_id'] = $input['item_id'][$xx];
                 $job_items_data['qty'] = $input['item_qty'][$xx];
                 $this->general->add_($job_items_data, 'job_items');
@@ -1577,12 +1579,14 @@ class Job extends MY_Controller
             }
         }
 
+        // insert data to job url links table
         $jobs_links_data = array(
             'link' => $input['link'],
             'job_id' => $jobs_id,
         );
         $this->general->add_($jobs_links_data, 'job_url_links');
 
+        // insert data to jobs approval table
         $jobs_approval_data = array(
             'authorize_name' => $input['authorize_name'],
             'signature_link' => $input['signature_link'],
@@ -1591,12 +1595,14 @@ class Job extends MY_Controller
         );
         $this->general->add_($jobs_approval_data, 'jobs_approval');
 
+        // insert data to job payments table
         $job_payment_query = array(
             'amount' => $input['total_amount'],
             'job_id' => $jobs_id,
         );
         $this->general->add_($job_payment_query, 'job_payments');
-
+        
+        // insert data to job settings table
         $jobs_settings_data = array(
             'job_num_next' => $job_settings[0]->job_num_next + 1
         );

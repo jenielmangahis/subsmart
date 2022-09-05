@@ -221,7 +221,23 @@ class Event_model extends MY_Model
         $this->db->select('job_payments.amount,jobs.date_issued,jobs.status');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
         $this->db->where("jobs.company_id", $company_id);
-        $this->db->where("jobs.date_issued", date('Y-m-d'));
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function getCollected()
+    {
+        $company_id = logged('company_id');
+        $this->db->from('jobs');
+        $this->db->select('job_payments.amount,jobs.date_issued,jobs.status');
+        $this->db->join('job_payments', 'job_payments.job_id = jobs.id');
+        $this->db->where("jobs.company_id", $company_id);
+        $this->db->where("jobs.status", 'Completed');
         $query = $this->db->get();
 
         if ($query) {
@@ -253,10 +269,13 @@ class Event_model extends MY_Model
     public function getTechLeaderboards()
     {
         $cid=logged('company_id');
-        $this->db->select('id,FName,LName');
+        $this->db->select('users.id, users.FName, users.LName, COUNT(acs_office.technician) as totalCount');
         $this->db->from('users');
-        $this->db->where('company_id', $cid);
-        $this->db->where('role', 7);
+        $this->db->join('acs_office', 'users.id = acs_office.technician');
+        $this->db->where('users.company_id', $cid);
+        $this->db->where('users.role', 7);
+        $this->db->group_by('technician');
+        $this->db->order_by('totalCount', 'desc');
         $query = $this->db->get();
         return $query->result();
     }

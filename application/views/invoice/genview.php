@@ -3,20 +3,33 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
-<?php include viewPath('includes/header'); ?>
+<?php //include viewPath('includes/header'); ?>
 
+<?php include viewPath('v2/includes/header'); ?>
+
+<link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <div class="wrapper" role="wrapper">
-        <?php include viewPath('includes/sidebars/invoice'); ?>
+        <?php //include viewPath('includes/sidebars/invoice'); ?>
 
+        <div class="row">
+            <div class="col-12 mb-3">
+                <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+            </div>
+            <div class="col-12 mb-3">
+                <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
+            </div>
+        </div>
         <div wrapper__section>
             <?php include viewPath('includes/notifications'); ?>
             <?php if (!empty($invoice)) : ?>
-                <div class="custom__div">
+                <div class="custom__div" style="padding:0 2% 2% 2%">
                     <div class="card">
                         <div class="container-fluid" style="font-size:16px;">
                             <div class="row">
-                                <div class="col-sm-12 pb-10">
-                                    <h1>Invoice# <?php echo $invoice->invoice_number ?></h1>
+                                <div class="col-sm-12 pb-10" style="float:right;">
+                                    <h3>Invoice# <?php echo $invoice->invoice_number ?></h3>
                                 </div>
                                 <div class="row col-xl-12" data-id="invoices">
                                     <div class="col-xl-2 margin-bottom margin-top">
@@ -24,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <a class="a-hunderline" href="<?php echo base_url('invoice') ?>"><span class="fa fa-angle-left fa-size-md"></span>Return to Invoices</a>
                                         </div>
                                     </div>
-                                    <div class="col-xl-10 margin-bottom margin-top text-right pr-0">
+                                    <div class="col-xl-10 margin-bottom margin-top pr-0" style="text-align:right;">
                                         <input type="hidden" id="autoOpenModalRP" value="<?php echo $record_payment ?>">
                                         <input type="hidden" id="recordPaymentInvoiceId" value="<?php echo $invoice->id ?>">
                                         <?php if(strtolower($invoice->status) === 'paid') : ?>
@@ -87,7 +100,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="col-sm-6">
                                         <div class="invoice-paper" id="presenter-paper">
                                         <div class="presenter-paper-sm" id="presenter-paper-sm"></div>
-                                        <div class="ribbon ribbon-<?php echo strtolower($invoice->status) ?>"><span><?php echo $invoice->status ?></span></div>
+                                        <div class="ribbon ribbon-<?php echo strtolower($invoice->status) ?>"><span style="background-color:green;padding:1%;color:white;margin:1%;font-weight:bold;"><?php echo $invoice->status ?></span></div>
+                                        <br>
                                         <div class="invoice-print" style="background: #ffffff; padding: 10px;">
                                             <table class="table-print" style="width: 100%; margin-bottom: 10px;">
                                                 <tbody>
@@ -712,8 +726,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 
 
+<?php //include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('includes/footer'); ?>
+<!-- Fancybox -->
+<script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
 
+<!-- Switchery -->
+<script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script>
+
+<!-- Main Script -->
+<script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
+<script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>
+<script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.table.js") ?>"></script>
 <script>
 // $(document).on('click','#delete_workorder',function(){
 //     // alert('test');

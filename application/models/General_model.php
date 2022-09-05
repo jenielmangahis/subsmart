@@ -161,8 +161,11 @@ class General_model extends MY_Model {
 
     public function add_return_id($input,$table)
     {
-        if($this->db->insert($table,$input)){
-            return $this->db->insert_id();
+        
+        $query = $this->db->insert($table,$input);
+        if($query){
+            $id = $this->db->insert_id();
+            return $id;
         }else{
             return false;
         }

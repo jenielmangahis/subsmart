@@ -165,7 +165,7 @@
                                             </h2>
                                             <div class="accordion-collapse collapse show" id="collapse-deposit-funds">
                                                 <div class="accordion-body">
-                                                    <table class="nsm-table" id="bank-deposit-table">
+                                                    <table class="nsm-table clickable" id="bank-deposit-table">
                                                         <thead>
                                                             <tr>
                                                                 <td data-name="Num">#</td>

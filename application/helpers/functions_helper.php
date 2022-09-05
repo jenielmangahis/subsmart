@@ -504,5 +504,15 @@ if (!function_exists('getCustomerName')){
         $user = $CI->users_model->get_user_name($id);
         return $user->FName." ".$user->LName;
     }
-}									
+}	
+
+if (!function_exists('getInstalledDate')){
+    function getInstalledDate($id, $table){
+        $CI = &get_instance();
+        $CI->load->model('AcsProfile_model');
+
+        $install_date = $CI->AcsProfile_model->getInstalledDate($id, $table);
+        return $install_date->install_date;
+    }
+}
 ?>

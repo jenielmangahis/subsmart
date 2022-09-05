@@ -5,9 +5,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <!-- Script for autosaving form -->
 <script src="<?=base_url("assets/js/invoice/autosave.js")?>"></script>
 
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/invoice'); ?>
+    <?php //include viewPath('includes/sidebars/invoice'); ?>
     <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
@@ -303,16 +303,25 @@ input:checked + .slider:before {
 }
 }
 </style>
+<div class="row">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
+    </div>
+</div>
     <!-- page wrapper start -->
     <div wrapper__section>
+        
         <div class="container-fluid" style="background-color:white;">
-            <div class="page-title-box">
+            <div class="page-title-box" style="padding:0 0 0 2%;">
                 <div class="row align-items-center">
                   <div class="col-sm-6">
                       <h3 class="page-title mt-0" style="font-size: 1.75rem; font-weight: 600;">Add New Invoice</h3>
                   </div>
                   <div class="col-sm-6">
-                      <div class="float-right d-none d-md-block">
+                      <div class="float-right d-none d-md-block" style="float:right;">
                           <div class="dropdown">
                                   <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
                                      aria-expanded="false">
@@ -331,7 +340,7 @@ input:checked + .slider:before {
             <!-- end row -->
             <?php echo form_open_multipart('Invoice/addNewInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
 
-            <div class="row ">
+            <div class="row "  style="padding:2%;">
                 <div class="col-xl-12">
                     <div class="card2">
                         <div class="card-body">
@@ -360,7 +369,9 @@ input:checked + .slider:before {
                                        data-target="#modalNewCustomer" style="color:#02A32C;"><span
                                                 class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                 </div>
+                                <br>
                                 <div class="col-md-5 form-group">
+                                <br>
                                     <label for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
                                     
                                     <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_location : ''; ?>" name="jobs_location" id="invoice_jobs_location" />
@@ -372,11 +383,13 @@ input:checked + .slider:before {
                                                 class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Location Address</a> -->
                                 </div>
                                 <div class="col-md-5 form-group">
+                                <br>
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_name : ''; ?>" name="job_name" id="job_name" />
                                 </div>
                             </div>
 
+                            <br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
                                     <div class="row form-group">
@@ -593,7 +606,7 @@ input:checked + .slider:before {
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                            data-counter="0" id="item_total_0" min="0" value="0">
                                                            $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="bx bx-fw bx-trash"></i></a></td>
                                             </tr>
                                         <?php }else{ ?>
                                             <?php $item_row = 0; foreach($w_items as $data){ ?>
@@ -639,7 +652,7 @@ input:checked + .slider:before {
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                            data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
                                                            $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-success"><i class="bx bx-fw bx-trash"></a></td>
                                             </tr>
                                             <?php $item_row++;} ?>
 
@@ -734,7 +747,7 @@ input:checked + .slider:before {
                                 </div>
                             </div>
 
-
+                            <br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
                                     <h5>Request a Deposit</h5>
@@ -753,7 +766,7 @@ input:checked + .slider:before {
                                     </div>
                                 </div>
                             </div>
-
+                            <br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
                                     <h5>Payment Schedule</h5>
@@ -761,7 +774,7 @@ input:checked + .slider:before {
                                     <p><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Manage payment schedule </a></p>
                                 </div>
                             </div>
-
+                            <br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
                                     <h5>Accepted payment methods</h5>
@@ -816,15 +829,15 @@ input:checked + .slider:before {
                                         <label for="deposit"><span>Deposit</span></label>
                                     </div>
                             </div>
-                            <br><br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
+                            <br><br>
                                     <h5>Message to Customer</h5>
                                     <span class="help help-sm help-block">Add a message that will be displayed on the invoice.</span>
                                     <textarea name="message_to_customer" cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
                                 </div>
-                                <br>
                                 <div class="col-md-12">
+                                <br><br>
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
                                     <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"><?= !empty($workorder[0]) ? htmlentities($workorder[0]->terms_and_conditions) : ''; ?></textarea>
@@ -832,7 +845,7 @@ input:checked + .slider:before {
                             </div>
                             </div>
 
-                            <div class="row" style="background-color:white;">
+                            <div class="row" style="background-color:white;padding-top:2%;">
                                 <div class="col-md-12">
                                     <h5>Attachments</h5>
                                     <div class="help help-sm help-block margin-bottom-sec">Optionally attach files to this invoice. Allowed type: pdf, doc, docx, png, jpg, gif.</div>
@@ -846,6 +859,7 @@ input:checked + .slider:before {
                                                         <input type="hidden" name="attachment_id[]" value="{{id}}">
                                                     </li>
                                         </script>
+                                        <br>
                                     <div class="alert alert-danger" data-fileupload="attachment-error" role="alert" style="display: none;"></div>
                                     <div class="" data-fileupload="attachment-progressbar" style="display: none;">
                                         <div class="text">Uploading</div>
@@ -856,7 +870,7 @@ input:checked + .slider:before {
                                     <span class="btn btn-default btn-md fileinput-button vertical-top"><span class="fa fa-upload"></span> Upload File <input data-fileupload="attachment-file" name="attachment-file" type="file"></span>
                                 </div>
                             </div>
-
+                            <br>
                             <div class="row" style="background-color:white;padding-top:10px;">
                                 <div class="col-md-12 form-group">
                                     <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save as Draft</button>
@@ -1160,7 +1174,8 @@ input:checked + .slider:before {
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                <span class="fa fa-plus"></span>
+                                                <!-- <span class="fa fa-plus"></span> -->
+                                                <i class="bx bx-fw bx-plus"></i>
                                             </button></td>
                                             </tr>
                                             
@@ -1179,7 +1194,18 @@ input:checked + .slider:before {
                 </div>
             </div>
 <?php include viewPath('accounting/add_new_term'); ?>
+<?php //include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('includes/footer'); ?>
+<!-- Fancybox -->
+<script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
+
+<!-- Switchery -->
+<script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script>
+
+<!-- Main Script -->
+<script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
+<script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>
+<script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.table.js") ?>"></script>
 
 <script>
     $(document).ready(function () {
