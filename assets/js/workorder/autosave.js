@@ -17,6 +17,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/workorder/edit/${id}`);
+          $form.setAttribute("action",`/workorder/UpdateWorkorder/${id}`);
           hasChangedUrl = true;
         }
 

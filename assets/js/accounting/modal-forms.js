@@ -312,77 +312,71 @@ $(function() {
         $('div#payrollModal div.modal-footer button[type="submit"]').prop('type', 'button');
     });
 
-    $(document).on('change', 'div#statementModal table thead th input[name="select_all"], div#statementModal table thead th input[name="select_all"], div#payrollModal table thead th input[name="select_all"]', function() {
-        var table = $(this).parent().parent().parent().parent().parent();
+    $(document).on('change', 'div#payrollModal table thead th input[name="select_all"]', function() {
+        var table = $(this).closest('table');
         var rows = table.children('tbody').children('tr');
 
         if ($(this).prop('checked')) {
             rows.each(function() {
-                $(this).children('td:first-child()').children('div').children('input').prop('checked', true);
+                $(this).find('input[type="checkbox"]').prop('checked', true);
 
-                if (table.attr('id') === 'payroll-table') {
-                    $(this).children('td').each(function(index, value) {
-                        if (index === 2) {
-                            $(this).html('<a href="#" class="text-info">Paper check</a>');
-                        } else if (index === 3) {
-                            $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">');
-                        } else if (index === 4) {
-                            $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">');
-                        } else if (index === 5) {
-                            $(this).html('<input type="text" name="memo[]" class="form-control">');
-                        } else if (index === 6) {
-                            $(this).html('<p class="text-right m-0">0.00</p>');
-                        } else if (index === 7) {
-                            $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
-                        }
-                    });
-                }
+                $(this).children('td').each(function(index, value) {
+                    if (index === 2) {
+                        $(this).html('<a href="#" class="text-decoration-none">Paper check</a>');
+                    } else if (index === 3) {
+                        $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-end text-end regular-pay-hours">');
+                    } else if (index === 4) {
+                        $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-end text-end employee-commission">');
+                    } else if (index === 5) {
+                        $(this).html('<input type="text" name="memo[]" class="form-control">');
+                    } else if (index === 6) {
+                        $(this).html('<p class="text-end m-0">0.00</p>');
+                    } else if (index === 7) {
+                        $(this).html('<p class="text-end m-0">$<span class="total-pay">0.00</span></p>');
+                    }
+                });
             });
         } else {
             rows.each(function() {
-                $(this).children('td:first-child()').children('div').children('input').prop('checked', false);
+                $(this).find('input[type="checkbox"]').prop('checked', false);
 
-                if (table.attr('id') === 'payroll-table') {
-                    $(this).children('td').each(function(index, value) {
-                        if (index > 1) {
-                            $(this).html('');
-                        }
-                    });
-                }
+                $(this).children('td').each(function(index, value) {
+                    if (index > 1) {
+                        $(this).html('');
+                    }
+                });
             });
         }
     });
 
-    $(document).on('change', 'div#statementModal table tbody tr td:first-child() input, div#payrollModal table tbody tr td:first-child() input', function() {
+    $(document).on('change', 'div#payrollModal table tbody tr td:first-child() input', function() {
         var table = $(this).parent().parent().parent().parent().parent();
         var checkbox = table.children('thead').children('tr').children('th:first-child()').children('div').children('input');
         var rows = table.children('tbody').children('tr');
         var flag = true;
 
-        if (table.attr('id') === 'payroll-table') {
-            if ($(this).prop('checked') === false) {
-                $(this).parent().parent().parent().children('td').each(function(index, value) {
-                    if (index > 1) {
-                        $(this).html('');
-                    }
-                });
-            } else {
-                $(this).parent().parent().parent().children('td').each(function(index, value) {
-                    if (index === 2) {
-                        $(this).html('<a href="#" class="text-info">Paper check</a>');
-                    } else if (index === 3) {
-                        $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">');
-                    } else if (index === 4) {
-                        $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">');
-                    } else if (index === 5) {
-                        $(this).html('<input type="text" name="memo[]" class="form-control">');
-                    } else if (index === 6) {
-                        $(this).html('<p class="text-right m-0">0.00</p>');
-                    } else if (index === 7) {
-                        $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
-                    }
-                });
-            }
+        if ($(this).prop('checked') === false) {
+            $(this).parent().parent().parent().children('td').each(function(index, value) {
+                if (index > 1) {
+                    $(this).html('');
+                }
+            });
+        } else {
+            $(this).parent().parent().parent().children('td').each(function(index, value) {
+                if (index === 2) {
+                    $(this).html('<a href="#" class="text-info">Paper check</a>');
+                } else if (index === 3) {
+                    $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">');
+                } else if (index === 4) {
+                    $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">');
+                } else if (index === 5) {
+                    $(this).html('<input type="text" name="memo[]" class="form-control">');
+                } else if (index === 6) {
+                    $(this).html('<p class="text-right m-0">0.00</p>');
+                } else if (index === 7) {
+                    $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+                }
+            });
         }
 
         rows.each(function() {
@@ -1296,106 +1290,123 @@ $(function() {
                 var customers = res.customers;
                 var withoutEmail = res.withoutEmail;
 
-                // var total = '$'+res.total;
-                // $('div#statementModal span#total-customers').html(customers.length);
-                // $('div#statementModal span#total-amount').html(`${total.replace('$-', '-$')}`);
-                // $('div#statementModal span#without-email-count').html(withoutEmail.length);
-                // $('div#statementModal span#statements-count').html(customers.length);
-                // $('div#statementModal table#statements-table tbody').html('');
-                // $('div#statementModal table#missing-email-table tbody').html('');
+                var total = '$'+res.total;
+                $('div#statementModal span#total-customers').html(customers.length);
+                $('div#statementModal span#total-amount').html(`${total.replace('$-', '-$')}`);
+                $('div#statementModal span#without-email-count').html(withoutEmail.length);
+                $('div#statementModal span#statements-count').html(customers.length);
+                $('div#statementModal table#statements-table tbody').html('');
+                $('div#statementModal table#missing-email-table tbody').html('');
 
-                // if (withoutEmail.length > 0) {
-                //     for (i in withoutEmail) {
-                //         $('div#statementModal table#missing-email-table tbody').append(`<tr>
-                //             <td>
-                //                 <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                //                     <input class="m-auto" type="checkbox" name="missing_email_customer[]" value="${withoutEmail[i]['id']}" checked>
-                //                 </div>
-                //             </td>
-                //             <td>${withoutEmail[i]['name']}</td>
-                //             <td><input type="email" name="no_email[${withoutEmail[i]['id']}]" class="form-control customer-email" value="${withoutEmail[i]['email']}"></td>
-                //             <td class="text-right">$${withoutEmail[i]['balance']}</td>
-                //         </tr>`);
-                //     }
+                if (withoutEmail.length > 0) {
+                    $.each(withoutEmail, function(key, cust) {
+                        var balance = '$'+cust.balance;
+                        $('div#statementModal table#missing-email-table tbody').append(`<tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" name="missing_email_customer[]" value="${cust.id}">
+                                </div>
+                            </td>
+                            <td>${cust.name}</td>
+                            <td><input type="email" name="no_email[]" class="form-control nsm-field" value="${cust.email}"></td>
+                            <td>${balance.replace('$-', '-$')}</td>
+                        </tr>`);
+                    });
+                } else {
+                    $('#statementModal #missing-email-table tbody').append(`<tr>
+                        <td colspan="4">
+                            <div class="nsm-empty">
+                                <span>No customers found for the applied filters.</span>
+                            </div>
+                        </td>
+                    </tr>`);
+                }
 
-                //     if ($('div#statementModal div#missing-email div.no-results').length > 0) {
-                //         $('div#statementModal div#missing-email div.no-results').each(function() {
-                //             $(this).remove();
-                //         });
-                //     }
-                // }
+                if (customers.length > 0) {
+                    $.each(customers, function(key, customer) {
+                        var balance = '$'+customer.balance;
+                        $('#statementModal #statements-table tbody').append(`<tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" name="customer[]" value="${customer.id}">
+                                </div>
+                            </td>
+                            <td>${customer.name}</td>
+                            <td><input type="email" name="email[]" class="form-control nsm-field" value="${customer.email}"></td>
+                            <td>${balance.replace('$-', '-$')}</td>
+                        </tr>
+                        `);
+                    });
+                } else {
+                    $('#statementModal #statements-table tbody').append(`<tr>
+                        <td colspan="4">
+                            <div class="nsm-empty">
+                                <span>No customers found for the applied filters.</span>
+                            </div>
+                        </td>
+                    </tr>`);
+                }
 
-                // if (customers.length > 0) {
-                //     for (i in customers) {
-                //         $('div#statementModal table#statements-table tbody').append(`<tr>
-                //             <td>
-                //                 <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                //                     <input class="m-auto" type="checkbox" name="customer[]" value="${customers[i]['id']}" checked>
-                //                 </div>
-                //             </td>
-                //             <td>${customers[i]['name']}</td>
-                //             <td><input type="email" name="email[${customers[i]['id']}]" class="form-control customer-email" value="${customers[i]['email']}"></td>
-                //             <td class="text-right">$${customers[i]['balance']}</td>
-                //         </tr>`);
-                //     }
-
-                //     if ($('div#statementModal div#statements-avail div.no-results').length > 0) {
-                //         $('div#statementModal div#statements-avail div.no-results').each(function() {
-                //             $(this).remove();
-                //         });
-                //     }
-                // }
-
-                // if (withoutEmail.length === 0 && $('div#statementModal div#missing-email div.no-results').length === 0) {
-                //     $('div#statementModal table#missing-email-table').parent().append(noRecordMessage);
-                // }
-
-                // if (customers.length === 0 && $('div#statementModal div#statements-avail div.no-results').length === 0) {
-                //     $('div#statementModal table#statements-table').parent().append(noRecordMessage);
-                // }
-
-                // $('div#statementModal div.modal-body button#apply-button').addClass('hide');
-                // $('div#statementModal div.modal-body div.row:last-child()').removeClass('hide');
+                $('div#statementModal div.modal-body button#apply-button').parent().remove();
+                $('div#statementModal div.modal-body div.row:last-child()').show();
             }
         });
     });
 
-    $(document).on('change', 'div#statementModal table tbody input.customer-email', function() {
-        var name = $(this).prop('name');
+    $(document).on('change', '#statementModal table tbody input[type="email"]', function() {
+        var row = $(this).closest('tr');
+        var customerId = row.find('.select-one').val();
         var value = $(this).val();
 
-        if (name.includes('no_email')) {
-            name = name.replace('no_', '');
+        if(row.closest('table').attr('id') === 'statements-table') {
+            $(`#statementModal #missing-email-table input.select-one[value="${customerId}"]`).closest('tr').find('input[type="email"]').val(value);
         } else {
-            name = "no_" + name;
+            $(`#statementModal #statements-table input.select-one[value="${customerId}"]`).closest('tr').find('input[type="email"]').val(value);
         }
-
-        $(`div#statementModal table tbody input[name="${name}"]`).each(function() {
-            $(this).val(value);
-        });
     });
 
-    $(document).on('change', 'div#statementModal table tbody input.select-customer', function() {
-        var name = $(this).prop('name');
-        var value = $(this).val();
-        var checked = $(this).prop('checked');
-        var tableName = 'missing-email-table';
-        var flag = true;
+    $(document).on('change', '#statementModal table thead input.select-all', function() {
+        var table = $(this).closest('table');
 
-        if (name.includes('missing_email')) {
-            tableName = 'statements-table';
-        }
+        table.children('tbody').find('input.select-one').prop('checked', $(this).prop('checked'));
 
-        var rows = $(`div#statementModal table#${tableName} tbody tr`);
-        var checkbox = $(`div#statementModal table#${tableName} thead tr th:first-child() div input`);
-        $(`div#statementModal table#${tableName} tbody tr td:first-child() div input[value="${value}"]`).prop('checked', checked);
-        rows.each(function() {
-            if ($(this).children('td:first-child()').children('div').children('input').prop('checked') === false) {
-                flag = false;
+        if(table.attr('id') === 'statements-table') {
+            $('#statementModal #missing-email-table input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+        } else {
+            table.children('tbody').find('input.select-one').each(function() {
+                var val = $(this).val();
+
+                $(`#statementModal #statements-table tbody input[type="checkbox"][value="${val}"]`).prop('checked', $(this).prop('checked'));
+            });
+
+            if($(this).prop('checked') === false) {
+                $('#statementModal #statements-table thead input.select-all').prop('checked', false);
             }
-        });
+        }
+    });
 
-        checkbox.prop('checked', flag);
+    $(document).on('change', '#statementModal table tbody input.select-one', function() {
+        var table = $(this).closest('table');
+        var totalRows = table.find('tbody tr').length;
+        var checked = table.find('input.select-one:checked').length;
+
+        table.find('.select-all').prop('checked', checked === totalRows);
+
+        if(table.attr('id') === 'statements-table') {
+            $(`#statementModal #missing-email-table tbody input[type="checkbox"][value="${$(this).val()}"]`).prop('checked', $(this).prop('checked'));
+
+            var missingTableRows = $('#statementModal #missing-email-table tbody tr').length;
+            var missingTableChecked = $('#statementModal #missing-email-table tbody input.select-one:checked').length;
+
+            $('#statementModal #missing-email-table thead .select-all').prop('checked', missingTableChecked === missingTableRows);
+        } else {
+            $(`#statementModal #statements-table tbody input[type="checkbox"][value="${$(this).val()}"]`).prop('checked', $(this).prop('checked'));
+
+            var statementsTableRows = $('#statementModal #statements-table tbody tr').length;
+            var statementsTableChecked = $('#statementModal #statements-table tbody input.select-one:checked').length;
+
+            $('#statementModal #statements-table thead .select-all').prop('checked', statementsTableChecked === statementsTableRows);
+        }
     });
 
     $(document).on('change', 'div#singleTimeModal select#startTime, div#singleTimeModal select#endTime, div#singleTimeModal input#time, #singleTimeModal #billable, #singleTimeModal #hourlyRate, #singleTimeModal #taxable', function() {
@@ -7412,11 +7423,103 @@ $(function() {
     });
 
     $(document).on('keyup', '#receivePaymentModal #search-invoice-no', function() {
-        // $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
+        var data = new FormData();
+        data.set('search', $(this).val());
+        data.set('from_date', $('#receivePaymentModal #invoices-from').val());
+        data.set('to_date', $('#receivePaymentModal #invoices-to').val());
+        data.set('overdue', $('#receivePaymentModal #overdue-invoices-only').prop('checked') ? 1 : 0);
+
+        $.ajax({
+            url: `/accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val()}`,
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var invoices = JSON.parse(result);
+
+                $('#receivePaymentModal #invoices-table tbody').html('');
+                if(invoices.length > 0) {
+                    $.each(invoices, function(key, invoice) {
+                        $('#receivePaymentModal #invoices-table tbody').append(`
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="${invoice.id}">
+                                </div>
+                            </td>
+                            <td>${invoice.description}</td>
+                            <td>${invoice.due_date}</td>
+                            <td>${invoice.original_amount}</td>
+                            <td>${invoice.open_balance}</td>
+                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
+                        </tr>
+                        `);
+                    });
+
+                    $('#receivePaymentModal #invoices-table').nsmPagination({
+                        itemsPerPage: parseInt($('#receivePaymentModal #invoice-table-rows li a.active').html())
+                    });
+                } else {
+                    $('#receivePaymentModal #invoices-table tbody').html(`<tr>
+                        <td colspan="6">
+                            <div class="nsm-empty">
+                                <span>There are no transactions matching the criteria.</span>
+                            </div>
+                        </td>
+                    </tr>`);
+                }
+            }
+        });
     });
 
-    $(document).on('change', '#receivePaymentModal #invoices_table_rows', function() {
-        // $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
+    $(document).on('keyup', '#receivePaymentModal #search-credit-memo-no', function() {
+        var data = new FormData();
+        data.set('search', $(this).val());
+        data.set('from_date', $('#receivePaymentModal #credit-memo-from').val());
+        data.set('to_date', $('#receivePaymentModal #credit-memo-to').val());
+
+        $.ajax({
+            url: `/accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var credits = JSON.parse(result);
+
+                $('#receivePaymentModal #credits-table tbody').html('');
+                if(credits.length > 0) {
+                    $.each(credits, function(key, credit) {
+                        $('#receivePaymentModal #credits-table tbody').append(`
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="${credit.id}">
+                                </div>
+                            </td>
+                            <td>${credit.description}</td>
+                            <td>${credit.original_amount}</td>
+                            <td>${credit.open_balance}</td>
+                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
+                        </tr>
+                        `);
+                    });
+
+                    $('#receivePaymentModal #credits-table').nsmPagination({
+                        itemsPerPage: parseInt($('#receivePaymentModal #credits-table-rows li a.active').html())
+                    });
+                } else {
+                    $('#receivePaymentModal #invoices-table tbody').html(`<tr>
+                        <td colspan="6">
+                            <div class="nsm-empty">
+                                <span>There are no transactions matching the criteria.</span>
+                            </div>
+                        </td>
+                    </tr>`);
+                }
+            }
+        });
     });
 
     $(document).on('change', '#receivePaymentModal #invoices-table thead #select-all-invoices', function() {
@@ -7705,16 +7808,111 @@ $(function() {
     $(document).on('change', '#modal-container form #receivePaymentModal #customer', function(e) {
         var id = $(this).val();
 
-        loadCustomerInvoices(id);
-        loadCustomerCredits(id);
+        $('#receivePaymentModal #search-invoice-no').val('');
+        $('#receivePaymentModal #invoices-from').val('');
+        $('#receivePaymentModal #invoices-to').val('');
+        $('#receivePaymentModal #overdue-invoices-only').prop('checked', false);
 
-        // if($('#receivePaymentModal #invoices-table tbody tr td:not(.dataTables_empty)').length === 0) {
-        //     $('#receivePaymentModal .display-with-customer:first-child').removeClass('hide');
-        // }
+        $('#receivePaymentModal #search-credit-memo-no').val('');
+        $('#receivePaymentModal #credit-memo-from').val('');
+        $('#receivePaymentModal #credit-memo-to').val('');
 
-        // if($('#receivePaymentModal #credit-memo-table tbody tr td:not(.dataTables_empty)').length === 0) {
-        //     $('#receivePaymentModal .display-with-customer').removeClass('hide');
-        // }
+        var data = new FormData();
+        data.set('search', '');
+        data.set('from_date', '');
+        data.set('to_date', '');
+        data.set('overdue', 0);
+
+        $.ajax({
+            url: `/accounting/get-customer-invoices/${id}`,
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var invoices = JSON.parse(result);
+
+                $('#receivePaymentModal #invoices-table tbody').html('');
+                if(invoices.length > 0) {
+                    $.each(invoices, function(key, invoice) {
+                        $('#receivePaymentModal #invoices-table tbody').append(`
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="${invoice.id}">
+                                </div>
+                            </td>
+                            <td>${invoice.description}</td>
+                            <td>${invoice.due_date}</td>
+                            <td>${invoice.original_amount}</td>
+                            <td>${invoice.open_balance}</td>
+                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
+                        </tr>
+                        `);
+                    });
+
+                    $('#receivePaymentModal #invoices-table').nsmPagination({
+                        itemsPerPage: 50
+                    });
+                } else {
+                    $('#receivePaymentModal #invoices-table tbody').html(`<tr>
+                        <td colspan="6">
+                            <div class="nsm-empty">
+                                <span>There are no transactions matching the criteria.</span>
+                            </div>
+                        </td>
+                    </tr>`);
+                }
+
+                $('#receivePaymentModal #invoices-container').show();
+            }
+        });
+
+        $.ajax({
+            url: `/accounting/get-customer-credits/${id}`,
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var credits = JSON.parse(result);
+
+                $('#receivePaymentModal #credits-table tbody').html('');
+                if(credits.length > 0) {
+                    $.each(credits, function(key, credit) {
+                        $('#receivePaymentModal #credits-table tbody').append(`
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="${credit.id}">
+                                </div>
+                            </td>
+                            <td>${credit.description}</td>
+                            <td>${credit.original_amount}</td>
+                            <td>${credit.open_balance}</td>
+                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
+                        </tr>
+                        `);
+                    });
+
+                    $('#receivePaymentModal #credits-table').nsmPagination({
+                        itemsPerPage: 50
+                    });
+
+                    $('#receivePaymentModal #credits-container').show();
+                } else {
+                    $('#receivePaymentModal #credits-container').hide();
+                }
+            }
+        });
+
+        $('#receivePaymentModal #payment-summary').show();
+    });
+
+    $(document).on('click', '#receivePaymentModal #cancel-find-by-invoice', function() {
+        $('#receivePaymentModal #invoice-no').val('');
+
+        $('#findByInvoice').dropdown('toggle');
     });
 
     $(document).on('click', '#receivePaymentModal #credit-memo-table tbody tr a', function(e) {
@@ -9083,6 +9281,19 @@ const submitModalForm = (event, el) => {
         case '#invoiceModal' :
             data.set('invoice_no', $('#invoiceModal #invoice-no').val());
         break;
+        case '#statementModal' :
+            data.delete('customer[]');
+            data.delete('email[]');
+            data.delete('missing_email_customer[]');
+            data.delete('no_email[]');
+
+            $('#statementModal #statements-table tbody .select-one:checked').each(function() {
+                var row = $(this).closest('tr');
+
+                data.append('customer[]', $(this).val());
+                data.append('email[]', row.find('input[name="email[]"]').val());
+            });
+        break;
     }
 
     if(customerModals.includes(modalId)) {
@@ -10130,7 +10341,7 @@ const viewPrint = (id, title = "") => {
         data.start_date = data.statement_type !== "2" ? $('#statementModal input#startDate').val() : null;
         data.end_date = data.statement_type !== "2" ? $('#statementModal input#endDate').val() : null;
 
-        var customers = $('#statements-table tbody tr td:first-child() input:checked');
+        var customers = $('#statements-table tbody input.select-one:checked');
 
         customers.each(function() {
             data.customers.push($(this).val());
@@ -10146,7 +10357,6 @@ const viewPrint = (id, title = "") => {
             url: '/accounting/generate-pdf',
             data: {json: JSON.stringify(data)},
             type: 'post',
-            dataType: "JSON",
             success: function(res) {
                 if($('#modal-container #showPdfModal').length > 0) {
                     $('#modal-container #showPdfModal').parent().remove();
@@ -10154,13 +10364,10 @@ const viewPrint = (id, title = "") => {
 
                 $('#modal-container').append(res);
 
+                if(title === 'statement-summary') {
+                    $('#showPdfModal #download-pdf').remove();
+                }
                 $('#showPdfModal').modal('show');
-                // if (res.filename != "") {
-                //     $('iframe#showPdf').attr('src', "/accounting/show-pdf?pdf=" +res.filename);
-                //     $('#showPdfModal').modal('show');
-
-                //     $('#showPdfModal div.modal-footer a#download-pdf').attr('href', '/accounting/download-pdf?filename='+res.filename);
-                // }
             }
         });
     } else {
@@ -11859,7 +12066,31 @@ const findCustByInvoiceNo = () => {
 const cancelFindByInvoice = () => {
     $('#receivePaymentModal #invoice-no').val('');
 
-    $("body").trigger("click");
+    $('#receivePaymentModal #findByInvoice').dropdown('toggle');
+}
+
+const invoiceTableRows = (el) => {
+    $('#receivePaymentModal #invoice-table-rows a.dropdown-item.active').removeClass('active');
+    $(el).addClass('active');
+
+    $(el).parent().parent().prev().find('span').html($(el).text());
+    $('#receivePaymentModal #invoice-table-rows').prev().dropdown('toggle');
+
+    $("#receivePaymentModal #invoices-table").nsmPagination({
+        itemsPerPage: parseInt($(el).text().trim())
+    });
+}
+
+const creditsTableRows = (el) => {
+    $('#receivePaymentModal #credits-table-rows a.dropdown-item.active').removeClass('active');
+    $(el).addClass('active');
+
+    $(el).parent().parent().prev().find('span').html($(el).text());
+    $('#receivePaymentModal #credits-table-rows').prev().dropdown('toggle');
+
+    $("#receivePaymentModal #credits-table").nsmPagination({
+        itemsPerPage: parseInt($(el).text().trim())
+    });
 }
 
 const applyInvoicesFilter = (e) => {

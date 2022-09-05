@@ -8,8 +8,9 @@ class UserPortalAccount_model extends MY_Model
 
     public function getAll($filters=array())
     {
-        $this->db->select('*');
+        $this->db->select('user_portal_accounts.*, users.company_id');
         $this->db->from($this->table);
+        $this->db->join('users', 'user_portal_accounts.user_id = users.id', 'left');
 
         if ( !empty($filters['search']) ){
             foreach($filters['search'] as $f){

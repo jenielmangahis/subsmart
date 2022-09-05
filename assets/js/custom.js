@@ -715,7 +715,7 @@ $(".select_item").click(function () {
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                 "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
                 "<td>\n" +
-                "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
                 "</td>\n" +
                 "</tr>";
             tableBody = $("#jobs_items_table_body");

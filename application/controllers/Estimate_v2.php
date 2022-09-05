@@ -997,6 +997,10 @@ class Estimate_v2 extends MY_Controller
         $this->page_data['itemsBundle2'] = $this->estimate_model->getItemlistByIDBundle2($id);
 
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
+        
+        add_css([
+            'assets/plugins/font-awesome/css/font-awesome.min.css',
+        ]);
 
         $this->load->view('estimate/v2/editBundle', $this->page_data);
     }

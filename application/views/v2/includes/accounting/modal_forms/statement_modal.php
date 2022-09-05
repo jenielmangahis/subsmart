@@ -97,7 +97,7 @@
                                                             </div>
                                                         </td>
                                                         <td><?=$cust['name']?></td>
-                                                        <td><input type="email" name="no_email[<?=$cust["id"]?>]" class="form-control nsm-field customer-email" value="<?=$cust['email']?>"></td>
+                                                        <td><input type="email" name="no_email[]" class="form-control nsm-field" value="<?=$cust['email']?>"></td>
                                                         <td><?=str_replace('$-', '-$', '$'.number_format(floatval($cust['balance']), 2, '.', ','))?></td>
                                                     </tr>
                                                     <?php endforeach; ?>
@@ -136,7 +136,7 @@
                                                             </div>
                                                         </td>
                                                         <td><?=$customer['name']?></td>
-                                                        <td><input type="email" name="email[<?=$customer["id"]?>]" class="form-control nsm-field customer-email" value="<?=$customer['email']?>"></td>
+                                                        <td><input type="email" name="email[]" class="form-control nsm-field" value="<?=$customer['email']?>"></td>
                                                         <td><?=str_replace('$-', '-$', '$'.number_format(floatval($customer['balance']), 2, '.', ','))?></td>
                                                     </tr>
                                                     <?php endforeach; ?>
@@ -196,43 +196,4 @@
     </div>
     <!--end of modal-->
 </form>
-<div id="showPdfModal" class="modal fade modal-fluid" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content" style="height: 100%;">
-            <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                <h4 class="modal-title">Print</h4>
-                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="row h-100">
-                    <div class="col-xl-12">
-                        <div class="card p-0 m-0 h-100">
-                            <div class="card-body" style="padding-bottom: 1.25rem">
-                                <div class="row h-100">
-                                    <div class="col-12">
-                                        <iframe id="showPdf" src="/accounting/show-pdf" frameborder="0" style="width: 100%; height: 100%;"></iframe>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer bg-secondary">
-                <div class="row w-100">
-                    <div class="col-md-4">
-                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
-                    </div>
-                    <div class="col-md-4">
-                        
-                    </div>
-                    <div class="col-md-4">
-                        <button type="button" class="btn btn-success btn-rounded float-right" id="print-deposit-pdf">Print</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </div>

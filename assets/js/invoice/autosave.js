@@ -16,6 +16,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
         const { id } = response;
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/invoice/invoice_edit/${id}`);
+          $form.setAttribute("action",`/invoice/updateInvoice/${id}`);
+          
           hasChangedUrl = true;
         }
 
