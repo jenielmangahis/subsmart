@@ -505,7 +505,7 @@
                 <label class="content-subtitle fw-bold">Transaction Amount</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle">$<?= !empty($billing_info->transaction_amount) ?  number_format((float)$billing_info->transaction_amount, 2, '.', ',') : '0.00' ?></label>
+                <label class="content-subtitle">$<?= !empty($billing_info->transaction_amount) ?  number_format((float)$billing_info->transaction_amount, 2, '.', ',') : number_format((float)$billing_info->mmr, 2, '.', ',')?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Transaction Category</label>

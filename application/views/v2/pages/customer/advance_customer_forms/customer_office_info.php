@@ -68,6 +68,7 @@
                     <option value="">Select</option>
                     <?php foreach ($users as $user): ?>
                         <option <?php if(isset($office_info)){ echo $office_info->fk_sales_rep_office ==  $user->id ? 'selected' : ''; } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                        <?= $user->id ?>    
                     <?php endforeach ?>
                 </select>
             </div>

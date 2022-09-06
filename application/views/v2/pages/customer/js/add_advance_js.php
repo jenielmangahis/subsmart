@@ -451,7 +451,7 @@
             formArray.forEach(({ name, value }) => payload[name] = value);
             //const prefixURL = location.hostname === "localhost" ? "/ci/nsmart_v2" : "";
             const prefixURL = base_url;
-            const response = await fetch(`${prefixURL}/customer_form/apiCheckDuplicate`, { 
+            const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, { 
                 method: "post", 
                 body: JSON.stringify(payload),
                 headers: { 
@@ -477,14 +477,33 @@
             }
 
             //var url = form.attr('action');
+            // const payload1 = new FormData();
+            // console.log(payload1);
+            // fetch('<?= base_url('customer/save_customer_profile') ?>', {
+            //     method: 'POST',
+            //     body: payload1,
+            // }) .then(response => response.json() ).then(response => {
+            //     document.getElementById('overlay').style.display = "none";
+            //     if(success){
+            //         alert('yawa');
+            //     }else{
+            //         sweetAlert('Sorry!','error',message);
+            //     }
+
+            //     console.log(response);
+            // }).catch((error) => {
+            //     console.log('Error:', error);
+            // });
+
             $.ajax({
                 type: "POST",
                 url: base_url + "customer/save_customer_profile",
+                dataType: 'json',
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
                     document.getElementById('overlay').style.display = "none";
-                    if(data.success){
+                    if(success){
                         <?php if(isset($profile_info)): ?>
                         sucess("Customer Information has been Updated Successfully!",data.profile_id);
                         <?php else: ?>
@@ -496,9 +515,20 @@
                     console.log(data);
                 }, beforeSend: function() {
                     document.getElementById('overlay').style.display = "flex";
-                },error: function (xhr, ajaxOptions, thrownError) {
-                    console.log(thrownError);
+                },error: function (xhr, ajaxOptions, thrownError, data) {
                     document.getElementById('overlay').style.display = "none";
+                    Swal.fire({
+                        title: 'Good job!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.value) {
+                            window.location.href="<?= base_url(); ?>customer";
+                        }
+                    });
                 }
             });
         });

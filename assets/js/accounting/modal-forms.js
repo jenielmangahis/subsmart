@@ -652,7 +652,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', `div#modal-container form .modal table:not(#category-details-table,#item-details-table,#previous-adjustments-table) tbody tr td:not(:last-child)`, function() {
+    $(document).on('click', `div#modal-container form .modal table.clickable:not(#category-details-table,#item-details-table,#previous-adjustments-table) tbody tr td:not(:last-child)`, function() {
         var row = $(this).parent();
         if (row.find('input').length < 1) {
             var rowNum = row.find('td:first-child').html();
@@ -2382,7 +2382,7 @@ $(function() {
 
         if (row.find('input[type="checkbox"]').prop('checked') === false && parseFloat(total) > 0) {
             row.find('input[type="checkbox"]').prop('checked', true);
-            if($('#payBillsModal #bills-table tbody tr input.select-one:checked').length === $('#payBillsModal #bills-table tbody tr:visible').length) {
+            if($('#payBillsModal #bills-table tbody tr:visible input.select-one:checked').length === $('#payBillsModal #bills-table tbody tr:visible').length) {
                 $('#payBillsModal #bills-table thead input.select-all').prop('checked', true);
             }
         } else {
@@ -2404,7 +2404,7 @@ $(function() {
             $(this).closest('tr').find('td:last-child').children().html('$0.00');
         }
 
-        if($('#payBillsModal #bills-table tbody input.select-one:checked').length === $('#payBillsModal #bills-table tbody tr:visible').length) {
+        if($('#payBillsModal #bills-table tbody tr:visible input.select-one:checked').length === $('#payBillsModal #bills-table tbody tr:visible').length) {
             $('#payBillsModal #bills-table thead tr input.select-all').prop('checked', true);
         } else {
             $('#payBillsModal #bills-table thead tr input.select-all').prop('checked', false);
@@ -4532,13 +4532,13 @@ $(function() {
     });
 
     $(document).on('change', '#printChecksModal #checks-table input.select-all', function() {
-        $('#printChecksModal #checks-table tbody tr input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
+        $('#printChecksModal #checks-table tbody tr:visible input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
     });
 
     $(document).on('change', '#printChecksModal #checks-table tbody tr input[type="checkbox"]', function() {
         $('#printChecksModal #selected-checks').html($('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').length);
 
-        var notChecked = $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:not(:checked)').length;
+        var notChecked = $('#printChecksModal #checks-table tbody tr:visible input[type="checkbox"]:not(:checked)').length;
         $('#printChecksModal #checks-table input.select-all').prop('checked', notChecked === 0);
 
         var selectedTotal = parseFloat($('#printChecksModal #selected-checks-total').html().replaceAll(',', '').replace('$', ''));
@@ -7423,162 +7423,63 @@ $(function() {
     });
 
     $(document).on('keyup', '#receivePaymentModal #search-invoice-no', function() {
-        var data = new FormData();
-        data.set('search', $(this).val());
-        data.set('from_date', $('#receivePaymentModal #invoices-from').val());
-        data.set('to_date', $('#receivePaymentModal #invoices-to').val());
-        data.set('overdue', $('#receivePaymentModal #overdue-invoices-only').prop('checked') ? 1 : 0);
-
-        $.ajax({
-            url: `/accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val()}`,
-            data: data,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function(result) {
-                var invoices = JSON.parse(result);
-
-                $('#receivePaymentModal #invoices-table tbody').html('');
-                if(invoices.length > 0) {
-                    $.each(invoices, function(key, invoice) {
-                        $('#receivePaymentModal #invoices-table tbody').append(`
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="${invoice.id}">
-                                </div>
-                            </td>
-                            <td>${invoice.description}</td>
-                            <td>${invoice.due_date}</td>
-                            <td>${invoice.original_amount}</td>
-                            <td>${invoice.open_balance}</td>
-                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
-                        </tr>
-                        `);
-                    });
-
-                    $('#receivePaymentModal #invoices-table').nsmPagination({
-                        itemsPerPage: parseInt($('#receivePaymentModal #invoice-table-rows li a.active').html())
-                    });
-                } else {
-                    $('#receivePaymentModal #invoices-table tbody').html(`<tr>
-                        <td colspan="6">
-                            <div class="nsm-empty">
-                                <span>There are no transactions matching the criteria.</span>
-                            </div>
-                        </td>
-                    </tr>`);
-                }
-            }
-        });
+        loadCustomerInvoices();
     });
 
     $(document).on('keyup', '#receivePaymentModal #search-credit-memo-no', function() {
-        var data = new FormData();
-        data.set('search', $(this).val());
-        data.set('from_date', $('#receivePaymentModal #credit-memo-from').val());
-        data.set('to_date', $('#receivePaymentModal #credit-memo-to').val());
-
-        $.ajax({
-            url: `/accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
-            data: data,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function(result) {
-                var credits = JSON.parse(result);
-
-                $('#receivePaymentModal #credits-table tbody').html('');
-                if(credits.length > 0) {
-                    $.each(credits, function(key, credit) {
-                        $('#receivePaymentModal #credits-table tbody').append(`
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="${credit.id}">
-                                </div>
-                            </td>
-                            <td>${credit.description}</td>
-                            <td>${credit.original_amount}</td>
-                            <td>${credit.open_balance}</td>
-                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
-                        </tr>
-                        `);
-                    });
-
-                    $('#receivePaymentModal #credits-table').nsmPagination({
-                        itemsPerPage: parseInt($('#receivePaymentModal #credits-table-rows li a.active').html())
-                    });
-                } else {
-                    $('#receivePaymentModal #invoices-table tbody').html(`<tr>
-                        <td colspan="6">
-                            <div class="nsm-empty">
-                                <span>There are no transactions matching the criteria.</span>
-                            </div>
-                        </td>
-                    </tr>`);
-                }
-            }
-        });
+        loadCustomerCredits();
     });
 
-    $(document).on('change', '#receivePaymentModal #invoices-table thead #select-all-invoices', function() {
-        $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
+    $(document).on('change', '#receivePaymentModal #invoices-table thead .select-all', function() {
+        $('#receivePaymentModal #invoices-table tbody tr:visible input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
     });
 
     $(document).on('change', '#receivePaymentModal #invoices-table tbody input[type="checkbox"]', function() {
-        var row = $(this).parent().parent().parent().parent();
+        var row = $(this).closest('tr');
         if($(this).prop('checked')) {
-            // var rowData = $('#receivePaymentModal #invoices-table').DataTable().row(row).data();
-
-            $(row).find('input[name="payment[]"]').val(rowData.open_balance).trigger('change');
+            $(row).find('input[name="payment[]"]').val(row.children('td:nth-child(5)').html().trim()).trigger('change');
         } else {
             $(row).find('input[name="payment[]"]').val('').trigger('change');
         }
 
-        var checked = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]:checked').length;
-        var all = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]').length;
+        var checked = $('#receivePaymentModal #invoices-table tbody tr:visible input[type="checkbox"]:checked').length;
+        var all = $('#receivePaymentModal #invoices-table tbody tr:visible input[type="checkbox"]').length;
 
-        $('#receivePaymentModal #invoices-table thead #select-all-invoices').prop('checked', checked === all);
+        $('#receivePaymentModal #invoices-table thead .select-all').prop('checked', checked === all);
 
-        $('#receivePaymentModal #credit-memo-table tbody tr').each(function() {
-            if($(this).find('td.dataTables_empty').length < 1) {
-                // var rowData = $('#receivePaymentModal #credit-memo-table').DataTable().row($(this)).data();
-
+        if($('#receivePaymentModal #credits-table tbody tr td div.nsm-empty').length < 1) {
+            $('#receivePaymentModal #credits-table tbody tr').each(function() {
+                var rowData = $(this).data();
                 if(checked > 0) {
                     if($(this).find('input[type="checkbox"]').length < 1) {
-                        $(this).find('td:first-child').html(`<div class="d-flex justify-content-center">
-                            <div class="checkbox checkbox-sec m-0">
-                                <input type="checkbox" id="${rowData.type}-${rowData.id}" value="${rowData.type}_${rowData.id}">
-                                <label for="${rowData.type}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-                            </div>
+                        $(this).find('td:first-child').html(`
+                        <div class="table-row-icon table-checkbox">
+                            <input class="form-check-input select-one table-select" type="checkbox" value="${rowData.type}_${rowData.id}">
                         </div>`);
                     }
                 } else {
                     $(this).find('td:first-child').html('');
                 }
-            }
-        });
+            });
+        }
     });
 
-    $(document).on('change', '#receivePaymentModal #credit-memo-table thead #select-all-credit-memo', function() {
-        $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
+    $(document).on('change', '#receivePaymentModal #credits-table thead .select-all', function() {
+        $('#receivePaymentModal #credits-table tbody tr:visible input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
     });
 
-    $(document).on('change', '#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]', function() {
-        var row = $(this).parent().parent().parent().parent();
+    $(document).on('change', '#receivePaymentModal #credits-table tbody input[type="checkbox"]', function() {
+        var row = $(this).closest('tr');
         if($(this).prop('checked')) {
-            // var rowData = $('#receivePaymentModal #credit-memo-table').DataTable().row(row).data();
-
-            $(row).find('input[name="credit_payment[]"]').val(rowData.open_balance).trigger('change');
+            $(row).find('input[name="credit_payment[]"]').val(row.children('td:nth-child(4)').html().trim()).trigger('change');
         } else {
             $(row).find('input[name="credit_payment[]"]').val('').trigger('change');
         }
 
-        var checked = $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]:checked').length;
-        var all = $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]').length;
+        var checked = $('#receivePaymentModal #credits-table tbody tr:visible input[type="checkbox"]:checked').length;
+        var all = $('#receivePaymentModal #credits-table tbody tr:visible input[type="checkbox"]').length;
 
-        $('#receivePaymentModal #credit-memo-table thead #select-all-credit-memo').prop('checked', checked === all);
+        $('#receivePaymentModal #credits-table thead .select-all').prop('checked', checked === all);
     });
 
     $(document).on('change', '#receivePaymentModal #received-amount', function() {
@@ -7594,7 +7495,7 @@ $(function() {
         });
 
         var creditAmount = 0.00;
-        $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
+        $('#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]').each(function() {
             var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
             if(checked) {
                 creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
@@ -7606,57 +7507,57 @@ $(function() {
         var amountToCredit = receivedAmount - parseFloat(total);
         $('#receivePaymentModal span.amount-to-credit').html(formatter.format(parseFloat(amountToCredit)));
 
-        if(parseFloat(amountToCredit.replace('$', '').replaceAll(',', '')) > 0) {
+        var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
+        $('#receivePaymentModal span.amount-to-apply').html(formatter.format(parseFloat(amountToApply)));
+
+        $('#receivePaymentModal .transaction-total-amount').html(formatter.format(parseFloat(receivedAmount)));
+
+        if(parseFloat(amountToCredit) > 0) {
             $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${formatter.format(parseFloat(amountToCredit))}`);
             $('#receivePaymentModal #credit-message').parent().parent().removeClass('d-none');
         } else {
             $('#receivePaymentModal #credit-message').html('');
             $('#receivePaymentModal #credit-message').parent().parent().addClass('d-none');
         }
-
-        var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
-        $('#receivePaymentModal span.amount-to-apply').html(formatter.format(parseFloat(amountToApply)));
-
-        $('#receivePaymentModal .transaction-total-amount').html(formatter.format(parseFloat(receivedAmount)));
     });
 
-    $(document).on('change', '#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]', function() {
-        var row = $(this).parent().parent();
-        // var rowData = $('#receivePaymentModal #credit-memo-table').DataTable().row(row).data();
+    $(document).on('change', '#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]', function() {
+        var row = $(this).closest('tr');
+        var rowData = row.data();
 
         if($(this).val() !== '' && $(this).val() !== '0.00') {
             row.find('input[type="checkbox"]').prop('checked', true);
 
-            var checked = $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]:checked').length;
-            var all = $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]').length;
-            $('#receivePaymentModal #credit-memo-table thead #select-all-credit-memo').prop('checked', checked === all);
+            var checked = $('#receivePaymentModal #credits-table tbody input[type="checkbox"]:checked').length;
+            var all = $('#receivePaymentModal #credits-table tbody input[type="checkbox"]').length;
+            $('#receivePaymentModal #credits-table thead .select-all').prop('checked', checked === all);
         } else {
             row.find('input[type="checkbox"]').prop('checked', false);
-            $('#receivePaymentModal #credit-memo-table thead #select-all-credit-memo').prop('checked', false);
+            $('#receivePaymentModal #credits-table thead .select-all').prop('checked', false);
         }
 
         if($('#modal-form').attr('data-href') !== false && typeof $('#modal-form').attr('data-href') !== 'undefined') {
-            var totalBal = parseFloat(rowData.open_balance) + parseFloat(rowData.payment_amount);
+            var totalBal = parseFloat(row.children('td:nth-child(4)').html().trim()) + parseFloat(rowData.payment_amount);
             if(parseFloat($(this).val()) > parseFloat(totalBal)) {
                 $(this).val(parseFloat(totalBal).toFixed(2));
             }
         } else {
-            if(parseFloat($(this).val()) > parseFloat(rowData.open_balance)) {
-                $(this).val(rowData.open_balance);
+            if(parseFloat($(this).val()) > parseFloat(row.children('td:nth-child(4)').html().trim())) {
+                $(this).val(row.children('td:nth-child(4)').html().trim());
             }
         }
 
         var invoicePayment = 0.00;
         $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').each(function() {
-            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+            var checked = $(this).closest('tr').find('input[type="checkbox"]').prop('checked');
             if(checked) {
                 invoicePayment = parseFloat(invoicePayment) + parseFloat($(this).val());
             }
         });
 
         var creditAmount = 0.00;
-        $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
-            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+        $('#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]').each(function() {
+            var checked = $(this).closest('tr').find('input[type="checkbox"]').prop('checked');
             if(checked) {
                 creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
             }
@@ -7670,7 +7571,7 @@ $(function() {
             $(this).val(val);
 
             creditAmount = 0.00;
-            $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
+            $('#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]').each(function() {
                 var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
                 if(checked) {
                     creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
@@ -7702,30 +7603,48 @@ $(function() {
     });
 
     $(document).on('change', '#receivePaymentModal #invoices-table tbody input[name="payment[]"]', function() {
-        var row = $(this).parent().parent();
-        // var rowData = $('#receivePaymentModal #invoices-table').DataTable().row(row).data();
+        var row = $(this).closest('tr');
+        var rowData = $(this).data();
 
         if($(this).val() !== '' && $(this).val() !== "0.00") {
             row.find('input[type="checkbox"]').prop('checked', true);
 
-            var checked = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]:checked').length;
-            var all = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]').length;
+            var checked = $('#receivePaymentModal #invoices-table tbody tr:visible input[type="checkbox"]:checked').length;
+            var all = $('#receivePaymentModal #invoices-table tbody tr:visible input[type="checkbox"]').length;
 
-            $('#receivePaymentModal #invoices-table thead #select-all-invoices').prop('checked', checked === all);
+            $('#receivePaymentModal #invoices-table thead .select-all').prop('checked', checked === all);
 
             if($('#modal-form').attr('data-href') !== false && typeof $('#modal-form').attr('data-href') !== 'undefined') {
-                var totalBal = parseFloat(rowData.open_balance) + parseFloat(rowData.payment_amount);
+                var totalBal = parseFloat(row.children('td:nth-child(5)').html().trim()) + parseFloat(rowData.payment_amount);
                 if(parseFloat($(this).val()) > parseFloat(totalBal)) {
                     $(this).val(parseFloat(totalBal).toFixed(2));
                 }
             } else {
-                if(parseFloat($(this).val()) > parseFloat(rowData.open_balance)) {
-                    $(this).val(rowData.open_balance);
+                if(parseFloat($(this).val()) > parseFloat(row.children('td:nth-child(5)').html().trim())) {
+                    $(this).val(row.children('td:nth-child(5)').html().trim());
                 }
             }
         } else {
             row.find('input[type="checkbox"]').prop('checked', false);
-            $('#receivePaymentModal #invoices-table thead #select-all-invoices').prop('checked', false);
+            $('#receivePaymentModal #invoices-table thead .select-all').prop('checked', false);
+        }
+
+        var checked = $('#receivePaymentModal #invoices-table tbody tr:visible input[type="checkbox"]:checked').length;
+
+        if($('#receivePaymentModal #credits-table tbody tr td div.nsm-empty').length < 1) {
+            $('#receivePaymentModal #credits-table tbody tr').each(function() {
+                var rowData = $(this).data();
+                if(checked > 0) {
+                    if($(this).find('input[type="checkbox"]').length < 1) {
+                        $(this).find('td:first-child').html(`
+                        <div class="table-row-icon table-checkbox">
+                            <input class="form-check-input select-one table-select" type="checkbox" value="${rowData.type}_${rowData.id}">
+                        </div>`);
+                    }
+                } else {
+                    $(this).find('td:first-child').html('');
+                }
+            });
         }
 
         var invoicePayment = 0.00;
@@ -7737,7 +7656,7 @@ $(function() {
         });
 
         var creditAmount = 0.00;
-        $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
+        $('#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]').each(function() {
             var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
             if(checked) {
                 creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
@@ -7747,7 +7666,7 @@ $(function() {
         if(parseFloat(creditAmount) > parseFloat(invoicePayment)) {
             var el = null;
             var val = null;
-            $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
+            $('#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]').each(function() {
                 var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
                 if(checked) {
                     el = $(this);
@@ -7760,7 +7679,7 @@ $(function() {
             el.val(val);
 
             creditAmount = 0.00;
-            $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
+            $('#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]').each(function() {
                 var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
                 if(checked) {
                     creditAmount = parseFloat(creditAmount) - parseFloat($(this).val());
@@ -7801,21 +7720,23 @@ $(function() {
 
         $('#receivePaymentModal #invoices-table input[type="checkbox"]').prop('checked', false);
         $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').val('');
-        $('#receivePaymentModal #credit-memo-table input[type="checkbox"]').prop('checked', false);
-        $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').val('');
+        $('#receivePaymentModal #credits-table input[type="checkbox"]').prop('checked', false);
+        $('#receivePaymentModal #credits-table tbody input[name="credit_payment[]"]').val('');
+
+        $('#receivePaymentModal #credits-table tbody input[type="checkbox"]').parent().html('');
     });
 
     $(document).on('change', '#modal-container form #receivePaymentModal #customer', function(e) {
         var id = $(this).val();
 
         $('#receivePaymentModal #search-invoice-no').val('');
-        $('#receivePaymentModal #invoices-from').val('');
-        $('#receivePaymentModal #invoices-to').val('');
-        $('#receivePaymentModal #overdue-invoices-only').prop('checked', false);
+        $('#receivePaymentModal #invoices-from').val('').attr('data-applied', '');
+        $('#receivePaymentModal #invoices-to').val('').attr('data-applied', '');
+        $('#receivePaymentModal #overdue-invoices-only').prop('checked', false).attr('data-applied', '');
 
         $('#receivePaymentModal #search-credit-memo-no').val('');
-        $('#receivePaymentModal #credit-memo-from').val('');
-        $('#receivePaymentModal #credit-memo-to').val('');
+        $('#receivePaymentModal #credit-memo-from').val('').attr('data-applied', '');
+        $('#receivePaymentModal #credit-memo-to').val('').attr('data-applied', '');
 
         var data = new FormData();
         data.set('search', '');
@@ -7846,7 +7767,7 @@ $(function() {
                             <td>${invoice.due_date}</td>
                             <td>${invoice.original_amount}</td>
                             <td>${invoice.open_balance}</td>
-                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
+                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
                         </tr>
                         `);
                     });
@@ -7880,17 +7801,20 @@ $(function() {
                 $('#receivePaymentModal #credits-table tbody').html('');
                 if(credits.length > 0) {
                     $.each(credits, function(key, credit) {
+                        if($('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').length > 0) {
+                            var checkboxCol = `<div class="table-row-icon table-checkbox">
+                                <input class="form-check-input select-one table-select" type="checkbox" value="${credit.type}_${credit.id}">
+                            </div>`;
+                        } else {
+                            var checkboxCol = '';
+                        }
                         $('#receivePaymentModal #credits-table tbody').append(`
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="${credit.id}">
-                                </div>
-                            </td>
+                        <tr data-id="${credit.id}" data-type="${credit.type}">
+                            <td>${checkboxCol}</td>
                             <td>${credit.description}</td>
                             <td>${credit.original_amount}</td>
                             <td>${credit.open_balance}</td>
-                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
+                            <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
                         </tr>
                         `);
                     });
@@ -7915,12 +7839,12 @@ $(function() {
         $('#findByInvoice').dropdown('toggle');
     });
 
-    $(document).on('click', '#receivePaymentModal #credit-memo-table tbody tr a', function(e) {
+    $(document).on('click', '#receivePaymentModal #credits-table tbody tr a', function(e) {
         e.preventDefault();
 
         var url = $(this).attr('href');
         var row = $(this).parent().parent();
-        // var data = $('#receivePaymentModal #credit-memo-table').DataTable().row(row).data();
+        var data = row.data();
         $('#receivePaymentModal').modal('hide');
 
         $.get(url, function(res) {
@@ -9268,7 +9192,7 @@ const submitModalForm = (event, el) => {
                 }
             });
 
-            $('#receivePaymentModal #credit-memo-table tbody tr input[type="checkbox"]:checked').each(function() {
+            $('#receivePaymentModal #credits-table tbody tr input[type="checkbox"]:checked').each(function() {
                 if(data.has('credits[]') === false) {
                     data.set('credits[]', $(this).val());
                     data.set('credit_payment[]', $(this).parent().parent().parent().parent().find('input[name="credit_payment[]"]').val());
@@ -10756,7 +10680,7 @@ const updateTransaction = (event, el) => {
                 }
             });
 
-            $('#receivePaymentModal #credit-memo-table tbody tr input[type="checkbox"]:checked').each(function() {
+            $('#receivePaymentModal #credits-table tbody tr input[type="checkbox"]:checked').each(function() {
                 if(data.has('credits[]') === false) {
                     data.set('credits[]', $(this).val());
                     data.set('credit_payment[]', $(this).parent().parent().parent().parent().find('input[name="credit_payment[]"]').val());
@@ -12096,7 +12020,11 @@ const creditsTableRows = (el) => {
 const applyInvoicesFilter = (e) => {
     e.preventDefault();
 
-    // $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
+    $('#receivePaymentModal #invoices-from').attr('data-applied', $('#receivePaymentModal #invoices-from').val());
+    $('#receivePaymentModal #invoices-to').attr('data-applied', $('#receivePaymentModal #invoices-to').val());
+    $('#receivePaymentModal #overdue-invoices-only').attr('data-applied', $('#receivePaymentModal #overdue-invoices-only').prop('checked') ? 1 : 0);
+
+    loadCustomerInvoices();
 }
 
 const resetInvoicesFilter = (e) => {
@@ -12104,32 +12032,29 @@ const resetInvoicesFilter = (e) => {
 
     var href = $('#modal-container form').attr('data-href');
     if(href === false || typeof href === 'undefined') {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-
-        today = mm + '/' + dd + '/' + yyyy;
-
-        $('#receivePaymentModal #invoices-from').val(today);
-        $('#receivePaymentModal #invoices-to').val(today);
-        $('#receivePaymentModal #overdue_invoices_only').prop('checked', false);
-
-        var customerId = $('#receivePaymentModal #customer').val();
-        loadCustomerInvoices(customerId);
+        $('#receivePaymentModal #invoices-from').val('');
+        $('#receivePaymentModal #invoices-to').val('');
+        $('#receivePaymentModal #overdue-invoices-only').prop('checked', false);
+        $('#receivePaymentModal #invoices-from').attr('data-applied', '');
+        $('#receivePaymentModal #invoices-to').attr('data-applied', '');
+        $('#receivePaymentModal #overdue-invoices-only').attr('data-applied', 0);
+        loadCustomerInvoices();
     } else {
         var split = href.split('/');
         var data = {
             id: split[split.length - 1]
         };
-        loadPaymentInvoices(data);
+        // loadPaymentInvoices(data);
     }
 }
 
 const applyCreditMemoFilter = (e) => {
     e.preventDefault();
 
-    // $('#receivePaymentModal #credit-memo-table').DataTable().ajax.reload(null, true);
+    $('#receivePaymentModal #credit-memo-from').attr('data-applied', $('#receivePaymentModal #credit-memo-from').val());
+    $('#receivePaymentModal #credit-memo-to').attr('data-applied', $('#receivePaymentModal #credit-memo-to').val());
+
+    loadCustomerCredits();
 }
 
 const resetCreditMemoFilter = (e) => {
@@ -12137,185 +12062,122 @@ const resetCreditMemoFilter = (e) => {
 
     var href = $('#modal-container form').attr('data-href');
     if(href === false || typeof href === 'undefined') {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-
-        today = mm + '/' + dd + '/' + yyyy;
-
-        $('#receivePaymentModal #credit-memo-from').val(today);
-        $('#receivePaymentModal #credit-memo-to').val(today);
-        $('#receivePaymentModal #overdue_credit_memo_only').prop('checked', false);
-
-        var customerId = $('#receivePaymentModal #customer').val();
-        loadCustomerCredits(customerId);
+        $('#receivePaymentModal #credit-memo-from').val('');
+        $('#receivePaymentModal #credit-memo-to').val('');
+        $('#receivePaymentModal #credit-memo-from').attr('data-applied', '');
+        $('#receivePaymentModal #credit-memo-to').attr('data-applied', '');
+        loadCustomerCredits();
     } else {
         var split = href.split('/');
         var data = {
             id: split[split.length - 1]
         };
-        loadPaymentCredits(data);
+        // loadPaymentCredits(data);
     }
 }
 
-// const loadCustomerInvoices = (id) => {
-//     if($.fn.DataTable.isDataTable(`#receivePaymentModal #invoices-table`)) {
-//         $('#receivePaymentModal #invoices-table').DataTable().clear();
-//         $('#receivePaymentModal #invoices-table').DataTable().destroy();
-//     }
+const loadCustomerInvoices = () => {
+    var data = new FormData();
+    data.set('search', $('#receivePaymentModal #search-invoice-no').val());
+    data.set('from_date', $('#receivePaymentModal #invoices-from').attr('data-applied'));
+    data.set('to_date', $('#receivePaymentModal #invoices-to').attr('data-applied'));
+    data.set('overdue', $('#receivePaymentModal #overdue-invoices-only').attr('data-applied'));
 
-//     $('#receivePaymentModal #invoices-table').DataTable({
-//         autoWidth: false,
-//         searching: false,
-//         processing: true,
-//         serverSide: true,
-//         lengthChange: false,
-//         ordering: false,
-//         info: false,
-//         ajax: {
-//             url: `/accounting/load-customer-invoices/${id}`,
-//             dataType: 'json',
-//             contentType: 'application/json',
-//             type: 'POST',
-//             data: function(d) {
-//                 d.columns[0].search.value = $('#receivePaymentModal #search-invoice-no').val();
-//                 d.from_date = $('#receivePaymentModal #invoices-from').val();
-//                 d.to_date = $('#receivePaymentModal #invoices-to').val();
-//                 d.overdue = $('#receivePaymentModal #overdue_invoices_only').prop('checked') ? 1 : 0;
-//                 d.length = $('#receivePaymentModal #invoices_table_rows').val()
-//                 return JSON.stringify(d);
-//             },
-//             pagingType: 'full_numbers',
-//         },
-//         columns: [
-//             {
-//                 data: null,
-//                 name: 'checkbox',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(`<div class="d-flex justify-content-center">
-//                         <div class="checkbox checkbox-sec m-0">
-//                             <input type="checkbox" id="invoice-${rowData.id}" value="${rowData.id}">
-//                             <label for="invoice-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-//                         </div>
-//                     </div>`);
-//                 }
-//             },
-//             {
-//                 data: 'description',
-//                 name: 'description',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(cellData);
-//                 }
-//             },
-//             {
-//                 data: 'due_date',
-//                 name: 'due_date',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(cellData);
-//                 }
-//             },
-//             {
-//                 data: 'original_amount',
-//                 name: 'original_amount',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(cellData);
-//                 }
-//             },
-//             {
-//                 data: 'open_balance',
-//                 name: 'open_balance',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(cellData);
-//                 }
-//             },
-//             {
-//                 data: null,
-//                 name: 'payment',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]">`);
-//                 }
-//             }
-//         ]
-//     });
-// }
+    $.ajax({
+        url: `/accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val()}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var invoices = JSON.parse(result);
 
-// const loadCustomerCredits = (id) => {
-//     if($.fn.DataTable.isDataTable(`#receivePaymentModal #credit-memo-table`)) {
-//         $('#receivePaymentModal #credit-memo-table').DataTable().clear();
-//         $('#receivePaymentModal #credit-memo-table').DataTable().destroy();
-//     }
+            $('#receivePaymentModal #invoices-table tbody').html('');
+            if(invoices.length > 0) {
+                $.each(invoices, function(key, invoice) {
+                    $('#receivePaymentModal #invoices-table tbody').append(`
+                    <tr>
+                        <td>
+                            <div class="table-row-icon table-checkbox">
+                                <input class="form-check-input select-one table-select" type="checkbox" value="${invoice.id}">
+                            </div>
+                        </td>
+                        <td>${invoice.description}</td>
+                        <td>${invoice.due_date}</td>
+                        <td>${invoice.original_amount}</td>
+                        <td>${invoice.open_balance}</td>
+                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
+                    </tr>
+                    `);
+                });
 
-//     $('#receivePaymentModal #credit-memo-table').DataTable({
-//         autoWidth: false,
-//         searching: false,
-//         processing: true,
-//         serverSide: true,
-//         lengthChange: false,
-//         ordering: false,
-//         info: false,
-//         ajax: {
-//             url: `/accounting/load-customer-credits/${id}`,
-//             dataType: 'json',
-//             contentType: 'application/json',
-//             type: 'POST',
-//             data: function(d) {
-//                 d.columns[0].search.value = $('#receivePaymentModal #search-credit-memo-no').val();
-//                 d.from_date = $('#receivePaymentModal #credit-memo-from').val();
-//                 d.to_date = $('#receivePaymentModal #credit-memo-to').val();
-//                 d.length = $('#receivePaymentModal #credit_memo_table_rows').val()
-//                 return JSON.stringify(d);
-//             },
-//             pagingType: 'full_numbers',
-//         },
-//         columns: [
-//             {
-//                 data: null,
-//                 name: 'checkbox',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     if($('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').length > 0) {
-//                         $(td).html(`<div class="d-flex justify-content-center">
-//                             <div class="checkbox checkbox-sec m-0">
-//                                 <input type="checkbox" id="${rowData.type}-${rowData.id}" value="${rowData.type}_${rowData.id}">
-//                                 <label for="${rowData.type}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-//                             </div>
-//                         </div>`);
-//                     } else {
-//                         $(td).html('');
-//                     }
-//                 }
-//             },
-//             {
-//                 data: 'description',
-//                 name: 'description',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(cellData);
-//                 }
-//             },
-//             {
-//                 data: 'original_amount',
-//                 name: 'original_amount',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(cellData);
-//                 }
-//             },
-//             {
-//                 data: 'open_balance',
-//                 name: 'open_balance',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(cellData);
-//                 }
-//             },
-//             {
-//                 data: null,
-//                 name: 'payment',
-//                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-//                     $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="credit_payment[]">`);
-//                 }
-//             }
-//         ]
-//     });
-// }
+                $('#receivePaymentModal #invoices-table').nsmPagination({
+                    itemsPerPage: parseInt($('#receivePaymentModal #invoice-table-rows li a.active').html())
+                });
+            } else {
+                $('#receivePaymentModal #invoices-table tbody').html(`<tr>
+                    <td colspan="6">
+                        <div class="nsm-empty">
+                            <span>There are no transactions matching the criteria.</span>
+                        </div>
+                    </td>
+                </tr>`);
+            }
+        }
+    });
+}
+
+const loadCustomerCredits = () => {
+    var data = new FormData();
+    data.set('search', $('#receivePaymentModal #search-credit-memo-no').val());
+    data.set('from_date', $('#receivePaymentModal #credit-memo-from').attr('data-applied'));
+    data.set('to_date', $('#receivePaymentModal #credit-memo-to').attr('data-applied'));
+
+    $.ajax({
+        url: `/accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var credits = JSON.parse(result);
+
+            $('#receivePaymentModal #credits-table tbody').html('');
+            if(credits.length > 0) {
+                $.each(credits, function(key, credit) {
+                    if($('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').length > 0) {
+                        var checkboxCol = `<div class="table-row-icon table-checkbox">
+                            <input class="form-check-input select-one table-select" type="checkbox" value="${credit.type}_${credit.id}">
+                        </div>`;
+                    } else {
+                        var checkboxCol = '';
+                    }
+                    $('#receivePaymentModal #credits-table tbody').append(`
+                    <tr data-id="${credit.id}" data-type="${credit.type}">
+                        <td>${checkboxCol}</td>
+                        <td>${credit.description}</td>
+                        <td>${credit.original_amount}</td>
+                        <td>${credit.open_balance}</td>
+                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
+                    </tr>
+                    `);
+                });
+
+                $('#receivePaymentModal #credits-table').nsmPagination({
+                    itemsPerPage: parseInt($('#receivePaymentModal #credits-table-rows li a.active').html())
+                });
+            } else {
+                $('#receivePaymentModal #credits-table tbody').html(`<tr>
+                    <td colspan="6">
+                        <div class="nsm-empty">
+                            <span>There are no transactions matching the criteria.</span>
+                        </div>
+                    </td>
+                </tr>`);
+            }
+        }
+    });
+}
 
 // const loadPaymentInvoices = (data) => {
 //     if($.fn.DataTable.isDataTable(`#receivePaymentModal #invoices-table`)) {
@@ -12411,11 +12273,11 @@ const resetCreditMemoFilter = (e) => {
 // }
 
 // const loadPaymentCredits = (data) => {
-//     if($.fn.DataTable.isDataTable(`#receivePaymentModal #credit-memo-table`)) {
-//         $('#receivePaymentModal #credit-memo-table').DataTable().clear();
-//         $('#receivePaymentModal #credit-memo-table').DataTable().destroy();
+//     if($.fn.DataTable.isDataTable(`#receivePaymentModal #credits-table`)) {
+//         $('#receivePaymentModal #credits-table').DataTable().clear();
+//         $('#receivePaymentModal #credits-table').DataTable().destroy();
 //     }
-//     $('#receivePaymentModal #credit-memo-table').DataTable({
+//     $('#receivePaymentModal #credits-table').DataTable({
 //         autoWidth: false,
 //         searching: false,
 //         processing: true,

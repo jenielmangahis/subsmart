@@ -62,6 +62,19 @@ class Customer_advance_model extends MY_Model {
         return $query->row();
     }
 
+    public function get_select_options($table=null, $key=null){
+        if($table != null){
+            $this->db->from($table);
+        }
+        if($key != null){
+            $this->db->select('DISTINCT('.$key.')');
+        }else{
+            $this->db->select('*');
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_customer_item_details($id){
         $this->db->from("job_items");
         $this->db->select('items.title,job_items.qty,items.type');
