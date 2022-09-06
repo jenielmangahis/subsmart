@@ -573,7 +573,7 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6 offset-md-6">
                                             <table class="nsm-table float-end text-end">
-                                                <tbody>
+                                                <tfoot>
                                                     <tr>
                                                         <td>Subtotal</td>
                                                         <td>
@@ -650,22 +650,22 @@
                                                             </span>
                                                         </td>
                                                     </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <td>Grand Total ($)</td>
-                                                    <td>
-                                                        <span class="transaction-grand-total">
-                                                        <?php if(isset($invoice)) : ?>
-                                                            <?php
-                                                            $amount = '$'.number_format(floatval($invoice->grand_total), 2, '.', ',');
-                                                            $amount = str_replace('$-', '-$', $amount);
-                                                            echo $amount;
-                                                            ?>
-                                                        <?php else : ?>
-                                                            $0.00
-                                                        <?php endif; ?>
-                                                        </span>
-                                                    </td>
+                                                    <tr>
+                                                        <td>Grand Total ($)</td>
+                                                        <td>
+                                                            <span class="transaction-grand-total">
+                                                            <?php if(isset($invoice)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($invoice->grand_total), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                            <?php else : ?>
+                                                                $0.00
+                                                            <?php endif; ?>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
                                                 </tfoot>
                                             </table>
                                         </div>

@@ -240,27 +240,31 @@
         </div>
 
         <div class="row form_line">
+            <?php 
+            $phone_h;
+            $phone_m;
+
+            if(strpos($profile_info->phone_h, "Mobile:") !== false){
+                $str = $profile_info->phone_h;
+                $exp = explode("Mobile:",$str);
+                $phone_h = preg_replace('/\s+/', '-', ltrim($exp[0]));
+                $phone_m = preg_replace('/\s+/', '-', ltrim($exp[1]));
+             }else{
+                $phone = preg_replace('/\s+/', '-', ltrim($profile_info->phone_h));
+             } ?>
             <div class="col-md-4">
                 Phone (H)
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $phone_h == null ? $phone : $phone_h; } ?>" />
             </div>
         </div>
-        <!--<div class="row form_line">
-            <div class="col-md-4">
-                Phone (W)
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
-            </div>
-        </div>-->
         <div class="row form_line">
             <div class="col-md-4">
                 Phone (M) <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_h) || isset($profile_info->phone_m)){ echo $profile_info->phone_m != null ? $profile_info->phone_m : $phone_m; } ?>" required />
             </div>
         </div>
     </div>
