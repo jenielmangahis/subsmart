@@ -1177,7 +1177,8 @@ class Debug extends MY_Controller {
         $data     = json_decode($response);
 
         echo "<pre>";
-        print_r($data);
+        print_r($ch);
+        print_r($response);
         exit;
     }
 
