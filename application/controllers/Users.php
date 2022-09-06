@@ -2315,7 +2315,10 @@ class Users extends MY_Controller
 
 	public function ajax_loggedin_adt_sales_portal()
 	{
+		$this->load->helper('adt_portal_helper');
+
 		$this->load->model('UserPortalAccount_model');
+		$this->load->model('AdtPortal_model');
 
 		$is_valid = '';
 		$msg = 'Invalid username / password';
@@ -2325,7 +2328,20 @@ class Users extends MY_Controller
 		$uid = logged('id');
 		$userPortalAccount = $this->UserPortalAccount_model->getByUserId($uid);
 		if( $userPortalAccount ){
-			$post = [
+			$adtPortalUser = $this->AdtPortal_model->getByEmail($userPortalAccount->username);
+			if( $adtPortalUser ){
+				$token = adtPortalGenerateToken($adtPortalUser->user_id);
+				$adt_data = ['token' => $token];
+				$this->AdtPortal_model->updateByUserId($adtPortalUser->user_id, $adt_data);
+
+				$is_valid = 1;
+				$portal_username = $adtPortalUser->portal_username;
+	        	$token = $token;
+
+			}
+
+			//Use if curl server error is fixed
+			/*$post = [
 	            'portal_username' => $userPortalAccount->username,
 	            'portal_password' => $userPortalAccount->password_plain,
 	        ];
@@ -2345,7 +2361,7 @@ class Users extends MY_Controller
 	        	$is_valid = 1;
 	        	$portal_username = $data->portal_username;
 	        	$token = $data->token;
-	        }
+	        }*/
 		}
 
 		$json = ['is_valid' => $is_valid, 'msg' => $msg, 'portal_username' => $portal_username, 'token' => $token];
