@@ -1166,7 +1166,9 @@ class Debug extends MY_Controller {
         $url = 'https://portal.urpowerpro.com/api/v1/user/validate_login';
         $ch = curl_init();        
         curl_setopt($ch, CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_POST, 1);            
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);            
