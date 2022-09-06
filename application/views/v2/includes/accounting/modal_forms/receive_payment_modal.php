@@ -168,8 +168,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-12">
-                                                <button class="nsm-button m-0" type="button" id="reset-invoices-btn">Reset</button>
-                                                <button class="nsm-button success float-end m-0" type="button" id="apply-invoices-btn">Apply</button>
+                                                <button class="nsm-button m-0" type="button" onclick="resetInvoicesFilter(event)">Reset</button>
+                                                <button class="nsm-button success float-end m-0" type="button" onclick="applyInvoicesFilter(event)">Apply</button>
                                             </div>
                                         </div>
                                     </ul>
@@ -242,8 +242,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-12">
-                                                <button class="nsm-button m-0" type="button" id="reset-credits-btn">Reset</button>
-                                                <button class="nsm-button success float-end m-0" type="button" id="apply-credits-btn">Apply</button>
+                                                <button class="nsm-button m-0" type="button" onclick="resetCreditMemoFilter(event)">Reset</button>
+                                                <button class="nsm-button success float-end m-0" type="button" onclick="applyCreditMemoFilter(event)">Apply</button>
                                             </div>
                                         </div>
                                     </ul>
@@ -291,12 +291,12 @@
                             </div>
                            
                             <div class="row" id="payment-summary">
-                                <div class="col-12 col-md-4 offset-md-8 grid-mb">
+                                <div class="col-12 col-md-3 offset-md-9 grid-mb">
                                     <table class="nsm-table text-end">
-                                        <tbody>
+                                        <tfoot>
                                             <tr>
-                                                <td class="border-0">Amount to Apply</td>
-                                                <td class="border-0">
+                                                <td>Amount to Apply</td>
+                                                <td>
                                                     <span class="amount-to-apply">
                                                         <?php if(isset($payment)) : ?>
                                                         <?php
@@ -311,8 +311,8 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="border-0">Amount to Credit</td>
-                                                <td class="border-0">
+                                                <td>Amount to Credit</td>
+                                                <td>
                                                     <span class="amount-to-credit">
                                                         <?php if(isset($payment)) : ?>
                                                         <?php
@@ -327,13 +327,13 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"><button type="button" class="nsm-button" id="clear-payment">Clear payment</button></td>
+                                                <td></td>
+                                                <td><button type="button" class="nsm-button" id="clear-payment">Clear payment</button></td>
                                             </tr>
                                             <tr class="d-none">
-                                                <td colspan="2" class="border-0"><span id="credit-message"></span></td>
+                                                <td colspan="2"><span id="credit-message"></span></td>
                                             </tr>
-                                        </tbody>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>

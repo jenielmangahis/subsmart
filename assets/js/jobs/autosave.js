@@ -10,7 +10,17 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const config = new FormAutoSaveConfig({
     onChange: async () => {
       try {
-        await autoSaveForm();
+        const { id } = await autoSaveForm();
+
+        let $jobId = $form.querySelector("[name=jobs_id]");
+        if (!$jobId) {
+          $jobId = document.createElement("input");
+          $jobId.setAttribute("type", "hidden");
+          $jobId.setAttribute("name", "jobs_id");
+          $form.appendChild($jobId);
+        }
+
+        $jobId.value = id;
       } catch (error) {
         if (error.toString().toLowerCase().includes("is not valid json")) {
           return;
@@ -30,20 +40,20 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   form.listen();
 });
 
-// async function autoSaveForm() {
-//   const $form = document.getElementById("jobs_form");
+async function autoSaveForm() {
+  const $form = document.getElementById("jobs_form");
 
-//   const formdata = new FormData($form);
-//   formdata.append("action", "submit");
+  const formdata = new FormData($form);
+  formdata.append("action", "submit");
 
-//   const response = await fetch("/job/save_job?json=1", {
-//     method: "post",
-//     body: formdata,
-//   });
+  const response = await fetch("/job/save_job?json=1", {
+    method: "post",
+    body: formdata,
+  });
 
-//   if (response.status === 500) {
-//     throw new Error("500");
-//   }
+  if (response.status === 500) {
+    throw new Error("500");
+  }
 
-//   return response.json();
-// }
+  return response.json();
+}

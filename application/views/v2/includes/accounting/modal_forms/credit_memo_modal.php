@@ -333,7 +333,7 @@
 
                                 <div class="col-12 col-md-3 offset-md-3">
                                     <table class="nsm-table float-end text-end">
-                                        <tbody>
+                                        <tfoot>
                                             <tr>
                                                 <td>Subtotal</td>
                                                 <td>
@@ -410,8 +410,6 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                        </tbody>
-                                        <tfoot>
                                             <tr>
                                                 <td>Grand Total ($)</td>
                                                 <td>

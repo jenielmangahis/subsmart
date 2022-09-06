@@ -1497,12 +1497,14 @@ class Customer extends MY_Controller
 
         $userid = $id;
         $user_id = logged('id');
+        $this->page_data['test']= getLoggedUserID();
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            $this->page_data['panel_type'] = $this->customer_ad_model->get_select_options('acs_alarm','panel_type');
 
             $get_customer_notes = array(
                 'where' => array(
@@ -1539,7 +1541,6 @@ class Customer extends MY_Controller
                 $this->page_data['papers'] = $this->page_data['papers'][0];
             }
         }
-
         $get_customer_groups = array(
             'where' => array(
                     'company_id' => logged('company_id')

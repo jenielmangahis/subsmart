@@ -1154,6 +1154,34 @@ class Debug extends MY_Controller {
         $plaidAccount = $this->PlaidAccount_model->getByCompanyId($cid);
     }
 
+    public function portal_validate_login()
+    {
+        $this->load->model('UserPortalAccount_model');
+
+        $post = [
+            'portal_username' => 'admin@gmail.com',
+            'portal_password' => 'secret',
+        ];
+
+        $url = 'https://portal.urpowerpro.com/api/v1/user/validate_login';
+        $ch = curl_init();        
+        curl_setopt($ch, CURLOPT_URL,$url);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_POST, 1);            
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);            
+        
+        $response = curl_exec($ch);
+        $data     = json_decode($response);
+
+        echo "<pre>";
+        print_r($ch);
+        print_r($response);
+        exit;
+    }
+
 }
 /* End of file Debug.php */
 

@@ -257,7 +257,14 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function getByAdtSalesProjectId($adt_project_id)
+    {
 
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('adt_sales_project_id', $adt_project_id);
+    }
+    
     public function getCustomerMMR($id){
         $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date');
         $this->db->from('acs_billing');

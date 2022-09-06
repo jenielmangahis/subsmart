@@ -1642,7 +1642,13 @@ class Job extends MY_Controller
         createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id']);
 
 
-        echo $jobs_id;
+        if (!is_null($this->input->get('json', TRUE))) {
+            // Returns json data, when ?json is set on URL query string.
+            header('content-type: application/json');
+            exit(json_encode(['id' => $jobs_id]));
+        } else {
+            echo $jobs_id;
+        }
     }
 
     public function delete()

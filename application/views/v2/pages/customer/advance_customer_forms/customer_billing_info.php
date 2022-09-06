@@ -43,7 +43,7 @@
             </div>
 
             <div class="col-md-6">
-                <input data-type="billing_address_city" type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
+                <input data-type="billing_address_city" type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city != null ? $billing_info->city : $profile_info->city; } ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -51,7 +51,7 @@
                 State
             </div>
             <div class="col-md-6">
-                <input data-type="billing_address_state" type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
+                <input data-type="billing_address_state" type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state != null ? $billing_info->state : $profile_info->state; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -59,7 +59,7 @@
                 ZIP
             </div>
             <div class="col-md-6">
-                <input data-type="billing_address_zip" type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
+                <input data-type="billing_address_zip" type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip != null ? $billing_info->zip : $profile_info->zip_code; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -147,7 +147,7 @@
                 Billing Start Date
             </div>
             <div class="col-md-6">
-                <input data-type="billing_start_date" type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+                <input data-type="billing_start_date" type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date != null ? $billing_info->bill_start_date : $office_info->install_date; } ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -155,7 +155,7 @@
                 Billing End Date
             </div>
             <div class="col-md-6">
-                <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
+                <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date != null ? $billing_info->bill_end_date : date("m/d/Y", strtotime("$office_info->install_date +$billing_info->contract_term months"));; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -166,9 +166,20 @@
                 <select data-type="billing_month_day" id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
                     <option selected value="0">Select Day</option>
                     <?php
+                    if($billing_info->bill_day == null){
+                        if($billing_info->billing_start_date == null){
+                            $insdate = strtotime($office_info->install_date);
+                            $day = date("d", $insdate);
+                        }else{
+                            $insdate = strtotime($billing_info->billing_start_date);
+                            $day = date("d", $insdate);
+                        }
+                    }else{
+                        $day = $billing_info->bill_day;
+                    }
                     for ($days=0;$days<32;$days++){
                         ?>
-                            <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($days)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
+                            <option <?php if(isset($billing_info)){ if($day == days_of_month($days)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
                         <?php
                     }
                     ?>
@@ -367,7 +378,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="transaction_amount" value="<?= isset($billing_info) ? $billing_info->transaction_amount : ''; ?>">
+                    <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : ''; ?>">
                 </div>
             </div>
         </div>
