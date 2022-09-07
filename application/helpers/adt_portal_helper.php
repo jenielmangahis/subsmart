@@ -1,6 +1,9 @@
 <?php
 function portalValidateLogin($username, $password)
 {   
+    $CI =& get_instance();
+    $CI->load->model('AcsProfile_model');
+
     $is_valid = 0;
     $msg = 'Invalid account';
     $portal_username = '';
@@ -173,4 +176,86 @@ function adtPortalGenerateToken($user_id) {
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
     return $randomString . $user_id;
+}
+
+function portalSyncProjectsNonAPI($user_id, $company_id, $username)
+{       
+    $CI =& get_instance();
+    $CI->load->model('AcsProfile_model');
+    $CI->load->model('AdtPortal_model');
+
+    $adt_project_ids = array();
+    $adtPortalUser   = $this->AdtPortal_model->getByEmail($username);
+    if( $adtPortalUser ){   
+        $pwCheck = password_verify($this->input->post('portal_password'), $adtPortalUser->password);
+        if( $pwCheck ){
+            $portalProjects = $CI->AdtPortal_model->getProjectsByUserId($adtPortalUser->user_id);
+            foreach($portalProjects as $prj){
+                $customer = $CI->AcsProfile_model->getByAdtSalesProjectId($prj->project_id);
+                if( $customer ){
+                    $customer_data = [
+                        'contact_name' => $prj->hoa_name,
+                        'first_name' => $prj->homeown_first_name,
+                        'last_name' => $prj->homeown_last_name,
+                        'mail_add' => $prj->street_address,
+                        'city' => $prj->city,
+                        'state' => $prj->state,
+                        'zip_code' => $prj->postal_code,
+                        'email' => $prj->homeown_email,
+                        'phone_h' => $prj->homeown_phone,
+                        'phone_m' => $prj->hoa_phone
+                    ];
+                    $CI->AcsProfile_model->updateByProfId($customer->prof_id,$customer_data);
+                }else{
+                    $customer_data = [
+                        'company_id' => $company_id,
+                        'fk_user_id' => $user_id,
+                        'fk_sa_id' => $user_id,
+                        'industry_type_id' => 0,
+                        'contact_name' => $prj->hoa_name,
+                        'status' => 'NEW',
+                        'customer_type' => 'Business',
+                        'business_name' => '',
+                        'first_name' => $prj->homeown_first_name,
+                        'middle_name' => '',
+                        'last_name' => $prj->homeown_last_name,
+                        'mail_add' => $prj->street_address,
+                        'city' => $prj->city,
+                        'state' => $prj->state,
+                        'zip_code' => $prj->postal_code,
+                        'email' => $prj->homeown_email,
+                        'phone_h' => $prj->homeown_phone,
+                        'phone_m' => $prj->hoa_phone,
+                        'adt_sales_project_id' => $prj->project_id
+                    ];
+
+                    $CI->AcsProfile_model->create($customer_data);
+                }
+
+                $adt_project_ids[] = $prj['project_id'];
+            }
+        }
+    }
+
+    $result = ['total_projects' => count($adt_project_ids), 'project_ids' => $adt_project_ids];
+    return $result;
+}
+
+function portalUpdateIsSyncProjectsNonAPI( $project_ids = array() )
+{
+    $CI->load->model('AdtPortal_model');
+
+    $total_updated = 0;
+    if( !empty($project_ids) ){
+
+        foreach($project_ids as $key => $prjid){
+            $data = ['is_sync' => 1];
+            $isUpdated = $CI->AdtPortal_model->updateProjectByProjectId($prjid, $data); 
+            $total_updated++;   
+        }
+    } 
+
+    $result = ['total_updated' => $total_updated];
+
+    return $result;
 }

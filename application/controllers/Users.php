@@ -2332,7 +2332,7 @@ class Users extends MY_Controller
 			if( $adtPortalUser ){
 				$token = adtPortalGenerateToken($adtPortalUser->user_id);
 				$adt_data = ['token' => $token];
-				$this->AdtPortal_model->updateByUserId($adtPortalUser->user_id, $adt_data);
+				$this->AdtPortal_model->updateUserByUserId($adtPortalUser->user_id, $adt_data);
 
 				$is_valid = 1;
 				$portal_username = $adtPortalUser->portal_username;
@@ -2386,6 +2386,7 @@ class Users extends MY_Controller
 	{
 		$this->load->helper('adt_portal_helper');
 		$this->load->model('UserPortalAccount_model');
+		$this->load->model('AdtPortal_model');
 
 		$is_success = 0;
 		$msg = 'Password not match';
@@ -2397,8 +2398,40 @@ class Users extends MY_Controller
 			$msg = 'Please enter password';
 		}elseif( $this->input->post('portal_username') == '' ){
 			$msg = 'Please enter username';
-		}else{
-			$apiIsValid = portalValidateLogin($this->input->post('portal_username'), $this->input->post('portal_password'));
+		}else{			
+			//Non API Version
+			$adtPortalUser = $this->AdtPortal_model->getByEmail($this->input->post('portal_username'));
+			if( $adtPortalUser ){	
+				$pwCheck = password_verify($this->input->post('portal_password'), $adtPortalUser->password);
+				if( $pwCheck ){
+					$userPortalAccess = $this->UserPortalAccount_model->getByUserId($post['uid']);
+					if( $userPortalAccess ){
+						$data_portal = [
+							'username' => $post['portal_username'],
+							'password_plain' => $post['portal_password']
+						];
+
+						$this->UserPortalAccount_model->update($userPortalAccess->id, $data_portal);
+					}else{
+						$data_portal = [
+							'user_id' => $post['uid'],
+							'username' => $post['portal_username'],
+							'password_plain' => $post['portal_password']
+						];
+
+						$this->UserPortalAccount_model->create($data_portal);
+					}
+
+					$is_success = 1;
+					$msg = '';
+				}else{
+					$msg = 'Login details not valid';
+				}
+			}else{
+				$msg = 'Login details not valid';
+			}
+			//API Version
+			/*$apiIsValid = portalValidateLogin($this->input->post('portal_username'), $this->input->post('portal_password'));
 			if( $apiIsValid['is_valid'] == 1 ){
 				$userPortalAccess = $this->UserPortalAccount_model->getByUserId($post['uid']);
 				if( $userPortalAccess ){
@@ -2422,7 +2455,7 @@ class Users extends MY_Controller
 				$msg = '';
 			}else{
 				$msg = $apiIsValid['msg'];
-			}
+			}*/
 		}	
 
 		$json = ['is_success' => $is_success, 'msg' => $msg];
