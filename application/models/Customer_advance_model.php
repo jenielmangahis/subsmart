@@ -172,6 +172,35 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
+    public function getCustomerLists($param = null)
+    {
+        $cid = logged('company_id');
+        $this->db->from("acs_profile");
+
+        if($cid == 58){
+            $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
+            acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
+            acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,
+            acs_office.fk_sales_rep_office,acs_info_solar.proposed_solar,acs_info_solar.proposed_payment');
+        }else{
+            $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
+            acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
+            acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,acs_office.fk_sales_rep_office');
+        }
+
+        $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
+        $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id','left');
+
+        $this->db->limit(10);
+        $this->db->where("acs_profile.company_id", $cid);
+        $query = $this->db->get();
+        return $query->result();
+
+    }
+
     public function get_customer_data($search=null){
         $cid = logged('company_id');
         $this->db->from("acs_profile");
@@ -259,8 +288,8 @@ class Customer_advance_model extends MY_Model {
             }
         }else{
             //$this->db->limit(10);
-            $this->db->order_by('prof_id', "DESC");
         }
+//$this->db->order_by('prof_id', "DESC");
         $this->db->limit($search['length'], $search['start']);
         $this->db->where("acs_profile.company_id", $cid);
         //$this->db->limit(20);

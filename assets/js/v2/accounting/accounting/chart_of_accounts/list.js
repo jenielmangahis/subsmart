@@ -64,16 +64,16 @@ $("#search_field").on("input", debounce(function() {
 }, 1500));
 
 $('#accounts-table input.select-all').on('change', function() {
-    $('#accounts-table tbody tr input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
+    $('#accounts-table tbody tr:visible input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
 $('#accounts-table tbody tr input[type="checkbox"]').on('change', function() {
-    $('#selected-checks').html($('#accounts-table tbody tr input[type="checkbox"]:checked').length);
+    // $('#selected-checks').html($('#accounts-table tbody tr:visible input[type="checkbox"]:checked').length);
 
-    var notChecked = $('#accounts-table tbody tr input[type="checkbox"]:not(:checked)').length;
+    var notChecked = $('#accounts-table tbody tr:visible input[type="checkbox"]:not(:checked)').length;
     $('#accounts-table input.select-all').prop('checked', notChecked === 0);
 
-    if($('#accounts-table tbody tr input[type="checkbox"]:checked').length > 0) {
+    if($('#accounts-table tbody tr:visible input[type="checkbox"]:checked').length > 0) {
         $('#make-inactive').removeClass('disabled');
     } else {
         $('#make-inactive').addClass('disabled');
@@ -85,7 +85,7 @@ $('#make-inactive').on('click', function(e) {
     if($(this).hasClass('disabled') === false) {
         var data = new FormData();
 
-        $('#accounts-table tbody tr input.select-one:checked').each(function() {
+        $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
             data.append('ids[]', $(this).val());
         });
 
@@ -97,7 +97,7 @@ $('#make-inactive').on('click', function(e) {
             cache:false,
             processData:false,
             success:function(data){
-                $('#accounts-table tbody tr input.select-one:checked').each(function() {
+                $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
                     if($('#inc_inactive').prop('checked')) {
                         $(this).closest('tr').find('td:nth-child(2)').html($(this).closest('tr').find('td:nth-child(2)').text() + ' (deleted)');
                     } else {

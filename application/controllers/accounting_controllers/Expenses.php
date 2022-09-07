@@ -109,9 +109,20 @@ class Expenses extends MY_Controller
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/expenses/expenses.js"
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/expenses/list.js"
         ));
 
+        $filters = [
+            'company_id' => logged('company_id'),
+            'type' => 'all',
+            'delivery_method' => 'all-statuses',
+            'category' => 'all',
+            'start-date' => date("Y-m-d", strtotime(date("m/d/Y")." -365 days")),
+            'end-date' => date("Y-m-d")
+        ];
+
+        $this->page_data['transactions'] = $this->get_transactions($filters);
         $this->page_data['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
@@ -119,7 +130,7 @@ class Expenses extends MY_Controller
         $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Expenses";
-        $this->load->view('accounting/expenses/index', $this->page_data);
+        $this->load->view('v2/pages/accounting/expenses/expenses/list', $this->page_data);
     }
 
     private function get_category_accs()
@@ -161,12 +172,9 @@ class Expenses extends MY_Controller
         return $categoryAccs;
     }
 
-    public function load_transactions()
+    public function get_expense_transactions()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $column = $post['order'][0]['column'];
-        $order = $post['order'][0]['dir'];
-        $columnName = $post['columns'][$column]['name'];
+        $post = $this->input->post();
 
         $filters = $this->set_filters($post);
 
@@ -257,6 +265,33 @@ class Expenses extends MY_Controller
                 $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
 
                 if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id']) {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">';
+                        
+                        if($bill->status !== "2") {
+                            $manageCol .= '<li><a class="dropdown-item" href="#">Schedule payment</a></li>';
+                            $manageCol .= '<li><a class="dropdown-item" href="#">Mark as paid</a></li>';
+                        }
+                        $manageCol .= '<li>
+                                    <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item copy-bill" href="#">Copy</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                            </ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $bill->id,
                         'date' => date("m/d/Y", strtotime($bill->bill_date)),
@@ -272,7 +307,8 @@ class Expenses extends MY_Controller
                         'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                         'status' => $bill->status === "2" ? "Paid" : "Open",
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
@@ -289,6 +325,33 @@ class Expenses extends MY_Controller
                 $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
 
                 if($filters['category'] === 'all') {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                </li>
+                        ';
+
+                        if($billPayment->status !== '4') {
+                            $manageCol .= '<li>
+                                <a class="dropdown-item void-bill-payment" href="#">Void</a>
+                            </li>';
+                        }
+
+                        $manageCol .= '</ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $billPayment->id,
                         'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
@@ -302,9 +365,10 @@ class Expenses extends MY_Controller
                         'due_date' => '',
                         'balance' => '$0.00',
                         'total' => '$'.number_format(floatval($billPayment->total_amount), 2, '.', ','),
-                        'status' => 'Applied',
+                        'status' => $billPayment->status === '4' ? 'Voided' : 'Applied',
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
@@ -331,6 +395,36 @@ class Expenses extends MY_Controller
                 }
 
                 if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id'] || $filters['category'] === $check->bank_account_id) {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item copy-check" href="#">Copy</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                </li>
+                        ';
+
+                        if($check->status !== '4') {
+                            $manageCol .= '<li>
+                                <a class="dropdown-item void-check" href="#">Void</a>
+                            </li>';
+                        }
+
+                        $manageCol .= '</ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $check->id,
                         'date' => date("m/d/Y", strtotime($check->payment_date)),
@@ -346,7 +440,8 @@ class Expenses extends MY_Controller
                         'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
                         'status' => $check->status === "1" ? "Paid" : "Voided",
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
@@ -373,6 +468,19 @@ class Expenses extends MY_Controller
                 }
 
                 if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id'] || $filters['category'] === $creditCardCredit->bank_credit_account_id) {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                            </ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $creditCardCredit->id,
                         'date' => date("m/d/Y", strtotime($creditCardCredit->payment_date)),
@@ -388,7 +496,8 @@ class Expenses extends MY_Controller
                         'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                         'status' => '',
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
@@ -401,6 +510,27 @@ class Expenses extends MY_Controller
                 $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
 
                 if($filters['category'] === 'all' || $filters['category'] === $ccPayment->credit_card_id || $filters['category'] === $ccPayment->bank_account_id) {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item view-edit-cc-payment" href="#">View/Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                </li>';
+
+                        if($ccPayment->status !== '4') {
+                            $manageCol .= '<li><a class="dropdown-item void-cc-payment" href="#">Void</a></li>';
+                        }
+
+                        $manageCol .= '</ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $ccPayment->id,
                         'date' => date("m/d/Y", strtotime($ccPayment->date)),
@@ -416,7 +546,8 @@ class Expenses extends MY_Controller
                         'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
                         'status' => '',
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
@@ -445,7 +576,40 @@ class Expenses extends MY_Controller
                 $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
 
                 if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id'] || $filters['category'] === $expense->payment_account_id) {
-                        $transactions[] = [
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/'.$expense->id.'" target="_blank">Print</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item copy-expense" href="#">Copy</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                </li>
+                        ';
+
+                        if($expense->status !== '4') {
+                            $manageCol .= '<li>
+                                <a class="dropdown-item void-expense" href="#">Void</a>
+                            </li>';
+                        }
+
+                        $manageCol .= '</ul>
+                        </div>';
+                    }
+
+                    $transactions[] = [
                         'id' => $expense->id,
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'type' => 'Expense',
@@ -460,7 +624,8 @@ class Expenses extends MY_Controller
                         'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
                         'status' => $expense->status === "1" ? 'Paid' : 'Voided',
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
@@ -474,6 +639,43 @@ class Expenses extends MY_Controller
                 $payee = $this->vendors_model->get_vendor_by_id($purchOrder->vendor_id);
 
                 if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id']) {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">';
+
+                            if($purchOrder->status === '1') {
+                                $manageCol .= '<li>
+                                    <a class="dropdown-item copy-to-bill" href="#">Send</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item copy-to-bill" href="#">Copy to bill</a>
+                                </li>';
+                            }
+
+                            $manageCol .= '<li>
+                                    <a class="dropdown-item" href="/accounting/vendors/print-transaction/purchase-order/'.$purchOrder->id.'" target="_blank">Print</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                        ';
+
+                        $manageCol .= '</ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $purchOrder->id,
                         'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
@@ -489,7 +691,8 @@ class Expenses extends MY_Controller
                         'total' => '$'.number_format(floatval($purchOrder->total_amount), 2, '.', ','),
                         'status' => $purchOrder->status === "1" ? "Open" : "Closed",
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($purchOrder->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($purchOrder->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
@@ -515,7 +718,8 @@ class Expenses extends MY_Controller
                         'total' => '-$'.number_format(floatval($transfer->transfer_amount), 2, '.', ','),
                         'status' => '',
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($transfer->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($transfer->created_at)),
+                        'manage' => ''
                     ];
                 }
             }
@@ -529,6 +733,28 @@ class Expenses extends MY_Controller
                 $payee = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
 
                 if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id']) {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item view-edit-vendor-credit" href="#">View/Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item copy-vendor-credit" href="#">Copy</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                </li>
+                            </ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $vendorCredit->id,
                         'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
@@ -544,11 +770,19 @@ class Expenses extends MY_Controller
                         'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                         'status' => $vendorCredit->status === "1" ? "Open" : "Closed",
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
-                        'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
+                        'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at)),
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }
         }
+
+        usort($transaction, function($a, $b) {
+            if($a[$columnName] === $b[$columnName]) {
+                return strtotime($a['date_created']) > strtotime($b['date_created']);
+            }
+            return strcmp($a[$columnName], $b[$columnName]);
+        });
 
         return $transactions;
     }

@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-12 col-md-6 mt-3">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control nsm-field mb-2" name="name" id="name" required placeholder="Enter Name" value="<?=$detailType->acc_detail_name?>"/>
+                        <input type="text" class="form-control nsm-field mb-2" name="name" id="name" required placeholder="Enter Name" value="<?=isset($account) ? $account->name : $detailType->acc_detail_name?>"/>
                     </div>
                 </div>
                 <div class="row">

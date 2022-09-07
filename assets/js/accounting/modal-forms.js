@@ -9342,11 +9342,11 @@ const submitModalForm = (event, el) => {
                             $('#expenseModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white" onclick="makeRecurring('expense')">Make Recurring</a></span>
+                                    <span><a href="#" class="text-dark text-decoration-none" onclick="makeRecurring('expense')">Make Recurring</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-expense">Copy</a>
                                                 <a class="dropdown-item" href="#" id="void-expense">Void</a>
@@ -9376,11 +9376,11 @@ const submitModalForm = (event, el) => {
                             $('#billModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white" onclick="makeRecurring('bill')">Make Recurring</a></span>
+                                    <span><a href="#" class="text-dark text-decoration-none" onclick="makeRecurring('bill')">Make Recurring</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-bill">Copy</a>
                                                 <a class="dropdown-item" href="#" id="delete-bill">Delete</a>
@@ -9399,7 +9399,7 @@ const submitModalForm = (event, el) => {
                             <span class="mx-3 divider"></span>
                             <span>
                                 <div class="dropup">
-                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#" id="copy-purchase-order">Copy</a>
                                         <a class="dropdown-item" href="#" id="delete-purchase-order">Delete</a>
@@ -9415,11 +9415,11 @@ const submitModalForm = (event, el) => {
                             $('#vendorCreditModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white" onclick="makeRecurring('vendor_credit')">Make Recurring</a></span>
+                                    <span><a href="#" class="text-dark text-decoration-none" onclick="makeRecurring('vendor_credit')">Make Recurring</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-vendor-credit">Copy</a>
                                                 <a class="dropdown-item" href="#" id="delete-vendor-credit">Delete</a>
@@ -9438,11 +9438,11 @@ const submitModalForm = (event, el) => {
                             $('#creditCardCreditModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white" onclick="makeRecurring('credit_card_credit')">Make Recurring</a></span>
+                                    <span><a href="#" class="text-dark text-decoration-none" onclick="makeRecurring('credit_card_credit')">Make Recurring</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-cc-credit">Copy</a>
                                                 <a class="dropdown-item" href="#" id="void-cc-credit">Void</a>
@@ -9458,7 +9458,7 @@ const submitModalForm = (event, el) => {
                         case 'singleTimeModal' :
                             var type = 'time-activity';
 
-                            $('#singleTimeModal .modal-footer div.row.w-100 div:nth-child(2)').html(`<a href="#" class="text-white m-auto" id="delete-time-activity">Delete</a>`);
+                            $('#singleTimeModal .modal-footer div.row.w-100 div:nth-child(2)').html(`<a href="#" class="text-dark text-decoration-none m-auto" id="delete-time-activity">Delete</a>`);
                         break;
                         case 'journalEntryModal' :
                             var type = 'journal';
@@ -9467,13 +9467,13 @@ const submitModalForm = (event, el) => {
                             $('#journalEntryModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white">Reverse</a></span>
+                                    <span><a href="#" class="text-dark text-decoration-none">Reverse</a></span>
                                     <span class="mx-3 divider"></span>
-                                    <span><a href="#" class="text-white" onclick="makeRecurring('journal_entry')">Make Recurring</a></span>
+                                    <span><a href="#" class="text-dark text-decoration-none" onclick="makeRecurring('journal_entry')">Make Recurring</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-journal-entry">Copy</a>
                                                 <a class="dropdown-item" href="#" id="delete-journal-entry">Delete</a>
@@ -9493,7 +9493,7 @@ const submitModalForm = (event, el) => {
 
                             $('#payDownCreditModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="dropup m-auto">
-                                <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#" id="void-credit-card-payment">Void</a>
                                     <a class="dropdown-item" href="#" id="delete-credit-card-payment">Delete</a>
@@ -9509,11 +9509,11 @@ const submitModalForm = (event, el) => {
                             $('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white" id="save-and-print">Print</a></span>
+                                    <span><a href="#" class="text-dark text-decoration-none" id="save-and-print">Print</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="void-payment">Void</a>
                                                 <a class="dropdown-item" href="#" id="delete-payment">Delete</a>
@@ -9532,7 +9532,7 @@ const submitModalForm = (event, el) => {
                             <span class="mx-3 divider"></span>
                             <span>
                                 <div class="dropup">
-                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#" id="copy-invoice">Copy</a>
                                         <a class="dropdown-item" href="#" id="void-invoice">Void</a>
@@ -9553,7 +9553,7 @@ const submitModalForm = (event, el) => {
                             <span class="mx-3 divider"></span>
                             <span>
                                 <div class="dropup">
-                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#" id="copy-credit-memo">Copy</a>
                                         <a class="dropdown-item" href="#" id="void-credit-memo">Void</a>
@@ -9571,7 +9571,7 @@ const submitModalForm = (event, el) => {
                             <span class="mx-3 divider"></span>
                             <span>
                                 <div class="dropup">
-                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#" id="copy-sales-receipt">Copy</a>
                                         <a class="dropdown-item" href="#" id="void-sales-receipt">Void</a>
@@ -9586,18 +9586,16 @@ const submitModalForm = (event, el) => {
                             var type = 'refund-receipt';
 
                             $('#refundReceiptModal .modal-footer div.row.w-100 div:nth-child(2) div.row div').prepend(`
-                            <span><a href="#" class="text-white">Order checks</a></span>
+                            <span><a href="#" class="text-dark text-decoration-none">Order checks</a></span>
                             <span class="mx-3 divider"></span>`);
                             $('#refundReceiptModal .modal-footer div.row.w-100 div:nth-child(2) div.row div').append(`
                             <span class="mx-3 divider"></span>
                             <span>
                                 <div class="dropup">
-                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <a href="javascript:void(0);" class="text-dark text-decoration-none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#" id="copy-refund-receipt">Copy</a>
-                                        <?php if($receipt->status !== "4") : ?>
                                         <a class="dropdown-item" href="#" id="void-refund-receipt">Void</a>
-                                        <?php endif; ?>
                                         <a class="dropdown-item" href="#" id="delete-refund-receipt">Delete</a>
                                         <a class="dropdown-item" href="#">Transaction journal</a>
                                         <a class="dropdown-item" href="#">Audit history</a>
@@ -11395,10 +11393,6 @@ const initAccountModal = () => {
         $('#modal-container #account-modal form').removeAttr('novalidate');
         $('#modal-container #account-modal').attr('data-bs-backdrop', 'static');
         $('#modal-container #account-modal').attr('data-bs-keyboard', 'false');
-        // $('#modal-container #account-modal').modal({
-        //     backdrop: 'static',
-        //     keyboard: false
-        // });
     }
     $('#modal-container #account-modal').modal('show');
 }

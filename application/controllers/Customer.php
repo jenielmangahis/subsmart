@@ -54,55 +54,6 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/adv_cust_modules/add_module_details', $this->page_data);
     }
 
-    // public function getCustomer(){
-    //     $data = array();
-    //     $input = $this->input->post();
-           
-    //     $users = $this->customer_ad_model->get_customer_data($input);
-        
-
-    //     $get_company_settings = array(
-    //         'where' => array(
-    //             'company_id' => logged('company_id')
-    //         ),
-    //         'table' => 'customer_settings_headers',
-    //         'select' => '*',
-    //     );
-    //     $customer_settings = $this->general->get_data_with_param($get_company_settings);
-    //     $countUsers = $this->customer_ad_model->get_row_count();
-    //     $enabled_table_headers = array();
-    //     if( $customer_settings[0] ){
-    //         $enabled_table_headers = unserialize($customer_settings[0]->headers);
-    //     }
-        
-    //     foreach($users as $user){
-    //         if (in_array('name', $enabled_table_headers)){
-    //             if ($user->customer_type === 'Business'){
-    //                 $parts = explode(' ', strtoupper(trim($user->business_name)));
-    //                 $name = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-    //             }else{
-    //                 $name = ucwords($user->first_name[0]) . ucwords($user->last_name[0]);
-    //             }
-    //         }
-    //         $data[] = array(
-
-    //             $name,
-    //             $user->city,
-    //             $user->phone_m
-    //         );
-    //     }
-        
-
-    //     $output = array(
-    //         "draw" => $_POST['draw'],
-    //         "recordsTotal" => '10',
-    //         "recordsFiltered" => '10',
-    //         "data" => $data
-    //     );
-
-    //     echo json_encode($output);
-        
-    // }
     public function index()
     {
         $this->page_data['page']->title = 'Customers';
@@ -112,11 +63,11 @@ class Customer extends MY_Controller
 
         $this->load->library('wizardlib');        
         $input = $this->input->post();
-        if($input){
-            $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
-        }else {            
-            $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
-        }
+        // if($input){
+        //     $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
+        // }else {            
+        //     $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
+        // }
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
 
         $get_company_settings = array(
@@ -128,7 +79,7 @@ class Customer extends MY_Controller
         );
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
         $enabled_table_headers = array();
-        if( $customer_settings[0] ){
+        if( isset($customer_settings[0] )){
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
 
@@ -141,7 +92,107 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/list', $this->page_data);
     }
 
+    /**
+     * This function will fetch customer list from post request of datatable server side processing
+     * 
+     * @return json Customer list json format
+     */
+    public function getCustomerLists()
+    {
+        $data  = array();
+        $start = $_POST['start'];
+        $length = $_POST['length'];
 
+        $customers = $this->customer_ad_model->getCustomerLists();
+    
+        foreach($customers as $customer){
+            switch (strtoupper($customer->status)){
+                case "INSTALLED":
+                    $badge = "success";
+                    break;
+                case "CANCELLED":
+                    $badge = "error";
+                    break;
+                case "COLLECTIONS":
+                    $badge = "secondary";
+                    break;
+                case "CHARGED BACK":
+                    $badge = "primary";
+                    break;
+                default:
+                    $badge = "";
+                    break;
+            }
+            if ($customer->customer_type === 'Business'){
+                $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                $name = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+            }else{
+                $name = ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]);
+            }
+            $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
+            $companyId = logged('company_id');
+            $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
+
+            $start++;
+            $data[] = array(
+                "<div class='nsm-profile'><span>".$name."</span></div>", 
+                "<label class='nsm-link default d-block fw-bold' onclick='location.href='".base_url('/customer/preview_/' .$customer->prof_id)."''>
+                ".$customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name . ' ' . $customer->last_name  ."</label>
+                <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>",
+                "Test",
+                $customer->city,
+                $customer->state,
+                $customer->lead_source != "" ? $customer->lead_source : 'n/a',
+                $customer->entered_by,
+                $salesRep,
+                $techician,
+                $customer->system_type,
+                '$'. $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ','),
+                '$'. $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ','),
+                $customer->phone_m,
+                "<span class='nsm-badge ".$badge."> ".$customer->status != null ? $customer->status : 'Pending'."</span>",
+                "<div class='dropdown table-management'>
+                    <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                    </a>
+                    <ul class='dropdown-menu dropdown-menu-end'>
+                        <li>
+                            <a class='dropdown-item' href='".("customer/preview_/".$customer->prof_id)."'>Preview</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url("customer/add_advance/".$customer->prof_id)."'>Edit</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='mailto:".$customer->email."'>Email</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item call-item' href='javascript:void(0);' data-id='<?= $customer->phone_m; ?>'>Call</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url('invoice/add/')."'>Invoice</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url('customer/module/' . $customer->prof_id)."'>Dashboard</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url('job/new_job1/')."'>Schedule</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='#'>Message</a>
+                        </li>
+                    </ul>
+                </div>",
+            );
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => count($customers),
+            "recordsFiltered" => count($customers),
+            "data" => $data,
+        );
+        echo json_encode($output);
+    }
 
     public function preview_($id=null){
         $this->load->model('IndustryType_model');

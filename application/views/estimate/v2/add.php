@@ -6,6 +6,7 @@ echo put_header_assets();
 
 <!-- Script for autosaving form -->
 <script src="<?= base_url("assets/js/estimate/autosave-standard.js") ?>"></script>
+<script src="<?= base_url("assets/js/custom.js") ?>"></script>
 
 <div class="wrapper" role="wrapper">
 
@@ -1199,6 +1200,8 @@ echo put_header_assets();
                 // var objJSON = JSON.parse(response['items'][0].title);
                 var inputs = "";
                 var count = parseFloat($("#count").val());
+                var markup, markup2 = "";
+
                 $.each(response['items'], function(i, v) {
                     inputs += v.title;
                     count = count + 1;

@@ -221,7 +221,7 @@
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
-                                <td data-name="Name">Name</td>
+                                <td data-name="Name">Name   </td>
                                 <?php if($companyId == 1): ?>
                                 <td data-name="Name">Industry</td>
                                 <?php endif; ?>
@@ -240,121 +240,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            if (!empty($profiles)) :
-                            ?>
-                                <?php
-                                foreach ($profiles as $customer) :
-                                    switch (strtoupper($customer->status)):
-                                        case "INSTALLED":
-                                            $badge = "success";
-                                            break;
-                                        case "CANCELLED":
-                                            $badge = "error";
-                                            break;
-                                        case "COLLECTIONS":
-                                            $badge = "secondary";
-                                            break;
-                                        case "CHARGED BACK":
-                                            $badge = "primary";
-                                            break;
-                                        default:
-                                            $badge = "";
-                                            break;
-                                    endswitch;
-                                ?>
-                                    <tr>
-                                        <td>
-                                            <div class="nsm-profile">
-                                                <?php if ($customer->customer_type === 'Business'): ?>
-                                                    <span>
-                                                    <?php 
-                                                        $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                                                        echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-                                                    ?>
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td class="nsm-text-primary">
-                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'">
-                                                <?php if ($customer->customer_type === 'Business'): ?>
-                                                    <?= $customer->business_name ?>
-                                                <?php else: ?>
-                                                    <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                <?php endif; ?>
-                                            </label>
-                                            <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
-                                        </td>
-                                        <?php if($companyId == 1): ?>
-                                        <td>test</td>
-                                        <?php endif; ?>
-                                        <td><?php echo $customer->city; ?></td>
-                                        <td><?php echo $customer->state; ?></td>
-                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                        <td><?php echo $customer->entered_by; ?></td>
-                                        <td><?php print_r( get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
-
-                                        <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned'; ?>
-                                        <td><?= $techician; ?></td>
-
-                                        <td><?php echo $customer->system_type; ?></td>
-                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                        <td><?php echo $customer->phone_m; ?></td>
-                                        <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
-                                        <td>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">Preview</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="mailto:<?= $customer->email; ?>">Email</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?= $customer->phone_m; ?>">Call</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('invoice/add/'); ?>">Invoice</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('customer/module/' . $customer->prof_id); ?>">Dashboard</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="#">Message</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php
-                                endforeach;
-                                ?>
-                            <?php
-                            else :
-                            ?>
-                                <tr>
-                                    <td colspan="14">
-                                        <div class="nsm-empty">
-                                            <span>No results found.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endif;
-                            ?>
                         </tbody>
                     </table>
                 <?php endif; ?>
@@ -370,11 +255,33 @@
     $(document).ready(function() {
        // $(".customer-list").nsmPagination();
        
+        // $('#customer-list').DataTable({
+        //     "lengthChange": true,
+        //     "searching" : true,
+        //     "pageLength": 10,
+        //     "order": [],
+        // });
+
         $('#customer-list').DataTable({
-            "lengthChange": true,
-            "searching" : true,
-            "pageLength": 10,
+            // Processing indicator
+            "processing": true,
+            // DataTables server-side processing mode
+            "serverSide": true,
+            // Initial no order.
             "order": [],
+            // Load data from an Ajax source
+            "ajax": {
+                "url": "<?= base_url('customer/getCustomerLists'); ?>",
+                "type": "POST"
+            },
+            
+            //Set column definition initialisation properties
+            "columnDefs": [{ 
+                "targets": [0],
+                "orderable": false
+            }],
+            "pageLength": 10,
+            "searching" : true,
         });
 
         $(document).on("click", ".call-item", function() {

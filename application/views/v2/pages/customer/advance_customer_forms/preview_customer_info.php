@@ -247,7 +247,19 @@
                 <label class="content-subtitle fw-bold">Billing Day of Month</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($billing_info) && !empty($billing_info->bill_day) ? $billing_info->bill_day : '---' ?></label>
+                <?php if($billing_info->bill_day == null){
+                        if($billing_info->billing_start_date == null){
+                            $insdate = strtotime($office_info->install_date);
+                            $day = date("d", $insdate);
+                        }else{
+                            $insdate = strtotime($billing_info->billing_start_date);
+                            $day = date("d", $insdate);
+                        }
+                    }else{
+                        $day = $billing_info->bill_day;
+                    }
+                    ?>
+                <label class="content-subtitle"><?= isset($day) && !empty($day) ? $day : '---' ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Contract Term* (months)</label>
@@ -259,13 +271,13 @@
                 <label class="content-subtitle fw-bold">Billing Start Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($billing_info) && !empty($billing_info->bill_start_date) ? $billing_info->bill_start_date : '---' ?></label>
+                <label class="content-subtitle"><?= isset($billing_info) && !empty($billing_info->bill_start_date) ? $billing_info->bill_start_date : $office_info->install_date ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Billing End Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($billing_info) && !empty($billing_info->bill_end_date) ? $billing_info->bill_end_date : '---' ?></label>
+                <label class="content-subtitle"><?php if(isset($billing_info)){ echo $billing_info->bill_end_date != null ? $billing_info->bill_end_date : date("m/d/Y", strtotime("$office_info->install_date +$billing_info->contract_term months"));; }?></label>
             </div>
         </div>
 

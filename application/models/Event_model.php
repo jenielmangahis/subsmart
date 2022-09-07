@@ -251,11 +251,11 @@ class Event_model extends MY_Model
     {
         $company_id = logged('company_id');
         $this->db->select('COUNT(*) as total');
-        $this->db->from('acs_profile');
-        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->from('acs_office');
+        $this->db->join('acs_profile', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where("acs_profile.company_id", $company_id);
         $this->db->where("acs_office.".$toCheck, date('m/d/Y'));
-        $this->db->group_by('prof_id');
+        $this->db->group_by('acs_profile.prof_id');
         $query = $this->db->get();
         //dd($this->db->last_query());
 
