@@ -868,6 +868,7 @@
     }
 </style>
 <?php include viewPath('includes/footer'); ?>
+<?php include viewPath('v2/dashbaord_v2_js') ?>
 
 
 <script type="text/javascript">

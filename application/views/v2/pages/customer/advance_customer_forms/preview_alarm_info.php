@@ -348,7 +348,7 @@
                     <label class="content-subtitle fw-bold">Account Cost</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->account_cost) ? $alarm_info->account_cost : '---'; ?></label>
+                    <label class="content-subtitle">$<?= !empty($alarm_info->account_cost) ? $alarm_info->account_cost : '0.00'; ?></label>
                 </div>
 
                 <div class="col-12 col-md-6">

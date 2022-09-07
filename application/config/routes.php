@@ -426,7 +426,6 @@ $route['accounting/get-attachment/(:any)'] = 'accounting_modals/get_attachment/$
 $route['accounting/get-existing-attachments-modal/(:any)'] = 'accounting_modals/get_existing_attachments_modal/$1';
 $route['accounting/attach/(:any)/(:any)']['post'] = 'accounting_modals/attach/$1/$2';
 $route['accounting/load-recent-transactions'] = 'accounting_modals/load_recent_transactions';
-// $route['accounting/load-recent-transactions']['post'] = 'accounting_modals/load_recent_transactions';
 $route['accounting/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_modals/delete_transaction/$1/$2';
 $route['accounting/void-transaction/(:any)/(:any)'] = 'accounting_modals/void_transaction/$1/$2';
 $route['accounting/print-purchase-order-modal/(:any)'] = 'accounting_modals/print_purchase_order_modal/$1';
@@ -562,7 +561,6 @@ $route['accounting/workers-comp'] = 'accounting/workerscomp';
 // Accounting chart of accounts
 $route['accounting/chart-of-accounts'] = 'accounting_controllers/chart_of_accounts/index';
 $route['accounting/chart-of-accounts/load']['post'] = 'accounting_controllers/chart_of_accounts/load_chart_of_accounts';
-$route['accounting/chart-of-accounts/create'] = 'accounting_controllers/chart_of_accounts/create';
 $route['accounting/chart-of-accounts/fetch-acc-detail'] = 'accounting_controllers/chart_of_accounts/fetch_acc_detail';
 $route['accounting/chart-of-accounts/add'] = 'accounting_controllers/chart_of_accounts/add';
 $route['accounting/chart-of-accounts/edit/(:any)?'] = 'accounting_controllers/chart_of_accounts/edit/$1';
@@ -656,7 +654,8 @@ $route['accounting/vendors/(:any)/print-transactions']['post'] = 'accounting_con
 $route['accounting/vendors/(:any)/export-transactions']['post'] = 'accounting_controllers/vendors/export_transactions/$1';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
-$route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';
+$route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';
+// $route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';
 $route['accounting/expenses/categorize-transactions/(:any)']['post'] = 'accounting_controllers/expenses/categorize_transactions/$1';
 $route['accounting/expenses/print-multiple-transactions']['post'] = 'accounting_controllers/expenses/print_multiple';
 $route['accounting/expenses/print-transaction/(:any)/(:any)'] = 'accounting_controllers/expenses/print_transaction/$1/$2';

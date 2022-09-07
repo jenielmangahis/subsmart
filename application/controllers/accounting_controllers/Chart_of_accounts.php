@@ -388,12 +388,6 @@ class Chart_of_accounts extends MY_Controller {
         echo json_encode($result);
     }
 
-    public function create()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/chart_of_accounts/add', $this->page_data);
-    }
-
     public function fetch_acc_detail()
     {
         if($this->input->post('account_id'))
@@ -466,7 +460,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['account'] = $account;
         $this->page_data['accountType'] = $this->account_model->getById($account->account_id);
         $this->page_data['detailType'] = $this->account_detail_model->getById($account->acc_detail_id);
-        $this->load->view('v2/includes/accounting/account_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/account_modal', $this->page_data);
     }
 
     public function update($id)

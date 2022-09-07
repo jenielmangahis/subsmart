@@ -161,11 +161,11 @@ class Dashboard extends Widgets {
         $companyId = logged('company_id');
         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
 
-        if($companyId == 1){
-            $this->page_data['companies'] = $this->event_model->getCompanies();
-        }else{
-            $this->page_data['upcomingJobs'] = $this->event_model->getRecentCustomer();
-        }
+        // if($companyId == 1){
+        //     $this->page_data['companies'] = $this->event_model->getCompanies();
+        // }else{
+        //     $this->page_data['upcomingJobs'] = $this->event_model->getRecentCustomer();
+        // }
 
         $this->page_data['events'] = $this->event_model->get_all_events(5);
         $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
@@ -176,6 +176,7 @@ class Dashboard extends Widgets {
         //$this->page_data['paymentInvoice']=$this->event_model->getAllPInvoices();
         $this->page_data['paymentInvoices']=$this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
         $this->page_data['lostAccounts']=$this->event_model->getAccountSituation('cancel_date'); // lost account count, if Cancel Date Office Info is set
+        
         $this->page_data['collectedAccounts']=$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
         $this->page_data['techLeaderboards']=$this->event_model->getTechLeaderboards(); // fetch Technicians and customer they are assigned to
         $this->page_data['salesLeaderboards']=$this->event_model->getSalesLeaderboards(); // fetch Sales Rep and customer they are assigned to
@@ -506,6 +507,31 @@ class Dashboard extends Widgets {
 
         redirect('dashboard');
     }
+
+    public function todays_stats(){
+        $payment=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
+        $paymentInvoices=$this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
+        $jobsDone = $this->event_model->getAllJobs();
+        $collectedAccounts =$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
+        $lostAccounts =$this->event_model->getAccountSituation('cancel_date'); // lost account count, if Cancel Date Office Info is set
+        $data_arr = array("success" => true,"data" => $payment, "paymentInvoice" => $paymentInvoices, "jobsCompleted" => $jobsDone, "lostAccount" => $lostAccounts, "collectedAccounts" => $collectedAccounts);
+        die(json_encode($data_arr));
+
+    }
+
+    public function upcoming_jobs(){
+        $companyId = logged('company_id');
+
+        if($companyId == 1){
+            $companies = $this->event_model->getCompanies();
+        }else{
+            $upcomingJobs = $this->event_model->getRecentCustomer();
+        }
+        $data_arr = array("success" => true, "companies" => $companies, "upcomingJobs" => $upcomingJobs);
+        die(json_encode($data_arr));
+
+    }
+    
 }
 
 /* End of file Dashboard.php */

@@ -3,6 +3,8 @@
 <?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 <?php include viewPath('v2/widgets/add_widgets'); ?>
+<?php include viewPath('dashboard_v2_js') ?>
+
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -71,6 +73,7 @@
         </li>
     </ul>
 </div>
+
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
         <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
@@ -346,6 +349,7 @@
     </div>
   </div>
 </div>
+
 
 <script type="module"  src="<?= base_url("assets/js/dashboard/index.js") ?>"></script>
 <?php include viewPath('v2/includes/footer'); ?>
