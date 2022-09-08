@@ -16,7 +16,10 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/estimate/editBundle/${id}`); // prettier-ignore
-          $form.setAttribute("action", `/estimate/updateestimateBundle/${id}`);
+          $form.setAttribute(
+            "action",
+            `/Estimate_v1/updateestimateBundle/${id}`
+          );
           hasChangedUrl = true;
         }
 
@@ -49,9 +52,9 @@ async function autoSaveForm() {
 
   const estimateId = $form.getAttribute("est_id");
 
-  let url = "/estimate/savenewestimateBundle?json=1";
+  let url = "/Estimate_v1/savenewestimateBundle?json=1";
   if (estimateId !== null) {
-    url = `/estimate/updateestimateBundle/${estimateId}?json=1`;
+    url = `/Estimate_v1/updateestimateBundle/${estimateId}?json=1`;
   }
 
   const response = await fetch(url, {

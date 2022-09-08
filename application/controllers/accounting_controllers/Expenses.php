@@ -116,7 +116,7 @@ class Expenses extends MY_Controller
         $filters = [
             'company_id' => logged('company_id'),
             'type' => 'all',
-            'delivery_method' => 'all-statuses',
+            'delivery_method' => 'any',
             'category' => 'all',
             'start-date' => date("Y-m-d", strtotime(date("m/d/Y")." -365 days")),
             'end-date' => date("Y-m-d")
@@ -656,7 +656,7 @@ class Expenses extends MY_Controller
                             }
 
                             $manageCol .= '<li>
-                                    <a class="dropdown-item" href="/accounting/vendors/print-transaction/purchase-order/'.$purchOrder->id.'" target="_blank">Print</a>
+                                    <a class="dropdown-item" href="/accounting/expenses/print-transaction/purchase-order/'.$purchOrder->id.'" target="_blank">Print</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
@@ -777,11 +777,11 @@ class Expenses extends MY_Controller
             }
         }
 
-        usort($transaction, function($a, $b) {
-            if($a[$columnName] === $b[$columnName]) {
-                return strtotime($a['date_created']) > strtotime($b['date_created']);
+        usort($transactions, function($a, $b) {
+            if($a['date'] === $b['date']) {
+                return strtotime($a['date_created']) < strtotime($b['date_created']);
             }
-            return strcmp($a[$columnName], $b[$columnName]);
+            return strtotime($a['date']) < strtotime($b['date']);
         });
 
         return $transactions;
@@ -1216,7 +1216,7 @@ class Expenses extends MY_Controller
                     $tableItems[] = [
                         'activity' => $categoryAcc->name,
                         'qty' => '',
-                        'rate' => number_format(floatval(1), 2, '.', ','),
+                        'rate' => '',
                         'amount' => number_format(floatval($category->amount), 2, '.', ','),
                     ];
                 }
@@ -1343,9 +1343,9 @@ class Expenses extends MY_Controller
                 ];
             } else {
                 $tableItems[] = [
-                    'activity' => '',
+                    'activity' => $categoryAcc->name,
                     'qty' => '',
-                    'rate' => number_format(floatval(1), 2, '.', ','),
+                    'rate' => '',
                     'amount' => number_format(floatval($category->amount), 2, '.', ','),
                 ];
             }

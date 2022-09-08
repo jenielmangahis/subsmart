@@ -44,7 +44,7 @@ async function autoSaveForm() {
   formdata.append("action", "submit");
 
   const response = await fetch(
-    `/estimate/updateestimateOptions/${estimateId}?json=1`,
+    `/Estimate_v1/updateestimateOptions/${estimateId}?json=1`,
     {
       method: "post",
       body: formdata,

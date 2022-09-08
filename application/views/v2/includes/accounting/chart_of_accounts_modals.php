@@ -1,4 +1,4 @@
-<div class="modal fade nsm-modal fade" id="print_accounts_modal" tabindex="-1" aria-labelledby="print_accounts_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal" id="print_accounts_modal" tabindex="-1" aria-labelledby="print_accounts_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -59,7 +59,7 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="print_preview_accounts_modal" tabindex="-1" aria-labelledby="print_preview_accounts_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal" id="print_preview_accounts_modal" tabindex="-1" aria-labelledby="print_preview_accounts_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">

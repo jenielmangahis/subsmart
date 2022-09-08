@@ -6,7 +6,6 @@ echo put_header_assets();
 
 <!-- Script for autosaving form -->
 <script src="<?= base_url("assets/js/estimate/autosave-standard.js") ?>"></script>
-<script src="<?= base_url("assets/js/custom.js") ?>"></script>
 
 <div class="wrapper" role="wrapper">
 
@@ -294,6 +293,8 @@ echo put_header_assets();
     <!-- page wrapper start -->
     <div wrapper__sectio class="nsm-content">
         <div class="page-content" style="background-color:white;">
+            <?php include viewPath('estimate/v2/header'); ?>
+
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
@@ -1482,3 +1483,5 @@ echo put_header_assets();
         $($customer).val(params.customer).trigger("change");
     });
 </script>
+
+<script src="<?= base_url("assets/js/custom.js") ?>"></script>

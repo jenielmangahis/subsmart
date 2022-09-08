@@ -56,9 +56,27 @@ endif;
 
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">
-            <div id="sales_leaderboard">
-
+            <?php foreach($salesLeaderboards as $sales): ?>
+            <div class="widget-item">
+                <div class="nsm-profile">
+                    <span><?= strtoupper($sales->FName[0].''.$sales->LName[0]) ?></span>
+                </div>
+                <div class="content">
+                    <div class="details">
+                        <span class="content-title"><?= $sales->FName .' '. $sales->LName ?></span>
+                        <span class="content-subtitle d-block">Sales Rep</span>
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?=  number_format(floatval(get_sales_rep_revenue($sales->id)[0]->salesRepRev), 2, '.', ','); ?></span>
+                        <span class="content-subtitle d-block">revenue</span>
+                        </div>
+                    <div class="controls">
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;"><?= $sales->customerCount; ?></span>
+                        <span class="content-subtitle d-block">customers</span>
+                    </div>
+                </div>
             </div>
+            <?php endforeach; ?>
         </div>
     </div>      
 

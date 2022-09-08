@@ -1,4 +1,4 @@
-<div class="modal fade nsm-modal fade" id="print_expenses_modal" tabindex="-1" aria-labelledby="print_expenses_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal" id="print_expenses_modal" tabindex="-1" aria-labelledby="print_expenses_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -77,7 +77,7 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="print_preview_expenses_modal" tabindex="-1" aria-labelledby="print_preview_expenses_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal" id="print_preview_expenses_modal" tabindex="-1" aria-labelledby="print_preview_expenses_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,3 +151,35 @@
         </div>
     </div>
 </div>
+
+<!-- Select category modal -->
+<div class="modal fade nsm-modal" id="select_category_modal" tabindex="-1" aria-labelledby="select_category_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="select_category_modal_label">Categorize Selected</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form id="categorize-selected-form">
+                <div class="modal-body" style="max-height: 400px;">
+                    <div class="row">
+                        <div class="col-12">
+                            <select name="category_id" id="category-id" class="form-control nsm-field" required></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row w-100">
+                        <div class="col-sm-6">
+                            <button type="button" class="nsm-button m-0" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="submit" class="nsm-button success float-end m-0">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- end select category modal -->
