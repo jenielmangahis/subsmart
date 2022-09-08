@@ -263,6 +263,9 @@ class AcsProfile_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('adt_sales_project_id', $adt_project_id);
+        
+        $query = $this->db->get();
+        return $query->row();
     }
     
     public function getCustomerMMR($id){
@@ -280,6 +283,14 @@ class AcsProfile_model extends MY_Model
         $this->db->where('fk_prof_id', $id);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function updateByAdtSalesProjectId($adt_sales_project_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('adt_sales_project_id', $adt_sales_project_id);
+        $this->db->update();
     }
 }
 
