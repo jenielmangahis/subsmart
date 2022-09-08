@@ -271,6 +271,8 @@ echo put_header_assets();
 <!-- page wrapper start -->
 <div wrapper__sectio class="nsm-content">
     <div class="page-content" style="background-color:white;">
+        <?php include viewPath('estimate/v2/header'); ?>
+
         <div class="page-title-box">
             <div class="row align-items-center">
                 <div class="col-sm-6">
@@ -874,8 +876,8 @@ echo put_header_assets();
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
-                        
+                            <i class="bx bx-fw bx-x m-0"></i>
+
                         </button>
                     </div>
                     <div class="modal-body"></div>
@@ -894,8 +896,8 @@ echo put_header_assets();
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
-                           
+                            <i class="bx bx-fw bx-x m-0"></i>
+
                         </button>
                     </div>
                     <div class="modal-body"></div>
@@ -914,8 +916,8 @@ echo put_header_assets();
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
-      
+                            <i class="bx bx-fw bx-x m-0"></i>
+
                         </button>
                     </div>
                     <div class="modal-body pt-0 pl-3 pb-3"></div>
@@ -934,7 +936,7 @@ echo put_header_assets();
                     <div class="modal-header">
                         <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
+                            <i class="bx bx-fw bx-x m-0"></i>
 
                         </button>
                     </div>
@@ -1002,8 +1004,8 @@ echo put_header_assets();
                     <div class="modal-header">
                         <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
-                  
+                            <i class="bx bx-fw bx-x m-0"></i>
+
                         </button>
                     </div>
                     <div class="modal-body">
@@ -1069,8 +1071,8 @@ echo put_header_assets();
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
-               
+                            <i class="bx bx-fw bx-x m-0"></i>
+
                         </button>
                     </div>
                     <div class="modal-body">
@@ -2546,3 +2548,5 @@ echo put_header_assets();
         $($customer).val(params.customer).trigger("change");
     });
 </script>
+
+<script src="<?= base_url("assets/js/custom.js") ?>"></script>

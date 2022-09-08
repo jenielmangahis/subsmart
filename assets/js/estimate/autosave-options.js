@@ -16,7 +16,10 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/estimate/editOption/${id}`); // prettier-ignore
-          $form.setAttribute("action", `/estimate/updateestimateOptions/${id}`);
+          $form.setAttribute(
+            "action",
+            `/Estimate_v1/updateestimateOptions/${id}`
+          );
           hasChangedUrl = true;
         }
 
@@ -49,9 +52,9 @@ async function autoSaveForm() {
 
   const estimateId = $form.getAttribute("est_id");
 
-  let url = "/estimate/savenewestimateOptions?json=1";
+  let url = "/Estimate_v1/savenewestimateOptions?json=1";
   if (estimateId !== null) {
-    url = `/estimate/updateestimateOptions/${estimateId}?json=1`;
+    url = `/Estimate_v1/updateestimateOptions/${estimateId}?json=1`;
   }
 
   const response = await fetch(url, {

@@ -73,17 +73,17 @@
                                     <div class="col-6">
                                         <label for="filter-status">Status</label>
                                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                                            <option value="any" selected="selected">Any</option>
-                                            <option value="print-later">Print later</option>
+                                            <option value="all" selected="selected">All statuses</option>
+                                            <option value="open">Open</option>
+                                            <option value="overdue">Overdue</option>
+                                            <option value="paid">Paid</option>
                                         </select>
                                     </div>
                                     <div class="col-6">
                                         <label for="filter-delivery-method">Delivery method</label>
                                         <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
-                                            <option value="all-statuses" selected="selected">All statuses</option>
-                                            <option value="open">Open</option>
-                                            <option value="overdue">Overdue</option>
-                                            <option value="paid">Paid</option>
+                                            <option value="any" selected="selected">Any</option>
+                                            <option value="print-later">Print later</option>
                                         </select>
                                     </div>
                                 </div>
@@ -109,7 +109,7 @@
                                     <div class="col-4">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y")?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-365 days"))?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-4">
@@ -137,12 +137,12 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button">
+                                        <button type="button" class="nsm-button" onclick="resetExpenseFilter()">
                                             Reset
                                         </button>
                                     </div>
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button primary float-end">
+                                        <button type="button" class="nsm-button primary float-end" onclick="applyExpenseFilter()">
                                             Apply
                                         </button>
                                     </div>
@@ -180,47 +180,47 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_type" id="chk_type" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
                                     <label for="chk_type" class="form-check-label">Type</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_no" id="chk_no" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
                                     <label for="chk_no" class="form-check-label">No.</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_payee" id="chk_payee" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_payee" class="form-check-input">
                                     <label for="chk_payee" class="form-check-label">Payee</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_method" id="chk_method" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_method" class="form-check-input">
                                     <label for="chk_method" class="form-check-label">Method</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_source" id="chk_source" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_source" class="form-check-input">
                                     <label for="chk_source" class="form-check-label">Source</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_category" id="chk_category" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_category" class="form-check-input">
                                     <label for="chk_category" class="form-check-label">Category</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_memo" id="chk_memo" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
                                     <label for="chk_memo" class="form-check-label">Memo</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_due_date" id="chk_due_date" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
                                     <label for="chk_due_date" class="form-check-label">Due date</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_balance" id="chk_balance" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
                                     <label for="chk_balance" class="form-check-label">Balance</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_status" id="chk_status" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
                                     <label for="chk_status" class="form-check-label">Status</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_attachments" id="chk_attachments" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
                                     <label for="chk_attachments" class="form-check-label">Attachments</label>
                                 </div>
                                 <p class="m-0">Rows</p>
@@ -259,8 +259,8 @@
                             <td data-name="Method">METHOD</td>
                             <td data-name="Source">SOURCE</td>
                             <td data-name="Category">CATEGORY</td>
-                            <td data-name="Memo">MEMO</td>
-                            <td data-name="Due Date">DUE DATE</td>
+                            <td data-name="Memo" class="text-truncate">MEMO</td>
+                            <td data-name="Due date">DUE DATE</td>
                             <td data-name="Balance">BALANCE</td>
                             <td data-name="Total">TOTAL</td>
                             <td data-name="Status">STATUS</td>

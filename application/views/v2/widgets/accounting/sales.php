@@ -128,7 +128,8 @@ endif;
             $start_date = getInstalledDate($mmrs->prof_id, 'acs_office');
         }else{
             $start_date = $mmrs->bill_start_date;
-            array_push($datenow, $start_date);
+            // array_push($datenow, $start_date);
+            
         }
 
         // if (date("Y-m-d", strtotime("-30 days")) <= date("Y-m-d", strtotime($start_date)) && date("Y-m-d", strtotime("-25 days")) >= date("Y-m-d", strtotime($start_date))) {

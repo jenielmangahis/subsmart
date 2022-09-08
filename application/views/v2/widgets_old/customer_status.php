@@ -41,10 +41,24 @@ endif;
                             </div>
                         </div>
                     </div>
-
-                    <div id="customer_status">
-
+                    <?php foreach($customerStatus as $status): ?>
+                    <div class="row js-row-dash">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9 marg-top">
+                                    <div class="jname"> <?= $status->status ? $status->status : 'Pending' ; ?></div>
+                                </div>
+                                <div class="col-3 col-center">
+                                    <div class="row">
+                                        <div class="col col-align">
+                                            <span class="nsm-badge success" style="font-size:12px;"><?= $status->statusCount; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
