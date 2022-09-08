@@ -178,18 +178,19 @@ function adtPortalGenerateToken($user_id) {
     return $randomString . $user_id;
 }
 
-function portalSyncProjectsNonAPI($user_id, $company_id, $username)
+function portalSyncProjectsNonAPI($user_id, $company_id, $username, $password)
 {       
     $CI =& get_instance();
     $CI->load->model('AcsProfile_model');
     $CI->load->model('AdtPortal_model');
 
     $adt_project_ids = array();
-    $adtPortalUser   = $this->AdtPortal_model->getByEmail($username);
+    $adtPortalUser   = $CI->AdtPortal_model->getByEmail($username);
     if( $adtPortalUser ){   
-        $pwCheck = password_verify($this->input->post('portal_password'), $adtPortalUser->password);
-        if( $pwCheck ){
-            $portalProjects = $CI->AdtPortal_model->getProjectsByUserId($adtPortalUser->user_id);
+        $pwCheck = password_verify($password, $adtPortalUser->password);
+        if( $pwCheck ){            
+            $filter[] = ['field' => 'is_sync', 'value' => 0];
+            $portalProjects = $CI->AdtPortal_model->getProjectsByUserId($adtPortalUser->user_id, $filter);
             foreach($portalProjects as $prj){
                 $customer = $CI->AcsProfile_model->getByAdtSalesProjectId($prj->project_id);
                 if( $customer ){
@@ -205,7 +206,7 @@ function portalSyncProjectsNonAPI($user_id, $company_id, $username)
                         'phone_h' => $prj->homeown_phone,
                         'phone_m' => $prj->hoa_phone
                     ];
-                    $CI->AcsProfile_model->updateByProfId($customer->prof_id,$customer_data);
+                    $CI->AcsProfile_model->updateByAdtSalesProjectId($prj->project_id,$customer_data);
                 }else{
                     $customer_data = [
                         'company_id' => $company_id,
@@ -232,7 +233,7 @@ function portalSyncProjectsNonAPI($user_id, $company_id, $username)
                     $CI->AcsProfile_model->create($customer_data);
                 }
 
-                $adt_project_ids[] = $prj['project_id'];
+                $adt_project_ids[] = $prj->project_id;
             }
         }
     }
@@ -243,6 +244,7 @@ function portalSyncProjectsNonAPI($user_id, $company_id, $username)
 
 function portalUpdateIsSyncProjectsNonAPI( $project_ids = array() )
 {
+    $CI =& get_instance();
     $CI->load->model('AdtPortal_model');
 
     $total_updated = 0;

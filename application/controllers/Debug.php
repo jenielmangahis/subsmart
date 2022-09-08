@@ -1169,6 +1169,7 @@ class Debug extends MY_Controller {
         //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 3);
         curl_setopt($ch, CURLOPT_POST, 1);            
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);            
@@ -1179,6 +1180,41 @@ class Debug extends MY_Controller {
         echo "<pre>";
         print_r($ch);
         print_r($response);
+        
+        exit;
+    }
+
+    public function adt_portal_db()
+    {
+        $this->load->model('AdtPortal_model');
+
+        $email  = 'admin@gmail.com';
+        $result = $this->AdtPortal_model->getByEmail($email);
+        $hash_pw = 'secret';
+        $pwCheck = password_verify($hash_pw, $result->password);
+        echo $hash_pw . ' / ' .  $result->password;
+        echo "<pre>";
+        print_r($result);
+        var_dump($pwCheck);
+        exit;
+    }
+
+    public function syncAdtPortalProjects()
+    {
+        $this->load->helper('adt_portal_helper');
+        $this->load->model('UserPortalAccount_model');
+
+        $total_updated = 0;
+        $portalUsers = $this->UserPortalAccount_model->getAll();        
+        foreach( $portalUsers as $pu ){
+            $projectResult = portalSyncProjectsNonAPI($pu->user_id, $pu->company_id, $pu->username, $pu->password_plain);            
+            if( $projectResult['total_projects'] > 0 ){
+                $updateResult  = portalUpdateIsSyncProjectsNonAPI($projectResult['project_ids']);
+                $total_updated += $updateResult['total_updated'];
+            }
+        }
+
+        echo 'Total Sync projects : ' . $total_updated;
         exit;
     }
 

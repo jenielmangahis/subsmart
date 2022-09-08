@@ -30,14 +30,14 @@ class AdtPortal_model extends MY_Model
         $this->adtportalDb->update();
     }
 
-    public function getProjectsByUserId($user_id, $filter=array())
+    public function getProjectsByUserId($user_id, $filters=array())
     {
         $this->adtportalDb->select('*');
         $this->adtportalDb->from($this->adt_portal_project_table);
         $this->adtportalDb->where('user_id', $user_id);
         
-        if ( !empty($filters['search']) ){
-            foreach($filters['search'] as $f){
+        if ( !empty($filters) ){
+            foreach($filters as $f){
                 $this->adtportalDb->where($f['field'], $f['value']);            
             } 
         }

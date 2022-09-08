@@ -127,3 +127,11 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modalConnectAdtPortal" tabindex="-1" aria-labelledby="modalTaskHubListLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">            
+            <div class="modal-body"><span class="adt-connect-msg"></span></div>            
+        </div>
+    </div>
+</div>
