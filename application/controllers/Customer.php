@@ -101,9 +101,11 @@ class Customer extends MY_Controller
     {
         $data  = array();
         $start = $_POST['start'];
-        $length = $_POST['length'];
-
-        $customers = $this->customer_ad_model->getCustomerLists();
+        $length = $_POST['length'];        
+        $search = $_POST['search']['value'];    
+        $search = ['search' => $search];    
+        $customers    = $this->customer_ad_model->getCustomerLists($search, $start, $length);
+        $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
     
         foreach($customers as $customer){
             switch (strtoupper($customer->status)){
@@ -187,8 +189,8 @@ class Customer extends MY_Controller
 
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => count($customers),
-            "recordsFiltered" => count($customers),
+            "recordsTotal" => count($allCustomers),
+            "recordsFiltered" => count($allCustomers),
             "data" => $data,
         );
         echo json_encode($output);

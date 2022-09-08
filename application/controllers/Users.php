@@ -960,6 +960,7 @@ class Users extends MY_Controller
     	$this->load->model('IndustryType_model');
     	$this->load->model('Clients_model');
     	$this->load->model('UserPortalAccount_model');
+    	$this->load->model('AdtPortal_model');
 
 		// Upload profile picture
 		$config = array(
@@ -1024,20 +1025,36 @@ class Users extends MY_Controller
         }else{
         	$is_with_error = false;
         	$create_portal_access = false;
+        	$portal_error = 1;
         	if( $this->input->post('portal_username') != '' ){
         		if( $this->input->post('portal_password') != '' && ( $this->input->post('portal_password') == $this->input->post('portal_confirm_password') ) ){     
-        			$apiIsValid = portalValidateLogin($this->input->post('portal_username'), $this->input->post('portal_password'));
-        			if( $apiIsValid['is_valid'] == 1 ){
-        				$is_with_error = false;  
-        				$create_portal_access = true;				
-        			}
+        			$adtUser = $this->AdtPortal_model->getByEmail($this->input->post('portal_username'));
+        			$isAccountExists = $this->UserPortalAccount_model->getByUsername($this->input->post('portal_username'));
+        			if( $isAccountExists ){
+        				$is_with_error = true;
+        				$portal_error  = 2;
+        			}else{
+        				if( $adtUser ){
+	        				$pwCheck = password_verify($adtUser->password, $this->input->post('portal_password'));
+	        				if( $pwCheck ){
+	        					$is_with_error = false;  
+	        					$create_portal_access = true;					
+	        				}
+	        			}else{
+	        				$is_with_error = true;
+	        			}        			
+        			}	        			
         		}else{
         			$is_with_error = true;
         		}
         	}
 
         	if( $is_with_error ){
-        		echo json_encode(4);
+        		if( $portal_error == 1 ){
+        			echo json_encode(4);
+        		}else{
+        			echo json_encode(5);
+        		}       		
         	}else{
         		$add = array(
 		            'FName' => $fname,
@@ -2412,18 +2429,28 @@ class Users extends MY_Controller
 						];
 
 						$this->UserPortalAccount_model->update($userPortalAccess->id, $data_portal);
-					}else{
-						$data_portal = [
-							'user_id' => $post['uid'],
-							'username' => $post['portal_username'],
-							'password_plain' => $post['portal_password']
-						];
 
-						$this->UserPortalAccount_model->create($data_portal);
+						$is_success = 1;
+						$msg = '';
+					}else{
+						$isAccountExists = $this->UserPortalAccount_model->getByUsername($this->input->post('portal_username'));
+						if( $isAccountExists ){
+							$msg = 'ADT Portal login details already exists';
+						}else{
+							$data_portal = [
+								'user_id' => $post['uid'],
+								'username' => $post['portal_username'],
+								'password_plain' => $post['portal_password']
+							];
+
+							$this->UserPortalAccount_model->create($data_portal);
+
+							$is_success = 1;
+							$msg = '';
+						}						
 					}
 
-					$is_success = 1;
-					$msg = '';
+					
 				}else{
 					$msg = 'Login details not valid';
 				}

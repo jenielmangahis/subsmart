@@ -34,6 +34,16 @@ class UserPortalAccount_model extends MY_Model
         return $query;
     }
 
+    public function getByUsername($username)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('username', $username);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByUserId($user_id)
     {
         $this->db->select('*');

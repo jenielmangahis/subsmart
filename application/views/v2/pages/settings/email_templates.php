@@ -16,7 +16,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Customize your emails that are sent on different events.
                         </div>
                     </div>
@@ -24,7 +23,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('settings/email_templates_create') ?>'">
+                            <button name="btn_link" type="button" class="nsm-button primary" onclick="location.href='<?= base_url('settings/email_templates_create') ?>'">
                                 <i class='bx bx-fw bx-envelope'></i> Add New Email Template
                             </button>
                         </div>
@@ -76,15 +75,15 @@
                                     <td><?= $invoice_template->details == 1 ? 'Default Template' : 'Custom Template'; ?></td>
                                     <td>
                                         <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">Edit</a>
+                                                    <a class="dropdown-item" name="dropdown_edit" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $invoice_template->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-id="<?php echo $invoice_template->id; ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>

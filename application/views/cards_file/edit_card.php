@@ -100,7 +100,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               </div>
                           </div>
                           <div class="col-md-2">
-                            <a href="#" id="help-popover-cvc" style="margin-top: 29px;display: block;color:#259e57;width: 30%;"> Where is<br>CVV</a>
+                            <a href="#" name="btn_link" id="help-popover-cvc" style="margin-top: 29px;display: block;color:#259e57;width: 30%;"> Where is<br>CVV</a>
                               <div class="hide" id="help-popover-cvc-content" style="display: none;margin-bottom: 20px;">
                                   <span class="help"> Please insert your card security number/CVV number. For all cards, except American Express, this is the <b>last 3 digits on the back of your card</b>. For American Express, this is the <b>4 digits printed on the front of your card</b>, above the 15 digit card number.</span><br> <img src="<?= base_url("assets/img/cvv.png"); ?>">
                               </div>
@@ -108,8 +108,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <hr />
                         <div class="col-md-">
-                          <a class="btn btn-default" href="<?php echo base_url('cards_file/list'); ?>">Cancel</a>
-                          <button type="submit" class="btn btn-primary">Save Card</button>
+                          <a class="btn btn-default" name="btn_link" href="<?php echo base_url('cards_file/list'); ?>">Cancel</a>
+                          <button type="submit" name="btn_submit" class="btn btn-primary">Save Card</button>
                         </div>
                       </div>
                       <?php echo form_close(); ?>
