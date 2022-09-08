@@ -16,7 +16,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/estimate/edit/${id}`); // prettier-ignore
-          $form.setAttribute("action",`/estimate/update/${id}`);
+          $form.setAttribute("action", `/Estimate_v1/update/${id}`);
           hasChangedUrl = true;
         }
 
@@ -62,9 +62,9 @@ async function autoSaveForm() {
   const estimateId = formdata.get("est_id");
   formdata.append("action", "submit");
 
-  let url = "/estimate/savenewestimate?json=1";
+  let url = "/Estimate_v1/savenewestimate?json=1";
   if (estimateId !== null) {
-    url = `/estimate/update/${estimateId}?json=1`;
+    url = `/Estimate_v1/update/${estimateId}?json=1`;
   }
 
   const response = await fetch(url, {

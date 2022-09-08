@@ -33,6 +33,10 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   });
   const form = new FormAutoSave($form, config);
   form.listen();
+
+  window.CKEDITOR.on("instanceReady", () => {
+    form.listenCKEDITOR();
+  });
 });
 
 async function autoSaveForm() {
@@ -43,7 +47,7 @@ async function autoSaveForm() {
   const formdata = new FormData($form);
   formdata.append("action", "submit");
 
-  const response = await fetch(`/estimate/update/${estimateId}?json=1`, {
+  const response = await fetch(`/Estimate_v1/update/${estimateId}?json=1`, {
     method: "post",
     body: formdata,
   });

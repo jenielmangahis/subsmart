@@ -655,7 +655,6 @@ $route['accounting/vendors/(:any)/export-transactions']['post'] = 'accounting_co
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';
-// $route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';
 $route['accounting/expenses/categorize-transactions/(:any)']['post'] = 'accounting_controllers/expenses/categorize_transactions/$1';
 $route['accounting/expenses/print-multiple-transactions']['post'] = 'accounting_controllers/expenses/print_multiple';
 $route['accounting/expenses/print-transaction/(:any)/(:any)'] = 'accounting_controllers/expenses/print_transaction/$1/$2';
