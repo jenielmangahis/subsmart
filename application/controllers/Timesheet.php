@@ -1195,7 +1195,7 @@ class Timesheet extends MY_Controller
                     <img src='" . $image . "' class='rounded mr-2' alt='...'>
                     <strong class='mr-auto'>" . $row->FName . " " . $row->LName . "</strong>
                     <small class='text-muted'>" . date('M d h:i A', strtotime($row->date_created)) . "</small>
-                    <button type='button' class='ml-2 mb-1 close delete-prev-notif' data-dismiss='toast' aria-label='Close' data-notif-id='" . $row->id . "' data-user-id='" . $row->user_id . "'>
+                    <button name='button' type='button' class='ml-2 mb-1 close delete-prev-notif' data-dismiss='toast' aria-label='Close' data-notif-id='" . $row->id . "' data-user-id='" . $row->user_id . "'>
                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>

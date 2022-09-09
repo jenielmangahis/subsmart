@@ -2139,7 +2139,7 @@
                         <div class="jss53">
                             <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-xs-center">
                                 <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto">
-                                    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" type="button">
+                                    <button name="button" class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" type="button">
                                     <span class="MuiButton-label">Set up your plans</span>
                                     <span class="MuiTouchRipple-root"></span>
                                     </button>
@@ -2247,7 +2247,7 @@
                                     <p class="MuiTypography-root MuiTypography-body1 MuiTypography-alignCenter">Track stats important to your business</p>
                                 </div>
                                 <div class="MuiGrid-root MuiGrid-item">
-                                    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" type="button">
+                                    <button name="button" class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" type="button">
                                     <span class="MuiButton-label">Upgrade to Plan</span>
                                     <span class="MuiTouchRipple-root"></span>
                                     </button>
@@ -2608,7 +2608,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add Tags</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -2624,8 +2624,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button name="button" type="submit" class="btn btn-primary">Add</button>
             </div>
             <?php echo form_close(); ?>
         </div>

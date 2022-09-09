@@ -2,6 +2,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $form = document.querySelector("form[action$=savenewWorkorderSolar]");
   if (!$form) return;
 
+  $form.setAttribute("formautosave", "true");
+
   const { FormAutoSave, FormAutoSaveConfig } = await import(
     "../customer/add_advance/FormAutoSave.js"
   );
@@ -17,7 +19,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/workorder/editWorkorderSolar/${id}`); // prettier-ignore
-          $form.setAttribute("action",`/workorder/updateWorkorderSolar/${id}`);
+          $form.setAttribute("action", `/workorder/updateWorkorderSolar/${id}`);
           hasChangedUrl = true;
         }
 
@@ -42,7 +44,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function autoSaveForm() {
-  const $form = document.querySelector("form[action$=savenewWorkorderSolar]");
+  const $form = document.querySelector("form[formautosave]");
 
   const formdata = new FormData($form);
   formdata.append("action", "submit");

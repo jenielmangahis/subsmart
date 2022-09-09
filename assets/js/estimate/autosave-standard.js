@@ -2,6 +2,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $form = document.querySelector("form[action$=savenewestimate]");
   if (!$form) return;
 
+  $form.setAttribute("formautosave", "true");
+
   const { FormAutoSave, FormAutoSaveConfig } = await import(
     "../customer/add_advance/FormAutoSave.js"
   );
@@ -56,7 +58,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function autoSaveForm() {
-  const $form = document.querySelector("form[action$=savenewestimate]");
+  const $form = document.querySelector("form[formautosave]");
 
   const formdata = new FormData($form);
   const estimateId = formdata.get("est_id");

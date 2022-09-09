@@ -249,7 +249,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     <div class="box-footer">
 
-      <button type="submit" class="btn btn-flat btn-primary">Submit</button>
+      <button name="button" type="submit" class="btn btn-flat btn-primary">Submit</button>
 
     </div>
 

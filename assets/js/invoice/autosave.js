@@ -2,6 +2,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $form = document.querySelector("form[action$=addNewInvoice]");
   if (!$form) return;
 
+  $form.setAttribute("formautosave", "true");
+
   const { FormAutoSave, FormAutoSaveConfig } = await import(
     "../customer/add_advance/FormAutoSave.js"
   );
@@ -16,8 +18,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
         const { id } = response;
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/invoice/invoice_edit/${id}`);
-          $form.setAttribute("action",`/invoice/updateInvoice/${id}`);
-          
+          $form.setAttribute("action", `/invoice/updateInvoice/${id}`);
+
           hasChangedUrl = true;
         }
 
@@ -51,7 +53,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function autoSaveForm() {
-  const $form = document.querySelector("form[action$=addNewInvoice]");
+  const $form = document.querySelector("form[formautosave]");
 
   const formdata = new FormData($form);
   formdata.append("action", "submit");

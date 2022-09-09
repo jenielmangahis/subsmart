@@ -2,6 +2,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $form = document.querySelector("form[action$=savenewWorkorder]");
   if (!$form) return;
 
+  $form.setAttribute("formautosave", "true");
+
   const { FormAutoSave, FormAutoSaveConfig } = await import(
     "../customer/add_advance/FormAutoSave.js"
   );
@@ -17,7 +19,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
         if (!hasChangedUrl) {
           window.history.replaceState({}, "", `/workorder/edit/${id}`);
-          $form.setAttribute("action",`/workorder/UpdateWorkorder/${id}`);
+          $form.setAttribute("action", `/workorder/UpdateWorkorder/${id}`);
           hasChangedUrl = true;
         }
 
@@ -49,7 +51,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function autoSaveForm() {
-  const $form = document.querySelector("form[action$=savenewWorkorder]");
+  const $form = document.querySelector("form[formautosave]");
 
   const formdata = new FormData($form);
   formdata.append("action", "submit");

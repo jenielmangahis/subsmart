@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                   type="text"
                                                                   placeholder="Search..."
                                                                   style="border-width: 1px;height: 38px !important;margin-right: 8px;">
-                                <button class="btn btn-default btn-md" type="submit">
+                                <button name="button" class="btn btn-default btn-md" type="submit">
                                     <span class="fa fa-search"></span>
                                 </button>
                                 <?php if (!empty($search)) { ?>
@@ -187,7 +187,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td><?php echo get_status_by_id($expenses->status_id)->title ?></td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-btn">
-                                                <button class="btn btn-default dropdown-toggle" type="button"
+                                                <button name="button" class="btn btn-default dropdown-toggle" type="button"
                                                         id="dropdown-edit"
                                                         data-toggle="dropdown" aria-expanded="true">
                                                     <span class="btn-label">Manage</span><span
@@ -257,7 +257,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     <h4 class="modal-title">Clone Work Order</h4>
@@ -273,8 +273,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <button id="clone_expenses" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                    <button name="button" class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <button name="button" id="clone_expenses" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
                         Work Order
                     </button>
                 </div>

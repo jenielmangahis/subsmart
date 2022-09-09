@@ -66,7 +66,7 @@ class Estimate extends MY_Controller
             if (!empty(get('search'))) {
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
-            } elseif (!empty(get('order'))) {
+            } elseif (!empty(get('order'))) {                
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
             } else {
@@ -108,8 +108,8 @@ class Estimate extends MY_Controller
 
             $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount();
         }*/
-
-        $this->load->view('estimate/list', $this->page_data);
+        // $this->load->view('estimate/list', $this->page_data);
+        $this->load->view('v2/pages/estimate/list', $this->page_data);
     }
 
     public function savenewestimate()
@@ -1998,13 +1998,15 @@ class Estimate extends MY_Controller
 
     public function estimate_settings()
     {
+		$this->page_data['page']->title = 'Estimate Settings';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->model('EstimateSettings_model');
 
         $company_id = logged('company_id');
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
 
         $this->page_data['setting'] = $setting;
-        $this->load->view('estimate/settings', $this->page_data);
+        $this->load->view('v2/pages/estimate/settings', $this->page_data);
     }
 
     public function save_setting()

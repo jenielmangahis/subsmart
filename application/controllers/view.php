@@ -56,7 +56,7 @@
                         <div class="col-auto">
                            <div class="h1-spacer">
                              <a href="<?= base_url() ?>survey/preview/<?= $this->uri->segment(2) ?>" target="_blank" class="btn btn-primary btn-md text-light" type="button" name="button">Preview</a>
-                              <button class="btn btn-primary btn-md text-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button name="button" class="btn btn-primary btn-md text-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Add New Question
                               </button>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">

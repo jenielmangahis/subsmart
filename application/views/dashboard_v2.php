@@ -76,34 +76,34 @@
 
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
-        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+        <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
             <i class='bx bx-fw bx-chart'></i> Add Estimate
         </button>
-        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
+        <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
             <i class='bx bx-fw bx-message-alt-add'></i> Add Workorder
         </button>
-        <button type="button" class="nsm-button btn-add-task">
+        <button name="button"type="button" class="nsm-button btn-add-task">
             <i class='bx bx-fw bx-task'></i> New Task
         </button>
-        <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
+        <button name="button" type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
             <i class='bx bx-fw bx-user-plus'></i> Add Customer
         </button>
-        <button type="button" class="nsm-button" onclick="location.href='<?= base_url('customer') ?>'">
+        <button name="button" type="button" class="nsm-button" onclick="location.href='<?= base_url('customer') ?>'">
             <i class='bx bx-fw bx-search-alt'></i> Find Customer
         </button>
-        <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('job/new_job1') ?>'">
+        <button name="button" type="button" class="nsm-button" onclick="location.href='<?php echo base_url('job/new_job1') ?>'">
             <i class='bx bx-fw bx-message-square-error'></i> Add Job
         </button>
-        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#quick_links_modal">
+        <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#quick_links_modal">
             <i class='bx bx-fw bx-bookmarks'></i> Quick Links
         </button>
-        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_feed_modal">
+        <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_feed_modal">
             <i class='bx bx-fw bx-comment'></i> News Feed
         </button>
-        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#news_letter_modal">
+        <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#news_letter_modal">
             <i class='bx bx-fw bx-news'></i> Add Newsletter
         </button>
-        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_widgets_modal">
+        <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_widgets_modal">
             <i class='bx bx-fw bx-cog'></i>
         </button>
     </div>
@@ -170,8 +170,9 @@
                     if($wids->w_name === 'Bank') {
                         $data = set_bank_widget_data($data);
                     }
-
-                    $this->load->view("v2/" . $wids->w_view_link, $data);
+                    if($wids->w_view_link != 'widgets/lead_source'){
+                        $this->load->view("v2/" . $wids->w_view_link, $data);
+                    }
                     echo '</div>';
                     
                 endif;
@@ -313,7 +314,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Rename Widget</h5>
-        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+        <button name="button" type="button" data-bs-dismiss="modal" aria-label="Close">
             <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
@@ -338,7 +339,7 @@
                 <label class="content-subtitle fw-bold mb-2">Widget Name</label>
                 <div class="input-group widget-form">
                     <input placeholder="Enter widget name" class="form-control nsm-field" maxlength="50">
-                    <button type="button" class="nsm-button primary">
+                    <button name="button" type="button" class="nsm-button primary">
                         Rename
                     </button>
                 </div>

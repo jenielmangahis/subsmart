@@ -86,6 +86,34 @@
 	<script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
 	</script>
+<script>
+
+jQuery(document).ready(function() {
+   
+    jQuery(document).ready(function() {
+        
+        // var attr = $('button').attr('name');
+
+        // // For some browsers, `attr` is undefined; for others,
+        // // `attr` is false.  Check for both.
+        // if (typeof attr !== 'undefined' && attr !== false) {
+        //     attr.attr("name","name");
+        // }
+
+        // $( "li.item-ii" ).find( allListElements );
+        $( "div" ).find( "button" ).attr( "name", "name-button" );
+        $( "div" ).find( "img" ).attr( "alt", "image" );
+        $( "div" ).find( "frame" ).attr( "title", "frame" );
+        $( "div" ).find( "frame" ).attr( "iframe", "iframe" );
+        $( "div" ).find( "a" ).attr( "name", "link" );
+
+
+    });
+
+
+});
+
+</script>
 	<?php
 		if (isset($footerBottomScripts)) {
 			echo $footerBottomScripts;

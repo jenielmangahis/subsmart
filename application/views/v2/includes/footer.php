@@ -60,7 +60,7 @@
     <script src="<?= base_url("assets/js/v2/multiple-select.min.js") ?>"></script>
 
     <!-- FullCalendar -->
-    <script src="<?= base_url("assets/js/v2/full-calendar-main.js") ?>"></script>
+    <!-- <script src="<?= base_url("assets/js/v2/full-calendar-main.js") ?>"></script> -->
 
     <!-- Fancybox -->
     <script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
@@ -421,6 +421,31 @@
             }, 900);
         });
         <?php } ?>
+    </script>
+
+    <script>
+
+    jQuery(document).ready(function() {
+        
+        // var attr = $('button').attr('name');
+
+        // // For some browsers, `attr` is undefined; for others,
+        // // `attr` is false.  Check for both.
+        // if (typeof attr !== 'undefined' && attr !== false) {
+        //     attr.attr("name","name");
+        // }
+
+        // $( "li.item-ii" ).find( allListElements );
+        $( "div" ).find( "button" ).attr( "name", "name-button" );
+        $( "div" ).find( "button" ).attr( "aria-label", "name-button" );
+        $( "div" ).find( "img" ).attr( "alt", "image" );
+        $( "div" ).find( "frame" ).attr( "title", "frame" );
+        $( "div" ).find( "frame" ).attr( "iframe", "iframe" );
+        $( "div" ).find( "a" ).attr( "name", "link" );
+
+
+    });
+
     </script>
 
     <!-- Added footer assets -->

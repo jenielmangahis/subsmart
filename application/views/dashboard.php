@@ -68,7 +68,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h6 class="modal-title" id="exampleModalLabel"><i class="fa fa-check-square"></i> Checklist</h6>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -83,7 +83,7 @@
                             <div class="modal-content" style="border-radius: 30px;">
                                 <div class="modal-header">
                                     <input type="text" placeholder="Title" id="feedSubject" class="form-control" required/>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -91,7 +91,7 @@
                                     <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Message" required></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="sendFeed()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Save Feed</button>
+                                    <button name="button" onclick="sendFeed()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Save Feed</button>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                             <div class="modal-content" style="border-radius: 30px;">
                                 <div class="modal-header">
                                     Company's News Letter
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
 
@@ -112,7 +112,7 @@
                                     <input class="float-left" id="file" type="file" value="Upload File" required/>
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="sendNewsLetter()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Send Newsletter</button>
+                                    <button name="button" onclick="sendNewsLetter()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Send Newsletter</button>
                                 </div>
                             </div>
                         </div>
@@ -539,7 +539,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add Tags</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -555,8 +555,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button name="button" type="submit" class="btn btn-primary">Add</button>
             </div>
             <?php echo form_close(); ?>
         </div>

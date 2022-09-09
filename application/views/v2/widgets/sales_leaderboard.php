@@ -28,31 +28,6 @@ endif;
             </div>
         </div>
     </div>
-    <?php
-
-     for ($x = 0; $x < count($salesLeaderboard); $x++) {
-    // ?>
-         <?php if(!empty($salesLeaderboard[$x][0])): ?>
-    <!--    <div class="nsm-card-content wow">
-    //         <div class="nsm-widget-table">
-    //             <div class="widget-item">
-    //                 <div class="nsm-profile">
-    //                     <span><?= $salesLeaderboard[$x][0];  ?></span>
-    //                 </div>
-    //                 <div class="content">
-    //                     <div class="details">
-    //                         <span class="content-title"><?php echo $salesLeaderboard[$x][1];  ?></span>
-    //                         <span class="content-subtitle d-block"><?php echo $salesLeaderboard[$x][2];  ?></span>
-    //                     </div>
-    //                     <div class="controls">
-    //                         <span class="content-subtitle d-block nsm-text-success fw-bold">+<?php echo $salesLeaderboard[$x][3];  ?> Sale</span>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </div> -->
-      <?php endif; ?>
-  <?php } ?>
 
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">

@@ -436,13 +436,13 @@ class Trac360 extends MY_Controller
         <p class="last_tract_location second-p">'.$place->address.'
         </p>
         <div class="places-actions-btn">
-            <button href="#" class="place-notif-action" id="place_notif_modal_btn"
+            <button name="button" href="#" class="place-notif-action" id="place_notif_modal_btn"
             data-user-id="'.$place->created_by.'"
             data-place-id="'.$place->id.'">
                 <i class="fa fa-bell-o" aria-hidden="true"></i>
             </button>';
             if ($place->created_by == $user_id || logged("role") < 5) {
-                $places .='<button href="#" class="place-edit-action edit_address_modal_btn"
+                $places .='<button name="button" href="#" class="place-edit-action edit_address_modal_btn"
                 data-lat="'.$exploded_coordinated[0].'"
                 data-lng="'.$exploded_coordinated[1].'"
                 data-place-name="'.$place->place_name.'"

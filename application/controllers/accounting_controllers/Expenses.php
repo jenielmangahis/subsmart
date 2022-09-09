@@ -115,7 +115,7 @@ class Expenses extends MY_Controller
 
         $filters = [
             'company_id' => logged('company_id'),
-            'type' => 'all',
+            'type' => 'all-transactions',
             'delivery_method' => 'any',
             'category' => 'all',
             'start-date' => date("Y-m-d", strtotime(date("m/d/Y")." -365 days")),
@@ -180,45 +180,13 @@ class Expenses extends MY_Controller
 
         $data = $this->get_transactions($filters);
 
-        usort($data, function ($a, $b) use ($order, $columnName) {
-            if ($columnName !== 'date') {
-                if($a[$columnName] === $b[$columnName]) {
-                    return strtotime($a['date_created']) > strtotime($b['date_created']);
-                }
-                if ($order === 'asc') {
-                    return strcmp($a[$columnName], $b[$columnName]);
-                } else {
-                    return strcmp($b[$columnName], $a[$columnName]);
-                }
-            } else {
-                if ($order === 'asc') {
-                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
-                        return strtotime($a['date_created']) > strtotime($b['date_created']);
-                    }
-                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
-                } else {
-                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
-                        return strtotime($a['date_created']) < strtotime($b['date_created']);
-                    }
-                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
-                }
-            }
-        });
-
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($data),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     private function get_transactions($filters, $for = 'table')
     {
         switch ($filters['type']) {
-            case 'all':
+            case 'all-transactions':
                 if (!isset($filters['payee']) || $filters['payee']['type'] === 'vendor') {
                     $bills = $this->expenses_model->get_company_bill_transactions($filters);
                 }
@@ -808,97 +776,11 @@ class Expenses extends MY_Controller
             $filters['status'] = $post['status'];
         }
 
-        switch ($post['date']) {
-            case 'today':
-                $filters['start-date'] = date("Y-m-d");
-                $filters['end-date'] = date("Y-m-d");
-            break;
-            case 'yesterday':
-                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
-                $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
-            break;
-            case 'this-week':
-                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
-                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
-            break;
-            case 'this-month':
-                $filters['start-date'] = date("Y-m-01");
-                $filters['end-date'] = date("Y-m-t");
-                // no break
-            case 'this-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
-                
-                $filters['start-date'] = $quarters[$quarter]['start'];
-                $filters['end-date'] = $quarters[$quarter]['end'];
-            break;
-            case 'this-year':
-                $filters['start-date'] = date("Y-01-01");
-                $filters['end-date'] = date("Y-12-t");
-            break;
-            case 'last-week':
-                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
-                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
-            break;
-            case 'last-month':
-                $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
-                $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
-            break;
-            case 'last-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
-
-                $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
-                $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
-            break;
-            case 'last-year':
-                $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
-                $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
-            break;
-            case 'last-365-days':
-                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
-                $filters['end-date'] = date("Y-m-d");
-            break;
-            case 'custom':
-                $filters['start-date'] = date("Y-m-d", strtotime($post['from_date']));
-                $filters['end-date'] = date("Y-m-d", strtotime($post['to_date']));
-            break;
+        if($post['from_date'] !== '') {
+            $filters['start-date'] = date("Y-m-d", strtotime($post['from_date']));        
+        }
+        if($post['to_date'] !== '') {
+            $filters['end-date'] = date("Y-m-d", strtotime($post['to_date']));
         }
 
         return $filters;
@@ -1821,5 +1703,229 @@ class Expenses extends MY_Controller
         header('Content-Disposition: attachment;filename="expenses.xlsx"');
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
+    }
+
+    public function update_transaction_category()
+    {
+        $post = $this->input->post();
+
+        switch ($post['transaction_type']) {
+            case 'bill':
+                $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Bill');
+                $category = $category[0];
+
+                if ($category->expense_account_id !== $post['new_category']) {
+                    $expenseAcc = $this->chart_of_accounts_model->getById($post['new_category']);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                    // revert
+                    $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                }
+            break;
+            case 'expense':
+                $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Expense');
+                $category = $category[0];
+
+                if ($category->expense_account_id !== $post['new_category']) {
+                    $expenseAcc = $this->chart_of_accounts_model->getById($post['new_category']);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                    // revert
+                    $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                }
+            break;
+            case 'check':
+                $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Check');
+                $category = $category[0];
+
+                if ($category->expense_account_id !== $post['new_category']) {
+                    $expenseAcc = $this->chart_of_accounts_model->getById($post['new_category']);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                    // revert
+                    $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                }
+            break;
+            case 'vendor-credit':
+                $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Vendor Credit');
+                $category = $category[0];
+
+                if ($category->expense_account_id !== $post['new_category']) {
+                    $expenseAcc = $this->chart_of_accounts_model->getById($post['new_category']);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                    // revert
+                    $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                }
+            break;
+            case 'credit-card-credit':
+                $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Credit Card Credit');
+                $category = $category[0];
+
+                if ($category->expense_account_id !== $post['new_category']) {
+                    $expenseAcc = $this->chart_of_accounts_model->getById($post['new_category']);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                    // revert
+                    $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + floatval($category->amount);
+                    }
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                }
+            break;
+        }
+
+        $post['transaction_type'] = str_replace('-', ' ', $post['transaction_type']);
+        $post['transaction_type'] = ucwords($post['transaction_type']);
+
+        $update = $this->vendors_model->update_transaction_category($post);
+
+        echo json_encode([
+            'data' => $update,
+            'success' => $update ? true : false,
+            'message' => $update ? "Successfully updated!" : "Unexpected Error"
+        ]);
     }
 }

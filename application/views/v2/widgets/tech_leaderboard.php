@@ -34,7 +34,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     $(document).ready(function(){
         //loadTechLeaderboards();
     });
@@ -50,7 +50,7 @@
             }
         });
     }
-</script>
+</script> -->
 
 <?php
     if(!is_null($dynamic_load) && $dynamic_load == true):

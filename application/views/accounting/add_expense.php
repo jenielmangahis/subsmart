@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                   Expense
                </div>
-               <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+               <button name="button" type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
             </div>
             <form action="<?php echo base_url('accounting/addExpenseModel'); ?>" method="post">
                <div class="modal-body" style="margin-bottom: 50px">
@@ -184,7 +184,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                <div class="modal-footer-check">
                   <div class="row">
                      <div class="col-md-5">
-                        <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
+                        <button name="button" class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
                      </div>
                      <div class="col-md-2" style="text-align: center;">
                         <div>
@@ -202,7 +202,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div> -->
                         
                         <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                           <button class="btn btn-success" type="submit">Save</button>
+                           <button name="button" class="btn btn-success" type="submit">Save</button>
                         </div>
                      </div>
                   </div>

@@ -870,10 +870,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button class="btn btn-light but"
+                                    <button name="button" class="btn btn-light but"
                                         style="border-radius: 0 !important;border:solid gray 1px;"
                                         data-action="update">Save as Draft</button>
-                                    <button class="btn btn-success but" style="border-radius: 0 !important;"
+                                    <button name="button" class="btn btn-success but" style="border-radius: 0 !important;"
                                         data-action="send">Preview</button>
                                     <a href="<?php echo url('invoice') ?>"
                                         class="btn but-red">cancel this</a>
@@ -895,14 +895,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -948,7 +948,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h3 class="modal-title" id="myModalLabel2">Create New Group</h3>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
                             </div>
 
@@ -972,7 +972,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </select>
                                         </div>
                                     </div>
-                                    <button class="btn btn-success" type="submit">Save</button>
+                                    <button name="button" class="btn btn-success" type="submit">Save</button>
                                 </form>
                                 <table id="tags-group" class="table table-bordered mb-3 hide">
                                     <tbody></tbody>
@@ -985,7 +985,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <input type="text" name="tag_name" id="tag_name" class="form-control">
                                         </div>
                                         <div class="col-md-4 d-flex align-items-end">
-                                            <button class="btn btn-success w-100">Add</button>
+                                            <button name="button" class="btn btn-success w-100">Add</button>
                                         </div>
                                     </div>
                                 </form>
@@ -1074,7 +1074,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success" data-dismiss="modal">Done</button>
+                                <button name="button" type="submit" class="btn btn-success" data-dismiss="modal">Done</button>
                             </div>
                         </div>
                     </div>
@@ -1089,7 +1089,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -1098,16 +1098,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <p>The markup will not be visible to customer estimate.</p>
 
                             <div class="btn-group margin-right-sec" role="group" aria-label="...">
-                                <button class="btn btn-default" type="button" name="markup_type_percent">%</button>
-                                <button class="btn btn-success" type="button" name="markup_type_dollar"
+                                <button name="button" class="btn btn-default" type="button" name="markup_type_percent">%</button>
+                                <button name="button" class="btn btn-success" type="button" name="markup_type_dollar"
                                     id="markup_type_dollar">$</button>&emsp;&emsp;
                                 <input class="form-control" name="markup_input" id="markup_input" type="number"
                                     style="width: 260px;">
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary setmarkup">Set Markup</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary setmarkup">Set Markup</button>
                         </div>
                     </div>
                 </div>
@@ -1121,7 +1121,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h3 class="modal-title" id="myModalLabel2">Create New Tag</h3>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
                             </div>
                             <form id="create-tag-form">
@@ -1138,8 +1138,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-success">Save</button>
+                                    <button name="button" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button name="button" type="submit" class="btn btn-success">Save</button>
                                 </div>
                             </form>
                         </div>
@@ -1153,17 +1153,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content" id="tags-list">
                         <div class="modal-header">
                             <h4 class="modal-title">Manage your tags</h4>
-                            <button type="button" class="close" data-dismiss="modal"><i
+                            <button name="button" type="button" class="close" data-dismiss="modal"><i
                                     class="fa fa-times fa-lg"></i></button>
                         </div>
                         <div class="modal-body pt-3">
                             <div class="row">
                                 <div class="col-6 d-flex">
-                                    <button type="button" class="btn btn-outline-secondary m-auto"
+                                    <button name="button" type="button" class="btn btn-outline-secondary m-auto"
                                         onclick="getTagForm({}, 'create')">Create Tag</button>
                                 </div>
                                 <div class="col-6 d-flex">
-                                    <button type="button" class="btn btn-outline-secondary m-auto"
+                                    <button name="button" type="button" class="btn btn-outline-secondary m-auto"
                                         onclick="getGroupTagForm()">Create Group</button>
                                 </div>
                                 <div class="col-12 py-3">
@@ -1193,7 +1193,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -1259,7 +1259,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="modal-footer modal-footer-detail">
                             <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span
+                                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal"><span
                                         class="fa fa-remove"></span> Close</button>
                             </div>
                         </div>
@@ -1274,14 +1274,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body pt-0 pl-3 pb-3"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -1293,7 +1293,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Add New Source</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -1307,8 +1307,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary save">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -1325,7 +1325,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Add By Group</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -1351,7 +1351,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </table>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                             </div>
                     </div>
@@ -1364,7 +1364,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Add/Create Package</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -1402,7 +1402,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                         <td></td>
                                                                         <td class="text-success"></td>
                                                                         <td class="text-success"><?php echo  $pItems->amount_set; ?></td>
-                                                                        <td class="text-error"><button id="<?= $pItems->id; ?>" pack-id="<?= $pItems->id; ?>"  class="btn btn-sm btn-default addNewPackageToList"><span class="fa fa-plus"></span></button></td>
+                                                                        <td class="text-error"><button name="button" id="<?= $pItems->id; ?>" pack-id="<?= $pItems->id; ?>"  class="btn btn-sm btn-default addNewPackageToList"><span class="fa fa-plus"></span></button></td>
                                                                         <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
                                                                     </tr>
                                                                     <tr id="demo<?php echo  $pItems->id; ?>" class="collapse">
@@ -1512,7 +1512,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             </div>
                                                             <div class="col-md-6" align="right">
                                                                 <!-- <div style="align:right;"> -->
-                                                                    <button type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
+                                                                    <button name="button" type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
                                                                 <!-- </div> -->
                                                             </div>
                                                         </div>
@@ -1526,7 +1526,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                     </div>
                 </div>
