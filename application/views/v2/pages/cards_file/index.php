@@ -16,7 +16,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Listing all your credit cards saved on file.
                         </div>
                     </div>
@@ -24,7 +23,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('cards_file/add_new'); ?>'">
+                            <button type="button" name="btn_link" class="nsm-button primary" onclick="location.href='<?php echo base_url('cards_file/add_new'); ?>'">
                                 <i class='bx bx-fw bx-credit-card'></i> Add New
                             </button>
                         </div>
@@ -92,15 +91,15 @@
                                     </td>
                                     <td>
                                         <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('cards_file/edit/' . $c->id) ?>">Edit</a>
+                                                    <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('cards_file/edit/' . $c->id) ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $c->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-id="<?= $c->id; ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>

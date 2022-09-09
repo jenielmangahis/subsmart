@@ -199,12 +199,16 @@ class Cron_Notification extends MYF_Controller {
                 }
 
                 $tags = 'Not Specified';
-                if($workorder->job_tags > 0 ){
+                /*if($workorder->job_tags > 0 ){
                     $jobTag = $this->Workorder_model->get_job_tags_data($workorder->job_tags);
                     if( $jobTag ){
                         $tags = $jobTag->name;
                     }
                     
+                }*/
+
+                if($workorder->job_tags != '' ){
+                    $tags = $workorder->job_tags;
                 }
                 
                 $installation_date  = 'Not Specified';
