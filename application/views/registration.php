@@ -454,8 +454,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											</div>
 
 		                      			<div class="pl-3 pr-3 float-right">		                      				
-		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn" data-key="step-1" type="button">Previous</button>
-		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn" data-key="step-3" type="button">Next</button>
+		  						          	<button name="button" class="reg-wbtn btn btn-indigo btn-rounded prevBtn" data-key="step-1" type="button">Previous</button>
+		  						          	<button name="button" class="reg-wbtn btn btn-indigo btn-rounded nextBtn" data-key="step-3" type="button">Next</button>
 		                      			</div>
 								        </div>
 							      	</div>
@@ -501,8 +501,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	</div>
 											<a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
 								      	  </div>								      	  
-								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
-								          <button class="btn btn-indigo btn-rounded trial-register-btn float-left" type="button" style="margin-left: 10px;">Register</button>
+								          <button name="button" class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
+								          <button name="button" class="btn btn-indigo btn-rounded trial-register-btn float-left" type="button" style="margin-left: 10px;">Register</button>
 								          <!-- <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button> -->
 								        </div>
 							      	</div>
@@ -529,7 +529,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						        <div class="modal-content">
 						            <div class="modal-header">
 						                <h4 class="modal-title">Offer Code</h4>
-						                <button type="button" class="close" data-dismiss="modal">&times;</button>
+						                <button name="button" type="button" class="close" data-dismiss="modal">&times;</button>
 						            </div>
 						            <div class="modal-body">
 						                <p>Verifying code...</p>
@@ -546,7 +546,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						        <div class="modal-content">
 						            <div class="modal-header">
 						                <h4 class="modal-title">Software as a Service Subscription License Agreement</h4>
-						                <button type="button" class="close" data-dismiss="modal">&times;</button>
+						                <button name="button" type="button" class="close" data-dismiss="modal">&times;</button>
 						            </div>
 						            <div class="modal-body" style="padding: 0px;">
 						                <div class="terms">
@@ -690,7 +690,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="">Pay Subscription Plan</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -773,8 +773,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-indigo" type="button" data-dismiss="modal">Close</button>
-            <button class="btn btn-indigo btn-modal-pay-subscription" type="submit">Pay</button>
+            <button name="button" class="btn btn-indigo" type="button" data-dismiss="modal">Close</button>
+            <button name="button" class="btn btn-indigo btn-modal-pay-subscription" type="submit">Pay</button>
         </div>
         </form>
       </div>

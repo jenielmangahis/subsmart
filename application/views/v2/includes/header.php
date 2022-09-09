@@ -14,6 +14,7 @@ if ($this->session->userdata('usertimezone') == null) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="nSmarTrac Website">
     <title>nSmarTrac</title>
 
     <!-- Custom CSS -->
@@ -497,7 +498,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i> More <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li class="selected">
+                        <li class="<?php if ($page->title == 'Upgrades') : echo 'selected'; endif; ?>">
                             <a href="<?= base_url("more/upgrades") ?>">
                                 <i class='bx bx-fw bx-calendar-event'></i> Upgrades
                             </a>

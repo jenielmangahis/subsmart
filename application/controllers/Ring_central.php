@@ -189,14 +189,14 @@ class Ring_central extends MY_Controller {
                     <div class="input-group">
                         <span class="input-group-prepend ">
                             <input type="file" id="inputImage" name="inputImage"  onchange="loadFile(event)" style="position:absolute; left:-1000px; display: none;">
-                            <button type="button" class="btn btn-default" onclick="openFileOption()"><i class="fas fa-photo-video fa-fw"></i></button>
-                            <button type="button" class="btn btn-default"><i class="fas fa-microphone fa-fw"></i></button>
+                            <button name="button" type="button" class="btn btn-default" onclick="openFileOption()"><i class="fas fa-photo-video fa-fw"></i></button>
+                            <button name="button" type="button" class="btn btn-default"><i class="fas fa-microphone fa-fw"></i></button>
                         </span>
 
                         <img src="" id="outputImg" style="width:100px" />
                         <input type="text" name="replyMessage" id="replyMessage" placeholder="Type Message ..." class="form-control">
                         <span class="input-group-append">
-                            <button id="btnReply" type="button" onclick="sendReply()" class="btn btn-primary">Send</button>
+                            <button name="button" id="btnReply" type="button" onclick="sendReply()" class="btn btn-primary">Send</button>
                         </span>
                     </div>
                 </div>

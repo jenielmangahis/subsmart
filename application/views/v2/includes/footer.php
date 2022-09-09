@@ -60,7 +60,7 @@
     <script src="<?= base_url("assets/js/v2/multiple-select.min.js") ?>"></script>
 
     <!-- FullCalendar -->
-    <script src="<?= base_url("assets/js/v2/full-calendar-main.js") ?>"></script>
+    <!-- <script src="<?= base_url("assets/js/v2/full-calendar-main.js") ?>"></script> -->
 
     <!-- Fancybox -->
     <script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
@@ -395,27 +395,57 @@
 
         <?php if( logged('user_type') == 7 ){ ?>
         $(document).on('click', '.btn-adt-sales-portal', function(){
-            $.ajax({
-                url: '<?php echo base_url(); ?>user/_loggedin_adt_sales_portal',
-                dataType: 'json',
-                success: function (e) {
-                    if( e.is_valid == 1 ){
-                        //var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?portal_username='+e.portal_username;
-                        var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?token='+e.token;
-                        window.open(portal_url, "_blank");
-                    }else{
-                        Swal.fire({
-                          icon: 'error',
-                          title: 'Error!',
-                          confirmButtonColor: '#32243d',
-                          html: e.msg
-                        });
+            $('#modalConnectAdtPortal').modal('show');
+            $('.adt-connect-msg').html('Connecting to ADT Sales Portal...');
+            setTimeout(function () {
+                $.ajax({
+                    url: '<?php echo base_url(); ?>user/_loggedin_adt_sales_portal',
+                    dataType: 'json',
+                    success: function (e) {
+                        $('#modalConnectAdtPortal').modal('hide');
+                        if( e.is_valid == 1 ){
+                            //var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?portal_username='+e.portal_username;
+                            var portal_url = 'http://portal.urpowerpro.com/api/v1/user/login?token='+e.token;
+                            window.open(portal_url, "_blank");
+                        }else{
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Error!',
+                              confirmButtonColor: '#32243d',
+                              html: e.msg
+                            });
+                        }
+                        
                     }
-                    
-                }
-            });
+                });
+            }, 900);
         });
         <?php } ?>
+    </script>
+
+    <script>
+
+    jQuery(document).ready(function() {
+        
+        // var attr = $('button').attr('name');
+
+        // // For some browsers, `attr` is undefined; for others,
+        // // `attr` is false.  Check for both.
+        // if (typeof attr !== 'undefined' && attr !== false) {
+        //     attr.attr("name","name");
+        // }
+
+        // $( "li.item-ii" ).find( allListElements );
+        $( "div" ).find( "button" ).attr( "name", "name-button" );
+        $( "div" ).find( "button" ).attr( "aria-label", "name-button" );
+        $( "div" ).find( "img" ).attr( "alt", "image" );
+        $( "div" ).find( "frame" ).attr( "title", "frame" );
+        $( "div" ).find( "frame" ).attr( "iframe", "iframe" );
+        $( "div" ).find( "a" ).attr( "name", "link" );
+
+
+    });
+
     </script>
 
     <!-- Added footer assets -->

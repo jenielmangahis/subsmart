@@ -332,7 +332,7 @@
                                                 <input type="text" name="firstname" id="firstname" class="nsm-field form-control name-field">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">First name</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">Last name</label>
                                                 <input type="text" name="lastname" id="lastname" class="nsm-field form-control name-field">
                                             </div>
                                             <div class="col-12">

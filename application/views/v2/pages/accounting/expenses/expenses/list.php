@@ -300,6 +300,33 @@
                             <td><?=$transaction['total']?></td>
                             <td><?=$transaction['status']?></td>
                             <td></td>
+                            <td style="overflow: unset">
+                                <?php if(count($transaction['attachments']) > 0) : ?>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px">
+                                            <div class="row m-0">
+                                                <?php foreach($transaction['attachments'] as $attachment) : ?>
+                                                <div class="col-12 p-2 view-attachment" data-href="/uploads/accounting/attachments/<?=$attachment->stored_name?>">
+                                                    <div class="row">
+                                                        <div class="col-5 pr-0">
+                                                            <?=in_array($attachment->file_extension, ['jpg', 'jpeg', 'png']) ? "<img src='/uploads/accounting/attachments/$attachment->stored_name' class='m-auto w-100'>" : "<div class='bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white'><p class='m-0'>NO PREVIEW AVAILABLE</p></div>"?>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <div class="d-flex align-items-center h-100 w-100">
+                                                                <span class="text-truncate"><?=$attachment->uploaded_name.'.'.$attachment->file_extension?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
                             <td><?=$transaction['manage']?></td>
                         </tr>
                         <?php endforeach; ?>

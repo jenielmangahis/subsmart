@@ -140,7 +140,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                       <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
                                     </div>
                                     <div class="col-md-12 col-lg-6 col-sm-12">
-                                            <button type="submit" class="btn btn-success w-100 float-left font-weight-bold">Sign Up Now</button>
+                                            <button name="button" type="submit" class="btn btn-success w-100 float-left font-weight-bold">Sign Up Now</button>
                                             <label class="font-weight-bold text-white">No credit card required</label>
                                     </div>
                                     <div class="col-md-12 col-lg-6 col-sm-12 desktop-only">

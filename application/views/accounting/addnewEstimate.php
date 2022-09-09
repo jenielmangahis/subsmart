@@ -687,7 +687,7 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
+                                    <button name="button" type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
                                     <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn but-red">Cancel this</a>
                                 </div>
@@ -707,14 +707,14 @@ input:checked + .slider:before {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -726,7 +726,7 @@ input:checked + .slider:before {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     <h4 class="modal-title">Clone Estimate</h4>
@@ -742,8 +742,8 @@ input:checked + .slider:before {
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                    <button name="button" class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <button name="button" id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
                     estimate
                     </button>
                 </div>
@@ -756,7 +756,7 @@ input:checked + .slider:before {
                     <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Add Package</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -782,7 +782,7 @@ input:checked + .slider:before {
                                         </table>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                             </div>
                     </div>
@@ -796,14 +796,14 @@ input:checked + .slider:before {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -816,7 +816,7 @@ input:checked + .slider:before {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -825,14 +825,14 @@ input:checked + .slider:before {
                                 <p>The markup will not be visible to customer estimate.</p>
 
                                 <div class="btn-group margin-right-sec" role="group" aria-label="...">
-                                    <button class="btn btn-default" type="button" name="markup_type_percent">%</button>
-                                    <button class="btn btn-success" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
+                                    <button name="button" class="btn btn-default" type="button" name="markup_type_percent">%</button>
+                                    <button name="button" class="btn btn-success" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
                                     <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
                                 </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary setmarkup">Set Markup</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary setmarkup">Set Markup</button>
                         </div>
                     </div>
                 </div>
@@ -844,7 +844,7 @@ input:checked + .slider:before {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -883,7 +883,7 @@ input:checked + .slider:before {
                                                 <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <td><button name="button" id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
                                                 <span class="fa fa-plus"></span>
                                             </button></td>
                                             </tr>
@@ -896,7 +896,7 @@ input:checked + .slider:before {
                         </div>
                         <div class="modal-footer modal-footer-detail">
                             <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                             </div>
                         </div>
                     </div>
@@ -910,14 +910,14 @@ input:checked + .slider:before {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body pt-0 pl-3 pb-3"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -930,7 +930,7 @@ input:checked + .slider:before {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -945,8 +945,8 @@ input:checked + .slider:before {
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
+                            <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="button" type="button" class="btn btn-primary save">Save changes</button>
                         </div>
                     </div>
                 </div>

@@ -61,6 +61,202 @@ $('#expenses-table tbody select[name="expense_account[]"]').each(function() {
     });
 });
 
+$('#expenses-table select[name="expense_account[]"]').on('change', function() {
+    var val = $(this).val();
+
+    var row = $(this).closest('tr');
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+    var transactionId = row.find('.select-one').val();
+
+    var data = new FormData();
+    data.set('transaction_type', transactionType);
+    data.set('transaction_id', transactionId);
+    data.set('new_category', val);
+
+    $.ajax({
+        url: '/accounting/expenses/update-transaction-category',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
+});
+
+$(document).on('click', '#expenses-table .view-edit-expense', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/expense/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#expenseModal';
+        initModalFields('expenseModal', data);
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$(document).on('click', '#expenses-table .view-edit-check', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/check/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#checkModal';
+        initModalFields('checkModal', data);
+
+        $('#checkModal').modal('show');
+    });
+});
+
+$(document).on('click', '#expenses-table .view-edit-bill', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/bill/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#billModal';
+        initModalFields('billModal', data);
+
+        $('#billModal').modal('show');
+    });
+});
+
+$(document).on('click', '#expenses-table .view-edit-purch-order', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/purchase-order/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#purchaseOrderModal';
+        initModalFields('purchaseOrderModal', data);
+
+        $('#purchaseOrderModal').modal('show');
+    });
+});
+
+$(document).on('click', '#expenses-table .view-edit-vendor-credit', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/vendor-credit/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#vendorCreditModal';
+        initModalFields('vendorCreditModal', data);
+
+        $('#vendorCreditModal').modal('show');
+    });
+});
+
+$(document).on('click', '#expenses-table .view-edit-cc-payment', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/credit-card-pmt/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#payDownCreditModal';
+        initModalFields('payDownCreditModal', data);
+
+        $('#payDownCreditModal').modal('show');
+    });
+});
+
 $('#expense-table-filters select').each(function() {
     if($(this).attr('id') !== 'filter-payee' && $(this).attr('id') !== 'filter-category') {
         $(this).select2({
@@ -257,6 +453,181 @@ $('#pay-bills').on('click', function(e) {
     $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_bills_modal"]').trigger('click');
 });
 
+$('#new-time-activity').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="single_time_activity_modal"]').trigger('click');
+});
+
+$('#new-bill').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="bill_modal"]').trigger('click');
+});
+
+$('#new-expense').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="expense_modal"]').trigger('click');
+});
+
+$('#new-check').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="check_modal"]').trigger('click');
+});
+
+$('#new-purchase-order').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="purchase_order_modal"]').trigger('click');
+});
+
+$('#new-vendor-credit').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="vendor_credit_modal"]').trigger('click');
+});
+
+$('#new-cc-payment').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_down_credit_card_modal"]').trigger('click');
+});
+
+$('#filter-from, #filter-to').on('change', function() {
+    $('#filter-date').val('custom').trigger('change');
+});
+
+$('#filter-date').on('change', function() {
+    var val = $(this).val();
+
+    var date = new Date();
+    switch(val) {
+        case 'last-365-days' :
+            date.setDate(date.getDate() - 365);
+
+            var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = '';
+        break;
+        case 'custom' :
+            var from_date = $('#filter-from').val();
+            var to_date = $('#filter-to').val();
+        break;
+        case 'today' :
+            var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'yesterday' :
+            date.setDate(date.getDate() - 1);
+            var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-week' :
+            var from = date.getDate() - date.getDay();
+            var to = from + 6;
+
+            var from_date = new Date(date.setDate(from));
+            var to_date = new Date(date.setDate(to));
+
+            from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-month' :
+            var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-quarter' :
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+                
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = '01/01/' + date.getFullYear();
+                    var to_date = '03/31/'+ date.getFullYear();
+                break;
+                case 2 :
+                    var from_date = '04/01/' + date.getFullYear();
+                    var to_date = '06/30/'+ date.getFullYear();
+                break;
+                case 3 :
+                    var from_date = '07/01/' + date.getFullYear();
+                    var to_date = '09/30/'+ date.getFullYear();
+                break;
+                case 4 :
+                    var from_date = '10/01/' + date.getFullYear();
+                    var to_date = '12/31/'+ date.getFullYear();
+                break;
+            }
+        break;
+        case 'this-year' :
+            var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'last-week' :
+            var from = date.getDate() - date.getDay();
+
+            var from_date = new Date(date.setDate(from - 7));
+            var to_date = new Date(date.setDate(date.getDate() + 6));
+
+            from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-month' :
+            var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
+
+            from_date = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-quarter' :
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+                
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                    var to_date = new Date('03/31/'+ date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                    var to_date = new Date('06/30/'+ date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                    var to_date = new Date('09/30/'+ date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                    var to_date = new Date('12/31/'+ date.getFullYear());
+                break;
+            }
+
+            from_date.setMonth(from_date.getMonth() - 3);
+            to_date.setMonth(to_date.getMonth() - 3);
+
+            if(to_date.getDate() === 1) {
+                to_date.setDate(to_date.getDate() - 1);
+            }
+
+            from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-year' :
+            date.setFullYear(date.getFullYear() - 1);
+
+            var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'all-dates' :
+            var from_date = '';
+            var to_date = '';
+        break;
+    }
+
+    $('#filter-from').val(from_date);
+    $('#filter-to').val(to_date);
+});
+
 function resetExpenseFilter() {
     $('#filter-type').val('all-transactions').trigger('change');
     $('#filter-status').val('all').trigger('change');
@@ -271,7 +642,110 @@ function resetExpenseFilter() {
 }
 
 function applyExpenseFilter() {
+    $('#filter-type').attr('data-applied', $('#filter-type').val());
+    $('#filter-status').attr('data-applied', $('#filter-status').val());
+    $('#filter-delivery-method').attr('data-applied', $('#filter-delivery-method').val());
+    $('#filter-date').attr('data-applied', $('#filter-date').val());
+    $('#filter-from').attr('data-applied', $('#filter-from').val());
+    $('#filter-to').attr('data-applied', $('#filter-to').val());
+    $('#filter-payee').attr('data-applied', $('#filter-payee').val());
+    $('#filter-category').attr('data-applied', $('#filter-category').val());
 
+    loadExpenseTransactions();
+}
+
+function loadExpenseTransactions() {
+    var data = new FormData();
+
+    data.set('type', $('#filter-type').attr('data-applied'));
+    data.set('status', $('#filter-status').attr('data-applied'));
+    data.set('delivery_method', $('#filter-delivery-method').attr('data-applied'));
+    data.set('date', $('#filter-date').attr('data-applied'));
+    data.set('from_date', $('#filter-from').attr('data-applied'));
+    data.set('to_date', $('#filter-to').attr('data-applied'));
+    data.set('payee', $('#filter-payee').attr('data-applied'));
+    data.set('category', $('#filter-category').attr('data-applied'));
+
+    $.ajax({
+        url: `/accounting/expenses/get-expense-transactions`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var transactions = JSON.parse(result);
+            $('#expenses-table thead .select-all').prop('checked', false);
+            $('#print-transactions').addClass('disabled');
+            $('#categorize-selected').addClass('disabled');
+            $('#expenses-table tbody').html('');
+
+            if(transactions.length > 0) {
+                $.each(transactions, function(index, transaction) {
+                    var category = '';
+
+                    if(transaction.category !== '-Split-' && transaction.category !== '') {
+                        category = `<select name="expense_account[]" class="form-control nsm-field">
+                            <option value="${transaction.category.id}">${transaction.category.name}</option>
+                        </select>`
+                    } else {
+                        category = transaction.category;
+                    }
+                    $('#expenses-table tbody').append(`
+                    <tr data-type="${transaction.type}">
+                        <td>
+                            <div class="table-row-icon table-checkbox">
+                                <input class="form-check-input select-one table-select" type="checkbox" value="${transaction.id}">
+                            </div>
+                        </td>
+                        <td>${transaction.date}</td>
+                        <td>${transaction.type}</td>
+                        <td>${transaction.number === null ? '' : transaction.number}</td>
+                        <td>${transaction.payee}</td>
+                        <td>${transaction.method}</td>
+                        <td>${transaction.source}</td>
+                        <td>${category}</td>
+                        <td>${transaction.memo}</td>
+                        <td>${transaction.due_date}</td>
+                        <td>${transaction.balance}</td>
+                        <td>${transaction.total}</td>
+                        <td>${transaction.status}</td>
+                        <td></td>
+                        <td>${transaction.manage}</td>
+                    </tr>
+                    `);
+                });
+
+                $('#expenses-table tbody select[name="expense_account[]"]').each(function() {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: 'expense-account'
+                                }
+                
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect
+                    });
+                });
+            } else {
+                $('#expenses-table tbody').html(`<tr>
+                <td colspan="15">
+                    <div class="nsm-empty">
+                        <span>No results found.</span>
+                    </div>
+                </td>
+            </tr>`);
+            }
+        }
+    });
 }
 
 $(function() {

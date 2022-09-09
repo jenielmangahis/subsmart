@@ -11,7 +11,6 @@ if ($var == 1) {
 }else{
     $widget_name = "Recent Customer";
 }
-
 ?>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">

@@ -45,16 +45,15 @@
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
-                            Create your auto sms notification.<br /> Note: You need to have a valid SMS API account for this to work. Please set your SMS API account in our <a href="<?= base_url('tools/api_connectors'); ?>">API Connectors list</a>.
+                        <div class="nsm-callout primary">                            
+                            Create your auto sms notification.<br /> Note: You need to have a valid SMS API account for this to work. Please set your SMS API account in our <a name="link" href="<?= base_url('tools/api_connectors'); ?>">API Connectors list</a>.
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary btn-create-auto-sms-setting">
+                            <button name="button" type="button" class="nsm-button primary btn-create-auto-sms-setting">
                                 <i class='bx bx-fw bx-cog'></i> Add New Auto SMS Notification Setting
                             </button>
                         </div>
@@ -103,15 +102,15 @@
                                 </td>
                                 <td>
                                     <div class="dropdown table-management">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                             <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item edit-auto-sms" href="javascript:void(0);" data-id="<?= $asms->id; ?>">Edit</a>
+                                                <a class="dropdown-item edit-auto-sms" name="dropdown_edit" href="javascript:void(0);" data-id="<?= $asms->id; ?>">Edit</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item delete-auto-sms" href="javascript:void(0);" data-id="<?= $asms->id; ?>">Delete</a>
+                                                <a class="dropdown-item delete-auto-sms" name="dropdown_delete" href="javascript:void(0);" data-id="<?= $asms->id; ?>">Delete</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -136,7 +135,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Create Auto SMS Notification Setting</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                             </div>
                             <form action="" id="frm-create-auto-sms-notification">
                             <div class="modal-body">
@@ -231,8 +230,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="nsm-button primary btn-save-auto-sms">Save</button>
+                                <button name="btn_close_create_auto_sms" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button name="btn_close_modal" type="submit" class="nsm-button primary btn-save-auto-sms">Save</button>
                             </div>
                             </form>                      
                         </div>
@@ -245,13 +244,13 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Edit Auto SMS Notification Setting</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                             </div>
                             <form action="" id="frm-edit-auto-sms-notification">
                             <div class="modal-body modal-edit-auto-sms-container"></div>
                             <div class="modal-footer">
-                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="nsm-button primary btn-update-auto-sms">Save</button>
+                                <button name="btn_close_modal" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button name="btn_edit_auto_sms" type="submit" class="nsm-button primary btn-update-auto-sms">Save</button>
                             </div>
                             </form>                      
                         </div>
@@ -332,7 +331,7 @@
           }
 
           var $container = $(
-            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="'+repo.user_image+'" /></div><div class="autocomplete-right">'+repo.FName + ' ' + repo.LName +'<br /><small>Mobile Number : '+mobile+'</small></div></div>'
+            '<div><div class="autocomplete-left"><img alt="user-image" class="autocomplete-img" src="'+repo.user_image+'" /></div><div class="autocomplete-right">'+repo.FName + ' ' + repo.LName +'<br /><small>Mobile Number : '+mobile+'</small></div></div>'
           );
 
           return $container;

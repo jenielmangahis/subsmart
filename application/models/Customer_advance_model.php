@@ -172,9 +172,9 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
-    public function getCustomerLists($param = null)
+    public function getCustomerLists($param = null, $start = 0, $length = 0)
     {
-        $cid = logged('company_id');
+        $cid = logged('company_id');        
         $this->db->from("acs_profile");
 
         if($cid == 58){
@@ -194,7 +194,16 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id','left');
 
-        $this->db->limit(10);
+        if( $length > 0 ){            
+            $this->db->limit($length, $start);    
+        }
+
+        if( $param['search'] != '' ){
+            $this->db->or_like('acs_profile.last_name', $param['search'], 'both');    
+            $this->db->or_like('acs_profile.first_name', $param['search'], 'both');    
+            $this->db->or_like('acs_profile.email', $param['search'], 'both');    
+        }
+        
         $this->db->where("acs_profile.company_id", $cid);
         $query = $this->db->get();
         return $query->result();

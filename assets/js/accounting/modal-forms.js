@@ -2496,10 +2496,9 @@ $(function() {
             case 'last-week' :
                 var date = new Date();
                 var from = date.getDate() - date.getDay();
-                var to = from + 6;
 
                 var from_date = new Date(date.setDate(from - 7));
-                var to_date = new Date(date.setDate(to - 7));
+                var to_date = new Date(date.setDate(date.getDate() + 6));
 
                 from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
                 to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();

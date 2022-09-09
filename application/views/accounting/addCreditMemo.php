@@ -210,9 +210,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             
                         <div class="row">
                             <div class="col-md-12 form-group">
-                                <button type="submit" class="btn btn-flat btn-success">Submit</button>
-                                <button type="submit" class="btn btn-flat btn-success">Preview</button>
-                                <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
+                                <button name="button" type="submit" class="btn btn-flat btn-success">Submit</button>
+                                <button name="button" type="submit" class="btn btn-flat btn-success">Preview</button>
+                                <button name="button" type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                             </div>
                         </div>
@@ -231,7 +231,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -266,7 +266,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="modal-footer modal-footer-detail">
                             <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                                <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                             </div>
                         </div>
                     </div>

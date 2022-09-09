@@ -248,7 +248,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="modal-dialog modal-lg">
                <div class="modal-content">
                   <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <button type="button" name="button" class="close" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">×</span>
                      </button>
                      <h4 class="modal-title">Upload Profile Picture</h4>
@@ -256,7 +256,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="modal-body">
                      <div class="clearfix">
                         <span class="btn btn-primary-flat fileinput-button vertical-top">Upload Image <input id="fileuploadmodal-file" name="fileavatar" type="file"></span>
-                        <button class="btn btn-danger pull-right" id="fileuploadmodal-btn-delete" type="button" style="display: none;">Delete Image</button>
+                        <button name="button" class="btn btn-danger pull-right" id="fileuploadmodal-btn-delete" type="button" style="display: none;">Delete Image</button>
                      </div>
                      <div class="alert alert-danger" id="fileuploadmodal-error" role="alert" style="display: none;"></div>
                      <div class="" id="fileuploadmodal-progressbar" style="display: none;">
@@ -274,8 +274,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      </div>
                   </div>
                   <div class="modal-footer">
-                     <button class="btn btn-success pull-left" id="fileuploadmodal-crop-btn" type="button" data-label-on-submit="Saving ..." style="display: none;">Save Image</button>
-                     <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                     <button name="button" class="btn btn-success pull-left" id="fileuploadmodal-crop-btn" type="button" data-label-on-submit="Saving ..." style="display: none;">Save Image</button>
+                     <button name="button" class="btn btn-default" type="button" data-dismiss="modal">Close</button>
                   </div>
                </div>
             </div>
@@ -284,7 +284,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="modal-dialog modal-lg">
                <div class="modal-content">
                   <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">×</span>
                      </button>
                      <h4 class="modal-title">Verify Phone</h4>
@@ -318,12 +318,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                            </div>
                         </div>
                         <div class="form-group">
-                           <button class="btn btn-primary btn-lg" id="validation-modal-btn-submit" data-on-click-label="Validating...">Validate Now</button>
+                           <button name="button" class="btn btn-primary btn-lg" id="validation-modal-btn-submit" data-on-click-label="Validating...">Validate Now</button>
                         </div>
                      </form>
                   </div>
                   <div class="modal-footer">
-                     <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                     <button name="button" class="btn btn-default" type="button" data-dismiss="modal">Close</button>
                   </div>
                </div>
             </div>

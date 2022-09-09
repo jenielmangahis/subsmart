@@ -86,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <!-- /.col -->
 
       <div class="col-xs-4">
-        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+        <button name="button" type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
       </div>
       <!-- /.col -->
     </div>

@@ -254,7 +254,7 @@
                                   </div>
                                   <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
-                                      <button type="submit" class="btn btn-primary btn-flat">Update Image</button>
+                                      <button name="button" type="submit" class="btn btn-primary btn-flat">Update Image</button>
                                     </div>
                                   </div>
                                 <?php echo form_close(); ?>
@@ -273,15 +273,15 @@
                         <!-- Modal Header -->
                         <div class="modal-header">
                             <h4 class="modal-title"><i class="fa fa-pencil"></i> Edit Profile</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button name="button" type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <!-- Modal body -->
                         <form action="" id="editProfileForm">
                             <div class="modal-body modal-edit-employee"></div>
                             <!-- Modal footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" id="closeEditProfileModal">Cancel</button>
-                                <button type="button" class="btn btn-primary" id="updateProfile">Save</button>
+                                <button name="button" type="button" class="btn btn-default" id="closeEditProfileModal">Cancel</button>
+                                <button name="button" type="button" class="btn btn-primary" id="updateProfile">Save</button>
                             </div>
                         </form>
 
@@ -297,7 +297,7 @@
                         <!-- Modal Header -->
                         <div class="modal-header">
                             <h4 class="modal-title"><i class="fa fa-lock"></i> Change Password</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button name="button" type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <!-- Modal body -->
                         <form action="" id="changePasswordForm">
@@ -327,8 +327,8 @@
                             </div>
                             <!-- Modal footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
-                                <button type="button" class="btn btn-success" id="updatePassword">Save</button>
+                                <button name="button" type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
+                                <button name="button" type="button" class="btn btn-success" id="updatePassword">Save</button>
                             </div>
                         </form>
 
@@ -354,7 +354,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title"><i class="fa fa-image"></i> Change Employee Photo</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button name="button" type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
             <form action="" id="editEmployeeProfileForm">
@@ -373,8 +373,8 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="closeEditEmployeeModalProfilePhoto">Close</button>
-                    <button type="button" class="btn btn-primary" id="updateEmployeeProfilePhoto">Save</button>
+                    <button name="button" type="button" class="btn btn-default" id="closeEditEmployeeModalProfilePhoto">Close</button>
+                    <button name="button" type="button" class="btn btn-primary" id="updateEmployeeProfilePhoto">Save</button>
                 </div>
             </form>
 
@@ -387,7 +387,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Register Signature</h5>
-                <button type="button" class="close close-me" aria-label="Close">
+                <button name="button" type="button" class="close close-me" aria-label="Close">
                     <span>×</span>
                 </button>
             </div>
@@ -414,14 +414,14 @@
                 </div>
 
                 <div class="modal-footer__buttonContainer" style="display: flex; justify-content: flex-end;">
-                    <button id="clear" class="btn btn-danger" style="margin-right: 10px;">Clear</button>
-                    <button type="button" class="btn btn-primary d-flex align-items-center mr-2" id="signatureApplyButton">
+                    <button name="button" id="clear" class="btn btn-danger" style="margin-right: 10px;">Clear</button>
+                    <button name="button" type="button" class="btn btn-primary d-flex align-items-center mr-2" id="signatureApplyButton">
                         <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                         Save Signature
                     </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button name="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
