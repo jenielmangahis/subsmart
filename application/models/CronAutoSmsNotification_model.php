@@ -3,7 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class CronAutoSmsNotification_model extends MY_Model
 {    
-    public $table = 'cron_auto_sms_notification';
+    //public $table = 'cron_auto_sms_notification';
+    public $table = 'cron_auto_sms_notification_a';
 
 
     public function getAll($filter=array(), $limit = 0)
