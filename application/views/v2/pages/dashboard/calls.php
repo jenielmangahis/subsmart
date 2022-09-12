@@ -100,7 +100,6 @@ div#controls div#call-controls div#volume-indicators > div {
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Call customer.
                         </div>
                     </div>
@@ -111,7 +110,7 @@ div#controls div#call-controls div#volume-indicators > div {
                             <div class="nsm-field-group search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Customer" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
                             </div>
-                            <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
+                            <button type="submit" name="btn_search" class="nsm-button primary" style="margin:0px;">Search</button>
                         </form>
                     </div>
                 </div>
@@ -155,7 +154,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                     <td><?php echo $customer->phone_m; ?></td>
                                     <td>
                                         <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
@@ -163,7 +162,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                                     <?php
                                                         $phone = cleanMobileNumber($customer->phone_m);
                                                     ?>
-                                                    <a class="dropdown-item call-customer" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $phone; ?>" href="javascript:void(0);">Call</a>
+                                                    <a class="dropdown-item call-customer" name="dropdown_call" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $phone; ?>" href="javascript:void(0);">Call</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -185,9 +184,9 @@ div#controls div#call-controls div#volume-indicators > div {
                             <td colspan="3">
                                 <nav class="nsm-table-pagination">
                                     <ul class="pagination">
-                                        <li class="page-item"><a class="page-link disabled" href="#">Prev</a></li>
-                                        <li class="page-item"><a class="page-link active" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link disabled" href="#">Next</a></li>
+                                        <li class="page-item"><a class="page-link disabled" href="#" name="btn_prev">Prev</a></li>
+                                        <li class="page-item"><a class="page-link active" href="#" name="btn_link">1</a></li>
+                                        <li class="page-item"><a class="page-link disabled" href="#" name="btn_next">Next</a></li>
                                     </ul>
                                 </nav>
                             </td>
@@ -215,7 +214,7 @@ div#controls div#call-controls div#volume-indicators > div {
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Make Call</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                             </div>
                             <div class="modal-body">
                                 <?php if( $enable_ringcentral_call ){ ?>
@@ -270,10 +269,10 @@ div#controls div#call-controls div#volume-indicators > div {
                                     <!-- <i class='bx bx-star dig'></i> -->
                                     <i class='bx bx-arrow-back dig' style="width:auto;"></i>
                                     <div id="call">
-                                        <a id="button-call" href="javascript:void(0);">
+                                        <a id="button-call" name="btn_call" href="javascript:void(0);">
                                             <i class='bx bx-phone-call' style="font-size:17px;"></i>
                                         </a>
-                                        <a id="button-hangup" href="javascript:void(0);" style="display: none;">
+                                        <a id="button-hangup" name="btn_hngup" href="javascript:void(0);" style="display: none;">
                                             <i class='bx bx-phone-incoming' style="font-size:17px;"></i>
                                         </a>
                                     </div>

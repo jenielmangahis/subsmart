@@ -10,7 +10,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Call Logs.
                         </div>
                     </div>
@@ -21,7 +20,7 @@
                             <div class="nsm-field-group search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Logs" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
                             </div>
-                            <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
+                            <button type="submit" name="btn_search" class="nsm-button primary" style="margin:0px;">Search</button>
                         </form>
                     </div>
                 </div>
@@ -57,9 +56,9 @@
                             <td colspan="3">
                                 <nav class="nsm-table-pagination">
                                     <ul class="pagination">
-                                        <li class="page-item"><a class="page-link disabled" href="#">Prev</a></li>
-                                        <li class="page-item"><a class="page-link active" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link disabled" href="#">Next</a></li>
+                                        <li class="page-item"><a class="page-link disabled" href="#" name="btn_prev">Prev</a></li>
+                                        <li class="page-item"><a class="page-link active" href="#" name="btn_link">1</a></li>
+                                        <li class="page-item"><a class="page-link disabled" href="#" name="btn_next">Next</a></li>
                                     </ul>
                                 </nav>
                             </td>

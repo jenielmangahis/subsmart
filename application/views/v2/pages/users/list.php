@@ -38,7 +38,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Manage Employees.
                         </div>
                     </div>
@@ -51,13 +50,13 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
+                            <button type="button" name="btn_link" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-user-plus'></i> Add Employee
                             </button>
-                            <button type="button" class="nsm-button btn-export-list">
+                            <button type="button" name="btn_link" class="nsm-button btn-export-list">
                                 <i class='bx bx-fw bx-export'></i> Export List
                             </button>
-                            <button type="button" class="nsm-button primary btn-share-url">
+                            <button type="button" name="btn_link" class="nsm-button primary btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
                             </button>
                         </div>
@@ -155,30 +154,30 @@
                                     </td>
                                     <td>
                                         <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('users/view/' . $row->id) ?>" data-id="<?php echo $row->id ?>">View</a>
+                                                    <a class="dropdown-item" name="btn_view" href="<?php echo url('users/view/' . $row->id) ?>" data-id="<?php echo $row->id ?>">View</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Edit</a>
+                                                    <a class="dropdown-item edit-item" name="btn_edit" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item update-profile-item" href="javascript:void(0);" data-id="<?php echo $row->id ?>" data-img="<?php echo $data_img; ?>">Update Profile Image</a>
+                                                    <a class="dropdown-item update-profile-item" name="btn_update_profile_image" href="javascript:void(0);" data-id="<?php echo $row->id ?>" data-img="<?php echo $data_img; ?>">Update Profile Image</a>
                                                 </li>
                                                 <?php if(isSolarCompany() == 1){ ?>
                                                     <li>
-                                                        <a class="dropdown-item change-adt-portal-access" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Change ADT Portal Access</a>
+                                                        <a class="dropdown-item change-adt-portal-access" name="btn_adt_portal_access" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Change ADT Portal Access</a>
                                                     </li>
                                                 <?php } ?>
                                                 <li>
-                                                    <a class="dropdown-item change-password-item" href="javascript:void(0);" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>">Change Password</a>
+                                                    <a class="dropdown-item change-password-item" name="btn_change_pw" href="javascript:void(0);" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>">Change Password</a>
                                                 </li>
                                                 <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
                                                     <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $row->id; ?>">Delete</a>
+                                                        <a class="dropdown-item delete-item" name="btn_delete" href="javascript:void(0);" data-id="<?= $row->id; ?>">Delete</a>
                                                     </li>
                                                 <?php endif; ?>
                                             </ul>
@@ -329,7 +328,14 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         });
-
+                    } else if (result == 5) {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: "ADT Sales App account already exists",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
                     } else {
                         Swal.fire({
                             title: 'Failed',

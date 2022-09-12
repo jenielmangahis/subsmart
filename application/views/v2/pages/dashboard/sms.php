@@ -45,7 +45,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Send sms to customer.
                         </div>
                     </div>
@@ -57,7 +56,7 @@
                                 <div class="nsm-field-group search">
                                     <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Customer" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
                                 </div>
-                                <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
+                                <button type="submit" name="btn_search" class="nsm-button primary" style="margin:0px;">Search</button>
                             </form>
                         </div>
                     </div>
@@ -123,15 +122,15 @@
                                         </td>
                                         <td>
                                             <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a class="dropdown-item send-message" data-customer-name="<?= ucwords($customer->first_name) . ' ' . ucwords($customer->last_name) ?>" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $customer->phone_m; ?>" href="javascript:void(0);">Send SMS</a>
+                                                        <a class="dropdown-item send-message" name="dropdown_send_sms" data-customer-name="<?= ucwords($customer->first_name) . ' ' . ucwords($customer->last_name) ?>" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $customer->phone_m; ?>" href="javascript:void(0);">Send SMS</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item sent-messages" data-cid="<?= $customer->prof_id; ?>" href="javascript:void(0);">View Messages</a>
+                                                        <a class="dropdown-item sent-messages" name="dropdown_view_messages" data-cid="<?= $customer->prof_id; ?>" href="javascript:void(0);">View Messages</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -153,9 +152,9 @@
                                 <td colspan="3">
                                     <nav class="nsm-table-pagination">
                                         <ul class="pagination">
-                                            <li class="page-item"><a class="page-link disabled" href="#">Prev</a></li>
-                                            <li class="page-item"><a class="page-link active" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link disabled" href="#">Next</a></li>
+                                            <li class="page-item"><a class="page-link disabled" href="#" name="btn_prev">Prev</a></li>
+                                            <li class="page-item"><a class="page-link active" href="#" name="btn_link">1</a></li>
+                                            <li class="page-item"><a class="page-link disabled" href="#" name="btn_next">Next</a></li>
                                         </ul>
                                     </nav>
                                 </td>
@@ -169,7 +168,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <span class="modal-title content-title" id="new_feed_modal_label">Send SMS</span>
-                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                                 </div>
                                 <form action="" id="frm-send-message">
                                 <input type="hidden" name="cid" id="cid" value="">
@@ -192,7 +191,7 @@
                                         <div class="col-md-12 mt-3">
                                             <label for="" style="display:block;margin-bottom: 11px;">
                                                 Message
-                                                <a style="float: right;" class="nsm-button primary btn-sm btn-sms-template">Use SMS Template</a>
+                                                <a style="float: right;" name="btn_use_template" class="nsm-button primary btn-sm btn-sms-template">Use SMS Template</a>
                                             </label>
                                             <div class="sms-message-container">
                                                 <textarea class="form-control" name="sms_txt_message" id="sms-txt" style="height:150px;"></textarea>                                    
@@ -205,8 +204,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="nsm-button primary btn-send-message">Send</button>
+                                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="btn_modal_send" class="nsm-button primary btn-send-message">Send</button>
                                 </div>
                                 </form>                      
                             </div>
@@ -219,7 +218,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <span class="modal-title content-title" id="new_feed_modal_label">Set Mobile Number</span>
-                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                                 </div>
                                 <form action="" id="frm-update-customer-mobile">
                                 <input type="hidden" name="cid" id="smn-cid" value="">
@@ -236,8 +235,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="nsm-button primary btn-update-mobile">Save</button>
+                                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="btn_modal_save" class="nsm-button primary btn-update-mobile">Save</button>
                                 </div>
                                 </form>                      
                             </div>
@@ -250,7 +249,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <span class="modal-title content-title" id="new_feed_modal_label">Messages Sent</span>
-                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                                 </div>
                                 <div class="modal-body sent-messages-container"></div>                                     
                             </div>
@@ -263,15 +262,15 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <span class="modal-title content-title" id="new_feed_modal_label">SMS Template</span>
-                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="accordion" id="smsTemplate">
                                         <?php foreach($smsTemplates as $st){ ?>                                   
                                         <div class="accordion-item">                                            
                                             <h2 class="accordion-header" id="heading<?= $st->id; ?>" style="background-color: #6a4a86;">
-                                              <a class="nsm nsm-button primary btn-sm btn-use-template" data-id="<?= $st->id; ?>" href="javascript:void(0);">Use Template</a>
-                                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $st->id; ?>" aria-expanded="true" aria-controls="collapse<?= $st->id; ?>">
+                                              <a class="nsm nsm-button primary btn-sm btn-use-template" name="btn_use_template" data-id="<?= $st->id; ?>" href="javascript:void(0);">Use Template</a>
+                                              <button class="accordion-button" name="btn_accordion" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $st->id; ?>" aria-expanded="true" aria-controls="collapse<?= $st->id; ?>">
                                                 <?= $st->title; ?>
                                               </button>                                              
                                             </h2>                                            
@@ -290,7 +289,7 @@
                     <div class="alert alert-danger" role="alert">
                       You haven't set your preferred SMS api in our api connectors. Please specify which sms api will you use.                       
                       <br />
-                      <a class="nsm-button primary" style="display: inline-block;margin-top: 20px;" href="<?= base_url('tools/api_connectors'); ?>">Set SMS API</a>
+                      <a class="nsm-button primary" name="btn_set_sms_api" style="display: inline-block;margin-top: 20px;" href="<?= base_url('tools/api_connectors'); ?>">Set SMS API</a>
                     </div>
                 <?php } ?>
                 
@@ -354,7 +353,7 @@
                 $('#modalMessagesSent').modal('hide');
                 $('#sms-txt').val("");
             }else{
-                var msg = 'Phone number is needed to send sms. <br /><a href="javascript:void(0);" data-customer-name="'+customer_name+'" data-id="'+profid+'" class="nsm-button primary btn-set-customer-mobile">Set Mobile Number</a>'
+                var msg = 'Phone number is needed to send sms. <br /><a href="javascript:void(0);" name="btn_set_mobile" data-customer-name="'+customer_name+'" data-id="'+profid+'" class="nsm-button primary btn-set-customer-mobile">Set Mobile Number</a>'
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',

@@ -16,7 +16,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Listing the campaigns that are currently running.
                         </div>
                     </div>
@@ -28,15 +27,15 @@
                                 Sort by Status: <span>All</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-id="status_all">All</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-id="status_active">Active</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-id="status_scheduled">Scheduled</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-id="status_closed">Closed</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-id="status_draft">Draft</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="status_all">All</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="status_active">Active</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="status_scheduled">Scheduled</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="status_closed">Closed</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="status_draft">Draft</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('email_campaigns/add_email_blast') ?>'">
+                            <button type="button" class="nsm-button primary" name="btn_create_email_blast" onclick="location.href='<?php echo url('email_campaigns/add_email_blast') ?>'">
                                 <i class='bx bx-fw bx-envelope'></i> Create Email Blast
                             </button>
                         </div>
