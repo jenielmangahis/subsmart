@@ -1580,43 +1580,23 @@ class Expenses extends MY_Controller
     {
         $this->load->library('PHPXLSXWriter');
         $post = $this->input->post();
-        $order = $post['order'];
-        $columnName = $post['column'];
 
         $filters = $this->set_filters($post);
 
         $transactions = $this->get_transactions($filters, 'print');
 
-        usort($transactions, function ($a, $b) use ($order, $columnName) {
-            if ($columnName !== 'date') {
-                if($a[$columnName] === $b[$columnName]) {
-                    return strtotime($a['date_created']) > strtotime($b['date_created']);
-                }
-                if ($order === 'asc') {
-                    return strcmp($a[$columnName], $b[$columnName]);
-                } else {
-                    return strcmp($b[$columnName], $a[$columnName]);
-                }
-            } else {
-                if ($order === 'asc') {
-                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
-                        return strtotime($a['date_created']) > strtotime($b['date_created']);
-                    }
-                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
-                } else {
-                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
-                        return strtotime($a['date_created']) < strtotime($b['date_created']);
-                    }
-                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
-                }
+        usort($transactions, function($a, $b) {
+            if(strtotime($a['date']) === strtotime($b['date'])) {
+                return strtotime($a['date_created']) < strtotime($b['date_created']);
             }
+            return strtotime($a['date']) < strtotime($b['date']);
         });
 
         switch($post['type']) {
-            case 'all' :
+            case 'all-transactions' :
                 $type = 'All transactions';
             break;
-            case 'expenses' :
+            case 'expense' :
                 $type = 'Expense';
             break;
             case 'bill' :

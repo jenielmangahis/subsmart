@@ -1306,7 +1306,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['accounts'] = $accounts;
         $this->page_data['payDate'] = $payDate;
 
-        $this->load->view('accounting/modals/payroll_form', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/payroll_form', $this->page_data);
     }
 
     public function generate_payroll()
@@ -1375,7 +1375,7 @@ class Accounting_modals extends MY_Controller
             'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
         ];
 
-        $this->load->view("accounting/modals/payroll_summary", $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/payroll_summary", $this->page_data);
     }
 
     public function get_statement_customers()
