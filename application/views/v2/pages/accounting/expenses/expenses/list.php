@@ -56,7 +56,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-type">Type</label>
-                                        <select class="nsm-field form-select" name="filter_type" id="filter-type">
+                                        <select class="nsm-field form-select" name="filter_type" id="filter-type" data-applied="all-transactions">
                                             <option value="all-transactions" selected="selected">All transactions</option>
                                             <option value="expense">Expense</option>
                                             <option value="bill">Bill</option>
@@ -72,7 +72,7 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <label for="filter-status">Status</label>
-                                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                                        <select class="nsm-field form-select" name="filter_status" id="filter-status" data-applied="all">
                                             <option value="all" selected="selected">All statuses</option>
                                             <option value="open">Open</option>
                                             <option value="overdue">Overdue</option>
@@ -81,7 +81,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label for="filter-delivery-method">Delivery method</label>
-                                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+                                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method" data-applied="any">
                                             <option value="any" selected="selected">Any</option>
                                             <option value="print-later">Print later</option>
                                         </select>
@@ -90,7 +90,7 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="filter-date">Date</label>
-                                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                                        <select class="nsm-field form-select" name="filter_date" id="filter-date" data-applied="last-365-days">
                                             <option value="last-365-days" selected="selected">Last 365 days</option>
                                             <option value="custom">Custom</option>
                                             <option value="today">Today</option>
@@ -109,20 +109,20 @@
                                     <div class="col-4">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-365 days"))?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-365 days"))?>" id="filter-from" data-applied="<?=date("m/d/Y", strtotime("-365 days"))?>">
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" id="filter-to">
+                                            <input type="text" class="nsm-field form-control date" id="filter-to" data-applied="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
                                         <label for="filter-payee">Payee</label>
-                                        <select class="nsm-field form-select" name="filter_payee" id="filter-payee">
+                                        <select class="nsm-field form-select" name="filter_payee" id="filter-payee" data-applied="all">
                                             <option value="all" selected="selected">All</option>
                                         </select>
                                     </div>
@@ -130,7 +130,7 @@
                                 <div class="row">
                                     <div class="col-5">
                                         <label for="filter-category">Category</label>
-                                        <select class="nsm-field form-select" name="filter_category" id="filter-category">
+                                        <select class="nsm-field form-select" name="filter_category" id="filter-category" data-applied="all">
                                             <option value="all" selected="selected">All</option>
                                         </select>
                                     </div>
@@ -184,8 +184,8 @@
                                     <label for="chk_type" class="form-check-label">Type</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
-                                    <label for="chk_no" class="form-check-label">No.</label>
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_number" class="form-check-input">
+                                    <label for="chk_number" class="form-check-label">No.</label>
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_payee" class="form-check-input">

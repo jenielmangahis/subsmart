@@ -287,6 +287,40 @@ $('#expense-table-filters select').each(function() {
     }
 });
 
+// $(".export-items").click(function() {
+//     window.location.href = "";
+// });
+
+$('.export-items').on('click', function() {
+    if($('#export-form').length < 1) {
+        $('body').append('<form action="/accounting/expenses/export" method="post" id="export-form"></form>');
+    }
+
+    var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('chk_', '')}">`);
+    });
+    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="delivery_method" value="${$('#filter-delivery-method').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="date" value="${$('#filter-date').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="from_date" value="${$('#filter-from').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="to_date" value="${$('#filter-to').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="payee" value="${$('#filter-payee').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="category" value="${$('#filter-category').attr('data-applied')}">`);
+
+    $('#export-form').append(`<input type="hidden" name="column" value="date">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="desc">`);
+
+    $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).remove();
+});
+
 $("#btn_print_expenses").on("click", function() {
     $("#expenses_table_print").printThis();
 });

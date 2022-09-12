@@ -83,17 +83,10 @@ $(document).ready(function () {
                         dropdownParent: $(modal_element)
                     });
                 } else {
-                    var options = $(this).find('option');
-                    if (options.length > 10) {
-                        $(this).select2({
-                            dropdownParent: $(modal_element)
-                        });
-                    } else {
-                        $(this).select2({
-                            minimumResultsForSearch: -1,
-                            dropdownParent: $(modal_element)
-                        });
-                    }
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $(modal_element)
+                    });
                 }
             });
 

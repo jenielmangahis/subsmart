@@ -165,15 +165,18 @@ $(function() {
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#continue-payroll', function() {
         payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
-        payroll.paySchedForm = $('div#payrollModal div.modal-body .card-body').html();
+        payroll.paySchedForm = $('div#payrollModal div.modal-body').html();
         var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.pay_sched_name').html();
         if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined) {
             $.get('/accounting/get-payroll-form/' + payroll.paySchedule, function(res) {
-                $('div#payrollModal .modal-body .card-body').html(res);
+                $('div#payrollModal .modal-body').html(res);
 
                 $('div#payrollModal .modal-header .modal-title').html('Run Payroll: ' + paySchedName);
-                $('div#payrollModal .modal-body .card-body select:not(#bank-account)').select2();
-                $('div#payrollModal .modal-body .card-body select#bank-account').select2({
+                $('div#payrollModal .modal-body select:not(#bank-account)').select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#payrollModal')
+                });
+                $('div#payrollModal .modal-body select#bank-account').select2({
                     ajax: {
                         url: '/accounting/get-dropdown-choices',
                         dataType: 'json',
@@ -181,7 +184,8 @@ $(function() {
                             var query = {
                                 search: params.term,
                                 type: 'public',
-                                field: 'bank-account'
+                                field: 'bank-account',
+                                modal: 'payrollModal'
                             }
 
                             // Query parameters will be ?search=[term]&type=public&field=[type]
@@ -189,37 +193,42 @@ $(function() {
                         }
                     },
                     templateResult: formatResult,
-                    templateSelection: optionSelect
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#payrollModal')
                 });
-                $('div#payrollModal .modal-body .card-body #payDate').datepicker({
-                    uiLibrary: 'bootstrap'
+                $('div#payrollModal .modal-body #payDate').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
                 });
 
                 payrollTotal();
             });
             $(this).parent().prepend(`
-            <div class="btn-group dropup float-right">
-                <button type="button" class="btn btn-success" id="preview-payroll">
+            <div class="btn-group float-end" role="group">
+                <button type="button" class="nsm-button success" id="preview-payroll">
                     Preview payroll
                 </button>
-                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Save for later</a>
+                <div class="btn-group" role="group">
+                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bx bx-fw bx-chevron-up text-white"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Save for later</a>
+                    </div>
                 </div>
             </div>`);
             $(this).remove();
-            $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="back-paysched-select">Back</button>');
+            $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="nsm-button primary" id="back-paysched-select">Back</button>');
         }
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#back-paysched-select', function() {
-        $('div#payrollModal div.modal-body .card-body').html(payroll.paySchedForm);
-        $(`div#payrollModal div.modal-body .card-body input[name="pay_schedule"][value="${payroll.paySchedule}"]`).prop('checked', true);
-        $(this).parent().html(`<button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" id="close-payroll-modal">Close</button>`);
+        $('div#payrollModal div.modal-body').html(payroll.paySchedForm);
+        $(`div#payrollModal div.modal-body input[name="pay_schedule"][value="${payroll.paySchedule}"]`).prop('checked', true);
+        $(this).parent().html(`<button type="button" class="nsm-button primary" data-bs-dismiss="modal" id="close-payroll-modal">Cancel</button>`);
         $('div#payrollModal div.modal-footer div.col-md-4:last-child').html(`
-        <button class="btn btn-success float-right" type="button" id="continue-payroll">
+        <button class="nsm-button success float-end" type="button" id="continue-payroll">
             Continue
         </button>`);
     });
@@ -616,7 +625,7 @@ $(function() {
         $.get('/accounting/get-account-balance/' + value, function(res) {
             var result = JSON.parse(res);
 
-            el.parent().parent().next().children('h6').html('Balance ' + result.balance);
+            el.parent().next().children('h6').html('Balance ' + result.balance);
         });
     });
 
@@ -1075,7 +1084,7 @@ $(function() {
             $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
 
             $(`table${table} tbody tr:last-child() select`).val(null);
-            $(`table${table} tbody tr:last-child() select`).next('span').remove();
+            // $(`table${table} tbody tr:last-child() select`).next('span').remove();
             $(`table${table} tbody tr:last-child() input:not([type="checkbox"])`).val('');
             $(`table${table} tbody tr:last-child() textarea`).val('');
             $(`table${table} tbody tr:last-child() textarea`).html('');
@@ -1091,7 +1100,8 @@ $(function() {
                             var query = {
                                 search: params.term,
                                 type: 'public',
-                                field: type
+                                field: type,
+                                modal: 'weeklyTimesheetModal'
                             }
 
                             // Query parameters will be ?search=[term]&type=public&field=[type]
@@ -1099,7 +1109,8 @@ $(function() {
                         }
                     },
                     templateResult: formatResult,
-                    templateSelection: optionSelect
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#weeklyTimesheetModal')
                 });
             });
         }
@@ -1416,13 +1427,15 @@ $(function() {
     $(document).on('change', '#singleTimeModal select#service, #singleTimeModal #billable', function() {
         var service = $('#singleTimeModal #service').val();
 
-        if($('#singleTimeModal #billable').prop('checked')) {
-            $.get(`/accounting/get-item-details/${service}`, function(res) {
-                var result = JSON.parse(res);
-                var rate = result.item !== null ? result.item.price : '';
-    
-                $('#singleTimeModal #hourlyRate').val(rate).trigger('change');
-            });
+        if(service !== null && service !== '' && service !== undefined) {
+            if($('#singleTimeModal #billable').prop('checked')) {
+                $.get(`/accounting/get-item-details/${service}`, function(res) {
+                    var result = JSON.parse(res);
+                    var rate = result.item !== null ? result.item.price : '';
+        
+                    $('#singleTimeModal #hourlyRate').val(rate).trigger('change');
+                });
+            }
         }
     });
 
@@ -4804,53 +4817,58 @@ $(function() {
                 switch (field) {
                     case 'service':
                         if (value === 1) {
-                            $('#singleTimeModal').find('#service').prop('required', true).parent().removeClass('hide');
-                            $('#weeklyTimesheetModal').find('select[name="service[]"]').prop('required', true).parent().removeClass('hide');
+                            $('#singleTimeModal').find('#service').prop('required', true).parent().show()
+                            $('#weeklyTimesheetModal').find('select[name="service[]"]').prop('required', true).parent().show()
                         } else {
-                            $('#singleTimeModal').find('#service').prop('required', false).parent().addClass('hide');
-                            $('#weeklyTimesheetModal').find('select[name="service[]"]').prop('required', false).parent().addClass('hide');
+                            $('#singleTimeModal').find('#service').prop('required', false).parent().hide();
+                            $('#weeklyTimesheetModal').find('select[name="service[]"]').prop('required', false).parent().hide();
                         }
-                        break;
+                    break;
                     case 'billable':
                         if (value === 1) {
-                            $('#singleTimeModal').next().children('div.modal').find('.card-body').children('.row:nth-child(2)').children('div:first-child()').append(`
-                            <div class="form-check form-check-inline">
-                                <div class="checkbox checkbox-sec margin-right ">
-                                    <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onclick="showHiddenFields(this)">
-                                    <label class="form-check-label" for="billable">Billable(/hr)</label>
+                            var toAppend = `<div class="row">
+                                <div class="col-4 d-flex align-items-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onchange="showHiddenFields(this)">
+                                        <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                    </div>
                                 </div>
-                                <input type="number" name="hourly_rate" id="hourlyRate" class="w-25 form-control hide">
-                            </div>
-                            <div class="form-check hide">
-                                <div class="checkbox checkbox-sec">
-                                    <input type="checkbox" name="taxable" id="taxable" class="form-check-input" value="1">
-                                    <label for="taxable" class="form-check-label">Taxable</label>
+                                <div class="col-4">
+                                    <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="form-control nsm-field text-end" style="display: none" value="0.00" onchange="convertToDecimal(this)">
                                 </div>
-                            </div>
-                            `);
+                                <div class="col-12">
+                                    <div class="form-check" style="display: none">
+                                        <input type="checkbox" name="taxable" id="taxable" class="form-check-input" value="1">
+                                        <label for="taxable" class="form-check-label">Taxable</label>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                            $(toAppend).insertAfter($('#singleTimeModal #service').parent());
 
                             $('#weeklyTimesheetModal #timesheet-table tbody tr').each(function() {
                                 var number = $(this).find('td:first-child()').html();
 
                                 $(this).find('select[name="customer[]"]').parent().next().append(`
-                                <div class="form-check form-check-inline">
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input class="form-check-input weekly-billable" id="billable_${number}" type="checkbox" name="billable[]" value="1" onchange="showHiddenFields(this)">
-                                        <label class="form-check-label" for="billable_${number}">Billable(/hr)</label>
+                                <div class="row">
+                                    <div class="col d-flex align-items-center pe-0">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input weekly-billable" id="billable_${number}" type="checkbox" name="billable[]" value="1" onchange="showHiddenFields(this)">
+                                            <label class="form-check-label" for="billable_${number}">Billable(/hr)</label>
+                                        </div>
                                     </div>
                                 </div>
                                 `);
                             });
                         } else {
-                            $('#singleTimeModal').next().children('div.modal').find('#billable').parent().parent().next().remove();
-                            $('#singleTimeModal').next().children('div.modal').find('#billable').parent().parent().remove();
-                            $('#weeklyTimesheetModal').find('input[name="billable[]"]').parent().parent().parent().html('');
+                            $('#singleTimeModal').find('#billable').parent().parent().remove();
+                            $('#weeklyTimesheetModal').find('input[name="billable[]"]').parent().parent().parent().parent().html('');
                         }
 
                         if ($('#weeklyTimesheetModal').length > 0) {
                             rowInputs = $('#weeklyTimesheetModal #timesheet-table tbody tr:first-child()').html();
                         }
-                        break;
+                    break;
                 }
             }
         });
@@ -4865,7 +4883,13 @@ $(function() {
                 var res = JSON.parse(result);
 
                 if (res.success === false) {
-                    toast(res.success, res.message);
+                    Swal.fire({
+                        text: res.message,
+                        icon: res.success ? 'success' : 'error',
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else {
                     var timesheet = res.data;
                     var time_activities = timesheet.time_activities;
@@ -4898,10 +4922,15 @@ $(function() {
                         $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').prop('checked', activity.billable === "1");
 
                         if (activity.billable === "1") {
-                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').parent().parent().append(`<input type="number" name="hourly_rate[]" step=".01" value="${parseFloat(activity.hourly_rate).toFixed(2)}" onchange="convertToDecimal(this)" class="ml-2 w-25 form-control">
-                            <div class="checkbox checkbox-sec">
-                                <input type="checkbox" name="taxable[]" id="taxable_${count+1}" class="ml-2 form-check-input" value="1" ${activity.taxable === "1" ? 'checked' : ''}>
-                                <label class="form-check-label" for="taxable_${count+1}">Taxable</label>
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').parent().parent().parent().append(`
+                            <div class="col g-0">
+                                <input type="number" name="hourly_rate[]" step=".01" value="${parseFloat(activity.hourly_rate).toFixed(2)}" onchange="convertToDecimal(this)" class="form-control nsm-field">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <div class="form-check">
+                                    <input type="checkbox" name="taxable[]" id="taxable_${count+1}" class="form-check-input" value="1">
+                                    <label class="form-check-label" for="taxable_${count+1}">Taxable</label>
+                                </div>
                             </div>`);
                         }
 
@@ -4925,7 +4954,8 @@ $(function() {
                                     }
                                 },
                                 templateResult: formatResult,
-                                templateSelection: optionSelect
+                                templateSelection: optionSelect,
+                                dropdownParent: $('#weeklyTimesheetModal')
                             });
                         });
 
@@ -4936,6 +4966,14 @@ $(function() {
                         count++;
                     }
                 }
+            });
+        } else {
+            Swal.fire({
+                text: "nSmarTrac can't copy a previous timesheet because one doesn't exist yet for this employee or vendor.",
+                icon: 'error',
+                showCloseButton: true,
+                showConfirmButton: false,
+                timer: 2000
             });
         }
     });
@@ -8531,8 +8569,8 @@ const convertToDecimal = (el) => {
 const payrollRowTotal = (el) => {
     convertToDecimal(el);
     var totalPay = 0.00;
-    var rowIndex = $(el).parent().parent().index();
-    var payRate = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(2) p span.pay-rate`).html();
+    var row = $(el).closest('tr');
+    var payRate = row.find('span.pay-rate').html().replace('$', '');
     var regPayHours = "0.00";
     var commission = "0.00";
 
@@ -8544,12 +8582,12 @@ const payrollRowTotal = (el) => {
     } else {
         regPayHours = parseFloat(el.val()).toFixed(2);
 
-        $(el).parent().parent().children('td:nth-child(7)').children().html(regPayHours);
+        row.children('td:nth-child(7)').children().html(regPayHours);
 
         totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate))).toFixed(2);
     }
 
-    $(el).parent().parent().children('td:last-child()').children('p').children('span.total-pay').html(totalPay);
+    row.children('td:last-child()').children('p').children('span.total-pay').html(formatter.format(parseFloat(totalPay)));
 }
 
 const payrollTotal = () => {
@@ -8574,9 +8612,9 @@ const payrollTotal = () => {
             empCommission = 0.00;
         }
 
-        commission = parseFloat(parseFloat(commission) + empCommission).toFixed(2);
+        commission = parseFloat(parseFloat(commission) + empCommission);
 
-        var empTotalPay = $(this).children('td:last-child()').children('p').children('span').html();
+        var empTotalPay = $(this).children('td:last-child()').children('p').children('span').html().replace('$', '');
 
         if (empTotalPay !== "" && empTotalPay !== undefined) {
             empTotalPay = parseFloat(empTotalPay);
@@ -8584,16 +8622,16 @@ const payrollTotal = () => {
             empTotalPay = 0.00;
         }
 
-        totalPay = parseFloat(parseFloat(totalPay) + empTotalPay).toFixed(2);
+        totalPay = parseFloat(parseFloat(totalPay) + parseFloat(empTotalPay));
     });
 
-    $('div#payrollModal table#payroll-table tfoot tr td:nth-child(4)').html(hours);
-    $('div#payrollModal table#payroll-table tfoot tr td:nth-child(7)').html(hours);
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(4)').html(hours);
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(7)').html(hours);
 
-    $('table#payroll-table tfoot tr td:nth-child(5)').html(formatter.format(parseFloat(commission)));
+    $('table#payroll-table tfoot tr:first-child td:nth-child(5)').html(formatter.format(parseFloat(commission)));
 
     $('div#payrollModal h2.total-pay').html(formatter.format(parseFloat(totalPay)));
-    $('table#payroll-table tfoot tr td:last-child() p').html(formatter.format(parseFloat(totalPay)));
+    $('table#payroll-table tfoot tr:first-child td:last-child()').html(formatter.format(parseFloat(totalPay)));
 }
 
 const tableWeekDate = (el) => {
@@ -8603,7 +8641,7 @@ const tableWeekDate = (el) => {
     var endDate = new Date(split[1]);
 
     for (var i = 3; startDate.getTime() <= endDate.getTime(); i++) {
-        $(`#weeklyTimesheetModal table#timesheet-table thead th:nth-child(${i}) p:nth-child(2)`).html(startDate.getDate());
+        $(`#weeklyTimesheetModal table#timesheet-table thead td:nth-child(${i}) p:nth-child(2)`).html(startDate.getDate());
         startDate = new Date(startDate.getTime() + 86400000);
     }
 }
@@ -8612,6 +8650,7 @@ const timeActivitySummary = (el) => {
     var date = $('div#singleTimeModal input#date').val();
     var time = $('div#singleTimeModal input#time').val();
     var billable = $('div#singleTimeModal input#billable').prop('checked');
+    var hourlyRate = $('div#singleTimeModal input#hourlyRate').val()
     hourlyRate = formatter.format(parseFloat(hourlyRate));
     var taxable = $('div#singleTimeModal input#taxable').prop('checked');
     var timeSplit = time !== "" ? time.split(':') : "";
@@ -8663,7 +8702,7 @@ const timeActivitySummary = (el) => {
 
         if(billable) {
             if (hourlyRate !== undefined && hourlyRate !== '$0.00' && hourlyRate !== '$' && totalHours !== undefined) {
-                summary += ' at '+formatter.format(parseFloat(hourlyRate))+' per hour ='
+                summary += ' at '+hourlyRate+' per hour ='
 
                 var totalHrsSplit = totalHours.split(':');
                 var rate = parseFloat(hourlyRate.replace('$', '').replaceAll(',', ''));
@@ -8679,16 +8718,19 @@ const timeActivitySummary = (el) => {
         }
 
         if (summary.trim() !== "") {
-            if ($('div#singleTimeModal div.modal-body div.row:nth-child(2) div.col-md-5 div#summary').length === 0) {
-                $('div#singleTimeModal div.modal-body div.row:nth-child(2) div.col-md-5').append(`
-                <div class="form-group" id="summary">
+            if ($('div#singleTimeModal div#summary').length === 0) {
+                var toAppend = `<div id="summary">
                     <label for="summary">Summary</label>
                     <p>${summary.trim()}</p>
-                </div>`);
+                </div>`;
+
+                $(toAppend).insertAfter($('#singleTimeModal #description').parent());
             } else {
-                $('div#singleTimeModal div.modal-body div.row:nth-child(2) div.col-md-5 div#summary p').html(summary.trim());
+                $('div#singleTimeModal div#summary p').html(summary.trim());
             }
         }
+    } else {
+        $('#singleTimeModal #summary').remove();
     }
 }
 
@@ -9828,27 +9870,27 @@ const toast = (status = true, text = "Success", position = "top-right") => {
 const showHiddenFields = (el) => {
     if($(el).attr('id') === 'billable') {
         if($(el).prop('checked') === true) {
-            $(el).parent().next().removeClass('hide');
-            $(el).parent().next().attr('required', 'required');
-            $(el).parent().parent().next().removeClass('hide');
+            $(el).parent().parent().next().children('input').show();
+            $(el).parent().parent().next().children('input').attr('required', 'required');
+            $(el).parent().parent().next().next().children('div').show();
         } else {
-            $(el).parent().next().addClass('hide');
-            $(el).parent().next().removeAttr('required', 'required');
-            $(el).parent().parent().next().addClass('hide');
+            $(el).parent().parent().next().children('input').hide();
+            $(el).parent().parent().next().children('input').removeAttr('required');
+            $(el).parent().parent().next().next().children('div').hide();
         }
     }
 
     if($(el).attr('id') === 'startEndTime') {
         if($(el).prop('checked') === true) {
-            $('div#singleTimeModal select#startTime, select#endTime').parent().removeClass('hide');
+            $('div#singleTimeModal select#startTime, select#endTime').parent().show();
             $('div#singleTimeModal select#startTime, select#endTime').prop('required', true);
             $('div#singleTimeModal label[for="time"]').html('Break');
             $('div#singleTimeModal input#time').removeAttr('required');
             $('div#singleTimeModal input#time').val('');
             $('div#singleTimeModal div#summary').remove();
         } else {
-            $('select#startTime, select#endTime').parent().addClass('hide')
-            $('select#startTime, select#endTime').removeAttr('required', 'required');
+            $('select#startTime, select#endTime').parent().hide();
+            $('select#startTime, select#endTime').removeAttr('required');
             $('label[for="time"]').html('Time');
             $('input#time').prop('required', true);
         }
@@ -9863,18 +9905,23 @@ const showHiddenFields = (el) => {
             $.get(`/accounting/get-item-details/${serviceId}`, function(res) {
                 var result = JSON.parse(res);
                 var rate = result.item !== null ? result.item.price : '';
-                $(el).parent().parent().append(`<input type="number" name="hourly_rate[]" step=".01" value="${rate}" onchange="convertToDecimal(this)" class="ml-2 w-25 form-control">
-                <div class="checkbox checkbox-sec">
-                    <input type="checkbox" name="taxable[]" id="taxable_${number}" class="ml-2 form-check-input" value="1">
-                    <label class="form-check-label" for="taxable_${number}">Taxable</label>
+                $(el).parent().parent().parent().append(`
+                <div class="col g-0">
+                    <input type="number" name="hourly_rate[]" step=".01" value="${rate}" onchange="convertToDecimal(this)" class="form-control nsm-field">
+                </div>
+                <div class="col d-flex align-items-center">
+                    <div class="form-check">
+                        <input type="checkbox" name="taxable[]" id="taxable_${number}" class="form-check-input" value="1">
+                        <label class="form-check-label" for="taxable_${number}">Taxable</label>
+                    </div>
                 </div>`);
 
-                $(el).parent().parent().find('[name="hourly_rate[]"]').trigger('change');
+                $(el).parent().parent().parent().find('[name="hourly_rate[]"]').trigger('change');
             });
         } else {
-            $(el).parent().parent().find('input[name="hourly_rate[]"]').remove();
-            $(el).parent().parent().find('input[name="taxable[]"]').parent().remove();
-            $(el).parent().parent().parent().parent().parent().parent().find('td.total-cell').find('p:nth-child(3), p:nth-child(4)').remove();
+            $(el).parent().parent().parent().find('input[name="hourly_rate[]"]').parent().remove();
+            $(el).parent().parent().parent().find('input[name="taxable[]"]').parent().parent().remove();
+            $(el).closest('tr').find('td.total-cell').find('p:nth-child(3), p:nth-child(4)').remove();
         }
     }
 }
