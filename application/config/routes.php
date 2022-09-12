@@ -1248,6 +1248,9 @@ $route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';
 //Cron Send Email
 $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
 
+//Cron Api
+$route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';
+
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';
 $route['cron_payment/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
