@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add Employee</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" style="overflow-x: auto;max-height: 800px;">
                     <div class="row gy-3 mb-4">
@@ -220,8 +220,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
@@ -234,13 +234,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Employee</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" id="edit_employee_container" style="overflow-x: auto;max-height: 800px;">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary" disabled>Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary" disabled>Save</button>
                 </div>
             </div>
         </form>
@@ -253,7 +253,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Change Password</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row gy-3 mb-4">
@@ -279,8 +279,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
@@ -293,12 +293,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Set ADT Sales Portal Login</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" id="adt-portal-access-container"></div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
@@ -311,7 +311,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Change Employee Photo</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
@@ -328,8 +328,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>

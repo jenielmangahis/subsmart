@@ -46,22 +46,22 @@ if (!empty($emailBlast)) :
             <td><span class="nsm-badge <?= $badge ?>"><?= $statusOptions[$eb->status]; ?></span></td>
             <td>
                 <div class="dropdown table-management">
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" href="<?php echo base_url('email_campaigns/view_campaign/' . $eb->id) ?>">Preview</a>
+                            <a class="dropdown-item" name="dropdown_preview" href="<?php echo base_url('email_campaigns/view_campaign/' . $eb->id) ?>">Preview</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="<?php echo base_url('email_campaigns/edit_campaign/' . $eb->id) ?>">Edit</a>
+                            <a class="dropdown-item" name="dropdown_edit" href="<?php echo base_url('email_campaigns/edit_campaign/' . $eb->id) ?>">Edit</a>
                         </li>
                         <li>
-                            <a class="dropdown-item clone-item" href="javascript:void(0);" data-name="<?= $eb->campaign_name; ?>" data-id="<?= $eb->id; ?>">Clone</a>
+                            <a class="dropdown-item clone-item" name="dropdown_clone" href="javascript:void(0);" data-name="<?= $eb->campaign_name; ?>" data-id="<?= $eb->id; ?>">Clone</a>
                         </li>
                         <?php if ($eb->status != 3) : ?>
                             <li>
-                                <a class="dropdown-item close-item" href="javascript:void(0);" data-name="<?= $eb->campaign_name; ?>" data-id="<?= $eb->id; ?>">Close</a>
+                                <a class="dropdown-item close-item" name="dropdown_close" href="javascript:void(0);" data-name="<?= $eb->campaign_name; ?>" data-id="<?= $eb->id; ?>">Close</a>
                             </li>
                         <?php endif; ?>
                     </ul>
