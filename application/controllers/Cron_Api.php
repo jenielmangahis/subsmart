@@ -16,7 +16,7 @@ class Cron_Api extends MYF_Controller {
 
         $userPortalAccounts = $this->UserPortalAccount_model->getAll();
         foreach($userPortalAccounts as $up){
-            $projects = portalSyncProjects($up->user_id, $up->company_id, $up->usernamem $up->password_plain);
+            $projects = portalSyncProjects($up->user_id, $up->company_id, $up->username, $up->password_plain);
             if( $projects['total_projects'] > 0 ){
                 $syncResult = portalUpdateIsSyncProjects($projects['project_ids']);
             }

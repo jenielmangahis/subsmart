@@ -566,7 +566,7 @@
                         </div>
 
                         <?php if(isset($expense) && !is_null($expense->linked_transacs)) : ?>
-                        <div class="w-auto nsm-callout primary" style="display: none">
+                        <div class="w-auto nsm-callout primary" style="display: none; max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
@@ -579,7 +579,7 @@
                                     $title .= $linkableTransac['number'] !== '' ? ' #' . $linkableTransac['number'] : '';
                                     ?>
 
-                                    <div class="col-12">
+                                    <div class="col-12 grid-mb">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h5 class="card-title"><?=$title?></h5>

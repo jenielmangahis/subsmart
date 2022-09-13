@@ -323,6 +323,10 @@
     .modal{
         z-index: 999999 !important;
     }
+    .items-8 li a{
+        color: #bebebe !important;
+        text-decoration: none !important;
+    }
 </style>
 
 <?php if(isset($jobs_data)): ?>
@@ -370,15 +374,21 @@
                                     <div class="nsm-card-content">
                                         <div class="nsm-progressbar my-4">
                                             <div class="progressbar">
-                                                <ul class="items-7">
-                                                    <li class="<?= !isset($jobs_data) || $jobs_data->status == '0'  ? 'active' : ''; ?>">Draft</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>">Schedule</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '2'  ? 'active' : ''; ?>" style="display: none;">Arrival</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '3'  ? 'active' : ''; ?>">Start</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Approved</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Finish</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Invoice</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Completed</li>
+                                                <ul class="items-8">
+                                                    <li class="<?= !isset($jobs_data) || $jobs_data->status == '0'  ? 'active' : ''; ?> step01">Draft</li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?> step02">Schedule</li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Arrival'  ? 'active' : ''; ?> step03" style="display: ;">
+                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-bs-toggle="modal" data-bs-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> style="text-decoration: none"> Arrival </a>
+                                                    </li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?> step04" >
+                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Start </a>
+                                                    </li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?> step05">
+                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?>data-bs-toggle="modal" data-bs-target="#fill_esign" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Approved </a>
+                                                    </li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Finish</li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoice'  ? 'active' : ''; ?>">Invoice</li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Completed</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -1160,73 +1170,9 @@
 </div>
 
 <!-- On My Way Modal -->
-<div class="modal fade" id="omw_modal" role="dialog">
-    <div class="close-modal" data-bs-dismiss="modal">&times;</div>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Arrival</h4>
-            </div>
-            <form id="update_status_to_omw">
-            <div class="modal-body">
-                <p>This will start travel duration tracking.</p>
-                <p>Arrive at:</p>
-                <input type="date" name="omw_date" id="omw_date" class="form-control" required>
-                <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
-                <input type="hidden" name="status" id="status" value="Arrival">
-                <select id="omw_time" name="omw_time" class="form-control" required>
-                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                        <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">
-                    <span class="fa fa-paper-plane-o"></span> Save
-                </button>
-                <button type="button" id="" class="btn btn-default" data-bs-dismiss="modal">
-                    <span class="fa fa-remove"></span> Close
-                </button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+<?php include viewPath('v2/pages/job/modals/arrival_modal'); ?>
 <!-- Start Job Modal -->
-<div class="modal fade" id="start_modal" role="dialog">
-    <div class="close-modal" data-bs-dismiss="modal">&times;</div>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Start Job</h4>
-            </div>
-            <form id="update_status_to_started">
-                <div class="modal-body">
-                    <p>This will stop travel duration tracking and start on job duration tracking.</p>
-                    <p>Start job at:</p>
-                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
-                    <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
-                    <input type="hidden" name="status" id="status" value="Started">
-                    <select id="job_start_time" name="job_start_time" class="form-control" required>
-                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <span class="fa fa-paper-plane-o"></span> Save
-                    </button>
-                    <button type="button" id="" class="btn btn-default" data-bs-dismiss="modal">
-                        <span class="fa fa-remove"></span> Close
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+<?php include viewPath('v2/pages/job/modals/started_modal'); ?>
 <!-- Finish Job Modal -->
 <div class="modal fade" id="finish_modal" role="dialog">
     <div class="close-modal" data-bs-dismiss="modal">&times;</div>
@@ -1300,6 +1246,8 @@ add_footer_js(array(
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
+<!-- Modals -->
+
 
 <script>
     $( window ).on( "load", function() {
@@ -2032,45 +1980,51 @@ add_footer_js(array(
         $("#update_status_to_omw").submit(function(e) {
             //alert("asf");
             e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/update_jobs_status",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Job Status Updated!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
-                    }
-                }
-            });
+            var omw_date = $('#omw_date').val();
+            var omw_time = $('#omw_time').val();
+            let status = $('#status').val();
+            var id = $('#jobid').val();
+
+            const fd = new FormData();
+            fd.append('id', id);
+            fd.append('omw_date', omw_date);
+            fd.append('omw_time', omw_time);
+            fd.append('status', status);
+
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'post',
+                body: fd
+            }).then(response => response.json()).then(response => {
+                console.log(response);
+            }).catch((error) => {
+                console.log(error);
+            })
         });
 
         $("#update_status_to_started").submit(function(e) {
             //alert("asf");
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
+            var job_start_date = $('#job_start_date').val();
+            var job_start_time = $('#job_start_time').val();
+            var status = $('#start_status').val();
+            var id = $('#jobid').val();
+            console.log(status);
+            const fd = new FormData();
+            fd.append('id', id);
+            fd.append('job_start_date', job_start_date);
+            fd.append('job_start_time', job_start_time);
+            fd.append('status', status);
+
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'post',
+                body: fd
+            }).then(response => response.json()).then(response => {
+                console.log(response);
+            }).catch((error) => {
+                console.log(error);
+            })
             //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/update_jobs_status",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Job Status Updated!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
-                    }
-                }
-            });
         });
 
         function sucess_add(information,is_reload){
@@ -2139,6 +2093,19 @@ add_footer_js(array(
             });
         }
 
+        $(".step02").click(function () {
+            $("#line-progress").css("width", "12.5%");
+        });
+
+        $(".step03").click(function () {
+            $("#line-progress").css("width", "25%");
+        });
+        $(".step04").click(function () {
+            $("#line-progress").css("width", "37.5%");
+        });
+        $(".step05").click(function () {
+            $("#line-progress").css("width", "50%");
+        });
         $("#employee2").on( 'change', function () {
             $('#employee2_id').val(this.value);
             console.log(get_employee_name(this));

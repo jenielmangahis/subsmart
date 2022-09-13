@@ -22,16 +22,44 @@
         </div>
     </div>
 
+    <?php 
+        $bgColors =  ['"rgba(75, 192, 192, 0.2)"',
+        '"rgba(153, 102, 255, 0.2)"',
+        '"rgba(54, 162, 235, 1)"',
+        '"rgba(255, 99, 132, 0.2)"',
+        '"rgba(54, 162, 235, 0.2)"',
+        '"rgba(255, 206, 86, 0.2)"',
+        '"rgb(255, 205, 86, 0.2)"',
+        '"rgba(255, 159, 64, 0.2)"',
+        '"rgba(65, 159, 64, 0.2)"'];
     
+    $sources = [];
+    $sourcesCount = [];
+    foreach($leadSources as $source): ?>
+        <?php 
+            $sources[] = "'".$source->ls_name."'";
+            $sourcesCount[] = $source->leadSourceCount;
+        ?>
+    <?php endforeach; ?>
+   
     <div class="nsm-card-content ">
     <div style=" float: left; position: relative;">
         <div style="width: 100%; height: 40px; position: absolute; top: 50%; left: 0; margin-top: -20px; line-height:19px; text-align: center; z-index: 999999999999999">
+            <?= count($leadSources) ?><Br />
             Sources
         </div>
         <canvas id="lead_source_chart" class="nsm-chart" data-chart-type="expenses"></canvas>
     </div>    
         <br>
         <div class="row">
+            <?php $x=0; foreach($leadSources as $source): ?>
+            <div class="col-md-12">
+                <span class="tagsData" href="javascript:void(0);">
+                    <span class=" big badge-circle"><b><?= $source->leadSourceCount ?></b>
+                    <span class="nsm-badge  badge-circle stat-bar stats-item" style="background-color: <?= str_replace('"', "", $bgColors[$x]) ?>;"></span>  <?= $source->lead_source ?></span>
+                </span>
+            </div>
+            <?php $x++; endforeach; ?>
         </div>
     </div>
     
@@ -42,25 +70,17 @@
         populateLeadSourceChart();
     });
 
-    //function initializeLeadSourceChart(){
-        // $.ajax({
-        //     url: '<?= base_url('widgets/getLeadSource') ?>',
-        //     method: 'get',
-        //     data: {},
-        //     dataType:'json',
-        //     success: function (response) {
-        //         populateLeadSourceChart(response.leadSource, response.leadNames);
-        //     }
-        // });
-
-        fetch('<?= base_url('widgets/getLeadSource') ?>',{
-
-        }).then(response => response.json()).then(response =>{
-            var {leadSource, leadNames} = response;
-            populateLeadSourceChart(leadSource, leadNames);
-            console.log(response);
-        })
-    //}
+    function initializeLeadSourceChart(){
+        $.ajax({
+            url: '<?= base_url('widgets/getLeadSource') ?>',
+            method: 'get',
+            data: {},
+            dataType:'json',
+            success: function (response) {
+                populateLeadSourceChart(response.leadSource, response.leadNames);
+            }
+        });
+    }
 
     function populateLeadSourceChart(){
         var lead_source = $("#lead_source_chart");
@@ -68,11 +88,11 @@
         new Chart(lead_source, {
           type: 'doughnut',
           data: {
-            labels: "sa",
+            labels: <?php echo '[' . implode(',', $sources) . ']'; ?>,
             datasets: [{
-              data: "hh",
+              data: <?php echo '[' . implode(',', $sourcesCount) . ']'; ?>,
               backgroundColor: [
-                "dd",
+                <?php echo  implode(',', $bgColors); ?>,
               ],
               borderWidth: 1
             }]

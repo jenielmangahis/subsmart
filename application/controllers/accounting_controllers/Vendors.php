@@ -1039,47 +1039,6 @@ class Vendors extends MY_Controller
         return $categoryAccs;
     }
 
-    public function copy_to_bill($purchaseOrderId)
-    {
-        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
-        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
-
-        $selectedTerm = $terms[0];
-
-        $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
-
-        $totalPayment = 0.00;
-        foreach ($billPayments as $billPayment) {
-            $paymentItems = $this->vendors_model->get_bill_payment_items($billPayment->id);
-
-            foreach ($paymentItems as $paymentItem) {
-                if ($paymentItem->bill_id === $billId) {
-                    $totalPayment += floatval($paymentItem->total_amount);
-                }
-            }
-        }
-
-        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
-        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
-
-        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Purchase Order', $purchaseOrder);
-        $this->page_data['purchaseOrder'] = $purchaseOrder;
-        $this->page_data['bill_payments'] = $billPayments;
-        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
-        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
-        // $this->page_data['bill'] = $bill;
-        $this->page_data['categories'] = $categories;
-        $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['terms'] = $terms;
-
-        $this->load->view('accounting/modals/bill_modal', $this->page_data);
-    }
-
     public function categorize_transactions($vendorId, $categoryId)
     {
         $post = $this->input->post();

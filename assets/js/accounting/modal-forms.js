@@ -242,7 +242,21 @@ $(function() {
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
         payrollForm = $('div#payrollModal div.modal-body').html();
-        payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
+        payrollFormData = new FormData();
+        // payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
+
+        payrollFormData.set('pay_from_account', $('#bank-account').val());
+        payrollFormData.set('pay_period', $('#payPeriod').val());
+        payrollFormData.set('pay_date', $('#payDate').val());
+        payrollFormData.set('pay_date', $('#payDate').val());
+
+        $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
+            var row = $(this).closest('tr');
+            payrollFormData.append('employees[]', $(this).val());
+            payrollFormData.append('reg_pay_hours[]', row.find('.regular-pay-hours').val());
+            payrollFormData.append('commission[]', row.find('.employee-commission').val());
+            payrollFormData.append('memo[]', row.find('[name="memo[]"]').val());
+        });
 
         $.ajax({
             url: '/accounting/generate-payroll',
@@ -253,34 +267,50 @@ $(function() {
             success: function(res) {
                 $('div#payrollModal div.modal-body').html(res);
 
-                var chartHeight = $('div#payrollModal div.modal-body div#payrollChart').parent().prev().height();
-                var chartWidth = $('div#payrollModal div.modal-body div#payrollChart').parent().width();
+                var chartHeight = $('div#payrollModal div.modal-body #payrollChart').parent().prev().height();
+                var chartWidth = $('div#payrollModal div.modal-body #payrollChart').parent().width();
 
-                $('div#payrollModal div#payrollChart').height(chartHeight);
-                $('div#payrollModal div#payrollChart').width(chartWidth);
+                $('div#payrollModal #payrollChart').height(chartHeight);
+                $('div#payrollModal #payrollChart').width(chartWidth);
 
-                var payrollCost = $('div#payrollModal div.modal-body h1 span#total-payroll-cost').html();
-                var totalNetPay = $('div#payrollModal div.modal-body h4 span#total-net-pay').html();
-                var employeeTax = $('div#payrollModal div.modal-body h4 span#total-employee-tax').html();
-                var employerTax = $('div#payrollModal div.modal-body h4 span#total-employer-tax').html();
+                var payrollCost = $('div#payrollModal div.modal-body span#total-payroll-cost').html().replace('$', '');
+                var totalNetPay = $('div#payrollModal div.modal-body span#total-net-pay').html().replace('$', '');
+                var employeeTax = $('div#payrollModal div.modal-body span#total-employee-tax').html().replace('$', '');
+                var employerTax = $('div#payrollModal div.modal-body span#total-employer-tax').html().replace('$', '');
 
                 var netPayPercent = parseFloat((parseFloat(totalNetPay) / parseFloat(payrollCost)) * 100).toFixed(2);
                 var employeeTaxPercent = parseFloat((parseFloat(employeeTax) / parseFloat(payrollCost)) * 100).toFixed(2);
                 var employerTaxPercent = parseFloat((parseFloat(employerTax) / parseFloat(payrollCost)) * 100).toFixed(2);
 
-                var Data = [
-                    { label: "Net Pay", value: netPayPercent },
-                    { label: "Employee", value: employeeTaxPercent },
-                    { label: "Employer", value: employerTaxPercent }
-                ];
-                var total = 100;
-                var donut_chart = Morris.Donut({
-                    element: 'payrollChart',
-                    data: Data,
-                    resize: true,
-                    formatter: function(value, data) {
-                        return Math.floor(value / total * 100) + '%';
-                    }
+                new Chart('payrollChart', {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Net Pay', 'Employee', 'Employer'],
+                        datasets: [{
+                            label: 'Payroll',
+                            data: [netPayPercent, employeeTaxPercent, employerTaxPercent],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(54, 162, 235, 0.2)'
+                              ],
+                              borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(54, 162, 235, 1)',
+                              ],
+                              borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                          legend: {
+                            position: 'bottom',
+                          },
+                        },
+                        aspectRatio: 1.5,
+                      }
                 });
             }
         });
@@ -2604,7 +2634,7 @@ $(function() {
                         `);
 
                         $('#expenseModal .modal-body').children('.row').append(`
-                            <div class="w-auto nsm-callout primary">
+                            <div class="w-auto nsm-callout primary" style="max-width: 15%">
                                 <div class="transactions-container h-100 p-3">
                                     <div class="row">
                                         <div class="col-12">
@@ -2620,7 +2650,7 @@ $(function() {
                             title += transaction.number !== '' ? ' #' + transaction.number : '';
                             if($(`#expenseModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                                 $('#expenseModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                                    <div class="col-12">
+                                    <div class="col-12 grid-mb">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
@@ -2629,7 +2659,7 @@ $(function() {
                                                     <strong>Total</strong>&emsp;${transaction.total}
                                                     ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong>&emsp;'+transaction.balance : ''}
                                                 </p>
-                                                <ul class="d-flex justify-content-around list-unstyle">
+                                                <ul class="d-flex justify-content-around list-unstyled">
                                                     <li><a href="#" class="add-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
                                                     <li><a href="#" class="open-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                                 </ul>
@@ -2684,7 +2714,7 @@ $(function() {
                         `);
 
                         $('#checkModal .modal-body').children('.row').append(`
-                            <div class="w-auto nsm-callout primary">
+                            <div class="w-auto nsm-callout primary" style="max-width: 15%">
                                 <div class="transactions-container h-100 p-3">
                                     <div class="row">
                                         <div class="col-12">
@@ -2700,7 +2730,7 @@ $(function() {
                             title += transaction.number !== '' ? '#' + transaction.number : '';
                             if($(`#checkModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                                 $('#checkModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                                    <div class="col-12">
+                                    <div class="col-12 grid-mb">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
@@ -2762,7 +2792,7 @@ $(function() {
                     `);
 
                     $('#billModal .modal-body').children('.row').append(`
-                        <div class="w-auto nsm-callout primary">
+                        <div class="w-auto nsm-callout primary" style="max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
@@ -2778,7 +2808,7 @@ $(function() {
                         title += transaction.number !== '' ? '#' + transaction.number : '';
                         if($(`#billModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                             $('#billModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                                <div class="col-12">
+                                <div class="col-12 grid-mb">
                                     <div class="card">
                                         <div class="card-body">
                                             <h5 class="card-title">${title}</h5>
@@ -2839,7 +2869,7 @@ $(function() {
                     `);
 
                     $('#billPaymentModal .modal-body').children('.row').append(`
-                        <div class="w-auto nsm-callout primary">
+                        <div class="w-auto nsm-callout primary" style="max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
@@ -2858,7 +2888,7 @@ $(function() {
                             var title = transaction.type;
                             title += transaction.number !== '' ? '#' + transaction.number : '';
                             $('#billPaymentModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                                <div class="col-12">
+                                <div class="col-12 grid-mb">
                                     <div class="card">
                                         <div class="card-body">
                                             <h5 class="card-title">${title}</h5>
@@ -4238,16 +4268,14 @@ $(function() {
                 }
 
                 $('#billPaymentModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                    <div class="col-md-12 px-0 pb-2">
-                        <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                            <i class="fa fa-chevron-right"></i>
-                        </a>
+                    <div class="col-12">
+                        <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                     </div>
                 `);
 
                 $('#billPaymentModal .modal-body').children('.row').append(`
-                    <div class="col-xl-2">
-                        <div class="transactions-container bg-white h-100" style="padding: 15px">
+                    <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                        <div class="transactions-container h-100 p-3">
                             <div class="row">
                                 <div class="col-12">
                                     <h4>Add to Bill Payment</h4>
@@ -4264,18 +4292,18 @@ $(function() {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#' + transaction.number : '';
                         $('#billPaymentModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
-                            <div class="col-12">
-                                <div class="card border">
-                                    <div class="card-body p-0">
+                            <div class="col-12 grid-mb">
+                                <div class="card">
+                                    <div class="card-body">
                                         <h5 class="card-title">${title}</h5>
                                         <p class="card-subtitle">${transaction.formatted_date}</p>
                                         <p class="card-text">
                                             <strong>Total</strong> ${transaction.total}
                                             ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
                                         </p>
-                                        <ul class="d-flex justify-content-around">
-                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                        <ul class="d-flex justify-content-around list-unstyled">
+                                            <li><a href="#" class="text-decoration-none add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-decoration-none open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -4352,16 +4380,14 @@ $(function() {
                 }
 
                 $('#billPaymentModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                    <div class="col-md-12 px-0 pb-2">
-                        <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                            <i class="fa fa-chevron-right"></i>
-                        </a>
+                    <div class="col-12">
+                        <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                     </div>
                 `);
 
                 $('#billPaymentModal .modal-body').children('.row').append(`
-                    <div class="col-xl-2">
-                        <div class="transactions-container bg-white h-100" style="padding: 15px">
+                    <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                        <div class="transactions-container h-100 p-3">
                             <div class="row">
                                 <div class="col-12">
                                     <h4>Add to Bill Payment</h4>
@@ -4378,7 +4404,7 @@ $(function() {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#' + transaction.number : '';
                         $('#billPaymentModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
-                            <div class="col-12">
+                            <div class="col-12 grid-mb">
                                 <div class="card border">
                                     <div class="card-body p-0">
                                         <h5 class="card-title">${title}</h5>
@@ -7321,23 +7347,23 @@ $(function() {
                             $('#invoiceModal .transactions-container').parent().remove();
 
                             $('#invoiceModal .modal-body').children('.row').append(`
-                                <div class="col-xl-2">
-                                    <div class="transactions-container bg-white h-100" style="padding: 15px">
+                                <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                                    <div class="transactions-container h-100 p-3">
                                         <div class="row">
                                             <div class="col-12">
                                                 <h4>Add to Invoice</h4>
                                             </div>
                                             <div class="col-12">
-                                                <div class="form-group">
+                                                <div class="grid-mb">
                                                     <label for="">Filter by</label>
-                                                    <select class="form-control" id="transaction-type">
+                                                    <select class="form-control nsm-field" id="transaction-type">
                                                         <option value="all">All types</option>
                                                         <option value="charges">Charges</option>
                                                         <option value="credits">Credits</option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group">
-                                                    <select class="form-control" id="transaction-date">
+                                                <div class="grid-mb">
+                                                    <select class="form-control nsm-field" id="transaction-date">
                                                         <option value="all">All dates</option>
                                                         <option value="this-month">This month</option>
                                                         <option value="last-month">Last month</option>
@@ -7359,18 +7385,18 @@ $(function() {
                                 title += transaction.number !== '' ? '#' + transaction.number : '';
     
                                 if($(`#invoiceModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
-                                    $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
-                                    <div class="col-12">
-                                        <div class="card border">
-                                            <div class="card-body p-0">
+                                    $('#invoiceModal .modal-body .row .transactions-container .row').append(`
+                                    <div class="col-12 grid-mb">
+                                        <div class="card">
+                                            <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
                                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                                 <p class="card-text">
                                                     ${transaction.balance}
                                                 </p>
-                                                <ul class="d-flex justify-content-around">
-                                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                <ul class="d-flex justify-content-around list-unstyled">
+                                                    <li><a href="#" class="text-decoration-none add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="text-decoration-none open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                                 </ul>
                                             </div>
                                         </div>

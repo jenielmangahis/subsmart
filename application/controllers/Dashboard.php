@@ -508,7 +508,7 @@ class Dashboard extends Widgets {
     public function upcoming_jobs(){
         $companyId = logged('company_id');
 
-        if($companyId == 1){
+        if($companyId != 1){
             $companies = $this->event_model->getCompanies();
         }else{
             $upcomingJobs = $this->event_model->getRecentCustomer();

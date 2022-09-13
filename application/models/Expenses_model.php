@@ -695,8 +695,11 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('recurring', null);
 
-        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+        if(isset($filters['start-date'])) {
             $this->db->where('bill_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
             $this->db->where('bill_date <=', $filters['end-date']);
         }
 
@@ -757,8 +760,11 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('recurring', null);
 
-        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+        if(isset($filters['start-date'])) {
             $this->db->where('purchase_order_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
             $this->db->where('purchase_order_date <=', $filters['end-date']);
         }
 
@@ -788,8 +794,11 @@ class Expenses_model extends MY_Model
         $this->db->where('status !=', 0);
         $this->db->where('recurring', null);
 
-        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+        if(isset($filters['start-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
             $this->db->where('payment_date <=', $filters['end-date']);
         }
 
@@ -810,6 +819,14 @@ class Expenses_model extends MY_Model
         if(isset($filters['payee'])) {
             $this->db->where('payee_type', $filters['payee']['type']);
             $this->db->where('payee_id', $filters['payee']['id']);
+        }
+
+        if(isset($filters['start-date'])) {
+            $this->db->where('payment_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
+            $this->db->where('payment_date <=', $filters['end-date']);
         }
 
         $query = $this->db->get('accounting_credit_card_credits');

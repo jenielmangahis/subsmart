@@ -82,8 +82,8 @@
                     <td>
                         <input type="text" name="memo[]" class="form-control nsm-field">
                     </td>
-                    <td><p class="text-end m-0">0.00</p></td>
-                    <td><p class="text-end m-0"><span class="total-pay">$0.00</span></p></td>
+                    <td><p class="m-0">0.00</p></td>
+                    <td><p class="m-0"><span class="total-pay">$0.00</span></p></td>
                 </tr>
                 <?php endforeach;?>
                 <?php endif; ?>

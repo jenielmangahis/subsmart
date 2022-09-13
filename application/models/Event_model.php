@@ -334,7 +334,7 @@ class Event_model extends MY_Model
         $this->db->select('status, count(status) as statusCount');
         $this->db->from('jobs');
         $this->db->group_by('status');
-        $this->db->order_by('status', 'desc');
+        $this->db->order_by('statusCount', 'desc');
         $this->db->where('company_id', $cid);
         $query = $this->db->get();
         return $query->result();

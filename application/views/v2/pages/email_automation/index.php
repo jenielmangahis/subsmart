@@ -30,7 +30,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             List all automations.
                         </div>
                     </div>
@@ -38,10 +37,10 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('email_automation/add_email_automation') ?>'">
+                            <button type="button" name="btn_add_email_automation" class="nsm-button" onclick="location.href='<?php echo url('email_automation/add_email_automation') ?>'">
                                 <i class='bx bx-fw bx-mail-send'></i> Add Email Automation
                             </button>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('email_automation/templates') ?>'">
+                            <button type="button" class="nsm-button primary" name="btn_default_templates" onclick="location.href='<?php echo url('email_automation/templates') ?>'">
                                 <i class='bx bx-fw bx-cog'></i> Manage Default Templates
                             </button>
                         </div>

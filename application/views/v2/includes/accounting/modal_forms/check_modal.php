@@ -575,7 +575,7 @@
                         </div>
 
                         <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
-                        <div class="w-auto nsm-callout primary" style="display: none">
+                        <div class="w-auto nsm-callout primary" style="display: none; max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
