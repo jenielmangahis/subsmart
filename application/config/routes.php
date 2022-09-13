@@ -645,8 +645,6 @@ $route['accounting/vendors/(:any)/update']['post'] = 'accounting_controllers/ven
 $route['accounting/vendors/update-attachments/(:any)']['post'] = 'accounting_controllers/vendors/update_attachments/$1';
 $route['accounting/vendors/remove-attachment/(:any)']['post'] = 'accounting_controllers/vendors/remove_attachment/$1';
 $route['accounting/vendors/(:any)/load-transactions']['post'] = 'accounting_controllers/vendors/load_transactions/$1';
-// $route['accounting/vendors/update-transaction-category']['post'] = 'accounting_controllers/vendors/update_transaction_category';
-$route['accounting/vendors/copy-to-bill/(:any)'] = 'accounting_controllers/vendors/copy_to_bill/$1';
 $route['accounting/vendors/(:any)/categorize-transactions/(:any)']['post'] = 'accounting_controllers/vendors/categorize_transactions/$1/$2';
 $route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/print_transaction/$1/$2';
 $route['accounting/vendors/print-multiple-transactions']['post'] = 'accounting_controllers/vendors/print_multiple';
@@ -664,6 +662,7 @@ $route['accounting/expenses/attach/(:any)/(:any)']['post'] = 'accounting_control
 $route['accounting/expenses/print-transactions']['post'] = 'accounting_controllers/expenses/print_transactions';
 $route['accounting/expenses/export']['post'] = 'accounting_controllers/expenses/export';
 $route['accounting/expenses/update-transaction-category']['post'] = 'accounting_controllers/expenses/update_transaction_category';
+$route['accounting/expenses/copy-to-bill/(:any)'] = 'accounting_controllers/expenses/copy_to_bill/$1';
 
 $route['accounting/reports'] = 'accounting_controllers/reports/index';
 $route['accounting/reports/add-to-favorites/(:any)'] = 'accounting_controllers/reports/add_to_favorites/$1';

@@ -70,7 +70,7 @@ $(document).ready(function() {
             }else{
                 for(var j=0; j < upcomingJobs.length; j++){
                     $("#jobsData").append(
-                        '<div class="widget-item cursor-pointer" onclick="location.href='+upcomingJobs[j].prof_id+'"><div class="nsm-profile"><span>'+upcomingJobs[j].last_name+' '+upcomingJobs[j].first_name+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+upcomingJobs[j].last_name+' '+upcomingJobs[j].first_name+'</span><span class="content-subtitle d-block">'+upcomingJobs[j].city+' '+upcomingJobs[j].state+' '+upcomingJobs[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">Pending</span><span class="content-subtitle d-block mt-1">'+upcomingJobs[j].email+'</span></div></div></div>'
+                        '<div class="widget-item cursor-pointer" onclick="location.href='+upcomingJobs[j].prof_id+'"><div class="nsm-profile"><span>'+upcomingJobs[j].last_name[0]+''+upcomingJobs[j].first_name[0]+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+upcomingJobs[j].last_name+' '+upcomingJobs[j].first_name+'</span><span class="content-subtitle d-block">'+upcomingJobs[j].city+' '+upcomingJobs[j].state+' '+upcomingJobs[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">Pending</span><span class="content-subtitle d-block mt-1">'+upcomingJobs[j].email+'</span></div></div></div>'
                     )
                 }
             }
@@ -101,15 +101,16 @@ $(document).ready(function() {
         method: 'GET'
     }) .then(response => response.json()).then(response => {
         var {success, salesLeaderboard, revenue} = response;
-        console.log(salesLeaderboard);
+        console.log(response);
         if(success){
             for(var x=0; x<salesLeaderboard.length; x++){
                 var name = salesLeaderboard[x].FName + ' '+ salesLeaderboard[x].LName;
                 var rev = parseFloat(revenue[x][0]['salesRepRev']).toFixed(2);
                 var prof = salesLeaderboard[x].FName[0] + ''+ salesLeaderboard[x].LName[0];
+                var salesRev = rev ? rev : 0;
 
                 $('#sales_leaderboard').append(
-                    '<div class="widget-item"><div class="nsm-profile"><span>'+ prof +'</span></div><div class="content"><div class="details"><span class="content-title">'+ name +'</span><span class="content-subtitle d-block">Sales Rep</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+ rev +'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ salesLeaderboard[x].customerCount+'</span><span class="content-subtitle d-block">customers</span></div></div></div>'
+                    '<div class="widget-item"><div class="nsm-profile"><span>'+ prof +'</span></div><div class="content"><div class="details"><span class="content-title">'+ name +'</span><span class="content-subtitle d-block">Sales Rep</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+ salesRev +'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ salesLeaderboard[x].customerCount+'</span><span class="content-subtitle d-block">customers</span></div></div></div>'
                 )
             }
         }
@@ -121,12 +122,15 @@ $(document).ready(function() {
         
     }).then(response => response.json()).then(response => {
         var {success, techLeaderboard, revenue, customerCount} = response;
-        console.log(techLeaderboard);
+        console.log(response);
         if(success){
             for(var x=0; x<techLeaderboard.length; x++){
+                var rev = parseFloat(revenue[x][0]['techRev']).toFixed(2);
+                var techRev = rev ? rev : 0;
+
                 var count = parseFloat(customerCount[x][0].totalCount) != 0 ? parseFloat(customerCount[x][0].totalCount) : '0';
                 $('#tech_leaderboard').append(
-                    '<div class="widget-item"><div class="nsm-profile"><span>'+techLeaderboard[x].FName[0] + ''+ techLeaderboard[x].LName[0]+'</span></div><div class="content"><div class="details"><span class="content-title">'+techLeaderboard[x].FName + ' '+ techLeaderboard[x].LName+'</span><span class="content-subtitle d-block">Technician</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+parseFloat(revenue[x][0]['techRev']).toFixed(2)+'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ count +'</span><span class="content-subtitle d-block">customers</span></div></div></div>'
+                    '<div class="widget-item"><div class="nsm-profile"><span>'+techLeaderboard[x].FName[0] + ''+ techLeaderboard[x].LName[0]+'</span></div><div class="content"><div class="details"><span class="content-title">'+techLeaderboard[x].FName + ' '+ techLeaderboard[x].LName+'</span><span class="content-subtitle d-block">Technician</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+techRev+'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ count +'</span><span class="content-subtitle d-block">customers</span></div></div></div>'
                 )
             }
         }
@@ -189,10 +193,10 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
     new Chart(jobs, {
         type: 'line',
         data: {
-            labels: [firstMonth,secMonth, currentMonth],
+            labels: [firstMonth, secMonth, currentMonth],
             datasets: [{
                     label: 'Job Count',
-                    data: [ curJob, prevJob, previousJob],
+                    data: [previousJob, prevJob, curJob],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -301,7 +305,7 @@ fetch('<?= base_url('Dashboard/accounting_sales') ?>',{
                 var ins = new Date('"'+installDate+'"');
             
                 if(new Date('01/01/2022') <= ins && new Date('01/31/2022') >= ins){
-                    window.amountFirst += parseInt(mmr[x].mmr);
+                    amountFirst += parseInt(mmr[x].mmr);
                 }else if(new Date('02/01/2022') <= ins && new Date('02/28/2022') >= ins){
                     amountSecond += parseInt(mmr[x].mmr);
                 }else if(new Date('03/01/2022') <= ins && new Date('03/31/2022') >= ins){

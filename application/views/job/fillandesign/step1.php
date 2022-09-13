@@ -1,31 +1,31 @@
 <div class="fillandesign__step1">
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item active">
-            <a class="nav-link active" id="recent-tab" data-toggle="tab" href="#recent" role="tab" aria-selected="true">
+            <a class="nav-link active" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-selected="true">
                 Fill & eSign Documents
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" id="my-templates" data-toggle="tab" href="#myTemplates" role="tab" aria-selected="false">
+            <a class="nav-link" id="my-templates" data-bs-toggle="tab" href="#myTemplates" role="tab" aria-selected="false">
                 eSign Templates
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" id="vault-tab" data-toggle="tab" href="#vault" role="tab" aria-selected="false">
+            <a class="nav-link" id="vault-tab" data-bs-toggle="tab" href="#vault" role="tab" aria-selected="false">
                 Shared Library
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" id="local-tab" data-toggle="tab" href="#local" role="tab" aria-selected="false">
+            <a class="nav-link" id="local-tab" data-bs-toggle="tab" href="#local" role="tab" aria-selected="false">
                 Local
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" id="esign-only-tab" data-toggle="tab" href="#esign-only" role="tab" aria-selected="false">
+            <a class="nav-link" id="esign-only-tab" data-bs-toggle="tab" href="#esign-only" role="tab" aria-selected="false">
                 eSign
             </a>
         </li>
@@ -70,12 +70,12 @@
 
             <ul class="nav nav-tabs mt-3" role="tablist">
                 <li class="nav-item active">
-                    <a class="nav-link active" id="esign-only-draw-tab" data-toggle="tab" href="#esign-only-draw" role="tab" aria-controls="draw" aria-selected="false">
+                    <a class="nav-link active" id="esign-only-draw-tab" data-bs-toggle="tab" href="#esign-only-draw" role="tab" aria-controls="draw" aria-selected="false">
                         <i class="fa fa-pencil mr-2"></i>Draw
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="esign-only-type-tab" data-toggle="tab" href="#esign-only-type" role="tab" aria-controls="type" aria-selected="true">
+                    <a class="nav-link" id="esign-only-type-tab" data-bs-toggle="tab" href="#esign-only-type" role="tab" aria-controls="type" aria-selected="true">
                         <i class="fa fa-keyboard-o mr-2"></i>Type
                     </a>
                 </li>
@@ -91,7 +91,7 @@
                 <div class="tab-pane" data-signature-type="type" id="esign-only-type" role="tabpanel" aria-labelledby="type-tab">
 
                     <div class="dropdown mt-2 mb-2" id="fontSelect">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="fontDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="fontDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Select Font
                         </button>
                         <div class="dropdown-menu" aria-labelledby="fontDropdown">

@@ -34,16 +34,16 @@
                     <div class="row" style="min-height: 100%">
                         <div class="col">
                             <div class="row payee-details">
-                                <?php if(isset($bill) && !is_null($bill->linked_transacs)) : ?>
+                                <?php if(isset($bill) && !is_null($bill->linked_transacs) || isset($purchaseOrder)) : ?>
                                 <div class="col-md-12">
                                     <button class="nsm-button open-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-left"></i></button>
 
                                     <div class="dropdown">
                                         <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">
-                                            <?php if(count($bill->linked_transacs) > 1) : ?>
-                                                <?=count($bill->linked_transacs)?> linked Purchase Orders
-                                            <?php else : ?>
+                                            <?php if(isset($bill) && count($bill->linked_transacs === 1) || isset($purchaseOrder)) : ?>
                                                 1 linked Purchase Order
+                                            <?php else : ?>
+                                                <?=count($bill->linked_transacs)?> linked Purchase Orders
                                             <?php endif; ?>
                                         </a>
                                         <div class="dropdown-menu">
@@ -57,6 +57,21 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php if(isset($purchaseOrder)) : ?>
+                                                    <tr>
+                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$purchaseOrder->id?>" data-type="purchase-order">Purchase Order</a></td>
+                                                        <td><?=date("m/d/Y", strtotime($purchaseOrder->purchase_order_date))?></td>
+                                                        <td>
+                                                            <?php
+                                                            $transacAmount = $purchaseOrder->total_amount;
+                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+
+                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                            ?>
+                                                        </td>
+                                                        <td><button type="button" class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$purchaseOrder->id?>">Remove</button></td>
+                                                    </tr>
+                                                    <?php else : ?>
                                                     <?php foreach($bill->linked_transacs as $linkedTransac) : ?>
                                                     <tr>
                                                         <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac['transaction']->id?>" data-type="purchase-order">Purchase Order</a></td>
@@ -72,14 +87,19 @@
                                                         <td><button type="button" class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$linkedTransac['transaction']->id?>">Remove</button></td>
                                                     </tr>
                                                     <?php endforeach; ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
 
+                                    <?php if(!isset($purchaseOrder)) : ?>
                                     <?php foreach($bill->linked_transacs as $linkedTransac) : ?>
                                         <input type="hidden" value="purchase_order-<?=$linkedTransac['transaction']->id?>" name="linked_transaction[]">
                                     <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <input type="hidden" value="purchase_order-<?=$purchaseOrder->id?>" name="linked_transaction[]">
+                                    <?php endif;?>
                                 </div>
                                 <?php endif; ?>
                                 <div class="col-12 col-md-8 grid-mb">
@@ -87,11 +107,18 @@
                                         <div class="col-12 col-md-3">
                                             <label for="vendor">Vendor</label>
                                             <select name="vendor_id" id="vendor" class="form-control nsm-field" required>
-                                                <?php if(isset($bill)) : ?>
+                                                <?php if(isset($bill) || isset($purchaseOrder)) : ?>
+                                                    <?php if(isset($purchaseOrder) && !isset($bill)) : ?>
+                                                    <option value="<?=$purchaseOrder->vendor_id?>">
+                                                        <?php $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id); ?>
+                                                        <?=$vendor->display_name?>
+                                                    </option>
+                                                    <?php else : ?>
                                                     <option value="<?=$bill->vendor_id?>">
                                                         <?php $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id); ?>
                                                         <?=$vendor->display_name?>
                                                     </option>
+                                                    <?php endif; ?>
                                                 <?php endif; ?>
                                             </select>
                                         </div>
@@ -207,11 +234,7 @@
                                 <div class="col-12 col-md-2">
                                     <label for="term">Terms</label>
                                     <select name="term" id="term" class="form-control nsm-field mb-2">
-                                        <?php if(isset($bill)) : ?>
-                                            <?php if($bill->term_id !== null && $bill->term_id !== "") : ?>
-                                                <option value="<?=$term->id?>"><?=$term->name?></option>
-                                            <?php endif; ?>
-                                        <?php endif; ?>
+                                        <option value="<?=$term->id?>"><?=$term->name?></option>
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
@@ -617,8 +640,8 @@
                             </div>
                         </div>
 
-                        <?php if(isset($bill) && !is_null($bill->linked_transacs)) : ?>
-                        <div class="w-auto nsm-callout primary" style="display: none">
+                        <?php if(isset($bill) && !is_null($bill->linked_transacs) || isset($purchaseOrder)) : ?>
+                        <div class="w-auto nsm-callout primary" style="display: none; max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
@@ -631,7 +654,7 @@
                                     $title .= $linkableTransac['number'] !== '' ? ' #' . $linkableTransac['number'] : '';
                                     ?>
 
-                                    <div class="col-12">
+                                    <div class="col-12 grid-mb">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h5 class="card-title"><?=$title?></h5>

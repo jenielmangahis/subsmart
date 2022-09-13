@@ -279,9 +279,7 @@
             "columnDefs": [{ 
                 "targets": [0],
                 "orderable": false
-            }],
-            "pageLength": 10,
-            "searching" : true,
+            }]
         });
 
         $(document).on("click", ".call-item", function() {

@@ -23,6 +23,8 @@ class Expenses extends MY_Controller
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('accounting_terms_model');
+        $this->load->model('tags_model');
 
         $this->page_data['page']->title = 'Expenses';
         $this->page_data['page']->parent = 'Expenses';
@@ -312,7 +314,7 @@ class Expenses extends MY_Controller
 
                         if($billPayment->status !== '4') {
                             $manageCol .= '<li>
-                                <a class="dropdown-item void-bill-payment" href="#">Void</a>
+                                <a class="dropdown-item void-transaction" href="#">Void</a>
                             </li>';
                         }
 
@@ -329,7 +331,7 @@ class Expenses extends MY_Controller
                         'method' => '',
                         'source' => '',
                         'category' => '',
-                        'memo' => $billPayment->memo,
+                        'memo' => is_null($billPayment->memo) ? '' : $billPayment->memo,
                         'due_date' => '',
                         'balance' => '$0.00',
                         'total' => '$'.number_format(floatval($billPayment->total_amount), 2, '.', ','),
@@ -385,7 +387,7 @@ class Expenses extends MY_Controller
 
                         if($check->status !== '4') {
                             $manageCol .= '<li>
-                                <a class="dropdown-item void-check" href="#">Void</a>
+                                <a class="dropdown-item void-transaction" href="#">Void</a>
                             </li>';
                         }
 
@@ -492,7 +494,7 @@ class Expenses extends MY_Controller
                                 </li>';
 
                         if($ccPayment->status !== '4') {
-                            $manageCol .= '<li><a class="dropdown-item void-cc-payment" href="#">Void</a></li>';
+                            $manageCol .= '<li><a class="dropdown-item void-transaction" href="#">Void</a></li>';
                         }
 
                         $manageCol .= '</ul>
@@ -569,7 +571,7 @@ class Expenses extends MY_Controller
 
                         if($expense->status !== '4') {
                             $manageCol .= '<li>
-                                <a class="dropdown-item void-expense" href="#">Void</a>
+                                <a class="dropdown-item void-transaction" href="#">Void</a>
                             </li>';
                         }
 
@@ -583,7 +585,7 @@ class Expenses extends MY_Controller
                         'type' => 'Expense',
                         'number' => $expense->ref_no,
                         'payee' => $payeeName,
-                        'method' => $method->name,
+                        'method' => is_null($method) ? '' : $method->name,
                         'source' => '',
                         'category' => $category,
                         'memo' => $expense->memo,
@@ -1907,5 +1909,68 @@ class Expenses extends MY_Controller
             'success' => $update ? true : false,
             'message' => $update ? "Successfully updated!" : "Unexpected Error"
         ]);
+    }
+
+    public function copy_to_bill($purchaseOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+        $selectedTerm = $terms[0];
+        if ($selectedTerm->type === "1") {
+            $dueDate = date("m/d/Y", strtotime(date("m/d/Y")." +$selectedTerm->net_due_days days"));
+        } else {
+            if ($selectedTerm->minimum_days_to_pay === null ||
+                $selectedTerm->minimum_days_to_pay === "" ||
+                $selectedTerm->minimum_days_to_pay === "0") {
+                if (intval(date("d")) > intval($selectedTerm->day_of_month_due)) {
+                    $dueDate = date("m/d/Y", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." +1 month"));
+                } else {
+                    $dueDate = date("m/$selectedTerm->day_of_month_due/Y");
+                }
+            } else {
+                if (intval(date("d") > intval(date("d", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." -$selectedTerm->minimum_days_to_pay days"))))) {
+                    $dueDate = date("m/d/Y", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." +1 month"));
+                } else {
+                    $dueDate = date("m/$selectedTerm->day_of_month_due/Y");
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
+
+        $linkableTransactions = [];
+
+        $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($bill->vendor_id);
+
+        foreach ($purchaseOrders as $purchaseOrder) {
+            $balance = '$'.number_format(floatval(str_replace(',', '', $purchaseOrder->remaining_balance)), 2, '.', ',');
+            $total = '$'.number_format(floatval(str_replace(',', '', $purchaseOrder->total_amount)), 2, '.', ',');
+
+            if($purchaseOrder->status === "1" && array_search($purchaseOrder->id, array_column($linkedTransactions, 'linked_transaction_id')) === false) {
+                $linkableTransactions[] = [
+                    'type' => 'Purchase Order',
+                    'data_type' => 'purchase-order',
+                    'id' => $purchaseOrder->id,
+                    'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
+                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                    'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
+                ];
+            }
+        }
+
+        $this->page_data['linkableTransactions'] = $linkableTransactions;
+        $this->page_data['due_date'] = $dueDate;
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Purchase Order', $purchaseOrderId);
+        $this->page_data['purchaseOrder'] = $purchaseOrder;
+        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['term'] = $selectedTerm;
+
+        $this->load->view('v2/includes/accounting/modal_forms/bill_modal', $this->page_data);
     }
 }

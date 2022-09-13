@@ -82,8 +82,12 @@ class Widgets extends MY_Controller
             $leadSrc[] = $ld->leadSource;
         endforeach;
 
-
+        if($leadSource){
         echo json_encode(array('leadNames' => $leadNames, 'leadSource' => $leadSrc));
+        }else{
+        echo json_encode(array('leadNames' => "", 'leadSource' => ""));
+
+        }
     }
 
     /**

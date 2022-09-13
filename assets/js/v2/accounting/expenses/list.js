@@ -257,6 +257,248 @@ $(document).on('click', '#expenses-table .view-edit-cc-payment', function() {
     });
 });
 
+$('#expenses-table .copy-expense').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/copy-transaction/expense/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#expenseModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#expenseModal';
+        initModalFields('expenseModal', data);
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$('#expenses-table .copy-check').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/copy-transaction/check/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#checkModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#checkModal';
+        initModalFields('checkModal', data);
+
+        $('#checkModal').modal('show');
+    });
+});
+
+$('#expenses-table .copy-bill').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/copy-transaction/bill/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#billModal';
+        initModalFields('billModal', data);
+
+        $('#billModal').modal('show');
+    });
+});
+
+$('#expenses-table .copy-purchase-order').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/copy-transaction/purchase-order/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#purchaseOrderModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#purchaseOrderModal';
+        initModalFields('purchaseOrderModal', data);
+
+        $('#purchaseOrderModal').modal('show');
+    });
+});
+
+$('#expenses-table .copy-vendor-credit').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/copy-transaction/vendor-credit/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#vendorCreditModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#vendorCreditModal';
+        initModalFields('vendorCreditModal', data);
+
+        $('#vendorCreditModal').modal('show');
+    });
+});
+
+$('#expenses-table .copy-to-bill').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+    
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/expenses/copy-to-bill/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#billModal';
+        initModalFields('billModal', data);
+
+        $('#billModal').modal('show');
+    });
+});
+
+$('#expenses-table .delete-transaction').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' (Check)', '');
+    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.ajax({
+        url: `/accounting/delete-transaction/${transactionType}/${id}`,
+        type: 'DELETE',
+        dataType: 'json',
+        success: function(result) {
+            Swal.fire({
+                text: result.message,
+                icon: result.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500,
+                onClose: applyExpenseFilter
+            })
+        }
+    });
+});
+
+$('#expenses-table .void-transaction').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' (Check)', '');
+    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/void-transaction/'+transactionType+'/'+id, function(res) {
+        var result = JSON.parse(res);
+
+        Swal.fire({
+            text: result.message,
+            icon: result.success ? 'success' : 'error',
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 1500,
+            onClose: applyExpenseFilter
+        })
+    });
+});
+
 $('#expense-table-filters select').each(function() {
     if($(this).attr('id') !== 'filter-payee' && $(this).attr('id') !== 'filter-category') {
         $(this).select2({
@@ -286,10 +528,6 @@ $('#expense-table-filters select').each(function() {
         });
     }
 });
-
-// $(".export-items").click(function() {
-//     window.location.href = "";
-// });
 
 $('.export-items').on('click', function() {
     if($('#export-form').length < 1) {

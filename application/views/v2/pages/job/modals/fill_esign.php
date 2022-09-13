@@ -8,12 +8,12 @@
                     <div class="rb-01">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" id="esign-tab" data-toggle="tab" role="tab" aria-controls="recent" href="#fill_esign_tab">
+                                <a class="nav-link active" id="esign-tab" data-bs-toggle="tab" role="tab" aria-controls="recent" href="#fill_esign_tab">
                                     Fill & eSign
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="approval-tab" data-toggle="tab" role="tab" href="#approval_tab" aria-selected="false">
+                                <a class="nav-link" id="approval-tab" data-bs-toggle="tab" role="tab" href="#approval_tab" aria-selected="false">
                                     Approval
                                 </a>
                             </li>

@@ -1110,10 +1110,11 @@ class Job extends MY_Controller
                 //SMS Notification
                 createCronAutoSmsNotification($job->company_id, $job->id, 'job', $input['status'], $job->employee_id);
 
-                echo "Success";
+                $data_arr = array("success" => true, "message" => "Updated Successfully");
             } else {
-                echo "Error";
+                $data_arr = array("success" => false, "message" => "Something went wrong");
             }
+            die(json_encode($data_arr));
         }
     }
 

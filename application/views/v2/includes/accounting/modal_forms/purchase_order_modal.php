@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <span class="modal-title content-title">
-                                Purchase Order <span><?=isset($purchaseOrder) ? "#$purchaseOrder->purchase_order_no" : ""?></span>
+                                Purchase Order <span><?=isset($purchaseOrder) && !$is_copy ? "#$purchaseOrder->purchase_order_no" : ""?></span>
                             </span>
                         </div>
                     </div>

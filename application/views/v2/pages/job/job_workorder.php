@@ -441,7 +441,7 @@
                                                     <?php foreach ($color_settings as $color): ?>
                                                         <li>
                                                             <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
-                                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
+                                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check"></i>'; } ?>
                                                             </a>
                                                         </li>
                                                     <?php endforeach; ?>
@@ -851,7 +851,7 @@
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <span class="help help-sm help-block">Record all items used on jobs</span>
-                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span> Add New Item</a>
+                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="nsm-button primary float-sm-end"><span class="fa fa-plus"  style="color:"></span> Add New Item</a>
                                                                     <br>
                                                                     <table style="width: 100%;" id="device_audit" class="table table-hover table-bordered table-striped">
                                                                         <thead>
@@ -1317,4 +1317,19 @@ add_footer_js(array(
             }
         });
     }
+    $("body").delegate(".color-scheme", "click", function(){
+            var id = this.id;
+            $('[id="job_color_id"]').val(id);
+            console.log(id);
+            $( "#"+id ).append( "<i class=\"bx bx-check calendar_button\" style=\"color:#ffffff\" aria-hidden=\"true\"></i>" );
+            remove_others(id);
+        });
+        function remove_others (color_id){
+            $('.color-scheme').each(function(index) {
+                var idd = this.id;
+                if(idd !== color_id){
+                    $( "#"+idd ).empty();
+                }
+            });
+        }
 </script>
