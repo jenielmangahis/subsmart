@@ -105,9 +105,13 @@ $(document).ready(function() {
         if(success){
             for(var x=0; x<salesLeaderboard.length; x++){
                 var name = salesLeaderboard[x].FName + ' '+ salesLeaderboard[x].LName;
-                var rev = parseFloat(revenue[x][0]['salesRepRev']).toFixed(2);
+                var salesRev = 0;
+                if(revenue[x]){
+                    salesRev = parseFloat(revenue[x][0]['salesRepRev']).toFixed(2);
+                }
                 var prof = salesLeaderboard[x].FName[0] + ''+ salesLeaderboard[x].LName[0];
-                var salesRev = rev ? rev : 0;
+
+                
 
                 $('#sales_leaderboard').append(
                     '<div class="widget-item"><div class="nsm-profile"><span>'+ prof +'</span></div><div class="content"><div class="details"><span class="content-title">'+ name +'</span><span class="content-subtitle d-block">Sales Rep</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+ salesRev +'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ salesLeaderboard[x].customerCount+'</span><span class="content-subtitle d-block">customers</span></div></div></div>'
@@ -220,7 +224,7 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
                 },
                 {
                     label: 'Job Value',
-                    data: [curJob, prevJob, previousJob],
+                    data: [previousJob, prevJob, curJob],
                     backgroundColor: [
                         'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',

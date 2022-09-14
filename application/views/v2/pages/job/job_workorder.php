@@ -385,7 +385,7 @@
                                                     <label>From</label>
                                                 </div>
                                                 <div class="col-lg-5">
-                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>&nbsp;&nbsp;
+                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->date_issued : '';  ?>" required>&nbsp;&nbsp;
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <select id="start_time" name="start_time" class="nsm-field form-select" required>
@@ -403,7 +403,7 @@
                                                     <label>To</label>
                                                 </div>
                                                 <div class="col-lg-5">
-                                                    <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
+                                                    <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->date_issued : '';  ?>" required>
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <select id="end_time" name="end_time" class="nsm-field form-select " required>
@@ -484,7 +484,7 @@
                                             <option value="">Select Tags</option>
                                             <?php if(!empty($tags)): ?>
                                                 <?php foreach ($tags as $tag): ?>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                                    <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
                                         </select><br>
@@ -575,7 +575,7 @@
                                                     </td>
                                                     <td>
                                                         <small>Job Tags</small>
-                                                        <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
+                                                        <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -851,7 +851,7 @@
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <span class="help help-sm help-block">Record all items used on jobs</span>
-                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="nsm-button primary float-sm-end"><span class="fa fa-plus"  style="color:"></span> Add New Item</a>
+                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="nsm-button primary float-sm-end"><span class="fa fa-plus" ></span> Add New Item</a>
                                                                     <br>
                                                                     <table style="width: 100%;" id="device_audit" class="table table-hover table-bordered table-striped">
                                                                         <thead>
@@ -917,14 +917,17 @@
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
-                                                <?php if(!isset($jobs_data) || $jobs_data->status == 'Scheduled') : ?>
+                                                
+                                                <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
+                                                <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>" class="nsm-button primary">Preview</a>
+                                                <!-- <?php //if(!isset($jobs_data) || $jobs_data->status == 'Scheduled') : ?>
                                                     <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
-                                                <?php endif; ?>
-                                                <?php if(isset($jobs_data)): ?>
-                                                    <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>">
-                                                        <button type="submit" class="nsm-button primary"><i class='bx bx-bx fa-search-plus'></i> Preview</button>
+                                                    <?php //endif; ?> -->
+                                                <!-- <?php //if(isset($jobs_data)): ?>
+                                                    <a href="<?// base_url('job/job_preview/'.$this->uri->segment(3)) ?>" class="nsm-button primary">
+                                                        <i class='bx bx-bx fa-search-plus'></i> Preview
                                                     </a>
-                                                <?php endif; ?>
+                                                <?php //endif; ?> -->
                                             </div>
                                         </div>
                                     </div>
@@ -997,8 +1000,8 @@
                                         <td><?= $item->price; ?></td>
                                         <td><?=ucfirst($item->type); ?></td>
                                         <td>
-                                            <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                <span class="fa fa-plus"></span>
+                                            <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="nsm-button primary select_item">
+                                            <i class='bx bx-plus'></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -1332,4 +1335,6 @@ add_footer_js(array(
                 }
             });
         }
+
+        
 </script>

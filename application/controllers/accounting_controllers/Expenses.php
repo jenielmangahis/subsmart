@@ -131,6 +131,7 @@ class Expenses extends MY_Controller
         $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
         $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['unlinked_attachments'] = $this->accounting_attachments_model->get_unlinked_attachments();
         $this->page_data['page_title'] = "Expenses";
         $this->load->view('v2/pages/accounting/expenses/expenses/list', $this->page_data);
     }
@@ -250,7 +251,7 @@ class Expenses extends MY_Controller
                                     <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item copy-bill" href="#">Copy</a>
+                                    <a class="dropdown-item copy-transaction" href="#">Copy</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -296,30 +297,47 @@ class Expenses extends MY_Controller
 
                 if($filters['category'] === 'all') {
                     if($for === 'table') {
-                        $manageCol = '<div class="dropdown table-management">
-                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">View/Edit</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                </li>
-                        ';
+                        if($paymentType === 'Check') {
+                            $manageCol = '<div class="dropdown table-management">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item print-check" href="#">Print check</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item view-edit-bill-payment" href="#">View/Edit</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    </li>
+                            ';
 
-                        if($billPayment->status !== '4') {
-                            $manageCol .= '<li>
-                                <a class="dropdown-item void-transaction" href="#">Void</a>
-                            </li>';
+                            if($billPayment->status !== '4') {
+                                $manageCol .= '<li>
+                                    <a class="dropdown-item void-transaction" href="#">Void</a>
+                                </li>';
+                            }
+
+                            $manageCol .= '</ul>
+                            </div>';
+                        } else {
+                            $manageCol = '<div class="dropdown table-management">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item view-edit-bill-payment" href="#">View/Edit</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            ';
                         }
-
-                        $manageCol .= '</ul>
-                        </div>';
                     }
 
                     $transactions[] = [
@@ -378,7 +396,7 @@ class Expenses extends MY_Controller
                                     <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item copy-check" href="#">Copy</a>
+                                    <a class="dropdown-item copy-transaction" href="#">Copy</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -562,7 +580,7 @@ class Expenses extends MY_Controller
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/'.$expense->id.'" target="_blank">Print</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item copy-expense" href="#">Copy</a>
+                                    <a class="dropdown-item copy-transaction" href="#">Copy</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -632,7 +650,7 @@ class Expenses extends MY_Controller
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
+                                    <a class="dropdown-item copy-transaction" href="#">Copy</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -716,7 +734,7 @@ class Expenses extends MY_Controller
                                     <a class="dropdown-item view-edit-vendor-credit" href="#">View/Edit</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item copy-vendor-credit" href="#">Copy</a>
+                                    <a class="dropdown-item copy-transaction" href="#">Copy</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -1272,11 +1290,11 @@ class Expenses extends MY_Controller
     {
         $transaction = $this->get_transaction($transactionType, $transactionId);
 
-        if ($transaction->attachments !== "" && $transaction->attachments !== null) {
-            $attachmentIds = json_decode($transaction->attachments, true);
-        } else {
-            $attachmentIds = null;
-        }
+        // if ($transaction->attachments !== "" && $transaction->attachments !== null) {
+        //     $attachmentIds = json_decode($transaction->attachments, true);
+        // } else {
+        //     $attachmentIds = null;
+        // }
 
         $this->page_data['id'] = $transactionId;
         $this->page_data['transactionType'] = $transactionType;

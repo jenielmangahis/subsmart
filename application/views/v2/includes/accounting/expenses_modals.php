@@ -183,3 +183,62 @@
     </div>
 </div>
 <!-- end select category modal -->
+
+<!-- attach file modal -->
+<div class="modal fade nsm-modal" id="attach_file_modal" tabindex="-1" aria-labelledby="attach_file_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered m-auto" role="document" style="max-width: 40%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="attach_file_modal_label">Attachments</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form id="attach-file-form" method="post">
+            <div class="modal-body" style="max-height: 800px;">
+                <div class="row">
+                    <div class="col-12 grid-mb border-bottom">
+                        <div class="attachments grid-mb">
+                            <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                            <span>Maximum size: 20MB</span>
+                            <div id="transaction-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                <div class="dz-message" style="margin: 20px;border">
+                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <h5>Attach existing</h5>
+                        <div class="grid-mb w-50">
+                            <select id="attachments-filter" class="form-control">
+                                <option value="unlinked" selected>Unlinked</option>
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row attachments-container">
+                    <?php foreach($unlinked_attachments as $attachment) : ?>
+                        <div class="col-12 col-md-3">
+                            <div class="card">
+                                <img class="card-img-top m-0" src="/uploads/accounting/attachments/<?=$attachment['stored_name']?>" alt="<?=$attachment['uploaded_name'].'.'.$attachment['file_extension']?>">
+                                <div class="card-body">
+                                    <h6 class="card-title"><?=$attachment['uploaded_name'].'.'.$attachment['file_extension']?></h6>
+                                    <p class="card-subtitle mb-2 text-muted"><?=date("m/d/Y", strtotime($attachment['created_at']))?></p>
+                                    <ul class="d-flex justify-content-around list-unstyled">
+                                        <li><a href="#" class="text-decoration-none attach-to-transaction" data-id="<?=$attachment['id']?>">Add</a></li>
+                                        <li><a href="/uploads/accounting/attachments/<?=$attachment['stored_name']?>" target="_blank" class="text-decoration-none">Preview</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- end attach file modal -->

@@ -179,7 +179,7 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
-
+        print_r($this->page_data['jobs_data']);
         $default_customer_id = 0;
         $default_customer_name = '';
 
@@ -378,7 +378,6 @@ class Job extends MY_Controller
             $default_customer_id = $this->input->get('cus_id');
 
         }
-
         $this->page_data['title'] = 'Job New';
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
@@ -464,7 +463,6 @@ class Job extends MY_Controller
             'select' => 'id,name',
         );
         $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
-
         $get_job_types = array(
             'where' => array(
                 'company_id' => logged('company_id')
@@ -531,6 +529,8 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->workorder_model->get_workorder_details($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_workorder_items($id);
         }
+
+
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
         ]);
