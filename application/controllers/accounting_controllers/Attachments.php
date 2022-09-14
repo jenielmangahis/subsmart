@@ -489,14 +489,28 @@ class Attachments extends MY_Controller {
 
     public function get_all_attachments()
     {
+        $transacAtt = $this->accounting_attachments_model->get_attachments($this->input->get('type'), $this->input->get('id'));
+        $exemptedIds = array_column($transacAtt, 'id');
+
         $attachments = $this->accounting_attachments_model->getCompanyAttachments();
+
+        $attachments = array_filter($attachments, function($attachment) use ($exemptedIds) {
+            return !in_array($attachment['id'], $exemptedIds);
+        });
 
         echo json_encode($attachments);
     }
 
     public function get_unlinked_attachments()
     {
+        $transacAtt = $this->accounting_attachments_model->get_attachments($this->input->get('type'), $this->input->get('id'));
+        $exemptedIds = array_column($transacAtt, 'id');
+
         $attachments = $this->accounting_attachments_model->get_unlinked_attachments();
+
+        $attachments = array_filter($attachments, function($attachment) use ($exemptedIds) {
+            return !in_array($attachment['id'], $exemptedIds);
+        });
 
         echo json_encode($attachments);
     }

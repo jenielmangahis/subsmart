@@ -114,7 +114,7 @@ class Jobs_model extends MY_Model
     {
         $this->db->from('work_orders_items');
         $this->db->select('items.id,items.title,items.price,items.type,work_orders_items.qty');
-        $this->db->join('items', 'items.id = work_orders_items.items_id', 'left');
+        $this->db->join('items', 'items.id = work_orders_items.items_id');
         $this->db->where("work_orders_items.work_order_id", $id);
         $query = $this->db->get();
         return $query->result();

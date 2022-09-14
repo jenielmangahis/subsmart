@@ -19,6 +19,11 @@ $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
     });
 });
 
+$('#attach_file_modal select').select2({
+    minimumResultsForSearch: -1,
+    dropdownParent: $('#attach_file_modal')
+});
+
 $('#select_category_modal #category-id').select2({
     ajax: {
         url: '/accounting/get-dropdown-choices',
@@ -257,18 +262,27 @@ $(document).on('click', '#expenses-table .view-edit-cc-payment', function() {
     });
 });
 
-$('#expenses-table .copy-expense').on('click', function(e) {
+$(document).on('click', '#expenses-table .view-edit-bill-payment', function() {
+    
+});
+
+$('#expenses-table .copy-transaction').on('click', function(e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' (Check)', '');
+    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
 
     var data = {
         id: id,
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/copy-transaction/expense/'+id, function(res) {
+    $.get(`/accounting/copy-transaction/${transactionType}/${id}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -285,130 +299,6 @@ $('#expenses-table .copy-expense').on('click', function(e) {
         initModalFields('expenseModal', data);
 
         $('#expenseModal').modal('show');
-    });
-});
-
-$('#expenses-table .copy-check').on('click', function(e) {
-    e.preventDefault();
-
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
-
-    var data = {
-        id: id,
-        type: row.find('td:nth-child(3)').text().trim()
-    };
-
-    $.get('/accounting/copy-transaction/check/'+id, function(res) {
-        if ($('div#modal-container').length > 0) {
-            $('div#modal-container').html(res);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    ${res}
-                </div>
-            `);
-        }
-
-        $('#checkModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
-
-        modalName = '#checkModal';
-        initModalFields('checkModal', data);
-
-        $('#checkModal').modal('show');
-    });
-});
-
-$('#expenses-table .copy-bill').on('click', function(e) {
-    e.preventDefault();
-
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
-
-    var data = {
-        id: id,
-        type: row.find('td:nth-child(3)').text().trim()
-    };
-
-    $.get('/accounting/copy-transaction/bill/'+id, function(res) {
-        if ($('div#modal-container').length > 0) {
-            $('div#modal-container').html(res);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    ${res}
-                </div>
-            `);
-        }
-
-        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
-
-        modalName = '#billModal';
-        initModalFields('billModal', data);
-
-        $('#billModal').modal('show');
-    });
-});
-
-$('#expenses-table .copy-purchase-order').on('click', function(e) {
-    e.preventDefault();
-
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
-
-    var data = {
-        id: id,
-        type: row.find('td:nth-child(3)').text().trim()
-    };
-
-    $.get('/accounting/copy-transaction/purchase-order/'+id, function(res) {
-        if ($('div#modal-container').length > 0) {
-            $('div#modal-container').html(res);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    ${res}
-                </div>
-            `);
-        }
-
-        $('#purchaseOrderModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
-
-        modalName = '#purchaseOrderModal';
-        initModalFields('purchaseOrderModal', data);
-
-        $('#purchaseOrderModal').modal('show');
-    });
-});
-
-$('#expenses-table .copy-vendor-credit').on('click', function(e) {
-    e.preventDefault();
-
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
-
-    var data = {
-        id: id,
-        type: row.find('td:nth-child(3)').text().trim()
-    };
-
-    $.get('/accounting/copy-transaction/vendor-credit/'+id, function(res) {
-        if ($('div#modal-container').length > 0) {
-            $('div#modal-container').html(res);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    ${res}
-                </div>
-            `);
-        }
-
-        $('#vendorCreditModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
-
-        modalName = '#vendorCreditModal';
-        initModalFields('vendorCreditModal', data);
-
-        $('#vendorCreditModal').modal('show');
     });
 });
 
@@ -497,6 +387,86 @@ $('#expenses-table .void-transaction').on('click', function(e) {
             onClose: applyExpenseFilter
         })
     });
+});
+
+$('#expenses-table .view-attachment').on('click', function(e) {
+    e.preventDefault();
+    var data = e.currentTarget.dataset;
+
+    window.open(data.href, "_blank");
+});
+
+Dropzone.autoDiscover = false;
+let attachmentsDropzone = null;
+$('#expenses-table .attach-file').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' (Check)', '');
+    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $('#attach_file_modal form').attr('action', `/accounting/expenses/attach/${transactionType}/${id}`);
+    
+    if (attachmentsDropzone) {
+        attachmentsDropzone.destroy();
+    }
+
+    var attachmentContId = $(`#attach_file_modal .attachments .dropzone`).attr('id');
+    attachmentsDropzone = new Dropzone(`#${attachmentContId}`, {
+        url: `/accounting/expenses/attach-files/${transactionType}/${id}`,
+        maxFilesize: 20,
+        uploadMultiple: true,
+        // maxFiles: 1,
+        addRemoveLinks: true,
+        init: function() {
+            this.on("success", function(file, response) {
+                applyExpenseFilter();
+
+                $('#attach_file_modal form').removeAttr('action');
+                $('#attach_file_modal').modal('hide');
+            });
+        },
+    });
+
+    $('#attach_file_modal').modal('show');
+});
+
+$('#attachments-filter').on('change', function() {
+    var transactionType = $('#attach_file_modal form').attr('action').replace('/accounting/expenses/attach/', '').split('/')[0];
+    var id = $('#attach_file_modal form').attr('action').replace('/accounting/expenses/attach/', '').split('/')[1];
+    $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax?type=${transactionType}&id=${id}`, function(res) {
+        var attachments = JSON.parse(res);
+
+        $('#attach_file_modal .attachments-container').html('');
+        $.each(attachments, function(index, attachment) {
+            var date = new Date(attachment.created_at.split(' ')[0]);
+            $('#attach_file_modal .attachments-container').append(`
+            <div class="col-12 col-md-3">
+                <div class="card">
+                    <img class="card-img-top m-0" src="/uploads/accounting/attachments/${attachment.stored_name}" alt="${attachment.uploaded_name}.${attachment.file_extension}">
+                    <div class="card-body">
+                        <h6 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h6>
+                        <p class="card-subtitle mb-2 text-muted">${String(date.getMonth() + 1).padStart(2, '0')+'/'+String(date.getDate()).padStart(2, '0')+'/'+date.getFullYear()}</p>
+                        <ul class="d-flex justify-content-around list-unstyled">
+                            <li><a href="#" class="text-decoration-none attach-to-transaction" data-id="${attachment.id}">Add</a></li>
+                            <li><a href="/uploads/accounting/attachments/${attachment.stored_name}" target="_blank" class="text-decoration-none">Preview</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>`);
+        });
+    });
+});
+
+$('#attach_file_modal a.attach-to-transaction').on('click', function(e) {
+    e.preventDefault();
+
+    $('#attach_file_modal #attach-file-form').prepend(`<input type="hidden" name="id" value="${e.currentTarget.dataset.id}">`);
+    $('#attach_file_modal #attach-file-form').submit();
 });
 
 $('#expense-table-filters select').each(function() {
