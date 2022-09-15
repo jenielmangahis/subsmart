@@ -515,4 +515,21 @@ if (!function_exists('getInstalledDate')){
         return $install_date->install_date;
     }
 }
+
+if(!function_exists('get_estimate_customer_name')){
+    function get_estimate_customer_name($id){
+        $distinct_customer = array(
+            "where" => array(
+                "company_id" => logged('company_id'),
+                "prof_id" => $id
+            ),
+            "table" => "acs_profile",
+            "select" => "first_name, last_name, prof_id",
+        );
+        $CI = &get_instance();
+        $CI->load->model('estimate_model');
+        $customer = $CI->estimate_model->getEstimatesByCustomerWithParam($distinct_customer);
+        return $customer;
+    }
+}
 ?>

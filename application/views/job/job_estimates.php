@@ -348,7 +348,7 @@ add_css(array(
                                 <?php
                                 $subtotal = 0.00;
                                 foreach ($jobs_data_items as $item):
-                                    $total = $item->price * $item->qty;
+                                    $total = (($item->price * $item->qty) + $item->tax) - $item->discount;
                                     $unique_id = rand(1,10000);
                                     ?>
                                     <tr id=ss>

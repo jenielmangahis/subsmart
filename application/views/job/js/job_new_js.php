@@ -15,7 +15,7 @@ if(isset($jobs_data)){
             success: function(data)
             {
                 //console.log(data);
-                var template_data = JSON.parse(data);
+                var template_data = JSON.parse(data).data;
                 var toAppend = '';
                 $.each(template_data,function(i,o){
                     var selected = '';
@@ -42,7 +42,7 @@ if(isset($jobs_data)){
             success: function(data)
             {
                 //console.log(data);
-                var template_data = JSON.parse(data);
+                var template_data = JSON.parse(data).data;
                 var toAppend = '';
                 $.each(template_data,function(i,o){
                     var selected = '';
