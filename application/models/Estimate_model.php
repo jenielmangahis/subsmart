@@ -692,6 +692,63 @@ class Estimate_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getEstimatesByCustomerWithParam($param){
+        if(array_key_exists("table", $param) && $param['table'] != NULL){
+            $this->db->from($param['table']);
+        }else{
+            return FALSE;
+        }
+
+        if(array_key_exists("select", $param) && $param['select'] != NULL){
+            $this->db->select($param['select']);
+        }else{
+            $this->db->select('*');
+        }
+
+        if(array_key_exists("where", $param)){
+            foreach($param['where'] as $key => $val){
+                if($val != ''){
+                    $this->db->where($key, $val);
+                }else{
+                    if($val == 0){
+                        $this->db->where($key, $val);
+                    }else{
+                        $this->db->where($key);
+                    }
+                }
+            }
+        }
+        if(array_key_exists("where_not_in", $param)){
+            foreach($param['where_not_in'] as $key => $val){
+                if($val != ''){
+                    $this->db->where_not_in($key, $val);
+                }else{
+                    if($val == 0){
+                        $this->db->where_not_in($key, $val);
+                    }else{
+                        $this->db->where_not_in($key);
+                    }
+                }
+            }
+        }
+        if(array_key_exists("group_by",$param) && $param['group_by'] != NULL ){
+            $this->db->group_by($param['group_by']);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function getEstimateCustomerName()
+    {
+        $this->db->select('acs_profile.first_name, acs_profile.last_name, estimates.customer_id');
+        $this->db->from('acs_profile');
+        $this->db->join('estimates', 'acs_profile.prof_id == estimates.customer_id');
+        $this->db->group_by('estimates.customer_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Estimate_model.php */

@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                    <div class="col-12 col-md-8 offset-md-2">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -410,37 +410,7 @@
                                             <td data-name="Amount">AMOUNT</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Customer</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;06/16/2022</td>
-                                            <td>123</td>
-                                            <td>Pending</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>$22,544.77</td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse"  id="accordion">
-                                            <td><b>Total for Test Customer</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr>
+                                    <tbody id="customerTbl">
                                     </tbody>
                                 </table>
                             </div>
@@ -456,3 +426,41 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function(){
+        fetch('<?= base_url('accounting_controllers/reports/estimatesByCustomer') ?>',{
+
+        }).then(response => response.json()).then(response => {
+            var {success, customer, totalAmount, customerName} = response;
+            if(success){
+                for(var x=0; x<customerName.length; x++){
+                    var amount = 0.00;
+                    for(var j=0; j<totalAmount.length; j++){
+                        if(customerName[x][0].prof_id == totalAmount[j].customer_id){
+                            amount = parseFloat(totalAmount[j].ttlAmount).toFixed(2);
+                        }
+                    }
+                    
+                    $('#customerTbl').append(
+                        '<tr data-toggle="collapse" data-target="#accordion'+x+'" class="clickable collapse-row collapsed"><td><i class="bx bx-fw bx-caret-right"></i>'+customerName[x][0].first_name+' '+ customerName[x][0].last_name +'</td><td></td><td></td><td></td><td></td><td></td><td></td><td><b>$'+ amount +'</b></td></tr>'
+                    )
+
+                    for(var i=0; i<customer.length; i++){
+                        if(customer[i].customer_id == customerName[x][0].prof_id){
+                            $('#customerTbl').append(
+                                '<tr class="clickable collapse-row collapse"  id="accordion'+x+'"><td>&emsp;</td><td>'+ customer[i].estimate_number+'</td><td>'+ customer[i].status+'</td><td>'+ customer[i].accepted_date+'</td><td>Test</td><td>Test</td><td>Test</td><td>'+ customer[i].grand_total+'</td></tr>'
+                            )
+                        }
+                    }
+                    $('#customerTbl').append(
+                        '<tr class="clickable collapse-row collapse"  id="accordion'+x+'"><td><b>Total for '+customerName[x][0].first_name+' '+ customerName[x][0].last_name +'</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td><b>$'+amount+'</b></td></tr>'
+                        )
+                }
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+    })
+</script>

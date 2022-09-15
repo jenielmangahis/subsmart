@@ -179,7 +179,6 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
-        print_r($this->page_data['jobs_data']);
         $default_customer_id = 0;
         $default_customer_name = '';
 
@@ -693,8 +692,8 @@ class Job extends MY_Controller
             'assets/js/esign/libs/pdf.worker.js',
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
-
-        $this->load->view('job/job_estimates', $this->page_data);
+		$this->page_data['page']->title = 'Estimates';
+        $this->load->view('v2/pages/job/job_estimates', $this->page_data);
     }
 
     public function job_preview($id=null)
@@ -747,7 +746,6 @@ class Job extends MY_Controller
             );
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
 
-            print_r($this->page_data['jobs_data']);
             $this->page_data['jobs_data'] = $jobs_data;
         }
         $this->load->view('job/job_billing', $this->page_data);
