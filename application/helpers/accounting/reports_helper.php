@@ -111,8 +111,3 @@ if(!function_exists('billPro')){
     }
 }
 
-if(!function_exists('tblCustom')){
-    function tblCustom($tblCustom){
-
-    }
-}

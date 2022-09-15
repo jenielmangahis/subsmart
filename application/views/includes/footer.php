@@ -242,7 +242,6 @@ jQuery(document).ready(function() {
     });
 
 
-    ;
     (function($, window, document, undefined) {
         $("#start_date_").on("change", function() {
             var date = new Date($("#start_date_").val()),

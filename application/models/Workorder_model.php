@@ -958,7 +958,7 @@ class Workorder_model extends MY_Model
         $this->db->select('*','ls_name','jbname');
 		$this->db->from('work_orders');
         $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id');
-        $this->db->join('job_tags', 'work_orders.job_tags  = job_tags.id');
+        // $this->db->join('job_tags', 'work_orders.job_tags  = job_tags.id');
 		$this->db->where('work_orders.id', $id);
 		$query = $this->db->get();
 		return $query->row();

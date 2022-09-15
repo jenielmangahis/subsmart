@@ -392,4 +392,54 @@ class Reports extends MY_Controller {
         $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export added.');
         die(json_encode($data_arr));
     }
+
+    public function estimatesByCustomer(){
+        $data = array(
+            "where" => array(
+                "company_id" => logged('company_id')
+            ),
+            "where_not_in" => array(
+                "status" => "Draft"
+            ),
+            "table" => "estimates",
+            "select" => "id, user_id, customer_id, estimate_number, status, accepted_date, grand_total"
+        );
+
+        $customer = $this->estimate_model->getEstimatesByCustomerWithParam($data);
+        $amountCustomer = array(
+            "where" => array(
+                "company_id" => logged('company_id')
+            ),
+            "where_not_in" => array(
+                "status" => "Draft"
+            ),
+            "table" => "estimates",
+            "select" => "SUM(grand_total) as ttlAmount, customer_id",
+            "group_by" => "customer_id"
+        );
+
+        $distinct_customer = array(
+            "where" => array(
+                "company_id" => logged('company_id')
+            ),
+            "where_not_in" => array(
+                "status" => "Draft"
+            ),
+            "table" => "estimates",
+            "select" => "DISTINCT(customer_id) as id",
+        );
+        $customerId = $this->estimate_model->getEstimatesByCustomerWithParam($distinct_customer);
+        $customerName = [];
+        foreach($customerId as $cid){
+            array_push($customerName, get_estimate_customer_name($cid->id));
+        }
+        $totalAmount = $this->estimate_model->getEstimatesByCustomerWithParam($amountCustomer);
+        if($customer){
+            $data_arr = array("success" => true, "customer" => $customer, "totalAmount" => $totalAmount, "customerName" => $customerName);
+        }else{
+            $data_arr = array("success" => false);
+        }
+
+        die(json_encode($data_arr));
+    }
 }

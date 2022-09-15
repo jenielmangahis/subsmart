@@ -905,6 +905,8 @@ class Share_Link extends CI_Controller
         $second = $this->workorder_model->getusersecond($workorder->primary_account_holder_name);
         $third = $this->workorder_model->getuserthird($workorder->secondary_account_holder_name);
 
+        // dd($wo_id);
+
         $data = array(
             'workorder'                         => $workorderNo,
             'company_representative_signature'  => $workorder->company_representative_signature,
@@ -935,7 +937,7 @@ class Share_Link extends CI_Controller
             'account_type'                      => $workorder->account_type,
             'panel_communication'               => $workorder->panel_communication,
             'panel_type'                        => $workorder->panel_type,
-            'job_tags'                          => $job_tags->name,
+            'job_tags'                          => $workorder->job_tags,
             // 'source' => $source
 
             'payment_method'                    => $payment->payment_method,
