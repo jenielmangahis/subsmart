@@ -173,6 +173,9 @@ class Customer extends MY_Controller
             if (in_array('state', $enabled_table_headers)){
                 array_push($data_arr, $customer->state);
             }
+            if (in_array('email', $enabled_table_headers)){
+                array_push($data_arr, $customer->email);
+            }
             if (in_array('source', $enabled_table_headers)){
                 $lead =  $customer->lead_source != "" ? $customer->lead_source : 'n/a';
                 array_push($data_arr, $lead);
@@ -234,6 +237,12 @@ class Customer extends MY_Controller
                 </ul>
             </div>";
             array_push($data_arr, $dropdown);
+
+            $is_adt_project = 'no';
+            if( $customer->adt_sales_project_id > 0 ){
+                $is_adt_project = 'yes';
+            }
+            array_push($data_arr, $is_adt_project);
             
 
             $data[] = $data_arr;
