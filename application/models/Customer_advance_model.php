@@ -181,13 +181,13 @@ class Customer_advance_model extends MY_Model {
             $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
             acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
             acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,
-            acs_office.fk_sales_rep_office,acs_info_solar.proposed_solar,acs_info_solar.proposed_payment,acs_profile.company_id');
+            acs_office.fk_sales_rep_office,acs_info_solar.proposed_solar,acs_info_solar.proposed_payment,acs_profile.company_id,acs_profile.adt_sales_project_id');
 
             $this->db->join('acs_info_solar', 'acs_info_solar.fk_prof_id = acs_profile.prof_id','left');
         }else{
             $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
             acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
-            acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,acs_office.fk_sales_rep_office,acs_profile.company_id');
+            acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,acs_office.fk_sales_rep_office,acs_profile.company_id,acs_profile.adt_sales_project_id');
         }
 
         $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
@@ -206,6 +206,7 @@ class Customer_advance_model extends MY_Model {
                 $this->db->or_like('acs_profile.last_name', $param['search'], 'both');    
                 $this->db->or_like('acs_profile.first_name', $param['search'], 'both');    
                 $this->db->or_like('acs_profile.email', $param['search'], 'both'); 
+                $this->db->or_like('acs_profile.business_name', $param['search'], 'both'); 
             $this->db->group_end();   
         }        
         

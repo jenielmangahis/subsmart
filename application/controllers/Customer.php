@@ -4797,6 +4797,19 @@ class Customer extends MY_Controller
         foreach( $input['headers'] as $key => $value ){
             $headers[] = $key;
         }
+
+        if( logged('company_id') == 58 ){
+            foreach( $input['solarHeader'] as $key => $value ){
+                $headers[] = $key;
+            }            
+        }
+
+        if( logged('company_id') == 31 ){
+            foreach( $input['alarmHeader'] as $key => $value ){
+                $headers[] = $key;
+            }            
+        }
+
         $get_company_settings = array(
             'where' => array(
                 'company_id' => logged('company_id')

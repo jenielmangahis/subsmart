@@ -37,7 +37,6 @@
                 <div class="row">
                     <div class="col-12 grid-mb">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             You can set up Tasks for yourself and assign them to other people in your organization. To Add a Task, in the Account, click on the ‘ + Add ‘ button. There are dropdown options for each field and a date picker.
                         </div>
                     </div>
@@ -45,13 +44,13 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button btn-clear-all">
+                            <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
                                 <i class='bx bx-fw bx-check'></i> Clear All
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button name="btn_search" type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-search'></i> Search Task
                             </button>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/entry'); ?>'">
+                            <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/entry'); ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add Task
                             </button>
                         </div>
@@ -134,21 +133,21 @@
                                     <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('taskhub/entry/' . $row->task_id) ?>">Edit</a>
+                                                    <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/entry/' . $row->task_id) ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item btn-complete-task" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
+                                                    <a class="dropdown-item btn-complete-task" name="dropdown_completed" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
+                                                    <a class="dropdown-item" name="dropdown_updated" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">View Comments</a>
+                                                    <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">View Comments</a>
                                                 </li>
                                             </ul>
                                         </div>

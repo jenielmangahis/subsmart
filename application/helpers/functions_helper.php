@@ -265,7 +265,7 @@ if (!function_exists('transaction_categories')){
 function solar_info_header($name=null) {
     $solar_info = array(
         array(
-            'id' => 'project_id',
+            'name' => 'project_id',
             'description' => 'Project Id',
         ),array(
             'name' => 'lender_type',
@@ -337,7 +337,7 @@ function solar_info_header($name=null) {
 function alarm_info_header($name=null) {
     $alarm_fields = array(
         array(
-            'id' => 'monitor_comp',
+            'name' => 'monitor_comp',
             'description' => 'Monitoring Company',
         ),array(
             'name' => 'monitor_id',
