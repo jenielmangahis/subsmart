@@ -61,7 +61,6 @@ $(document).ready(function() {
 
         if(success){
             if(companies){
-                var nn = "NN";
                 
                 for(var i=0; i < companies.length; i++){
                     $("#companiesData").append(
@@ -70,6 +69,7 @@ $(document).ready(function() {
                 }
             }else{
                 for(var j=0; j < upcomingJobs.length; j++){
+                var nn = "NN";
                     if(upcomingJobs[j].last_name[0]){
                         nn = upcomingJobs[j].last_name[0]+''+upcomingJobs[j].first_name[0];
                     }

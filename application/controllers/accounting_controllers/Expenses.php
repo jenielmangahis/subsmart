@@ -273,7 +273,7 @@ class Expenses extends MY_Controller
                         'source' => '',
                         'category' => $category,
                         'memo' => $bill->memo,
-                        'due_date' => '',
+                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                         'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
                         'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                         'status' => $bill->status === "2" ? "Paid" : "Open",
@@ -464,6 +464,9 @@ class Expenses extends MY_Controller
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item view-edit-cc-credit" href="#">View/Edit</a>
                                 </li>
                             </ul>
                         </div>';
@@ -691,6 +694,19 @@ class Expenses extends MY_Controller
                 $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transfer->id);
 
                 if($filters['category'] === 'all' || $filters['category'] === $transfer->transfer_from_account_id || $filters['category'] === $transfer->transfer_to_account_id) {
+                    if($for === 'table') {
+                        $manageCol = '<div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item view-edit-transfer" href="#">View/Edit</a>
+                                </li>
+                            </ul>
+                        </div>';
+                    }
+
                     $transactions[] = [
                         'id' => $transfer->id,
                         'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
@@ -707,7 +723,7 @@ class Expenses extends MY_Controller
                         'status' => '',
                         'attachments' => $for === 'table' ? $attachments : count($attachments),
                         'date_created' => date("m/d/Y H:i:s", strtotime($transfer->created_at)),
-                        'manage' => ''
+                        'manage' => $for === 'table' ? $manageCol : ''
                     ];
                 }
             }

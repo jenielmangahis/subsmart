@@ -1478,7 +1478,9 @@ table input.form-control {
 												<br>
 												<div class="row"> 
 													<div class="col-md-6">
-														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->installation_date; ?>" readonly style="background-color: #fff;">
+														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php 
+														$originalDate = $agreements->installation_date;
+														$newDate = date("m-d-Y", strtotime($originalDate)); echo $newDate ?>" readonly style="background-color: #fff;">
 														<b>Installation Date:</b>
 													</div>
 													<div class="col-md-6">
@@ -1935,7 +1937,9 @@ table input.form-control {
 																	<div class="col-md-4">
 																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 100px;">
 																		<hr>
-																		<center><?php echo $first->FName.' '.$first->LName; ?></center>
+																		<?php if(is_numeric($workorder->company_representative_name)){  ?>
+																		<center><?php echo $first->FName.' '.$first->LName;  ?></center>
+																		<?php }else{ echo '<center>'.$workorder->company_representative_name.'</center>'; } ?>
 																	</div>
 																	<?php } ?>
 																	<?php if(!empty($workorder->primary_account_holder_signature)){ ?>

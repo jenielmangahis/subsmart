@@ -1315,7 +1315,6 @@ add_footer_js(array(
                     position: results[0].geometry.location
                 });
             } else {
-                console.log(status);
                 console.log('Geocode was not successful for the following reason: ' + status);
             }
         });
@@ -1323,7 +1322,6 @@ add_footer_js(array(
     $("body").delegate(".color-scheme", "click", function(){
             var id = this.id;
             $('[id="job_color_id"]').val(id);
-            console.log(id);
             $( "#"+id ).append( "<i class=\"bx bx-check calendar_button\" style=\"color:#ffffff\" aria-hidden=\"true\"></i>" );
             remove_others(id);
         });

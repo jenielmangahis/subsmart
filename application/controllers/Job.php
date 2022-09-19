@@ -218,7 +218,6 @@ class Job extends MY_Controller
             'assets/js/esign/libs/pdf.worker.js',
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
-
         $this->load->view('v2/pages/job/job_new', $this->page_data);
         //$this->load->view('job/job_new', $this->page_data);
     }
@@ -621,6 +620,18 @@ class Job extends MY_Controller
         );
         $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
 
+        $get_estimates_item = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'estimates_id'
+            ),
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
         // get color settings
         $get_color_settings = array(
             'where' => array(
@@ -693,6 +704,7 @@ class Job extends MY_Controller
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
 		$this->page_data['page']->title = 'Estimates';
+        $this->page_data['idd'] = $id;
         $this->load->view('v2/pages/job/job_estimates', $this->page_data);
     }
 
@@ -1514,23 +1526,37 @@ class Job extends MY_Controller
             'table' => 'job_settings',
             'select' => '*',
         );
-        $job_settings = $this->general->get_data_with_param($get_job_settings);
-        if( $job_settings ){
-            $prefix   = $job_settings[0]->job_num_prefix;
-            $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);            
-            //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
-        }else{
-            $prefix = 'JOB-';
-            $lastId = $this->jobs_model->getlastInsert($comp_id);
-            if( $lastId ){
-                $next_num = $lastId->id + 1;
-                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-            }else{
-                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-            }            
-        }
 
-        $job_number = $prefix . $next_num;
+        $check_job = array(
+            'where' => array(
+                'job_number' => $input['job_number']
+            ),
+            'table' => 'jobs',
+            'select' => 'job_number, id'
+        );
+        $isJob = $this->general->get_data_with_param($check_job, false);
+
+        if(!empty($isJob)){
+            $job_number = $isJob->job_number;
+        }else{
+            $job_settings = $this->general->get_data_with_param($get_job_settings);
+            if( $job_settings ){
+                $prefix   = $job_settings[0]->job_num_prefix;
+                $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);            
+                //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+            }else{
+                $prefix = 'JOB-';
+                $lastId = $this->jobs_model->getlastInsert($comp_id);
+                if( $lastId ){
+                    $next_num = $lastId->id + 1;
+                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                }else{
+                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                }            
+            }
+
+            $job_number = $prefix . $next_num;
+        }
         
 
         $jobs_data = array(
@@ -1560,53 +1586,101 @@ class Job extends MY_Controller
             'job_type' => $input['job_type'],
             'date_issued' => $input['start_date'],
         );
+        if(empty($isJob)){
+            // INSERT DATA TO JOBS TABLE
+            $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+            customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
 
-        // INSERT DATA TO JOBS TABLE
-        $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
-        customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
-
-        // insert data to job items table (items_id, qty, jobs_id)
-        if (isset($input['item_id'])) {
-            $devices = count($input['item_id']);
-            for ($xx=0;$xx<$devices;$xx++) {
-                $job_items_data = array();
-                $job_items_data['job_id'] = $jobs_id; //from jobs table
-                $job_items_data['items_id'] = $input['item_id'][$xx];
-                $job_items_data['qty'] = $input['item_qty'][$xx];
-                $this->general->add_($job_items_data, 'job_items');
-                unset($job_items_data);
+            // insert data to job items table (items_id, qty, jobs_id)
+            if (isset($input['item_id'])) {
+                $devices = count($input['item_id']);
+                for ($xx=0;$xx<$devices;$xx++) {
+                    $job_items_data = array();
+                    $job_items_data['job_id'] = $jobs_id; //from jobs table
+                    $job_items_data['items_id'] = $input['item_id'][$xx];
+                    $job_items_data['qty'] = $input['item_qty'][$xx];
+                    $this->general->add_($job_items_data, 'job_items');
+                    unset($job_items_data);
+                }
             }
+
+            // insert data to job url links table
+            $jobs_links_data = array(
+                'link' => $input['link'],
+                'job_id' => $jobs_id,
+            );
+            $this->general->add_($jobs_links_data, 'job_url_links');
+
+            // insert data to jobs approval table
+            $jobs_approval_data = array(
+                'authorize_name' => $input['authorize_name'],
+                'signature_link' => $input['signature_link'],
+                'datetime_signed' => $input['datetime_signed'],
+                'jobs_id' => $jobs_id,
+            );
+            $this->general->add_($jobs_approval_data, 'jobs_approval');
+
+            // insert data to job payments table
+            $job_payment_query = array(
+                'amount' => $input['total_amount'],
+                'job_id' => $jobs_id,
+            );
+            $this->general->add_($job_payment_query, 'job_payments');
+            
+            // insert data to job settings table
+            $jobs_settings_data = array(
+                'job_num_next' => $job_settings[0]->job_num_next + 1
+            );
+            $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+        }else{
+            
+            // update data to job items table (items_id, qty, jobs_id)
+            if (isset($input['item_id'])) {
+                $devices = count($input['item_id']);
+                for ($xx=0;$xx<$devices;$xx++) {
+                    $check_item = array(
+                        'where' => array(
+                            'job_id' => $isJob->id,
+                            'items_id' => $input['item_id'][$xx]
+                        ),
+                        'table' => 'job_items',
+                        'select' => 'job_id'
+                    );
+                    $isItem = $this->general->get_data_with_param($check_item, false);
+
+                    if(empty($isItem)){
+                        $job_items_data = array();
+                        $job_items_data['job_id'] = $isJob->id; //from jobs table
+                        $job_items_data['items_id'] = $input['item_id'][$xx];
+                        $job_items_data['qty'] = $input['item_qty'][$xx];
+                        $this->general->add_($job_items_data, 'job_items');
+                    }
+                    unset($job_items_data);
+                }
+            }
+
+            // update data to job url links table
+            $jobs_links_data = array(
+                'link' => $input['link'],
+            );
+            $this->general->update_with_key_field($jobs_links_data, $isJob->id, 'job_url_links', 'job_id');
+
+            // insert data to jobs approval table
+            $jobs_approval_data = array(
+                'authorize_name' => $input['authorize_name'],
+                'signature_link' => $input['signature_link'],
+                'datetime_signed' => $input['datetime_signed'],
+            );
+            $this->general->update_with_key_field($jobs_approval_data, $isJob->id, 'jobs_approval', 'jobs_id');
+
+            // insert data to job payments table
+            $job_payment_query = array(
+                'amount' => $input['total_amount'],
+            );
+            $isset = $this->general->update_with_key_field($job_payment_query, $isJob->id, 'job_payments', 'job_id');
+            
+            $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
         }
-
-        // insert data to job url links table
-        $jobs_links_data = array(
-            'link' => $input['link'],
-            'job_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_links_data, 'job_url_links');
-
-        // insert data to jobs approval table
-        $jobs_approval_data = array(
-            'authorize_name' => $input['authorize_name'],
-            'signature_link' => $input['signature_link'],
-            'datetime_signed' => $input['datetime_signed'],
-            'jobs_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_approval_data, 'jobs_approval');
-
-        // insert data to job payments table
-        $job_payment_query = array(
-            'amount' => $input['total_amount'],
-            'job_id' => $jobs_id,
-        );
-        $this->general->add_($job_payment_query, 'job_payments');
-        
-        // insert data to job settings table
-        $jobs_settings_data = array(
-            'job_num_next' => $job_settings[0]->job_num_next + 1
-        );
-        $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
-
         if (isset($input['wo_id'])) {
             $get_work_order_data = array(
                 'where' => array(
@@ -1638,15 +1712,16 @@ class Job extends MY_Controller
         }
 
         //SMS Notification
-        createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id']);
+        //createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id']);
 
 
         if (!is_null($this->input->get('json', TRUE))) {
             // Returns json data, when ?json is set on URL query string.
             header('content-type: application/json');
-            exit(json_encode(['id' => $jobs_id]));
+            exit(json_encode(['id' => $job_number]));
         } else {
-            echo $jobs_id;
+            $data_arr = array("data" => $input);
+            echo $isset;
         }
     }
 

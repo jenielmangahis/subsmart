@@ -4088,12 +4088,21 @@ class Accounting_modals extends MY_Controller
                 $paymentTotal = 0.00;
                 $itemKeys = array_keys($data['payee'], $payee);
                 $vendor = $this->vendors_model->get_vendor_by_id($payee);
+                $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
                 $appliedVCredits = [];
+                $linkedTransacsData = [];
+
+                foreach($openVCredits as $vCredit) {
+                    $linkedTransacsData[] = [
+                        'linked_transaction_type' => 'vendor-credit',
+                        'linked_transaction_id' => $vCredit->id
+                    ];
+                }
+
                 foreach ($itemKeys as $key) {
                     $paymentTotal += floatval(str_replace(',', '', $data['payment_amount'][$key]));
 
                     if (!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
-                        $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
                         $vCreditPercentage = number_format(floatval(str_replace(',', '', $data['credit_applied'][$key])) / floatval(str_replace(',', '', $vendor->vendor_credits)) * 100, 2, '.', ',');
     
                         foreach ($openVCredits as $vCredit) {
@@ -4134,6 +4143,11 @@ class Accounting_modals extends MY_Controller
                 $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
 
                 if ($billPaymentId) {
+                    foreach($linkedTransacsData as $index => $linkedVCredit) {
+                        $linkedTransacsData[$index]['linked_to_type'] = 'bill-payment';
+                        $linkedTransacsData[$index]['linked_to_id'] = $billPaymentId;
+                    }
+
                     if (is_null($billPayment['to_print_check_no']) && !is_null($billPayment['check_no'])) {
                         $assignCheck = [
                             'check_no' => $billPayment['check_no'],
@@ -4196,6 +4210,15 @@ class Accounting_modals extends MY_Controller
         
                             $this->vendors_model->updateVendor($vendor->id, $vendorData);
                         }
+
+                        $linkedTransacsData[] = [
+                            'linked_to_type' => 'bill-payment',
+                            'linked_to_id' => $billPaymentId,
+                            'linked_transaction_id' => $data['bills'][$key],
+                            'linked_transaction_type' => 'bill'
+                        ];
+
+                        $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
 
                         $paymentItems[] = [
                             'bill_payment_id' => $billPaymentId,
@@ -7637,37 +7660,36 @@ class Accounting_modals extends MY_Controller
 
     public function bill_payment_form($billId)
     {
-        $this->page_data['balance'] = '$0.00';
-        $this->page_data['bill'] = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
-        $this->load->view('accounting/modals/bill_payment_modal', $this->page_data);
-    }
-
-    public function load_bill_payment_bills()
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-        $fromDate = $post['from'];
-        $toDate = $post['to'];
-        $search = $post['search'];
+        $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
 
         $filters = [
-            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-            'overdue' => $post['overdue']
+            'from' => null,
+            'to' => null,
+            'overdue' => false,
+            'search' => '',
+            'vendor' => $bill->vendor_id
         ];
 
-        $bills = $this->expenses_model->get_bills_by_vendor($post['vendor'], $filters);
+        $this->page_data['bills'] = $this->get_bills_to_pay_by_vendor($filters);
+        $this->page_data['credits'] = $this->get_vendor_credits($filters);
+        $this->page_data['balance'] = '$0.00';
+        $this->page_data['bill'] = $bill;
+        $this->load->view('v2/includes/accounting/modal_forms/bill_payment_modal', $this->page_data);
+    }
+
+    private function get_bills_to_pay_by_vendor($filters)
+    {
+        $bills = $this->expenses_model->get_bills_by_vendor($filters['vendor'], $filters);
 
         $data = [];
         foreach ($bills as $bill) {
-            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+            $description = '<a href="#" class="text-decoration-none" data-id="'.$bill->id.'">Bill ';
             $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
 
-            if ($search !== "") {
-                if (stripos($bill->bill_no, $search) !== false) {
+            if ($filters['search'] !== "") {
+                if (stripos($bill->bill_no, $filters['search']) !== false) {
                     $data[] = [
                         'id' => $bill->id,
                         'description' => $description,
@@ -7689,42 +7711,39 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($bills),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        return $data;
     }
 
-    public function load_bill_payment_credits()
+    public function get_bill_payment_bills()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-        $fromDate = $post['from'];
-        $toDate = $post['to'];
-        $search = $post['search'];
-        $selectedCredits = $post['credits'];
+        $post = $this->input->post();
 
         $filters = [
-            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null
+            'from' => $post['from'] !== "" ? date("Y-m-d", strtotime($post['from'])) : null,
+            'to' => $post['to'] !== "" ? date("Y-m-d", strtotime($post['to'])) : null,
+            'overdue' => $post['overdue'],
+            'search' => $post['search'],
+            'vendor' => $post['vendor']
         ];
 
-        $credits = $this->expenses_model->get_credits_by_vendor($post['vendor'], $filters);
+        $data = $this->get_bills_to_pay_by_vendor($filters);
+
+        echo json_encode($data);
+    }
+
+    private function get_vendor_credits($filters)
+    {
+        $credits = $this->expenses_model->get_credits_by_vendor($filters['vendor'], $filters);
 
         $data = [];
         foreach ($credits as $credit) {
-            $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+            $description = '<a href="#" class="text-decoration-none" data-id="'.$credit->id.'">Vendor Credit ';
             $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
 
-            if ($search !== "") {
-                if (stripos($credit->ref_no, $search) !== false) {
+            if ($filters['search'] !== "") {
+                if (stripos($credit->ref_no, $filters['search']) !== false) {
                     $data[] = [
                         'id' => $credit->id,
                         'description' => $description,
@@ -7746,14 +7765,24 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($credits),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
+        return $data;
+    }
+
+    public function get_bill_payment_credits()
+    {
+        $post = $this->input->post();
+
+        $filters = [
+            'from' => $post['from'] !== "" ? date("Y-m-d", strtotime($post['from'])) : null,
+            'to' => $post['to'] !== "" ? date("Y-m-d", strtotime($post['to'])) : null,
+            'search' => $post['search'],
+            'selectedCredits' => $post['credits'],
+            'vendor' => $post['vendor']
         ];
 
-        echo json_encode($result);
+        $data = $this->get_vendor_credits($filters);
+
+        echo json_encode($data);
     }
 
     public function load_checks()
@@ -10686,6 +10715,20 @@ class Accounting_modals extends MY_Controller
             $selectedBalance = '$'.number_format(floatval(str_replace(',', '', $selectedBalance)), 2, '.', ',');
         }
 
+        $filters = [
+            'from' => null,
+            'to' => null,
+            'overdue' => false,
+            'bill_payment_id' => $billPaymentId,
+            'payee_id' => $billPayment->payee_id,
+            'search' => ''
+        ];
+
+        $bills = $this->get_bills($filters);
+        $credits = $this->get_credits($filters);
+
+        $this->page_data['bills'] = $bills;
+        $this->page_data['credits'] = $credits;
         $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
         $this->page_data['balance'] = $selectedBalance;
@@ -11158,41 +11201,21 @@ class Accounting_modals extends MY_Controller
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
 
-    public function load_bills_payed($billPaymentId)
+    private function get_bills($filters)
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-        $fromDate = $post['from'];
-        $toDate = $post['to'];
-        $search = $post['search'];
-
-        $filters = [
-            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-            'overdue' => $post['overdue']
-        ];
-
-        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
-        $bills = $this->vendors_model->get_bill_payment_bills_by_vendor_id($billPaymentId, $billPayment->payee_id, $filters);
-
-        $filters = [
-            'start-date' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'end-date' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-            'overdue' => $post['overdue']
-        ];
-        $openBills = $this->vendors_model->get_vendor_open_bills($billPayment->payee_id, $filters);
+        $bills = $this->vendors_model->get_bill_payment_bills_by_vendor_id($filters['bill_payment_id'], $filters['payee_id'], $filters);
+        $openBills = $this->vendors_model->get_vendor_open_bills($filters['payee_id'], $filters);
 
         $data = [];
         foreach ($bills as $bill) {
-            $paymentData = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
-            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+            $paymentData = $this->vendors_model->get_bill_payment_item_by_bill_id($filters['bill_payment_id'], $bill->id);
+            $description = '<a href="#" class="text-decoration-none" data-id="'.$bill->id.'">Bill ';
             $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
 
-            if ($search !== "") {
-                if (stripos($bill->bill_no, $search) !== false) {
+            if ($filters['search'] !== "") {
+                if (stripos($bill->bill_no, $filters['search']) !== false) {
                     $data[] = [
                         'id' => $bill->id,
                         'description' => $description,
@@ -11218,13 +11241,13 @@ class Accounting_modals extends MY_Controller
 
         if (count($openBills) > 0) {
             foreach ($openBills as $bill) {
-                $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+                $description = '<a href="#" class="text-decoration-none" data-id="'.$bill->id.'">Bill ';
                 $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
                 $description .= '</a>';
                 $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
 
-                if ($search !== "") {
-                    if (stripos($bill->bill_no, $search) !== false) {
+                if ($filters['search'] !== "") {
+                    if (stripos($bill->bill_no, $filters['search']) !== false) {
                         $data[] = [
                             'id' => $bill->id,
                             'description' => $description,
@@ -11249,31 +11272,31 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($bills),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        return $data;
     }
 
-    public function load_payment_used_credits($billPaymentId)
+    public function get_bills_to_pay($billPaymentId)
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-        $fromDate = $post['from'];
-        $toDate = $post['to'];
-        $search = $post['search'];
+        $post = $this->input->post();
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
 
         $filters = [
-            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+            'from' => $post['from'] !== "" ? date("Y-m-d", strtotime($post['from'])) : null,
+            'to' => $post['to'] !== "" ? date("Y-m-d", strtotime($post['to'])) : null,
+            'overdue' => $post['overdue'] === 'true',
+            'bill_payment_id' => $billPaymentId,
+            'payee_id' => $billPayment->payee_id,
+            'search' => $post['search']
         ];
 
-        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $data = $this->get_bills($filters);
+
+        echo json_encode($data);
+    }
+
+    private function get_credits($filters)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($filters['bill_payment_id']);
         $credits = json_decode($billPayment->vendor_credits_applied, true);
         $openCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($billPayment->payee_id);
 
@@ -11281,16 +11304,17 @@ class Accounting_modals extends MY_Controller
         foreach ($credits as $creditId => $creditAmount) {
             $credit = $this->vendors_model->get_vendor_credit_by_id($creditId, logged('company_id'));
 
-            $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+            $description = '<a href="#" class="text-decoration-none" data-id="'.$credit->id.'">Vendor Credit ';
             $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
 
-            if ($search !== "") {
-                if (stripos($credit->ref_no, $search) !== false) {
+            if ($filters['search'] !== "") {
+                if (stripos($credit->ref_no, $filters['search']) !== false) {
                     $data[] = [
                         'id' => $credit->id,
                         'description' => $description,
+                        'date' => date("m/d/Y", strtotime($credit->payment_date)),
                         'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                         'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                         'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)) + floatval(str_replace(',', '', $creditAmount)), 2, '.', ','),
@@ -11302,6 +11326,7 @@ class Accounting_modals extends MY_Controller
                 $data[] = [
                     'id' => $credit->id,
                     'description' => $description,
+                    'date' => date("m/d/Y", strtotime($credit->payment_date)),
                     'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                     'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                     'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)) + floatval(str_replace(',', '', $creditAmount)), 2, '.', ','),
@@ -11313,17 +11338,18 @@ class Accounting_modals extends MY_Controller
 
         if (count($openCredits) > 0) {
             foreach ($openCredits as $credit) {
-                $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+                $description = '<a href="#" class="text-decoration-none" data-id="'.$credit->id.'">Vendor Credit ';
                 $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
                 $description .= '</a>';
                 $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
 
                 if (array_search($credit->id, array_column($data, 'id')) === false) {
-                    if ($search !== "") {
-                        if (stripos($credit->ref_no, $search) !== false) {
+                    if ($filters['search'] !== "") {
+                        if (stripos($credit->ref_no, $filters['search']) !== false) {
                             $data[] = [
                                 'id' => $credit->id,
                                 'description' => $description,
+                                'date' => date("m/d/Y", strtotime($credit->payment_date)),
                                 'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                                 'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                                 'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
@@ -11335,6 +11361,7 @@ class Accounting_modals extends MY_Controller
                         $data[] = [
                             'id' => $credit->id,
                             'description' => $description,
+                            'date' => date("m/d/Y", strtotime($credit->payment_date)),
                             'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                             'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                             'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
@@ -11346,14 +11373,36 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($credits),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $data = array_filter($data, function($credit, $key) use ($filters) {
+                return strtotime($credit['date']) >= strtotime($filters['from']);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $data = array_filter($data, function($credit, $key) use ($filters) {
+                return strtotime($credit['date']) <= strtotime($filters['to']);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        return $data;
+    }
+
+    public function get_payment_used_credits($billPaymentId)
+    {
+        $post = $this->input->post();
+
+        $filters = [
+            'from' => $post['from'] !== "" ? date("Y-m-d", strtotime($post['from'])) : null,
+            'to' => $post['to'] !== "" ? date("Y-m-d", strtotime($post['to'])) : null,
+            'bill_payment_id' => $billPaymentId,
+            'payee_id' => $billPayment->payee_id,
+            'search' => $post['search']
         ];
 
-        echo json_encode($result);
+        $data = $this->get_credits($filters);
+
+        echo json_encode($data);
     }
 
     public function update_transaction($transactionType, $transactionId)
