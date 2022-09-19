@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             Make scheduling appointments simple and streamlined with the CRM color setting. Now, with just a few clicks, users can add and assign colors to employees, events, and job types.
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('color_settings/add_new_color_setting'); ?>'">
+                            <button type="button" name="btn_new" class="nsm-button primary" onclick="location.href='<?php echo base_url('color_settings/add_new_color_setting'); ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
@@ -53,15 +53,15 @@
                                     <td><span class="nsm-badge" style="background-color: <?= $c->color_code; ?>; color: #fff;"><?= $c->color_code; ?></span></td>
                                     <td>
                                         <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('workorder/priority/edit/' . $priority->id) ?>">Edit</a>
+                                                    <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('workorder/priority/edit/' . $priority->id) ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?php echo $c->color_name; ?>" data-id="<?php echo $c->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-name="<?php echo $c->color_name; ?>" data-id="<?php echo $c->id; ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>

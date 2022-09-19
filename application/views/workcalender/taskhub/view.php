@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col">
                 <h3 class="m-0">
                     Task Hub
-                    <a href="<?php echo base_url('taskhub') ?>" class="btn btn-primary" aria-expanded="false" style="float: right;">
+                    <a href="<?php echo base_url('taskhub') ?>" name="btn_back" class="btn btn-primary" aria-expanded="false" style="float: right;">
                     <i class="mdi mdi-settings mr-2"></i> Go Back to TaskHub
                 </a>
                 </h3>
@@ -89,7 +89,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		                                        <textarea class="form-control" name="comment" id="comment" autocomplete="off" style="height: 300px !important" placeholder="Place your comment here..."></textarea>
 		                                    </div>
 		                                    <div class="form-group" style="margin-bottom: 1rem !important">
-	                                        	<button type="button" class="btn btn-flat btn-primary float-right" id="btnAddComment">Submit</button>
+	                                        	<button type="button" name="btn_save" class="btn btn-flat btn-primary float-right" id="btnAddComment">Submit</button>
 	                                        </div>
 										</div>
 									</div>								
@@ -169,7 +169,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="modal-content">
       <div class="modal-header" id="modal-taskhub-alert-header">
       	<h4 class="modal-title" id="modal-taskhub-alert-title"></h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" name="btn_modal_close" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
       	<p id="modal-taskhub-alert-text"></p>  
