@@ -13,7 +13,7 @@
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
 
 <!-- Script for autosaving form -->
-<!--<script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>-->
+<script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
 
 
 <style>
@@ -484,7 +484,7 @@
                                                     <?php foreach ($color_settings as $color): ?>
                                                         <li>
                                                             <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
-                                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bxs-calendar calendar_button" aria-hidden="true"></i>'; } ?>
+                                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check calendar_button" aria-hidden="true"></i>'; } ?>
                                                             </a>
                                                         </li>
                                                     <?php endforeach; ?>
@@ -670,6 +670,9 @@
                                             <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
                                             <hr/>
                                         </div>
+                                        <div class="col-sm-12">
+                                            <input type="text" name="job_number" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->job_number : ''; ?>" hidden>
+                                        </div>
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -742,7 +745,7 @@
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
                                                         <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        <input type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
@@ -952,7 +955,7 @@
                                             <br>
                                         </div>
                                         <div class="row">
-                                            <input id="total_amount" type="hidden" name="total_amount">
+                                            <!-- <input id="total_amount" type="hidden" name="total_amount"> -->
                                             <input id="signature_link" type="hidden" name="signature_link">
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
@@ -1351,7 +1354,6 @@ add_footer_js(array(
                     position: results[0].geometry.location
                 });
             } else {
-                console.log(status);
                 console.log('Geocode was not successful for the following reason: ' + status);
             }
         });
@@ -1378,5 +1380,18 @@ add_footer_js(array(
     //             });
     //         }
     //     });
-
+    $("body").delegate(".color-scheme", "click", function(){
+            var id = this.id;
+            $('[id="job_color_id"]').val(id);
+            $( "#"+id ).append( "<i class=\"bx bx-check calendar_button\" aria-hidden=\"true\"></i>" );
+            remove_others(id);
+        });
+        function remove_others (color_id){
+            $('.color-scheme').each(function(index) {
+                var idd = this.id;
+                if(idd !== color_id){
+                    $( "#"+idd ).empty();
+                }
+            });
+        }
 </script>

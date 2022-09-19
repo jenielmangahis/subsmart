@@ -10,7 +10,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Listing orders for all your purchases.
                         </div>
                     </div>
@@ -47,12 +46,12 @@
                                     <td>$<?= number_format($p->total_amount,2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?= base_url("mycrm/view_payment/" . $p->id); ?>">View</a>
+                                                    <a class="dropdown-item" name="dropdown_view" href="<?= base_url("mycrm/view_payment/" . $p->id); ?>">View</a>
                                                 </li>
                                             </ul>
                                         </div>

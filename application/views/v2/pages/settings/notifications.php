@@ -16,7 +16,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Manage your notification options.
                         </div>
                     </div>
@@ -68,8 +67,8 @@
                                 <div class="nsm-tab">
                                     <nav>
                                         <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-                                            <button class="nav-link active" id="nav-residential-tab" data-bs-toggle="tab" data-bs-target="#nav-residential" type="button" role="tab" aria-controls="nav-residential" aria-selected="true">Residential</button>
-                                            <button class="nav-link" id="nav-commercial-tab" data-bs-toggle="tab" data-bs-target="#nav-commercial" type="button" role="tab" aria-controls="nav-commercial" aria-selected="false">Commercial</button>
+                                            <button name="btn_nav" class="nav-link active" id="nav-residential-tab" data-bs-toggle="tab" data-bs-target="#nav-residential" type="button" role="tab" aria-controls="nav-residential" aria-selected="true">Residential</button>
+                                            <button name="btn_nav" class="nav-link" id="nav-commercial-tab" data-bs-toggle="tab" data-bs-target="#nav-commercial" type="button" role="tab" aria-controls="nav-commercial" aria-selected="false">Commercial</button>
                                         </div>
                                     </nav>
                                     <div class="tab-content" id="nav-tabContent">
@@ -390,7 +389,7 @@
                         </div>
                     </div>
                     <div class="col-12 text-end">
-                        <button type="submit" data-action="save" class="nsm-button primary">
+                        <button  name="btn_notification_save" type="submit" data-action="save" class="nsm-button primary">
                             Save Changes
                         </button>
                     </div>

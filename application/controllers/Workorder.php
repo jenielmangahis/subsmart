@@ -651,6 +651,7 @@ class Workorder extends MY_Controller
         $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
         $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+		$this->page_data['page']->title = 'Workorder';
 
         $spt_query = array(
             'table' => 'ac_system_package_type',
@@ -670,7 +671,7 @@ class Workorder extends MY_Controller
 
         // print_r($this->page_data['items']);
         add_footer_js('assets/js/esign/docusign/workorder.js');
-        $this->load->view('workorder/view', $this->page_data);
+        $this->load->view('workorder/view_v1', $this->page_data);
     }
 
     public function printSolar($id)

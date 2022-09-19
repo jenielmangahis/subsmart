@@ -1452,10 +1452,13 @@ class Estimate extends MY_Controller
 
     public function sendEstimateToAcs()
     {
+        $this->load->helper(array('url', 'hashids_helper'));
+
         $id = $this->input->post('id');
         $wo_id = $this->input->post('est_id');
 
         $workData = $this->estimate_model->getEstimate($wo_id);
+        $eid      = hashids_encrypt($workData->id, '', 15);
         // var_dump($workData);
 
         // $items = $this->estimate_model->getItemlistByID($wo_id);
@@ -1535,6 +1538,7 @@ class Estimate extends MY_Controller
             'adjustment_value'              => $workData->adjustment_value,
             'markup_type'                   => $workData->markup_type,
             'markup_amount'                 => $workData->markup_amount,
+            'eid'                           => $eid
             // 'source' => $source
         );
 

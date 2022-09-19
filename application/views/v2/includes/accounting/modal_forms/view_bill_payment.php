@@ -45,6 +45,9 @@
                                                 <option value="<?=$billPayment->payment_account_id?>"><?=$this->chart_of_accounts_model->getName($billPayment->payment_account_id)?></option>
                                             </select>
                                         </div>
+                                        <div class="col-12 col-md-3 d-flex ">
+                                            <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4 text-end grid-mb">
@@ -137,11 +140,11 @@
                                                     </span> <i class='bx bx-fw bx-chevron-down'></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end" id="bills-table-rows">
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                                    <li><a class="dropdown-item active" href="javascript:void(0);">150</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentBillsRows(this)">50</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentBillsRows(this)">75</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentBillsRows(this)">100</a></li>
+                                                    <li><a class="dropdown-item active" href="javascript:void(0);" onclick="billPaymentBillsRows(this)">150</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentBillsRows(this)">300</a></li>
                                                 </ul>
                                             </div>
                                         </ul>
@@ -241,11 +244,11 @@
                                                     </span> <i class='bx bx-fw bx-chevron-down'></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end" id="credits-table-rows">
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                                    <li><a class="dropdown-item active" href="javascript:void(0);">150</a></li>
-                                                    <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentCreditsRows(this)">50</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentCreditsRows(this)">75</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentCreditsRows(this)">100</a></li>
+                                                    <li><a class="dropdown-item active" href="javascript:void(0);" onclick="billPaymentCreditsRows(this)">150</a></li>
+                                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="billPaymentCreditsRows(this)">300</a></li>
                                                 </ul>
                                             </div>
                                         </ul>
@@ -295,6 +298,54 @@
                             </div>
                             <?php endif; ?>
 
+                            <div class="row" id="payment-summary">
+                                <div class="col-12 col-md-3 offset-md-9 grid-mb">
+                                    <table class="nsm-table text-end">
+                                        <tfoot>
+                                            <tr>
+                                                <td>Amount to Apply</td>
+                                                <td>
+                                                    <span class="amount-to-apply">
+                                                        <?php if(isset($billPayment)) : ?>
+                                                        <?php
+                                                        $amount = '$'.number_format(floatval($billPayment->amount_to_apply), 2, '.', ',');
+                                                        $amount = str_replace('$-', '-$', $amount);
+                                                        echo $amount;
+                                                        ?>
+                                                        <?php else : ?>
+                                                        $0.00
+                                                        <?php endif; ?>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Amount to Credit</td>
+                                                <td>
+                                                    <span class="amount-to-credit">
+                                                        <?php if(isset($billPayment)) : ?>
+                                                        <?php
+                                                        $amount = '$'.number_format(floatval($billPayment->amount_to_credit), 2, '.', ',');
+                                                        $amount = str_replace('$-', '-$', $amount);
+                                                        echo $amount;
+                                                        ?>
+                                                        <?php else : ?>
+                                                        $0.00
+                                                        <?php endif; ?>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><button type="button" class="nsm-button" id="clear-payment">Clear payment</button></td>
+                                            </tr>
+                                            <tr class="d-none">
+                                                <td colspan="2"><span id="credit-message"></span></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="row">
@@ -336,8 +387,6 @@
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
                                     <span><a href="#" class="text-dark text-decoration-none" id="print-check">Print check</a></span>
-                                    <span class="mx-3 divider"></span>
-                                    <span><a href="#" class="text-dark text-decoration-none">Order checks</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">

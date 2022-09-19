@@ -38,7 +38,7 @@ if (isset($selected_participants)) {
                 <div class="row">
                     <div class="col-12 grid-mb">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             <?php if (isset($task)) {
                                 echo 'Edit your task.';
                             } else {
@@ -204,8 +204,8 @@ if (isset($selected_participants)) {
                     </div>
 
                     <div class="col-12 mt-3 text-end">
-                        <button type="submit" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
-                        <button type="submit" class="nsm-button primary">Save</button>
+                        <button type="submit" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
+                        <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                     </div>
                 </div>
                 <?php echo form_close(); ?>

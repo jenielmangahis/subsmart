@@ -273,7 +273,8 @@ class Cron_Notification extends MYF_Controller {
                     $sales_agent = $salesAgent->FName . ' ' . $salesAgent->LName;
                 }*/
 
-                $customer_name = $customer->first_name . ' ' . $customer->last_name;
+                //$customer_name = $customer->first_name . ' ' . $customer->last_name;
+                $customer_name = $customer->first_name;
                 $customer_email = $customer->email;
                 $customer_phone = $customer->phone_m;
             }

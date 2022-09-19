@@ -16,7 +16,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
                             Create your email branding that will help recognize your business.
                         </div>
                     </div>
@@ -91,7 +90,7 @@
                         </div>
                     </div>
                     <div class="col-12 text-end">
-                        <button type="submit" data-action="save" class="nsm-button primary">
+                        <button type="submit" name="btn_email_branding_save" data-action="save" class="nsm-button primary">
                             Save Changes
                         </button>
                     </div>

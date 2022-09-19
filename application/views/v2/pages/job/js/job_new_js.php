@@ -25,7 +25,6 @@ if(isset($jobs_data)){
                     if(o.prof_id == cust_id){
                         selected = "selected";
                     }
-                    //console.log(cust_id);
                     toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.first_name + ' ' + o.last_name +'</option>';
                 });
                 $('#customer_id').append(toAppend);
@@ -69,7 +68,6 @@ if(isset($jobs_data)){
             success: function(data)
             {
                 var customer_data = JSON.parse(data);
-                console.log(customer_data);
                 $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
                 if(customer_data.mail_add !== null){
                     $('#cust_address').text(customer_data.mail_add + ' ');
@@ -163,7 +161,6 @@ if(isset($jobs_data)){
                         toAppend += '<option value='+o.esignLibraryTemplateId+'>'+o.title+'</option>';
                     });
                     $('#library_template').append(toAppend);
-                    //console.log(template_data);
                 }
             });
         });
@@ -188,8 +185,6 @@ if(isset($jobs_data)){
 
         $(".select_item").click(function () {
             var idd = this.id;
-            console.log(idd);
-            console.log($(this).data('itemname'));
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             var qty = $(this).data('quantity');
@@ -198,7 +193,6 @@ if(isset($jobs_data)){
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
-            console.log(total);
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
                 "<td width=\"10%\"><small>Qty</small><input min=\"1\" data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\" maxlength=\"1\"></td>\n" +
@@ -248,6 +242,7 @@ if(isset($jobs_data)){
             $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             $('#pay_amount').val(withCommas);
             $('#total_amount').val(total);
+            $('#total2').val(total);
         }
         //$(".color-scheme").on( 'click', function () {});
         function formatNumber(num) {
@@ -293,13 +288,7 @@ if(isset($jobs_data)){
             calculate_subtotal();
         });
 
-        $("body").delegate(".color-scheme", "click", function(){
-            var id = this.id;
-            $('[id="job_color_id"]').val(id);
-            console.log(id);
-            $( "#"+id ).append( "<i class=\"fa fa-check calendar_button\" aria-hidden=\"true\"></i>" );
-            remove_others(id);
-        });
+        
 
         $("body").delegate(".edit_item_list", "click", function(){
             var id = this.id;
@@ -324,7 +313,6 @@ if(isset($jobs_data)){
                     var template_data = JSON.parse(data);
                     $('#description').val(template_data.description);
                     $('#brand').val(template_data.brand);
-                    console.log(template_data);
                 }
             });
         }
@@ -353,14 +341,7 @@ if(isset($jobs_data)){
 
         // get the tax value and deduct it to subtotal then display over all total
 
-        function remove_others (color_id){
-            $('.color-scheme').each(function(index) {
-                var idd = this.id;
-                if(idd !== color_id){
-                    $( "#"+idd ).empty();
-                }
-            });
-        }
+        
 
         $("#library_template").on( 'change', function () {
             var lib_id = this.value;
@@ -372,7 +353,6 @@ if(isset($jobs_data)){
                 {
                     var template_data = JSON.parse(data);
                     $('#summernote').summernote('code', template_data.content);
-                    //console.log(data);
                 }
             });
         });
@@ -394,7 +374,6 @@ if(isset($jobs_data)){
 
         $("#start_time").on( 'change', function () {
             var tag_id = this.value;
-            console.log(tag_id);
             var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
 
             if(end_time === 'Invalid date') {
@@ -402,7 +381,6 @@ if(isset($jobs_data)){
             }else{
                $('#end_time').val(end_time);
             }
-            console.log(end_time);
         });
 
         $("#job_type_option").on( 'change', function () {
@@ -582,8 +560,6 @@ if(isset($jobs_data)){
             // var form = $('#upload_library_form').serialize();
             // var formData = new FormData($(form)[0]);
             var input = document.getElementById('attachment-file');
-            //  console.log(formData);
-            // console.log(input.files);
             // for (var i = 0; i < input.files.length; i++) {
             //     console.log(input.files[i]);
             // }
@@ -646,7 +622,6 @@ if(isset($jobs_data)){
         $("#fillAndSignNext").on( "click", function( event ) {
             return; // moved implementation to script.js@onClickNext
 
-            console.log('fsdfd');
             var formData = {
                 'status': $(this).data('status'),
                 'id': $(this).data('id'),
@@ -659,16 +634,13 @@ if(isset($jobs_data)){
                 //encode : true,
                 success: function(data)
                 {
-                    console.log(data);
                     if(data === "Success"){
                         sucess_add('Job is now Approved!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
                     }
                 },
                 error : function(data) {
-                    console.log(data);
                 }
             });
         });
@@ -688,7 +660,6 @@ if(isset($jobs_data)){
                         sucess_add('Customer Added Successfully!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
                     }
                 }
             });
@@ -710,7 +681,6 @@ if(isset($jobs_data)){
                         sucess_add('Job Status Updated!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
                     }
                 }
             });
@@ -732,7 +702,6 @@ if(isset($jobs_data)){
                         sucess_add('Job Status Updated!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
                     }
                 }
             });
@@ -772,7 +741,6 @@ if(isset($jobs_data)){
 
         $("#customer_id").on( 'change', function () {
             var customer_selected = this.value;
-            //console.log(customer_selected);
             if(customer_selected !== ""){
                 load_customer_data(customer_selected);
             }else{
@@ -785,7 +753,6 @@ if(isset($jobs_data)){
         });
 
         function get_employee_name($this){
-            //console.log($this.value);
             $.ajax({
                 type: "POST",
                 data: {id : $this.value},
@@ -799,22 +766,18 @@ if(isset($jobs_data)){
                     }else if($this.id === 'employee4' ){
                         $('#emp4_id').val(emp_data.FName);
                     }
-                    console.log(emp_data);
                 }
             });
         }
 
         $("#employee2").on( 'change', function () {
             $('#employee2_id').val(this.value);
-            console.log(get_employee_name(this));
         });
         $("#employee3").on( 'change', function () {
             $('#employee3_id').val(this.value);
-            console.log(get_employee_name(this));
         });
         $("#employee4").on( 'change', function () {
             $('#employee4_id').val(this.value);
-            console.log(get_employee_name(this));
         });
 
         $("#start_date").on("change", function(){

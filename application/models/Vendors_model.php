@@ -482,11 +482,13 @@ class Vendors_model extends MY_Model {
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
 		$this->db->where('recurring', null);
-		if(isset($filters['start-date'])) {
-			$this->db->where('bill_date >=', $filters['start-date']);
-			$this->db->where('bill_date <=', $filters['end-date']);
+		if(isset($filters['from']) && !is_null($filters['from'])) {
+			$this->db->where('bill_date >=', $filters['from']);
 		}
-		if(isset($filters['overdue']) && $filters['overdue'] === "true") {
+		if(isset($filters['to']) && !is_null($filters['to'])) {
+			$this->db->where('bill_date <=', $filters['to']);
+		}
+		if(isset($filters['overdue']) && $filters['overdue']) {
 			$this->db->where('due_date <', date("Y-m-d"));
 		}
 		$this->db->order_by('created_at', $filters['order']);
@@ -766,7 +768,7 @@ class Vendors_model extends MY_Model {
 		if(isset($filters['to'])  && !is_null($filters['to'])) {
 			$this->db->where('accounting_bill.bill_date <=', $filters['to']);
 		}
-		if($filters['overdue']) {
+		if(isset($filters['overdue']) && $filters['overdue']) {
 			$this->db->where('accounting_bill.due_date <', date("Y-m-d"));
 		}
 		$this->db->order_by('accounting_bill.bill_date', 'asc');

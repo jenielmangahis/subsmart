@@ -1,5 +1,10 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
+<style>
+.row-adt-project{
+    background-color: #d1b3ff !important;
+}
+</style>
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -274,7 +279,13 @@
                 "url": "<?= base_url('customer/getCustomerLists'); ?>",
                 "type": "POST"
             },
-            
+            // Load data from an Ajax source
+            "createdRow": function( row, data, dataIndex){
+                console.log(data);
+                if( data[7] ==  'yes'){
+                    $(row).addClass('row-adt-project');
+                }
+            },            
             //Set column definition initialisation properties
             "columnDefs": [{ 
                 "targets": [0],

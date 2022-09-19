@@ -9,8 +9,8 @@
                 <div class="modal-body" id="edit_profile_container">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
@@ -38,9 +38,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="nsm-button" id="btn_clear_signature">Clear</button>
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save Signature</button>
+                <button type="button" name="btn_modal_clear" class="nsm-button" id="btn_clear_signature">Clear</button>
+                <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" name="btn_save" class="nsm-button primary">Save Signature</button>
             </div>
         </div>
         <?php echo form_close(); ?>
@@ -69,13 +69,13 @@
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Retype Password</label>
                             <input type="password" name="re_password" id="rePassword" class="nsm-field form-control pw-field" />
-                            <a href="javascript:void(0);" class="nsm-link mt-2 float-end" id="toggle_passwords">Show passwords</a>
+                            <a href="javascript:void(0);" name="btn_show_pw" class="nsm-link mt-2 float-end" id="toggle_passwords">Show passwords</a>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
@@ -103,8 +103,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
