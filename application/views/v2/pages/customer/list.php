@@ -4,6 +4,21 @@
 .row-adt-project{
     background-color: #d1b3ff !important;
 }
+.badge-primary{
+    background-color: #007bff;
+}
+.badge{
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    margin-top: 9px;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -242,6 +257,7 @@
                                 <td data-name="Phone">Phone</td>
                                 <td data-name="Status">Status</td>
                                 <td data-name="Manage"></td>
+                                <td data-name="Manage"></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -266,6 +282,7 @@
         //     "pageLength": 10,
         //     "order": [],
         // });
+        $('.row-adt-project').tooltip();   
 
         $('#customer-list').DataTable({
             // Processing indicator
@@ -281,16 +298,26 @@
             },
             // Load data from an Ajax source
             "createdRow": function( row, data, dataIndex){
-                console.log(data);
-                if( data[7] ==  'yes'){
+                //console.log(data);
+                if( data[14] ==  'yes'){
                     $(row).addClass('row-adt-project');
+                    /*$(row).attr('title', 'ADT Solar Data');
+                    $(row).attr('data-toggle', 'tooltip');
+                    $(row).attr('data-placement', 'top');*/
                 }
             },            
             //Set column definition initialisation properties
-            "columnDefs": [{ 
-                "targets": [0],
-                "orderable": false
-            }]
+            "columnDefs": [
+                { 
+                    "targets": [0],
+                    "orderable": false,
+                },
+                { 
+                    "targets": [14],
+                    "visible": false,
+                    "searchable": false,
+                }
+            ]
         });
 
         $(document).on("click", ".call-item", function() {

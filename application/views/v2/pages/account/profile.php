@@ -47,7 +47,7 @@ if ($user->profile_img != '') {
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             Edit Profile
                         </div>
                     </div>
@@ -55,16 +55,16 @@ if ($user->profile_img != '') {
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button btn-edit-profile" data-id="<?= $user->id; ?>">
+                            <button name="btn_edit" type="button" class="nsm-button btn-edit-profile" data-id="<?= $user->id; ?>">
                                 <i class='bx bx-fw bx-edit'></i> Edit Profile
                             </button>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
+                            <button name="btn_create_signature" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
                                 <i class='bx bx-fw bx-pen'></i> Create Signature
                             </button>
-                            <button type="button" class="nsm-button btn-change-pw" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>">
+                            <button name="btn_change_password" type="button" class="nsm-button btn-change-pw" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>">
                                 <i class='bx bx-fw bx-key'></i> Change Password
                             </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#change_photo_modal" data-id="<?= $user->id; ?>" data-img="<?= $data_img; ?>">
+                            <button name="btn_change_profile_picture" type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#change_photo_modal" data-id="<?= $user->id; ?>" data-img="<?= $data_img; ?>">
                                 <i class='bx bx-fw bx-user-circle'></i> Change Profile Picture
                             </button>
                         </div>

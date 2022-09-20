@@ -9,6 +9,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-repeat: no-repeat;
         padding: 6px 12px;
     }
+    label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
     .page-title, .box-title {
       font-family: Sarabun, sans-serif !important;
       font-size: 1.75rem !important;
@@ -219,7 +223,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if (result.value) {
                 $.ajax({
                     type: "POST",
-                    url: "/customer/remove_lead",
+                    url: base_url + "/customer/remove_lead",
                     data: {lead_id : ID}, // serializes the form's elements.
                     success: function(data)
                     {

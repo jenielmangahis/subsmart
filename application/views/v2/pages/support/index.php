@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             Send email to our support so that we may assist you.
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                                         <textarea name="message" id="message" cols="30" rows="10" placeholder="Message" class="nsm-field form-control" required></textarea>
                                     </div>
                                     <div class="col-12 text-end">
-                                        <button type="submit" class="nsm-button primary">Send</button>
+                                        <button type="submit" class="nsm-button primary" name="btn_send">Send</button>
                                     </div>
                                 </div>
                             </form>

@@ -204,7 +204,8 @@ function portalSyncProjectsNonAPI($user_id, $company_id, $username, $password)
                         'zip_code' => $prj->postal_code,
                         'email' => $prj->homeown_email,
                         'phone_h' => $prj->homeown_phone,
-                        'phone_m' => $prj->hoa_phone
+                        'phone_m' => $prj->hoa_phone,
+                        'is_sync' => 0
                     ];
                     $CI->AcsProfile_model->updateByAdtSalesProjectId($prj->project_id,$customer_data);
                 }else{
@@ -227,7 +228,8 @@ function portalSyncProjectsNonAPI($user_id, $company_id, $username, $password)
                         'email' => $prj->homeown_email,
                         'phone_h' => $prj->homeown_phone,
                         'phone_m' => $prj->hoa_phone,
-                        'adt_sales_project_id' => $prj->project_id
+                        'adt_sales_project_id' => $prj->project_id,
+                        'is_sync' => 0
                     ];
 
                     $CI->AcsProfile_model->create($customer_data);

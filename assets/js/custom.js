@@ -676,6 +676,7 @@ cal_total_due();
 
 
 $(".select_item").click(function () {
+  //
             var idd = this.id;
             //console.log(idd);
             //console.log($(this).data('itemname'));
@@ -1297,7 +1298,7 @@ $(document).on("focusout", ".qtyest3", function () {
 
 
 
-function calculation(counter) {
+function calculation_x(counter) {
   // alert('calc 1');
   var price = $("#price_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
@@ -2092,6 +2093,7 @@ function calculation(counter) {
   var cnt = $("#count").val();
   var total_discount = 0;
   var pquantity  = 0;
+
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price_" + p).val();
     var quantity = $("#quantity_" + p).val();
@@ -2193,6 +2195,45 @@ function calculation(counter) {
   $("#total_tax_").html(sls);
   $("#total_tax_input").val(sls);
   cal_total_due();
+
+  const fixedSubtotal = calculateSubtotal();
+  $("#item_total").val(fixedSubtotal);
+  $("#item_total_text").html(fixedSubtotal);
+  $("#span_sub_total_invoice").text(fixedSubtotal);
+
+  const fixedTaxes = calculateTaxes();
+  $("#total_tax_").text(fixedTaxes);
+  $("#total_tax_input").val(fixedTaxes);
+}
+
+function calculateSubtotal() {
+  let retval = 0;
+  const $rows = document.querySelectorAll("#jobs_items_table_body tr");
+
+  [...$rows].forEach($row => {
+    const $price = $row.querySelector("[name^=price]");
+    const $quantity = $row.querySelector("[name^=quantity]");
+    const $discount = $row.querySelector("[name^=discount]");
+
+    const price = Number($price.value);
+    const quantity = Number($quantity.value);
+    const discount = Number($discount.value);
+    retval = retval + (price * quantity) - discount;
+  });
+
+  return retval.toFixed(2);
+}
+
+function calculateTaxes() {
+  let retval = 0;
+  const $rows = document.querySelectorAll("#jobs_items_table_body tr");
+
+  [...$rows].forEach($row => {
+    const $tax = $row.querySelector("[name^=tax]");
+    retval = retval + Number($tax.value);
+  });
+
+  return retval.toFixed(2);
 }
 
 function calculation2(counter) {

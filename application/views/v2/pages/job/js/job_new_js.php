@@ -60,28 +60,7 @@ if(isset($jobs_data)){
     //     }
     // }
 
-    function load_customer_data($id){
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url() ?>/job/get_customer_selected",
-            data: {id : $id}, // serializes the form's elements.
-            success: function(data)
-            {
-                var customer_data = JSON.parse(data);
-                $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-                if(customer_data.mail_add !== null){
-                    $('#cust_address').text(customer_data.mail_add + ' ');
-                }
-                $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
-                $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                $('#cust_number').text(customer_data.phone_h);
-                $('#cust_email').text(customer_data.email);
-                $('#mail_to').attr("href","mailto:"+customer_data.email);
-                initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-            }
-        });
-    }
+    
 
     function loadStreetView(address)
     {
@@ -97,6 +76,50 @@ if(isset($jobs_data)){
     }
 
     $(document).ready(function() {
+        var id1 = <?php echo $customer  ?>;
+        var postData1 = new FormData();
+        postData1.append('id', id1);
+
+        fetch('<?= base_url('job/get_customer_selected') ?>', {
+            method: 'POST',
+            body: postData1
+        }).then(response => response.json()).then(response => {
+            console.log(response);
+            var {success, data} = response;
+
+            if(success){
+                var phone_h = '(xxx) xxx-xxxx';
+                $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
+                if(data.mail_add !== null){
+                    $('#cust_address').text(data.mail_add + ' ');
+                }
+                if(data.phone_h){
+                    if(data.phone_h.includes('Mobile:')){
+                    phone_h = ((data.phone_h).slice(0,13))
+                }else{
+                    phone_h = data.phone_h;
+                }
+                }
+                if(data.city || data.state || data.zip_code){
+                    $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+                }else{
+                    $('#cust_address2').text('-------------');
+                }
+
+                if(data.email){
+                    $('#cust_email').text(data.email);
+                }else{
+                    $('#cust_email').text('xxxxx@xxxxx.xxx');
+                }
+                $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
+                $('#cust_number').text(phone_h);
+                $('#mail_to').attr("href","mailto:"+data.email);
+                initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+            
+            }
+        })
+        //JOB
         $("#jobs_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             if($('#job_color_id').val()=== ""){
@@ -218,7 +241,7 @@ if(isset($jobs_data)){
             calculate_subtotal();
         });
 
-        function calculate_subtotal(tax=0){
+        function calculate_subtotal(tax=0, def=false){
             var subtotal = 0 ;
             $('.total_per_item').each(function(index) {
                 var idd = $(this).data('subtotal');
@@ -227,11 +250,17 @@ if(isset($jobs_data)){
             });
             var total = parseFloat(subtotal).toFixed(2);
             var tax_total=0;
-            if(tax !== 0 || tax !== ''){
+            if((tax !== 0 || tax !== '') && def == false){
                 tax_total = Number(total) *  Number(tax);
                 total = Number(total) - Number(tax_total);
                 total = parseFloat(total).toFixed(2);
                 tax_total =  parseFloat(tax_total).toFixed(2);
+                var tax_with_comma = Number(tax_total).toLocaleString('en');
+                $('#invoice_tax_total').html('$' + tax_with_comma);
+            }else if((tax !== 0 || tax !== '') && def == true){
+                total = Number(total)+ Number(tax);
+                total = parseFloat(total).toFixed(2);
+                tax_total =  parseFloat(tax).toFixed(2);
                 var tax_with_comma = Number(tax_total).toLocaleString('en');
                 $('#invoice_tax_total').html('$' + tax_with_comma);
             }
@@ -334,6 +363,9 @@ if(isset($jobs_data)){
         }
 
         // get the tax value and deduct it to subtotal then display over all total
+        var taxRate = $('#invoice_tax_total').text();
+        calculate_subtotal(taxRate, true);
+
         $("#tax_rate").on( 'change', function () {
             var tax = this.value;
             calculate_subtotal(tax);
@@ -740,6 +772,7 @@ if(isset($jobs_data)){
         }
 
         $("#customer_id").on( 'change', function () {
+            
             var customer_selected = this.value;
             if(customer_selected !== ""){
                 load_customer_data(customer_selected);
@@ -821,5 +854,70 @@ if(isset($jobs_data)){
         });
 
     });
+    function load_customer_data($id){
+        // $.ajax({
+        //     type: "POST",
+        //     url: "<?= base_url() ?>/job/get_customer_selected",
+        //     data: {id : $id}, // serializes the form's elements.
+        //     success: function(data)
+        //     {
+        //         console.log(data);
+        //         var customer_data = JSON.parse(data);
+        //         $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
+        //         if(customer_data.mail_add !== null){
+        //             $('#cust_address').text(customer_data.mail_add + ' ');
+        //         }
+        //         $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
+        //         $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //         $('#cust_number').text(customer_data.phone_h);
+        //         $('#cust_email').text(customer_data.email);
+        //         $('#mail_to').attr("href","mailto:"+customer_data.email);
+        //         initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //         loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //     }
+        // });
+        var postData = new FormData();
+        postData.append('id', $id);
+
+        fetch('<?= base_url('job/get_customer_selected') ?>', {
+            method: 'POST',
+            body: postData
+        }).then(response => response.json()).then(response => {
+            console.log(response);
+            var {success, data} = response;
+
+            if(success){
+                var phone_h = '(xxx) xxx-xxxx';
+                $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
+                if(data.mail_add !== null){
+                    $('#cust_address').text(data.mail_add + ' ');
+                }
+                if(data.phone_h){
+                    if(data.phone_h.includes('Mobile:')){
+                    phone_h = ((data.phone_h).slice(0,13))
+                }else{
+                    phone_h = data.phone_h;
+                }
+                }
+                if(data.city || data.state || data.zip_code){
+                    $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+                }else{
+                    $('#cust_address2').text('-------------');
+                }
+
+                if(data.email){
+                    $('#cust_email').text(data.email);
+                }else{
+                    $('#cust_email').text('xxxxx@xxxxx.xxx');
+                }
+                $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
+                $('#cust_number').text(phone_h);
+                $('#mail_to').attr("href","mailto:"+data.email);
+                initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+            
+            }
+        })
+    }
 
 </script>

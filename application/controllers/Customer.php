@@ -158,6 +158,9 @@ class Customer extends MY_Controller
                 }
                 $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href='".base_url('/customer/preview_/' .$customer->prof_id)."''>".$labelName."</label>
                 <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
+                if( $customer->adt_sales_project_id > 0 ){
+                    $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                }
                 array_push($data_arr, $name);
             }
             if (in_array('industry', $enabled_table_headers)) {
@@ -1867,6 +1870,7 @@ class Customer extends MY_Controller
             $input_profile['phone_h'] = $input['phone_h'];
             $input_profile['phone_m'] = $input['phone_m'];
             $input_profile['custom_fields'] = json_encode($custom_fields_array);
+            $input_profile['is_sync'] = 0;
             if( $input['bill_method'] == 'CC' ){
                 //Check cc if valid using converge
                 $a_exp_date = explode("/", $input['credit_card_exp']);
@@ -1895,6 +1899,10 @@ class Customer extends MY_Controller
 
             if( $proceed == 1 ){
                 if(isset($input['customer_id'])){
+                    $customer = $this->customer_ad_model->get_customer_data_settings($input['customer_id']);
+                    if( $customer->adt_sales_project_id > 0 ){
+                        $input_profile['is_sync'] = 0;
+                    }
                     $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
                     $profile_id = $input['customer_id'];
 

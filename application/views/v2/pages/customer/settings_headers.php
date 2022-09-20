@@ -49,15 +49,19 @@
                                                 <?php if($company_id == 58): ?>
                                                     <div class="col-12 col-md-12"> </div>
                                                     <br><br><br><hr><h3>Solar Fields</h3>
-                                                    <?php
-                                                        $solar_fields = solar_info_header();
-                                                        foreach($solar_fields as $solar):
+                                                    <?php $solar_fields = solar_info_header(); ?>
+                                                    <?php foreach($solar_fields as $solar): ?>
+                                                            <?php 
+                                                                $checked  = '';
+                                                                if (in_array($solar['name'], $customer_tbl_headers)) {
+                                                                    $checked = 'checked="checked"';
+                                                                }
                                                             ?>
                                                                 <div class="col-12 col-md-3">
                                                                     <div class="d-block">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="headers[<?= $solar['id'] ?>]" id="<?= $solar['id'] ?>" >
-                                                                            <label class="form-check-label" for="51"><?= $solar['description'] ?></label>
+                                                                            <input class="form-check-input" type="checkbox" name="solarHeader[<?= $solar['name'] ?>]" id="<?= $solar['name'] ?>" <?= $checked; ?>>
+                                                                            <label class="form-check-label" for="<?= $solar['name'] ?>"><?= $solar['description'] ?></label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -70,18 +74,22 @@
                                                 <?php if($company_id == 31): ?>
                                                     <div class="col-12 col-md-12"> </div>
                                                     <br><br><br><hr><h3>Alarm Fields</h3>
-                                                    <?php
-                                                        $alarm_fields = alarm_info_header();
-                                                        foreach($alarm_fields as $alarm):
-                                                            ?>
-                                                                <div class="col-12 col-md-3">
-                                                                    <div class="d-block">
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="headers[<?= $alarm['id'] ?>]" id="<?= $alarm['id'] ?>" >
-                                                                            <label class="form-check-label" for="51"><?= $alarm['description'] ?></label>
-                                                                        </div>
+                                                    <?php $alarm_fields = alarm_info_header(); ?>
+                                                    <?php foreach($alarm_fields as $alarm): ?>
+                                                        <?php 
+                                                            $checked  = '';
+                                                            if (in_array($alarm['name'], $customer_tbl_headers)) {
+                                                                $checked = 'checked="checked"';
+                                                            }
+                                                        ?>
+                                                            <div class="col-12 col-md-3">
+                                                                <div class="d-block">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="alarmHeader[<?= $alarm['name'] ?>]" id="<?= $alarm['name'] ?>" <?= $checked; ?>>
+                                                                        <label class="form-check-label" for="<?= $alarm['name'] ?>"><?= $alarm['description'] ?></label>
                                                                     </div>
                                                                 </div>
+                                                            </div>
                                                             <?php
                                                         endforeach;
                                                 endif;
@@ -116,19 +124,19 @@
                 data: $("#customer_headers_form").serialize(),
                 success: function(result) {
                     Swal.fire({
-                    title: title,
-                    text: information,
-                    icon: icon,
+                    title: 'Update Successful!',
+                    text: "Header Settings was successfully updated.",
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#32243d',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ok'
                 }).then((result) => {
-                    if(is_reload === 1){
+                    /*if(is_reload === 1){
                         if (result.value) {
                             window.location.reload();
                         }
-                    }
+                    }*/
                 });
                 },error: function() {
                              //Your Error Message   

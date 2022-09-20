@@ -107,7 +107,9 @@
                                                     <label>To</label>
                                                 </div>
                                                 <div class="col-lg-5">
+
                                                     <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->date_issued : '';  ?>" required>
+
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <select id="end_time" name="end_time" class="nsm-field form-select " required>
@@ -368,14 +370,24 @@
                                                         <small>Tax Rate</small>
                                                         <!--<a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>-->
                                                         <select id="tax_rate" name="tax_rate" class="form-control">
-                                                            <option value="">None</option>
+                                                            <option value="0">None</option>
                                                             <?php foreach ($tax_rates as $rate) : ?>
                                                                 <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_tax_total">$0.00</label>
+                                                        <label id="invoice_tax_total"><?= $jobs_data->tax1_total != null ? number_format((float)$jobs_data->tax1_total,2,'.',',') : '0.00' ?></label>
+                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <hr>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label style="padding: 0 .75rem;">Discount</label>
+                                                    </div>
+                                                    <div class="col-sm-6 text-right pr-3">
+                                                        <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-12">
@@ -468,7 +480,66 @@
                                                 </div>
 
                                                 <?php endif; ?>
-
+                                                <div class="col-sm-12">
+                                                    <div class="card box_right">
+                                                        <div class="row">
+                                                            <div class="col-md-12 ">
+                                                                <div class="card-header">
+                                                                    <h5 style="padding-left: 20px;" class="mb-0">Devices Audit</h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <span class="help help-sm help-block">Record all items used on jobs</span>
+                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="nsm-button primary float-sm-end"><span class="fa fa-plus" ></span> Add New Item</a>
+                                                                    <br>
+                                                                    <table style="width: 100%;" id="device_audit" class="table table-hover table-bordered table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <td>Name</td>
+                                                                                <td>Points</td>
+                                                                                <td>Price</td>
+                                                                                <td>Qty</td>
+                                                                                <td>Subtotal</td>
+                                                                                <td>Location</td>
+                                                                                <td>Action</td>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="device_audit_datas">
+                                                                        <?php if(isset($jobs_data_items)): ?>
+                                                                            <?php
+                                                                                $subtotal = 0.00;
+                                                                                foreach ($jobs_data_items as $item):
+                                                                                $total = $item->price * $item->qty;
+                                                                            ?>
+                                                                                <tr>
+                                                                                    <td ><?= $item->title; ?></td>
+                                                                                    <td ><?= $item->points; ?></td>
+                                                                                    <td ><?= number_format((float)$item->price,2,'.',',');?></td>
+                                                                                    <td id="device_qty<?= $item->id; ?>"><?= $item->qty; ?></td>
+                                                                                    <td ><?= number_format((float)$total,2,'.',',');?></td>
+                                                                                    <td ><?= $item->location; ?></td>
+                                                                                    <td ><a href="#" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>" class="edit_item_list">
+                                                                                            <span class="fa fa-edit"></span>
+                                                                                        </a>
+                                                                                        <!--<a href="javascript:void(0)" class="remove_audit_item_row">
+                                                                                            <span class="fa fa-trash"></span></i>
+                                                                                        </a>-->
+                                                                                    </td>
+                                                                                </tr>
+                                                                            <?php $subtotal = $subtotal + $total; endforeach; ?>
+                                                                        <?php endif; ?>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <br>
+                                                                    <style>
+                                                                        .table-bordered td, .table-bordered th {
+                                                                            border: 1px solid #dee2e6 !important;
+                                                                        }
+                                                                    </style>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <br>
                                         </div>

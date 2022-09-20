@@ -129,7 +129,7 @@ class Estimate extends MY_Controller
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'status' => $this->input->post('status'),
             'estimate_type' => 'Standard',
-            'type' => $this->input->post('estimate_type'),
+            //'type' => $this->input->post('estimate_type'),
             // 'ship_via' => $this->input->post('ship_via'),
             // 'ship_date' => $this->input->post('ship_date'),
             // 'tracking_no' => $this->input->post('tracking_no'),
@@ -2055,5 +2055,13 @@ class Estimate extends MY_Controller
         $this->session->set_flashdata('alert', 'Settings was successfully updated');
 
         redirect('estimate/settings');
+    }
+
+    public function approveEstimate()
+    {
+        $id = $this->input->post('estId');
+        $updateQuery = $this->estimate_model->approveEstimate($id);
+
+        echo json_encode($updateQuery);
     }
 }

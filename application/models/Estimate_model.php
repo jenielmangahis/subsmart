@@ -92,6 +92,7 @@ class Estimate_model extends MY_Model
         // $query = $this->db->get();
         // return $query->result();
         $this->db->select('*, estimates_items.cost AS icost, estimates_items.tax AS itax, estimates_items.total AS itotal');
+        //$this->db->select('*, estimates_items.cost AS icost, estimates_items.tax AS itax, estimates_items.total AS itotal');
 		$this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.estimates_id  = items.id');
         $this->db->where('estimates_id', $id);
@@ -182,6 +183,16 @@ class Estimate_model extends MY_Model
             'markup_type'               => $markup_type,
             'markup_amount'             => $markup_amount,
             'updated_at'                => $updated_at,
+            
+        ));
+        return true;
+    }
+
+    public  function approveEstimate($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('estimates', array(
+            'status'  => 'Accepted',
             
         ));
         return true;

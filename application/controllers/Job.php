@@ -1146,7 +1146,8 @@ class Job extends MY_Controller
 
     public function get_customer_selected()
     {
-        $id = $_POST['id'];
+        $input = $this->input->post();
+        $id = $input['id'];
         $get_customer = array(
             'where' => array(
                 'prof_id' => $id
@@ -1154,7 +1155,10 @@ class Job extends MY_Controller
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,zip_code',
         );
-        echo json_encode($this->general->get_data_with_param($get_customer, false), true);
+        $data = $this->general->get_data_with_param($get_customer, false);
+        $data_arr = array("success" => true, "data" => $data);
+        die(json_encode($data_arr));
+        //echo json_encode($this->general->get_data_with_param($get_customer, false), true);
     }
 
     public function get_esign_selected()
