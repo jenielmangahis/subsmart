@@ -7672,6 +7672,49 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['bills'] = $this->get_bills_to_pay_by_vendor($filters);
         $this->page_data['credits'] = $this->get_vendor_credits($filters);
+
+        $linkableBills = $this->expenses_model->get_vendor_open_bills($bill->vendor_id);
+        $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($bill->vendor_id);
+
+        if (isset($linkableBills) && count($linkableBills) > 0) {
+            foreach ($linkableBills as $linkableBill) {
+                $balance = '$'.number_format(floatval($linkableBill->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($linkableBill->total_amount), 2, '.', ',');
+
+                if($linkableBill->id !== $bill->id) {
+                    $transactions[] = [
+                        'type' => 'Bill',
+                        'data_type' => 'bill',
+                        'id' => $linkableBill->id,
+                        'number' => $linkableBill->bill_no === null || $linkableBill->bill_no === '' ? '' : $linkableBill->bill_no,
+                        'date' => date("m/d/Y", strtotime($linkableBill->due_date)),
+                        'formatted_date' => date("F j", strtotime($linkableBill->due_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
+            }
+        }
+
+        if (isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach ($vendorCredits as $vendorCredit) {
+                $balance = '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ',');
+
+                $transactions[] = [
+                    'type' => 'Vendor Credit',
+                    'data_type' => 'vendor-credit',
+                    'id' => $vendorCredit->id,
+                    'number' => $vendorCredit->ref_no === null || $vendorCredit->ref_no === '' ? '' : $vendorCredit->ref_no,
+                    'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                    'formatted_date' => date("F j", strtotime($vendorCredit->payment_date)),
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
+                ];
+            }
+        }
+
+        $this->page_data['linkableTransactions'] = $transactions;
         $this->page_data['balance'] = '$0.00';
         $this->page_data['bill'] = $bill;
         $this->load->view('v2/includes/accounting/modal_forms/bill_payment_modal', $this->page_data);
@@ -10729,6 +10772,59 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['bills'] = $bills;
         $this->page_data['credits'] = $credits;
+
+        $linkableBills = $this->expenses_model->get_vendor_open_bills($billPayment->payee_id);
+        $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($billPayment->payee_id);
+
+        if (isset($linkableBills) && count($linkableBills) > 0) {
+            foreach ($linkableBills as $bill) {
+                $selected = array_filter($bills, function($paymentBill, $key) use ($bill) {
+                    return $paymentBill['id'] === $bill->id && $paymentBill['selected'];
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $balance = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($bill->total_amount), 2, '.', ',');
+
+                if(count($selected) < 1) {
+                    $transactions[] = [
+                        'type' => 'Bill',
+                        'data_type' => 'bill',
+                        'id' => $bill->id,
+                        'number' => $bill->bill_no === null || $bill->bill_no === '' ? '' : $bill->bill_no,
+                        'date' => date("m/d/Y", strtotime($bill->due_date)),
+                        'formatted_date' => date("F j", strtotime($bill->due_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
+            }
+        }
+
+        if (isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach ($vendorCredits as $vendorCredit) {
+                $selected = array_filter($credits, function($credit, $key) use ($vendorCredit) {
+                    return $credit['id'] === $vendorCredit->id && $credit['selected'];
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $balance = '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ',');
+
+                if(count($selected) < 1) {
+                    $transactions[] = [
+                        'type' => 'Vendor Credit',
+                        'data_type' => 'vendor-credit',
+                        'id' => $vendorCredit->id,
+                        'number' => $vendorCredit->ref_no === null || $vendorCredit->ref_no === '' ? '' : $vendorCredit->ref_no,
+                        'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                        'formatted_date' => date("F j", strtotime($vendorCredit->payment_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
+            }
+        }
+
+        $this->page_data['linkableTransactions'] = $transactions;
         $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
         $this->page_data['balance'] = $selectedBalance;

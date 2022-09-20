@@ -45,7 +45,7 @@ async function autoSaveForm() {
 
   const formdata = new FormData($form);
   formdata.append("action", "submit");
-
+  console.log(formdata);
   const response = await fetch("/job/save_job?json=1", {
     method: "post",
     body: formdata,

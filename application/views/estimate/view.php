@@ -583,6 +583,7 @@ span.sc-item {
                                                     <?php } ?>
                           <a class="btn btn-info" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"><span class="fa fa-file-pdf-o icon"></span> PDF</a>
                           <a class="btn btn-info" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
+                          <a class="btn btn-success approveEstimate" target="_new" estimateID="<?php echo $estimate->id; ?>"><span class="fa fa-file-pdf-o icon"></span> APPROVE</a>
                           <a class="btn btn-info" href="<?php echo base_url('estimate/') ?>">BACK TO ESTIMATE LIST</a>
                         </div>
                       </div>
@@ -653,25 +654,25 @@ span.sc-item {
                                       <td valign="top" style="width:30px; text-align:center;"></td>
                                       <td valign="top" style="width:45%;"><?= $itemData1->title; ?></td>
                                       <td valign="top" style="width:20%;"><?= $itemData1->type; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->costing,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float)$itemData1->costing,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->qty; ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->discount; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->total,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float)$itemData1->total,2); ?></td>
                                     </tr>
                                   <?php } ?>
                                 
                                 <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->sub_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->option1_total, 2); ?></b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$estimate->option1_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
                                     <td colspan="7" style="padding-top:15px;"><b>Option 1 Message</b></td>
@@ -698,15 +699,15 @@ span.sc-item {
                                 <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total2, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->sub_total2, 2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax2_total, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax2_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->option2_total, 2); ?></b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$estimate->option2_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
                                     <td colspan="7" style="padding-top:15px;"><b>Option 2 Message</b></td>
@@ -872,6 +873,50 @@ function printDiv(divName) {
 }
 </script>
 
+
+<script>
+  $('body').on('click', '.approveEstimate', function () {
+      var estId = $(this).attr("estimateID");
+
+      if(confirm("Are you sure you want to Approve this Estimate?")){
+        $.ajax({
+              type: "POST",
+              dataType: 'json',
+              data:{'estId':estId },
+              url : "<?php echo base_url(); ?>estimate/approveEstimate",
+              success: function (data) {
+                // alert('success');
+                // location.reload();
+                sucess("Success");
+              },
+              error: function (data) {
+                  console.log('Error:', data);
+              }
+          });
+        }
+      else{
+        return false;
+      }
+
+      
+    function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+
+    });
+</script>
 <script>
 $(document).on('click touchstart','.send_to_customer',function(){
 
@@ -921,3 +966,5 @@ if (r == true) {
 
 });
 </script>
+
+

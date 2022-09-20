@@ -114,7 +114,8 @@ class Vendors extends MY_Controller
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/expenses/vendors.js"
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/vendors/list.js"
         ));
 
         $paymentsFilter = [
@@ -130,6 +131,33 @@ class Vendors extends MY_Controller
         $checks = $this->expenses_model->get_company_check_transactions($paymentsFilter);
         $creditCardPayments = $this->expenses_model->get_company_cc_payment_transactions($paymentsFilter);
 
+        $status = [
+            1
+        ];
+
+        if (!empty(get('status') && get('status') === 'all') ) {
+            array_push($status, 0);
+        }
+
+        $vendors = $this->vendors_model->getAllByCompany($status);
+
+        $search = get('search');
+        if(!empty($search)) {
+            $vendors = array_filter($vendors, function($vendor, $key) use ($search) {
+                return (stripos($vendor->display_name, $search) !== false);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        usort($vendors, function($a, $b) {
+            return strcasecmp($a->display_name, $b->display_name);
+        });
+
+        if(!empty(get('search'))) {
+            $this->page_data['search'] = get('search');
+        }
+        if(!empty(get('status'))) {
+            $this->page_data['status'] = get('status');
+        }
         $this->page_data['paidTransactions'] = count($billPayments) + count($expenses) + count($checks) + count($creditCardPayments);
         $this->page_data['purchaseOrders'] = count($openPurchaseOrders);
         $this->page_data['openBills'] = count($openBills);
@@ -139,9 +167,9 @@ class Vendors extends MY_Controller
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['vendors'] = $vendors;
         $this->page_data['page_title'] = "Vendors";
-        $this->load->view('accounting/vendors/index', $this->page_data);
+        $this->load->view('v2/pages/accounting/expenses/vendors/list', $this->page_data);
     }
 
     public function load_vendors()
@@ -2119,9 +2147,9 @@ class Vendors extends MY_Controller
     
         usort($data, function ($a, $b) use ($order, $columnName) {
             if ($order === 'asc') {
-                return strcmp($a[$columnName], $b[$columnName]);
+                return strcasecmp($a[$columnName], $b[$columnName]);
             } else {
-                return strcmp($b[$columnName], $a[$columnName]);
+                return strcasecmp($b[$columnName], $a[$columnName]);
             }
         });
 
@@ -2139,6 +2167,20 @@ class Vendors extends MY_Controller
             "Attachments",
             "Open Balance"
         ];
+
+        if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
+            unset($headers[2]);
+        }
+        if(!isset($post['fields']) || !in_array('attachments', $post['fields'])) {
+            unset($headers[9]);
+        }
+        if(!isset($post['fields']) || !in_array('phone', $post['fields'])) {
+            unset($headers[7]);
+        }
+        if(!isset($post['fields']) || !in_array('email', $post['fields'])) {
+            unset($headers[8]);
+        }
+
         $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
         foreach($data as $v) {
@@ -2146,6 +2188,19 @@ class Vendors extends MY_Controller
             $name .= $v['status'] === '0' ? ' (deleted)' : '';
             $v['name'] = $name;
             unset($v['status']);
+
+            if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
+                unset($v['address']);
+            }
+            if(!isset($post['fields']) || !in_array('attachments', $post['fields'])) {
+                unset($v['attachments']);
+            }
+            if(!isset($post['fields']) || !in_array('phone', $post['fields'])) {
+                unset($v['phone']);
+            }
+            if(!isset($post['fields']) || !in_array('email', $post['fields'])) {
+                unset($v['email']);
+            }
 
             $writer->writeSheetRow('Sheet1', $v);
         }

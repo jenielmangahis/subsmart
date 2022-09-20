@@ -13,8 +13,8 @@
                                     <i class="bx bx-fw bx-history"></i>
                                 </a>
                                 <div class="dropdown-menu p-3" style="width: 500px">
-                                    <h5 class="dropdown-header">Recent Checks</h5>
-                                    <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-checks">
+                                    <h5 class="dropdown-header">Recent Bill Payments</h5>
+                                    <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-bill-payments">
                                         <tbody></tbody>
                                     </table>
                                 </div>
@@ -31,6 +31,10 @@
                     <div class="row" style="min-height: 100%">
                         <div class="col">
                             <div class="row">
+                                <div class="col-12">
+                                    <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
+                                </div>
+
                                 <div class="col-12 col-md-8 grid-mb">
                                     <div class="row">
                                         <div class="col-12 col-md-3">
@@ -177,14 +181,14 @@
                                             <tr>
                                                 <td>
                                                     <div class="table-row-icon table-checkbox">
-                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?=$paymentBill['id']?>" <?=$paymentBill['selected'] ? 'checked' : ''?>>
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?=$paymentBill['id']?>" <?=$paymentBill['id'] === $bill->id ? 'checked' : ''?>>
                                                     </div>
                                                 </td>
                                                 <td><?=$paymentBill['description']?></td>
                                                 <td><?=$paymentBill['due_date']?></td>
                                                 <td><?=$paymentBill['original_amount']?></td>
                                                 <td><?=$paymentBill['open_balance']?></td>
-                                                <td><input type="number" value="<?=$paymentBill['payment']?>" name="bill_payment[]" class="form-control nsm-field text-end" onchange="convertToDecimal(this)"></td>
+                                                <td><input type="number" value="<?=$paymentBill['id'] === $bill->id ? $paymentBill['payment'] : ''?>" name="bill_payment[]" class="form-control nsm-field text-end" onchange="convertToDecimal(this)"></td>
                                             </tr>
                                             <?php endforeach;?>
                                             <?php else : ?>
@@ -285,7 +289,7 @@
                                                 <td><?=$credit['description']?></td>
                                                 <td><?=$credit['original_amount']?></td>
                                                 <td><?=$credit['open_balance']?></td>
-                                                <td><input type="number" value="<?=$credit['payment']?>" name="credit_payment[]" class="form-control nsm-field text-end" onchange="convertToDecimal(this)" max="<?=$credit['open_balance']?>" step="0.01"></td>
+                                                <td><input type="number" value="" name="credit_payment[]" class="form-control nsm-field text-end" onchange="convertToDecimal(this)" max="<?=$credit['open_balance']?>" step="0.01"></td>
                                             </tr>
                                             <?php endforeach;?>
                                             <?php else : ?>
@@ -363,6 +367,43 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                            <div class="transactions-container h-100 p-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>Add to Bill Payment</h4>
+                                    </div>
+
+                                    <?php foreach($linkableTransactions as $linkableTransac) : ?>
+                                    <?php
+                                    $title = $linkableTransac['type'];
+                                    $title .= $linkableTransac['number'] !== '' ? ' #' . $linkableTransac['number'] : '';
+                                    ?>
+
+                                    <div class="col-12 grid-mb">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><?=$title?></h5>
+                                                <p class="card-subtitle"><?=$linkableTransac['formatted_date']?></p>
+                                                <p class="card-text">
+                                                    <strong>Total</strong>&emsp;<?=$linkableTransac['total']?>
+                                                    <?php if($linkableTransac['type'] === 'Purchase Order') : ?>
+                                                    <br>
+                                                    <strong>Balance</strong>&emsp;<?=$linkableTransac['balance']?>
+                                                    <?php endif; ?>
+                                                </p>
+                                                <ul class="d-flex justify-content-around list-unstyled">
+                                                    <li><a href="#" class="add-transaction text-decoration-none" data-id="<?=$linkableTransac['id']?>" data-type="<?=$linkableTransac['data_type']?>"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="open-transaction text-decoration-none" data-id="<?=$linkableTransac['id']?>" data-type="<?=$linkableTransac['data_type']?>"><strong>Open</strong></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
                         </div>
