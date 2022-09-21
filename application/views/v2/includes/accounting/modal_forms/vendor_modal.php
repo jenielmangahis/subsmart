@@ -1,7 +1,8 @@
 <div id="vendor-modal" class="modal fade modal-fluid nsm-modal" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-xl m-auto">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <!-- Modal content-->
-        <form id="add-vendor-form" class="m-auto">
+        <form action="/accounting/vendors/add" method="post" class="form-validate" novalidate="novalidate" enctype="multipart/form-data">
+        <form id="add-vendor-form">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Vendor Information</span>
@@ -214,7 +215,7 @@
                     <div class="col-12 col-md-7">
                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                         <span>Maximum size: 20MB</span>
-                        <div id="vendAtt" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                        <div id="vendAtt" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                             <div class="dz-message" style="margin: 20px;border">
                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>

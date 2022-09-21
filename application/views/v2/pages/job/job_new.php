@@ -13,7 +13,10 @@
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
 
 <!-- Script for autosaving form -->
+
+<?php if(isset($jobs_data)) { ?>
 <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
+<?php } ?>
 
 
 <style>
@@ -634,21 +637,22 @@
                                                     foreach ($jobs_data_items as $item):
                                                     $total = $item->price * $item->qty;
                                                 ?>
-                                                    <tr id=ss>
+                                                   <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
                                                             <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" >
-                                                            <input type="hidden" value='"+idd+"' name="item_id[]">
+                                                            <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                         </td>
                                                         <td width="20%"><small>Qty</small>
-                                                            <input data-itemid='"+idd+"'  id='"+idd+"' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                         </td>
                                                         <td width="20%"><small>Unit Price</small>
-                                                            <input id='price"+idd+"' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
+                                                        <td width="20%"><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
                                                         <td style="text-align: center" class="d-flex" width="15%">
-                                                            <b data-subtotal='"+total_+"' id='sub_total"+idd+"' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
+                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
                                                             <a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
                                                         </td>
                                                     </tr>
@@ -671,7 +675,7 @@
                                             <hr/>
                                         </div>
                                         <div class="col-sm-12">
-                                            <input type="text" name="job_number" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->job_number : ''; ?>" hidden>
+                                            <input type="text" name="job_number" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>" hidden>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="row">
@@ -719,7 +723,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_tax_total">$0.00</label>
+                                                        <label id="invoice_tax_total">0.00</label>
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-12">

@@ -484,7 +484,6 @@ echo put_header_assets();
                             <div class="row mb-3" id="plansItemDiv" style="background-color:white;">
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
-                                        <input type="hidden" name="count" value="0" id="count">
                                         <thead style="background-color:#E9E8EA;">
                                             <tr>
                                                 <th>Name</th>
@@ -593,7 +592,7 @@ echo put_header_assets();
                                                         </div>
                                                     </td>
                                                     <td width="10%">
-                                                        <input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $count; ?>" value="<?php echo $data->qty; ?>">
+                                                        <input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="quantity_<?= $count; ?>" value="<?php echo $data->qty; ?>">
                                                     </td>
                                                     <td width="10%">
                                                         <input type="number" class="form-control price hidden_mobile_view" name="price[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
@@ -620,6 +619,8 @@ echo put_header_assets();
                                                 </tr>
                                             <?php $count++;
                                             } ?>
+                                        <input type="hidden" name="count" value="<?= $count ?>" id="count">
+
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
@@ -1192,20 +1193,7 @@ echo put_header_assets();
             $('#modalSetMarkup').modal('toggle');
         });
     });
-</script>
 
-<script type="text/javascript">
-    // $(window).on('beforeunload', function(){
-    //     var c = confirm();
-    //     if(c){
-    //         return true;
-    //     }
-    //     else
-    //         return false;
-    // });
-</script>
-
-<script>
     jQuery(document).ready(function() {
         $(document).on('click', '#Commercial', function() {
             $('#business_name_area').show();
@@ -1217,15 +1205,12 @@ echo put_header_assets();
             $('#business_name_area').hide();
         });
     });
-</script>
-<script>
+
     $(function() {
         $("#datepicker_dateissued").datepicker({
             format: 'M dd, yyyy'
         });
     });
-</script>
-<script>
     $('#ssn').keyup(function() {
         var foo = $(this).val().split("-").join(""); // remove hyphens
         if (foo.length > 0) {
@@ -1264,9 +1249,6 @@ echo put_header_assets();
         }
         $(this).val(foo);
     });
-</script>
-
-<script>
     $(".select_package").click(function() {
         var idd = this.id;
         console.log(idd);
@@ -1693,5 +1675,4 @@ echo put_header_assets();
         // cal_total_due();
     });
 </script>
-
 <script src="<?= base_url("assets/js/custom.js") ?>"></script>

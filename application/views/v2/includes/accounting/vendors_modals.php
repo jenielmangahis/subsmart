@@ -23,7 +23,7 @@
                         <?php if (count($vendors) > 0) : ?>
                         <?php foreach($vendors as $vendor) : ?>
                         <tr>
-                            <td><?=$vendor->display_name?></td>
+                            <td><?=$vendor->display_name?><?=$vendor->status === '0' ? ' (deleted)' : ''?></td>
                             <td></td>
                             <td><?=$vendor->phone?></td>
                             <td><?=$vendor->email?></td>
@@ -81,7 +81,7 @@
                         <?php if (count($vendors) > 0) : ?>
                         <?php foreach($vendors as $vendor) : ?>
                         <tr>
-                            <td><?=$vendor->display_name?></td>
+                            <td><?=$vendor->display_name?><?=$vendor->status === '0' ? ' (deleted)' : ''?></td>
                             <td></td>
                             <td><?=$vendor->phone?></td>
                             <td><?=$vendor->email?></td>

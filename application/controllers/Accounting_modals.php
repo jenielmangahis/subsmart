@@ -9641,7 +9641,6 @@ class Accounting_modals extends MY_Controller
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->load->view('v2/includes/accounting/modal_forms/vendor_modal', $this->page_data);
-        // $this->load->view('accounting/modals/add_vendor_modal', $this->page_data);
     }
 
     public function add_customer_details_modal()
@@ -9650,7 +9649,6 @@ class Accounting_modals extends MY_Controller
         $this->page_data['paymentMethods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->load->view('v2/includes/accounting/modal_forms/customer_modal', $this->page_data);
-        // $this->load->view('accounting/modals/add_customer_modal', $this->page_data);
     }
 
     public function add_full_payee_details()

@@ -1,6 +1,12 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/vendors_modals'); ?>
 
+<style>
+    .nsm-counter.selected, .nsm-counter.co-selected {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.35);
+    }
+</style>
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/expenses'); ?>
@@ -18,7 +24,7 @@
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter primary h-100 mb-2">
+                        <div class="nsm-counter primary h-100 mb-2 <?=$transaction === 'purchase-orders' ? 'selected' : ''?>" id="purchase-orders">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -31,7 +37,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter error h-100 mb-2">
+                        <div class="nsm-counter error h-100 mb-2 <?=$transaction === 'overdue-bills' ? 'selected' : ''?><?=$transaction === 'open-bills' ? 'co-selected' : ''?>" id="overdue-bills">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -44,7 +50,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter h-100 mb-2">
+                        <div class="nsm-counter h-100 mb-2 <?=$transaction === 'open-bills' ? 'selected' : ''?>" id="open-bills">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -57,7 +63,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter success h-100 mb-2">
+                        <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -108,7 +114,7 @@
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="add-vendor-button">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
                             <button type="button" class="nsm-button export-items">
@@ -182,17 +188,19 @@
                     <tbody>
                         <?php if (count($vendors) > 0) : ?>
                         <?php foreach($vendors as $vendor) : ?>
-                        <tr>
+                        <tr data-status="<?=$vendor->status === '0' ? 'inactive' : 'active'?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$vendor->id?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/vendors/view/' . $vendor->id) ?>'"><?=$vendor->display_name?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/vendors/view/' . $vendor->id) ?>'"><?=$vendor->display_name?><?=$vendor->status === '0' ? ' (deleted)' : ''?></td>
                             <td></td>
                             <td><?=$vendor->phone?></td>
                             <td><?=$vendor->email?></td>
-                            <td></td>
+                            <td>
+                                <?php $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendor->id) ?>
+                            </td>
                             <td>
                                 <?php
                                     $balance = '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',');
@@ -205,21 +213,27 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        <?php if($vendor->status === '0') : ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create bill</a>
+                                            <a class="dropdown-item make-active" href="#">Make active</a>
+                                        </li>
+                                        <?php else : ?>
+                                        <li>
+                                            <a class="dropdown-item create-bill" href="#">Create bill</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create expense</a>
+                                            <a class="dropdown-item create-expense" href="#">Create expense</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Write check</a>
+                                            <a class="dropdown-item write-check" href="#">Write check</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create purchase order</a>
+                                            <a class="dropdown-item create-purchase-order" href="#">Create purchase order</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Make inactive</a>
+                                            <a class="dropdown-item make-inactive" href="#">Make inactive</a>
                                         </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

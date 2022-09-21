@@ -136,7 +136,6 @@ if(isset($jobs_data)){
                     data: form.serialize(), // serializes the form's elements.
                     success: function(data) {
                         if ($overlay) $overlay.style.display = "none";
-                        console.log(data);
                         sucess_add_job(data);
                     }, beforeSend: function() {
                         if ($overlay) $overlay.style.display = "flex";
@@ -212,7 +211,7 @@ if(isset($jobs_data)){
             var price = $(this).data('price');
             var qty = $(this).data('quantity');
             var item_type = $(this).data('item_type');
-
+            console.log(idd);
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
@@ -241,32 +240,39 @@ if(isset($jobs_data)){
             calculate_subtotal();
         });
 
-        function calculate_subtotal(tax=0, def=false){
+        function calculate_subtotal(tax=0, def=false, discount=0){
             var subtotal = 0 ;
             $('.total_per_item').each(function(index) {
                 var idd = $(this).data('subtotal');
                 // var idd = this.id;
                 subtotal = Number(subtotal) + Number(idd);
+
             });
             var total = parseFloat(subtotal).toFixed(2);
             var tax_total=0;
             if((tax !== 0 || tax !== '') && def == false){
                 tax_total = Number(total) *  Number(tax);
-                total = Number(total) - Number(tax_total);
+                total = Number(total) + Number(tax_total) - Number(discount);
                 total = parseFloat(total).toFixed(2);
                 tax_total =  parseFloat(tax_total).toFixed(2);
                 var tax_with_comma = Number(tax_total).toLocaleString('en');
                 $('#invoice_tax_total').html('$' + tax_with_comma);
             }else if((tax !== 0 || tax !== '') && def == true){
-                total = Number(total)+ Number(tax);
+                total = Number(total)+ Number(tax) - Number(discount);
                 total = parseFloat(total).toFixed(2);
                 tax_total =  parseFloat(tax).toFixed(2);
+                console.log(tax_total);
+
                 var tax_with_comma = Number(tax_total).toLocaleString('en');
-                $('#invoice_tax_total').html('$' + tax_with_comma);
+
+                $('#invoice_tax_total').html('$' + tax_total);
             }
             var withCommas = Number(total).toLocaleString('en');
             if(tax_total < 1){
                 $('#invoice_sub_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
+            }
+            if(discount > 0){
+                $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
             }
             $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             $('#pay_amount').val(withCommas);
@@ -364,11 +370,14 @@ if(isset($jobs_data)){
 
         // get the tax value and deduct it to subtotal then display over all total
         var taxRate = $('#invoice_tax_total').text();
-        calculate_subtotal(taxRate, true);
+        var discount = $('#invoice_discount_total').text();
+        console.log(taxRate);
+        calculate_subtotal(taxRate, true, discount);
 
         $("#tax_rate").on( 'change', function () {
             var tax = this.value;
-            calculate_subtotal(tax);
+        var discount = $('#invoice_discount_total').text();
+            calculate_subtotal(tax, false, discount);
         });
 
         // get the tax value and deduct it to subtotal then display over all total
