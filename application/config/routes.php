@@ -1387,3 +1387,7 @@ $route['plaid_account/_bank_account_recurring_transactions'] = 'PlaidAccount/aja
 
 //ADT Portal
 $route['user/_loggedin_adt_sales_portal'] = 'Users/ajax_loggedin_adt_sales_portal';
+
+//Customer Sync Setting
+$route['customer/_update_adt_sales_sync_setting'] = 'Customer/ajax_update_adt_sales_sync_setting';
+$route['customer/_adt_sales_sync_setting'] = 'Customer/ajax_adt_sales_sync_setting';
