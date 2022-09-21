@@ -703,6 +703,7 @@ class Job extends MY_Controller
             'assets/js/esign/libs/pdf.worker.js',
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
+
 		$this->page_data['page']->title = 'Estimates';
         $this->page_data['idd'] = $id;
         $this->load->view('v2/pages/job/job_estimates', $this->page_data);
@@ -1146,7 +1147,8 @@ class Job extends MY_Controller
 
     public function get_customer_selected()
     {
-        $id = $_POST['id'];
+        $input = $this->input->post();
+        $id = $input['id'];
         $get_customer = array(
             'where' => array(
                 'prof_id' => $id
@@ -1154,7 +1156,10 @@ class Job extends MY_Controller
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,zip_code',
         );
-        echo json_encode($this->general->get_data_with_param($get_customer, false), true);
+        $data = $this->general->get_data_with_param($get_customer, false);
+        $data_arr = array("success" => true, "data" => $data);
+        die(json_encode($data_arr));
+        //echo json_encode($this->general->get_data_with_param($get_customer, false), true);
     }
 
     public function get_esign_selected()
@@ -1605,8 +1610,9 @@ class Job extends MY_Controller
             }
 
             // insert data to job url links table
+            $link = isset($input['link']) ? $input['link'] : 'none';
             $jobs_links_data = array(
-                'link' => $input['link'],
+                'link' => $link,
                 'job_id' => $jobs_id,
             );
             $this->general->add_($jobs_links_data, 'job_url_links');
@@ -1720,8 +1726,8 @@ class Job extends MY_Controller
             header('content-type: application/json');
             exit(json_encode(['id' => $job_number]));
         } else {
-            $data_arr = array("data" => $input);
-            echo $isset;
+            $data_arr = array("data" => "Success");
+            exit(json_encode($data_arr));
         }
     }
 
