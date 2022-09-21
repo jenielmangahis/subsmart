@@ -28,6 +28,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('accounting_purchase_order.status', 1);
 		$this->db->where('accounting_purchase_order.purchase_order_date >=', date("Y-m-d", strtotime("-365 days")));
 		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->group_by('accounting_vendors.id');
 		$this->db->from($this->table);
 		$this->db->join('accounting_purchase_order', 'accounting_purchase_order.vendor_id = accounting_vendors.id');
 		$query = $this->db->get();
@@ -44,6 +45,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('accounting_bill.status', 1);
 		$this->db->where('accounting_bill.bill_date >=', date("Y-m-d", strtotime("-365 days")));
 		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->group_by('accounting_vendors.id');
 		$this->db->from($this->table);
 		$this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id');
 		$query = $this->db->get();
@@ -61,6 +63,7 @@ class Vendors_model extends MY_Model {
         $this->db->where('accounting_bill.due_date <', date("Y-m-d"));
 		$this->db->where('accounting_bill.bill_date >=', date("Y-m-d", strtotime("-365 days")));
 		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->group_by('accounting_vendors.id');
 		$this->db->from($this->table);
 		$this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id');
 		$query = $this->db->get();
@@ -96,6 +99,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('accounting_pay_down_credit_card.date >=', $startDate);
 
 		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->group_by('accounting_vendors.id');
 		$this->db->from($this->table);
 		$this->db->join('accounting_bill_payments', 'accounting_bill_payments.payee_id = accounting_vendors.id', 'left');
 		$this->db->join('accounting_expense', 'accounting_expense.payee_id = accounting_vendors.id', 'left');

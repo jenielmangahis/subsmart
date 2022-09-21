@@ -89,7 +89,7 @@
                                                     <label>From</label>
                                                 </div>
                                                 <div class="col-lg-5">
-                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->date_issued : '';  ?>" required>&nbsp;&nbsp;
+                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data->estimate_date) ?  $jobs_data->estimate_date : '';  ?>" required>&nbsp;&nbsp;
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <select id="start_time" name="start_time" class="nsm-field form-select" required>
@@ -108,7 +108,7 @@
                                                 </div>
                                                 <div class="col-lg-5">
 
-                                                    <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->date_issued : '';  ?>" required>
+                                                    <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data->expiry_date) ?  $jobs_data->expiry_date : (new DateTime())->format('Y-m-d');;  ?>" required>
 
                                                 </div>
                                                 <div class="col-lg-5">
@@ -294,22 +294,24 @@
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
                                                     $total = $item->price * $item->qty;
+
                                                 ?>
                                                     <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
                                                             <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" >
-                                                            <input type="hidden" value='"+idd+"' name="item_id[]">
+                                                            <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                         </td>
                                                         <td width="20%"><small>Qty</small>
-                                                            <input data-itemid='"+idd+"'  id='"+idd+"' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                         </td>
                                                         <td width="20%"><small>Unit Price</small>
-                                                            <input id='price"+idd+"' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
+                                                        <td width="20%"><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
                                                         <td style="text-align: center" class="d-flex" width="15%">
-                                                            <b data-subtotal='"+total_+"' id='sub_total"+idd+"' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
+                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
                                                             <a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
                                                         </td>
                                                     </tr>
@@ -387,8 +389,8 @@
                                                         <label style="padding: 0 .75rem;">Discount</label>
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        <label id="invoice_discount_total"><?= isset($jobs_data) ? number_format((float)$jobs_data->bundle_discount,2,'.',',') : '0.00'; ?></label>
+                                                        <input type="hidden" name="sub_discount" id="sub_discount_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <hr>
@@ -635,8 +637,8 @@
                                         <td><?= $item->price; ?></td>
                                         <td><?=ucfirst($item->type); ?></td>
                                         <td>
-                                            <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                <span class="fa fa-plus"></span>
+                                            <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                            <i class='bx bx-plus'></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -724,6 +726,8 @@ add_footer_js(array(
     'assets/js/esign/jobs/esign.js',
 ));
 ?>
+<?php include viewPath('v2/includes/footer'); ?>
+
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>

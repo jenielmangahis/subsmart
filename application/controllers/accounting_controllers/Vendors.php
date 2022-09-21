@@ -139,7 +139,24 @@ class Vendors extends MY_Controller
             array_push($status, 0);
         }
 
-        $vendors = $this->vendors_model->getAllByCompany($status);
+        if (empty(get('transaction'))) {
+            $vendors = $this->vendors_model->getAllByCompany($status);
+        } else {
+            switch (get('transaction')) {
+                case 'purchase-orders':
+                    $vendors = $this->vendors_model->get_vendors_with_unbilled_po($status);
+                break;
+                case 'open-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_open_bills($status);
+                break;
+                case 'overdue-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_overdue_bills($status);
+                break;
+                case 'payments':
+                    $vendors = $this->vendors_model->get_vendors_with_payments($status);
+                break;
+            }
+        }
 
         $search = get('search');
         if(!empty($search)) {
@@ -157,6 +174,9 @@ class Vendors extends MY_Controller
         }
         if(!empty(get('status'))) {
             $this->page_data['status'] = get('status');
+        }
+        if(!empty(get('transaction'))) {
+            $this->page_data['transaction'] = get('transaction');
         }
         $this->page_data['paidTransactions'] = count($billPayments) + count($expenses) + count($checks) + count($creditCardPayments);
         $this->page_data['purchaseOrders'] = count($openPurchaseOrders);
@@ -421,6 +441,35 @@ class Vendors extends MY_Controller
                 $this->session->set_flashdata('success', "<b>$vendor->display_name</b> has been successfully set to inactive!");
             } else {
                 $this->session->set_flashdata('success', "$update vendor/s has been successfully set to inactive!");
+            }
+        } else {
+            $this->session->set_flashdata('error', "Unexpected error, please try again!");
+        }
+    }
+
+    public function make_active()
+    {
+        $vendors = $this->input->post('vendors');
+
+        if (count($vendors) === 1) {
+            $vendor = $this->vendors_model->get_vendor_by_id($vendors[0]);
+        }
+
+        $data = [];
+        foreach ($vendors as $vendorId) {
+            $data[] = [
+                'id' => $vendorId,
+                'status' => 1
+            ];
+        }
+
+        $update = $this->vendors_model->update_multiple_vendor_by_id($data);
+
+        if ($update) {
+            if (count($vendors) === 1) {
+                $this->session->set_flashdata('success', "<b>$vendor->display_name</b> has been successfully set to active!");
+            } else {
+                $this->session->set_flashdata('success', "$update vendor/s has been successfully set to active!");
             }
         } else {
             $this->session->set_flashdata('error', "Unexpected error, please try again!");
