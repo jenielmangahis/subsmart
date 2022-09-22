@@ -106,7 +106,7 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="vendor">Vendor</label>
-                                            <select name="vendor_id" id="vendor" class="form-control nsm-field" required>
+                                            <select name="vendor" id="vendor" class="form-control nsm-field" required>
                                                 <?php if(isset($bill) || isset($purchaseOrder)) : ?>
                                                     <?php if(isset($purchaseOrder) && !isset($bill)) : ?>
                                                     <option value="<?=$purchaseOrder->vendor_id?>">

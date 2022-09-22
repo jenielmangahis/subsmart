@@ -94,6 +94,106 @@ if(!function_exists('customCols')){
     }
 
 }
+if(!function_exists('estimateCols')){
+    function estimateCols(){
+        $estimateCols = array(
+            array(
+                'name' => 'AMOUNT',
+                'description' => 'grand_total',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'ACCEPTED DATE',
+                'description' => 'accepted_date',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'BILLING ADDRESS',
+                'description' => 'billing_address',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'CREATED BY',
+                'description' => 'estimate_number',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'CUSTOMER MESSAGE',
+                'description' => 'customer_message',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'DATE',
+                'description' => 'estimate_date',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'EMAIL',
+                'description' => 'email',
+                'name_in' => 'customer'
+            ),
+            array(
+                'name' => 'EXPIRATION DATE',
+                'description' => 'expiry_date',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'INVOICE #',
+                'description' => 'status',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'LAST MODIFIED',
+                'description' => 'updated_at',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'NAME',
+                'description' => 'first_name',
+                'name_in' => 'customer'
+            ),
+            array(
+                'name' => 'NUM',
+                'description' => 'estimate_number',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'PHONE NUMBER',
+                'description' => 'phone_h',
+                'name_in' => 'customer'
+            ),
+            array(
+                'name' => 'SHIP DATE',
+                'description' => 'ship_date',
+            ),
+            array(
+                'name' => 'SHIP VIA',
+                'description' => 'ship_via',
+                'name_in' => 'estimate'
+
+            ),
+            array(
+                'name' => 'SHIPPING ADDRESS',
+                'description' => 'billing_address',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'TAX AMOUNT',
+                'description' => 'tax1_total',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'TRANSACTION TYPE',
+                'description' => 'estimate_type',
+                'name_in' => 'estimate'
+            ),
+        );
+        return $estimateCols;
+    }
+
+}
+
+
 
 if(!function_exists('billPro')){
     function billPro($billPro){
@@ -108,6 +208,22 @@ if(!function_exists('billPro')){
             }
         endforeach;
         return $array1;
+    }
+}
+
+if(!function_exists('selectCustomerEstimate')){
+    function selectCustomerEstimate($key, $table){
+        $data_arr = array();
+        foreach($key as $k) :
+            if($table == 'customer'){
+                $field = 'acs_profile.'.$k;
+                array_push($data_arr, $field);
+            }else{
+                $field = 'estimates.'.$k;
+                array_push($data_arr, $field);
+            }
+        endforeach;
+        return $data_arr;
     }
 }
 

@@ -1,5 +1,77 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 
+<style>
+    .change-col {
+        margin-top: 20px;
+        color: blue;
+        cursor: pointer;
+    }
+    .change-col:hover{
+        text-decoration: underline !important;
+    }
+    .changeCol{
+        display: none;
+    }
+    .modal.right .modal-dialog {
+		position: fixed;
+		margin: auto;
+		width: 320px;
+		height: 100%;
+		-webkit-transform: translate3d(0%, 0, 0);
+		    -ms-transform: translate3d(0%, 0, 0);
+		     -o-transform: translate3d(0%, 0, 0);
+		        transform: translate3d(0%, 0, 0);
+	}
+
+	.modal.right .modal-content {
+		height: 100%;
+		overflow-y: auto;
+        border-radius: 50px !important;
+	}
+        
+	.modal.right.fade .modal-dialog {
+		right: -320px;
+		-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+		   -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+		     -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+		        transition: opacity 0.3s linear, right 0.3s ease-out;
+	}
+	
+	.modal.right.fade.in .modal-dialog {
+		right: 0;
+	}
+
+	.modal-content {
+		border-radius: 0;
+		border: none;
+	}
+
+	.modal-header {
+		border-bottom-color: #EEEEEE;
+	}
+    .czLabel {
+        cursor: pointer;
+    }
+    .czLabel i {
+        color: black !important;
+        font-size: 13px;
+    }
+    #general{
+        display: none;
+    }
+    #column{
+        display: none;
+    }
+    .column{
+        margin-top: 20px;
+    }
+    .head_foot{
+        display: none;
+    }
+    .header-footer{
+        margin-top: 20px;
+    }
+</style>
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -95,9 +167,9 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
+                            <a type="button" class="nsm-button demo" data-bs-toggle="modal" data-bs-target="#customizeModal">
                                 <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
+                            </a>
                             <button type="button" class="nsm-button primary">
                                 <i class='bx bx-fw bx-save'></i> Save customization
                             </button>
@@ -425,6 +497,7 @@
     </div>
 </div>
 
+<?php include viewPath('accounting/reports/reports_modals/estimates_by_customer_modal'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
@@ -464,3 +537,4 @@
         })
     })
 </script>
+<?php include viewPath('accounting/reports/reports_js/reports_gen_js') ?>

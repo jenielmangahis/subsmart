@@ -282,7 +282,7 @@
         //     "pageLength": 10,
         //     "order": [],
         // });
-        $('.row-adt-project').tooltip();   
+        //$('.row-adt-project').tooltip();   
 
         $('#customer-list').DataTable({
             // Processing indicator
@@ -297,26 +297,26 @@
                 "type": "POST"
             },
             // Load data from an Ajax source
-            "createdRow": function( row, data, dataIndex){
-                //console.log(data);
-                if( data[14] ==  'yes'){
-                    $(row).addClass('row-adt-project');
-                    /*$(row).attr('title', 'ADT Solar Data');
-                    $(row).attr('data-toggle', 'tooltip');
-                    $(row).attr('data-placement', 'top');*/
-                }
-            },            
+            // "createdRow": function( row, data, dataIndex){
+            //     //console.log(data);
+            //     if( data[14] ==  'yes'){
+            //         $(row).addClass('row-adt-project');
+            //         /*$(row).attr('title', 'ADT Solar Data');
+            //         $(row).attr('data-toggle', 'tooltip');
+            //         $(row).attr('data-placement', 'top');*/
+            //     }
+            // },            
             //Set column definition initialisation properties
             "columnDefs": [
                 { 
                     "targets": [0],
                     "orderable": false,
                 },
-                { 
-                    "targets": [14],
-                    "visible": false,
-                    "searchable": false,
-                }
+                // { 
+                //     "targets": [14],
+                //     "visible": false,
+                //     "searchable": false,
+                // }
             ]
         });
 

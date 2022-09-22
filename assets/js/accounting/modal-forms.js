@@ -5783,9 +5783,38 @@ $(function() {
                     }
                 });
 
-                $('#modal-container #vendor-modal select').select2({
-                    dropdownParent: $('#modal-container #vendor-modal')
+                $('#modal-container #vendor-modal select').each(function() {
+                    var select = $(this);
+                    if(select.attr('id') === 'term' || select.attr('id') === 'expense_account') {
+                        select.select2({
+                            ajax: {
+                                url: '/accounting/get-dropdown-choices',
+                                dataType: 'json',
+                                data: function(params) {
+                                    var query = {
+                                        search: params.term,
+                                        type: 'public',
+                                        field: select.attr('id').replace('_', '-'),
+                                        modal: 'vendor-modal'
+                                    }
+    
+                                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                                    return query;
+                                }
+                            },
+                            placeholder: select.attr('id') === 'expense_account' ? "Choose Account" : '',
+                            templateResult: formatResult,
+                            templateSelection: optionSelect,
+                            dropdownParent: $('#modal-container #vendor-modal')
+                        });
+                    } else {
+                        select.select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container #vendor-modal')
+                        });
+                    }
                 });
+
                 $('#modal-container #vendor-modal .date').datepicker({
                     format: 'mm/dd/yyyy',
                     orientation: 'bottom',
