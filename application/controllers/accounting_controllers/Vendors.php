@@ -297,7 +297,7 @@ class Vendors extends MY_Controller
             'company' => $this->input->post('company'),
             'display_name' => $this->input->post('display_name'),
             'to_display' => $this->input->post('use_display_name'),
-            'print_on_check_name' => $this->input->post('use_display_name') === "1" ? $this->input->post('use_display_name') : $this->input->post('print_on_check_name'),
+            'print_on_check_name' => $this->input->post('use_display_name') === "1" ? $this->input->post('display_name') : $this->input->post('print_on_check_name'),
             'street' => $this->input->post('street'),
             'city' => $this->input->post('city'),
             'state' => $this->input->post('state'),
@@ -350,7 +350,7 @@ class Vendors extends MY_Controller
     public function view($vendorId)
     {
         add_footer_js(array(
-            "assets/js/accounting/expenses/view-vendor.js"
+            "assets/js/v2/accounting/vendors/view.js"
         ));
 
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
@@ -415,7 +415,7 @@ class Vendors extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['attachments'] = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
         $this->page_data['page_title'] = "Vendors";
-        $this->load->view('accounting/vendors/view', $this->page_data);
+        $this->load->view('v2/pages/accounting/expenses/vendors/view', $this->page_data);
     }
 
     public function make_inactive()
@@ -480,7 +480,8 @@ class Vendors extends MY_Controller
     {
         $this->page_data['vendorDetails'] = $this->vendors_model->get_vendor_by_id($vendorId);
         $this->page_data['attachments'] = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
-        $this->load->view('accounting/vendors/edit_vendor_modal', $this->page_data);
+        // $this->load->view('accounting/vendors/edit_vendor_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/vendor_modal', $this->page_data);
     }
 
     public function update($vendorId)
@@ -508,8 +509,6 @@ class Vendors extends MY_Controller
             'website' => $this->input->post('website'),
             'billing_rate' => $this->input->post('billing_rate') !== "" ? $this->input->post('billing_rate') : null,
             'terms' => $this->input->post('terms'),
-            'opening_balance' => $this->input->post('opening_balance'),
-            'opening_balance_as_of_date' => date("Y-m-d", strtotime($this->input->post('opening_balance_as_of_date'))),
             'account_number' => $this->input->post('account_number') !== "" ? $this->input->post('account_number') : null,
             'tax_id' => $this->input->post('tax_id'),
             'default_expense_account' => $this->input->post('default_expense_account'),

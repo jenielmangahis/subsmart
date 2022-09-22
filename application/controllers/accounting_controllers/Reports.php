@@ -442,4 +442,25 @@ class Reports extends MY_Controller {
 
         die(json_encode($data_arr));
     }
+
+    public function view_reports_data()
+    {
+        $input = $this->input->post();
+        $customerCol = json_decode($input['customerCol']);
+        $estimateCol = json_decode($input['estimateCol']);
+        
+        $customer = ($input['customerCol'] != '[]') ? selectCustomerEstimate($customerCol, 'customer') : 'null';
+        $estimate = ($input['customerCol'] != '[]') ? selectCustomerEstimate($estimateCol, 'estimate') : 'null';
+
+        $selected_col = array_merge($customer,$estimate);
+        $get_estimate_data = array(
+            "select" => $selected_col,
+            "table" => 'estimates',
+            "where" => array(
+                'company_id' => logged('company_id')
+            )
+            );
+        $data_arr = array("success" => true, "input" => $selected_col);
+        die(json_encode($data_arr));
+    }
 }

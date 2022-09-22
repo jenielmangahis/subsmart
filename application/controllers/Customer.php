@@ -158,9 +158,9 @@ class Customer extends MY_Controller
                 }
                 $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href='".base_url('/customer/preview_/' .$customer->prof_id)."''>".$labelName."</label>
                 <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
-                if( $customer->adt_sales_project_id > 0 ){
-                    $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
-                }
+                // if( $customer->adt_sales_project_id > 0 ){
+                //     $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                // }
                 array_push($data_arr, $name);
             }
             if (in_array('industry', $enabled_table_headers)) {
