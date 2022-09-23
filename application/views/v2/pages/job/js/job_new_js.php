@@ -32,7 +32,6 @@ if(isset($jobs_data)){
             })
             
     });
-    var cust_id = <?php echo $customer  ?>;
 
     // function get_customers($id=null){
     //     $.ajax({
@@ -76,49 +75,50 @@ if(isset($jobs_data)){
     }
 
     $(document).ready(function() {
-        var id1 = <?php echo $customer  ?>;
-        var postData1 = new FormData();
-        postData1.append('id', id1);
+        load_customer_data(<?= $customer  ?>);
+        // var id1 = <?php echo $customer  ?>;
+        // var postData1 = new FormData();
+        // postData1.append('id', id1);
 
-        fetch('<?= base_url('job/get_customer_selected') ?>', {
-            method: 'POST',
-            body: postData1
-        }).then(response => response.json()).then(response => {
-            console.log(response);
-            var {success, data} = response;
+        // fetch('<?= base_url('job/get_customer_selected') ?>', {
+        //     method: 'POST',
+        //     body: postData1
+        // }).then(response => response.json()).then(response => {
+        //     console.log(response);
+        //     var {success, data} = response;
 
-            if(success){
-                var phone_h = '(xxx) xxx-xxxx';
-                $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
-                if(data.mail_add !== null){
-                    $('#cust_address').text(data.mail_add + ' ');
-                }
-                if(data.phone_h){
-                    if(data.phone_h.includes('Mobile:')){
-                    phone_h = ((data.phone_h).slice(0,13))
-                }else{
-                    phone_h = data.phone_h;
-                }
-                }
-                if(data.city || data.state || data.zip_code){
-                    $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
-                }else{
-                    $('#cust_address2').text('-------------');
-                }
+        //     if(success){
+        //         var phone_h = '(xxx) xxx-xxxx';
+        //         $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
+        //         if(data.mail_add !== null){
+        //             $('#cust_address').text(data.mail_add + ' ');
+        //         }
+        //         if(data.phone_h){
+        //             if(data.phone_h.includes('Mobile:')){
+        //             phone_h = ((data.phone_h).slice(0,13))
+        //         }else{
+        //             phone_h = data.phone_h;
+        //         }
+        //         }
+        //         if(data.city || data.state || data.zip_code){
+        //             $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+        //         }else{
+        //             $('#cust_address2').text('-------------');
+        //         }
 
-                if(data.email){
-                    $('#cust_email').text(data.email);
-                }else{
-                    $('#cust_email').text('xxxxx@xxxxx.xxx');
-                }
-                $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
-                $('#cust_number').text(phone_h);
-                $('#mail_to').attr("href","mailto:"+data.email);
-                initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
-                loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+        //         if(data.email){
+        //             $('#cust_email').text(data.email);
+        //         }else{
+        //             $('#cust_email').text('xxxxx@xxxxx.xxx');
+        //         }
+        //         $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
+        //         $('#cust_number').text(phone_h);
+        //         $('#mail_to').attr("href","mailto:"+data.email);
+        //         initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+        //         loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
             
-            }
-        })
+        //     }
+        // })
         //JOB
         $("#jobs_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -780,9 +780,10 @@ if(isset($jobs_data)){
             });
         }
 
-        $("#customer_id").on( 'change', function () {
+        $("#customer_id").on('change', function () {
             
             var customer_selected = this.value;
+            console.log(customer_selected);
             if(customer_selected !== ""){
                 load_customer_data(customer_selected);
             }else{
@@ -863,6 +864,10 @@ if(isset($jobs_data)){
         });
 
     });
+    <?php if( $default_customer_id > 0 ){ ?>
+            $('#customer_id').click();
+            load_customer_data('<?= $default_customer_id; ?>');
+        <?php } ?>
     function load_customer_data($id){
         // $.ajax({
         //     type: "POST",
@@ -928,5 +933,6 @@ if(isset($jobs_data)){
             }
         })
     }
+    
 
 </script>

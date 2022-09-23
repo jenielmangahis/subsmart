@@ -572,7 +572,7 @@ input:checked + .slider:before {
                                                                     data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $count; ?>" value="<?php echo $data->qty; ?>">
                                                             </td>
                                                             <td width="10%">
-                                                                <input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                                <input type="text" class="form-control price hidden_mobile_view" name="price[]"
                                                                     data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
                                                                 <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>">
                                                                 <div class="show_mobile_view"><?php echo $data->costing; ?></div>

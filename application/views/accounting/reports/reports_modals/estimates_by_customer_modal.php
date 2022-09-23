@@ -71,7 +71,7 @@
                                 <div class="col-12 col-md-6">
                                     <label for="filter-group-by">Group by</label>
                                     <select class="nsm-field form-select" name="filter_group_by" id="group_by_filter">
-                                        <option value="none" selected>None</option>
+                                        <option value="" selected>None</option>
                                         <option value="estimate_type">Transaction Type</option>
                                         <option value="first_name">Customer</option>
                                         <option value="day">Day</option>

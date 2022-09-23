@@ -595,7 +595,7 @@ echo put_header_assets();
                                                         <input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="quantity_<?= $count; ?>" value="<?php echo $data->qty; ?>">
                                                     </td>
                                                     <td width="10%">
-                                                        <input type="number" class="form-control price hidden_mobile_view" name="price[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
+                                                        <input type="text" class="form-control price hidden_mobile_view" name="price[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
                                                         <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>">
                                                         <div class="show_mobile_view"><?php echo $data->costing; ?></div>
                                                     </td>
