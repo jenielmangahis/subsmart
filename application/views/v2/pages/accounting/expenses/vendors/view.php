@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/view_vendor_modals'); ?>
 
 <style>
     .notes-container {
@@ -144,16 +145,16 @@
                                                                 <div class="col">
                                                                     <label for="filter-type">Type</label>
                                                                     <select class="nsm-field form-select" name="filter_type" id="filter-type">
-                                                                        <option value="all-transactions" selected="selected">All transactions</option>
-                                                                        <option value="expenses">Expenses</option>
-                                                                        <option value="all-bills">All Bills</option>
-                                                                        <option value="open-bills">Open Bills</option>
-                                                                        <option value="overdue-bills">Overdue Bills</option>
-                                                                        <option value="bill-payments">Bill payments</option>
-                                                                        <option value="checks">Checks</option>
-                                                                        <option value="purchase-orders">Purchase orders</option>
-                                                                        <option value="recently-paid">Recently paid</option>
-                                                                        <option value="vendor-credits">Vendor Credits</option>
+                                                                        <option value="all" <?=empty($type) || $type === 'all' ? 'selected' : ''?>>All transactions</option>
+                                                                        <option value="expenses" <?=$type === 'expenses' ? 'selected' : ''?>>Expenses</option>
+                                                                        <option value="all-bills" <?=$type === 'all-bills' ? 'selected' : ''?>>All Bills</option>
+                                                                        <option value="open-bills" <?=$type === 'open-bills' ? 'selected' : ''?>>Open Bills</option>
+                                                                        <option value="overdue-bills" <?=$type === 'overdue-bills' ? 'selected' : ''?>>Overdue Bills</option>
+                                                                        <option value="bill-payments" <?=$type === 'bill-payments' ? 'selected' : ''?>>Bill payments</option>
+                                                                        <option value="checks" <?=$type === 'checks' ? 'selected' : ''?>>Checks</option>
+                                                                        <option value="purchase-orders" <?=$type === 'purchase-orders' ? 'selected' : ''?>>Purchase orders</option>
+                                                                        <option value="recently-paid" <?=$type === 'recently-paid' ? 'selected' : ''?>>Recently paid</option>
+                                                                        <option value="vendor-credits" <?=$type === 'vendor-credits' ? 'selected' : ''?>>Vendor Credits</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -161,29 +162,29 @@
                                                                 <div class="col">
                                                                     <label for="filter-date">Date</label>
                                                                     <select class="nsm-field form-select" name="filter_date" id="filter-date">
-                                                                        <option value="all-dates" selected="selected">All dates</option>
-                                                                        <option value="today">Today</option>
-                                                                        <option value="yesterday">Yesterday</option>
-                                                                        <option value="this-week">This week</option>
-                                                                        <option value="this-month">This month</option>
-                                                                        <option value="this-quarter">This quarter</option>
-                                                                        <option value="this-year">This year</option>
-                                                                        <option value="last-week">Last week</option>
-                                                                        <option value="last-month">Last month</option>
-                                                                        <option value="last-quarter">Last quarter</option>
-                                                                        <option value="last-year">Last year</option>
-                                                                        <option value="last-365-days">Last 365 days</option>
+                                                                        <option value="all" <?=empty($date) || $date === 'all' ? 'selected' : ''?>>All dates</option>
+                                                                        <option value="today" <?=$date === 'today' ? 'selected' : ''?>>Today</option>
+                                                                        <option value="yesterday" <?=$date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                                                        <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
+                                                                        <option value="this-month" <?=$date === 'this-month' ? 'selected' : ''?>>This month</option>
+                                                                        <option value="this-quarter" <?=$date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
+                                                                        <option value="this-year" <?=$date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                                                        <option value="last-week" <?=$date === 'last-week' ? 'selected' : ''?>>Last week</option>
+                                                                        <option value="last-month" <?=$date === 'last-month' ? 'selected' : ''?>>Last month</option>
+                                                                        <option value="last-quarter" <?=$date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
+                                                                        <option value="last-year" <?=$date === 'last-year' ? 'selected' : ''?>>Last year</option>
+                                                                        <option value="last-365-days" <?=$date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="row mt-3">
                                                                 <div class="col-6">
-                                                                    <button type="button" class="nsm-button">
+                                                                    <button type="button" class="nsm-button" id="reset-button">
                                                                         Reset
                                                                     </button>
                                                                 </div>
                                                                 <div class="col-6">
-                                                                    <button type="button" class="nsm-button primary float-end">
+                                                                    <button type="button" class="nsm-button primary float-end" id="apply-button">
                                                                         Apply
                                                                     </button>
                                                                 </div>
@@ -193,7 +194,7 @@
                                                         <button type="button" class="nsm-button export-items">
                                                             <i class='bx bx-fw bx-export'></i> Export
                                                         </button>
-                                                        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                                        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_vendor_transactions_modal">
                                                             <i class='bx bx-fw bx-printer'></i>
                                                         </button>
                                                         <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -202,47 +203,47 @@
                                                         <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                                             <p class="m-0">Columns</p>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_type" id="chk_type" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
                                                                 <label for="chk_type" class="form-check-label">Type</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_no" id="chk_no" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
                                                                 <label for="chk_no" class="form-check-label">No.</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_payee" id="chk_payee" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_payee" class="form-check-input">
                                                                 <label for="chk_payee" class="form-check-label">Payee</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_method" id="chk_method" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_method" class="form-check-input">
                                                                 <label for="chk_method" class="form-check-label">Method</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_source" id="chk_source" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_source" class="form-check-input">
                                                                 <label for="chk_source" class="form-check-label">Source</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_category" id="chk_category" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_category" class="form-check-input">
                                                                 <label for="chk_category" class="form-check-label">Category</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_memo" id="chk_memo" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
                                                                 <label for="chk_memo" class="form-check-label">Memo</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_due_date" id="chk_due_date" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
                                                                 <label for="chk_due_date" class="form-check-label">Due date</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_balance" id="chk_balance" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
                                                                 <label for="chk_balance" class="form-check-label">Balance</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_status" id="chk_status" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
                                                                 <label for="chk_status" class="form-check-label">Status</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" checked="checked" onchange="showCol(this)" name="chk_attachments" id="chk_attachments" class="form-check-input">
+                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
                                                                 <label for="chk_attachments" class="form-check-label">Attachments</label>
                                                             </div>
                                                             <p class="m-0">Rows</p>
@@ -254,7 +255,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table class="nsm-table">
+                                            <table class="nsm-table" id="transactions-table">
                                                 <thead>
                                                     <tr>
                                                         <td class="table-icon text-center">
@@ -268,7 +269,7 @@
                                                         <td data-name="Source">SOURCE</td>
                                                         <td data-name="Category">CATEGORY</td>
                                                         <td data-name="Memo">MEMO</td>
-                                                        <td data-name="Due Date">DUE DATE</td>
+                                                        <td data-name="Due date">DUE DATE</td>
                                                         <td data-name="Balance">BALANCE</td>
                                                         <td data-name="Total">TOTAL</td>
                                                         <td data-name="Status">STATUS</td>
@@ -279,59 +280,73 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php if(count($transactions) > 0) : ?>
+                                                    <?php foreach($transactions as $transaction) : ?>
                                                     <tr>
                                                         <td>
                                                             <div class="table-row-icon table-checkbox">
-                                                                <input class="form-check-input select-one table-select" type="checkbox">
+                                                                <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
                                                             </div>
                                                         </td>
-                                                        <td>07/03/2022</td>
-                                                        <td>Check</td>
-                                                        <td>123</td>
-                                                        <td>Test Payee</td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td><?=$transaction['date']?></td>
+                                                        <td><?=$transaction['type']?></td>
+                                                        <td><?=$transaction['number']?></td>
+                                                        <td><?=$transaction['payee']?></td>
+                                                        <td><?=$transaction['method']?></td>
+                                                        <td><?=$transaction['source']?></td>
                                                         <td>
-                                                            <select class="nsm-field form-select" name="row_category[]">
-                                                                <?php foreach($categoryAccs as $type => $categories) : ?>
-                                                                <?php if(count($categories) > 0) : ?>
-                                                                <optgroup label="<?=$type?>">
-                                                                    <?php foreach($categories as $category) : ?>
-                                                                        <option value="<?=$category->id?>"><?=$category->name?></option>
-                                                                    <?php endforeach; ?>
-                                                                </optgroup>
-                                                                <?php endif; ?>
-                                                                <?php endforeach; ?>
+                                                            <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
+                                                            <select name="expense_account[]" class="form-control nsm-field">
+                                                                <option value="<?=$transaction['category']['id']?>"><?=$transaction['category']['name']?></option>
                                                             </select>
+                                                            <?php else : ?>
+                                                            <?=$transaction['category']?>
+                                                            <?php endif; ?>
                                                         </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>$0.00</td>
-                                                        <td>$100.00</td>
-                                                        <td><span class="text-success fw-bold">Paid</span></td>
-                                                        <td></td>
-                                                        <td>
-                                                            <div class="dropdown table-management">
-                                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                                </a>
-                                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                                    <li>
-                                                                        <a class="dropdown-item" href="#">View/Edit</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a class="dropdown-item" href="#">Delete</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a class="dropdown-item" href="#">Void</a>
-                                                                    </li>
-                                                                </ul>
+                                                        <td><?=$transaction['memo']?></td>
+                                                        <td><?=$transaction['due_date']?></td>
+                                                        <td><?=$transaction['balance']?></td>
+                                                        <td><?=$transaction['total']?></td>
+                                                        <td><?=$transaction['status']?></td>
+                                                        <td style="overflow: unset">
+                                                            <?php if(count($transaction['attachments']) > 0) : ?>
+                                                                <div class="dropdown table-management">
+                                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                                        <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px">
+                                                                        <?php foreach($transaction['attachments'] as $attachment) : ?>
+                                                                        <li>
+                                                                            <a href="#" class="dropdown-item view-attachment" data-href="/uploads/accounting/attachments/<?=$attachment->stored_name?>">
+                                                                                <div class="row">
+                                                                                    <div class="col-5 pr-0">
+                                                                                        <?=in_array($attachment->file_extension, ['jpg', 'jpeg', 'png']) ? "<img src='/uploads/accounting/attachments/$attachment->stored_name' class='m-auto w-100'>" : "<div class='bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white'><p class='m-0'>NO PREVIEW AVAILABLE</p></div>"?>
+                                                                                    </div>
+                                                                                    <div class="col-7">
+                                                                                        <div class="d-flex align-items-center h-100 w-100">
+                                                                                            <span class="text-truncate"><?=$attachment->uploaded_name.'.'.$attachment->file_extension?></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <?php endforeach; ?>
+                                                                    </ul>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td><?=$transaction['manage']?></td>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                    <?php else : ?>
+                                                    <tr>
+                                                        <td colspan="15">
+                                                            <div class="nsm-empty">
+                                                                <span>No results found.</span>
                                                             </div>
                                                         </td>
                                                     </tr>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>

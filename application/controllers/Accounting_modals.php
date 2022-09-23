@@ -16223,7 +16223,8 @@ class Accounting_modals extends MY_Controller
     public function get_existing_attachments_modal($type)
     {
         $this->page_data['type'] = $type;
-        $this->load->view('accounting/modals/attachments_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/attachments_modal', $this->page_data);
+        // $this->load->view('accounting/modals/attachments_modal', $this->page_data);
     }
 
     public function attach($type, $linkedId)

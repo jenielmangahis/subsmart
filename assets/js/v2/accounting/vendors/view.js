@@ -1,6 +1,6 @@
 const currUrl = window.location.href;
 const urlSplit = currUrl.split('/');
-const vendorId = urlSplit[urlSplit.length - 1];
+const vendorId = urlSplit[urlSplit.length - 1].includes('?') ? urlSplit[urlSplit.length - 1].split('?')[0].replace('#', '') : urlSplit[urlSplit.length - 1].replace('#', '');
 const vendorName = $('span#vendor-display-name').html();
 
 var attachmentId = [];
@@ -85,7 +85,15 @@ var previewAttachments = new Dropzone('#previewVendorAttachments', {
     }
 });
 
-$('.dropdown-menu.table-settings').on('click', function(e) {
+$("#transactions-table").nsmPagination({
+    itemsPerPage: 50
+});
+
+$('#filter-type, #filter-date').select2({
+    minimumResultsForSearch: -1
+});
+
+$('.dropdown-menu.table-settings, .dropdown-menu.p-3').on('click', function(e) {
     e.stopPropagation();
 });
 
@@ -400,4 +408,140 @@ $('#new-cc-payment').on('click', function(e) {
 
         $('#payDownCreditModal').modal('show');
     });
+});
+
+$('#show-existing-attachments').on('click', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/get-existing-attachments-modal/vendor', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#existing-attachments-modal #attachment-types').select2({
+            minimumResultsForSearch: -1,
+            dropdownParent: $('#existing-attachments-modal')
+        });
+
+        $('#existing-attachments-modal #attachment-types').trigger('change');
+
+        $('#existing-attachments-modal').modal('show');
+    });
+});
+
+$(document).on('click', '#existing-attachments-modal .add-attachment', function(e) {
+    e.preventDefault();
+    var id = e.currentTarget.dataset.id;
+
+    $.get('/accounting/get-attachment/'+id, function(res) {
+        var attachment = JSON.parse(res);
+
+        attachmentId.push(attachment.id);
+        var mockFile = {
+            name: `${attachment.uploaded_name}.${attachment.file_extension}`,
+            size: parseInt(attachment.size),
+            dataURL: base_url+"uploads/accounting/attachments/" + attachment.stored_name,
+            accepted: true
+        };
+        previewAttachments.emit("addedfile", mockFile);
+        attachedFiles.push(mockFile);
+
+        previewAttachments.createThumbnailFromUrl(mockFile, previewAttachments.options.thumbnailWidth, previewAttachments.options.thumbnailHeight, previewAttachments.options.thumbnailMethod, true, function(thumbnail) {
+            previewAttachments.emit('thumbnail', mockFile, thumbnail);
+        });
+        previewAttachments.emit("complete", mockFile);
+    });
+
+    var data = new FormData();
+    data.set('id', id);
+    $.ajax({
+        url: '/accounting/attach/vendor/'+vendorId,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            $('#existing-attachments-modal #attachment-types').trigger('change');
+        }
+    })
+});
+
+$('#transactions-table tbody select[name="expense_account[]"]').each(function() {
+    $(this).select2({
+        ajax: {
+            url: '/accounting/get-dropdown-choices',
+            dataType: 'json',
+            data: function(params) {
+                var query = {
+                    search: params.term,
+                    type: 'public',
+                    field: 'expense-account'
+                }
+
+                // Query parameters will be ?search=[term]&type=public&field=[type]
+                return query;
+            }
+        },
+        templateResult: formatResult,
+        templateSelection: optionSelect
+    });
+});
+
+$('#apply-button').on('click', function() {
+    var filterType = $('#filter-type').val();
+    var filterDate = $('#filter-date').val();
+
+    var url = `${base_url}accounting/vendors/view/${vendorId}?`;
+
+    url += filterType !== 'all' ? `type=${filterType}&` : '';
+    url += filterDate !== 'all' ? `date=${filterDate}` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&') {
+        url = url.slice(0, -1); 
+    }
+    location.href = url;
+});
+
+$('#reset-button').on('click', function() {
+    location.href = `${base_url}accounting/vendors/view/${vendorId}`;
+});
+
+$('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
+    var chk = $(this);
+    var dataName = $(this).next().text();
+
+    var index = $(`#transactions-table thead td[data-name="${dataName}"]`).index();
+    $(`#transactions-table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index]).show();
+        } else {
+            $($(this).find('td')[index]).hide();
+        }
+    });
+
+    $(`#print_vendor_transactions_modal table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
+
+    $(`#print_preview_vendor_transactions_modal #vendor_transactions_table_print tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
+});
+
+$("#btn_print_vendor_transactions").on("click", function() {
+    $("#vendor_transactions_table_print").printThis();
 });

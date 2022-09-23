@@ -639,7 +639,7 @@ class Expenses extends MY_Controller
 
                             if($purchOrder->status === '1') {
                                 $manageCol .= '<li>
-                                    <a class="dropdown-item copy-to-bill" href="#">Send</a>
+                                    <a class="dropdown-item" href="#">Send</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item copy-to-bill" href="#">Copy to bill</a>

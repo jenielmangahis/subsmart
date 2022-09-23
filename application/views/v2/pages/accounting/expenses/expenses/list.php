@@ -299,7 +299,6 @@
                             <td><?=$transaction['balance']?></td>
                             <td><?=$transaction['total']?></td>
                             <td><?=$transaction['status']?></td>
-                            <td></td>
                             <td style="overflow: unset">
                                 <?php if(count($transaction['attachments']) > 0) : ?>
                                     <div class="dropdown table-management">

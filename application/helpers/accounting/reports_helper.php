@@ -99,92 +99,93 @@ if(!function_exists('estimateCols')){
         $estimateCols = array(
             array(
                 'name' => 'AMOUNT',
-                'description' => 'grand_total',
+                'description' => 'estimates.grand_total',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'ACCEPTED DATE',
-                'description' => 'accepted_date',
+                'description' => 'estimates.accepted_date',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'BILLING ADDRESS',
-                'description' => 'billing_address',
+                'description' => 'estimates.billing_address',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'CREATED BY',
-                'description' => 'estimate_number',
+                'description' => 'estimates.estimate_number',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'CUSTOMER MESSAGE',
-                'description' => 'customer_message',
+                'description' => 'estimates.customer_message',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'DATE',
-                'description' => 'estimate_date',
+                'description' => 'estimates.estimate_date',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'EMAIL',
-                'description' => 'email',
+                'description' => 'acs_profile.email',
                 'name_in' => 'customer'
             ),
             array(
                 'name' => 'EXPIRATION DATE',
-                'description' => 'expiry_date',
+                'description' => 'estimates.expiry_date',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'INVOICE #',
-                'description' => 'status',
+                'description' => 'estimates.status',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'LAST MODIFIED',
-                'description' => 'updated_at',
+                'description' => 'estimates.updated_at',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'NAME',
-                'description' => 'first_name',
+                'description' => 'acs_profile.first_name',
                 'name_in' => 'customer'
             ),
             array(
                 'name' => 'NUM',
-                'description' => 'estimate_number',
+                'description' => 'estimates.estimate_number',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'PHONE NUMBER',
-                'description' => 'phone_h',
+                'description' => 'acs_profile.phone_h',
                 'name_in' => 'customer'
             ),
             array(
                 'name' => 'SHIP DATE',
-                'description' => 'ship_date',
+                'description' => 'estimates.hip_date',
+                'name_in' => 'estimate'
             ),
             array(
                 'name' => 'SHIP VIA',
-                'description' => 'ship_via',
+                'description' => 'estimates.ship_via',
                 'name_in' => 'estimate'
 
             ),
             array(
                 'name' => 'SHIPPING ADDRESS',
-                'description' => 'billing_address',
+                'description' => 'estimates.billing_address',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'TAX AMOUNT',
-                'description' => 'tax1_total',
+                'description' => 'estimates.tax1_total',
                 'name_in' => 'estimate'
             ),
             array(
                 'name' => 'TRANSACTION TYPE',
-                'description' => 'estimate_type',
+                'description' => 'estimates.estimate_type',
                 'name_in' => 'estimate'
             ),
         );

@@ -138,7 +138,7 @@
                     </div> 
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="submit" class="nsm-button success">Run Report</button>
+                    <button type="submit" class="nsm-button primary">Run Report</button>
                 </div>
             </div>
         </div>

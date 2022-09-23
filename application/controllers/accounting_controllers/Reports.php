@@ -445,22 +445,83 @@ class Reports extends MY_Controller {
 
     public function view_reports_data()
     {
+        $param = [];
         $input = $this->input->post();
         $customerCol = json_decode($input['customerCol']);
         $estimateCol = json_decode($input['estimateCol']);
+        $estimateColText = json_decode($input['estimateColText']);
+        $customerColText = json_decode($input['customerColText']);
+        $header['header'] = array_merge($customerColText,$estimateColText);
+        $group_by = $input['group_by'];
+        $date_from = $input['date_from'];
+        $date_to = $input['date_to'];
         
+        $filter_estimate_data = array(
+            'select' => 'id',
+            'table' => 'estimates',
+            'where' => array(
+                'estimate_date >=' => $date_from,
+                'estimate_date <=' => $date_to,
+            )
+            );
+
+        if(($date_from != 'NaN-NaN-NaN') && ($date_to != 'NaN-NaN-NaN')){
+            $filtered_data = $this->estimate_model->getEstimatesByCustomerWithParam($filter_estimate_data);
+        }
         $customer = ($input['customerCol'] != '[]') ? selectCustomerEstimate($customerCol, 'customer') : 'null';
         $estimate = ($input['customerCol'] != '[]') ? selectCustomerEstimate($estimateCol, 'estimate') : 'null';
 
-        $selected_col = array_merge($customer,$estimate);
-        $get_estimate_data = array(
-            "select" => $selected_col,
-            "table" => 'estimates',
-            "where" => array(
-                'company_id' => logged('company_id')
-            )
-            );
-        $data_arr = array("success" => true, "input" => $selected_col);
+        if($customer != 'null' && $estimate != 'null'){
+            $selected_col = array_merge($customerCol,$estimateCol);
+        }else{
+            if($customer != 'null'){
+                $selected_col = $customer;
+            }elseif($estimate != 'null'){
+                $selected_col = $estimate;
+
+            }
+        }
+
+        //get where param
+        $where_date = [];
+        $where = [];
+        $date_filter = [];
+        if(!empty($filtered_data)){
+            foreach($filtered_data as $fltrData){
+                array_push($where_date, $fltrData->id);
+            }
+            $param['where_in'] = array('id' => $where_date);
+            $date_filter = array('estimates.id' => implode(',',$where_date));
+            //array_push($where, $date_filter);
+        }
+        $company = array('estimates.company_id' => logged('company_id'));
+        $user = array('estimates.user_id' => logged('id'));
+        $where = array_merge($company, $user);
+        $param['where'] = $where;
+        
+        //get select param
+        if(!empty($selected_col)){
+            $param['select'] = $selected_col;
+        }   
+        //get table param
+        $param['table'] = 'estimates';
+        //get join param
+        $param['join'] = array('acs_profile' => 'acs_profile.prof_id = estimates.customer_id');
+        //get group param
+        if(!empty($group_by)){
+            $param['group_by'] = "estimates.".$group_by;
+        }
+
+        $column = [];
+        for($i=0; $i<count($selected_col); $i++){
+            $pos = substr($selected_col[$i],strpos($selected_col[$i], '.')+1);
+            $trimmed_pos = str_replace(' ','',$pos);
+            array_push($column, $trimmed_pos);
+        }
+        $header['column'] = $column;
+        $estimate_data = $this->estimate_model->getEstimatesByCustomerWithParam($param);
+
+        $data_arr = array("success" => true, "data" => $estimate_data, "header" => $header, "column" => $column);
         die(json_encode($data_arr));
     }
 }
