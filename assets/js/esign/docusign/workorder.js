@@ -4,7 +4,7 @@
   const $table = $("#templatesTable");
   const workorderId = $("#workorderId").val();
   const jobId = $("#esignJobId").val();
-  const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const urlPrefix = "";
 
   function addEventListeners() {
     $esignButton.on("click", function (event) {

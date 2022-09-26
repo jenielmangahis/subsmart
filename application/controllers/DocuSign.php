@@ -1238,7 +1238,7 @@ SQL;
 
     private function sendEnvelope(array $envelope, array $recipient, bool $isSelfSigned = false)
     {
-        $mail = getMailInstance(['subject' => $envelope['subject']]);
+        $mail = email__getInstance(['subject' => $envelope['subject']]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
         $template = file_get_contents($templatePath);
 

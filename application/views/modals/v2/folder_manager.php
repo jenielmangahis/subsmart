@@ -655,7 +655,7 @@ foreach ($categories as $category) {
 
 <script>
 window.addEventListener('DOMContentLoaded', async (event) => {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
   const { data } = await response.json();
 

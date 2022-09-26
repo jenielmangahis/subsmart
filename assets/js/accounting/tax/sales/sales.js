@@ -32,7 +32,7 @@ class Accounting__TaxItem {
   }
 
   onShowModal(data) {
-    const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+    const prefixURL = "";
     const $dataTypes = this.$modal.find("[data-type]");
     const $sidebar = $("#addAdjustment");
     const $sidebarCloseBtn = $sidebar.find(".addAdjustment__close");
@@ -1102,7 +1102,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+const prefixURL = "";
 
 async function fetchGetTaxedInvoices(payload = {}) {
   const endpoint = `${prefixURL}/AccountingSales/apiGetTaxedInvoices`;

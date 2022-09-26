@@ -1,4 +1,4 @@
-const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+const prefixURL = "";
 
 const columns = {
   formName: (_, __, row) => {

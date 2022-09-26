@@ -25,7 +25,7 @@ function Step1(params = {}) {
   let templates = [];
   let onSelect = params.onSelect || (() => {});
 
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   function getVaultDocumentById(id) {
     return vaultDocuments.find(({ file_id }) => file_id == id);

@@ -95,7 +95,7 @@
 <script>
     (async () => {
         const $esignLink = document.getElementById("esignlink");
-        const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+        const prefixURL = "";
 
         const response = await fetch(`${prefixURL}/DocuSign/apiGetDefaultTemplate`);
         const json = await response.json();

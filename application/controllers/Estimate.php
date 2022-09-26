@@ -1550,33 +1550,82 @@ class Estimate extends MY_Controller
     $message2 = $this->load->view('estimate/send_email_acs', $data, true);
     $filename = $workData->company_representative_signature;
 
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-            $server    = MAIL_SERVER;
-            $port      = MAIL_PORT ;
-            $username  = MAIL_USERNAME;
-            $password  = MAIL_PASSWORD;
-            $from      = MAIL_FROM;
-            $subject   = 'nSmarTrac: Estimate Details';
+        // include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        //     $server    = MAIL_SERVER;
+        //     $port      = MAIL_PORT ;
+        //     $username  = MAIL_USERNAME;
+        //     $password  = MAIL_PASSWORD;
+        //     $from      = MAIL_FROM;
+        //     $subject   = 'nSmarTrac: Estimate Details';
+        //     $mail = new PHPMailer;
+        //     //$mail->SMTPDebug = 4;
+        //     $mail->isSMTP();
+        //     $mail->Host = $server;
+        //     $mail->SMTPAuth = true;
+        //     $mail->Username   = $username;
+        //     $mail->Password   = $password;
+        //     $mail->getSMTPInstance()->Timelimit = 5;
+        //     $mail->SMTPSecure = 'ssl';
+        //     $mail->Timeout    =   10; // set the timeout (seconds)
+        //     $mail->Port = $port;
+        //     $mail->From = $from;
+        //     $mail->FromName = 'NsmarTrac';
+
+        //     $mail->addAddress($recipient, $recipient);
+        //     $mail->isHTML(true);
+        //     // $email->attach("/home/yoursite/location-of-file.jpg", "inline");
+        //     $mail->Subject = $subject;
+        //     $mail->Body    = $message2;
+        //     // $cid = $email->attachment_cid($filename);
+
+                
+            $config = array_replace([
+                'isHTML' => true,
+                'subject' => 'nSmarTrac',
+            ], $config);
+        
+            $host = 'smtp.gmail.com';
+            $port = 465;
+            $username = 'sales@nsmartrac.com';
+            $password = 'bysebhxwxgheiryb';
+            $from = $username;
+            $subject = $config['subject'];
+        
+            include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
             $mail = new PHPMailer;
-            //$mail->SMTPDebug = 4;
             $mail->isSMTP();
-            $mail->Host = $server;
-            $mail->SMTPAuth = true;
-            $mail->Username   = $username;
-            $mail->Password   = $password;
             $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->Host = $host;
+            $mail->SMTPAuth = true;
+            $mail->Username = $username;
+            $mail->Password = $password;
             $mail->SMTPSecure = 'ssl';
-            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Timeout = 10; // seconds
             $mail->Port = $port;
             $mail->From = $from;
-            $mail->FromName = 'NsmarTrac';
+            $mail->FromName = 'nSmarTrac';
+            $mail->Subject = $subject;
+            // $mail->IsHTML($config['isHTML']);
 
+                
+            // $mail = new PHPMailer;
+            // $mail->SMTPDebug = 4;
+            // $mail->isSMTP();
+            // $mail->Host = $server;
+            // $mail->SMTPAuth = true;
+            // $mail->Username   = $username;
+            // $mail->Password   = $password;
+            // $mail->getSMTPInstance()->Timelimit = 5;
+            // $mail->SMTPSecure = 'ssl';
+            // $mail->Timeout    =   10; // set the timeout (seconds)
+            // $mail->Port = $port;
+            // $mail->From = $from;
+            // $mail->FromName = 'NsmarTrac';
             $mail->addAddress($recipient, $recipient);
             $mail->isHTML(true);
-            // $email->attach("/home/yoursite/location-of-file.jpg", "inline");
-            $mail->Subject = $subject;
+            // $mail->Subject = $subject;
             $mail->Body    = $message2;
-            // $cid = $email->attachment_cid($filename);
+
 
 
             $json_data['is_success'] = 1;
@@ -1705,6 +1754,7 @@ class Estimate extends MY_Controller
             $this->session->set_flashdata('alert-type', 'danger');
             $this->session->set_flashdata('alert', 'Cannot find estimate');
         }
+
 
         redirect('estimate');
     }

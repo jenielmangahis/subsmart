@@ -1,4 +1,4 @@
-export const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+export const prefixURL = "";
 
 export function getLabels() {
   return http.get(`${prefixURL}/CustomerForms/apiGetLabels`);

@@ -306,7 +306,7 @@
   });
 })();
 
-window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+window.prefixURL = "";
 
 async function fetchAgencies() {
   const includeInactive = shouldIncludeInactive();

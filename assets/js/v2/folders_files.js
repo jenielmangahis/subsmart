@@ -3112,7 +3112,7 @@ $(document).ready(function(){
   }
   
   function createDocusignTemplate(file, options = {}) {
-      const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+      const prefixURL = "";
   
       const { id, name, created_at, is_shared } = file;
       const { onClick = null, onDoubleClick = null } = options;
@@ -3537,7 +3537,7 @@ $(document).ready(function(){
   
   function showUsersModal(templateId) {
     const $table = $("#usersTable");
-    const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
+    const urlPrefix = "";
   
     const table = $table.DataTable({
       searching: false,
@@ -3625,7 +3625,7 @@ $(document).ready(function(){
   
   
   function showDeleteTemplateModal(templateId) {
-    const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
+    const urlPrefix = "";
   
     const $modal = $("#deleteTemplateModal");
     const $submit = $modal.find(".btn-primary");

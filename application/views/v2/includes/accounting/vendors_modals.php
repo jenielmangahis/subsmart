@@ -27,7 +27,7 @@
                             <td></td>
                             <td><?=$vendor->phone?></td>
                             <td><?=$vendor->email?></td>
-                            <td></td>
+                            <td><?=count($this->accounting_attachments_model->get_attachments('Vendor', $vendor->id)) > 0 ? count($this->accounting_attachments_model->get_attachments('Vendor', $vendor->id)) : ''?></td>
                             <td>
                                 <?php
                                     $balance = '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',');
@@ -85,7 +85,7 @@
                             <td></td>
                             <td><?=$vendor->phone?></td>
                             <td><?=$vendor->email?></td>
-                            <td></td>
+                            <td><?=count($this->accounting_attachments_model->get_attachments('Vendor', $vendor->id)) > 0 ? count($this->accounting_attachments_model->get_attachments('Vendor', $vendor->id)) : ''?></td>
                             <td>
                                 <?php
                                     $balance = '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',');

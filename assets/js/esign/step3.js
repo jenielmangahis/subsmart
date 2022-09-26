@@ -25,7 +25,7 @@ function Step3() {
   let isTemplate = undefined;
   let userInfo = undefined;
   let files = [];
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
@@ -1212,7 +1212,7 @@ function handleSelfSigningOnSubmit(args) {
   const $subject = $modal.find("#selfSigningSend__subject");
   const $message = $modal.find("#selfSigningSend__message");
 
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   const filenames = files.map((file) => file.name);
   const subject = `Please eSign: ${filenames.join(", ")}`;

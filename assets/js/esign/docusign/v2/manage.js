@@ -1,4 +1,4 @@
-const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+const prefixURL = "";
 const PDFJS = pdfjsLib;
 
 const columns = {

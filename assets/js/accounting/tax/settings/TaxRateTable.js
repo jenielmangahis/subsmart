@@ -107,7 +107,7 @@ export class TaxRateTable {
       },
     };
 
-    const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+    const prefixURL = "";
     const includeInactive = this.shouldIncludeInactive();
 
     const actions = {

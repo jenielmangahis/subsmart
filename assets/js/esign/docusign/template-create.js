@@ -1,7 +1,7 @@
 function TemplateCreate() {
   const PDFJS = pdfjsLib;
 
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const validFileExtensions = ["pdf"];
 
   const maxRecipients = 10;
