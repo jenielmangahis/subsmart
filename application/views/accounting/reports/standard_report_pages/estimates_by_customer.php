@@ -1,5 +1,80 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 
+<style>
+    .modal-print{
+        width: 100%;
+    }
+    .change-col {
+        margin-top: 20px;
+        color: blue;
+        cursor: pointer;
+    }
+    .change-col:hover{
+        text-decoration: underline !important;
+    }
+    .changeCol{
+        display: none;
+    }
+    .modal.right .modal-dialog {
+		position: fixed;
+		margin: auto;
+		width: 320px;
+		height: 100%;
+		-webkit-transform: translate3d(0%, 0, 0);
+		    -ms-transform: translate3d(0%, 0, 0);
+		     -o-transform: translate3d(0%, 0, 0);
+		        transform: translate3d(0%, 0, 0);
+	}
+
+	.modal.right .modal-content {
+		height: 100%;
+		overflow-y: auto;
+        border-radius: 50px !important;
+	}
+        
+	.modal.right.fade .modal-dialog {
+		right: -320px;
+		-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+		   -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+		     -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+		        transition: opacity 0.3s linear, right 0.3s ease-out;
+	}
+	
+	.modal.right.fade.in .modal-dialog {
+		right: 0;
+	}
+
+	.modal-content {
+		border-radius: 0;
+		border: none;
+	}
+
+	.modal-header {
+		border-bottom-color: #EEEEEE;
+	}
+    .czLabel {
+        cursor: pointer;
+    }
+    .czLabel i {
+        color: black !important;
+        font-size: 13px;
+    }
+    #general{
+        display: none;
+    }
+    #column{
+        display: none;
+    }
+    .column{
+        margin-top: 20px;
+    }
+    .head_foot{
+        display: none;
+    }
+    .header-footer{
+        margin-top: 20px;
+    }
+</style>
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -95,18 +170,18 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
+                            <a type="button" class="nsm-button demo" data-bs-toggle="modal" data-bs-target="#customizeModal">
                                 <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
+                            </a>
                             <button type="button" class="nsm-button primary">
                                 <i class='bx bx-fw bx-save'></i> Save customization
                             </button>
                         </div>
                     </div>
                 </div>
-
+<!-- Modal -->
                 <div class="row g-3">
-                    <div class="col-12 col-md-8 offset-md-2">
+                    <div class="col-12 col-md-8 offset-md-2" id="main">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -169,7 +244,7 @@
                                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                                 <i class='bx bx-fw bx-envelope'></i>
                                             </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                            <button type="button" class="nsm-button" id="printThis">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -385,6 +460,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <?php include viewPath('accounting/reports/reports_modals/estimates_by_customer_print') ?>
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
@@ -397,7 +473,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table w-100" id="defaultTbl">
                                     <thead>
                                         <tr>
                                             <td data-name="Date">DATE</td>
@@ -411,7 +487,17 @@
                                         </tr>
                                     </thead>
                                     <tbody id="customerTbl">
+                                        <tr>
+                                            <td>hh</td>
+                                        </tr>
                                     </tbody>
+                                </table>
+
+                                <table class="nsm-table" id="filtered_tbl">
+                                    <thead>
+                                        <tr id="head_tbl"></tr>
+                                    </thead>
+                                    <tbody id="body_tbl"></tbody>
                                 </table>
                             </div>
                             <div class="nsm-card-footer text-center">
@@ -425,11 +511,18 @@
     </div>
 </div>
 
+<?php include viewPath('accounting/reports/reports_modals/estimates_by_customer_modal'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<!-- <script type="text/javascript" src="<?= base_url("accounting/reports/reports_js/printThis.js") ?>"></script> -->
+<script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 
-<script>
+
+<script type="text/javascript">
     $(document).ready(function(){
+        $("#PrinTable").on("click", function() {
+            $("#defaultTbl").printThis();
+        });
         fetch('<?= base_url('accounting_controllers/reports/estimatesByCustomer') ?>',{
 
         }).then(response => response.json()).then(response => {
@@ -464,3 +557,4 @@
         })
     })
 </script>
+<?php include viewPath('accounting/reports/reports_js/reports_gen_js') ?>

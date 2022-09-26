@@ -9,7 +9,7 @@ var original_fname_vc = [];
 var siteURL = document.getElementById('siteurl').value;
 var attachment = null;
 var attachment_id = [];
-window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+window.prefixURL = "";
 
 $(document).ready(function() {
     $('.loader').hide();

@@ -81,7 +81,7 @@
                                     <div class="col-12 col-md-2">
                                         <div class="grid-mb">
                                             <label for="name">Name</label>
-                                            <select name="name" id="person_tracking" class="form-control nsm-field" required>
+                                            <select name="person_tracking" id="person_tracking" class="form-control nsm-field" required>
                                                 <option value="" disabled <?=!isset($timeActivity) ? 'selected' : ''?>>Whose time are you tracking?</option>
                                                 <?php if(isset($timeActivity)) : ?>
                                                 <option value="<?=$timeActivity->name_key.'-'.$timeActivity->name_id?>" selected><?=$timeActivity->name?></option>

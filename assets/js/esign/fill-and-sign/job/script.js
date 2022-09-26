@@ -24,7 +24,7 @@ function JobFillAndEsign() {
   let step2 = null;
   let documentObj = null;
   let signaturePad = null;
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   function onSelect(event) {
     let $target = $(event.target);

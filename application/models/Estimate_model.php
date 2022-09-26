@@ -716,7 +716,19 @@ class Estimate_model extends MY_Model
         }else{
             $this->db->select('*');
         }
-
+        if(array_key_exists("where_in", $param)){
+            foreach($param['where_in'] as $key => $val){
+                if($val != ''){
+                    $this->db->where_in($key, $val);
+                }else{
+                    if($val == 0){
+                        $this->db->where_in($key, $val);
+                    }else{
+                        $this->db->where_in($key);
+                    }
+                }
+            }
+        }
         if(array_key_exists("where", $param)){
             foreach($param['where'] as $key => $val){
                 if($val != ''){
@@ -743,9 +755,18 @@ class Estimate_model extends MY_Model
                 }
             }
         }
+        
         if(array_key_exists("group_by",$param) && $param['group_by'] != NULL ){
             $this->db->group_by($param['group_by']);
         }
+
+        if(array_key_exists("join", $param)){
+            foreach($param['join'] as $key => $val){
+                if($val != ''){
+                    $this->db->join($key, $val);
+                }
+            }
+        }   
 
         $query = $this->db->get();
         return $query->result();

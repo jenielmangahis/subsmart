@@ -1,4 +1,4 @@
-export const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+export const prefixURL = "";
 
 export function getItems() {
   return http.get(`${prefixURL}/SlideShare/apiGetItems`);

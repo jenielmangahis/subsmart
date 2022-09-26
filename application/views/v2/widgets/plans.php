@@ -137,7 +137,7 @@
 
 <script>
     window.document.addEventListener("DOMContentLoaded", async () => {
-        const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+        const prefixURL = "";
 
         const $modal = document.getElementById("rsp_users--modal");
         const $wrapper = $modal.querySelector(".users-wrapper");

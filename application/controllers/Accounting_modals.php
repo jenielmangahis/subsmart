@@ -1660,7 +1660,7 @@ class Accounting_modals extends MY_Controller
     private function single_time_activity($data)
     {
         $this->form_validation->set_rules('date', 'Date', 'required');
-        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('person_tracking', 'Name', 'required');
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('service', 'Service', 'required');
         if ($data['billable'] === 1 || $data['billable'] === "1") {
@@ -1682,7 +1682,7 @@ class Accounting_modals extends MY_Controller
             $return['message'] = 'Error';
         } else {
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
-            $name = explode('-', $data['name']);
+            $name = explode('-', $data['person_tracking']);
 
             if(isset($data['start_end_time'])) {
                 $startTime = strtotime($data['start_time']);
@@ -3643,7 +3643,7 @@ class Accounting_modals extends MY_Controller
 
     private function bill($data)
     {
-        $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
+        $this->form_validation->set_rules('vendor', 'Vendor', 'required');
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
@@ -3701,7 +3701,7 @@ class Accounting_modals extends MY_Controller
         } else {
             $billData = [
                 'company_id' => logged('company_id'),
-                'vendor_id' => $data['vendor_id'],
+                'vendor_id' => $data['vendor'],
                 'mailing_address' => nl2br($data['mailing_address']),
                 'term_id' => $data['term'],
                 'bill_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['bill_date'])) : null,
@@ -3721,14 +3721,14 @@ class Accounting_modals extends MY_Controller
             if ($billId) {
                 if(!isset($data['template_name'])) {
                     if(floatval($data['total_amount']) < 0) {
-                        $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+                        $vendor = $this->vendors_model->get_vendor_by_id($data['vendor']);
         
                         $vendorCredits = floatval(str_replace(',', '', $vendor->vendor_credits)) - floatval(str_replace(',', '', $data['total_amount']));
                         $vendorData = [
                             'vendor_credits' => floatval(str_replace(',', '', $vendorCredits))
                         ];
         
-                        $this->vendors_model->updateVendor($data['vendor_id'], $vendorData);
+                        $this->vendors_model->updateVendor($data['vendor'], $vendorData);
                     }
 
                     if(!is_null($data['linked_transaction'])) {
@@ -8648,6 +8648,18 @@ class Accounting_modals extends MY_Controller
                     'Other Income',
                     'Other Expense'
                 ];
+
+                if($this->input->get('modal') === 'vendor-modal') {
+                    $accountTypes = [
+                        'Expenses',
+                        'Other Expense',
+                        'Cost of Goods Sold'
+                    ];
+
+                    $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
+                    $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
+                    $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
+                }
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
@@ -16211,7 +16223,8 @@ class Accounting_modals extends MY_Controller
     public function get_existing_attachments_modal($type)
     {
         $this->page_data['type'] = $type;
-        $this->load->view('accounting/modals/attachments_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/attachments_modal', $this->page_data);
+        // $this->load->view('accounting/modals/attachments_modal', $this->page_data);
     }
 
     public function attach($type, $linkedId)

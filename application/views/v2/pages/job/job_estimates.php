@@ -721,12 +721,11 @@ add_footer_js(array(
     'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
     //'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-    //'assets/textEditor/summernote-bs4.js',
-    'assets/js/esign/docusign/workorder.js',
-    'assets/js/esign/jobs/esign.js',
+    'assets/textEditor/summernote-bs4.js',
+
 ));
+include viewPath('includes/footer');
 ?>
-<?php include viewPath('v2/includes/footer'); ?>
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>

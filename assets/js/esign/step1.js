@@ -3,7 +3,7 @@ function Step1() {
   const PDFJS = pdfjsLib;
 
   const validFileExtensions = ["pdf"];
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   const $form = $("[data-form-step=1]");
   const $fileInput = $("#docFile");

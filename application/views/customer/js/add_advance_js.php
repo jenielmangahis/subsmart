@@ -404,7 +404,7 @@
             const payload = {};
             formArray.forEach(({ name, value }) => payload[name] = value);
             
-            const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+            const prefixURL = "";
             const response = await fetch(`${prefixURL}/Customer_Form/apiCheckDuplicate`, { 
                 method: "post", 
                 body: JSON.stringify(payload),

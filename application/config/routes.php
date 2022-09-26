@@ -537,7 +537,7 @@ $route['import/customer'] = 'accounting/import_customers';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
-$route['accounting/products-and-services/load']['post'] = 'accounting_controllers/products_and_services/load';
+// $route['accounting/products-and-services/load']['post'] = 'accounting_controllers/products_and_services/load';
 $route['accounting/products-and-services/item-form/(:any)'] = 'accounting_controllers/products_and_services/get_item_form/$1';
 $route['accounting/products-and-services/inactive/(:any)/(:any)']['DELETE'] = "accounting_controllers/products_and_services/inactive/$1/$2";
 $route['accounting/products-and-services/active/(:any)/(:any)'] = "accounting_controllers/products_and_services/active/$1/$2";
@@ -649,6 +649,7 @@ $route['accounting/vendors/update-attachments/(:any)']['post'] = 'accounting_con
 $route['accounting/vendors/remove-attachment/(:any)']['post'] = 'accounting_controllers/vendors/remove_attachment/$1';
 $route['accounting/vendors/(:any)/load-transactions']['post'] = 'accounting_controllers/vendors/load_transactions/$1';
 $route['accounting/vendors/(:any)/categorize-transactions/(:any)']['post'] = 'accounting_controllers/vendors/categorize_transactions/$1/$2';
+$route['accounting/vendors/(:any)/update-transaction-category']['post'] = 'accounting_controllers/vendors/update_transaction_category/$1';
 $route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/print_transaction/$1/$2';
 $route['accounting/vendors/print-multiple-transactions']['post'] = 'accounting_controllers/vendors/print_multiple';
 $route['accounting/vendors/(:any)/print-transactions']['post'] = 'accounting_controllers/vendors/print_transactions/$1';

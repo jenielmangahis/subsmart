@@ -1,7 +1,7 @@
-window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+window.prefixURL = "";
 
 export async function getRates() {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const response = await fetch(`${prefixURL}/AccountingSales/apiGetRates`);
   return response.json();
 }
