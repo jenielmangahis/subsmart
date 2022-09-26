@@ -299,9 +299,9 @@
                             <td><?=$transaction['balance']?></td>
                             <td><?=$transaction['total']?></td>
                             <td><?=$transaction['status']?></td>
-                            <td style="overflow: unset">
+                            <td class="overflow-visible">
                                 <?php if(count($transaction['attachments']) > 0) : ?>
-                                    <div class="dropdown table-management">
+                                    <div class="dropdown">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                             <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
                                         </a>

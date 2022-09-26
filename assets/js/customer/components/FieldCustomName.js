@@ -1,4 +1,4 @@
-const PREFIX_URL = location.hostname === "localhost" ? "/nsmartrac" : "";
+const PREFIX_URL = "";
 const CUSTOM_EVENT_NAME = "formfieldcustomnamesready";
 
 (() => {

@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="col-12">
-                        <div class="nsm-card primary">
+                        <div class="nsm-card primary overflow-visible">
                             <div class="nsm-card-content">
                                 <div class="nsm-tab">
                                     <nav>
@@ -144,7 +144,7 @@
                                                             <div class="row">
                                                                 <div class="col">
                                                                     <label for="filter-type">Type</label>
-                                                                    <select class="nsm-field form-select" name="filter_type" id="filter-type">
+                                                                    <select class="nsm-field form-select" name="filter_type" id="filter-type" data-applied="<?=empty($type) ? 'all' : $type?>">
                                                                         <option value="all" <?=empty($type) || $type === 'all' ? 'selected' : ''?>>All transactions</option>
                                                                         <option value="expenses" <?=$type === 'expenses' ? 'selected' : ''?>>Expenses</option>
                                                                         <option value="all-bills" <?=$type === 'all-bills' ? 'selected' : ''?>>All Bills</option>
@@ -161,7 +161,7 @@
                                                             <div class="row">
                                                                 <div class="col">
                                                                     <label for="filter-date">Date</label>
-                                                                    <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                                                                    <select class="nsm-field form-select" name="filter_date" id="filter-date" data-applied="<?=empty($date) ? 'all' : $date?>">
                                                                         <option value="all" <?=empty($date) || $date === 'all' ? 'selected' : ''?>>All dates</option>
                                                                         <option value="today" <?=$date === 'today' ? 'selected' : ''?>>Today</option>
                                                                         <option value="yesterday" <?=$date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
@@ -308,9 +308,9 @@
                                                         <td><?=$transaction['balance']?></td>
                                                         <td><?=$transaction['total']?></td>
                                                         <td><?=$transaction['status']?></td>
-                                                        <td style="overflow: unset">
+                                                        <td class="overflow-visible">
                                                             <?php if(count($transaction['attachments']) > 0) : ?>
-                                                                <div class="dropdown table-management">
+                                                                <div class="dropdown">
                                                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                                         <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
                                                                     </a>

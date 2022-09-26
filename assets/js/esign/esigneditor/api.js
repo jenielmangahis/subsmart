@@ -1,4 +1,4 @@
-export const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+export const prefixURL = "";
 
 export function getCategories() {
   return http.get(`${prefixURL}/EsignEditor/apiGetCategories`);

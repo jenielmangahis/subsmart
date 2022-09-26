@@ -40,7 +40,7 @@ function Step2({ documentId }) {
   let signaturePad = null;
   let isStoring = false;
   let link = null;
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
@@ -749,7 +749,7 @@ function Step2({ documentId }) {
 }
 
 async function generatePDF(documentId) {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   let documentPdf = null;
   let fields = [];

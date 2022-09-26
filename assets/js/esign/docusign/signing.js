@@ -15,7 +15,7 @@ function Signing(hash) {
 
   const $finishSigning = $("[data-action=finish]");
 
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   let data = null;
   let signaturePad = null;

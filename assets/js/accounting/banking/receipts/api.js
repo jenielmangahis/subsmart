@@ -1,4 +1,4 @@
-window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+window.prefixURL = "";
 export const prefixURL = window.prefixURL;
 
 export async function fetchReceipts(isReviewed = false) {

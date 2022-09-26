@@ -155,7 +155,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     return;
   }
 
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
   const { data } = await response.json();
 

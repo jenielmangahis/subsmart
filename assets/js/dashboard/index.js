@@ -1,4 +1,4 @@
-const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+const prefixURL = "";
 
 window.document.addEventListener("DOMContentLoaded", async () => {
   const widgets = document.querySelectorAll("[id^=widget_]");

@@ -1,4 +1,4 @@
-window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+window.prefixURL = "";
 
 export async function getPayrollTaxPayments() {
   const endpoint = `${window.prefixURL}/AccountingPayroll/apiGetPayrollTaxPayments`;

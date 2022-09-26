@@ -198,8 +198,33 @@
                             <td></td>
                             <td><?=$vendor->phone?></td>
                             <td><?=$vendor->email?></td>
-                            <td>
+                            <td class="overflow-visible">
                                 <?php $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendor->id) ?>
+                                <?php if(count($attachments) > 0) : ?>
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class="bx bx-fw"><?=count($attachments)?></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px">
+                                        <?php foreach($attachments as $attachment) : ?>
+                                        <li>
+                                            <a href="#" class="dropdown-item view-attachment" data-href="/uploads/accounting/attachments/<?=$attachment->stored_name?>">
+                                                <div class="row">
+                                                    <div class="col-5 pr-0">
+                                                        <?=in_array($attachment->file_extension, ['jpg', 'jpeg', 'png']) ? "<img src='/uploads/accounting/attachments/$attachment->stored_name' class='m-auto w-100'>" : "<div class='bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white'><p class='m-0'>NO PREVIEW AVAILABLE</p></div>"?>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <div class="d-flex align-items-center h-100 w-100">
+                                                            <span class="text-truncate"><?=$attachment->uploaded_name.'.'.$attachment->file_extension?></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <?php

@@ -1,5 +1,5 @@
 function Pub() {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const urlParams = new URLSearchParams(window.location.search);
   const hash = urlParams.get("hash");
 

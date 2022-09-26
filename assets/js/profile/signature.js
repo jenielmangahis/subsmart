@@ -13,7 +13,7 @@ function Signature() {
 
   const $signatureHolder = $(".signature-holder");
 
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   async function fetchUserSignature() {
     const endpoint = `${prefixURL}/Profile/getUserSignature`;

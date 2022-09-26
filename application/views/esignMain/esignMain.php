@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 
 <script>
 window.addEventListener('DOMContentLoaded', async (event) => {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
   const { data } = await response.json();
 

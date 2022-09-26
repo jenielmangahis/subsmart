@@ -193,7 +193,7 @@ function Step2() {
   const $formList = $("#setup-recipient-list");
   const $addRecipientButton = $("#add-recipient-button");
   const $formAdderButton = $(".esignBuilder__addForm");
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
 
   async function fetchRecipients() {
     const urlParams = new URLSearchParams(window.location.search);

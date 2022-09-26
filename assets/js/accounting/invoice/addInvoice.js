@@ -7,7 +7,7 @@ const selectors = {
 };
 
 (async () => {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const { Accounting__DropdownWithSearch } = await import("../tax/dropdown-with-search/dropdown-with-search.js"); // prettier-ignore
   const { rateAgencies } = await import("../tax/settings/rateAgencies.js");
 
@@ -142,7 +142,7 @@ const selectors = {
 })();
 
 async function fetchCustomRates() {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const prefixURL = "";
   const response = await fetch(`${prefixURL}/AccountingSales/apiGetRates`);
   return response.json();
 }

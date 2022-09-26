@@ -37,13 +37,13 @@ if ($addRecipients) {
                     </li>
 
                     <li class="">
-                        <a class="nsm-page-link" href="<?=base_url('docusign_v2/manage?view=inbox')?>">
+                        <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=inbox')?>">
                             <span>Manage</span>
                         </a>
                     </li>
 
                     <li class="">
-                        <a class="nsm-page-link" href="<?=base_url('docusign_v2/manage?view=sent')?>">
+                        <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=sent')?>">
                             <span>Templates</span>
                         </a>
                     </li>
