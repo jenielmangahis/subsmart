@@ -1,3 +1,20 @@
+<style>
+.badge-primary{
+    background-color: #007bff;
+}
+.badge{
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    margin-top: 9px;
+}
+</style>
 <div class="nsm-card">
     <div class="nsm-card-content">
         <div class="row mb-3">
@@ -5,6 +22,9 @@
                 <div class="nsm-card-title">
                     <?php if($companyId == 58): ?>
                         <span>Solar Information</span>
+                        <?php if( $profile_info->adt_sales_project_id > 0 ){ ?>
+                            <span class="badge badge-primary" style="font-size:13px; float: right;">ADT Sales Portal Project Data</span>
+                        <?php } ?>
                     <?php else: ?>
                         <span>Alarm Information</span>
                     <?php endif; ?>  

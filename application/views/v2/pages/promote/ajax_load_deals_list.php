@@ -24,7 +24,7 @@ if (!empty($dealsSteals)) :
             </td>
             <td class="fw-bold nsm-text-primary">
                 <label class="d-block"><?= $ds->title; ?></label>
-                <a class="nsm-link" href="javascript:void(0);">
+                <a class="nsm-link" name="btn_count" href="javascript:void(0);">
                     $<?= number_format($ds->deal_price, 2); ?>
                 </a>
             </td>
@@ -39,25 +39,25 @@ if (!empty($dealsSteals)) :
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" href="<?php echo base_url('promote/view_deals/' . $ds->id) ?>">View</a>
+                            <a class="dropdown-item" name="dropdown_list" href="<?php echo base_url('promote/view_deals/' . $ds->id) ?>">View</a>
                         </li>
                         <?php if ($ds->status != 3) : ?>
                             <li>
-                                <a class="dropdown-item" href="<?php echo base_url('promote/edit_deals/' . $ds->id) ?>">Edit</a>
+                                <a class="dropdown-item" name="dropdown_edit" href="<?php echo base_url('promote/edit_deals/' . $ds->id) ?>">Edit</a>
                             </li>
                             <li>
-                                <a class="dropdown-item close-item" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Close Deal</a>
+                                <a class="dropdown-item close-item" name="dropdown_close_deal" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Close Deal</a>
                             </li>
                             <?php if ($ds->status != 1) : ?>
                                 <li>
-                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Delete</a>
+                                    <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Delete</a>
                                 </li>
                             <?php endif; ?>
                         <?php endif; ?>
                         
                         <?php if($ds->status == $status_ended): ?>
                         <li>
-                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Delete</a>
+                            <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Delete</a>
                         </li>
                         <?php endif; ?>
                     </ul>

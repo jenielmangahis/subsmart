@@ -1,12 +1,32 @@
+<style>
+.badge-primary{
+    background-color: #007bff;
+}
+.badge{
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    margin-top: 9px;
+}
+</style>
 <div class="nsm-card primary">
     <?php if($company_id == 58): ?>
         <div class="nsm-card-header">
             <div class="nsm-card-title">
                 <span><i class="bx bx-fw bx-user"></i>Solar Information</span>
+                <?php if( $profile_info->adt_sales_project_id > 0 ){ ?>
+                    <span class="badge badge-primary" style="font-size:13px; float: right;">ADT Sales Portal Project Data</span>
+                <?php } ?>
             </div>
         </div>
         <div class="nsm-card-content">
-            <hr>
+            <hr>            
             <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
                     <field-custom-name default="Project ID" form="solar_info"></field-custom-name>
@@ -561,7 +581,7 @@
                         <input type="text" class="form-control" name="custom_value[]" value="<?= $field->value; ?>" />
                     </div>
                     <div class="col-md-2">
-                        <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
+                        <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -577,7 +597,7 @@
                     <input type="text" class="form-control" name="custom_value[]" value="" />
                 </div>
                 <div class="col-md-2">
-                    <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
+                    <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
                 </div>
             </div>
         <?php endif; ?>
