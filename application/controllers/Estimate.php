@@ -1546,103 +1546,26 @@ class Estimate extends MY_Controller
         $recipient  = $customerData->email;
         // $message = "This is a test email";
 
+        $mail = email__getInstance(['subject' => 'Estimate Details']);
+        $mail->addAddress($recipient, $recipient);
+        $mail->isHTML(true);
+        $mail->Body = $this->load->view('estimate/send_email_acs', $data, true);
 
-    $message2 = $this->load->view('estimate/send_email_acs', $data, true);
-    $filename = $workData->company_representative_signature;
+        $json_data['is_success'] = 1;
+        $json_data['error']      = '';
 
-        // include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        //     $server    = MAIL_SERVER;
-        //     $port      = MAIL_PORT ;
-        //     $username  = MAIL_USERNAME;
-        //     $password  = MAIL_PASSWORD;
-        //     $from      = MAIL_FROM;
-        //     $subject   = 'nSmarTrac: Estimate Details';
-        //     $mail = new PHPMailer;
-        //     //$mail->SMTPDebug = 4;
-        //     $mail->isSMTP();
-        //     $mail->Host = $server;
-        //     $mail->SMTPAuth = true;
-        //     $mail->Username   = $username;
-        //     $mail->Password   = $password;
-        //     $mail->getSMTPInstance()->Timelimit = 5;
-        //     $mail->SMTPSecure = 'ssl';
-        //     $mail->Timeout    =   10; // set the timeout (seconds)
-        //     $mail->Port = $port;
-        //     $mail->From = $from;
-        //     $mail->FromName = 'NsmarTrac';
+        if(!$mail->Send()) {
+            /*echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            exit;*/
+            $json_data['is_success'] = 0;
+            $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
+        }
 
-        //     $mail->addAddress($recipient, $recipient);
-        //     $mail->isHTML(true);
-        //     // $email->attach("/home/yoursite/location-of-file.jpg", "inline");
-        //     $mail->Subject = $subject;
-        //     $mail->Body    = $message2;
-        //     // $cid = $email->attachment_cid($filename);
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
 
-                
-            $config = array_replace([
-                'isHTML' => true,
-                'subject' => 'nSmarTrac',
-            ], $config);
-        
-            $host = 'smtp.gmail.com';
-            $port = 465;
-            $username = 'sales@nsmartrac.com';
-            $password = 'bysebhxwxgheiryb';
-            $from = $username;
-            $subject = $config['subject'];
-        
-            include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-            $mail = new PHPMailer;
-            $mail->isSMTP();
-            $mail->getSMTPInstance()->Timelimit = 5;
-            $mail->Host = $host;
-            $mail->SMTPAuth = true;
-            $mail->Username = $username;
-            $mail->Password = $password;
-            $mail->SMTPSecure = 'ssl';
-            $mail->Timeout = 10; // seconds
-            $mail->Port = $port;
-            $mail->From = $from;
-            $mail->FromName = 'nSmarTrac';
-            $mail->Subject = $subject;
-            // $mail->IsHTML($config['isHTML']);
-
-                
-            // $mail = new PHPMailer;
-            // $mail->SMTPDebug = 4;
-            // $mail->isSMTP();
-            // $mail->Host = $server;
-            // $mail->SMTPAuth = true;
-            // $mail->Username   = $username;
-            // $mail->Password   = $password;
-            // $mail->getSMTPInstance()->Timelimit = 5;
-            // $mail->SMTPSecure = 'ssl';
-            // $mail->Timeout    =   10; // set the timeout (seconds)
-            // $mail->Port = $port;
-            // $mail->From = $from;
-            // $mail->FromName = 'NsmarTrac';
-            $mail->addAddress($recipient, $recipient);
-            $mail->isHTML(true);
-            // $mail->Subject = $subject;
-            $mail->Body    = $message2;
-
-
-
-            $json_data['is_success'] = 1;
-            $json_data['error']      = '';
-
-            if(!$mail->Send()) {
-                /*echo 'Message could not be sent.';
-                echo 'Mailer Error: ' . $mail->ErrorInfo;
-                exit;*/
-                $json_data['is_success'] = 0;
-                $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
-            }
-
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
-
-            echo json_encode($json_data);
+        echo json_encode($json_data);
         // return true;
         // echo "test";
     }

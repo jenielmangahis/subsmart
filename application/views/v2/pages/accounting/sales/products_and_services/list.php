@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/products_and_services_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -50,7 +51,7 @@
                     <div class="col-12 col-md-4 grid-mb">
                         <form action="<?php echo base_url('accounting/products-and-services') ?>" method="get">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Find products and services">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Find products and services" value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
                         </form>
                     </div>
@@ -63,8 +64,8 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="assign-category">Assign category</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="assign-category">Assign category</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="adjust-quantity">Adjust quantity</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="reorder">Reorder</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-non-inventory">Make non-inventory</a></li>
@@ -79,7 +80,7 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="manage-categories">Manage categories</a></li>
+                                <li><a class="dropdown-item" href="/accounting/product-categories" id="manage-categories">Manage categories</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="run-report">Run report</a></li>
                             </ul>
                         </div>
@@ -92,22 +93,22 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-status">Status</label>
-                                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                                            <option value="active" selected="selected">Active</option>
-                                            <option value="inactive">Inactive</option>
-                                            <option value="all">All</option>
+                                        <select class="nsm-field form-select" name="filter_status" id="filter-status" data-applied="<?=empty($status) ? 'active' : $status?>">
+                                            <option value="active" <?=empty($status) || $status === 'active' ? 'selected' : ''?>>Active</option>
+                                            <option value="inactive" <?=$status === 'inactive' ? 'selected' : ''?>>Inactive</option>
+                                            <option value="all" <?=$status === 'all' ? 'selected' : ''?>>All</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-type">Type</label>
-                                        <select class="nsm-field form-select" name="filter_type" id="filter-type">
-                                            <option value="all" selected="selected">All</option>
-                                            <option value="inventory">Inventory</option>
-                                            <option value="non-inventory">Non-inventory</option>
-                                            <option value="service">Service</option>
-                                            <option value="bundle">Bundle</option>
+                                        <select class="nsm-field form-select" name="filter_type" id="filter-type" data-applied="<?=empty($type) ? 'all' : $type?>">
+                                            <option value="all" <?=empty($type) || $type === 'all' ? 'selected' : ''?>>All</option>
+                                            <option value="inventory" <?=$type === 'inventory' ? 'selected' : ''?>>Inventory</option>
+                                            <option value="non-inventory" <?=$type === 'non-inventory' ? 'selected' : ''?>>Non-inventory</option>
+                                            <option value="service" <?=$type === 'service' ? 'selected' : ''?>>Service</option>
+                                            <option value="bundle" <?=$type === 'bundle' ? 'selected' : ''?>>Bundle</option>
                                         </select>
                                     </div>
                                 </div>
@@ -115,9 +116,9 @@
                                     <div class="col">
                                         <label for="filter-category" class="w-100">Category</label>
                                         <select name="filter_category[]" id="filter-category" class="nsm-field form-select" multiple="multiple">
-                                            <option value="0" selected>Uncategorized</option>
+                                            <option value="0" <?=empty($selectedCategories) || in_array('0', $selectedCategories) ? 'selected' : ''?>>Uncategorized</option>
                                             <?php foreach ($this->items_model->getItemCategories() as $category) : ?>
-                                            <option value="<?=$category->item_categories_id?>" selected><?=$category->name?></option>
+                                            <option value="<?=$category->item_categories_id?>" <?=empty($selectedCategories) || in_array($category->item_categories_id, $selectedCategories) ? 'selected' : ''?>><?=$category->name?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -125,21 +126,21 @@
 								<div class="row">
                                     <div class="col">
                                         <label for="filter-stock-status">Stock status</label>
-                                        <select class="nsm-field form-select" name="filter_stock_status" id="filter-stock-status">
-                                            <option value="all" selected="selected">All</option>
-											<option value="low-stock">Low stock</option>
-											<option value="out-of-stock">Out of stock</option>
+                                        <select class="nsm-field form-select" name="filter_stock_status" id="filter-stock-status" data-applied="<?=empty($stock_status) ? 'all' : $stock_status?>">
+                                            <option value="all" <?=empty($stock_status) || $stock_status === 'all' ? 'selected' : ''?>>All</option>
+											<option value="low-stock" <?=$stock_status === 'low-stock' ? 'selected' : ''?>>Low stock</option>
+											<option value="out-of-stock" <?=$stock_status === 'out-of-stock' ? 'selected' : ''?>>Out of stock</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button">
+                                        <button type="button" class="nsm-button" id="reset-button">
                                             Reset
                                         </button>
                                     </div>
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button primary float-end">
+                                        <button type="button" class="nsm-button primary float-end" id="apply-button">
                                             Apply
                                         </button>
                                     </div>
@@ -270,13 +271,15 @@
                     <tbody>
                         <?php if(count($items) > 0) : ?>
 						<?php foreach($items as $item) : ?>
-						<tr>
+						<tr data-status="<?=$item['status']?>" data-id="<?=$item['id']?>">
 							<td>
+                                <?php if($item['type'] !== 'Bundle') : ?>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$item['id']?>">
                                 </div>
+                                <?php endif; ?>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$item['name']?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
 							<td><?=$item['sku']?></td>
 							<td><?=$item['type']?></td>
 							<td><?=$item['sales_desc']?></td>

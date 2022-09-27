@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             Listing the deals that are currently running.
                         </div>
                     </div>
@@ -28,14 +28,14 @@
                                 <span>Filter by Status: Active Deals</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" data-id="filter_active" href="javascript:void(0);">Active Deals</a></li>
-                                <li><a class="dropdown-item" data-id="filter_scheduled" href="javascript:void(0);">Scheduled</a></li>
-                                <li><a class="dropdown-item" data-id="filter_ended" href="javascript:void(0);">Ended</a></li>
-                                <li><a class="dropdown-item" data-id="filter_draft" href="javascript:void(0);">Draft</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_active" href="javascript:void(0);">Active Deals</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_scheduled" href="javascript:void(0);">Scheduled</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_ended" href="javascript:void(0);">Ended</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_draft" href="javascript:void(0);">Draft</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('promote/create_deals') ?>'">
+                            <button type="button" name="btn_create" class="nsm-button primary" onclick="location.href='<?php echo url('promote/create_deals') ?>'">
                                 <i class='bx bx-fw bx-chat'></i> Create Deal
                             </button>
                         </div>

@@ -117,6 +117,11 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-phone-call'></i> Calls
                     </a>
                 </li>
+                <li class="<?= $page_title == 'ADT Sales Sync Logs' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/adt_sales_sync_logs") ?>">
+                        <i class='bx bx-fw bx-refresh'></i> ADT Sales App Sync Logs
+                    </a>
+                </li>
                 <li class="<?= $page_title == 'Auto SMS Logs' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/auto_sms_notification") ?>">
                         <i class='bx bx-fw bx-notification'></i> Auto SMS Logs

@@ -6022,4 +6022,55 @@ class Customer extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_adt_sales_sync_setting()
+    {
+        $this->load->model('CustomerSettings_model');
+
+        $cid  = logged('company_id');
+        $filter[] = ['field' => 'setting_type', 'value' => $this->CustomerSettings_model->settingAdtSalesSync()]; 
+        $setting  =  $this->CustomerSettings_model->getByCompanyId($cid, $filter);
+        
+        $this->page_data['setting'] = $setting;
+        $this->load->view('v2/pages/customer/ajax_adt_sales_sync_setting', $this->page_data);
+    }
+
+    public function ajax_update_adt_sales_sync_setting()
+    {
+        $this->load->model('CustomerSettings_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $filter[] = ['field' => 'setting_type', 'value' => 'adt_sales_sync']; 
+        $setting  =  $this->CustomerSettings_model->getByCompanyId($cid, $filter);
+
+        if ( isSolarCompany() == 0 ){
+            if( $setting ){
+                $data = ['setting_type' => $this->CustomerSettings_model->settingAdtSalesSync(), 'value' => $post['adt_sales_sync']];
+                $this->CustomerSettings_model->updateByCustomerSettingId($setting->customer_settings_id, $data);
+            }else{
+                $data = [
+                    'company_id' => $cid,
+                    'setting_type' => $this->CustomerSettings_model->settingAdtSalesSync(),
+                    'value' => $post['adt_sales_sync'],
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CustomerSettings_model->create($data);
+            }
+
+            $msg = '';
+            $is_success = 1;
+        }else{
+            $msg = 'Cannot upate setting. Only solar industry company can update this feature';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
 }

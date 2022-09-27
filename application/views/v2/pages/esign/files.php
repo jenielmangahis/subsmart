@@ -42,6 +42,31 @@ echo put_header_assets();
         display: flex;
         justify-content: flex-end;
     }
+
+    .recipientForm {
+        margin-bottom: 1rem;
+    }
+
+    .form-box .clos-bx {
+        position: absolute;
+        font-size: 24px;
+        color: #1e1e1e;
+        top: 50%;
+        transform: translate(0,-50%);
+        opacity: 0;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-decoration: none;
+        right: -40px;
+        cursor: pointer;
+    }
+    .form-box .clos-bx:hover,
+    .recipientForm:hover .clos-bx{
+        opacity: 1;
+    }
 </style>
 
 <?php if (isset($next_step) && $next_step == 0) {?>
@@ -212,7 +237,7 @@ echo put_header_assets();
 
                                 </div>
 
-                                <a class="btn-main esignBuilder__addForm" id="add-recipient-button">
+                                <a class="nsm-button" id="add-recipient-button" style="cursor: pointer; display: inline-block;">
                                     <i class="fa fa-user-plus"></i>Add Recipient
                                 </a>
                             </div>
@@ -225,9 +250,9 @@ echo put_header_assets();
     <!-- Footer --->
     <footer>
         <div class="container-fluid">
-            <ul class="d-flex align-items-center justify-content-end">
+            <ul class="d-flex align-items-center justify-content-end" style="list-style-type: none;">
                 <li class="d-none"><a onClick='onbackclick("<?php echo url('esign/Files?id=' . $file_id . '&next_step=0') ?>")'>Back</a></li>
-                <li><button class="esignBuilder__submit btn-success" type="submit">Next</button></li>
+                <li><button class="nsm-button primary" type="submit">Next</button></li>
             </ul>
         </div>
     </footer>

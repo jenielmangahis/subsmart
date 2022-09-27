@@ -218,7 +218,7 @@
                 "                    <input type=\"text\" class=\"form-control\" name=\"custom_value[]\" id=\"office_custom_field1\" value=\"\" />\n" +
                 "                </div>\n" +
                 "                <div class=\"col-md-2\">\n" +
-                "                    <button style=\"margin-top: 30px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button>\n" +
+                "                    <button style=\"margin-top: 23px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><i class='bx bx-trash'></i></button>\n" +
                 "                </div>\n" +
                 "            </div>";
             $("#custom_field").append(custom_field_form);
@@ -518,7 +518,7 @@
                 },error: function (xhr, ajaxOptions, thrownError, data) {
                     document.getElementById('overlay').style.display = "none";
                     Swal.fire({
-                        title: 'Good job!',
+                        text: 'Customer profile was successfully updated!',
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#32243d',

@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             Showing customers and leads purchased on Campaign 360
                         </div>
                     </div>

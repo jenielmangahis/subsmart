@@ -108,7 +108,12 @@ if ($this->session->userdata('usertimezone') == null) {
                                         <hr class="dropdown-divider">
                                     </div>
                                     <div class="list-item text-center">
-                                        <span class="content-subtitle">View All</span>
+                                        <a href="<?= base_url('acs_access/notifications'); ?>" class="btn"> 
+                                            <span class="content-subtitle">View All</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-clear-notification"> 
+                                            <span class="content-subtitle">Clear All</span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
