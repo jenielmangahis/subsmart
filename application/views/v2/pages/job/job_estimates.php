@@ -583,7 +583,7 @@
 </div>
 
 <!-- Modals -->
-<?php include viewPath('job/modals/new_customer'); ?>
+<?php //include viewPath('job/modals/new_customer'); ?>
 <?php include viewPath('job/modals/inventory_location'); ?>
 <?php include viewPath('job/modals/new_inventory'); ?>
 

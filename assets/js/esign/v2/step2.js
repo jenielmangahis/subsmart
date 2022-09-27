@@ -109,7 +109,7 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
         <input type="hidden" name="color" value="${color}">
 
         <a class="clos-bx">
-            <i class="fa fa-times-circle-o"></i>
+            <i class="bx bx-x"></i>
         </a>
         <div class="row">
             <div class="col-md-7 col-sm-7">
@@ -117,7 +117,6 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
                     <div class="form-group">
                         <label>Name *</label>
                         <input type="text" data-key="name" name="name" value="${name}" class="form-control" required>
-                        <a href="#" tabindex="-1"><i class="fa fa-address-book"></i></a>
                     </div>
                     <div class="form-group">
                         <label>Email *</label>
@@ -128,9 +127,9 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
             </div>
             <div class="col-md-5 col-sm-5">
                 <div class="action-envlo">
-                    <ul>
+                    <ul style="list-style-type: none; margin: 0; padding: 0; margin-top: 18px;">
                         <li class="dropdown" data-key="role">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="#" class="nsm-button dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" style="display: inline-block; margin: 0;">
                                 <i class="fa ${role.icon}"></i>
                                 ${role.value}
                             </a>
@@ -139,7 +138,7 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
                                   .map(
                                     (currRole) =>
                                       `<li>
-                                        <a href="#">
+                                        <a class="dropdown-item" href="#">
                                           <i class="fa ${currRole.icon}"></i>
                                           ${currRole.value}
                                         </a>
@@ -287,7 +286,7 @@ function Step2() {
       },
     });
 
-    window.location = `${prefixURL}/esign_v2/Files?id=${docId}&next_step=3`;
+    window.location = `${prefixURL}/esign/Files?id=${docId}&next_step=3`;
   }
 
   function attachEventHandlers() {
