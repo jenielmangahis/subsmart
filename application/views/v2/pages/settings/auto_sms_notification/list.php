@@ -352,7 +352,7 @@
         $(".module-status-container").html('<span class="bx bx-loader bx-spin"></span>');
         //$(".smart-tags-container").html('<span class="bx bx-loader bx-spin"></span>');
 
-        if( module_name == 'taskhub' || module_name == 'lead' ){
+        if( module_name == 'taskhub' || module_name == 'lead' || module_name == 'job' ){
             $('.grp-send-assigned-user').show();
             //$('.grp-send-assigned-user').css('display', 'inline-block');
         }else{

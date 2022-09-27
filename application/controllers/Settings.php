@@ -1166,7 +1166,7 @@ class Settings extends MY_Controller {
             }
 
             $send_to_assigned_user = 0;
-            if( isset($post['send_assigned_user']) && ($post['module_name'] == 'taskhub' || $post['module_name'] == 'lead') ){
+            if( isset($post['send_assigned_user']) && ($post['module_name'] == 'taskhub' || $post['module_name'] == 'lead' || $post['module_name'] == 'job') ){
                 $send_to_assigned_user = 1;
             }
 
@@ -1331,7 +1331,7 @@ class Settings extends MY_Controller {
                 }
 
                 $send_to_assigned_user = 0;
-                if( isset($post['send_assigned_user']) && ($post['module_name'] == 'lead' || $post['module_name'] == 'taskhub') ){
+                if( isset($post['send_assigned_user']) && ($post['module_name'] == 'lead' || $post['module_name'] == 'taskhub' || $post['module_name'] == 'job') ){
                     $send_to_assigned_user = 1;
                 }
 
