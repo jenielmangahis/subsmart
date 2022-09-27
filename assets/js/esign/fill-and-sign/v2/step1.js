@@ -176,7 +176,7 @@ function Step1(params = {}) {
     });
 
     const { document_id } = await response.json();
-    window.location = `${prefixURL}/FillAndSign/step2?docid=${document_id}`;
+    window.location = `${prefixURL}/FillAndSign_v2/step2?docid=${document_id}`;
   }
 
   function attachEventHandlers() {

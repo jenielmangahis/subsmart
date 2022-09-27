@@ -130,9 +130,14 @@ class Products_and_services extends MY_Controller {
         ];
 
 
-        if(!empty(get('category'))) {
+        if(!empty(get('stock-status'))) {
+            $filters['stock_status'] = get('stock-status');
+            $this->page_data['stock_status'] = get('stock-status');
+        }
+
+        if(!is_null($this->input->get('category'))) {
             $itemCategories = $this->items_model->getItemCategories();
-            $selectedCategories = explode(',', get('category'));
+            $selectedCategories = explode(',', $this->input->get('category'));
 
             if(in_array('0', $selectedCategories)) {
                 array_unshift($selectedCategories, '');
@@ -149,6 +154,8 @@ class Products_and_services extends MY_Controller {
                     $filters['category'][] = $itemCat->item_categories_id;
                 }
             }
+
+            $this->page_data['selectedCategories'] = $selectedCategories;
         }
 
         if(!empty(get('search'))) {
@@ -170,6 +177,7 @@ class Products_and_services extends MY_Controller {
                     ];
                 break;
             }
+            $this->page_data['status'] = get('status');
         }
 
         if(!empty(get('type'))) {
@@ -219,29 +227,63 @@ class Products_and_services extends MY_Controller {
 
     private function get_items($filters)
     {
-        $items = $this->items_model->getItemsWithFilter($filters);
-
         $data = [];
-        foreach($items as $item) {
-            $qty = $this->items_model->countQty($item->id);
-            $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
+        if($filters['type'][0] !== 'bundle' || !isset($filters['type'])) {
+            $items = $this->items_model->getItemsWithFilter($filters);
 
-            if($item->attached_image !== null && $item->attached_image !== "") {
-                $icon = "/uploads/$item->attached_image";
-            } else if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
-                $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
-                $icon = "/uploads/accounting/attachments/$attachment->stored_name";
-            } else {
-                $icon = "";
-            }
-
-            if(isset($filters['search']) && $filters['search'] !== "") {
-                if(stripos($item->title, $filters['search']) !== false) {
+            foreach($items as $item) {
+                $qty = $this->items_model->countQty($item->id);
+                $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
+    
+                if($item->attached_image !== null && $item->attached_image !== "") {
+                    $icon = "/uploads/$item->attached_image";
+                } else if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                    $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
+                    $icon = "/uploads/accounting/attachments/$attachment->stored_name";
+                } else {
+                    $icon = "";
+                }
+    
+                if(isset($filters['search']) && $filters['search'] !== "") {
+                    if(stripos($item->title, $filters['search']) !== false) {
+                        $data[] = [
+                            'id' => $item->id,
+                            'name' => $item->title,
+                            'category_id' => $item->item_categories_id,
+                            'category' => !is_null($this->items_model->getCategory($item->item_categories_id)) ? $this->items_model->getCategory($item->item_categories_id)->name : '',
+                            'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                            'type' => ucfirst($item->type),
+                            'rebate' => $item->rebate,
+                            'sales_desc' => $item->description,
+                            'income_account_id' => !is_null($accountingDetails) ? $accountingDetails->income_account_id : '',
+                            'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
+                            'expense_account_id' => !is_null($accountingDetails) ? $accountingDetails->expense_account_id : '',
+                            'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
+                            'inventory_account_id' => !is_null($accountingDetails) ? $accountingDetails->inv_asset_acc_id : '',
+                            'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
+                            'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
+                            'sales_price' => $item->price,
+                            'cost' => $item->cost,
+                            'taxable' => $accountingDetails->tax_rate_id,
+                            'qty_on_hand' => $qty,
+                            'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
+                            'reorder_point' => $item->re_order_points,
+                            'icon' => $icon,
+                            'vendor_id' => $item->vendor_id,
+                            'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
+                            'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
+                            'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
+                            'locations' => $this->items_model->getLocationByItemId($item->id),
+                            'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                            'status' => $item->is_active
+                        ];
+                    }
+                } else {
                     $data[] = [
                         'id' => $item->id,
                         'name' => $item->title,
                         'category_id' => $item->item_categories_id,
-                        'category' => !is_null($this->items_model->getCategory($item->item_categories_id)) ? $this->items_model->getCategory($item->item_categories_id)->name : '',
+                        'category' => $this->items_model->getCategory($item->item_categories_id)->name,
                         'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
                         'type' => ucfirst($item->type),
                         'rebate' => $item->rebate,
@@ -269,68 +311,70 @@ class Products_and_services extends MY_Controller {
                         'status' => $item->is_active
                     ];
                 }
-            } else {
-                $data[] = [
-                    'id' => $item->id,
-                    'name' => $item->title,
-                    'category_id' => $item->item_categories_id,
-                    'category' => $this->items_model->getCategory($item->item_categories_id)->name,
-                    'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
-                    'type' => ucfirst($item->type),
-                    'rebate' => $item->rebate,
-                    'sales_desc' => $item->description,
-                    'income_account_id' => !is_null($accountingDetails) ? $accountingDetails->income_account_id : '',
-                    'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
-                    'expense_account_id' => !is_null($accountingDetails) ? $accountingDetails->expense_account_id : '',
-                    'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
-                    'inventory_account_id' => !is_null($accountingDetails) ? $accountingDetails->inv_asset_acc_id : '',
-                    'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
-                    'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
-                    'sales_price' => $item->price,
-                    'cost' => $item->cost,
-                    'taxable' => $accountingDetails->tax_rate_id,
-                    'qty_on_hand' => $qty,
-                    'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
-                    'reorder_point' => $item->re_order_points,
-                    'icon' => $icon,
-                    'vendor_id' => $item->vendor_id,
-                    'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
-                    'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
-                    'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
-                    'locations' => $this->items_model->getLocationByItemId($item->id),
-                    'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-                    'status' => $item->is_active
-                ];
             }
         }
 
-        $packages = $this->items_model->get_company_packages(logged('company_id'), $filters);
-        foreach($packages as $package) {
-            $packageItems = $this->items_model->get_package_items($package->id);
+        if($filters['type'][0] === 'bundle' || !isset($filters['type'])) {
+            $packages = $this->items_model->get_company_packages(logged('company_id'), $filters);
+            foreach($packages as $package) {
+                $packageItems = $this->items_model->get_package_items($package->id);
 
-            $bundleItems = [];
-            foreach($packageItems as $packageItem) {
-                $item = $this->items_model->getItemById($packageItem->item_id)[0];
+                $bundleItems = [];
+                foreach($packageItems as $packageItem) {
+                    $item = $this->items_model->getItemById($packageItem->item_id)[0];
 
-                $bundleItems[] = [
-                    'id' => $packageItem->id,
-                    'item_id' => $packageItem->item_id,
-                    'quantity' => $packageItem->quantity,
-                    'name' => $item->title
-                ];
-            }
+                    $bundleItems[] = [
+                        'id' => $packageItem->id,
+                        'item_id' => $packageItem->item_id,
+                        'quantity' => $packageItem->quantity,
+                        'name' => $item->title
+                    ];
+                }
 
-            $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
+                $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
 
-            if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
-                $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
-                $icon = "/uploads/accounting/attachments/$attachment->stored_name";
-            } else {
-                $icon = "";
-            }
+                if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                    $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
+                    $icon = "/uploads/accounting/attachments/$attachment->stored_name";
+                } else {
+                    $icon = "";
+                }
 
-            if(isset($filters['search']) && $filters['search'] !== "") {
-                if(stripos($package->name, $filters['search']) !== false) {
+                if(isset($filters['search']) && $filters['search'] !== "") {
+                    if(stripos($package->name, $filters['search']) !== false) {
+                        $data[] = [
+                            'id' => $package->id,
+                            'name' => $package->name,
+                            'category_id' => null,
+                            'category' => '',
+                            'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                            'type' => 'Bundle',
+                            'rebate' => null,
+                            'sales_desc' => '',
+                            'income_account_id' => '',
+                            'income_account' => '',
+                            'expense_account_id' => '',
+                            'expense_account' => '',
+                            'inventory_account_id' => '',
+                            'inventory_account' => '',
+                            'purch_desc' => '',
+                            'sales_price' => number_format(floatval($package->total_price), 2, '.', ','),
+                            'cost' => '',
+                            'taxable' => $accountingDetails->tax_rate_id,
+                            'qty_on_hand' => '',
+                            'qty_po' => '',
+                            'reorder_point' => '',
+                            'icon' => $icon,
+                            'vendor_id' => '',
+                            'vendor' => '',
+                            'sales_tax_cat_id' => '',
+                            'sales_tax_cat' => '',
+                            'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                            'bundle_items' => $bundleItems,
+                            'status' => $package->status
+                        ];
+                    }
+                } else {
                     $data[] = [
                         'id' => $package->id,
                         'name' => $package->name,
@@ -363,38 +407,6 @@ class Products_and_services extends MY_Controller {
                         'status' => $package->status
                     ];
                 }
-            } else {
-                $data[] = [
-                    'id' => $package->id,
-                    'name' => $package->name,
-                    'category_id' => null,
-                    'category' => '',
-                    'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
-                    'type' => 'Bundle',
-                    'rebate' => null,
-                    'sales_desc' => '',
-                    'income_account_id' => '',
-                    'income_account' => '',
-                    'expense_account_id' => '',
-                    'expense_account' => '',
-                    'inventory_account_id' => '',
-                    'inventory_account' => '',
-                    'purch_desc' => '',
-                    'sales_price' => number_format(floatval($package->total_price), 2, '.', ','),
-                    'cost' => '',
-                    'taxable' => $accountingDetails->tax_rate_id,
-                    'qty_on_hand' => '',
-                    'qty_po' => '',
-                    'reorder_point' => '',
-                    'icon' => $icon,
-                    'vendor_id' => '',
-                    'vendor' => '',
-                    'sales_tax_cat_id' => '',
-                    'sales_tax_cat' => '',
-                    'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-                    'bundle_items' => $bundleItems,
-                    'status' => $package->status
-                ];
             }
         }
 
@@ -413,8 +425,6 @@ class Products_and_services extends MY_Controller {
                 }
             });
         }
-
-        $recordsFiltered = count($data);
 
         if(isset($filters['group_by_category']) && $filters['group_by_category'] === "1" || isset($filters['group_by_category']) && $filters['group_by_category'] === 1) {
             $uncategorized = array_filter($data, function($item) {
@@ -1381,7 +1391,7 @@ class Products_and_services extends MY_Controller {
 
     public function assign_category($categoryId)
     {
-        $items = json_decode($this->input->post('items'));
+        $items = $this->input->post('items');
         $data = [];
 
         foreach($items as $item) {

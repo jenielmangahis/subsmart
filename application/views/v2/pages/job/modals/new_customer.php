@@ -18,13 +18,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>First Name</label>
-                                            <input type="text" name="first_name" class="form-control" required>
+                                            <input type="text" name="first_name" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Last Name</label>
-                                            <input type="text" name="last_name" class="form-control" required>
+                                            <input type="text" name="last_name" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-5">
@@ -36,37 +36,37 @@
                                     <div class="col-md-7">
                                         <div class="form-group">
                                             <label>Email</label>
-                                            <input type="email" name="email" class="form-control" required>
+                                            <input type="email" name="email" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Phone</label>
-                                            <input type="text" name="phone_h" class="form-control" required>
+                                            <input type="text" name="phone_h" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Address</label>
-                                            <input type="text" name="mail_add" class="form-control" required>
+                                            <input type="text" name="mail_add" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>City</label>
-                                            <input type="text" name="city" class="form-control" required>
+                                            <input type="text" name="city" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>State</label>
-                                            <input type="text" name="state" class="form-control" required>
+                                            <input type="text" name="state" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Zip Code</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
+                                            <input type="text" name="zip_code" class="form-control">
                                         </div>
                                     </div>
                                 </div>

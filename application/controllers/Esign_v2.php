@@ -259,7 +259,7 @@ class Esign_v2 extends MY_Controller
 
             'assets/js/esign/docusign/input.autoresize.js',
             'assets/js/esign/v2/step1.js',
-            'assets/js/esign/step2.js',
+            'assets/js/esign/v2/step2.js',
             'assets/js/esign/step3.js',
 
             'assets/js/v2/bootstrap.bundle.min.js',
