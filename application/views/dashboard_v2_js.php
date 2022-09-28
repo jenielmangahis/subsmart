@@ -175,10 +175,11 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
     var prevJob = 0;
     var previousJob = 0;
     var {success, jobsDone} = response;
+    console.log(response);
     var monthNow = date.getMonth()+1;
     var yearNow = date.getFullYear();
     var prev = new Date(date.setMonth(date.getMonth() - 1));
-    var previous = new Date(prev.setMonth(prev.getMonth() - 1));
+    var previous = new Date(date.setMonth(date.getMonth() - 1));
     
     var prevMonthNow = prev.getMonth()+1;
     var previousMonthNow = previous.getMonth()+1;
@@ -193,9 +194,13 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
                 prevJob++;
             }else if(previousMonthNow == (month_created) && yearNow == year_created){
                 previousJob++;
-
             }
+
+
         }
+        console.log(curJob);
+        console.log(prevJob);
+        console.log(previousJob);
     }
     var jobs = $("#jobs_chart");
     new Chart(jobs, {

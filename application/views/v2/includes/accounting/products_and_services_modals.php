@@ -1,54 +1,54 @@
-<div class="modal fade nsm-modal" id="print_vendor_transactions_modal" tabindex="-1" aria-labelledby="print_vendor_transactions_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+<div class="modal fade nsm-modal" id="print_items_modal" tabindex="-1" aria-labelledby="print_items_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-xxl">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="print_vendor_transactions_modal_label">Print Vendor Transactions List</span>
+                <span class="modal-title content-title" id="print_items_modal_label">Print Items List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td data-name="Date">DATE</td>
+                            <td data-name="Name">NAME</td>
+                            <td data-name="SKU">SKU</td>
                             <td data-name="Type">TYPE</td>
-                            <td data-name="No.">NO.</td>
-                            <td data-name="Payee">PAYEE</td>
-                            <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
-                            <td data-name="Category">CATEGORY</td>
-                            <td data-name="Memo">MEMO</td>
-                            <td data-name="Due date">DUE DATE</td>
-                            <td data-name="Balance">BALANCE</td>
-                            <td data-name="Total">TOTAL</td>
-                            <td data-name="Status">STATUS</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
+                            <td data-name="Sales Description">SALES DESCRIPTION</td>
+                            <td data-name="Income Account">INCOME ACCOUNT</td>
+                            <td data-name="Expense Account">EXPENSE ACCOUNT</td>
+                            <td data-name="Inventory Account">INVENTORY ACCOUNT</td>
+                            <td data-name="Purchase Description">PURCHASE DESCRIPTION</td>
+                            <td data-name="Sales Price">SALES PRICE</td>
+                            <td data-name="Cost">COST</td>
+                            <td data-name="Taxable">TAXABLE</td>
+                            <td data-name="Qty on hand">QTY ON HAND</td>
+                            <td data-name="Qty on PO">QTY ON PO</td>
+                            <td data-name="Reorder point">REORDER POINT</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (count($transactions) > 0) : ?>
-                        <?php foreach($transactions as $transaction) : ?>
+                        <?php if(count($items) > 0) : ?>
+						<?php foreach($items as $item) : ?>
                         <tr>
-                            <td><?=$transaction['date']?></td>
-                            <td><?=$transaction['type']?></td>
-                            <td><?=$transaction['number']?></td>
-                            <td><?=$transaction['payee']?></td>
-                            <td><?=$transaction['method']?></td>
-                            <td><?=$transaction['source']?></td>
-                            <td>
-                                <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
-                                <?=$transaction['category']['name']?>
-                                <?php else : ?>
-                                <?=$transaction['category']?>
-                                <?php endif; ?>
-                            </td>
-                            <td><?=$transaction['memo']?></td>
-                            <td><?=$transaction['due_date']?></td>
-                            <td><?=$transaction['balance']?></td>
-                            <td><?=$transaction['total']?></td>
-                            <td><?=$transaction['status']?></td>
-                            <td><?=count($transaction['attachments'])?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
+							<td><?=$item['sku']?></td>
+							<td><?=$item['type']?></td>
+							<td><?=$item['sales_desc']?></td>
+							<td data-incomeaccountid="<?=$item['income_account_id']?>"><?=$item['income_account']?></td>
+							<td data-expenseaccountid="<?=$item['expense_account_id']?>"><?=$item['expense_account']?></td>
+							<td data-inventoryaccountid="<?=$item['inventory_account_id']?>"><?=$item['inventory_account']?></td>
+							<td><?=$item['purch_desc']?></td>
+							<td><?=$item['sales_price']?></td>
+							<td><?=$item['cost']?></td>
+							<td>
+								<?php if($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
+								<div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
+                                </div>
+								<?php endif; ?>
+							</td>
+							<td><?=$item['qty_on_hand']?></td>
+							<td><?=$item['qty_po']?></td>
+							<td><?=$item['reorder_point']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>
@@ -65,63 +65,63 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="nsm-button primary" id="btn_print_vendor_transactions">Print</button>
+                <button type="button" class="nsm-button primary" id="btn_print_items">Print</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade nsm-modal" id="print_preview_vendor_transactions_modal" tabindex="-1" aria-labelledby="print_preview_vendor_transactions_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal" id="print_preview_items_modal" tabindex="-1" aria-labelledby="print_preview_items_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="print_preview_vendor_transactions_modal_label">Print vendors List</span>
+                <span class="modal-title content-title" id="print_preview_items_modal_label">Print itemss List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <table class="w-100" id="vendor_transactions_table_print">
+                <table class="w-100" id="items_table_print">
                     <thead>
                         <tr>
-                            <td data-name="Date">DATE</td>
+                            <td data-name="Name">NAME</td>
+                            <td data-name="SKU">SKU</td>
                             <td data-name="Type">TYPE</td>
-                            <td data-name="No.">NO.</td>
-                            <td data-name="Payee">PAYEE</td>
-                            <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
-                            <td data-name="Category">CATEGORY</td>
-                            <td data-name="Memo">MEMO</td>
-                            <td data-name="Due date">DUE DATE</td>
-                            <td data-name="Balance">BALANCE</td>
-                            <td data-name="Total">TOTAL</td>
-                            <td data-name="Status">STATUS</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
+                            <td data-name="Sales Description">SALES DESCRIPTION</td>
+                            <td data-name="Income Account">INCOME ACCOUNT</td>
+                            <td data-name="Expense Account">EXPENSE ACCOUNT</td>
+                            <td data-name="Inventory Account">INVENTORY ACCOUNT</td>
+                            <td data-name="Purchase Description">PURCHASE DESCRIPTION</td>
+                            <td data-name="Sales Price">SALES PRICE</td>
+                            <td data-name="Cost">COST</td>
+                            <td data-name="Taxable">TAXABLE</td>
+                            <td data-name="Qty on hand">QTY ON HAND</td>
+                            <td data-name="Qty on PO">QTY ON PO</td>
+                            <td data-name="Reorder point">REORDER POINT</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (count($transactions) > 0) : ?>
-                        <?php foreach($transactions as $transaction) : ?>
+                        <?php if(count($items) > 0) : ?>
+						<?php foreach($items as $item) : ?>
                         <tr>
-                            <td><?=$transaction['date']?></td>
-                            <td><?=$transaction['type']?></td>
-                            <td><?=$transaction['number']?></td>
-                            <td><?=$transaction['payee']?></td>
-                            <td><?=$transaction['method']?></td>
-                            <td><?=$transaction['source']?></td>
-                            <td>
-                                <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
-                                <?=$transaction['category']['name']?>
-                                <?php else : ?>
-                                <?=$transaction['category']?>
-                                <?php endif; ?>
-                            </td>
-                            <td><?=$transaction['memo']?></td>
-                            <td><?=$transaction['due_date']?></td>
-                            <td><?=$transaction['balance']?></td>
-                            <td><?=$transaction['total']?></td>
-                            <td><?=$transaction['status']?></td>
-                            <td><?=count($transaction['attachments'])?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
+							<td><?=$item['sku']?></td>
+							<td><?=$item['type']?></td>
+							<td><?=$item['sales_desc']?></td>
+							<td data-incomeaccountid="<?=$item['income_account_id']?>"><?=$item['income_account']?></td>
+							<td data-expenseaccountid="<?=$item['expense_account_id']?>"><?=$item['expense_account']?></td>
+							<td data-inventoryaccountid="<?=$item['inventory_account_id']?>"><?=$item['inventory_account']?></td>
+							<td><?=$item['purch_desc']?></td>
+							<td><?=$item['sales_price']?></td>
+							<td><?=$item['cost']?></td>
+							<td>
+								<?php if($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
+								<div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
+                                </div>
+								<?php endif; ?>
+							</td>
+							<td><?=$item['qty_on_hand']?></td>
+							<td><?=$item['qty_po']?></td>
+							<td><?=$item['reorder_point']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>

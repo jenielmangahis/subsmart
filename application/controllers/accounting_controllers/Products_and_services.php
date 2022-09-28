@@ -214,7 +214,9 @@ class Products_and_services extends MY_Controller {
             $this->page_data['type'] = get('type');
         }
 
-        $items = $this->items_model->getItemsWithFilter($filters);
+        if(!empty(get('group-by-category'))) {
+            $filters['group_by_category'] = "1";
+        }
 
         $this->page_data['items'] = $this->get_items($filters);
         $this->page_data['low_stock_count'] = $lowStock;
@@ -1598,7 +1600,7 @@ class Products_and_services extends MY_Controller {
         $post = $this->input->post();
 
         $filters = [];
-        $search = $post['search'];
+        $filters['search'] = $post['search'];
 
         if(in_array('0', $post['category'])) {
             array_unshift($post['category'], '');
@@ -1650,13 +1652,15 @@ class Products_and_services extends MY_Controller {
             break;
         }
 
-        $items = $this->items_model->getItemsWithFilter($filters);
+        $filters['stock_status'] = $post['stock_status'];
 
-        if($search !== "") {
-            $items = array_filter($items, function($item, $key) use ($search) {
-                return stripos($item->title, $search) !== false;
-            }, ARRAY_FILTER_USE_BOTH);
-        }
+        $items = $this->get_items($filters);
+
+        // if($search !== "") {
+        //     $items = array_filter($items, function($item, $key) use ($search) {
+        //         return stripos($item->title, $search) !== false;
+        //     }, ARRAY_FILTER_USE_BOTH);
+        // }
 
         $this->load->helper('string');
 
@@ -1720,5 +1724,28 @@ class Products_and_services extends MY_Controller {
         header('Content-Disposition: attachment;filename="'.$filename.'"');
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
+    }
+
+    public function reorder_items()
+    {
+        $post = $this->input->post();
+        $items = [];
+
+        foreach($post['items'] as $itemId) {
+            $item = $this->items_model->getItemById($itemId)[0];
+
+            $itemData = new stdClass();
+            $itemData->item_id = $itemId;
+            $itemData->quantity = 1;
+            $itemData->rate = $item->price;
+            $itemData->discount = 0.00;
+            $itemData->tax = 0.00;
+            $itemData->total = $item->price;
+
+            $items[] = $itemData;
+        }
+
+        $this->page_data['items'] = $items;
+        $this->load->view("v2/includes/accounting/modal_forms/purchase_order_modal", $this->page_data);
     }
 }

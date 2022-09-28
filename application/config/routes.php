@@ -547,6 +547,7 @@ $route['accounting/products-and-services/assign-category/(:any)']['post'] = 'acc
 $route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting_controllers/products_and_services/batch_action/$1';
 $route['accounting/products-and-services/print-table']['post'] = 'accounting_controllers/products_and_services/print_table';
 $route['accounting/products-and-services/export-table']['post'] = 'accounting_controllers/products_and_services/export_table';
+$route['accounting/products-and-services/reorder-items']['post'] = 'accounting_controllers/products_and_services/reorder_items';
 
 // Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';
