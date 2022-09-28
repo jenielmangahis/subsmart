@@ -1722,8 +1722,16 @@ class Job extends MY_Controller
         }
 
         //SMS Notification
-        //createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id']);
-
+        createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
+        if( $input['employee2_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
+        }
+        if( $input['employee3_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee3_id'], 0);
+        }
+        if( $input['employee4_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
+        }
 
         if (!is_null($this->input->get('json', TRUE))) {
             // Returns json data, when ?json is set on URL query string.
