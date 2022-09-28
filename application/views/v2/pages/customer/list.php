@@ -68,11 +68,12 @@
                     </div>
                 </div>
                 <?php if (!empty($enabled_table_headers)) : ?>
-                    <table class="nsm-table customer-list" id="customer-list">
+                    <table class="nsm-table customer-list" id="customer-list" style="width:100%">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
                                 <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
+                                <?php if (in_array('email', $enabled_table_headers)) : ?><td data-name="Name">Email</td><?php endif; ?>
                                 <?php if (in_array('industry', $enabled_table_headers)) : ?><td data-name="Name">Industry</td><?php endif; ?>
                                 <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
                                 <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
@@ -237,7 +238,7 @@
                     </table>
                 <?php else : ?>
                     
-                    <table class="nsm-table " id="customer-list">
+                    <table class="nsm-table " id="customer-list" style="width:100%">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>

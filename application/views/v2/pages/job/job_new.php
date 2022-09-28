@@ -387,7 +387,7 @@
                                                         <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Start </a>
                                                     </li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?> step05">
-                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?>data-bs-toggle="modal" data-bs-target="#fill_esign" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Approved </a>
+                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?>data-bs-toggle="modal" data-bs-target="#approved_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Approved </a>
                                                     </li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Finish</li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoice'  ? 'active' : ''; ?>">Invoice</li>
@@ -1180,6 +1180,8 @@
 <?php include viewPath('v2/pages/job/modals/arrival_modal'); ?>
 <!-- Start Job Modal -->
 <?php include viewPath('v2/pages/job/modals/started_modal'); ?>
+<!-- Approved Job Modal -->
+<?php include viewPath('v2/pages/job/modals/approved_modal'); ?>
 <!-- Finish Job Modal -->
 <div class="modal fade" id="finish_modal" role="dialog">
     <div class="close-modal" data-bs-dismiss="modal">&times;</div>

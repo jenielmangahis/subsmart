@@ -971,7 +971,7 @@ class Workcalender extends MY_Controller
             $client->setClientId($google_client_id);
             $client->setClientSecret($google_secrect);
             $client->setAccessToken($access_token);
-            $client->refreshToken($refresh_token);
+            //$client->refreshToken($refresh_token);
             $client->setScopes(array(
                 'email',
                 'profile',
@@ -1567,7 +1567,7 @@ class Workcalender extends MY_Controller
             $client->setClientId($google_client_id);
             $client->setClientSecret($google_secrect);
             $client->setAccessToken($access_token);
-            $client->refreshToken($refresh_token);
+            //$client->refreshToken($refresh_token);
             $client->setScopes(array(
                 'email',
                 'profile',

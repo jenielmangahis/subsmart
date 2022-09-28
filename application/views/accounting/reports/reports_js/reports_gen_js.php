@@ -47,19 +47,25 @@
 
                     if(header){
                         //size of the table
-                        if(header['header'].length > 7){ 
-                            $( "#main" ).removeClass( "col-md-8 offset-md-2" ).addClass( "col-md-12 offset-md-0" );
-                        }else{
-                            if($('#main').hasClass('col-md-12 offset-md-0')){
-                                $( "#main" ).removeClass( "col-md-12 offset-md-0" ).addClass( "col-md-8 offset-md-2" );
+                        if(header['header']){
+                            if(header['header'].length > 7){ 
+                                $( "#main" ).removeClass( "col-md-8 offset-md-2" ).addClass( "col-md-12 offset-md-0" );
+                            }else{
+                                if($('#main').hasClass('col-md-12 offset-md-0')){
+                                    $( "#main" ).removeClass( "col-md-12 offset-md-0" ).addClass( "col-md-8 offset-md-2" );
+                                }
                             }
-                        }
 
-                        //set thead
-                        for(var x=0; x<header['header'].length; x++){
+                            //set thead
+                            for(var x=0; x<header['header'].length; x++){
+                                $('#head_tbl').append(
+                                '<td>'+ header['header'][x] +'</td>'
+                                )
+                            }
+                        }else{
                             $('#head_tbl').append(
-                            '<td>'+ header['header'][x] +'</td>'
-                            )
+                                '<td>NAME</td><td>NUM</td><td>ESTIMATES STATUS</td><td>ACCEPTED DATE</td><td>EXPIRATION DATE</td><td>AMOUNT</td>'
+                                )
                         }
 
                         //set tbody

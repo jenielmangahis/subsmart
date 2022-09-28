@@ -70,7 +70,7 @@
                   </label>
                 </div>   
             </li>
-            <li class="edit-grp-send-assigned-user" style="<?= $autoSms->module_name == 'lead' || $autoSms->module_name == 'taskhub' ? 'display: inline-block;' : 'display: none'; ?>">
+            <li class="edit-grp-send-assigned-user" style="<?= $autoSms->module_name == 'lead' || $autoSms->module_name == 'taskhub' || $autoSms->module_name == 'job' ? 'display: inline-block;' : 'display: none'; ?>">
                 <div class="form-check">
                   <input <?= $autoSms->send_to_assigned_user == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_assigned_user" id="edit-chk-assigned-user">
                   <label class="form-check-label" for="edit-chk-assigned-user">
@@ -185,7 +185,7 @@ $(document).on('change', '#edit-module-name', function(e){
 
     $(".edit-module-status-container").html('<span class="bx bx-loader bx-spin"></span>');
 
-    if( module_name == 'taskhub' || module_name == 'lead' ){
+    if( module_name == 'taskhub' || module_name == 'lead' || module_name == 'job' ){
         $('.edit-grp-send-assigned-user').show();
         //$('.edit-grp-send-assigned-user').css('display', 'inline-block');
     }else{

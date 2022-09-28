@@ -73,6 +73,7 @@ if(isset($jobs_data)){
             }
         });
     }
+    
 
     $(document).ready(function() {
         load_customer_data(<?= $customer  ?>);
@@ -143,34 +144,7 @@ if(isset($jobs_data)){
                 });
             }
         });
-        function sucess_add_job(){
-            Swal.fire({
-                title: 'Nice!',
-                text: 'Job has been added!',
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href='<?= base_url(); ?>job/';
-                }
-            });
-        }
-        function error(title,text,icon){
-            Swal.fire({
-                title: title,
-                text: text,
-                icon: icon,
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-
-            });
-        }
+        
         $("#fill_esign_btn").click(function () {
             $.ajax({
                 type: "GET",
@@ -705,81 +679,6 @@ if(isset($jobs_data)){
                 }
             });
         });
-
-        $("#update_status_to_omw").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/update_jobs_status",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Job Status Updated!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                    }
-                }
-            });
-        });
-
-        $("#update_status_to_started").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/update_jobs_status",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Job Status Updated!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                    }
-                }
-            });
-        });
-
-        function sucess_add(information,is_reload){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if(is_reload === 1){
-                    if (result.value) {
-                        window.location.reload();
-                    }
-                }
-            });
-        }
-
-        function warning(information){
-            Swal.fire({
-                title: 'Warning!',
-                text: information,
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-
-            });
-        }
-
         $("#customer_id").on('change', function () {
             
             var customer_selected = this.value;
@@ -864,6 +763,190 @@ if(isset($jobs_data)){
         });
 
     });
+
+    $("#update_status_to_omw").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var job_id = $('#jobid').val();
+            var omw_time = $('#omw_time').val();
+            var status = $('#status').val();
+            var omw_date = $('#omw_date').val();
+
+            const fd = new FormData();
+            fd.append('id', job_id);
+            fd.append('status', status);
+            fd.append('omw_time', omw_time);
+            fd.append('omw_date', omw_date);
+            
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'POST',
+                body: fd
+            }).then(response => response.json()).then(response => {
+                console.log(response);
+                var { success, message} = response;
+                if(success){
+                    $('#omw_modal').modal('hide');
+                    sucess_add(message,1);
+                }else{
+                    warning(message)
+                }
+            }).catch((error) =>{
+                console.log(error);
+            })
+            //var url = form.attr('action');
+            // $.ajax({
+            //     type: "POST",
+            //     url: "<?= base_url() ?>/job/update_jobs_status",
+            //     data: form.serialize(), // serializes the form's elements.
+            //     success: function(data)
+            //     {
+            //         console.log(data);
+            //         if(data === "Success"){
+            //             //window.location.reload();
+            //             sucess_add('Job Status Updated!',1);
+            //         }else {
+            //             warning('There is an error adding Customer. Contact Administrator!');
+            //         }
+            //     }
+            // });
+        });
+
+        $("#update_status_to_started").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var job_id = $('#jobid').val();
+            var job_start_time = $('#job_start_time').val();
+            var status = $('#start_status').val();
+            var job_start_date = $('#job_start_date').val();
+
+            const fd1 = new FormData();
+            fd1.append('id', job_id);
+            fd1.append('status', status);
+            fd1.append('job_start_time', job_start_time);
+            fd1.append('job_start_date', job_start_date);
+            
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'POST',
+                body: fd1
+            }).then(response => response.json()).then(response => {
+                console.log(response);
+                var { success, message} = response;
+                if(success){
+                    $('#start_modal').modal('hide');
+
+                    // console.log(response);
+                    sucess_add(message, 1);
+                }else{
+                    warning(message);
+                    // console.log(response);
+                }
+            }).catch((error) =>{
+                console.log(error);
+            })
+            //var url = form.attr('action');
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url() ?>/job/update_jobs_status",
+        //         data: form.serialize(), // serializes the form's elements.
+        //         success: function(data)
+        //         {
+        //             if(data === "Success"){
+        //                 //window.location.reload();
+        //                 sucess_add('Job Status Updated!',1);
+        //             }else {
+        //                 warning('There is an error adding Customer. Contact Administrator!');
+        //             }
+        //         }
+        //     });
+        });
+    $("#update_status_to_approved").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var job_id = $('#jobid').val();
+            var status = $('#approved_status').val();
+
+            const fd2 = new FormData();
+            fd2.append('id', job_id);
+            fd2.append('status', status);
+            
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'POST',
+                body: fd2
+            }).then(response => response.json()).then(response => {
+                console.log(response);
+                var { success, message} = response;
+                if(success){
+                    $('#approved_modal').modal('hide');
+                    // console.log(response);
+                    sucess_add(message);
+                }else{
+                    warning(message);
+                    // console.log(response);
+                }
+            }).catch((error) =>{
+                console.log(error);
+            })
+            //var url = form.attr('action');
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url() ?>/job/update_jobs_status",
+        //         data: form.serialize(), // serializes the form's elements.
+        //         success: function(data)
+        //         {
+        //             if(data === "Success"){
+        //                 //window.location.reload();
+        //                 sucess_add('Job Status Updated!',1);
+        //             }else {
+        //                 warning('There is an error adding Customer. Contact Administrator!');
+        //             }
+        //         }
+        //     });
+        });
+        function sucess_add(message){
+            Swal.fire({
+                title: 'Nice!',
+                text: message,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+        function sucess_add_job(){
+            Swal.fire({
+                title: 'Nice!',
+                text: 'Job has been added!',
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href='<?= base_url(); ?>job/';
+                }
+            });
+        }
+        function error(title,text,icon){
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+
+            });
+        }
     <?php if( $default_customer_id > 0 ){ ?>
             $('#customer_id').click();
             load_customer_data('<?= $default_customer_id; ?>');
@@ -934,5 +1017,6 @@ if(isset($jobs_data)){
         })
     }
     
+
 
 </script>
