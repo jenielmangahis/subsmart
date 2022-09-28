@@ -292,6 +292,27 @@ class AcsProfile_model extends MY_Model
         $this->db->where('adt_sales_project_id', $adt_sales_project_id);
         $this->db->update();
     }
+
+    public function getAllByIsSync($is_sync = 0, $conditions = array(), $limit = 0)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('is_sync', $is_sync);
+        $this->db->order_by('first_name', 'ASC');
+
+        if( !empty($conditions) ){
+            foreach($conditions as $c){
+                $this->db->where($c['field'], $c['value']);
+            }
+        }
+
+        $query = $this->db->get();
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+        return $query->result();
+    }
 }
 
 /* End of file AcsProfile_model.php */

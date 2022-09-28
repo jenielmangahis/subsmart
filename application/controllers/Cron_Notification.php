@@ -198,7 +198,8 @@ class Cron_Notification extends MYF_Controller {
                     $creator_name = $workorderCreator->FName . ' ' . $workorderCreator->LName;
                 }
 
-                $tags = 'Not Specified';
+                //$tags = 'Not Specified';
+                $tags = '';
                 /*if($workorder->job_tags > 0 ){
                     $jobTag = $this->Workorder_model->get_job_tags_data($workorder->job_tags);
                     if( $jobTag ){
@@ -211,11 +212,15 @@ class Cron_Notification extends MYF_Controller {
                     $tags = $workorder->job_tags;
                 }
                 
-                $installation_date  = 'Not Specified';
-                $workOrderAgreement = $this->Workorder_model->get_agreements($workorder->id);
+                //$installation_date  = 'Not Specified';
+                $installation_date  = '';
+                if( $workorder->install_date != '' && $workorder->install_time != '' ){
+                    $installation_date = date("m/d/Y",strtotime($workorder->install_date)) . ' at ' . $workorder->install_time;
+                }
+                /*$workOrderAgreement = $this->Workorder_model->get_agreements($workorder->id);
                 if( $workOrderAgreement && $workOrderAgreement->intall_time != '' ){
                     $installation_date = date("m/d/Y",strtotime($workOrderAgreement->installation_date)) . ' at ' . $workOrderAgreement->intall_time;    
-                }
+                }*/
                 
             }
         }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
@@ -290,9 +295,24 @@ class Cron_Notification extends MYF_Controller {
         $sms_message = str_replace("{{lead.phone}}", $lead_phone, $sms_message);
         $sms_message = str_replace("{{lead.email}}", $lead_email, $sms_message);
 
-        $sms_message = str_replace("{{creator.name}}", $creator_name, $sms_message);
-        $sms_message = str_replace("{{tags}}", $tags, $sms_message);
-        $sms_message = str_replace("{{installation.date}}", $installation_date, $sms_message);
+        $sms_message = str_replace("{{creator.name}}", $creator_name, $sms_message);        
+
+        if( $tags != '' ){
+            $sms_message = str_replace("{{tags}}", $tags, $sms_message);
+        }else{
+            $sms_message = str_replace("Tag :", "", $sms_message);
+            $sms_message = str_replace("{{tags}}", "", $sms_message);
+        }
+
+        if( $installation_date != '' ){
+            if( $tags == '' ){
+                $sms_message = str_replace("and is booked for", "Booked for", $sms_message);
+            }
+            $sms_message = str_replace("{{installation.date}}", $installation_date, $sms_message);
+        }else{
+            $sms_message = str_replace("and is booked for", "", $sms_message);
+            $sms_message = str_replace("{{installation.date}}", "", $sms_message);
+        }
 
         return $sms_message;
     }
