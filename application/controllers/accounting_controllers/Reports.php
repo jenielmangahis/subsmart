@@ -451,7 +451,6 @@ class Reports extends MY_Controller {
         $estimateCol = json_decode($input['estimateCol']);
         $estimateColText = json_decode($input['estimateColText']);
         $customerColText = json_decode($input['customerColText']);
-        $header['header'] = array_merge($customerColText,$estimateColText);
         $group_by = $input['group_by'];
         $date_from = $input['date_from'];
         $date_to = $input['date_to'];
@@ -473,12 +472,14 @@ class Reports extends MY_Controller {
 
         if($customer != 'null' && $estimate != 'null'){
             $selected_col = array_merge($customerCol,$estimateCol);
+            $header['header'] = array_merge($customerColText,$estimateColText);
         }else{
             if($customer != 'null'){
                 $selected_col = $customer;
             }elseif($estimate != 'null'){
                 $selected_col = $estimate;
-
+            }else{
+                $selected_col = array('acs_profile.first_name', 'estimates.estimate_number', 'estimates.status', 'estimates.accepted_date', 'estimates.expiry_date', 'estimates.grand_total');
             }
         }
 
@@ -521,7 +522,7 @@ class Reports extends MY_Controller {
         $header['column'] = $column;
         $estimate_data = $this->estimate_model->getEstimatesByCustomerWithParam($param);
 
-        $data_arr = array("success" => true, "data" => $estimate_data, "header" => $header, "column" => $column);
+        $data_arr = array("success" => true, "data" => $estimate_data, "header" => $header, "column" => $column, "select" => $selected_col);
         die(json_encode($data_arr));
     }
 }

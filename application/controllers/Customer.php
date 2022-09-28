@@ -241,11 +241,11 @@ class Customer extends MY_Controller
             </div>";
             array_push($data_arr, $dropdown);
 
-            $is_adt_project = 'no';
-            if( $customer->adt_sales_project_id > 0 ){
-                $is_adt_project = 'yes';
-            }
-            array_push($data_arr, $is_adt_project);
+            // $is_adt_project = 'no';
+            // if( $customer->adt_sales_project_id > 0 ){
+            //     $is_adt_project = 'yes';
+            // }
+            // array_push($data_arr, $is_adt_project);
             
 
             $data[] = $data_arr;

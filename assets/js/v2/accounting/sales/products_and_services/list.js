@@ -207,3 +207,159 @@ $(document).on('submit', '#assign-category-form', function(e) {
         }
     });
 });
+
+$('#reorder').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    $('#items-table tbody tr:visible .select-one:checked').each(function() {
+        data.append('items[]', $(this).val());
+    });
+
+    $.ajax({
+        url: '/accounting/products-and-services/reorder-items',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+
+            initModalFields('purchaseOrderModal');
+
+		    $(`#purchaseOrderModal`).modal('show');
+        }
+    })
+});
+
+$('#adjust-quantity').on('click', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/get-other-modals/inventory_qty_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+        initModalFields('inventoryModal');
+
+        var count = 1;
+        $('#items-table tbody tr:visible .select-one:checked').each(function() {
+            if($(`#inventoryModal #inventory-adjustments-table tbody tr:nth-child(${count})`).length < 1) {
+                $(`#inventoryModal #inventory-adjustments-table tbody`).append('<tr></tr>');   
+            }
+
+            $(`#inventoryModal #inventory-adjustments-table tbody tr:nth-child(${count})`).html(rowInputs);
+            $(`#inventoryModal #inventory-adjustments-table tbody tr:nth-child(${count}) td:nth-child(1)`).html(count);
+
+            $(`#inventoryModal #inventory-adjustments-table tbody tr:nth-child(${count})`).find('select[name="product[]"]').html(`<option value="${$(this).val()}">${$(this).closest('tr').find('td:nth-child(2)').html().trim()}</option>`).trigger('change');
+
+            $(`#inventoryModal #inventory-adjustments-table tbody tr:nth-child(${count})`).find('select').each(function() {
+                var type = $(this).attr('id');
+                if (type === undefined) {
+                    type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+                } else {
+                    type = type.replaceAll('_', '-');
+                }
+
+                if (dropdownFields.includes(type)) {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: type,
+                                    modal: 'inventoryModal'
+                                }
+
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect,
+                        dropdownParent: $('#inventoryModal')
+                    });
+                } else {
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#inventoryModal')
+                    });
+                }
+            });
+
+            count++;
+        });
+
+        $('#inventoryModal').modal('show');
+    });
+});
+
+$('#make-non-inventory, #make-service, #make-inactive').on('click', function(e) {
+    e.preventDefault();
+
+    var action = $(this).attr('id');
+
+    var data = new FormData();
+
+	var items = [];
+    $('#items-table tbody tr:visible .select-one:checked').each(function() {
+        items.push($(this).val());
+    });
+
+	data.append('items', JSON.stringify(items));
+
+    $.ajax({
+		url: `products-and-services/batch-action/${action}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+		success: function(result) {
+			location.reload();
+		}
+	});
+});
+
+$('.export-items').on('click', function() {
+    if($('#export-form').length < 1) {
+        $('body').append('<form action="/accounting/products-and-services/export-table" method="post" id="export-form"></form>');
+    }
+
+    var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('_chk', '')}">`);
+    });
+
+    $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="stock_status" value="${$('#filter-stock-status').val()}">`);
+
+    $('#export-form').append(`<input type="hidden" name="column" value="name">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="asc">`);
+
+    // $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).remove();
+});

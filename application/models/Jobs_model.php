@@ -89,12 +89,16 @@ class Jobs_model extends MY_Model
         acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
         acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email,
         job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.amount as total_amount');
-        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
-        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
-        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
-        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
-        $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id', 'left');
-        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        // $this->db->select('jobs.*,jobs.id as job_unique_id,LName,FName,
+        // acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        // acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email,
+        // job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.amount as total_amount');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id');
+        $this->db->join('users', 'users.id = jobs.employee_id');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id');
+        $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id');
         $this->db->where("jobs.id", $id);
         $query = $this->db->get();
         return $query->row();

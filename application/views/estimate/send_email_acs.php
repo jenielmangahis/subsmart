@@ -193,25 +193,25 @@
                                             <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemData1->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemData1->type; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->costing,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData1->costing,2); ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->qty; ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->discount; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->total,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData1->total,2); ?></td>
                                             </tr>
                                         <?php } ?>
                                         
                                         <tr><td colspan="7"><hr/></td></tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($sub_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $sub_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($tax1_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $tax1_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format($option1_total, 2); ?></b></td>
+                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $option1_total, 2); ?></b></td>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Option 1 Message</b></td>
@@ -228,25 +228,25 @@
                                             <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemData2->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemData2->type; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData2->costing,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData2->costing,2); ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->qty; ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->discount; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData2->total,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData2->total,2); ?></td>
                                             </tr>
                                         <?php } ?>
                                         
                                         <tr><td colspan="7"><hr/></td></tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($sub_total2, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $sub_total2, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($tax2_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $tax2_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format($option2_total, 2); ?></b></td>
+                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $option2_total, 2); ?></b></td>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Option 2 Message</b></td>
@@ -265,25 +265,25 @@
                                             <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemDatabd1->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemDatabd1->type; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd1->costing,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd1->costing,2); ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->qty; ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->discount; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd1->total,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd1->total,2); ?></td>
                                             </tr>
                                         <?php } ?>
                                         
                                         <tr><td colspan="7"><hr/></td></tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($sub_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $sub_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($tax1_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $tax1_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format($bundle1_total, 2); ?></b></td>
+                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $bundle1_total, 2); ?></b></td>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Bundle 1 Message</b></td>
@@ -300,25 +300,25 @@
                                             <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemDatabd2->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemDatabd2->type; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd2->costing,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd2->costing,2); ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->qty; ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->discount; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd2->total,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd2->total,2); ?></td>
                                             </tr>
                                         <?php } ?>
                                         
                                         <tr><td colspan="7"><hr/></td></tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($sub_total2, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $sub_total2, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($tax2_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $tax2_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format($bundle2_total, 2); ?></b></td>
+                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $bundle2_total, 2); ?></b></td>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Bundle 2 Message</b></td>
@@ -333,25 +333,25 @@
                                             <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemData->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iCost,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData->iCost,2); ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->qty; ?></td>
                                             <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->discount; ?></td>
-                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iTotal,2); ?></td>
+                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData->iTotal,2); ?></td>
                                             </tr>
                                         <?php } ?>
                                         
                                         <tr><td colspan="7"><hr/></td></tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($sub_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $sub_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format($tax1_total, 2); ?></p></td>
+                                        <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float) $tax1_total, 2); ?></p></td>
                                         </tr>
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format($grand_total, 2); ?></b></td>
+                                        <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $grand_total, 2); ?></b></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

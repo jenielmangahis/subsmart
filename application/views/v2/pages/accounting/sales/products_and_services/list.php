@@ -158,7 +158,7 @@
                             <button type="button" class="nsm-button export-items">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_items_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">

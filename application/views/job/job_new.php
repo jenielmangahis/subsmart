@@ -87,7 +87,7 @@ add_css(array(
                                             <p><small>Start</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" type="button" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?> data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false" <?php endif; ?> class="btn btn-circle  <?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                            <a href="#" type="button" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?> data-toggle="modal" data-target="#approved_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> class="btn btn-circle  <?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa fa-check-circle-o"></span>
                                             </a>
                                             <p><small>Approved</small></p>
@@ -97,7 +97,7 @@ add_css(array(
                                                 href="#"
                                                 id="confirmEsignModalTrigger"
                                                 data-job-status="<?= isset($jobs_data) ? $jobs_data->status : ''  ?>"
-                                                <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>
+                                                <?php if(isset($jobs_data) && $jobs_data->status == 'Finish'): ?>
                                                     data-toggle="modal"
                                                     data-target="#finish_modal"
                                                     data-backdrop="static"
@@ -1325,7 +1325,7 @@ add_css(array(
                     <p>Start job at:</p>
                     <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
                     <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
-                    <input type="hidden" name="status" id="status" value="Started">
+                    <input type="hidden" name="status" id="start_status" value="Started">
                     <select id="job_start_time" name="job_start_time" class="form-control" required>
                         <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                             <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
@@ -1345,6 +1345,39 @@ add_css(array(
     </div>
 </div>
 
+<!-- Approved Job Modal -->
+<div class="modal fade" id="approved_modal" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Approved Job</h4>
+            </div>
+            <form id="update_status_to_approved">
+                <div class="modal-body">
+                    <p>This will stop travel duration tracking and start on job duration tracking.</p>
+                    <p>Approved job at:</p>
+                    <input type="date" name="approved_job_date" id="approved_job_date" class="form-control" required>
+                    <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                    <input type="hidden" name="status" id="approved_status" value="Started">
+                    <select id="approved_job_time" name="approved_job_time" class="form-control" required>
+                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-paper-plane-o"></span> Save
+                    </button>
+                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
+                        <span class="fa fa-remove"></span> Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- Finish Job Modal -->
 <div class="modal fade" id="finish_modal" role="dialog">
     <div class="close-modal" data-dismiss="modal">&times;</div>

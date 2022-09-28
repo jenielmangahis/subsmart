@@ -729,17 +729,10 @@ $(function() {
                         dropdownParent: $('#modal-container form .modal')
                     });
                 } else {
-                    var options = $(this).find('option');
-                    if (options.length > 10) {
-                        $(this).select2({
-                            dropdownParent: $('#modal-container form .modal')
-                        });
-                    } else {
-                        $(this).select2({
-                            minimumResultsForSearch: -1,
-                            dropdownParent: $('#modal-container form .modal')
-                        });
-                    }
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#modal-container form .modal')
+                    });
                 }
             });
         }
@@ -788,17 +781,10 @@ $(function() {
                         dropdownParent: $('#modal-container form .modal')
                     });
                 } else {
-                    var options = $(this).find('option');
-                    if (options.length > 10) {
-                        $(this).select2({
-                            dropdownParent: $('#modal-container form .modal')
-                        });
-                    } else {
-                        $(this).select2({
-                            minimumResultsForSearch: -1,
-                            dropdownParent: $('#modal-container form .modal')
-                        });
-                    }
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#modal-container form .modal')
+                    });
                 }
             });
         }
@@ -1164,7 +1150,10 @@ $(function() {
             $(`table${table} tbody tr:last-child() textarea`).html('');
             $(`table${table} tbody tr:last-child() input[name="billable[]"]`).attr('id', `billable_${num}`).prop('checked', false).trigger('change');
             $(`table${table} tbody tr:last-child() input[name="billable[]"]`).next().attr('for', `billable_${num}`);
-            $(`table${table} tbody tr:last-child() select`).select2();
+            $(`table${table} tbody tr:last-child() select`).select2({
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#weeklyTimeSsheetModal')
+            });
         }
 
         computeTotalHours();
@@ -3041,17 +3030,10 @@ $(function() {
                                     dropdownParent: $('#modal-container form .modal')
                                 });
                             } else {
-                                var options = $(this).find('option');
-                                if (options.length > 10) {
-                                    $(this).select2({
-                                        dropdownParent: $('#modal-container form .modal')
-                                    });
-                                } else {
-                                    $(this).select2({
-                                        minimumResultsForSearch: -1,
-                                        dropdownParent: $('#modal-container form .modal')
-                                    });
-                                }
+                                $(this).select2({
+                                    minimumResultsForSearch: -1,
+                                    dropdownParent: $('#modal-container form .modal')
+                                });
                             }
                         });
                     }
@@ -3132,16 +3114,10 @@ $(function() {
                             `);
 
                             $('#modal-container form .modal #item-details-table tbody tr:last-child select').each(function() {
-                                if($(this).find('option').length > 10) {
-                                    $(this).select2({
-                                        dropdownParent: $('#modal-container form .modal')
-                                    });
-                                } else {
-                                    $(this).select2({
-                                        minimumResultsForSearch: -1,
-                                        dropdownParent: $('#modal-container form .modal')
-                                    });
-                                }
+                                $(this).select2({
+                                    minimumResultsForSearch: -1,
+                                    dropdownParent: $('#modal-container form .modal')
+                                });
                             });
                         });
                     }
@@ -5272,17 +5248,10 @@ $(function() {
                         dropdownParent: $('#item-modal')
                     });
                 } else {
-                    var options = $(this).find('option');
-                    if (options.length > 10) {
-                        $(this).select2({
-                            dropdownParent: $('#item-modal')
-                        });
-                    } else {
-                        $(this).select2({
-                            minimumResultsForSearch: -1,
-                            dropdownParent: $('#item-modal')
-                        });
-                    }
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#item-modal')
+                    });
                 }
             });
 
@@ -5896,6 +5865,7 @@ $(function() {
                 });
 
                 $('#modal-container #customer-modal select').select2({
+                    minimumResultsForSearch: -1,
                     dropdownParent: $('#modal-container #customer-modal')
                 });
 
@@ -7368,7 +7338,8 @@ $(function() {
                             `);
         
                             $('#invoiceModal #transaction-type, #invoiceModal #transaction-date').select2({
-                                minimumResultsForSearch: -1
+                                minimumResultsForSearch: -1,
+                                dropdownParent: $('#invoiceModal')
                             });
 
                             $.each(transactions, function(index, transaction) {
@@ -10969,14 +10940,10 @@ const initModalFields = (modalName, data = {}) => {
         $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
         $(`#${modalName} table#category-details-table tbody tr:last-child()`).remove();
     } else {
-        if($(`#${modalName} .modal-body table.clickable`).length > 0) {
-            if(modalName !== 'inventoryModal') {
-                rowInputs = $(`div#modal-container #${modalName} .modal-body table tbody tr:first-child()`).html();
-                blankRow = $(`div#modal-container #${modalName} .modal-body table tbody tr:last-child()`).html();
-                $(`div#modal-container #${modalName} .modal-body table tbody tr:first-child()`).remove();
-                $(`div#modal-container #${modalName} .modal-body table tbody tr:last-child()`).remove();
-            }
-    
+        if ($('div#modal-container .modal-body table.clickable:not(#category-details-table, #item-details-table)').length > 0) {
+            rowInputs = $(`div#modal-container form #${modalName} table tbody tr:first-child()`).html();
+            blankRow = $(`div#modal-container form #${modalName} table tbody tr:last-child()`).html();
+
             switch(modalName) {
                 case 'depositModal' :
                     rowCount = 2;
@@ -10991,6 +10958,9 @@ const initModalFields = (modalName, data = {}) => {
                     rowCount = 3;
                 break;
             }
+
+            $('div#modal-container form .modal table tbody tr:first-child()').html(blankRow);
+            $('div#modal-container form .modal table tbody tr:first-child() td:first-child()').html(1);
         }
     }
 
@@ -11029,17 +10999,10 @@ const initModalFields = (modalName, data = {}) => {
                     dropdownParent: $('#modal-container form .modal')
                 });
             } else {
-                var options = $(this).find('option');
-                if (options.length > 10) {
-                    $(this).select2({
-                        dropdownParent: $('#modal-container form .modal')
-                    });
-                } else {
-                    $(this).select2({
-                        minimumResultsForSearch: -1,
-                        dropdownParent: $('#modal-container form .modal')
-                    });
-                }
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#modal-container form .modal')
+                });
             }
         });
     }
@@ -11427,16 +11390,10 @@ const initAccountModal = () => {
                 });
             break;
             default:
-                if ($(this).find('option').length > 10) {
-                    $(this).select2({
-                        dropdownParent: $('#modal-container #account-modal')
-                    });
-                } else {
-                    $(this).select2({
-                        minimumResultsForSearch: -1,
-                        dropdownParent: $('#modal-container #account-modal')
-                    });
-                }
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#modal-container #account-modal')
+                });
             break;
         }
     });
@@ -11975,17 +11932,14 @@ const clearForm = () => {
                             }
                         },
                         templateResult: formatResult,
-                        templateSelection: optionSelect
+                        templateSelection: optionSelect,
+                        dropdownParent: $(modalName)
                     });
                 } else {
-                    var options = $(this).find('option');
-                    if (options.length > 10) {
-                        $(this).select2();
-                    } else {
-                        $(this).select2({
-                            minimumResultsForSearch: -1
-                        });
-                    }
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $(modalName)
+                    });
                 }
             });
             count++;
@@ -12660,15 +12614,10 @@ const printcheck = () => {
 					dropdownParent: $('#printChecksModal')
 				});
 			} else {
-				var options = $(this).find('option');
-				if (options.length > 10) {
-					$(this).select2();
-				} else {
-					$(this).select2({
-						minimumResultsForSearch: -1,
-						dropdownParent: $('#printChecksModal')
-					});
-				}
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#printChecksModal')
+                });
 			}
 		});
 
@@ -12747,15 +12696,10 @@ const addcheck = () => {
 					dropdownParent: $('#checkModal')
 				});
 			} else {
-				var options = $(this).find('option');
-				if (options.length > 10) {
-					$(this).select2();
-				} else {
-					$(this).select2({
-						minimumResultsForSearch: -1,
-						dropdownParent: $('#checkModal')
-					});
-				}
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#checkModal')
+                });
 			}
 		});
 

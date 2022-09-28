@@ -218,6 +218,7 @@ class Job extends MY_Controller
             'assets/js/esign/libs/pdf.worker.js',
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
+        //print_r($this->page_data['jobs_data']);
         $this->load->view('v2/pages/job/job_new', $this->page_data);
         //$this->load->view('job/job_new', $this->page_data);
     }
@@ -1104,24 +1105,27 @@ class Job extends MY_Controller
     public function update_jobs_status()
     {
         $input = $this->input->post();
+        
         // customer_ad_model
         if ($input) {
             $id = $input['id'];
-            unset($input['id']);
             $input['company_id'] = logged('company_id');
+
             if ($input['status'] == "Arrival") {
                 $input['omw_date'] = date("Y-m-d");
                 $input['omw_time'] = date("H:i A");
             }
-            if ($this->general->update_with_key($input, $id, "jobs")) {
+            unset($input['id']);
+            $up = $this->general->update_with_key($input, $id, "jobs");
+            if ($up) {
                 //Log audit trail
+
                 $job = $this->jobs_model->get_specific_job($id);
                 customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #'.$job->job_number.' to '.$input['status']);
 
                 //SMS Notification
                 createCronAutoSmsNotification($job->company_id, $job->id, 'job', $input['status'], $job->employee_id);
-
-                $data_arr = array("success" => true, "message" => "Updated Successfully");
+                $data_arr = array("success" => true, "message" => "Updated Successfully", "input" => $input);
             } else {
                 $data_arr = array("success" => false, "message" => "Something went wrong");
             }
