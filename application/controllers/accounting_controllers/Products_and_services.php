@@ -111,7 +111,7 @@ class Products_and_services extends MY_Controller {
             "assets/js/v2/accounting/sales/products_and_services/list.js"
         ));
 
-        $products = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'Inventory', 'product', 'Product']]);
+        $products = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'Inventory', 'product', 'Product'], 'status' => [1]]);
 
         $outOfStock = 0;
         $lowStock = 0;
@@ -316,7 +316,8 @@ class Products_and_services extends MY_Controller {
             }
         }
 
-        if($filters['type'][0] === 'bundle' || !isset($filters['type'])) {
+        if($filters['type'][0] === 'bundle' && !is_null($filters['category']) && in_array('0', $filters['category']) || !isset($filters['type']) && !is_null($filters['category']) && in_array('0', $filters['category']) ||
+            $filters['type'][0] === 'bundle' && is_null($filters['category']) || !isset($filters['type']) && is_null($filters['category'])) {
             $packages = $this->items_model->get_company_packages(logged('company_id'), $filters);
             foreach($packages as $package) {
                 $packageItems = $this->items_model->get_package_items($package->id);
@@ -420,7 +421,7 @@ class Products_and_services extends MY_Controller {
                     'inventory',
                     'Inventory'
                 ];
-                if($filters['stock_status'] === 'low stock') {
+                if($filters['stock_status'] === 'low-stock') {
                     return $item['qty_on_hand'] <= intval($item['reorder_point']) && in_array($item['type'], $invArray);
                 } else {
                     return $item['qty_on_hand'] === 0 && in_array($item['type'], $invArray);
@@ -485,454 +486,6 @@ class Products_and_services extends MY_Controller {
         });
 
         return $data;
-    }
-
-    // public function load()
-    // {
-    //     $postData = json_decode(file_get_contents('php://input'), true);
-    //     $column = $postData['order'][0]['column'];
-    //     $order = $postData['order'][0]['dir'];
-    //     $columnName = $postData['columns'][$column]['name'];
-    //     $start = $postData['start'];
-    //     $limit = $postData['length'];
-    //     $search = $postData['columns'][0]['search']['value'];
-    //     $data = [];
-
-    //     switch($columnName) {
-    //         case 'name' :
-    //             $column = 'title';
-    //         break;
-    //         case 'type' : 
-    //             $column = 'type';
-    //         break;
-    //         case 'sales_desc' :
-    //             $column = 'description';
-    //         break;
-    //         case 'sales_price' :
-    //             $column = 'price';
-    //         break;
-    //         case 'cost' :
-    //             $column = 'cost';
-    //         break;
-    //         case 'reorder_point' :
-    //             $column = 're_order_points';
-    //         break;
-    //         default : 
-    //             $column = 'title';
-
-    //     }
-
-    //     if(in_array('0', $postData['category'])) {
-    //         array_unshift($postData['category'], '');
-    //         array_unshift($postData['category'], null);
-    //     }
-
-    //     $filters = [
-    //         'status' => [
-    //             1
-    //         ],
-    //         'category' => $postData['category']
-    //     ];
-
-    //     if($postData['status'] === 'inactive') {
-    //         $filters['status'] = [0];
-    //     } else if($postData['status'] === 'all') {
-    //         $filters['status'] = [
-    //             0,
-    //             1
-    //         ];
-    //     }
-
-    //     if($postData['type'] === 'inventory') {
-    //         $filters['type'] = [
-    //             'product',
-    //             'Product',
-    //             'inventory',
-    //             'Inventory'
-    //         ];
-    //     } else if($postData['type'] === 'non-inventory') {
-    //         $filters['type'] = [
-    //             'material',
-    //             'Material',
-    //             'non-inventory',
-    //             'Non-inventory'
-    //         ];
-    //     } else if($postData['type'] === 'service') {
-    //         $filters['type'] = [
-    //             'service',
-    //             'Service'
-    //         ];
-    //     } else if($postData['type'] === 'bundle') {
-    //         $filters['type'] = [
-    //             'bundle',
-    //             'Bundle'
-    //         ];
-    //     }
-
-    //     $items = $this->items_model->getItemsWithFilter($filters, $column, $order);
-
-    //     foreach($items as $item) {
-    //         $qty = $this->items_model->countQty($item->id);
-    //         $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
-
-    //         if($item->attached_image !== null && $item->attached_image !== "") {
-    //             $icon = "/uploads/$item->attached_image";
-    //         } else if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
-    //             $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
-    //             $icon = "/uploads/accounting/attachments/$attachment->stored_name";
-    //         } else {
-    //             $icon = "";
-    //         }
-
-    //         if($search !== "") {
-    //             if(stripos($item->title, $search) !== false) {
-    //                 $data[] = [
-    //                     'id' => $item->id,
-    //                     'name' => $item->title,
-    //                     'category_id' => $item->item_categories_id,
-    //                     'category' => !is_null($this->items_model->getCategory($item->item_categories_id)) ? $this->items_model->getCategory($item->item_categories_id)->name : '',
-    //                     'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
-    //                     'type' => ucfirst($item->type),
-    //                     'rebate' => $item->rebate,
-    //                     'sales_desc' => $item->description,
-    //                     'income_account_id' => !is_null($accountingDetails) ? $accountingDetails->income_account_id : '',
-    //                     'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
-    //                     'expense_account_id' => !is_null($accountingDetails) ? $accountingDetails->expense_account_id : '',
-    //                     'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
-    //                     'inventory_account_id' => !is_null($accountingDetails) ? $accountingDetails->inv_asset_acc_id : '',
-    //                     'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
-    //                     'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
-    //                     'sales_price' => $item->price,
-    //                     'cost' => $item->cost,
-    //                     'taxable' => $accountingDetails->tax_rate_id,
-    //                     'qty_on_hand' => $qty,
-    //                     'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
-    //                     'reorder_point' => $item->re_order_points,
-    //                     'icon' => $icon,
-    //                     'vendor_id' => $item->vendor_id,
-    //                     'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
-    //                     'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
-    //                     'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
-    //                     'locations' => $this->items_model->getLocationByItemId($item->id),
-    //                     'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-    //                     'status' => $item->is_active
-    //                 ];
-    //             }
-    //         } else {
-    //             $data[] = [
-    //                 'id' => $item->id,
-    //                 'name' => $item->title,
-    //                 'category_id' => $item->item_categories_id,
-    //                 'category' => $this->items_model->getCategory($item->item_categories_id)->name,
-    //                 'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
-    //                 'type' => ucfirst($item->type),
-    //                 'rebate' => $item->rebate,
-    //                 'sales_desc' => $item->description,
-    //                 'income_account_id' => !is_null($accountingDetails) ? $accountingDetails->income_account_id : '',
-    //                 'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
-    //                 'expense_account_id' => !is_null($accountingDetails) ? $accountingDetails->expense_account_id : '',
-    //                 'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
-    //                 'inventory_account_id' => !is_null($accountingDetails) ? $accountingDetails->inv_asset_acc_id : '',
-    //                 'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
-    //                 'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
-    //                 'sales_price' => $item->price,
-    //                 'cost' => $item->cost,
-    //                 'taxable' => $accountingDetails->tax_rate_id,
-    //                 'qty_on_hand' => $qty,
-    //                 'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
-    //                 'reorder_point' => $item->re_order_points,
-    //                 'icon' => $icon,
-    //                 'vendor_id' => $item->vendor_id,
-    //                 'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
-    //                 'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
-    //                 'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
-    //                 'locations' => $this->items_model->getLocationByItemId($item->id),
-    //                 'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-    //                 'status' => $item->is_active
-    //             ];
-    //         }
-    //     }
-
-    //     $packages = $this->items_model->get_company_packages(logged('company_id'), $filters);
-    //     foreach($packages as $package) {
-    //         $packageItems = $this->items_model->get_package_items($package->id);
-
-    //         $bundleItems = [];
-    //         foreach($packageItems as $packageItem) {
-    //             $item = $this->items_model->getItemById($packageItem->item_id)[0];
-
-    //             $bundleItems[] = [
-    //                 'id' => $packageItem->id,
-    //                 'item_id' => $packageItem->item_id,
-    //                 'quantity' => $packageItem->quantity,
-    //                 'name' => $item->title
-    //             ];
-    //         }
-
-    //         $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
-
-    //         if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
-    //             $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
-    //             $icon = "/uploads/accounting/attachments/$attachment->stored_name";
-    //         } else {
-    //             $icon = "";
-    //         }
-
-    //         if($search !== "") {
-    //             if(stripos($package->name, $search) !== false) {
-    //                 $data[] = [
-    //                     'id' => $package->id,
-    //                     'name' => $package->name,
-    //                     'category_id' => null,
-    //                     'category' => '',
-    //                     'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
-    //                     'type' => 'Bundle',
-    //                     'rebate' => null,
-    //                     'sales_desc' => '',
-    //                     'income_account_id' => '',
-    //                     'income_account' => '',
-    //                     'expense_account_id' => '',
-    //                     'expense_account' => '',
-    //                     'inventory_account_id' => '',
-    //                     'inventory_account' => '',
-    //                     'purch_desc' => '',
-    //                     'sales_price' => number_format(floatval($package->total_price), 2, '.', ','),
-    //                     'cost' => '',
-    //                     'taxable' => $accountingDetails->tax_rate_id,
-    //                     'qty_on_hand' => '',
-    //                     'qty_po' => '',
-    //                     'reorder_point' => '',
-    //                     'icon' => $icon,
-    //                     'vendor_id' => '',
-    //                     'vendor' => '',
-    //                     'sales_tax_cat_id' => '',
-    //                     'sales_tax_cat' => '',
-    //                     'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-    //                     'bundle_items' => $bundleItems,
-    //                     'status' => $package->status
-    //                 ];
-    //             }
-    //         } else {
-    //             $data[] = [
-    //                 'id' => $package->id,
-    //                 'name' => $package->name,
-    //                 'category_id' => null,
-    //                 'category' => '',
-    //                 'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
-    //                 'type' => 'Bundle',
-    //                 'rebate' => null,
-    //                 'sales_desc' => '',
-    //                 'income_account_id' => '',
-    //                 'income_account' => '',
-    //                 'expense_account_id' => '',
-    //                 'expense_account' => '',
-    //                 'inventory_account_id' => '',
-    //                 'inventory_account' => '',
-    //                 'purch_desc' => '',
-    //                 'sales_price' => number_format(floatval($package->total_price), 2, '.', ','),
-    //                 'cost' => '',
-    //                 'taxable' => $accountingDetails->tax_rate_id,
-    //                 'qty_on_hand' => '',
-    //                 'qty_po' => '',
-    //                 'reorder_point' => '',
-    //                 'icon' => $icon,
-    //                 'vendor_id' => '',
-    //                 'vendor' => '',
-    //                 'sales_tax_cat_id' => '',
-    //                 'sales_tax_cat' => '',
-    //                 'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-    //                 'bundle_items' => $bundleItems,
-    //                 'status' => $package->status
-    //             ];
-    //         }
-    //     }
-
-    //     if($postData['stock_status'] !== 'all') {
-    //         $data = array_filter($data, function($item) use ($postData) {
-    //             $invArray = [
-    //                 'product',
-    //                 'Product',
-    //                 'inventory',
-    //                 'Inventory'
-    //             ];
-    //             if($postData['stock_status'] === 'low stock') {
-    //                 return $item['qty_on_hand'] <= intval($item['reorder_point']) && in_array($item['type'], $invArray);
-    //             } else {
-    //                 return $item['qty_on_hand'] === 0 && in_array($item['type'], $invArray);
-    //             }
-    //         });
-    //     }
-
-    //     usort($data, function($a, $b) use ($order, $columnName) {
-    //         switch($columnName) {
-    //             case 'name' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['name'], $b['name']);
-    //                 } else {
-    //                     return strcmp($b['name'], $a['name']);
-    //                 }
-    //             break;
-    //             case 'sku' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['sku'], $b['sku']);
-    //                 } else {
-    //                     return strcmp($b['sku'], $a['sku']);
-    //                 }
-    //             break;
-    //             case 'type' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['type'], $b['type']);
-    //                 } else {
-    //                     return strcmp($b['type'], $a['type']);
-    //                 }
-    //             break;
-    //             case 'sales_desc' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['sales_desc'], $b['sales_desc']);
-    //                 } else {
-    //                     return strcmp($b['sales_desc'], $a['sales_desc']);
-    //                 }
-    //             break;
-    //             case 'income_account' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['income_account'], $b['income_account']);
-    //                 } else {
-    //                     return strcmp($b['income_account'], $a['income_account']);
-    //                 }
-    //             break;
-    //             case 'expense_account' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['expense_account'], $b['expense_account']);
-    //                 } else {
-    //                     return strcmp($b['expense_account'], $a['expense_account']);
-    //                 }
-    //             break;
-    //             case 'inventory_account' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['inventory_account'], $b['inventory_account']);
-    //                 } else {
-    //                     return strcmp($b['inventory_account'], $a['inventory_account']);
-    //                 }
-    //             break;
-    //             case 'purch_desc' :
-    //                 if($order === 'asc') {
-    //                     return strcmp($a['purch_desc'], $b['purch_desc']);
-    //                 } else {
-    //                     return strcmp($b['purch_desc'], $a['purch_desc']);
-    //                 }
-    //             break;
-    //             case 'sales_price' :
-    //                 if($order === 'asc') {
-    //                     return floatval($a['sales_price']) > floatval($b['sales_price']);
-    //                 } else {
-    //                     return floatval($a['sales_price']) < floatval($b['sales_price']);
-    //                 }
-    //             break;
-    //             case 'cost' :
-    //                 if($order === 'asc') {
-    //                     return floatval($a['cost']) > floatval($b['cost']);
-    //                 } else {
-    //                     return floatval($a['cost']) < floatval($b['cost']);
-    //                 }
-    //             break;
-    //             case 'qty_on_hand' :
-    //                 if($order === 'asc') {
-    //                     return intval($a['qty_on_hand']) > intval($b['qty_on_hand']);
-    //                 } else {
-    //                     return intval($a['qty_on_hand']) < intval($b['qty_on_hand']);
-    //                 }
-    //             break;
-    //             case 'qty_po' :
-    //                 if($order === 'asc') {
-    //                     return intval($a['qty_po']) > intval($b['qty_po']);
-    //                 } else {
-    //                     return intval($a['qty_po']) < intval($b['qty_po']);
-    //                 }
-    //             break;
-    //             case 'reorder_point' :
-    //                 if($order === 'asc') {
-    //                     return intval($a['reorder_point']) > intval($b['reorder_point']);
-    //                 } else {
-    //                     return intval($a['reorder_point']) < intval($b['reorder_point']);
-    //                 }
-    //             break;
-    //         }
-    //     });
-
-    //     $recordsFiltered = count($data);
-
-    //     if($postData['group_by_category'] === "1" || $postData['group_by_category'] === 1) {
-    //         $uncategorized = array_filter($data, function($item) {
-    //             return in_array($item['category_id'], ['0', null, '']);
-    //         });
-
-    //         $categories = $this->items_model->getItemCategories();
-
-    //         $categorized = [];
-    //         foreach($categories as $category) {
-    //             $catItems = array_filter($data, function($item) use ($category) {
-    //                 return $item['category_id'] === $category->item_categories_id;
-    //             });
-
-    //             if(!empty($catItems)) {
-    //                 $categorized[] = [
-    //                     'is_category' => 1,
-    //                     'id' => '',
-    //                     'name' => $category->name,
-    //                     'sku' => '',
-    //                     'type' => '',
-    //                     'sales_desc' => '',
-    //                     'income_account' => '',
-    //                     'expense_account' => '',
-    //                     'inventory_account' => '',
-    //                     'purch_desc' => '',
-    //                     'sales_price' => '',
-    //                     'cost' => '',
-    //                     'taxable' => '',
-    //                     'qty_on_hand' => '',
-    //                     'qty_po' => '',
-    //                     'reorder_point' => '',
-    //                     'item_categories_id' => ''
-    //                 ];
-    //                 foreach($catItems as $value) {
-    //                     $categorized[] = $value;
-    //                 }
-    //             }
-    //         }
-
-    //         $data = $uncategorized;
-
-    //         foreach($categorized as $itemWC) {
-    //             $data[] = $itemWC;
-    //         }
-
-    //         $categoryHeaderCount = count(array_filter($data, function($header) {
-    //             return $header['is_category'] === 1;
-    //         }));
-
-    //         $recordsFiltered = count($data) - $categoryHeaderCount;
-    //     }
-
-    //     $result = [
-    //         'draw' => $postData['draw'],
-    //         'recordsTotal' => count($items) + count($packages),
-    //         'recordsFiltered' => $recordsFiltered,
-    //         'data' => array_slice($data, $start, $limit)
-    //     ];
-
-    //     echo json_encode($result);
-    // }
-
-    public function get_item_form($type = "")
-    {
-        if($type) {
-            $this->page_data['inventory_asset_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 2, 5);
-            $this->page_data['income_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 11, 86);
-            $this->page_data['expense_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 13, 98);
-            $this->page_data['tax_rates'] = $this->TaxRates_model->getAllByCompanyId(getLoggedCompanyID());
-            $this->page_data['vendors'] = $this->vendors_model->getAllByCompany();
-            $this->load->view("accounting/products_services_modals/".$type, $this->page_data);
-        }
     }
 
     public function inactive($type, $id)
@@ -1694,26 +1247,27 @@ class Products_and_services extends MY_Controller {
 
             $taxable = "no";
 
-            if(!is_null($accountingDetails) && $accountingDetails->tax_rate_id !== "0" &&
-                !is_null($accountingDetails->tax_rate_id) && $accountingDetails->tax_rate_id !== ""
-            ) {
+            if($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== "" && $item['tax_rate_id'] !== null) {
                 $taxable = "yes";
             }
 
+            $name = $item['name'];
+            $name .= $item['status'] === '0' ? ' (deleted)' : '';
+
             $data = [
-                $item->title,
-                $item->description,
-                !is_null($accountingDetails) ? $accountingDetails->sku : '',
-                ucfirst($item->type),
-                $item->price,
+                $name,
+                $item['sales_desc'],
+                $item['sku'],
+                $item['type'],
+                $item['sales_price'],
                 $taxable,
-                !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
-                !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
-                $item->cost,
-                !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
-                $qty,
-                $item->re_order_points,
-                !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
+                $item['income_account'],
+                $item['purch_desc'],
+                $item['cost'],
+                $item['expense_account'],
+                $item['qty_on_hand'],
+                $item['reorder_point'],
+                $item['inventory_account'],
                 $qtyAsOfDate
             ];
 

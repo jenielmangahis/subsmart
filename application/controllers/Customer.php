@@ -263,6 +263,27 @@ class Customer extends MY_Controller
         echo json_encode($output);
     }
 
+    public function getCustomerList(){
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $enabled_table_headers = array();
+        if( isset($customer_settings[0] )){
+            $enabled_table_headers = unserialize($customer_settings[0]->headers);
+        }
+        $customers = $this->customer_ad_model->getCustomerLists();
+
+        $data_arr = array("customer" => $customers, "headers" => $enabled_table_headers);
+        die(json_encode($data_arr));
+
+
+    }
+
     public function preview_($id=null){
         $this->load->model('IndustryType_model');
 

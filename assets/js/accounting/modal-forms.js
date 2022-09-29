@@ -5330,28 +5330,34 @@ $(function() {
 
     $(document).on('click', '#modal-container #item-modal #storage-locations tbody tr td:not(:last-child)', function() {
         if($(this).parent().find('input[name="location_name[]"]').length < 1) {
-            $(this).parent().children('td:first-child').append('<input type="text" name="location_name[]" class="form-control">');
-            $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
+            $(this).parent().children('td:first-child').append('<input type="text" name="location_name[]" class="form-control nsm-field">');
+            $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control nsm-field">');
         }
     });
 
     $(document).on('click', '#modal-container #item-modal #addBundleItem, #modal-container #item-modal #addLocationLine', function(e) {
         e.preventDefault();
-        $(this).prev().children('tbody').append(`
+
+        if($(this).attr('id').includes('Bundle')) {
+            var type = 'item';
+        } else {
+            var type = 'location';
+        }
+        $(this).closest('table').children('tbody').append(`
         <tr>
             <td></td>
             <td></td>
-            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+            <td><button type="button" class="nsm-button delete-${type}"><i class='bx bx-fw bx-trash'></i></button></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
-            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+            <td><button type="button" class="nsm-button delete-${type}"><i class='bx bx-fw bx-trash'></i></button></td>
         </tr>
         `);
     });
 
-    $(document).on('click', '#modal-container #item-modal #bundle-items-table .deleteRow, #modal-container #item-modal #storage-locations .deleteRow', function(e) {
+    $(document).on('click', '#modal-container #item-modal #bundle-items-table .delete-item, #modal-container #item-modal #storage-locations .delete-location', function(e) {
         e.preventDefault();
     
         if($(this).parent().parent().parent().children('tr').length > 2) {

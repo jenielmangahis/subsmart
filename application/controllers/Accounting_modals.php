@@ -9944,7 +9944,8 @@ class Accounting_modals extends MY_Controller
             $this->page_data['expense_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 13, 98);
             $this->page_data['tax_rates'] = $this->TaxRates_model->getAllByCompanyId(getLoggedCompanyID());
             $this->page_data['vendors'] = $this->vendors_model->getAllByCompany();
-            $this->load->view("accounting/products_services_modals/".$type, $this->page_data);
+            $this->load->view('v2/pages/accounting/sales/products_and_services/item_forms/'.$type, $this->page_data);
+            // $this->load->view("accounting/products_services_modals/".$type, $this->page_data);
         }
     }
 

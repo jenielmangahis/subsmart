@@ -409,34 +409,34 @@ if(isset($jobs_data)){
             tabsize: 2,
             height: 250,
         });
-        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
-        $('#click').click(function(e){
-            e.preventDefault();
-            var data = signaturePad.toDataURL('image/png');
-            $('#output').val(data);
-            var url = '<?= base_url() ?>/job/save_esign';
-            $.ajax({
-                url: url,
-                type: "POST",
-                data:{base64: data}
-            }).done(function(e){
-                //$('#updateSignature').modal('hide');
-                var name = $('#authorizer_name').val();
-                $('#authorizer').html(name);
-                $('#appoval_name_right').html(name);
-                $('#date_signed').html(e);
-                $('#datetime_signed').val(e);
-                $('#name').val(name);
-                $('#signature_link').val(data);
-                $("#customer-signature").attr("src",data);
-                $("#customer_signature_right").attr("src",data);
-                //location.reload();
-            });
-        });
+        // var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        // $('#click').click(function(e){
+        //     e.preventDefault();
+        //     var data = signaturePad.toDataURL('image/png');
+        //     $('#output').val(data);
+        //     var url = '<?= base_url() ?>/job/save_esign';
+        //     $.ajax({
+        //         url: url,
+        //         type: "POST",
+        //         data:{base64: data}
+        //     }).done(function(e){
+        //         //$('#updateSignature').modal('hide');
+        //         var name = $('#authorizer_name').val();
+        //         $('#authorizer').html(name);
+        //         $('#appoval_name_right').html(name);
+        //         $('#date_signed').html(e);
+        //         $('#datetime_signed').val(e);
+        //         $('#name').val(name);
+        //         $('#signature_link').val(data);
+        //         $("#customer-signature").attr("src",data);
+        //         $("#customer_signature_right").attr("src",data);
+        //         //location.reload();
+        //     });
+        // });
 
-        $('#clear-signature').click(function(e){
-            signaturePad.clear();
-        });
+        // $('#clear-signature').click(function(e){
+        //     signaturePad.clear();
+        // });
 
         <?php if(isset($jobs_data) && $jobs_data->status == 'Started') : ?>
             document.getElementById('check_form').style.display = "none";
