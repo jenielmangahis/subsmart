@@ -71,7 +71,7 @@ class PlaidAccount extends MY_Controller {
 
         $is_valid = 0;
         $plaid_token = ''; 
-        $msg = 'Cannot connect to Plaid.';   
+        $msg = 'Cannot connect bank account. Please try again later.';   
 
         $cid  = logged('company_id');    
         $post = $this->input->post();
@@ -86,7 +86,7 @@ class PlaidAccount extends MY_Controller {
                 $this->session->set_userdata('plaid_token', $plaidToken['token']);    
             }
         }else{
-            $msg = 'Invalid Plaid Credentials';
+            $msg = 'Invalid Account';
         }       
         
         $json = ['client_name' => $client_name, 'plaid_token' => $plaid_token, 'is_valid' => $is_valid, 'msg' => $msg];

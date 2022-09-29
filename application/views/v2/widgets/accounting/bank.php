@@ -202,7 +202,8 @@ $(document).on('click', '.btn-connect-plaid', function(){
                 linkHandler.open();
             }else{
                 var api_connect_url = base_url + 'tools/api_connectors';
-                var html_message = o.msg + "<br />To check your Plaid API credentials click <a href='"+api_connect_url+"'>API Connectors</a>";
+                //var html_message = o.msg + "<br />To check your Plaid API credentials click <a href='"+api_connect_url+"'>API Connectors</a>";
+                var html_message = o.msg;
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
