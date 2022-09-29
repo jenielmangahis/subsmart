@@ -352,14 +352,51 @@ $('.export-items').on('click', function() {
     $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').val()}">`);
     $('#export-form').append(`<input type="hidden" name="stock_status" value="${$('#filter-stock-status').val()}">`);
 
+    $.each($('#filter-category').val(), function(key, value) {
+        $('#export-form').append(`<input type="hidden" name="category[]" value="${value}">`);
+    });
+
     $('#export-form').append(`<input type="hidden" name="column" value="name">`);
     $('#export-form').append(`<input type="hidden" name="order" value="asc">`);
 
-    // $('#export-form').submit();
+    $('#export-form').submit();
 });
 
 $('#export-form').on('submit', function(e) {
     e.preventDefault();
     this.submit();
     $(this).remove();
+});
+
+$('.nsm-counter').on('click', function() {
+    if($(this).hasClass('selected')) {
+        $('#filter-stock-status').val('all').trigger('change');
+    } else {
+        $('#filter-stock-status').val($(this).attr('id')).trigger('change');
+    }
+
+    $('#apply-button').trigger('click');
+});
+
+$('#add-item-button').on('click', function(e) {
+    e.preventDefault();
+
+    $.get(`/accounting/get-dropdown-modal/item_modal?field=product`, function(result) {
+		if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+                        ${result}
+                    </div>
+                </div>
+            `);
+        }
+
+        $(`#modal-container #item-modal`).attr('data-bs-backdrop', 'static');
+        $(`#modal-container #item-modal`).attr('data-bs-keyboard', 'true');
+
+		$(`#modal-container #item-modal`).modal('show');
+	});
 });

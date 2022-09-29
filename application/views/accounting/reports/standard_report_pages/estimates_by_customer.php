@@ -488,7 +488,6 @@
                                     </thead>
                                     <tbody id="customerTbl">
                                         <tr>
-                                            <td>hh</td>
                                         </tr>
                                     </tbody>
                                 </table>

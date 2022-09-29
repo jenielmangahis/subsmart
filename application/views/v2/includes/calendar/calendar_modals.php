@@ -47,8 +47,9 @@
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Which Employee</label>
-                            <select class="nsm-field form-select" name="appointment_user_id" id="appointment-user" multiple="multiple">
-                            </select>
+                            <span id="wait-list-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                <select class="nsm-field form-select" name="appointment_user_id" id="appointment-user"></select>
+                            </span>                                                        
                         </div>
                         <div class="col-12">
                             <div class="row g-3">
@@ -59,8 +60,9 @@
                                     <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-quick-add-customer">Add New Customer</a>
                                 </div>
                             </div>
-                            <select class="nsm-field form-select" name="appointment_customer_id" id="appointment-customer" multiple="multiple">
-                            </select>
+                            <span id="add-customer-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                <select class="nsm-field form-select" name="appointment_customer_id" id="appointment-customer"></select>
+                            </span>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
@@ -74,8 +76,9 @@
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
-                            <select class="nsm-field form-select" name="appointment_tags[]" id="appointment-tags" multiple="multiple">
-                            </select>
+                            <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                <select class="nsm-field form-select" name="appointment_tags[]" id="appointment-tags" multiple="multiple"></select>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -102,10 +105,14 @@
                             <label class="content-subtitle fw-bold d-block mb-2">Preferred Date</label>
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
+                                    <span id="waitlist-date-popover" data-toggle="popover" data-placement="right"data-container="body">
                                     <input type="text" name="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;">
+                                    </span>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <input type="text" name="appointment_time" class="nsm-field form-control timepicker" placeholder="Time" required />
+                                    <span id="waitlist-time-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                        <input type="text" name="appointment_time" class="nsm-field form-control timepicker" placeholder="Time" required />
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -118,18 +125,21 @@
                                     <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-quick-add-customer">Add New Customer</a>
                                 </div>
                             </div>
-                            <select class="nsm-field form-select" name="appointment_customer_id" id="wait-list-appointment-customer" multiple="multiple">
-                            </select>
+                            <span id="waitlist-customer-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                <select class="nsm-field form-select" name="appointment_customer_id" id="wait-list-appointment-customer"></select>
+                            </span>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                            <select name="appointment_type_id" id="wait-list-appointment-type" class="nsm-field form-select" required>
-                                <?php $start = 0; ?>
-                                <?php foreach ($appointmentTypes as $a) { ?>
-                                    <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
-                                <?php $start++;
-                                } ?>
-                            </select>
+                            <span id="waitlist-appointment-type-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                <select name="appointment_type_id" id="wait-list-appointment-type" class="nsm-field form-select" required>
+                                    <?php $start = 0; ?>
+                                    <?php foreach ($appointmentTypes as $a) { ?>
+                                        <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
+                                    <?php $start++;
+                                    } ?>
+                                </select>
+                            </span>
                         </div>
                     </div>
                 </div>

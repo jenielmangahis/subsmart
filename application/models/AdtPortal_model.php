@@ -56,6 +56,17 @@ class AdtPortal_model extends MY_Model
         $this->adtportalDb->where('project_id', $project_id);
         $this->adtportalDb->update();
     }
+
+    public function getByProjectByProjectId($project_id)
+    {
+        $this->adtportalDb->select('*');
+        $this->adtportalDb->from($this->adt_portal_project_table);
+        $this->adtportalDb->where('project_id', $project_id);
+        $this->adtportalDb->order_by('project_id', 'DESC');
+
+        $query = $this->adtportalDb->get()->row();
+        return $query;
+    }
 }
 
 /* End of file AdtPortal_model.php */

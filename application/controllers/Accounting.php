@@ -428,9 +428,9 @@ class Accounting extends MY_Controller
                 }
             }
             if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d")) {
-                $total_overdue += $inv->grand_total - $amount_payment;
+                $total_overdue += intval($inv->grand_total) - intval($amount_payment);
             } else {
-                $total_not_due += $inv->grand_total - $amount_payment;
+                $total_not_due += intval($inv->grand_total) - intval($amount_payment);
             }
         }
 

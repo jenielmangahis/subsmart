@@ -4749,7 +4749,7 @@ if(!function_exists('set_expense_graph_data')) {
                 }
             }
 
-            if( $autoSms->module_name == 'taskhub' || $autoSms->module_name == 'lead' ){
+            //if( $autoSms->module_name == 'taskhub' || $autoSms->module_name == 'lead' ){
                 if( $autoSms->send_to_assigned_user == 1 && $assigned_to_user_id > 0 ){
                     $assignedUser = $CI->Users_model->getUserByID($assigned_to_user_id);
                     if( $assignedUser->mobile != '' ){
@@ -4801,7 +4801,7 @@ if(!function_exists('set_expense_graph_data')) {
                         }
                     }  
                 }
-            }
+            //}
 
             if( $autoSms->send_to_company_admin == 1 ){
                 $companyAdminUsers = $CI->Users_model->getAllAdminByCompanyID($company_id);

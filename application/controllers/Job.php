@@ -197,7 +197,6 @@ class Job extends MY_Controller
         $this->page_data['default_customer_name'] = $default_customer_name;
 
         add_css([
-            'assets/css/esign/fill-and-sign/fill-and-sign.css',
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -205,18 +204,12 @@ class Job extends MY_Controller
         ]);
 
         add_footer_js([
-            'assets/js/esign/fill-and-sign/step1.js',
-            'assets/js/esign/fill-and-sign/step2.js',
-            'assets/js/esign/fill-and-sign/job/script.js',
+            'assets/js/esign/fill-and-sign/job/approve.js',
 
             'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
             'https://html2canvas.hertzen.com/dist/html2canvas.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-
-            'assets/js/esign/libs/pdf.js',
-            'assets/js/esign/libs/pdf.worker.js',
-            'assets/js/esign/fill-and-sign/step2.js',
         ]);
         //print_r($this->page_data['jobs_data']);
         $this->load->view('v2/pages/job/job_new', $this->page_data);
@@ -1722,8 +1715,16 @@ class Job extends MY_Controller
         }
 
         //SMS Notification
-        //createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id']);
-
+        createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
+        if( $input['employee2_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
+        }
+        if( $input['employee3_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee3_id'], 0);
+        }
+        if( $input['employee4_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
+        }
 
         if (!is_null($this->input->get('json', TRUE))) {
             // Returns json data, when ?json is set on URL query string.

@@ -265,16 +265,32 @@
                         </tbody>
                     </table>
                 <?php endif; ?>
+                <!-- <div style="overflow-x:auto;">
+                <table class="nsm-table" id="customer_list" style=" min-width: 500px;">
+                    <thead >
+                        <tr id="customer_head">
+                        </tr>
+                    </thead>
+                    <tbody id="customer_body"></tbody>
+                </table>
+                </div> -->
             </div>
         </div>
     </div>
 </div>
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<!-- <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script> -->
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.css">
+<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+
        // $(".customer-list").nsmPagination();
        
         // $('#customer-list').DataTable({
@@ -285,14 +301,75 @@
         // });
         //$('.row-adt-project').tooltip();   
 
+        // fetch('<?= base_url('customer/getCustomerList') ?>', {
+
+        // }).then(response => response.json() ).then(response => {
+        //     console.log(response);
+        //     var { customer, headers} = response;
+        //     if(headers){
+        //         for(var i=0; i<headers.length; i++){
+        //             test1(headers[i]);
+        //             var head = getName(headers[i]);
+        //             $('#customer_head').append('<td>'+ head +'</td>');
+        //         }
+        //     }
+
+        //     if(customer){
+        //         for(var x=0; x<customer.length; x++){
+        //             $('#customer_body').append('<tr id="body_tr'+x+'"></tr>');
+        //             for(var y=0; y<headers.length; y++){
+        //                 var bod = '';
+        //                 var head = getName(headers[y]);
+        //                 if(head == 'Name'){
+        //                     bod = '<label class="nsm-link default d-block fw-bol" onclick="location.href="customer/preview_/'+customer[x].prof_id+')""">'+customer[x].first_name+'</label><label class="nsm-link default content-subtitle fst-italic d-block">'+customer[x].email+'</label>';
+        //                 }
+        //                 $('#body_tr'+x+'').append(
+        //                     '<td>'+ bod +'</td>'
+        //                 );
+        //             }
+        //         }
+        //     }
+        // }).catch((error)=>{
+        //     console.log(error);
+        // });
+
+        // function getName(field){
+        //     var head = "";
+        //     if(field == "name"){
+        //         head= 'Name';
+        //     }else if(field == 'industry'){
+        //         head = 'Industry';
+        //     }else if(field == 'city'){
+        //         head = 'City';
+        //     }else if(field == 'state'){
+        //         head = 'State';
+        //     }else if(field == 'email'){
+        //         head = 'Email';
+        //     }else if(field == 'source'){
+        //         head = 'Source';
+        //     }else if(field == 'added'){
+        //         head = 'Added by';
+        //     }else if(field == 'sales_rep'){
+        //         head = 'Sales Rep';
+        //     }else if(field == 'tech'){
+        //         head = 'Technician';
+        //     }else if(field == 'plan_type'){
+        //         head = 'Plan Type';
+        //     }else if(field == 'subscription_amount'){
+        //         head = 'Subscription Amount';
+        //     }else if(field == 'phone'){
+        //         head = 'Phone';
+        //     }else if(field == 'status'){
+        //         head = 'Status';
+        //     }
+
+        //     return head;
+        // }
         $('#customer-list').DataTable({
-            // Processing indicator
             "processing": true,
-            // DataTables server-side processing mode
             "serverSide": true,
-            // Initial no order.
             "order": [],
-            // Load data from an Ajax source
+            "responsive" : true,
             "ajax": {
                 "url": "<?= base_url('customer/getCustomerLists'); ?>",
                 "type": "POST"

@@ -348,6 +348,7 @@ class Workcalender extends MY_Controller
         $this->page_data['settings'] = $settings;
         $this->page_data['enabled_calendar'] = $enabled_calendar;
         $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
+        //$this->page_data['enable_popper_tooltip'] = 1;
         $this->page_data['get_recent_users'] = $get_recent_users;
 
         $this->page_data['resources_users'] = $resources_users;

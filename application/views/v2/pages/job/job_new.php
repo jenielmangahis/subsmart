@@ -387,7 +387,7 @@
                                                         <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Start </a>
                                                     </li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?> step05">
-                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?>data-bs-toggle="modal" data-bs-target="#approved_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Approved </a>
+                                                        <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>"> Approved </a>
                                                     </li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Finish</li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoice'  ? 'active' : ''; ?>">Invoice</li>
@@ -996,7 +996,6 @@
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/pages/job/modals/inventory_location'); ?>
 <?php include viewPath('v2/pages/job/modals/new_inventory'); ?>
-<?php include viewPath('v2/pages/job/modals/esign'); ?>
 
 <!-- Signature Modal -->
 <div class="modal fade" id="updateSignature" role="dialog">
@@ -1012,8 +1011,6 @@
         </div>
     </div>
 </div>
-
-<?php include viewPath('v2/pages/job/modals/fill_esign'); ?>
 
 <!-- Modal -->
 <div class="modal fade nsm-modal" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
@@ -1223,6 +1220,51 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade nsm-modal" id="approveThisJobModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Approve Job</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <p>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</p>
+
+                        <div class="nsm-loader" style="height: 100px; min-height: unset;">
+                            <i class="bx bx-loader-alt bx-spin"></i>
+                        </div>
+
+                        <div class="nsm-empty d-none" style="height: auto; padding: 1rem 0;">
+                            <i class="bx bx-meh-blank"></i>
+                            <span>No eSign template found.</span>
+                        </div>
+
+                        <div class="esign-templates d-none">
+                            <p>Select your template below.</p>
+                            <div class="dropdown">
+                                <button class="nsm-button dropdown-toggle m-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Dropdown button
+                                </button>
+                                <ul class="dropdown-menu"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="nsm-button" data-action="approve">Approve</button>
+                    <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">
+                        <i class="bx bx-loader-alt bx-spin"></i>
+                        <span>Approve and eSign</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
