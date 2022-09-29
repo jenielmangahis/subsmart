@@ -240,7 +240,7 @@ class AcsProfile_model extends MY_Model
     public function getCustomer(){
         $this->db->select('DISTINCT(last_name), first_name, prof_id');
         $this->db->from($this->table);
-        $this->db->group_by('last_name');
+        //$this->db->group_by('last_name');
 
         $query = $this->db->get();
         return $query->result();

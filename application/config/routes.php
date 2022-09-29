@@ -537,8 +537,6 @@ $route['import/customer'] = 'accounting/import_customers';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
-// $route['accounting/products-and-services/load']['post'] = 'accounting_controllers/products_and_services/load';
-$route['accounting/products-and-services/item-form/(:any)'] = 'accounting_controllers/products_and_services/get_item_form/$1';
 $route['accounting/products-and-services/inactive/(:any)/(:any)']['DELETE'] = "accounting_controllers/products_and_services/inactive/$1/$2";
 $route['accounting/products-and-services/active/(:any)/(:any)'] = "accounting_controllers/products_and_services/active/$1/$2";
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting_controllers/products_and_services/create/$1';

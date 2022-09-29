@@ -1,6 +1,12 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/products_and_services_modals'); ?>
 
+<style>
+    .nsm-counter.selected {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.35);
+    }
+</style>
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -21,7 +27,7 @@
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-6">
-                        <div class="nsm-counter primary h-100 mb-2">
+                        <div class="nsm-counter primary h-100 mb-2 <?=$stock_status === 'low-stock' ? 'selected' : ''?>" id="low-stock">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -34,7 +40,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="nsm-counter error h-100 mb-2">
+                        <div class="nsm-counter error h-100 mb-2 <?=$stock_status === 'out-of-stock' ? 'selected' : ''?>" id="out-of-stock">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -152,7 +158,7 @@
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="add-item-button">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
                             <button type="button" class="nsm-button export-items">
