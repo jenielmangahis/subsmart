@@ -1,19 +1,19 @@
 <div class="modal-header">
-    <h3 class="modal-title" id="myModalLabel2" >Product/Service information</h3>
-    <button type="button" class="close close-item-modal" aria-label="Close">&times;</button>
+    <span class="modal-title content-title">Product/Service information</span>
+    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
 </div>
-<form id="bundle-item-form" action="<?=url('accounting/products-and-services/bundle/create')?>" method="post" enctype="multipart/form-data">
+<form id="bundle-item-form" class="h-100" action="<?=url('accounting/products-and-services/bundle/create')?>" method="post" enctype="multipart/form-data">
 <div class="modal-body">
     <table class="table">
         <thead>
             <tr>
                 <th>
                     <div class="row" style="height: 68.5px;">
-                        <div class="col-sm-2">
+                        <div class="col-12 col-sm-2">
                             <div class="type-icon" style="background-image: url('/assets/img/accounting/bundle.png')"></div>
                         </div>
-                        <div class="col-sm-10 d-flex align-items-center">
-                            <h5><span>Bundle</span></h5> &nbsp;&nbsp; <a href="#" class="text-info" id="select-item-type"><span>Change type</span></a>
+                        <div class="col-12 col-sm-10 d-flex align-items-center">
+                            <h5><span>Bundle</span></h5> &nbsp;&nbsp; <a href="#" class="text-decoration-none" id="select-item-type"><span>Change type</span></a>
                         </div>
                     </div>
                 </th>
@@ -23,30 +23,28 @@
             <tr>
                 <td>
                     <div class="row">
-                        <div class="col-sm-8">
-                            <div class="form-group" style="margin-bottom: 12px !important">
+                        <div class="col-12 col-md-8">
+                            <div class="mb-2">
                                 <label for="name">Name *</label>
-                                <textarea name="name" id="name" class="form-control" required></textarea>
+                                <textarea name="name" id="name" class="form-control nsm-field" required></textarea>
                             </div>
-                            <div class="form-group" style="margin-bottom: 12px !important">
+                            <div class="mb-2">
                                 <label for="sku">SKU</label>
-                                <input type="text" name="sku" id="sku" class="form-control">
+                                <input type="text" name="sku" id="sku" class="form-control nsm-field">
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <input type="file" name="icon" id="icon" class="hide">
+                        <div class="col-12 col-md-4">
+                            <input type="file" name="icon" id="icon" class="d-none">
                             <div class="icon-preview h-75">
                                 <div class="no-icon border" onclick="document.getElementById('icon').click()"></div>
-                                <div class="preview-uploaded border hide" onclick="document.getElementById('icon').click()">
+                                <div class="preview-uploaded border d-none" onclick="document.getElementById('icon').click()">
                                     <img src="" alt="Preview image" class="image-prev w-100">
                                 </div>
                             </div>
-                            <div class="action-bar h-25 d-flex align-items-center justify-content-center">
-                                <ul>
-                                    <li><a href="#" onclick="document.getElementById('icon').click()"><i class="fa fa-pencil"></i></a></li>
-                                    <li><a href="#" id="remove-item-icon"><i class="fa fa-trash-o"></i></a></li>
-                                </ul>
-                            </div>
+                            <ul class="h-25 d-flex justify-content-around list-unstyled">
+                                <li class="d-flex align-items-center"><a href="#" onclick="document.getElementById('icon').click()" class="text-muted"><i class="bx bx-fw bx-pencil"></i></a></li>
+                                <li class="d-flex align-items-center"><a href="#" id="remove-item-icon" class="text-muted"><i class="bx bx-fw bx-trash"></i></a></li>
+                            </ul>
                         </div>
                     </div>
                 </td>
@@ -54,11 +52,9 @@
             <tr>
                 <td>
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group" style="margin: 0 !important">
-                                <label for="price">Price</label>
-                                <input type="text" class="form-control text-right" id="price" name="price" required onchange="convertToDecimal(this)">
-                            </div>
+                        <div class="col-12">
+                            <label for="price">Price</label>
+                            <input type="text" class="form-control nsm-field text-end" id="price" name="price" required onchange="convertToDecimal(this)">
                         </div>
                     </div>
                 </td>
@@ -66,19 +62,15 @@
             <tr>
                 <td>
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-12">
                             <label>Products/services included in the bundle</label>
-                            <div class="form-check p-0">
-                                <div class="checkbox checkbox-sec">
-                                    <input class="form-check-input" type="checkbox" id="displayBundle" name="display_on_print" value="1">
-                                    <label class="form-check-label" for="displayBundle">
-                                        Display bundle components when printing or sending transactions
-                                    </label>
-                                </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="displayBundle" name="display_on_print" value="1">
+                                <label class="form-check-label" for="displayBundle">Display bundle components when printing or sending transactions</label>
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <table class="table table-bordered table-hover" id="bundle-items-table">
+                        <div class="col-12">
+                            <table class="nsm-table" id="bundle-items-table">
                                 <thead>
                                     <tr>
                                         <th width="70%">PRODUCT/SERVICE</th>
@@ -90,16 +82,32 @@
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                        <td>
+                                            <button type="button" class="nsm-button delete-item">
+                                                <i class='bx bx-fw bx-trash'></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                        <td>
+                                            <button type="button" class="nsm-button delete-item">
+                                                <i class='bx bx-fw bx-trash'></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3">
+                                            <button type="button" class="nsm-button" id="addBundleItem">
+                                                Add lines
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
-                            <a href="#" class="text-info" id="addBundleItem"><i class="fa fa-plus"></i> Add lines</a>
                         </div>
                     </div>
                 </td>
@@ -107,16 +115,18 @@
         </tbody>
     </table>
 </div>
-<div class="modal-footer">
-    <div class="btn-group dropup float-right">
-        <button type="button" class="btn btn-success" id="save-and-close">
+<div class="modal-footer position-absolute w-100 bottom-0">
+    <div class="btn-group dropup float-end" role="group">
+        <button type="button" class="nsm-button success" id="save-and-close">
             Save and close
         </button>
-        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
+        <div class="btn-group" role="group">
+            <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bx bx-fw bx-chevron-up text-white"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
+            </div>
         </div>
     </div>
 </div>

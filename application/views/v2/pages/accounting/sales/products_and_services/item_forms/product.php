@@ -166,7 +166,7 @@
             <tr>
                 <td>
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-12">
                             <label>Purchasing information</label>
                         </div>
                         <div class="col-12 mb-2">

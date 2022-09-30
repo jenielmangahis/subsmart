@@ -145,7 +145,72 @@ class Customer extends MY_Controller
             $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
             $labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name . ' ' . $customer->last_name;
             $data_arr = [];
-            if (in_array('name', $enabled_table_headers)){
+            if(!empty($enabled_table_headers)){
+                if (in_array('name', $enabled_table_headers)){
+                    if ($customer->customer_type === 'Business'){
+                        $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                        $n = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+                        $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
+                        array_push($data_arr, $data_name);
+                    }else{
+                        $n = ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]);
+                        $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
+                        array_push($data_arr, $data_name);
+                    }
+                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href='".base_url('/customer/preview_/' .$customer->prof_id)."''>".$labelName."</label>
+                    <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
+                    if( $customer->adt_sales_project_id > 0 ){
+                        $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                    }
+                    array_push($data_arr, $name);
+                }
+                if (in_array('industry', $enabled_table_headers)) {
+                    if( $customer->industry_type_id > 0 ){
+                        array_push($data_arr, $customer->industry_type);
+                    }else{
+                        array_push($data_arr, 'Not Specified');           
+                    }
+                }
+                if (in_array('city', $enabled_table_headers)) {
+                    array_push($data_arr, $customer->city);
+                }
+                if (in_array('state', $enabled_table_headers)){
+                    array_push($data_arr, $customer->state);
+                }
+                if (in_array('email', $enabled_table_headers)){
+                    array_push($data_arr, $customer->email);
+                }
+                if (in_array('source', $enabled_table_headers)){
+                    $lead =  $customer->lead_source != "" ? $customer->lead_source : 'n/a';
+                    array_push($data_arr, $lead);
+                }
+                if (in_array('added', $enabled_table_headers)){
+                    array_push($data_arr, $customer->entered_by);
+                }
+                if (in_array('sales_rep', $enabled_table_headers)){
+                    $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
+                    array_push($data_arr, $sales_rep);
+                }
+                if (in_array('tech', $enabled_table_headers)) {
+                    $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned';
+                    array_push($data_arr, $techician);
+                }
+                if (in_array('plan_type', $enabled_table_headers)){
+                    array_push($data_arr, $customer->system_type);
+                }
+                if (in_array('subscription_amount', $enabled_table_headers)){
+                    $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                    array_push($data_arr, "$".$subs_amt);
+                }
+                if (in_array('phone', $enabled_table_headers)){
+                    array_push($data_arr, $customer->phone_m);
+                }
+                if (in_array('status', $enabled_table_headers)){
+                    $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
+                    array_push($data_arr, $stat);
+                }
+            }else{
+                //name
                 if ($customer->customer_type === 'Business'){
                     $parts = explode(' ', strtoupper(trim($customer->business_name)));
                     $n = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
@@ -158,54 +223,44 @@ class Customer extends MY_Controller
                 }
                 $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href='".base_url('/customer/preview_/' .$customer->prof_id)."''>".$labelName."</label>
                 <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
-                // if( $customer->adt_sales_project_id > 0 ){
-                //     $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
-                // }
+                if( $customer->adt_sales_project_id > 0 ){
+                    $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                }
                 array_push($data_arr, $name);
-            }
-            if (in_array('industry', $enabled_table_headers)) {
+                //industry
                 if( $customer->industry_type_id > 0 ){
                     array_push($data_arr, $customer->industry_type);
                 }else{
                     array_push($data_arr, 'Not Specified');           
                 }
-            }
-            if (in_array('city', $enabled_table_headers)) {
+                //city
                 array_push($data_arr, $customer->city);
-            }
-            if (in_array('state', $enabled_table_headers)){
+                //state
                 array_push($data_arr, $customer->state);
-            }
-            if (in_array('email', $enabled_table_headers)){
+                //email
                 array_push($data_arr, $customer->email);
-            }
-            if (in_array('source', $enabled_table_headers)){
+                //source
                 $lead =  $customer->lead_source != "" ? $customer->lead_source : 'n/a';
                 array_push($data_arr, $lead);
-            }
-            if (in_array('added', $enabled_table_headers)){
+                //added
                 array_push($data_arr, $customer->entered_by);
-            }
-            if (in_array('sales_rep', $enabled_table_headers)){
+                //sales rep
                 $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
                 array_push($data_arr, $sales_rep);
-            }
-            if (in_array('tech', $enabled_table_headers)) {
+                //tech
                 $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned';
                 array_push($data_arr, $techician);
-            }
-            if (in_array('plan_type', $enabled_table_headers)){
+                //plan type
                 array_push($data_arr, $customer->system_type);
-            }
-            if (in_array('subscription_amount', $enabled_table_headers)){
+                //sub amount
                 $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                 array_push($data_arr, "$".$subs_amt);
-            }
-            if (in_array('phone', $enabled_table_headers)){
+                //phone
                 array_push($data_arr, $customer->phone_m);
-            }
-            if (in_array('status', $enabled_table_headers)){
+                //status
                 $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
+                array_push($data_arr, $stat);
+
             }
 
             $dropdown = "<div class='dropdown table-management'>

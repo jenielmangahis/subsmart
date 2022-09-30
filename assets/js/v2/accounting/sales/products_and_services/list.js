@@ -94,23 +94,39 @@ $('#apply-button').on('click', function() {
     var filterType = $('#filter-type').val();
     var filterCategory = $('#filter-category').val();
     var filterStockStat = $('#filter-stock-status').val();
+    var groupByCat = $('#group-by-category');
 
     var url = `${base_url}accounting/products-and-services?`;
 
     url += filterStatus !== 'active' ? `status=${filterStatus}&` : '';
     url += filterType !== 'all' ? `type=${filterType}&` : '';
     url += $('#filter-category option').length !== $('#filter-category option:selected').length && $('#filter-category option:selected').length > 0 ? `category=${filterCategory}&` : '';
-    url += filterStockStat !== 'all' ? `stock-status=${filterStockStat}` : '';
+    url += filterStockStat !== 'all' ? `stock-status=${filterStockStat}&` : '';
+    url += groupByCat.prop('checked') ? 'group-by-category=1' : '';
 
-    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
-        url = url.slice(0, -1); 
+    if(url.slice(-1) === '#') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '&') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '?') {
+        url = url.slice(0, -1);
     }
 
     location.href = url;
 });
 
 $('#reset-button').on('click', function() {
-    location.href = `${base_url}accounting/products-and-services`;
+    if($('#group-by-category').prop('checked')) {
+        var url = `${base_url}accounting/products-and-services?group-by-category=1`;
+    } else {
+        var url = `${base_url}accounting/products-and-services`;
+    }
+
+    location.href = url;
 });
 
 $('#items-table thead .select-all').on('change', function() {
@@ -399,4 +415,51 @@ $('#add-item-button').on('click', function(e) {
 
 		$(`#modal-container #item-modal`).modal('show');
 	});
+});
+
+$('#group-by-category').on('change', function() {
+    var currUrl = window.location.href;
+
+    if($(this).prop('checked')) {
+        if(currUrl.slice(-1) === '#') {
+            currUrl = currUrl.slice(0, -1); 
+        }
+    
+        var urlSplit = currUrl.split('/');
+        var queries = urlSplit[urlSplit.length - 1].split('?');
+
+        if(queries.length > 1) {
+            queries = queries[queries.length - 1];
+
+            if(queries.slice(-1) === '#') {
+                queries = queries.slice(0, -1);
+            }
+
+            if(queries.slice(-1) === '&') {
+                queries = queries.slice(0, -1);
+            }
+
+            queries += '&group-by-category=1';
+
+            var url = `${base_url}accounting/products-and-services?${queries}`;
+        } else {
+            var url = `${base_url}accounting/products-and-services?group-by-category=1`;
+        }
+    } else {
+        var url = currUrl.replace('group-by-category=1', '');
+
+        if(url.slice(-1) === '#') {
+            url = url.slice(0, -1); 
+        }
+
+        if(url.slice(-1) === '&') {
+            url = url.slice(0, -1);
+        }
+
+        if(url.slice(-1) === '?') {
+            url = url.slice(0, -1); 
+        }
+    }
+
+    location.href = url;
 });

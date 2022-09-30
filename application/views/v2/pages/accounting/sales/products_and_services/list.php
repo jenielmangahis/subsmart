@@ -244,7 +244,7 @@
                                     <label for="compact" class="form-check-label">Compact</label>
                                 </div>
 								<div class="form-check">
-                                    <input type="checkbox" id="group-by-category" class="form-check-input">
+                                    <input type="checkbox" id="group-by-category" class="form-check-input" <?=!empty($group_by_category) ? 'checked' : ''?>>
                                     <label for="group-by-category" class="form-check-label">Group by category</label>
                                 </div>
                             </ul>
@@ -277,6 +277,12 @@
                     <tbody>
                         <?php if(count($items) > 0) : ?>
 						<?php foreach($items as $item) : ?>
+                        <?php if($item['is_category']) : ?>
+                        <tr>
+                            <td></td>
+                            <td class="fw-bold nsm-text-primary default" colspan="15"><?=$item['name']?></td>
+                        </tr>
+                        <?php else : ?>
 						<tr data-status="<?=$item['status']?>" data-id="<?=$item['id']?>">
 							<td>
                                 <?php if($item['type'] !== 'Bundle') : ?>
@@ -285,7 +291,7 @@
                                 </div>
                                 <?php endif; ?>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
+                            <td class="nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
 							<td><?=$item['sku']?></td>
 							<td><?=$item['type']?></td>
 							<td><?=$item['sales_desc']?></td>
@@ -327,10 +333,11 @@
                                 </div>
                             </td>
 						</tr>
+                        <?php endif; ?>
 						<?php endforeach; ?>
 						<?php else : ?>
 						<tr>
-							<td colspan="14">
+							<td colspan="15">
 								<div class="nsm-empty">
 									<span>No results found.</span>
 								</div>

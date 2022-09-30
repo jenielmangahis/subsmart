@@ -5319,12 +5319,12 @@ $(function() {
             reader.readAsDataURL($(this)[0].files[0]);
     
             $('#modal-container #item-modal img.image-prev').parent().addClass('d-flex justify-content-center');
-            $('#modal-container #item-modal img.image-prev').parent().removeClass('hide');
-            $('#modal-container #item-modal img.image-prev').parent().prev().addClass('hide');
+            $('#modal-container #item-modal img.image-prev').parent().removeClass('d-none');
+            $('#modal-container #item-modal img.image-prev').parent().prev().addClass('d-none');
         } else {
             $('#modal-container #item-modal img.image-prev').parent().removeClass('d-flex justify-content-center');
-            $('#modal-container #item-modal img.image-prev').parent().addClass('hide');
-            $('#modal-container #item-modal img.image-prev').parent().prev().removeClass('hide');
+            $('#modal-container #item-modal img.image-prev').parent().addClass('d-none');
+            $('#modal-container #item-modal img.image-prev').parent().prev().removeClass('d-none');
         }
     });
 
@@ -5397,25 +5397,17 @@ $(function() {
 
     $(document).on('change', '#modal-container #item-modal #selling, #modal-container #item-modal #purchasing', function() {
         if($(this).prop('checked') === false) {
-            $(this).parent().parent().parent().parent().children('div:not(:first-child)').addClass('hide');
+            $(this).closest('.row').find('select, input:not([type="checkbox"]), textarea').parent().addClass('d-none');
     
             if($(this).attr('id') === 'selling') {
-                $(this).parent().parent().parent().parent().parent().parent().next().addClass('hide');
-    
                 if($('#modal-container #item-modal #purchasing').prop('checked') === false) {
                     $('#modal-container #item-modal #purchasing').prop('checked', true).trigger('change');
                 }
             } else {
-                if($('#modal-container #item-modal #selling').prop('checked') === false) {
-                    $('#modal-container #item-modal #selling').prop('checked', true).trigger('change');
-                }
+                $('#modal-container #item-modal #selling').prop('checked', true).trigger('change');
             }
         } else {
-            $(this).parent().parent().parent().parent().children('div:not(:first-child)').removeClass('hide');
-    
-            if($(this).attr('id') === 'selling') {
-                $(this).parent().parent().parent().parent().parent().parent().next().removeClass('hide');
-            }
+            $(this).closest('.row').find('select, input:not([type="checkbox"]), textarea').parent().removeClass('d-none')
         }
     });
 

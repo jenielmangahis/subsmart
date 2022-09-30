@@ -19,6 +19,36 @@
     border-radius: 0.25rem;
     margin-top: 9px;
 }
+    .cont{
+        overflow-x: auto;
+    }
+    .customerTbl>thead {
+	color: #888888;
+	font-weight: bold;
+	font-size: 14px;
+    }
+
+    .customerTbl td {
+        padding: 0.8rem 0.5rem;
+    }
+
+    .customerTbl>tbody td {
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .customerTbl td .bx {
+        color: #888888;
+    }
+    .customerTbl>tbody>tr:hover {
+        background-color: #f7f7f7;
+    }
+    .customerTbl{
+        width: 100%;
+        font-size: 15px;
+    }
+    .customerTbl>tfoot td {
+        padding: 0.8rem 0 0 0;
+    }
 </style>
 
 <div class="nsm-fab-container">
@@ -68,303 +98,222 @@
                     </div>
                 </div>
                 <?php if (!empty($enabled_table_headers)) : ?>
-                    <table class="nsm-table customer-list" id="customer-list" style="width:100%">
-                        <thead>
-                            <tr>
-                                <td class="table-icon"></td>
-                                <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
-                                <?php if (in_array('email', $enabled_table_headers)) : ?><td data-name="Name">Email</td><?php endif; ?>
-                                <?php if (in_array('industry', $enabled_table_headers)) : ?><td data-name="Name">Industry</td><?php endif; ?>
-                                <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
-                                <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
-                                <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
-                                <?php if (in_array('added', $enabled_table_headers)) : ?><td data-name="Added">Added</td><?php endif; ?>
-                                <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
-                                <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
-                                <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
-                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </td><?php endif; ?>
-                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
-                                <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
-                                <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
-                                <td data-name="Manage"></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if (!empty($profiles)) :
-                            ?>
+                    <div class="cont">
+                        <table class="customerTbl customer-list" id="customer-list" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <td class="table-icon"></td>
+                                    <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
+                                    <?php if (in_array('email', $enabled_table_headers)) : ?><td data-name="Name">Email</td><?php endif; ?>
+                                    <?php if (in_array('industry', $enabled_table_headers)) : ?><td data-name="Name">Industry</td><?php endif; ?>
+                                    <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
+                                    <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
+                                    <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
+                                    <?php if (in_array('added', $enabled_table_headers)) : ?><td data-name="Added">Added</td><?php endif; ?>
+                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
+                                    <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
+                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </td><?php endif; ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
+                                    <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
+                                    <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
+                                    <td data-name="Manage"></td>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <?php
-                                foreach ($profiles as $customer) :
-                                    switch (strtoupper($customer->status)):
-                                        case "INSTALLED":
-                                            $badge = "success";
-                                            break;
-                                        case "CANCELLED":
-                                            $badge = "error";
-                                            break;
-                                        case "COLLECTIONS":
-                                            $badge = "secondary";
-                                            break;
-                                        case "CHARGED BACK":
-                                            $badge = "primary";
-                                            break;
-                                        default:
-                                            $badge = "";
-                                            break;
-                                    endswitch;
+                                if (!empty($profiles)) :
                                 ?>
-                                    <?php if (in_array('name', $enabled_table_headers)) : ?>
+                                    <?php
+                                    foreach ($profiles as $customer) :
+                                        switch (strtoupper($customer->status)):
+                                            case "INSTALLED":
+                                                $badge = "success";
+                                                break;
+                                            case "CANCELLED":
+                                                $badge = "error";
+                                                break;
+                                            case "COLLECTIONS":
+                                                $badge = "secondary";
+                                                break;
+                                            case "CHARGED BACK":
+                                                $badge = "primary";
+                                                break;
+                                            default:
+                                                $badge = "";
+                                                break;
+                                        endswitch;
+                                    ?>
+                                        <?php if (in_array('name', $enabled_table_headers)) : ?>
+                                            <td>
+                                                <div class="nsm-profile">
+                                                    <?php if ($customer->customer_type === 'Business'): ?>
+                                                        <span>
+                                                        <?php 
+                                                            $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                                                            echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+                                                        ?>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
+                                            <td class="nsm-text-primary">
+                                                <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/module/' . $customer->prof_id); ?>'">
+                                                    <?php if ($customer->customer_type === 'Business'): ?>
+                                                        <?= $customer->business_name ?>
+                                                    <?php else: ?>
+                                                        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
+                                                    <?php endif; ?>
+                                                </label>
+                                                <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                            </td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('industry', $enabled_table_headers)) : ?>
+                                            <td>
+                                                <?php 
+                                                    if( $customer->industry_type_id > 0 ){
+                                                        echo $customer->industry_type;
+                                                    }else{
+                                                        echo 'Not Specified';                                                    
+                                                    }
+                                                ?>
+                                            </td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('city', $enabled_table_headers)) : ?>
+                                            <td><?php echo $customer->city; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('state', $enabled_table_headers)) : ?>
+                                            <td><?php echo $customer->state; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('source', $enabled_table_headers)) : ?>
+                                            <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('added', $enabled_table_headers)) : ?>
+                                            <td><?php echo $customer->entered_by; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
+                                            <td><?php print_r( get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('tech', $enabled_table_headers)) : ?>
+                                            <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
+                                            <td><?= $techician; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
+                                            <td><?php echo $customer->system_type; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
+                                            <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
+                                            <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('phone', $enabled_table_headers)) : ?>
+                                            <td><?php echo $customer->phone_m; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('status', $enabled_table_headers)) : ?>
+                                            <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
+                                        <?php endif; ?>
                                         <td>
-                                            <div class="nsm-profile">
-                                                <?php if ($customer->customer_type === 'Business'): ?>
-                                                    <span>
-                                                    <?php 
-                                                        $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                                                        echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-                                                    ?>
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
-                                                <?php endif; ?>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">Preview</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="mailto:<?= $customer->email; ?>">Email</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?= $customer->phone_m; ?>">Call</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?= base_url('invoice/add/'); ?>">Invoice</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?= base_url('customer/module/' . $customer->prof_id); ?>">Dashboard</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?= $customer->prof_id; ?>">Message</a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </td>
-                                        <td class="nsm-text-primary">
-                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/module/' . $customer->prof_id); ?>'">
-                                                <?php if ($customer->customer_type === 'Business'): ?>
-                                                    <?= $customer->business_name ?>
-                                                <?php else: ?>
-                                                    <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                <?php endif; ?>
-                                            </label>
-                                            <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </tr>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                <?php
+                                else :
+                                ?>
+                                    <tr>
+                                        <td colspan="14">
+                                            <div class="nsm-empty">
+                                                <span>No results found.</span>
+                                            </div>
                                         </td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('industry', $enabled_table_headers)) : ?>
-                                        <td>
-                                            <?php 
-                                                if( $customer->industry_type_id > 0 ){
-                                                    echo $customer->industry_type;
-                                                }else{
-                                                    echo 'Not Specified';                                                    
-                                                }
-                                            ?>
-                                        </td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('city', $enabled_table_headers)) : ?>
-                                        <td><?php echo $customer->city; ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('state', $enabled_table_headers)) : ?>
-                                        <td><?php echo $customer->state; ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('source', $enabled_table_headers)) : ?>
-                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('added', $enabled_table_headers)) : ?>
-                                        <td><?php echo $customer->entered_by; ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
-                                        <td><?php print_r( get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('tech', $enabled_table_headers)) : ?>
-                                        <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
-                                        <td><?= $techician; ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
-                                        <td><?php echo $customer->system_type; ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('phone', $enabled_table_headers)) : ?>
-                                        <td><?php echo $customer->phone_m; ?></td>
-                                    <?php endif; ?>
-                                    <?php if (in_array('status', $enabled_table_headers)) : ?>
-                                        <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
-                                    <?php endif; ?>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">Preview</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="mailto:<?= $customer->email; ?>">Email</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?= $customer->phone_m; ?>">Call</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('invoice/add/'); ?>">Invoice</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('customer/module/' . $customer->prof_id); ?>">Dashboard</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?= $customer->prof_id; ?>">Message</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
                                     </tr>
                                 <?php
-                                endforeach;
+                                endif;
                                 ?>
-                            <?php
-                            else :
-                            ?>
-                                <tr>
-                                    <td colspan="14">
-                                        <div class="nsm-empty">
-                                            <span>No results found.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endif;
-                            ?>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php else : ?>
-                    
-                    <table class="nsm-table " id="customer-list" style="width:100%">
-                        <thead>
-                            <tr>
-                                <td class="table-icon"></td>
-                                <td data-name="Name">Name   </td>
-                                <?php if($companyId == 1): ?>
-                                <td data-name="Name">Industry</td>
-                                <?php endif; ?>
-                                <td data-name="City">City</td>
-                                <td data-name="State">State</td>
-                                <td data-name="Source">Source</td>
-                                <td data-name="Added">Added</td>
-                                <td data-name="Sales Rep">Sales Rep</td>
-                                <td data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></td>
-                                <td data-name="Plan Type">Plan Type</td>
-                                <td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?>"><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?></td>
-                                <td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td>
-                                <td data-name="Phone">Phone</td>
-                                <td data-name="Status">Status</td>
-                                <td data-name="Manage"></td>
-                                <td data-name="Manage"></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                    <div class="cont">
+                        <table class="customerTbl " id="customer-list" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <td class="table-icon"></td>
+                                    <td data-name="Name">Name   </td>
+                                    <?php if($companyId == 1): ?>
+                                    <td data-name="Name">Industry</td>
+                                    <?php endif; ?>
+                                    <td data-name="City">City</td>
+                                    <td data-name="State">State</td>
+                                    <td data-name="Source">Source</td>
+                                    <td data-name="Added">Added</td>
+                                    <td data-name="Sales Rep">Sales Rep</td>
+                                    <td data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></td>
+                                    <td data-name="Plan Type">Plan Type</td>
+                                    <td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?>"><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?></td>
+                                    <td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td>
+                                    <td data-name="Phone">Phone</td>
+                                    <td data-name="Status">Status</td>
+                                    <td data-name="Manage"></td>
+                                    <td data-name="Manage"></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php endif; ?>
-                <!-- <div style="overflow-x:auto;">
-                <table class="nsm-table" id="customer_list" style=" min-width: 500px;">
-                    <thead >
-                        <tr id="customer_head">
-                        </tr>
-                    </thead>
-                    <tbody id="customer_body"></tbody>
-                </table>
-                </div> -->
             </div>
         </div>
     </div>
 </div>
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
-<!-- <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script> -->
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.css">
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.css">
 <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"> -->
  
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-
-       // $(".customer-list").nsmPagination();
-       
-        // $('#customer-list').DataTable({
-        //     "lengthChange": true,
-        //     "searching" : true,
-        //     "pageLength": 10,
-        //     "order": [],
-        // });
-        //$('.row-adt-project').tooltip();   
-
-        // fetch('<?= base_url('customer/getCustomerList') ?>', {
-
-        // }).then(response => response.json() ).then(response => {
-        //     console.log(response);
-        //     var { customer, headers} = response;
-        //     if(headers){
-        //         for(var i=0; i<headers.length; i++){
-        //             test1(headers[i]);
-        //             var head = getName(headers[i]);
-        //             $('#customer_head').append('<td>'+ head +'</td>');
-        //         }
-        //     }
-
-        //     if(customer){
-        //         for(var x=0; x<customer.length; x++){
-        //             $('#customer_body').append('<tr id="body_tr'+x+'"></tr>');
-        //             for(var y=0; y<headers.length; y++){
-        //                 var bod = '';
-        //                 var head = getName(headers[y]);
-        //                 if(head == 'Name'){
-        //                     bod = '<label class="nsm-link default d-block fw-bol" onclick="location.href="customer/preview_/'+customer[x].prof_id+')""">'+customer[x].first_name+'</label><label class="nsm-link default content-subtitle fst-italic d-block">'+customer[x].email+'</label>';
-        //                 }
-        //                 $('#body_tr'+x+'').append(
-        //                     '<td>'+ bod +'</td>'
-        //                 );
-        //             }
-        //         }
-        //     }
-        // }).catch((error)=>{
-        //     console.log(error);
-        // });
-
-        // function getName(field){
-        //     var head = "";
-        //     if(field == "name"){
-        //         head= 'Name';
-        //     }else if(field == 'industry'){
-        //         head = 'Industry';
-        //     }else if(field == 'city'){
-        //         head = 'City';
-        //     }else if(field == 'state'){
-        //         head = 'State';
-        //     }else if(field == 'email'){
-        //         head = 'Email';
-        //     }else if(field == 'source'){
-        //         head = 'Source';
-        //     }else if(field == 'added'){
-        //         head = 'Added by';
-        //     }else if(field == 'sales_rep'){
-        //         head = 'Sales Rep';
-        //     }else if(field == 'tech'){
-        //         head = 'Technician';
-        //     }else if(field == 'plan_type'){
-        //         head = 'Plan Type';
-        //     }else if(field == 'subscription_amount'){
-        //         head = 'Subscription Amount';
-        //     }else if(field == 'phone'){
-        //         head = 'Phone';
-        //     }else if(field == 'status'){
-        //         head = 'Status';
-        //     }
-
-        //     return head;
-        // }
         $('#customer-list').DataTable({
             "processing": true,
             "serverSide": true,
