@@ -216,6 +216,7 @@ class Products_and_services extends MY_Controller {
 
         if(!empty(get('group-by-category'))) {
             $filters['group_by_category'] = "1";
+            $this->page_data['group_by_category'] = "1";
         }
 
         $this->page_data['items'] = $this->get_items($filters);
@@ -429,6 +430,10 @@ class Products_and_services extends MY_Controller {
             });
         }
 
+        usort($data, function($a, $b) use ($order, $columnName) {
+            return strcasecmp($a['name'], $b['name']);
+        });
+
         if(isset($filters['group_by_category']) && $filters['group_by_category'] === "1" || isset($filters['group_by_category']) && $filters['group_by_category'] === 1) {
             $uncategorized = array_filter($data, function($item) {
                 return in_array($item['category_id'], ['0', null, '']);
@@ -444,7 +449,7 @@ class Products_and_services extends MY_Controller {
 
                 if(!empty($catItems)) {
                     $categorized[] = [
-                        'is_category' => 1,
+                        'is_category' => true,
                         'id' => '',
                         'name' => $category->name,
                         'sku' => '',
@@ -473,17 +478,7 @@ class Products_and_services extends MY_Controller {
             foreach($categorized as $itemWC) {
                 $data[] = $itemWC;
             }
-
-            $categoryHeaderCount = count(array_filter($data, function($header) {
-                return $header['is_category'] === 1;
-            }));
-
-            $recordsFiltered = count($data) - $categoryHeaderCount;
         }
-
-        usort($data, function($a, $b) use ($order, $columnName) {
-            return strcasecmp($a['name'], $b['name']);
-        });
 
         return $data;
     }
@@ -744,7 +739,7 @@ class Products_and_services extends MY_Controller {
             $this->session->set_flashdata('error', "Please try again!");
         }
 
-        redirect('/accounting/products-and-services');
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 
     private function uploadFile($files)
@@ -941,7 +936,7 @@ class Products_and_services extends MY_Controller {
             $this->session->set_flashdata('error', "Please try again!");
         }
 
-        redirect('/accounting/products-and-services');
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 
     public function assign_category($categoryId)

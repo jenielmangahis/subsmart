@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="create_appointment_modal" tabindex="-1" aria-labelledby="create_appointment_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="create_appointment_modal" aria-labelledby="create_appointment_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <form id="frm-create-appointment" method="POST">
             <div class="modal-content">
@@ -311,5 +311,57 @@
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Priority -->
+<div class="modal fade nsm-modal fade" id="create_priority_modal" tabindex="-1" aria-labelledby="create_priority_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <?php echo form_open_multipart('', ['id' => 'create-workorder-priority', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Create Priority</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">                
+                <div class="row-g-3">
+                    <div class="col-12">
+                        <label class="content-subtitle fw-bold d-block mb-2">Name *</label>
+                        <input type="text" name="priority_name" class="nsm-field form-control" required />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary btn-save-workorder-priority">Save</button>
+            </div>
+        </div>
+        <?php echo form_close(); ?>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="edit_priority_modal" tabindex="-1" aria-labelledby="edit_priority_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <?php echo form_open_multipart('', ['id' => 'update-workorder-priority', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <input type="hidden" name="pid" id="priority_id" value="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Priority</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">                
+                <div class="row-g-3">
+                    <div class="col-12">
+                        <label class="content-subtitle fw-bold d-block mb-2">Name *</label>
+                        <input type="text" name="priority_name" id="edit_priority_name" class="nsm-field form-control" required />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary btn-update-workorder-priority">Save</button>
+            </div>
+        </div>
+        <?php echo form_close(); ?>
     </div>
 </div>

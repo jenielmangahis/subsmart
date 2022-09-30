@@ -19,7 +19,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   $button.addEventListener("click", (event) => {
     event.preventDefault();
-    $($modal).modal("show");
+
+    const jobStatus = $("#esignJobStatus").val();
+    if (jobStatus === "Started") {
+      $($modal).modal("show");
+    }
   });
 
   $($modal).on("shown.bs.modal", async () => {
@@ -77,20 +81,64 @@ window.addEventListener("DOMContentLoaded", () => {
     $esignTemplatesMenu.innerHTML = "";
   });
 
-  $approveButton.addEventListener("click", () => {
-    const customerId = $("#customer_id").val();
+  $approveButton.addEventListener("click", async () => {
+    const response = await updateJobToApproved();
+    if (!response.success) return;
 
-    console.log("---------------------------");
-    console.log("Update job status to approve");
-    console.log({ customerId });
+    $($modal).modal("hide");
+    const result = await Swal.fire({
+      title: "Nice!",
+      text: response.message,
+      icon: "success",
+      showCancelButton: false,
+      confirmButtonColor: "#32243d",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ok",
+    });
+
+    if (result.value) {
+      location.reload();
+    }
   });
 
-  $approveAndEsignButton.addEventListener("click", () => {
+  $approveAndEsignButton.addEventListener("click", async () => {
+    const response = await updateJobToApproved();
+    if (!response.success) return;
+
     const esignId = $esignTemplatesToggle.dataset.id;
     const customerId = $("#customer_id").val();
+    const jobId = $("input[id=esignJobId]").val();
 
-    console.log("---------------------------");
-    console.log("Update job status to approve and redirect to esign");
-    console.log({ esignId, customerId });
+    const params = new URLSearchParams({
+      id: esignId,
+      job_id: jobId,
+      customer_id: customerId,
+    });
+
+    window.location = `/eSign_v2/templateCreate?${params}`;
   });
+
+  async function updateJobToApproved() {
+    const $jobIdInput = document.querySelector("input[id=esignJobId]");
+
+    if (!$jobIdInput) {
+      return false;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("id", $jobIdInput.value);
+      formData.append("status", "Approved");
+
+      const response = await fetch("/job/update_jobs_status", {
+        method: "POST",
+        body: formData,
+      });
+
+      return response.json();
+    } catch (error) {
+      alert("Something went wrong");
+      return false;
+    }
+  }
 });

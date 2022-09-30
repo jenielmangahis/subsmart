@@ -230,10 +230,6 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     background-color: #0077c5;
 }
 
-#item-modal #types-table tr:hover {
-    background-color: #fff;
-}
-
 #item-modal #types-table tr:last-child td {
     border-bottom: 1px solid #dee2e6;
 }

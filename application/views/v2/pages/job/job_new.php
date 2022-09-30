@@ -334,6 +334,7 @@
 
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
+    <input type="hidden" value="<?= $jobs_data->status ?>" id="esignJobStatus" />
 <?php endif; ?>
 
 <div class="nsm-fab-container">

@@ -944,6 +944,8 @@ $route['workorder/_delete_custom_field'] = 'Workorder/ajax_delete_custom_field';
 $route['workorder/_create_checklist'] = 'Workorder/ajax_save_checklist';
 $route['workorder/_update_checklist'] = 'Workorder/ajax_update_checklist';
 $route['workorder/_delete_checklist'] = 'Workorder/ajax_delete_checklist';
+$route['workorder/_create_workorder_priority'] = 'Workorder/ajax_create_workorder_priority';
+$route['workorder/_update_workorder_priority'] = 'Workorder/ajax_update_workorder_priority';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
