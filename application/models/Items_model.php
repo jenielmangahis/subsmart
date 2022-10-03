@@ -50,10 +50,23 @@ class Items_model extends MY_Model
 
     public function categoriesWithoutParent()
     {
-        $this->db->where('company_id', getLoggedCompanyID());
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
         $this->db->where('parent_id', null);
         $this->db->or_where('parent_id', 0);
+        $this->db->where('company_id', $companyId);
         $this->db->or_where('parent_id', '');
+        $this->db->where('company_id', $companyId);
+        $query = $this->db->get($this->table_categories);
+
+        return $query->result();
+    }
+
+    public function get_child_categories($categoryId)
+    {
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $this->db->where('parent_id', $categoryId);
         $query = $this->db->get($this->table_categories);
 
         return $query->result();
@@ -523,20 +536,29 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function check_name($companyId, $itemName)
+    public function check_name($companyId, $itemName, $status)
     {
         $this->db->where('company_id', $companyId);
         $this->db->where('title', $itemName);
+        $this->db->where('is_active', $status);
         $query = $this->db->get($this->table);
         return $query->row();
     }
 
-    public function check_package_name($companyId, $packageName)
+    public function check_package_name($companyId, $packageName, $status)
     {
         $this->db->where('company_id', $companyId);
         $this->db->where('name', $packageName);
+        $this->db->where('status', $status);
         $query = $this->db->get('package_details');
         return $query->row();
+    }
+
+    public function remove_item_categories($categoryId)
+    {
+        $this->db->where('item_categories_id', $categoryId);
+        $update = $this->db->update($this->table, ['item_categories_id' => 0]);
+        return $update;
     }
 }
 

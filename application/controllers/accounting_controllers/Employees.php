@@ -107,51 +107,58 @@ class Employees extends MY_Controller {
     {
         $this->hasAccessModule(77); 
         add_footer_js(array(
-            "assets/js/accounting/payroll/employees.js"
+            "assets/js/v2/accounting/payroll/employees/list.js"
         ));
 
-        $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/employees/index', $this->page_data);
-    }
-
-    public function load_employees()
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $order = $post['order'][0]['dir'];
-        $orderColumn = $post['order'][0]['column'];
-        $columnName = $post['columns'][$orderColumn]['name'];
-        $start = $post['start'];
-        $limit = $post['length'];
-
-        if($post['status'] === 'active') {
-            $status = [
-                "1"
-            ];
-        } else if($post['status'] === 'inactive') {
-            $status = [
-                "0",
-                "2",
-                "3",
-                "4",
-                "5"
-            ];
-        } else {
-            $status = [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5"
-            ];
+        $filters = [];
+        switch(get('status')) {
+            case 'all' :
+                $filters['status'] = [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ];
+            break;
+            case 'inactive' :
+                $filters['status'] = [
+                    "0",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ];
+            break;
+            default :
+                $filters['status'] = [
+                    "1"
+                ];
+            break;
         }
 
-        $employees = $this->users_model->getCompanyUsersWithFilter($status, $order, $orderColumn);
+        if(!empty(get('status'))) {
+            $this->page_data['status'] = get('status');
+        }
+
+        if(!empty(get('search'))) {
+            $this->page_data['search'] = get('search');
+            $filters['search'] = get('search');
+        }
+
+        $this->page_data['employees'] = $this->get_employees($filters);
+        $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->load->view('accounting/employees/index', $this->page_data);
+        $this->load->view('v2/pages/accounting/payroll/employees/list', $this->page_data);
+    }
+
+    private function get_employees($filters)
+    {
+        $employees = $this->users_model->getCompanyUsersWithFilter($filters['status']);
 
         $data = [];
-        $search = $post['columns'][0]['search']['value'];
-
         if(count($employees) > 0) {
             foreach($employees as $employee) {
                 switch ($employee->status) {
@@ -191,8 +198,8 @@ class Employees extends MY_Controller {
                     $payRate = 'Missing';
                 }
 
-                if($search !== "") {
-                    if(stripos($employee->LName, $search) !== false || stripos($employee->FName, $search) !== false) {
+                if(isset($filters['search']) && $filters['search'] !== "") {
+                    if(stripos($employee->LName, $filters['search']) !== false || stripos($employee->FName, $filters['search']) !== false) {
                         $data[] = [
                             'id' => $employee->id,
                             'name' => "$employee->LName, $employee->FName",
@@ -217,22 +224,11 @@ class Employees extends MY_Controller {
             }
         }
 
-        usort($data, function($a, $b) use ($order, $columnName) {
-            if($order === 'asc') {
-                return strcmp($a[$columnName], $b[$columnName]);
-            } else {
-                return strcmp($b[$columnName], $a[$columnName]);
-            }
+        usort($data, function($a, $b) {
+            return strcmp($a['name'], $b['name']);
         });
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($employees),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        return $data;
     }
 
     public function add()

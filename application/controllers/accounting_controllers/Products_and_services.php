@@ -494,11 +494,11 @@ class Products_and_services extends MY_Controller {
         $attempt = 0;
         do {
             if($type === 'bundle') {
-                $name = $attempt > 0 ? "$package->name (deleted - $attempt)" : "$package->name (deleted)";
-                $checkName = $this->items_model->check_package_name(logged('company_id'), $name);
+                $name = $attempt > 0 ? "$package->name (deleted-$attempt)" : "$package->name (deleted)";
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 0);
             } else {
-                $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
-                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+                $name = $attempt > 0 ? "$item->title (deleted-$attempt)" : "$item->title (deleted)";
+                $checkName = $this->items_model->check_name(logged('company_id'), $name, 0);
             }
 
             $attempt++;
@@ -539,10 +539,10 @@ class Products_and_services extends MY_Controller {
         do {
             if($type === 'bundle') {
                 $name = $attempt > 0 ? "$newName - $attempt" : $newName;
-                $checkName = $this->items_model->check_package_name(logged('company_id'), $name);
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 1);
             } else {
                 $name = $attempt > 0 ? "$newName - $attempt" : $newName;
-                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+                $checkName = $this->items_model->check_name(logged('company_id'), $name, 1);
             }
 
             $attempt++;
@@ -598,10 +598,10 @@ class Products_and_services extends MY_Controller {
         do {
             if($type === 'bundle') {
                 $name = $attempt > 0 ? "$name - $attempt" : $name;
-                $checkName = $this->items_model->check_package_name(logged('company_id'), $name);
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 1);
             } else {
                 $name = $attempt > 0 ? "$name - $attempt" : $name;
-                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+                $checkName = $this->items_model->check_name(logged('company_id'), $name, 1);
             }
 
             $attempt++;
@@ -1296,5 +1296,115 @@ class Products_and_services extends MY_Controller {
 
         $this->page_data['items'] = $items;
         $this->load->view("v2/includes/accounting/modal_forms/purchase_order_modal", $this->page_data);
+    }
+
+    public function get_item_details($type, $id)
+    {
+        if($type !== 'bundle') {
+            $item = $this->items_model->getItemById($id)[0];
+            $qty = $this->items_model->countQty($item->id);
+            $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
+    
+            if($item->attached_image !== null && $item->attached_image !== "") {
+                $icon = "/uploads/$item->attached_image";
+            } else if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
+                $icon = "/uploads/accounting/attachments/$attachment->stored_name";
+            } else {
+                $icon = "";
+            }
+    
+            $data = [
+                'id' => $item->id,
+                'name' => $item->title,
+                'category_id' => $item->item_categories_id,
+                'category' => !is_null($this->items_model->getCategory($item->item_categories_id)) ? $this->items_model->getCategory($item->item_categories_id)->name : '',
+                'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                'type' => ucfirst($item->type),
+                'rebate' => $item->rebate,
+                'sales_desc' => $item->description,
+                'income_account_id' => !is_null($accountingDetails) ? $accountingDetails->income_account_id : '',
+                'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
+                'expense_account_id' => !is_null($accountingDetails) ? $accountingDetails->expense_account_id : '',
+                'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
+                'inventory_account_id' => !is_null($accountingDetails) ? $accountingDetails->inv_asset_acc_id : '',
+                'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
+                'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
+                'sales_price' => $item->price,
+                'cost' => $item->cost,
+                'taxable' => $accountingDetails->tax_rate_id,
+                'qty_on_hand' => $qty,
+                'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
+                'as_of_date' => !is_null($accountingDetails) && !in_array($accountingDetails->as_of_date, [null, '']) ? date('m/d/Y', strtotime($accountingDetails->as_of_date)) : '',
+                'reorder_point' => $item->re_order_points,
+                'icon' => $icon,
+                'vendor_id' => $item->vendor_id,
+                'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
+                'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
+                'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
+                'locations' => $this->items_model->getLocationByItemId($item->id),
+                'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                'status' => $item->is_active
+            ];
+        } else {
+            $package = $this->items_model->get_package_by_id($id);
+            $packageItems = $this->items_model->get_package_items($package->id);
+
+            $bundleItems = [];
+            foreach($packageItems as $packageItem) {
+                $item = $this->items_model->getItemById($packageItem->item_id)[0];
+
+                $bundleItems[] = [
+                    'id' => $packageItem->id,
+                    'item_id' => $packageItem->item_id,
+                    'quantity' => $packageItem->quantity,
+                    'name' => $item->title
+                ];
+            }
+
+            $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
+
+            if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
+                $icon = "/uploads/accounting/attachments/$attachment->stored_name";
+            } else {
+                $icon = "";
+            }
+
+            $data = [
+                'id' => $package->id,
+                'name' => $package->name,
+                'category_id' => null,
+                'category' => '',
+                'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                'type' => 'Bundle',
+                'rebate' => null,
+                'sales_desc' => '',
+                'income_account_id' => '',
+                'income_account' => '',
+                'expense_account_id' => '',
+                'expense_account' => '',
+                'inventory_account_id' => '',
+                'inventory_account' => '',
+                'purch_desc' => '',
+                'sales_price' => number_format(floatval($package->total_price), 2, '.', ','),
+                'cost' => '',
+                'taxable' => $accountingDetails->tax_rate_id,
+                'qty_on_hand' => '',
+                'qty_po' => '',
+                'as_of_date' => '',
+                'reorder_point' => '',
+                'icon' => $icon,
+                'vendor_id' => '',
+                'vendor' => '',
+                'sales_tax_cat_id' => '',
+                'sales_tax_cat' => '',
+                'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                'bundle_items' => $bundleItems,
+                'status' => $package->status
+            ];
+        }
+        
+        echo json_encode($data);
     }
 }

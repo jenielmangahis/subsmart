@@ -546,6 +546,7 @@ $route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accoun
 $route['accounting/products-and-services/print-table']['post'] = 'accounting_controllers/products_and_services/print_table';
 $route['accounting/products-and-services/export-table']['post'] = 'accounting_controllers/products_and_services/export_table';
 $route['accounting/products-and-services/reorder-items']['post'] = 'accounting_controllers/products_and_services/reorder_items';
+$route['accounting/products-and-services/get-item-details/(:any)/(:any)'] = 'accounting_controllers/products_and_services/get_item_details/$1/$2';
 
 // Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';
@@ -606,7 +607,6 @@ $route['accounting/reconcile/view/showData'] = 'accounting_controllers/reconcile
 $route['accounting/reconcile/view/download/(:any)'] = 'accounting_controllers/reconcile/download/$1';
 
 $route['accounting/employees'] = 'accounting_controllers/employees/index';
-$route['accounting/employees/load']['post'] = 'accounting_controllers/employees/load_employees';
 $route['accounting/employees/add'] = 'accounting_controllers/employees/add';
 $route['accounting/employees/create']['post'] = 'accounting_controllers/employees/create';
 $route['accounting/employees/edit/(:any)'] = 'accounting_controllers/employees/edit/$1';

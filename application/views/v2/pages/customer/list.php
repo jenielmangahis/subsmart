@@ -49,6 +49,9 @@
     .customerTbl>tfoot td {
         padding: 0.8rem 0 0 0;
     }
+    .customerTbl .table-icon {
+	width: 1%;
+}
 </style>
 
 <div class="nsm-fab-container">

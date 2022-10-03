@@ -2437,8 +2437,8 @@ class Workorder extends MY_Controller
             'first_ecn_no'                      => $agreements->first_ecn_no,
             'second_ecn_no'                     => $agreements->second_ecn_no,
             'third_ecn_no'                      => $agreements->third_ecn_no,
-            'installation_date'                 => $agreements->installation_date,
-            'intall_time'                       => $agreements->intall_time,
+            'installation_date'                 => $workorder->install_date,
+            'intall_time'                       => $workorder->install_time,
             'sales_re_name'                     => $agreements->sales_re_name,
             'sale_rep_phone'                    => $agreements->sale_rep_phone,
             'team_leader'                       => $agreements->team_leader,
@@ -8123,6 +8123,10 @@ class Workorder extends MY_Controller
              'secondary_account_holder_name'        => $this->input->post('secondery_account_holder_name'),
              'date_issued'                          => date("Y-m-d"),
 
+             
+            'install_date'                          => $this->input->post('installation_date'),
+            'install_time'                          => $this->input->post('intall_time'),
+
             // 'company_representative_signature' => 'company_representative_signature',
             // 'company_representative_name' => 'company_representative_name',
             // 'primary_account_holder_signature' => 'primary_account_holder_signature',
@@ -8162,8 +8166,8 @@ class Workorder extends MY_Controller
             'first_ecn_no'              => $this->input->post('first_ecn_no'),
             'second_ecn_no'             => $this->input->post('second_ecn_no'),
             'third_ecn_no'              => $this->input->post('third_ecn_no'),
-            'installation_date'         => $this->input->post('installation_date'),
-            'intall_time'               => $this->input->post('intall_time'),
+            // 'installation_date'         => $this->input->post('installation_date'),
+            // 'intall_time'               => $this->input->post('intall_time'),
             'sales_re_name'             => $this->input->post('sales_re_name'),
             'sale_rep_phone'            => $this->input->post('sale_rep_phone'),
             'team_leader'               => $this->input->post('team_leader'),
@@ -8782,6 +8786,10 @@ class Workorder extends MY_Controller
             'grand_total'                           => $this->input->post('totalDue'),
             'terms_and_conditions'                  => $this->input->post('terms_conditions'),
 
+            
+            'install_date'                          => $this->input->post('installation_date'),
+            'install_time'                          => $this->input->post('intall_time'),
+
              //signature
              'company_representative_signature'     => $file_save,
              'company_representative_name'          => $this->input->post('company_representative_printed_name'),
@@ -8999,8 +9007,8 @@ class Workorder extends MY_Controller
             'first_ecn_no'              => $this->input->post('first_ecn_no'),
             'second_ecn_no'             => $this->input->post('second_ecn_no'),
             'third_ecn_no'              => $this->input->post('third_ecn_no'),
-            'installation_date'         => $this->input->post('installation_date'),
-            'intall_time'               => $this->input->post('intall_time'),
+            // 'installation_date'         => $this->input->post('installation_date'),
+            // 'intall_time'               => $this->input->post('intall_time'),
             'sales_re_name'             => $this->input->post('sales_re_name'),
             'sale_rep_phone'            => $this->input->post('sale_rep_phone'),
             'team_leader'               => $this->input->post('team_leader'),

@@ -525,4 +525,75 @@ class Reports extends MY_Controller {
         $data_arr = array("success" => true, "data" => $estimate_data, "header" => $header, "column" => $column, "select" => $selected_col);
         die(json_encode($data_arr));
     }
+
+    public function EstimatesInvoiceByCustomer(){
+        $input = $this->input->post();
+        $header = json_decode($input['header']);
+        $company_name = $input['company_name'];
+        $report_title = $input['report_title'];
+        if(empty($input)){
+            $data = array(
+                "where" => array(
+                    "company_id" => logged('company_id')
+                ),
+                "table" => "estimates",
+                "select" => "id, customer_id, estimate_date, estimate_number, status, grand_total"
+            );
+
+            $customer = $this->estimate_model->getEstimatesByCustomerWithParam($data);
+            $distinct_customer = array(
+                "where" => array(
+                    "company_id" => logged('company_id')
+                ),
+                "where_not_in" => array(
+                    "status" => "Draft"
+                ),
+                "table" => "estimates",
+                "select" => "DISTINCT(customer_id) as id",
+            );
+            $customerId = $this->estimate_model->getEstimatesByCustomerWithParam($distinct_customer);
+            $customerName = [];
+            foreach($customerId as $cid){
+                array_push($customerName, get_estimate_customer_name($cid->id));
+            }
+            $data_arr = array("success"=> true, "def" => true, "customer" => $customer, "customerName" => $customerName);
+        }
+
+        $cust_header = [];
+        //header and footer
+        if(!empty($header)){
+            if(in_array('isCompany', $header)){
+                $cust_header['company_title'] = $company_name;
+                $cust_header['head'] = true;
+            }else{
+                $cust_header['company_title'] = "";
+            }
+
+            if(in_array('isReport', $header)){
+                $cust_header['report_title'] = $report_title;
+                $cust_header['head'] = true;
+            }else{
+                $cust_header['report_title'] = "";
+            }
+
+            if(in_array('isDate', $header)){
+                $cust_header['date_prepared'] = date("l, F j, Y");
+                $cust_header['foot'] = true;
+
+
+            }else{
+                $cust_header['date_prepared'] = "";
+            }
+
+            if(in_array('isTime', $header)){
+                $cust_header['time_prepared'] = date("h:i A eP");
+                $cust_header['foot'] = true;
+            }else{
+                $cust_header['time_prepared'] = "";
+            }
+
+            $data_arr = array("success" => true, "cust_header" => $cust_header);
+        }
+        die(json_encode($data_arr));
+    }
 }

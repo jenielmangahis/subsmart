@@ -87,7 +87,7 @@ add_css(array(
                                             <p><small>Start</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" type="button" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?> data-toggle="modal" data-target="#approved_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> class="btn btn-circle  <?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                            <a href="#" type="button" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?> data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false" <?php endif; ?> class="btn btn-circle  <?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa fa-check-circle-o"></span>
                                             </a>
                                             <p><small>Approved</small></p>

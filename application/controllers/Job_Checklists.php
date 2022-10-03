@@ -25,7 +25,7 @@ class Job_Checklists extends MY_Controller
         $jobChecklists = $this->JobChecklist_model->getAllByCompanyId($company_id);
 
         $this->page_data['jobChecklists'] = $jobChecklists;
-        $this->load->view('job_checklists/index', $this->page_data);
+        $this->load->view('v2/pages/job_checklists/index', $this->page_data);
     }
 
     public function add_new()

@@ -14,10 +14,8 @@
 
 <!-- Script for autosaving form -->
 
-<?php if(isset($jobs_data)) { ?>
-<script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
-<?php } ?>
 
+<script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
 
 <style>
     .nsm-table {
@@ -326,10 +324,15 @@
     .modal{
         z-index: 999999 !important;
     }
+    .a-bold{
+        color: black !important;
+    }
     .items-8 li a{
-        color: #bebebe !important;
+        color: #bebebe;
         text-decoration: none !important;
     }
+    
+    
 </style>
 
 <?php if(isset($jobs_data)): ?>
@@ -379,16 +382,18 @@
                                         <div class="nsm-progressbar my-4">
                                             <div class="progressbar">
                                                 <ul class="items-8">
-                                                    <li class="<?= !isset($jobs_data) || $jobs_data->status == '0'  ? 'active' : ''; ?> step01">Draft</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?> step02">Schedule</li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Arrival'  ? 'active' : ''; ?> step03" style="display: ;">
-                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-bs-toggle="modal" data-bs-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> style="text-decoration: none"> Arrival </a>
+                                                    <li class="<?= !isset($jobs_data) || $jobs_data->status == '0' || $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>" id="1">
+                                                <a href="">Draft</a></li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>" id="2">
+                                                <a href="">Schedule</a></li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Arrival' ? 'active' : ''; ?>" id="3" style="display: ;">
+                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-bs-toggle="modal" data-bs-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Arrival </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?> step04" >
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?>" id="4" >
                                                         <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Start </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?> step05">
-                                                        <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>"> Approved </a>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5">
+                                                        <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
                                                     </li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Finish</li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoice'  ? 'active' : ''; ?>">Invoice</li>
@@ -676,7 +681,7 @@
                                             <hr/>
                                         </div>
                                         <div class="col-sm-12">
-                                            <input type="text" name="job_number" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>" hidden>
+                                            <input type="text" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>" hidden>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="row">
@@ -1302,7 +1307,45 @@ add_footer_js(array(
 
 
 <script>
-  
+    $(document).ready(function(){
+        var class_name = $('.active').attr('class');
+        var step = '';
+        
+        if($('#2').hasClass('active')){
+            step = '2';
+        }else if($('#3').hasClass('active')){
+            step = '3';
+        }else if($('#4').hasClass('active')){
+            step = '4';
+        }else if($('#5').hasClass('active')){
+            step = '5';
+        }
+
+        for(var x=0; x<step; x++){
+            $('#'+x).addClass('active');
+            $('#'+x).addClass('a-bold');
+        }
+        // if(step == 'step02'){
+        //     $('#step01').addClass('active');
+        // }
+        // if(step == 'step03'){
+        //     $('#step01').addClass('active');
+        //     $('#step02').addClass('active');
+        // }
+        // if(step == 'step04'){
+        //     $('#step01').addClass('active');
+        //     $('#step02').addClass('active');
+        //     $('#step03').addClass('active');
+        // }
+        // if(step == 'step05'){
+        //     $('#step01').addClass('active');
+        //     $('#step02').addClass('active');
+        //     $('#step03').addClass('active');
+        //     $('#step04').addClass('active');
+        // }
+        // $('#active').addClass('active');
+        // if(class_name)
+    })
     $(function(){
         // $('#customer_id').select2({
         //     ajax: {

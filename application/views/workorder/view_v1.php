@@ -1479,12 +1479,12 @@ table input.form-control {
 												<div class="row"> 
 													<div class="col-md-6">
 														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php 
-														$originalDate = $agreements->installation_date;
+														$originalDate = $workorder->install_date;
 														$newDate = date("m-d-Y", strtotime($originalDate)); echo $newDate ?>" readonly style="background-color: #fff;">
 														<b>Installation Date:</b>
 													</div>
 													<div class="col-md-6">
-														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->intall_time; ?>" readonly style="background-color: #fff;">
+														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->install_time; ?>" readonly style="background-color: #fff;">
 														<b>Install Time Date:</b>
 													</div>
 												</div>

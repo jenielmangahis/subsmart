@@ -95,9 +95,11 @@ $('#apply-button').on('click', function() {
     var filterCategory = $('#filter-category').val();
     var filterStockStat = $('#filter-stock-status').val();
     var groupByCat = $('#group-by-category');
+    var search = $('#search_field').val();
 
     var url = `${base_url}accounting/products-and-services?`;
 
+    url += search !== '' ? `search=${search}&` : '';
     url += filterStatus !== 'active' ? `status=${filterStatus}&` : '';
     url += filterType !== 'all' ? `type=${filterType}&` : '';
     url += $('#filter-category option').length !== $('#filter-category option:selected').length && $('#filter-category option:selected').length > 0 ? `category=${filterCategory}&` : '';
@@ -120,10 +122,22 @@ $('#apply-button').on('click', function() {
 });
 
 $('#reset-button').on('click', function() {
+    var url = `${base_url}accounting/products-and-services?`;
+
+    if($('#search_field').val() !== '') {
+        url += `search=${$('#search_field').val()}&`;
+    }
+
     if($('#group-by-category').prop('checked')) {
-        var url = `${base_url}accounting/products-and-services?group-by-category=1`;
-    } else {
-        var url = `${base_url}accounting/products-and-services`;
+        url += `group-by-category=1`;
+    }
+
+    if(url.slice(-1) === '&') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '?') {
+        url = url.slice(0, -1);
     }
 
     location.href = url;
@@ -463,3 +477,372 @@ $('#group-by-category').on('change', function() {
 
     location.href = url;
 });
+
+$('#items-table .make-active').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var name = row.find('td:nth-child(2)').html().trim();
+    var type = row.find('td:nth-child(4)').html().trim();
+
+	Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${name}</b> active?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+				url: `/accounting/products-and-services/active/${type.toLowerCase()}/${row.find('.select-one').val()}`,
+				type: 'GET',
+				success: function(result) {
+					location.reload();
+				}
+			});
+        }
+    });
+});
+
+$('#items-table .make-inactive').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var name = row.find('td:nth-child(2)').html().trim();
+    var type = row.find('td:nth-child(4)').html().trim();
+
+	Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${name}</b> inactive?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+				url: `/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
+				type: 'DELETE',
+				success: function(result) {
+					location.reload();
+				}
+			});
+        }
+    });
+});
+
+$('#items-table .duplicate').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var type = row.find('td:nth-child(4)').html().trim();
+    type = type.toLowerCase();
+
+    $.get('/accounting/item-form/'+type, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">
+				<div class="modal-right-side">
+                    <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+						<div class="modal-dialog" role="document" style="width: 25%">
+							<div class="modal-content">
+								${result}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+						<div class="modal-right-side">
+                            <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+								<div class="modal-dialog" role="document" style="width: 25%">
+									<div class="modal-content">
+                        				${result}
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+            `);
+        }
+
+		$(`#item-modal a#select-item-type`).attr('onclick', `changeType('')`);
+
+        $('#modal-container #item-modal .date').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+
+        $('#item-modal select').each(function() {
+            var dropdownType = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+
+            if (dropdownFields.includes(dropdownType)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: dropdownType,
+                                modal: 'item-modal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#item-modal')
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#item-modal')
+                });
+            }
+        });
+
+		occupyFields(row.data().id, type, 'duplicate');
+
+		$(`#item-modal form`).attr('id', 'duplicate-item-form');
+
+        $(`#modal-container #item-modal`).attr('data-bs-backdrop', 'static');
+        $(`#modal-container #item-modal`).attr('data-bs-keyboard', 'false');
+
+		$(`#modal-container #item-modal`).modal('show');
+    });
+});
+
+$('#items-table .edit-item').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var type = row.find('td:nth-child(4)').html().trim();
+    type = type.toLowerCase();
+
+	$.get('/accounting/item-form/'+type, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">
+				<div class="modal-right-side">
+                    <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+						<div class="modal-dialog" role="document" style="width: 25%">
+							<div class="modal-content">
+								${result}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+						<div class="modal-right-side">
+                            <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+								<div class="modal-dialog" role="document" style="width: 25%">
+									<div class="modal-content">
+                        				${result}
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+            `);
+        }
+
+        $('#modal-container #item-modal .date').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+
+        $('#item-modal select').each(function() {
+            var dropdownType = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+
+            if (dropdownFields.includes(dropdownType)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: dropdownType,
+                                modal: 'item-modal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#item-modal')
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#item-modal')
+                });
+            }
+        });
+
+        if(type === 'product' || type === 'bundle') {
+			$('#item-modal a#select-item-type').remove();
+		} else {
+			$(`#item-modal a#select-item-type`).attr('onclick', `changeType('${type}')`);
+		}
+
+		occupyFields(row.data().id, type);
+
+		$('#item-modal label[for="asOfDate"]').parent().parent().remove();
+
+        var qtyPo = row.find('td:nth-child(14)').html().trim() !== '' ? row.find('td:nth-child(14)').html().trim() : 0;
+
+        $(`<div class="row">
+			<div class="col-6">
+				<label for="">Quantity on hand</label>
+				<p class="m-0">Adjust: <a class="text-decoration-none adjust-quantity" href="#">Quantity</a> | <a class="text-decoration-none adjust-starting-value" href="#">Starting value</a></p>
+			</div>
+			<div class="col-6">
+				<p class="text-end m-0">${row.find('td:nth-child(13)').html().trim()}</p>
+			</div>
+		</div>`).insertAfter('#item-modal #storage-locations');
+		$('#item-modal #storage-locations').parent().append(`<div class="row">
+			<div class="col-6">
+				<label for="">Quantity on PO</label>
+			</div>
+			<div class="col-6">
+				<p class="text-end m-0">${qtyPo}</p>
+			</div>
+		</div>`);
+		$('#item-modal #storage-locations').remove();
+
+		$('#item-modal form').attr('id', `update-${type}-form`);
+		$(`#item-modal form`).attr('action', `/accounting/products-and-services/update/${type}/${row.find('.select-one').val()}`);
+
+        $(`#modal-container #item-modal`).attr('data-bs-backdrop', 'static');
+        $(`#modal-container #item-modal`).attr('data-bs-keyboard', 'false');
+
+		$(`#modal-container #item-modal`).modal('show');
+    });
+});
+
+function occupyFields(id, type, action = 'edit') {
+    $.get(`/accounting/products-and-services/get-item-details/${type}/${id}`, function(result) {
+        var item = JSON.parse(result);
+
+        var name = action === 'duplicate' ? item.name+' - copy' : item.name;
+	    $(`#item-modal #name`).val(name);
+        $(`#item-modal #sku`).val(item.sku);
+
+        if(item.category !== null && item.category !== "") {
+            $(`#item-modal #category`).append(`<option value="${item.category_id}" selected>${item.category}</option>`);
+        }
+
+        $(`#item-modal #rebate-item`).prop('checked', item.rebate === '1');
+	    $(`#item-modal #asOfDate`).val(item.as_of_date);
+        $(`#item-modal #reorderPoint`).val(item.reorder_point);
+
+        if(item.inventory_account !== null && item.inventory_account !== "") {
+            $(`#item-modal #inv_asset_account`).append(`<option value="${item.inventory_account_id}" selected>${item.inventory_account}</option>`);
+        }
+
+        $(`#item-modal #description`).val(item.sales_desc);
+	    $(`#item-modal #price`).val(item.sales_price);
+
+        if(item.income_account !== null && item.income_account !== "") {
+            $(`#item-modal #income_account`).append(`<option value="${item.income_account_id}" selected>${item.income_account}</option>`);
+        }
+
+        if(item.sales_tax_cat !== null && item.sales_tax_cat !== "") {
+            $(`#item-modal #sales_tax_category`).append(`<option value="${item.sales_tax_cat_id}" selected>${item.sales_tax_cat}</option>`);
+        }
+
+        if(item.purch_desc !== "") {
+            $(`#item-modal #purchasing`).prop('checked', true).trigger('change');
+        }
+
+        $(`#item-modal #purchaseDescription`).val(item.purch_desc);
+	    $(`#item-modal #cost`).val(item.cost);
+
+        if(item.expense_account !== null && item.expense_account !== "") {
+            $(`#item-modal #item_expense_account`).append(`<option value="${item.expense_account_id}" selected>${item.expense_account}</option>`);
+        }
+
+        if(item.icon !== null && item.icon !== "" && action === 'edit') {
+            $(`#item-modal img.image-prev`).attr('src', `${item.icon}`);
+            $(`#item-modal img.image-prev`).parent().addClass('d-flex justify-content-center');
+            $(`#item-modal img.image-prev`).parent().removeClass('d-none');
+            $(`#item-modal img.image-prev`).parent().prev().addClass('d-none');
+        }
+
+        if(item.display_on_print === "1" || item.display_on_print === 1) {
+            $('#item-modal #displayBundle').prop('checked', true);
+        }
+
+        if(item.vendor !== null && item.vendor !== "") {
+            $(`#item-modal #vendor`).append(`<option value="${item.vendor_id}" selected>${item.vendor}</option>`);
+        }
+
+        for(i in item.locations) {
+            if($($(`#item-modal #storage-locations tbody tr`)[i]).length < 1) {
+                $(`#item-modal #storage-locations tbody`).append(`
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><button type="button" class="nsm-button delete-location"><i class='bx bx-fw bx-trash'></i></button></td>
+                </tr>
+                `);
+            }
+            $($(`#item-modal #storage-locations tbody tr`)[i]).children('td:first-child').html(`<input type="text" name="location_name[]" class="form-control nsm-field" value="${item.locations[i].name}">`);
+            $($(`#item-modal #storage-locations tbody tr`)[i]).children('td:nth-child(2)').html(`<input type="number" name="quantity[]" class="text-end form-control nsm-field" value="${item.locations[i].qty}">`);
+        }
+
+        for(i in item.bundle_items) {
+            if($($('#item-modal #bundle-items-table tbody tr')[i]).length > 0 ) {
+                $($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${item.bundle_items[i].item_id}`);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${item.bundle_items[i].name}`);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${item.bundle_items[i].quantity}`);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
+                <span>${item.bundle_items[i].name}</span>
+                <input type="hidden" value="${item.bundle_items[i].item_id}" name="item_id[]">
+                `);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
+                <span>${item.bundle_items[i].quantity}</span>
+                <input type="number" name="quantity[]" class="text-end form-control nsm-field d-none" value="${item.bundle_items[i].quantity}">
+                `);
+            } else {
+                $('#item-modal #bundle-items-table tbody').append(`
+                <tr data-item="${item.bundle_items[i].item_id}" data-name="${item.bundle_items[i].name}" data-quantity="${item.bundle_items[i].quantity}">
+                    <td>
+                        <span>${item.bundle_items[i].name}</span>
+                        <input type="hidden" value="${item.bundle_items[i].item_id}" name="item_id[]">
+                    </td>
+                    <td>
+                        <span>${item.bundle_items[i].quantity}</span>
+                        <input type="number" name="quantity[]" class="text-end form-control nsm-field d-none" value="${item.bundle_items[i].quantity}">
+                    </td>
+                    <td><button type="button" class="nsm-button delete-item"><i class='bx bx-fw bx-trash'></i></button></td>
+                </tr>
+                `);
+            }
+        }
+    });
+}

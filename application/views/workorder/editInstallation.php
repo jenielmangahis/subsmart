@@ -364,16 +364,16 @@ table input.form-control {
                             <br>
                             <div class="row"> 
                                 <div class="col-md-6">
-                                    <input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" id="datepicker_date" value="<?php echo $agreeDetails->installation_date; ?>">
+                                    <input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" id="datepicker_date" value="<?php echo $workorder->install_date; ?>">
                                     <b>Installation Date:</b>
                                 </div>
                                 <div class="col-md-6">
                                     <select id="intall_time" name="intall_time" class="form-control custom-select m_select border-top-0 border-right-0 border-left-0">
-                                        <option value="8-10" <?php if($agreeDetails->intall_time == '8-10'){ echo 'selected'; } ?> >8-10</option>
-                                        <option value="10-12" <?php if($agreeDetails->intall_time == '10-12'){ echo 'selected'; } ?> >10-12</option>
-                                        <option value="12-2" <?php if($agreeDetails->intall_time == '12-2'){ echo 'selected'; } ?> >12-2</option>
-                                        <option value="2-4 <?php if($agreeDetails->intall_time == '2-4'){ echo 'selected'; } ?> ">2-4</option>
-                                        <option value="4-6" <?php if($agreeDetails->intall_time == '4-6'){ echo 'selected'; } ?> >4-6</option>
+                                        <option value="8-10" <?php if($workorder->install_time == '8-10'){ echo 'selected'; } ?> >8-10</option>
+                                        <option value="10-12" <?php if($workorder->install_time == '10-12'){ echo 'selected'; } ?> >10-12</option>
+                                        <option value="12-2" <?php if($workorder->install_time == '12-2'){ echo 'selected'; } ?> >12-2</option>
+                                        <option value="2-4 <?php if($workorder->install_time == '2-4'){ echo 'selected'; } ?> ">2-4</option>
+                                        <option value="4-6" <?php if($workorder->install_time == '4-6'){ echo 'selected'; } ?> >4-6</option>
                                     </select>
                                     <b>Install Time Date:</b>
                                 </div>

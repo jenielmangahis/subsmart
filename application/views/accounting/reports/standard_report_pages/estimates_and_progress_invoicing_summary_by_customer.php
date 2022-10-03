@@ -1,14 +1,81 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-
+<style>
+    .modal-print{
+        width: 100%;
+    }
+    .change-col {
+        margin-top: 20px;
+        color: blue;
+        cursor: pointer;
+    }
+    .change-col:hover{
+        text-decoration: underline !important;
+    }
+    .changeCol{
+        display: none;
+    }
+    .modal.right .modal-dialog {
+		position: fixed;
+		margin: auto;
+		width: 320px;
+		height: 100%;
+		-webkit-transform: translate3d(0%, 0, 0);
+		    -ms-transform: translate3d(0%, 0, 0);
+		     -o-transform: translate3d(0%, 0, 0);
+		        transform: translate3d(0%, 0, 0);
+	}
+	.modal.right .modal-content {
+		height: 100%;
+		overflow-y: auto;
+        border-radius: 50px !important;
+	}
+        
+	.modal.right.fade .modal-dialog {
+		right: -320px;
+		-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+		   -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+		     -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+		        transition: opacity 0.3s linear, right 0.3s ease-out;
+	}
+	.modal.right.fade.in .modal-dialog {
+		right: 0;
+	}
+	.modal-content {
+		border-radius: 0;
+		border: none;
+	}
+	.modal-header {
+		border-bottom-color: #EEEEEE;
+	}
+    .czLabel {
+        cursor: pointer;
+    }
+    .czLabel i {
+        color: black !important;
+        font-size: 13px;
+    }
+    #general{
+        display: none;
+    }
+    #column{
+        display: none;
+    }
+    .column{
+        margin-top: 20px;
+    }
+    .head_foot{
+        display: none;
+    }
+    .header-footer{
+        margin-top: 20px;
+    }
+</style>
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <!-- <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
-                        </div> -->
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
@@ -62,9 +129,9 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
+                            <a type="button" class="nsm-button demo" data-bs-toggle="modal" data-bs-target="#customizeModal">
                                 <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
+                            </a>
                             <button type="button" class="nsm-button primary">
                                 <i class='bx bx-fw bx-save'></i> Save customization
                             </button>
@@ -73,7 +140,7 @@
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                    <div class="col-12 col-md-8 offset-md-2">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -214,69 +281,19 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                    <div class="col-12 grid-mb company">
+                                        
                                     </div>
-                                    <div class="col-12 grid-mb text-center">
-                                        <p class="m-0 fw-bold">Estimates & Progress Invoicing Summary by Customer</p>
-                                        <p>All Dates</p>
+                                    <div class="col-12 grid-mb text-center report">
                                     </div>
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
                                 <table class="nsm-table">
-                                    <thead>
-                                        <tr>
-                                            <td data-name="Date">DATE</td>
-                                            <td data-name="Num">NUM</td>
-                                            <td data-name="Status">STATUS</td>
-                                            <td data-name="Amount">AMOUNT</td>
-                                            <td data-name="Balance">BALANCE</td>
-                                            <td data-name="Invoiced Amount">INVOICED AMOUNT</td>
-                                            <td data-name="% Invoiced">% AMOUNT</td>
-                                            <td data-name="Remaining Amount">REMAINING AMOUNT</td>
-                                        </tr>
+                                    <thead id="head_tbl">
                                     </thead>
-                                    <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Customer</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td><b>$0.00</b></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;06/16/2022</td>
-                                            <td>123</td>
-                                            <td>Pending</td>
-                                            <td>22,544.77</td>
-                                            <td>22,544.77</td>
-                                            <td>0.00</td>
-                                            <td>0.00%</td>
-                                            <td>22,544.77</td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse"  id="accordion">
-                                            <td><b>Total for Test Customer</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td><b>$0.00</b></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr>
+                                    <tbody id="customerTbl">
                                         <tr>
-                                            <td><b>TOTAL</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td><b>$0.00</b></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -291,5 +308,222 @@
         </div>
     </div>
 </div>
-
+<!-- Customize Modal -->
+<?php include viewPath('accounting/reports/reports_modals/estimates_and_progress_invoicing_summary_by_customer_modal'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        fetch('<?= base_url('accounting_controllers/reports/EstimatesInvoiceByCustomer') ?>',{
+
+        }).then(response => response.json()).then(response => { 
+            var {success, def, customer, customerName} = response;
+            if(def){
+                $('#head_tbl').append(
+                    '<tr><td data-name="Date">DATE</td><td data-name="Num">NUM</td><td data-name="Status">STATUS</td><td data-name="Amount">AMOUNT</td><td data-name="Balance">BALANCE</td><td data-name="Invoiced Amount">INVOICED AMOUNT</td><td data-name="% Invoiced">% AMOUNT</td><td data-name="Remaining Amount">REMAINING AMOUNT</td></tr>'
+                );
+                var overall_total_amt = 0.00;
+
+                for(var x=0; x<customerName.length; x++){
+                    $('#customerTbl').append(
+                        '<tr data-toggle="collapse" data-target="#accordion'+x+'" class="clickable collapse-row collapsed"><td><i class="bx bx-fw bx-caret-right"></i>'+customerName[x][0].first_name+' '+ customerName[x][0].last_name +'</td><td></td><td></td><td></td><td></td><td></td><td></td><td><b></b></td></tr>'
+                    )
+                    var total_amt = 0.00;
+                    for(var i=0; i<customer.length; i++){
+                        if(customer[i].customer_id == customerName[x][0].prof_id){
+                            total_amt += parseFloat(customer[i].grand_total);
+                            var estimate_date ='';
+                            var est_date = '';
+                            if(customer[i].estimate_date != '0000-00-00'){
+                                estimate_date = new Date(customer[i].estimate_date);
+                                est_date = estimate_date.getMonth()+1 +'/'+ estimate_date.getDate() +'/' + estimate_date.getFullYear();
+                            }else{
+                                est_date = 'No Date';
+                            }
+                            $('#customerTbl').append(
+                                '<tr class="clickable collapse-row collapse"  id="accordion'+x+'"><td>'+ est_date+'</td><td>'+ customer[i].estimate_number+'</td><td>'+ customer[i].status+'</td><td>$'+parseFloat(customer[i].grand_total).toFixed(2)+'</td><td>$'+parseFloat(customer[i].grand_total).toFixed(2)+'</td><td>0.00</td><td>0.00%</td><td>$'+ parseFloat(customer[i].grand_total).toFixed(2)+'</td></tr>'
+                            )
+                        }
+                    }
+                    $('#customerTbl').append(
+                        '<tr class="clickable collapse-row collapse"  id="accordion'+x+'"><td><b>Total for '+customerName[x][0].first_name+' '+ customerName[x][0].last_name +'</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td><b>$'+ parseFloat(total_amt).toFixed(2) +'</b></td></tr>'
+                        )
+                    overall_total_amt += total_amt;
+                    
+                }
+                $('#customerTbl').append(
+                        '<tr><td><b>Total</b></td><td></td><td></td><td><b>$'+ parseFloat(overall_total_amt).toFixed(2) +'</b></td><td></td><td></td><td></td><td><b>$'+ parseFloat(overall_total_amt).toFixed(2) +'</b></td></tr>'
+                        )
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+
+//RUN REPORT
+        $("#runReport").submit(function(e) {
+            var header = [];
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            $("input.header:checkbox:checked").each(function() {
+                header.push($(this).val());
+            });
+
+            var company_name = $('.company_name').val();
+            var report_title = $('.report_title').val();
+
+            const fd = new FormData();
+            fd.append('header', JSON.stringify(header));
+            fd.append('company_name', company_name);
+            fd.append('report_title', report_title);
+            fetch('<?= base_url('accounting_controllers/reports/EstimatesInvoiceByCustomer') ?>',{
+                method: 'POST',
+                body: fd
+            }).then(response => response.json()).then(response => {
+                var {success, cust_header} = response;
+                console.log(response);
+
+                if(cust_header){
+                    if(cust_header['company_title']){
+                        if ( $('.company').children().length > 0 ) {
+                            $("#company_child").remove();
+                        }
+                        $('.company').append(
+                            '<h4 class="text-center fw-bold"><span class="company-name" id="company_child">'+cust_header['company_title']+'</span></h4>'
+                        )
+                    }
+                    if(cust_header['report_title']){
+                        if ( $('.report').children().length > 0 ) {
+                            $("#report_child").remove();
+                        }
+                        $('.report').append(
+                            '<hp class="fw-bold" id="report_child">'+cust_header['report_title']+'</p>'
+                        )
+                    }
+                }
+            }).catch((error)=>{
+                console.log(error);
+            })
+
+        })
+    })
+
+    function general(){
+        var class_name = document.getElementById('gen').className;
+        var genHeader = document.getElementById('gen');
+        var genLabel = document.getElementById('genLabel');
+        var genDiv = document.getElementById('general');
+        if(class_name == 'bx bx-fw bxs-right-arrow'){
+            genHeader.classList.remove("bxs-right-arrow");
+            genHeader.classList.add("bxs-down-arrow");
+            genLabel.classList.add("fw-bold");
+            genLabel.style.color = "#6a4a86";
+            genDiv.style.display = 'inline';
+        }else{
+            genHeader.classList.add("bxs-right-arrow");
+            genHeader.classList.remove("bxs-down-arrow");
+            genLabel.classList.remove("fw-bold");
+            genLabel.style.color = "black";
+            genDiv.style.display = 'none';
+
+        }
+    }
+    function column(){
+        var class_name = document.getElementById('custom_row_col').className;
+        var colHeader = document.getElementById('custom_row_col');
+        var colLabel = document.getElementById('custom_row_col_label');
+        var colDiv = document.getElementById('column');
+        if(class_name == 'bx bx-fw bxs-right-arrow'){
+            colHeader.classList.remove("bxs-right-arrow");
+            colHeader.classList.add("bxs-down-arrow");
+            colLabel.classList.add("fw-bold");
+            colLabel.style.color = "#6a4a86";
+            colDiv.style.display = 'inline';
+        }else{
+            colHeader.classList.add("bxs-right-arrow");
+            colHeader.classList.remove("bxs-down-arrow");
+            colLabel.classList.remove("fw-bold");
+            colLabel.style.color = "black";
+            colDiv.style.display = 'none';
+
+        }
+    }
+    function headerFooter(){
+        var class_name = document.getElementById('header_footer').className;
+        var headFootHeader = document.getElementById('header_footer');
+        var headFootLabel = document.getElementById('header_footer_label');
+        var headFootDiv = document.getElementById('head_foot');
+        if(class_name == 'bx bx-fw bxs-right-arrow'){
+            headFootHeader.classList.remove("bxs-right-arrow");
+            headFootHeader.classList.add("bxs-down-arrow");
+            headFootLabel.classList.add("fw-bold");
+            headFootLabel.style.color = "#6a4a86";
+            headFootDiv.style.display = 'inline';
+        }else{
+            headFootHeader.classList.add("bxs-right-arrow");
+            headFootHeader.classList.remove("bxs-down-arrow");
+            headFootLabel.classList.remove("fw-bold");
+            headFootLabel.style.color = "black";
+            headFootDiv.style.display = 'none';
+
+        }
+    }
+    function dates(){
+        var filter_report_period = document.getElementById('filter_report_period').value;
+        var date_filter_from = document.getElementById('date_filter_from');
+        var date_filter_to = document.getElementById('date_filter_to');
+        var filter_to = document.getElementById('filter_to');
+        var filter_from = document.getElementById('filter_from');
+        const D = new Date(); 
+        var month = D.getMonth() + 1;  // 10 (PS: +1 since Month is 0-based)
+        var day = D.getDate();       // 30
+        var year = D.getFullYear(); // 2022
+
+        if(filter_report_period == 'all-dates'){
+            date_filter_from.style.display = 'none';
+            date_filter_to.style.display = 'none';
+        }else if(filter_report_period == 'this-week'){
+            var numberOfDaysToAdd = 7;
+            var result = D.setDate(D.getDate() + numberOfDaysToAdd);
+            var week = new Date(result);
+            filter_from.value = month+"/"+day+"/"+year;
+            filter_to.value = (week.getMonth() + 1)+"/"+week.getDate()+"/"+week.getFullYear();
+        }else if(filter_report_period == 'this-month'){
+            var numberOfDaysToAdd = 30;
+            var result = D.setDate(D.getDate() + numberOfDaysToAdd);
+            var res_month = new Date(result);
+            filter_from.value = month+"/"+day+"/"+year;
+            filter_to.value = (res_month.getMonth() + 1)+"/"+res_month.getDate()+"/"+res_month.getFullYear();
+        }else{
+            date_filter_from.style.display = 'inline';
+            date_filter_to.style.display = 'inline';
+        }
+    }
+    function ccl() {
+        var x = document.getElementById("changeCol");
+        
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+
+    function checkCustomer(){
+        document.getElementById("checkCustomer1").checked = true;    
+    }
+    function checkType(){
+        document.getElementById("checkType1").checked = true;    
+    }
+    function checkStatus(){
+        document.getElementById("checkStatus1").checked = true;    
+    }
+
+    function changeCompany(){
+        document.getElementById("changeCompany1").checked = true;    
+    }
+    function changeReport(){
+        document.getElementById("changeReport1").checked = true;    
+    }
+
+</script>
