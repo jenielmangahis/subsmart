@@ -46,7 +46,7 @@ class Priority
 
     private function add()
     {
-        $this->app->load->view('workorder/priority-list/add', $this->app->page_data);
+        $this->app->load->view('v2/pages/workorder/priority-list/add', $this->app->page_data);
     }
 
 

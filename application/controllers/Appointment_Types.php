@@ -27,7 +27,7 @@ class Appointment_Types extends MY_Controller {
 		$appointmentTypes = $this->AppointmentType_model->getAllByCompany($company_id, true);
 
 		$this->page_data['appointmentTypes'] = $appointmentTypes;
-		$this->load->view('appointment_types/index', $this->page_data);
+		$this->load->view('v2/pages/appointment_types/index', $this->page_data);
 	}
 
 	public function add_new_type(){
@@ -139,6 +139,33 @@ class Appointment_Types extends MY_Controller {
 		}
 
 		redirect('appointment_types/index');
+	}
+
+	public function ajax_create_appointment_type()
+	{
+		$this->load->model('AppointmentType_model');
+
+		$is_success = 0;
+		$msg = 'Cannot save data';
+
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        if( $post['appointment_type_name'] != '' ){
+        	$data_appointment_type = [        		
+		        'company_id' => $company_id,
+				'name' => $post['appointment_type_name'],
+				'created' => date("Y-m-d H:i:s")
+			];
+
+			$this->AppointmentType_model->create($data_appointment_type);	
+
+			$is_success = 1;
+			$msg = '';
+        }
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
 	}
 }
 

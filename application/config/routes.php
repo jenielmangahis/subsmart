@@ -1312,6 +1312,7 @@ $route['appointment_types/create_appointment_type'] = 'Appointment_Types/create_
 $route['appointment_types/edit/(:num)'] = 'Appointment_Types/edit_type/$1';
 $route['appointment_types/update_appointment_type'] = 'Appointment_Types/update_appointment_type';
 $route['appointment_types/delete'] = 'Appointment_Types/delete_appointment_type';
+$route['appointment_types/_create_appointment_type'] = 'Appointment_Types/ajax_create_appointment_type';
 
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
 

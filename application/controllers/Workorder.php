@@ -9826,6 +9826,68 @@ class Workorder extends MY_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
+
+    public function ajax_create_workorder_priority()
+    {
+        $this->load->model('PriorityList_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $post        = $this->input->post();
+        $company_id  = logged('company_id');
+        $user_id     = logged('id');
+
+        if( $post['priority_name'] != '' ){
+            $data = [
+                'user_id' => $user_id,
+                'company_id' => $company_id,
+                'title' => $post['priority_name'],
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->PriorityList_model->create($data);
+
+            $is_success = 1;    
+        }        
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_workorder_priority()
+    {
+        $this->load->model('PriorityList_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $post        = $this->input->post();
+        $company_id  = logged('company_id');
+        $user_id     = logged('id');
+
+        if( $post['priority_name'] != '' ){
+
+            $priority = $this->PriorityList_model->getById($post['pid']);
+            if( $priority ){
+                $data = [
+                    'title' => $post['priority_name']
+                ];
+
+                $this->PriorityList_model->update($priority->id, $data);
+
+                $is_success = 1;    
+            }else{
+                $msg = 'Cannot find data';
+            }            
+        }        
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
 }
 
 
