@@ -234,7 +234,6 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['accountType'] = $accountType;
         $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
         $this->load->view('v2/pages/accounting/accounting/chart_of_accounts/list', $this->page_data);
-        // $this->load->view('accounting/chart_of_accounts/index', $this->page_data);
     }
 
     public function get_detail_type($id)

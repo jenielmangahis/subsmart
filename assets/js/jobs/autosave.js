@@ -50,7 +50,9 @@ async function autoSaveForm() {
     method: "post",
     body: formdata,
   });
-
+  const data = await response.json();
+  $('#jobNumber').val(data.id);
+  
   if (response.status === 500) {
     throw new Error("500");
   }

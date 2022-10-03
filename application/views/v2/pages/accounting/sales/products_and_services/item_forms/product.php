@@ -1,8 +1,8 @@
 <div class="modal-header">
     <span class="modal-title content-title">Product/Service information</span>
-    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+    <button type="button" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
 </div>
-<form id="product-item-form" action="<?=url('accounting/products-and-services/product/create')?>" method="post" enctype="multipart/form-data">
+<form id="product-item-form" class="h-100" action="<?=url('accounting/products-and-services/product/create')?>" method="post" enctype="multipart/form-data">
 <div class="modal-body">
     <table class="table">
         <thead>
@@ -190,7 +190,7 @@
         </tbody>
     </table>
 </div>
-<div class="modal-footer">
+<div class="modal-footer position-absolute w-100 bottom-0">
     <div class="btn-group dropup float-end" role="group">
         <button type="button" class="nsm-button success" id="save-and-close">
             Save and close

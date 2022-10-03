@@ -97,7 +97,7 @@
                 <div class="custome-fileup">
                     <div class="upload-btn-wrapper">
                         <button class="btn">
-                            <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
+                            <img src="<?= $url->assets ?>esign/images/fileup-ic.png" alt="">
                             <span>Upload</span>
                         </button>
                         <input multiple="" type="file" name="docFile" id="docFile" accept="application/pdf,application/vnd.ms-excel" required="">

@@ -210,7 +210,7 @@
       <div class="fileupload">
           <div class="custome-fileup">
               <button class="btn">
-                  <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
+                  <img src="<?= $url->assets ?>esign/images/fileup-ic.png" alt="">
                   <span class="nsm-button primary">Upload</span>
               </button>
               <input multiple="" type="file" name="docFile" id="docFile" accept="application/pdf,application/vnd.ms-excel" required="">

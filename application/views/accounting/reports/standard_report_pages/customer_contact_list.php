@@ -81,7 +81,7 @@
         display: none;
         padding-left: 30px;
         transition: height 1s ease-in;
-    }
+    } 
     #hfDownArrow{
         display: none;
     }

@@ -74,15 +74,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
   $($modal).on("hidden.bs.modal", () => {
     $loader.classList.remove("d-none");
-    $approveAndEsignButtonLoader.classList.remove("d-none");
-
-    $esignButton.setAttribute("disabled", true);
     $esignTemplates.classList.add("d-none");
     $esignTemplatesMenu.innerHTML = "";
+    disableApproveAndEsignButton();
   });
 
   $approveButton.addEventListener("click", async () => {
+    disableApproveAndEsignButton();
     const response = await updateJobToApproved();
+    enableApproveAndEsignButton();
+
     if (!response.success) return;
 
     $($modal).modal("hide");
@@ -102,7 +103,10 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   $approveAndEsignButton.addEventListener("click", async () => {
+    disableApproveAndEsignButton();
     const response = await updateJobToApproved();
+    enableApproveAndEsignButton();
+
     if (!response.success) return;
 
     const esignId = $esignTemplatesToggle.dataset.id;
@@ -115,7 +119,7 @@ window.addEventListener("DOMContentLoaded", () => {
       customer_id: customerId,
     });
 
-    window.location = `/eSign_v2/templateCreate?${params}`;
+    window.location = `/eSign_v2/templatePrepare?${params}`;
   });
 
   async function updateJobToApproved() {
@@ -140,5 +144,14 @@ window.addEventListener("DOMContentLoaded", () => {
       alert("Something went wrong");
       return false;
     }
+  }
+
+  function disableApproveAndEsignButton() {
+    $approveAndEsignButtonLoader.classList.remove("d-none");
+    $esignButton.setAttribute("disabled", true);
+  }
+  function enableApproveAndEsignButton() {
+    $approveAndEsignButtonLoader.classList.add("d-none");
+    $esignButton.removeAttribute("disabled");
   }
 });

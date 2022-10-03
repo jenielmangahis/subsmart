@@ -13,6 +13,7 @@ if(isset($jobs_data)){
                 method: 'GET',
             }) .then(response => response.json() ).then(response => {
               var { message, data } = response;
+              console.log(response);
               if(message){
                 // for(var x=0; x<data.length;x++){
                 //   $('#customer_id').append(

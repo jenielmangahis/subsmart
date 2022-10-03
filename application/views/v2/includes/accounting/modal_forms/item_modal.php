@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Product/Service information</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                    <button type="button" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body p-0">
                     <table class="table table-hover cursor-pointer" id="types-table">

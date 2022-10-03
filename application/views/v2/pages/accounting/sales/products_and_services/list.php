@@ -291,13 +291,13 @@
                                 </div>
                                 <?php endif; ?>
                             </td>
-                            <td class="nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
+                            <td class="nsm-text-primary nsm-link default"><?=$item['name']?></td>
 							<td><?=$item['sku']?></td>
 							<td><?=$item['type']?></td>
 							<td><?=$item['sales_desc']?></td>
-							<td data-incomeaccountid="<?=$item['income_account_id']?>"><?=$item['income_account']?></td>
-							<td data-expenseaccountid="<?=$item['expense_account_id']?>"><?=$item['expense_account']?></td>
-							<td data-inventoryaccountid="<?=$item['inventory_account_id']?>"><?=$item['inventory_account']?></td>
+							<td data-id="<?=$item['income_account_id']?>"><?=$item['income_account']?></td>
+							<td data-id="<?=$item['expense_account_id']?>"><?=$item['expense_account']?></td>
+							<td data-id="<?=$item['inventory_account_id']?>"><?=$item['inventory_account']?></td>
 							<td><?=$item['purch_desc']?></td>
 							<td><?=$item['sales_price']?></td>
 							<td><?=$item['cost']?></td>
@@ -317,18 +317,29 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        <?php if($item['status'] !== "0") : ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item edit-item" href="#">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Make inactive</a>
+                                            <a class="dropdown-item make-inactive" href="#">Make inactive</a>
+                                        </li>
+                                        <?php if($item['type'] !== 'Bundle') : ?>
+                                        <li>
+                                            <a class="dropdown-item" href="#">Run report</a>
+                                        </li>
+                                        <?php endif; ?>
+                                        <li>
+                                            <a class="dropdown-item duplicate" href="#">Duplicate</a>
+                                        </li>
+                                        <?php else : ?>
+                                        <li>
+                                            <a class="dropdown-item make-active" href="#">Make active</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#">Run report</a>
                                         </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Duplicate</a>
-                                        </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>
