@@ -1,175 +1,201 @@
-<?php include viewPath('v2/includes/accounting_header'); ?>
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<style type="text/css">
+    .hide-toggle::after {
+        display: none !important;
+    }
+    .show>.btn-primary.dropdown-toggle {
+        background-color: #32243D;
+        border: 1px solid #32243D;
+    }
+    #employees-table .btn-group .btn:hover, #employees-table .btn-group .btn:focus {
+        color: unset;
+    }
+    #employees-table .btn-group .btn {
+        padding: 10px;
+    }
+    .action-bar ul li {
+        margin-right: 0 !important;
+    }
+    .action-bar ul li button.btn-transparent {
+        color: #6B6C72 !important;
+    }
+    .action-bar ul li button.btn-transparent:hover {
+        background: #d4d7dc !important;
+        border-color: #6B6C72 !important;
+    }
+    .view-password {
+        position: absolute;
+        bottom: 2px;
+        right: 15px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+    #add-pay-schedule-modal .card.shadow .card-body, #edit-pay-schedule-modal .card.shadow .card-body {
+        padding: 0;
+    }
+    #add-pay-schedule-modal .form-row, #edit-pay-schedule-modal .form-row {
+        margin-top: 30px;
+    }
+</style>
+<?php include viewPath('includes/header'); ?>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <?php include viewPath('includes/notifications'); ?>
+        <div class="container-fluid">
+            <div class="page-title-box">
 
-<div class="row page-content g-0">
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
-    </div>
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/employees_subtabs'); ?>
-    </div>
-    <div class="col-12">
-        <div class="nsm-page">
-            <div class="nsm-page-content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
-                            Here you will get a detailed summary of pay rate, payment method, pay schedule and the status of each of your employee. With this report, you will be able to forecast a better budget for future weeks.
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Find an employee">
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    More actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="run-payroll">Run payroll</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="bonus-only">Bonus only</a></li>
-                            </ul>
-                        </div>
-
-						<div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Active employees <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end" style="width: max-content">
-                                <li><a class="dropdown-item active" href="javascript:void(0);" id="active-employees">Active employees</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="inactive-employees">Inactive employees</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="all-employees">All employees</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-list-plus'></i> Add an employee
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-cog"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                                <p class="m-0">Show columns</p>
-                                <div class="form-check">
-                                    <input type="checkbox" checked onchange="showCol(this)" id="chk-pay-rate" class="form-check-input">
-                                    <label for="chk-pay-rate" class="form-check-label">Pay rate</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked onchange="showCol(this)" id="chk-pay-method" class="form-check-input">
-                                    <label for="chk-pay-method" class="form-check-label">Pay method</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked onchange="showCol(this)" id="chk-pay-schedule" class="form-check-input">
-                                    <label for="chk-pay-schedule" class="form-check-label">Pay schedule</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked onchange="showCol(this)" id="chk-status" class="form-check-input">
-                                    <label for="chk-status" class="form-check-label">Status</label>
-                                </div>
-								<div class="form-check">
-                                    <input type="checkbox" checked onchange="showCol(this)" id="chk-email-address" class="form-check-input">
-                                    <label for="chk-email-address" class="form-check-label">Email Address</label>
-                                </div>
-								<div class="form-check">
-                                    <input type="checkbox" checked onchange="showCol(this)" id="chk-phone-num" class="form-check-input">
-                                    <label for="chk-phone-num" class="form-check-label">Phone Number</label>
-                                </div>
-                                <div class="form-check p-0">
-                                    <label for="privacy">Privacy </label>
-                                    <input type="checkbox" name="privacy" id="privacy">
-                                </div>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <!-- <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
-                            </td> -->
-                            <td data-name="Name">NAME</td>
-                            <td data-name="Pay rate">PAY RATE</td>
-                            <td data-name="Pay method">PAY METHOD</td>
-                            <td data-name="Pay schedule">PAY SCHEDULE</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Email address">EMAIL ADDRESS</td>
-                            <td data-name="Phone number">PHONE NUMBER</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(count($employees) > 0) : ?>
-						<?php foreach($employees as $employee) : ?>
-                        <?php
-                            $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
-                            $paySchedule = !in_array($empPayDetails->pay_schedule_id, ['', '0', null]) ? $this->users_model->getPaySchedule($empPayDetails->pay_schedule_id)->name : null;
-                            if($empPayDetails) {
-                                $payMethod = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Check';
-            
-                                if($empPayDetails->pay_type === 'hourly') {
-                                    $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
-                                } else if($empPayDetails->pay_type === 'salary') {
-                                    $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
-                                } else {
-                                    $payRate = 'Commission only';
-                                }
-                            } else {
-                                $payMethod = 'Missing';
-                                $payRate = 'Missing';
-                            }
-
-                            switch ($employee->status) {
-                                case '0' :
-                                    $empStatus = "Terminated";
-                                break;
-                                case '2' : 
-                                    $empStatus = "Paid leave of absence";
-                                break;
-                                case '3' : 
-                                    $empStatus = "Unpaid leave of absence";
-                                break;
-                                case '4' : 
-                                    $empStatus = "Not on payroll";
-                                break;
-                                case '5' : 
-                                    $empStatus = "Deceased";
-                                break;
-                                default : 
-                                    $empStatus = "Active";
-                                break;
-                            }
-                        ?>
-                        <tr>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?="$employee->LName, $employee->FName"?></td>
-                            <td><?=$payRate?></td>
-                            <td><?=$payMethod?></td>
-                            <td><?=$paySchedule?></td>
-                            <td><?=$empStatus?></td>
-                            <td><?=$employee->email?></td>
-                            <td><?=$employee->phone?></td>
-                        </tr>
-                        <?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="14">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
-                    </tbody>
-                </table>
             </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h3 class="page-title" style="margin: 0 !important">Employees</h3>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="alert alert-warning mt-4 mb-4" role="alert">
+                                        <span style="color:black;">Here you will get a detailed summary of pay rate, payment method, pay schedule and the status of each of your employee. With this report, you will be able to forecast a better budget for future weeks.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-md-12 banking-tab-container">
+                                    <a href="<?php echo url('/accounting/payroll-overview')?>" class="banking-tab ">Overview</a>
+                                    <a href="<?php echo url('/accounting/employees')?>" class="banking-tab-active text-decoration-none">Employees</a>
+                                    <a href="<?php echo url('/accounting/contractors')?>" class="banking-tab">Contractors</a>
+                                    <a href="<?php echo url('/accounting/workers-comp')?>" class="banking-tab">Worker's Comp</a>
+                                    <a href="#" class="banking-tab">Benefits</a>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-sm-6">
+                                    <!-- <h6><a href="/accounting/lists" class="text-info"><i class="fa fa-chevron-left"></i> All Lists</a></h6> -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="float-right d-none d-md-block">
+                                        <div class="dropdown show">
+                                            <div class="btn-group float-right">
+                                                <a href="javascript:void(0);" id="run-payroll-button" class="btn btn-success d-flex align-items-center justify-content-center">
+                                                    Run payroll
+                                                </a>
+                                                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#" id="bonus-only">Bonus only</a>
+                                                    <?php if($commission_pays !== null && count($commission_pays) > 0) : ?>
+                                                    <a class="dropdown-item" href="#" id="commission-only">Commision only</a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            		    <?php if($this->session->flashdata('success')) : ?>
+                        <div class="alert alert-success alert-dismissible my-4" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <span><strong>Success!</strong> <?php echo $this->session->flashdata('success'); ?></span>
+                        </div>
+                        <?php elseif($this->session->flashdata('error')) : ?>
+                        <div class="alert alert-danger alert-dismissible my-4" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <span><strong>Error!</strong> <?php echo $this->session->flashdata('error'); ?></span>
+                        </div>
+                        <?php endif; ?>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <div class="row my-3">
+                                    <div class="col-md-12">
+                                        <div class="form-check float-right mb-3">
+                                            <label for="privacy">Privacy </label>
+                                            <input type="checkbox" name="privacy" id="privacy">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <input type="text" name="search" id="search" class="form-control" placeholder="Find an employee">
+                                            </div>
+                                            <div class="col-4">
+                                                <select name="" id="employee-status" class="form-control">
+                                                    <option value="active" selected>Active Employees</option>
+                                                    <option value="inactive">Inactive Employees</option>
+                                                    <option value="all">All Employees</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="action-bar h-100 d-flex align-items-center">
+                                            <ul class="ml-auto">
+                                                <li><button class="btn btn-transparent" type="button" id="add-employee-button">Add an employee</button></li>
+                                                <li>
+                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="fa fa-cog"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
+                                                        <p class="m-0">Show columns</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_pay_rate" id="chk-pay-rate">
+                                                            <label for="chk-pay-rate">Pay rate</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_pay_method" id="chk-pay-method">
+                                                            <label for="chk-pay-method">Pay method</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_status" id="chk-status">
+                                                            <label for="chk-status">Status</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" name="chk_email_address" id="chk-email-address">
+                                                            <label for="chk-email-address">Email Address</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" name="chk_phone_num" id="chk-phone-num">
+                                                            <label for="chk-phone-num">Phone number</label>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <table id="employees-table" class="table table-bordered table-hover" style="width:100%">
+									<thead>
+                                        <tr>
+                                            <th>NAME</th>
+                                            <th class="pay-rate">PAY RATE</th>
+                                            <th class="pay-method">PAY METHOD</th>
+                                            <th class="status">STATUS</th>
+                                            <th class="email-address hide">EMAIL ADDRESS</th>
+                                            <th class="phone-num hide">PHONE NUMBER</th>
+                                        </tr>
+									</thead>
+									<tbody class="cursor-pointer"></tbody>
+								</table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card -->
+                </div>
+            </div>
+            <!-- end row -->
         </div>
+        <!-- end container-fluid -->
     </div>
 </div>
 
-<?php include viewPath('v2/includes/footer'); ?>
+<div class="append-modal"></div>
+
+<!-- page wrapper end -->
+<?php include viewPath('includes/footer_accounting'); ?>

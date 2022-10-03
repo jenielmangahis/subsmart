@@ -194,6 +194,65 @@ if(!function_exists('estimateCols')){
 
 }
 
+if(!function_exists('estimateInvoice')){
+    function estimateInvoice(){
+        $estimateCols = array(
+            array(
+                'name' => 'NUM',
+                'description' => 'estimates.estimate_number',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'STATUS',
+                'description' => 'estimates.status',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'AMOUNT',
+                'description' => 'estimates.grand_total',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'ACCEPTED DATE',
+                'description' => 'estimates.accepted_date',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'EXPIRATION DATE',
+                'description' => 'estimates.expiry_date',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'BALANCE',
+                'description' => 'estimates.grand_total',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'INVOICED AMOUNT',
+                'description' => 'estimates.grand_total',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => '% AMOUNT',
+                'description' => 'estimates.grand_total',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'REMAINING AMOUNT',
+                'description' => 'estimates.grand_total',
+                'name_in' => 'estimate'
+            ),
+            array(
+                'name' => 'MEMO',
+                'description' => 'estimates.customer_message',
+                'name_in' => 'estimate'
+            ),
+        );
+
+        return $estimateCols;
+    }
+}
+
 
 
 if(!function_exists('billPro')){

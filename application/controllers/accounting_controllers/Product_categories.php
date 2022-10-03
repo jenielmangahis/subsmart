@@ -105,13 +105,20 @@ class Product_categories extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/sales/product-categories.js"
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/sales/product_categories/list.js"
         ));
 
-        $this->page_data['categories'] = $this->items_model->getItemCategories('asc');
+        $categories = $this->items_model->categoriesWithoutParent();
+
+        foreach($categories as $key => $category) {
+            $categories[$key]->child_categories = $this->items_model->get_child_categories($category->item_categories_id);
+        }
+
+        $this->page_data['categories'] = $categories;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product Categories";
-        $this->load->view('accounting/product_categories', $this->page_data);
+        $this->load->view('v2/pages/accounting/sales/products_and_services/product_categories', $this->page_data);
     }
 
     public function get_categories()
@@ -132,8 +139,13 @@ class Product_categories extends MY_Controller {
 
     public function create()
     {
-        $data = $this->input->post();
-        $data['company_id'] = getLoggedCompanyID();
+        $post = $this->input->post();
+
+        $data = [
+            'company_id' => getLoggedCompanyID(),
+            'name' => $post['name'],
+            'parent_id' => isset($post['parent_id']) ? $post['parent_id'] : null
+        ];
 
         $create = $this->items_model->insertCategory($data);
         $name = $data['name'];
@@ -158,8 +170,12 @@ class Product_categories extends MY_Controller {
 
     public function update($id)
     {
-        $data = $this->input->post();
-        $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
+        $post = $this->input->post();
+
+        $data = [
+            'name' => $post['name'],
+            'parent_id' => isset($post['parent_id']) ? $post['parent_id'] : null
+        ];
 
         $update = $this->items_model->updateCategory($id, $data);
         $name = $data['name'];
@@ -177,6 +193,8 @@ class Product_categories extends MY_Controller {
     {
         $name = $this->items_model->getCategory($id)->name;
         $delete = $this->items_model->deleteCategory($id);
+
+        $removeItemCategories = $this->items_model->remove_item_categories($id);
 
         if($delete) {
             $this->session->set_flashdata('success', "$name deleted successfully!");

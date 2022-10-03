@@ -1,6 +1,6 @@
 <div class="modal-header">
     <span class="modal-title content-title">Product/Service information</span>
-    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+    <button type="button" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
 </div>
 <form id="service-item-form" class="h-100" action="<?=url('accounting/products-and-services/service/create')?>" method="post" enctype="multipart/form-data">
 <div class="modal-body">

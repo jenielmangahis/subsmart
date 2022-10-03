@@ -435,6 +435,9 @@ class Workorder_model extends MY_Model
             'panel_type'            => $panel_type,//
             'panel_communication'   => $panel_communication,//
 
+            'install_date'          => $install_date,//
+            'install_time'          => $install_time,//
+
             'date_updated'                  => $date_updated,//
         ));
         return true;

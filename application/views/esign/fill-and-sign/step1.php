@@ -15,7 +15,7 @@
         <div class="d-flex">
             <div class="fillAndSign__upload">
                 <button class="btn" type="button">
-                    <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
+                    <img src="<?= $url->assets ?>esign/images/fileup-ic.png" alt="">
                     <span>Select</span>
                 </button>
             </div>

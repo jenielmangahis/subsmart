@@ -25,7 +25,6 @@
 		     -o-transform: translate3d(0%, 0, 0);
 		        transform: translate3d(0%, 0, 0);
 	}
-
 	.modal.right .modal-content {
 		height: 100%;
 		overflow-y: auto;
@@ -39,16 +38,13 @@
 		     -o-transition: opacity 0.3s linear, right 0.3s ease-out;
 		        transition: opacity 0.3s linear, right 0.3s ease-out;
 	}
-	
 	.modal.right.fade.in .modal-dialog {
 		right: 0;
 	}
-
 	.modal-content {
 		border-radius: 0;
 		border: none;
 	}
-
 	.modal-header {
 		border-bottom-color: #EEEEEE;
 	}
@@ -74,6 +70,34 @@
     .header-footer{
         margin-top: 20px;
     }
+    .myTable>thead {
+	color: #888888;
+	font-weight: bold;
+	font-size: 14px;
+    }
+
+    .myTable td {
+        padding: 0.8rem 0.5rem;
+    }
+
+    .myTable>tbody td {
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .myTable td .bx {
+        color: #888888;
+    }
+    .myTable>tbody>tr:hover {
+        background-color: #f7f7f7;
+    }
+    .myTable{
+        width: 100%;
+        font-size: 15px;
+    }
+    .myTable>tfoot td {
+        padding: 0.8rem 0 0 0;
+    }
+
 </style>
 <div class="row page-content g-0">
     <div class="col-12">
@@ -472,8 +496,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table w-100" id="defaultTbl">
+                            <div class="nsm-card-content h-auto grid-mb" style="overflow-x: auto">
+                                <table class="myTable w-100" id="defaultTbl">
                                     <thead>
                                         <tr>
                                             <td data-name="Date">DATE</td>
@@ -492,7 +516,7 @@
                                     </tbody>
                                 </table>
 
-                                <table class="nsm-table" id="filtered_tbl">
+                                <table class="myTable" id="filtered_tbl">
                                     <thead>
                                         <tr id="head_tbl"></tr>
                                     </thead>
@@ -524,7 +548,7 @@
         });
         fetch('<?= base_url('accounting_controllers/reports/estimatesByCustomer') ?>',{
 
-        }).then(response => response.json()).then(response => {
+        }).then(response => response.json()).then(response => { 
             var {success, customer, totalAmount, customerName} = response;
             if(success){
                 for(var x=0; x<customerName.length; x++){

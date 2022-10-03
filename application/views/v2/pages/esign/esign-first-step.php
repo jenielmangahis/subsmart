@@ -50,7 +50,7 @@
             <div class="custome-fileup">
                 <div class="upload-btn-wrapper">
                     <button class="btn">
-                        <img src="images/fileup-ic.png" alt="">
+                        <img src="<?= $url->assets ?>esign/images/fileup-ic.png" alt="">
                         <span>upload</span>
                     </button>
                     <input type="file" name="myfile" />

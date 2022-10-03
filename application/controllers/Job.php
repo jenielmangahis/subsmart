@@ -178,6 +178,7 @@ class Job extends MY_Controller
         if (!$id==null) {
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+
         }
         $default_customer_id = 0;
         $default_customer_name = '';
@@ -211,7 +212,6 @@ class Job extends MY_Controller
             'https://html2canvas.hertzen.com/dist/html2canvas.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
-        //print_r($this->page_data['jobs_data']);
         $this->load->view('v2/pages/job/job_new', $this->page_data);
         //$this->load->view('job/job_new', $this->page_data);
     }
