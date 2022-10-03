@@ -44,7 +44,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Connect your Plaid Bank Accounts.<br /> Note: You need to have a valid Plaid API account to connect your bank account. Please set your Plaid API account in our <a href="<?= base_url('tools/api_connectors'); ?>">API Connectors list</a>.
+                            Connect your Bank Accounts using Plaid API. With Plaid, you can track your bank account balances.
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                             <td data-name="Bank">Bank</td>
                             <td data-name="Account Name">Account Name</td>
                             <td data-name="Type">Type</td>
-                            <td data-name="Balance" style="width: 10%;">Balance</td>
+                            <td data-name="Balance" style="width: 20%;">Balance</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -74,7 +74,15 @@
                                 <td><?= $pa->institution_name; ?></td>
                                 <td><?= $pa->account_name; ?></td>
                                 <td><?= ucwords($pa->subtype); ?></td>
-                                <td><?= number_format($pa->balance_current, 2); ?></td>
+                                <td>                                    
+                                    <?php 
+                                        if( is_int($pa->balance_current) ){
+                                            echo number_format($pa->balance_current, 2);
+                                        }else{
+                                            echo $pa->balance_current;
+                                        }   
+                                    ?>        
+                                </td>
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -283,7 +291,8 @@ $(document).on('click', '.btn-connect-plaid', function(){
                 linkHandler.open();
             }else{
                 var api_connect_url = base_url + 'tools/api_connectors';
-                var html_message = o.msg + "<br />To check your Plaid API credentials click <a href='"+api_connect_url+"'>API Connectors</a>";
+                //var html_message = o.msg + "<br />To check your Plaid API credentials click <a href='"+api_connect_url+"'>API Connectors</a>";
+                var html_message = o.msg;
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',

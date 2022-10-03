@@ -183,8 +183,10 @@ class Users_model extends MY_Model
         $this->db->where('company_id', $company_id);
         if ( !empty($filters) ) {
             if ( $filters['search'] != '' ) {
-                $this->db->like('FName', $filters['search'], 'both');
-                $this->db->or_like('LName', $filters['search'], 'both');
+                $this->db->group_start();
+                    $this->db->like('FName', $filters['search'], 'both');
+                    $this->db->or_like('LName', $filters['search'], 'both');
+                $this->db->group_end();
             }
 
             if( $filters['mobile'] != '' ){
