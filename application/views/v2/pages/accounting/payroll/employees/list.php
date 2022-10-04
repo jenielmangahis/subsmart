@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-employee-modal">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add an employee
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -84,9 +84,9 @@
                                     <input type="checkbox" checked id="chk-phone-num" name="col_chk" class="form-check-input">
                                     <label for="chk-phone-num" class="form-check-label">Phone number</label>
                                 </div>
-                                <div class="form-check p-0">
-                                    <label for="privacy">Privacy </label>
-                                    <input type="checkbox" name="privacy" id="privacy">
+                                <div class="form-check form-switch nsm-switch">
+                                    <label for="privacy" class="form-check-label">Privacy </label>
+                                    <input type="checkbox" name="privacy" id="privacy" class="form-check-input">
                                 </div>
                             </ul>
                         </div>

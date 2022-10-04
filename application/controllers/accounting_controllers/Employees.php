@@ -147,6 +147,18 @@ class Employees extends MY_Controller {
             $filters['search'] = get('search');
         }
 
+        $role_id = logged('role');
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		}else{
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		}
+
+        $usedPaySched = $this->users_model->getPayScheduleUsed();
+        $nextPayDate = $this->get_next_pay_date($usedPaySched);
+
+        $this->page_data['nextPayDate'] = $nextPayDate;
+        $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
         $this->page_data['employees'] = $this->get_employees($filters);
         $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
