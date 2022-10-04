@@ -73,12 +73,12 @@
             <span class="text">Save And Close</span>
         </button>
 
-        <button id="copylink" type="button" class="btn btn-secondary align-items-center mr-1 d-none">
+        <button id="copylink" type="button" class="nsm-button align-items-center mr-1 d-none">
             <span class="text" data-default-text="Copy Link"></span>
         </button>
 
         <button type="submit" class="nsm-button primary d-flex align-items-center">
-            <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
+            <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status" style="margin-right: 5px;">
                 <span class="sr-only">Loading...</span>
             </div>
             <span class="text">Next</span>

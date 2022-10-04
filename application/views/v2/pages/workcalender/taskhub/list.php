@@ -12,12 +12,12 @@
             </div>
             <span class="nsm-fab-label">Clear All</span>
         </li>
-        <li>
+        <!-- <li>
             <div class="nsm-fab-icon">
                 <i class="bx bx-search"></i>
             </div>
             <span class="nsm-fab-label">Search Task</span>
-        </li>
+        </li> -->
         <li onclick="location.href='<?php echo base_url('taskhub/entry') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-plus"></i>
@@ -47,9 +47,9 @@
                             <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
                                 <i class='bx bx-fw bx-check'></i> Clear All
                             </button>
-                            <button name="btn_search" type="button" class="nsm-button">
+                            <!-- <button name="btn_search" type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-search'></i> Search Task
-                            </button>
+                            </button> -->
                             <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/entry'); ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add Task
                             </button>
@@ -143,11 +143,11 @@
                                                 <li>
                                                     <a class="dropdown-item btn-complete-task" name="dropdown_completed" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
                                                 </li>
-                                                <li>
+                                                <!-- <li>
                                                     <a class="dropdown-item" name="dropdown_updated" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
-                                                </li>
+                                                </li> -->
                                                 <li>
-                                                    <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">View Comments</a>
+                                                    <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">Add Update</a>
                                                 </li>
                                             </ul>
                                         </div>

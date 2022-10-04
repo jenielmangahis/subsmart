@@ -4946,6 +4946,62 @@ class Admin extends CI_Controller
         $this->page_data['profid'] = $profid;
         $this->load->view('admin/customers/ajax_get_messages', $this->page_data);
     }
+
+    public function adt_sales_sync_logs()
+    {
+        $this->load->model('AdtSalesSyncLogs_model');
+
+        $search = '';
+        if( get('search') != '' ){
+            $search  = trim(get('search'));
+            $search_param = ['search' => $search];
+            $syncLogs = $this->AdtSalesSyncLogs_model->getAll($search_param);
+        }else{            
+            $syncLogs = $this->AdtSalesSyncLogs_model->getAll();
+        }
+
+        $this->page_data['search']   = $search;
+        $this->page_data['syncLogs'] = $syncLogs;
+        $this->page_data['page_title'] = 'ADT Sales Sync Logs';
+        $this->load->view('admin/adt_sync_logs/list', $this->page_data);
+    }
+
+    public function export_adt_sales_sync_logs()
+    {
+        $this->load->model('AdtSalesSyncLogs_model');
+
+        $logs   = $this->AdtSalesSyncLogs_model->getAll();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "adt_sales_portal_sync_logs_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'Date', 'Total Data Sync');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($logs)) {
+            foreach ($logs as $log) {
+                $csvData = array(
+                    $log->business_name,
+                    date('F g, Y g:i A', strtotime($log->date_sync)),
+                    $log->total_sync
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
 }
 
 /* End of file Admin.php */

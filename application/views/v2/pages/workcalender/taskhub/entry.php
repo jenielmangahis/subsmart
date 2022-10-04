@@ -47,10 +47,10 @@ if (isset($selected_participants)) {
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart('taskhub/entry', ['class' => 'form-validate require-validation', 'id' => 'taskhub_entry', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation', 'id' => 'taskhub_entry']); ?>
                 <?php
                 if (isset($task)) {
-                    $task_id = $task->task_id;
+                    $task_id = $taskHub->task_id;
                 } else {
                     $task_id = '0';
                 }
@@ -68,7 +68,7 @@ if (isset($selected_participants)) {
                                 <div class="row g-3">
                                     <div class="col-12 col-md-4">
                                         <?php if ((set_value('subject') == '') && (isset($task))) {
-                                            $subject = $task->subject;
+                                            $subject = $taskHub->subject;
                                         } else {
                                             $subject = set_value('subject');
                                         } ?>
@@ -83,7 +83,7 @@ if (isset($selected_participants)) {
                                                 <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
                                             <?php } ?>
                                             <?php if ($task) { ?>
-                                                <option value="<?= $task->prof_id; ?>"><?= $task->customer_name; ?></option>
+                                                <option value="<?= $taskHub->prof_id; ?>"><?= $taskHub->customer_name; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -94,7 +94,7 @@ if (isset($selected_participants)) {
                                             <select name="status" class="nsm-field form-select">
                                                 <?php
                                                 if ((empty(set_value('status'))) && (isset($task))) {
-                                                    $sel_status = $task->status_id;
+                                                    $sel_status = $taskHub->status_id;
                                                 } else {
                                                     $sel_status = set_value('status');
                                                 }
@@ -143,7 +143,7 @@ if (isset($selected_participants)) {
                                         <select name="priority" class="nsm-field form-select">
                                             <?php foreach ($optionPriority as $key => $value) { ?>
                                                 <?php if ($task) { ?>
-                                                    <option <?= $task->priority == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                                    <option <?= $taskHub->priority == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                                 <?php } else { ?>
                                                     <option value="<?= $key; ?>"><?= $value; ?></option>
                                                 <?php } ?>
@@ -176,10 +176,9 @@ if (isset($selected_participants)) {
 
                                     <div class="col-12 col-md-4">
                                         <?php
-                                        if ((set_value('estimated_date_complete') == '') && (isset($task))) {
-                                            $date = $task->estimated_date_complete;
-                                        } else {
-                                            echo set_value('estimated_date_complete');
+                                        $date = date("m/d/Y");
+                                        if (isset($task)) {
+                                            $date = date("m/d/Y",strtotime($taskHub->estimated_date_complete));
                                         }
                                         ?>
                                         <label class="content-subtitle fw-bold d-block mb-2">Estimated Date of Competion</label>
@@ -191,7 +190,7 @@ if (isset($selected_participants)) {
                                         <textarea name="description" class="nsm-field form-control ckeditor" placeholder="Enter Description" required>
                                         <?php
                                         if ((set_value('description') == '') && (isset($task))) {
-                                            echo $task->description;
+                                            echo $taskHub->description;
                                         } else {
                                             echo set_value('description');
                                         }
@@ -204,7 +203,7 @@ if (isset($selected_participants)) {
                     </div>
 
                     <div class="col-12 mt-3 text-end">
-                        <button type="submit" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
+                        <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
                         <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                     </div>
                 </div>
@@ -223,7 +222,7 @@ if (isset($selected_participants)) {
         $('#participants').children('option[value="' + prev_assigned_to + '"]').prop('hidden', true);
 
         $('.datepicker').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'mm/dd/yyyy',
         });
 
         $("#customer_id").select2({
@@ -348,10 +347,10 @@ if (isset($selected_participants)) {
             });
         }
 
-        $("#taskhub_entry").on("submit", function(e) {
-            let _this = $(this);
+        $("#taskhub_entry").on("submit", function(e) {            
             e.preventDefault();
 
+            let _this = $(this);
             var url = "<?php echo base_url('taskhub/entry'); ?>";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
@@ -368,12 +367,13 @@ if (isset($selected_participants)) {
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
+                        //if (result.value) {
+                            location.href = "<?php echo base_url('taskhub'); ?>";
+                            //location.reload();
+                        //}
                     });
 
-                    _this.trigger("reset");
+                    //_this.trigger("reset");
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);

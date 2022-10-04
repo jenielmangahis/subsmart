@@ -20,9 +20,11 @@ class PlaidAccount extends MY_Controller {
     {
         $this->load->model('PlaidAccount_model');
         $this->load->model('PlaidBankAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
 
         $is_valid = 1;
         $cid = logged('company_id');
+        $uid = logged('id');
 
         $plaidAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
         $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
@@ -31,15 +33,43 @@ class PlaidAccount extends MY_Controller {
             foreach($plaidAccounts as $pc){            
                 try{
                     $balance = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
-                    if( !empty($balance->accounts) ){
-                        $pc->balance_available = $balance->accounts[0]->balances->available;
-                        $pc->balance_current   = $balance->accounts[0]->balances->current;
+                     if( isset($balance->error_code) && $balance->error_code != '' ){
+                        $pc->balance_available = 'Cannot connect to your bank account';
+                        $pc->balance_current   = 'Cannot connect to your bank account';
+
+                        $err_data = [
+                            'user_id' => $uid,
+                            'log_date' => date("Y-m-d H:i:s"),
+                            'log_msg' => $balance->error_code . ' / ' . $balance->error_message
+                        ];
+
+                        $this->PlaidErrorLogs_model->create($err_data);
+                    }else{
+                        if( !empty($balance->accounts) ){
+                            $pc->balance_available = $balance->accounts[0]->balances->available;
+                            $pc->balance_current   = $balance->accounts[0]->balances->current;
+                        }
                     }
+                    
                 }catch(Exception $e){
                     $is_valid = 0;
+                    $err_data = [
+                        'user_id' => $uid,
+                        'log_date' => date("Y-m-d H:i:s"),
+                        'log_msg' => $e->getMessage()
+                    ];
+
+                    $this->PlaidErrorLogs_model->create($err_data);
                 }         
             }
         }else{
+            $err_data = [
+                'user_id' => $uid,
+                'log_date' => date("Y-m-d H:i:s"),
+                'log_msg' => 'Token Error'
+            ];
+
+            $this->PlaidErrorLogs_model->create($err_data);
             $is_valid = 0;
         }
 
@@ -68,12 +98,14 @@ class PlaidAccount extends MY_Controller {
     public function ajax_plaid_api()
     {
         $this->load->model('PlaidAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
 
         $is_valid = 0;
         $plaid_token = ''; 
         $msg = 'Cannot connect bank account. Please try again later.';   
 
         $cid  = logged('company_id');    
+        $uid  = logged('id');
         $post = $this->input->post();
 
         $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
@@ -84,6 +116,14 @@ class PlaidAccount extends MY_Controller {
                 $msg      = '';
                 $plaid_token = $plaidToken['token'];
                 $this->session->set_userdata('plaid_token', $plaidToken['token']);    
+            }else{
+                $err_data = [
+                    'user_id' => $uid,
+                    'log_date' => date("Y-m-d H:i:s"),
+                    'log_msg' => $plaidToken['err_msg']
+                ];
+
+                $this->PlaidErrorLogs_model->create($err_data);
             }
         }else{
             $msg = 'Invalid Account';
@@ -97,6 +137,7 @@ class PlaidAccount extends MY_Controller {
     {
         $this->load->model('PlaidAccount_model');
         $this->load->model('PlaidBankAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
 
         $is_success = 0;
         $msg = '';
@@ -104,6 +145,7 @@ class PlaidAccount extends MY_Controller {
 
         $post = $this->input->post();
         $cid  = logged('company_id');
+        $uid  = logged('id');
         $plaidData = json_decode($post['meta_data']);
         $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
         $accessToken = exchangeToken($plaidAccount->client_id, $plaidAccount->client_secret, $post['public_token']);
@@ -147,6 +189,14 @@ class PlaidAccount extends MY_Controller {
 
                 $total_created++;   
             }
+        }else{
+            $err_data = [
+                'user_id' => $uid,
+                'log_date' => date("Y-m-d H:i:s"),
+                'log_msg' => 'Token Error'
+            ];
+
+            $this->PlaidErrorLogs_model->create($err_data);
         }
         
 
@@ -164,9 +214,11 @@ class PlaidAccount extends MY_Controller {
     {
         $this->load->model('PlaidAccount_model');
         $this->load->model('PlaidBankAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
 
         $is_valid = 1;
         $cid = logged('company_id');
+        $uid = logged('id');
 
         $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
         $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
@@ -175,12 +227,33 @@ class PlaidAccount extends MY_Controller {
             foreach($plaidBankAccounts as $pc){            
                 try{
                     $balance  = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);  
-                    if( !empty($balance->accounts) ){
-                        $pc->balance_available = $balance->accounts[0]->balances->available;
-                        $pc->balance_current   = $balance->accounts[0]->balances->current;
+                    if( isset($balance->error_code) && $balance->error_code != '' ){
+                        $pc->balance_available = 'Cannot fetch bank account balance';
+                        $pc->balance_current   = 'Cannot fetch bank account balance';
+
+                        $err_data = [
+                            'user_id' => $uid,
+                            'log_date' => date("Y-m-d H:i:s"),
+                            'log_msg' => $balance->error_code . ' / ' . $balance->error_message
+                        ];
+
+                        $this->PlaidErrorLogs_model->create($err_data);
+                    }else{
+                        if( !empty($balance->accounts) ){
+                            $pc->balance_available = $balance->accounts[0]->balances->available;
+                            $pc->balance_current   = $balance->accounts[0]->balances->current;
+                        }
                     }
                 }catch(Exception $e){
                     $err = $e->getMessage();
+
+                    $err_data = [
+                        'user_id' => $uid,
+                        'log_date' => date("Y-m-d H:i:s"),
+                        'log_msg' => $err
+                    ];
+
+                    $this->PlaidErrorLogs_model->create($err_data);
                 }         
             }
         }else{
@@ -224,12 +297,14 @@ class PlaidAccount extends MY_Controller {
     {
         $this->load->model('PlaidAccount_model');
         $this->load->model('PlaidBankAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
 
         $is_valid = 0;
         $msg = 'Cannot connect to Plaid.';  
 
-        $post= $this->input->post();    
-        $cid = logged('company_id');    
+        $post = $this->input->post();    
+        $cid  = logged('company_id');  
+        $uid  = logged('id');  
 
         $apiPlaidTransactions = array();
         $apiPlaidAccount      = array();
@@ -240,7 +315,18 @@ class PlaidAccount extends MY_Controller {
             $end_date   = '2022-08-25';
             $apiPlaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $start_date, $end_date, $plaidBankAccount->account_id);
             $apiPlaidAccount  = authGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);
-            $is_valid = 1;
+
+            if( isset($apiPlaidAccount->error_code) && $apiPlaidAccount->error_code != '' ){
+                $err_data = [
+                    'user_id' => $uid,
+                    'log_date' => date("Y-m-d H:i:s"),
+                    'log_msg' => $apiPlaidAccount->error_code . ' / ' . $apiPlaidAccount->error_message
+                ];
+
+                $this->PlaidErrorLogs_model->create($err_data);
+            }else{
+                $is_valid = 1;    
+            }
         }else{
             $msg = 'Invalid Plaid Credentials';
         }       
@@ -256,12 +342,14 @@ class PlaidAccount extends MY_Controller {
     {
         $this->load->model('PlaidAccount_model');
         $this->load->model('PlaidBankAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
 
         $is_valid = 0;
         $msg = 'Cannot connect to Plaid.';  
 
-        $post= $this->input->post();    
-        $cid = logged('company_id');    
+        $post = $this->input->post();    
+        $cid  = logged('company_id');   
+        $uid  = logged('id'); 
         
         $apiPlaidAccount      = array();
         $apiPlaidRecurringTransactions = array();
@@ -270,7 +358,18 @@ class PlaidAccount extends MY_Controller {
         if( $plaidAccount && $plaidBankAccount ){                        
             $apiPlaidAccount  = authGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);
             $apiPlaidRecurringTransactions = recurringTransactionsGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);
-            $is_valid = 1;
+
+            if( isset($apiPlaidAccount->error_code) && $apiPlaidAccount->error_code != '' ){
+                $err_data = [
+                    'user_id' => $uid,
+                    'log_date' => date("Y-m-d H:i:s"),
+                    'log_msg' => $apiPlaidAccount->error_code . ' / ' . $apiPlaidAccount->error_message
+                ];
+
+                $this->PlaidErrorLogs_model->create($err_data);
+            }else{
+                $is_valid = 1;    
+            }
         }else{
             $msg = 'Invalid Plaid Credentials';
         }       

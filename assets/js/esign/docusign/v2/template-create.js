@@ -146,7 +146,7 @@ function TemplateCreate() {
         }
 
         const $modal = $("#deleteDocument");
-        const $buttonPrimary = $modal.find(".btn-primary");
+        const $buttonPrimary = $modal.find(".nsm-button.primary");
 
         $modal.find(".total-fields").html(_file.total_fields);
         $modal.modal("show");
@@ -298,7 +298,7 @@ function TemplateCreate() {
     }
 
     if (action === ACTIONS.PREPARE) {
-      const $button = $form.find(".btn-primary");
+      const $button = $form.find(".nsm-button.primary");
       $button.attr("disabled", true);
       $button.find(".spinner-border").removeClass("d-none");
 
@@ -321,7 +321,7 @@ function TemplateCreate() {
       });
 
       const data = await response.json();
-      let nextUrl = `${prefixURL}/eSign/manage?view=sent`;
+      let nextUrl = `${prefixURL}/eSign_v2/manage?view=sent`;
       if (data.hash) {
         nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
       }
@@ -360,7 +360,7 @@ function TemplateCreate() {
 
     let $button = $(event.currentTarget);
     if (event.type.toLowerCase() === "submit") {
-      $button = $form.find(".btn-primary");
+      $button = $form.find(".nsm-button.primary");
     }
 
     $button.attr("disabled", true);
@@ -377,9 +377,9 @@ function TemplateCreate() {
     $button.attr("disabled", false);
     $button.find(".spinner-border").addClass("d-none");
 
-    let nextUrl = `${prefixURL}/vault/mylibrary`;
-    if ($button.hasClass("btn-primary")) {
-      nextUrl = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
+    let nextUrl = `${prefixURL}/vault_v2/mylibrary`;
+    if ($button.hasClass("nsm-button.primary")) {
+      nextUrl = `${prefixURL}/esign_v2/Files?template_id=${templateId}&next_step=3`;
     }
 
     window.location = nextUrl;
@@ -395,7 +395,7 @@ function TemplateCreate() {
     }
 
     const $modal = $("#deleteRecipient");
-    const $buttonPrimary = $modal.find(".btn-primary");
+    const $buttonPrimary = $modal.find(".nsm-button.primary");
 
     $modal.find(".total-fields").html(recipient.total_fields);
     $modal.modal("show");
@@ -644,8 +644,18 @@ function TemplateCreate() {
 
     const { pathname } = window.location;
     let action = ACTIONS.CREATE;
-    if (/edit/i.test(pathname)) action = ACTIONS.UPDATE;
-    if (/prepare/i.test(pathname)) action = ACTIONS.PREPARE;
+
+    if (/edit/i.test(pathname)) {
+      action = ACTIONS.UPDATE;
+      $(".nsm-nav .nsm-page-title h4").text("Edit Template");
+      $(".active-header-nav").text("Edit Template");
+    }
+
+    if (/prepare/i.test(pathname)) {
+      action = ACTIONS.PREPARE;
+      $(".nsm-nav .nsm-page-title h4").text("Prepare Template");
+      $(".active-header-nav").text("Prepare Template");
+    }
 
     const isPreparingTemplate = action === ACTIONS.PREPARE;
 

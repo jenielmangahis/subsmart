@@ -1230,7 +1230,7 @@ SQL;
         $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]";
 
         if (isLocalhost()) {
-            $baseUrl .= '/nsmartrac';
+            $baseUrl .= '/';
         }
 
         return $baseUrl . '/eSign';

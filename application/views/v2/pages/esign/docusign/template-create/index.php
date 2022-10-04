@@ -31,7 +31,13 @@ if ($addRecipients) {
             <div class="nsm-page-nav mb-3">
                 <ul>
                     <li class="active">
-                        <a class="nsm-page-link" href="<?=base_url('docusign/Files')?>">
+                        <a class="nsm-page-link" href="#">
+                            <span class="active-header-nav">Create Template</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="nsm-page-link" href="<?=base_url('esignmain')?>">
                             <span>Home</span>
                         </a>
                     </li>
@@ -43,7 +49,7 @@ if ($addRecipients) {
                     </li>
 
                     <li class="">
-                        <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=sent')?>">
+                        <a class="nsm-page-link" href="<?=base_url('vault_v2/mylibrary')?>">
                             <span>Templates</span>
                         </a>
                     </li>

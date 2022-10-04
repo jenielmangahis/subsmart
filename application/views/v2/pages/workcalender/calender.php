@@ -504,9 +504,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 reloadCalendar();
-                            }
+                            //}
                         });
                     } else {
                         Swal.fire({
@@ -592,8 +592,7 @@
             ajax: {
                 url: base_url + 'autocomplete/_company_users',
                 dataType: 'json',
-                delay: 250,
-                dropdownParent: $("#create_appointment_modal"),
+                delay: 250,                
                 data: function(params) {
                     return {
                         q: params.term,
@@ -607,11 +606,12 @@
                         results: data,
                     };
                 },
-                formatResult: function(item) {
-                    return '<div>' + item.FName + ' ' + item.LName + '<br /><small>' + item.email + '</small></div>';
-                },
+                /*formatResult: function(item) {
+                    return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+                },*/
                 cache: true
             },
+            dropdownParent: $("#create_appointment_modal"),
             placeholder: 'Select User',
             minimumInputLength: 0,
             templateResult: formatRepoUser,
@@ -645,6 +645,7 @@
                 },
                 cache: true
             },
+            dropdownParent: $("#create_appointment_modal"),
             placeholder: 'Select Customer',
             minimumInputLength: 0,
             templateResult: formatRepoCustomer,
@@ -671,6 +672,7 @@
                 },
                 cache: true
             },
+            dropdownParent: $("#create_appointment_modal"),
             placeholder: 'Select Tags',
             minimumInputLength: 0,
             templateResult: formatRepoTag,
@@ -768,7 +770,7 @@
                 data: _this.serialize(),
                 success: function(result) {
                     if (result.is_success) {
-                        if (o.is_wait_list == 0) {
+                        if (result.is_wait_list == 0) {
                             var swal_text = "Wait list was successfully moved to calendar.";
                         } else {
                             var swal_text = "Appointment wait list was successfully updated.";
@@ -781,9 +783,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 loadWaitList()
-                            }
+                            //}
                         });
                     } else {
                         $("#w_is_wait_list").val(0);
@@ -895,9 +897,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 reloadCalendar();
-                            }
+                            //}
                         });
                     } else {
                         Swal.fire({
@@ -1575,6 +1577,7 @@
                 },
                 cache: true
             },
+            dropdownParent: $("#update_waitlist_modal"),
             placeholder: 'Select User',
             minimumInputLength: 0,
             templateResult: formatRepoUser,
@@ -1601,6 +1604,7 @@
                 },
                 cache: true
             },
+            dropdownParent: $("#update_waitlist_modal"),
             placeholder: 'Select Customer',
             minimumInputLength: 0,
             templateResult: formatRepoCustomer,
@@ -1627,6 +1631,7 @@
                 },
                 cache: true
             },
+            dropdownParent: $("#update_waitlist_modal"),
             placeholder: 'Select Tags',
             minimumInputLength: 0,
             templateResult: formatRepoTag,

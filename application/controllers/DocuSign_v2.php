@@ -165,7 +165,8 @@ class DocuSign_v2 extends MYF_Controller
             'assets/js/esign/docusign/v2/manage.js',
         ]);
 
-        $this->page_data['page']->title = 'Manage: Inbox';
+        $view = $this->input->get('view', true) ?? "inbox";
+        $this->page_data['page']->title = 'Manage: ' . ucfirst(implode(' ', explode('_', $view)));
         $this->load->view('v2/pages/esign/docusign/manage', $this->page_data);
     }
 
