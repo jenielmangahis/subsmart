@@ -54,6 +54,7 @@ class Job extends MY_Controller
             'select' => 'id,FName,LName',
         );
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
+        $this->page_data['table'] = 'job';
 
         // check if settings has been set
         $get_job_settings = array(
@@ -679,6 +680,8 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query, false);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_estimate_items($id);
         }
+
+        $this->page_data['table'] = 'estimates';
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
         ]);
@@ -700,6 +703,7 @@ class Job extends MY_Controller
 
 		$this->page_data['page']->title = 'Estimates';
         $this->page_data['idd'] = $id;
+        print_r($this->jobs_data_items);
         $this->load->view('v2/pages/job/job_estimates', $this->page_data);
     }
 

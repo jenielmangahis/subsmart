@@ -267,15 +267,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                                 if($estimate->estimate_type == 'Option')
                                                 {
-                                                    echo '$ '.$total1;
+                                                    echo '$ '.number_format($total1,2);
                                                 }
                                                 elseif($estimate->estimate_type == 'Bundle')
                                                 {
-                                                    echo '$ '.$total2;
+                                                    echo '$ '.number_format($total2,2);
                                                 }
                                                 else
                                                 {
-                                                    echo '$ '.$estimate->grand_total; 
+                                                    echo '$ '.number_format($estimate->grand_total,2); 
                                                 }
                                                 
                                                 ?>

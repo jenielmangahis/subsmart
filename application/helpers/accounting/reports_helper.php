@@ -224,13 +224,13 @@ if(!function_exists('estimateInvoice')){
             ),
             array(
                 'name' => 'BALANCE',
-                'description' => 'estimates.grand_total',
-                'name_in' => 'estimate'
+                'description' => 'invoices.balance',
+                'name_in' => 'invoice'
             ),
             array(
                 'name' => 'INVOICED AMOUNT',
-                'description' => 'estimates.grand_total',
-                'name_in' => 'estimate'
+                'description' => 'invoices.invoice_totals',
+                'name_in' => 'invoice'
             ),
             array(
                 'name' => '% AMOUNT',

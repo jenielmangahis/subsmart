@@ -128,7 +128,7 @@ class Jobs_model extends MY_Model
     {
         $this->db->from('estimates_items');
         //$this->db->select('items.id,items.title,items.price,items.type,estimates_items.qty,estimates_items.tax,estimates_items.discount');
-        $this->db->select('items.id,items.title,items.price,items.type,estimates_items.qty');
+        $this->db->select('items.id,items.title,items.price,items.type,estimates_items.qty, estimates_items.cost');
         $this->db->join('items', 'items.id = estimates_items.items_id', 'left');
         $this->db->where("estimates_items.estimates_id", $id);
         $query = $this->db->get();

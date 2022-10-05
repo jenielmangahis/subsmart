@@ -293,7 +293,7 @@
                                                 <?php
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
-                                                    $total = $item->price * $item->qty;
+                                                    $total = $item->cost * $item->qty;
 
                                                 ?>
                                                     <tr id=ss>
@@ -305,15 +305,18 @@
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                         </td>
                                                         <td width="20%"><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
                                                         <td width="20%"><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
                                                         <td style="text-align: center" class="d-flex" width="15%">
                                                             <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
-                                                            <a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
                                                         </td>
+                                                        <td width="20%">
+                                                            <button style="margin-top: 20px;" type="button" class="nsm-button items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
+                                                        </td>
+
                                                     </tr>
                                                 <?php
                                                     $subtotal = $subtotal + $total;
@@ -720,12 +723,14 @@ add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
     'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    //'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
     'assets/textEditor/summernote-bs4.js',
 
 ));
-include viewPath('includes/footer');
+
 ?>
+<?php include viewPath('v2/includes/footer'); ?>
+
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>

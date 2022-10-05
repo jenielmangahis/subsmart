@@ -309,7 +309,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="add-pay-schedule-modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <form method="post" id="pay-schedule-form">
             <div class="modal-content">
                 <div class="modal-header">
@@ -333,10 +333,6 @@
                                             <option value="every-month">Every month</option>
                                         </select>
                                     </div>
-                                    <div class="form-check form-switch nsm-switch">
-                                        <label for="custom-schedule" class="form-check-label">Custom schedule</label>
-                                        <input type="checkbox" name="custom_schedule" id="custom-schedule" class="form-check-input">
-                                    </div>
                                 </div>
                                 <div class="col-12">
                                     <label for="next-payday">Next payday</label>
@@ -353,301 +349,7 @@
                                     <p class="m-0">Wednesday</p>
                                 </div>
                             </div>
-                            <div class="row gy-3 mb-4">
-                                <div class="col-12">
-                                    <label class="content-title">First pay period of the month</label>
-                                </div>
-                                <div class="col-12">
-                                    <label for="first_payday">First payday of the month</label>
-                                    <select name="first_payday" id="first_payday" class="form-select nsm-field">
-                                        <option value="1">1st</option>
-                                        <option value="2">2nd</option>
-                                        <option value="3">3rd</option>
-                                        <option value="4">4th</option>
-                                        <option value="5">5th</option>
-                                        <option value="6">6th</option>
-                                        <option value="7">7th</option>
-                                        <option value="8">8th</option>
-                                        <option value="9">9th</option>
-                                        <option value="10">10th</option>
-                                        <option value="11">11th</option>
-                                        <option value="12">12th</option>
-                                        <option value="13">13th</option>
-                                        <option value="14">14th</option>
-                                        <option value="15">15th</option>
-                                        <option value="16">16th</option>
-                                        <option value="17">17th</option>
-                                        <option value="18">18th</option>
-                                        <option value="19">19th</option>
-                                        <option value="20">20th</option>
-                                        <option value="21">21st</option>
-                                        <option value="22">22nd</option>
-                                        <option value="23">23rd</option>
-                                        <option value="24">24th</option>
-                                        <option value="25">25th</option>
-                                        <option value="26">26th</option>
-                                        <option value="27">27th</option>
-                                        <option value="28">28th</option>
-                                        <option value="29">29th</option>
-                                        <option value="30">30th</option>
-                                        <option value="0">End of month</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row gy-3 mb-4">
-                                <div class="col-12">
-                                    <label class="content-title">End of first pay period</label>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check form-check-inline">
-                                        <input type="radio" name="end_of_first_pay_period" id="end_date_first_pay" class="form-check-input" value="end-date" checked>
-                                        <label for="end_date_first_pay" class="form-check-label">End date</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input type="radio" name="end_of_first_pay_period" id="number_of_days_first_pay" class="form-check-input ml-2" value="number-of-days-before">
-                                        <label for="number_of_days_first_pay" class="form-check-label">Number of days before payday</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <label for="first_pay_month">Month</label>
-                                            <select name="first_pay_month" id="first_pay_month" class="form-seelct nsm-field">
-                                                <option value="same">Same</option>
-                                                <option value="previous">Previous</option>
-                                                <option value="next">Next</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <label for="first_pay_day">Day</label>
-                                            <select name="first_pay_day" id="first_pay_day" class="form-select nsm-field">
-                                                <option value="1">1st</option>
-                                                <option value="2">2nd</option>
-                                                <option value="3">3rd</option>
-                                                <option value="4">4th</option>
-                                                <option value="5">5th</option>
-                                                <option value="6">6th</option>
-                                                <option value="7">7th</option>
-                                                <option value="8">8th</option>
-                                                <option value="9">9th</option>
-                                                <option value="10">10th</option>
-                                                <option value="11">11th</option>
-                                                <option value="12">12th</option>
-                                                <option value="13">13th</option>
-                                                <option value="14">14th</option>
-                                                <option value="15">15th</option>
-                                                <option value="16">16th</option>
-                                                <option value="17">17th</option>
-                                                <option value="18">18th</option>
-                                                <option value="19">19th</option>
-                                                <option value="20">20th</option>
-                                                <option value="21">21st</option>
-                                                <option value="22">22nd</option>
-                                                <option value="23">23rd</option>
-                                                <option value="24">24th</option>
-                                                <option value="25">25th</option>
-                                                <option value="26">26th</option>
-                                                <option value="27">27th</option>
-                                                <option value="28">28th</option>
-                                                <option value="29">29th</option>
-                                                <option value="30">30th</option>
-                                                <option value="0">End of month</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12">
-                                            <label for="first_pay_days_before">Days before payday</label>
-                                            <select name="first_pay_days_before" id="first_pay_days_before" class="form-select nsm-field">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
-                                                <option value="10">10</option>
-                                                <option value="11">11</option>
-                                                <option value="12">12</option>
-                                                <option value="13">13</option>
-                                                <option value="14">14</option>
-                                                <option value="15">15</option>
-                                                <option value="16">16</option>
-                                                <option value="17">17</option>
-                                                <option value="18">18</option>
-                                                <option value="19">19</option>
-                                                <option value="20">20</option>
-                                                <option value="21">21</option>
-                                                <option value="22">22</option>
-                                                <option value="23">23</option>
-                                                <option value="24">24</option>
-                                                <option value="25">25</option>
-                                                <option value="26">26</option>
-                                                <option value="27">27</option>
-                                                <option value="28">28</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
-                                                <option value="-9">-9</option>
-                                                <option value="-8">-8</option>
-                                                <option value="-7">-7</option>
-                                                <option value="-6">-6</option>
-                                                <option value="-5">-5</option>
-                                                <option value="-4">-4</option>
-                                                <option value="-3">-3</option>
-                                                <option value="-2">-2</option>
-                                                <option value="-1">-1</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row gy-3 mb-4">
-                                <div class="col-12">
-                                    <label class="content-title">Second pay period of the month</label>
-                                </div>
-                                <div class="col-12">
-                                    <label for="second_payday">Second payday of the month</label>
-                                    <select name="second_payday" id="second_payday" class="form-select nsm-field">
-                                        <option value="1">1st</option>
-                                        <option value="2">2nd</option>
-                                        <option value="3">3rd</option>
-                                        <option value="4">4th</option>
-                                        <option value="5">5th</option>
-                                        <option value="6">6th</option>
-                                        <option value="7">7th</option>
-                                        <option value="8">8th</option>
-                                        <option value="9">9th</option>
-                                        <option value="10">10th</option>
-                                        <option value="11">11th</option>
-                                        <option value="12">12th</option>
-                                        <option value="13">13th</option>
-                                        <option value="14">14th</option>
-                                        <option value="15">15th</option>
-                                        <option value="16" selected>16th</option>
-                                        <option value="17">17th</option>
-                                        <option value="18">18th</option>
-                                        <option value="19">19th</option>
-                                        <option value="20">20th</option>
-                                        <option value="21">21st</option>
-                                        <option value="22">22nd</option>
-                                        <option value="23">23rd</option>
-                                        <option value="24">24th</option>
-                                        <option value="25">25th</option>
-                                        <option value="26">26th</option>
-                                        <option value="27">27th</option>
-                                        <option value="28">28th</option>
-                                        <option value="29">29th</option>
-                                        <option value="30">30th</option>
-                                        <option value="0">End of month</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row gy-3 mb-4">
-                                <div class="col-12">
-                                    <label class="content-title">End of second pay period</label>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check form-check-inline">
-                                        <input type="radio" name="end_of_second_pay_period" id="end_date_second_pay" class="form-check-input" value="end-date" checked>
-                                        <label for="end_date_second_pay" class="form-check-label">End date</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input type="radio" name="end_of_second_pay_period" id="number_of_days_second_pay" class="form-check-input ml-2" value="number-of-days-before">
-                                        <label for="number_of_days_second_pay" class="form-check-label">Number of days before payday</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <label for="second_pay_month">Month</label>
-                                            <select name="second_pay_month" id="second_pay_month" class="form-seelct nsm-field">
-                                                <option value="same">Same</option>
-                                                <option value="previous">Previous</option>
-                                                <option value="next">Next</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <label for="second_pay_day">Day</label>
-                                            <select name="second_pay_day" id="second_pay_day" class="form-select nsm-field">
-                                                <option value="1">1st</option>
-                                                <option value="2">2nd</option>
-                                                <option value="3">3rd</option>
-                                                <option value="4">4th</option>
-                                                <option value="5">5th</option>
-                                                <option value="6">6th</option>
-                                                <option value="7">7th</option>
-                                                <option value="8">8th</option>
-                                                <option value="9">9th</option>
-                                                <option value="10">10th</option>
-                                                <option value="11">11th</option>
-                                                <option value="12">12th</option>
-                                                <option value="13">13th</option>
-                                                <option value="14">14th</option>
-                                                <option value="15">15th</option>
-                                                <option value="16">16th</option>
-                                                <option value="17">17th</option>
-                                                <option value="18">18th</option>
-                                                <option value="19">19th</option>
-                                                <option value="20">20th</option>
-                                                <option value="21">21st</option>
-                                                <option value="22">22nd</option>
-                                                <option value="23">23rd</option>
-                                                <option value="24">24th</option>
-                                                <option value="25">25th</option>
-                                                <option value="26">26th</option>
-                                                <option value="27">27th</option>
-                                                <option value="28">28th</option>
-                                                <option value="29">29th</option>
-                                                <option value="30">30th</option>
-                                                <option value="0">End of month</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12">
-                                            <label for="second_pay_days_before">Days before payday</label>
-                                            <select name="second_pay_days_before" id="second_pay_days_before" class="form-select nsm-field">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
-                                                <option value="10">10</option>
-                                                <option value="11">11</option>
-                                                <option value="12">12</option>
-                                                <option value="13">13</option>
-                                                <option value="14">14</option>
-                                                <option value="15">15</option>
-                                                <option value="16">16</option>
-                                                <option value="17">17</option>
-                                                <option value="18">18</option>
-                                                <option value="19">19</option>
-                                                <option value="20">20</option>
-                                                <option value="21">21</option>
-                                                <option value="22">22</option>
-                                                <option value="23">23</option>
-                                                <option value="24">24</option>
-                                                <option value="25">25</option>
-                                                <option value="26">26</option>
-                                                <option value="27">27</option>
-                                                <option value="28">28</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
-                                                <option value="-9">-9</option>
-                                                <option value="-8">-8</option>
-                                                <option value="-7">-7</option>
-                                                <option value="-6">-6</option>
-                                                <option value="-5">-5</option>
-                                                <option value="-4">-4</option>
-                                                <option value="-3">-3</option>
-                                                <option value="-2">-2</option>
-                                                <option value="-1">-1</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="row gy-3">
                                 <div class="col-12">
                                     <label for="name">Pay schedule name</label>
                                     <input type="text" name="name" id="name" class="form-control nsm-field" value="Every Friday">
@@ -659,7 +361,79 @@
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            
+                            <div class="row gy-3 mb-4">
+                                <div class="col-12">
+                                    <label class="content-title">Upcoming pay periods</label>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12 grid-mb">
+                                            <div class="card shadow">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-8">
+                                                            <label class="content-subtitle">Pay period</label>
+                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="content-subtitle">Pay date</label>
+                                                            <p class="m-0 pay-date"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 grid-mb">
+                                            <div class="card shadow">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-8">
+                                                            <label class="content-subtitle">Pay period</label>
+                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="content-subtitle">Pay date</label>
+                                                            <p class="m-0 pay-date"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 grid-mb">
+                                            <div class="card shadow">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-8">
+                                                            <label class="content-subtitle">Pay period</label>
+                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="content-subtitle">Pay date</label>
+                                                            <p class="m-0 pay-date"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 grid-mb">
+                                            <div class="card shadow">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-8">
+                                                            <label class="content-subtitle">Pay period</label>
+                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="content-subtitle">Pay date</label>
+                                                            <p class="m-0 pay-date"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

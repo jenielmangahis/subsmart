@@ -10,8 +10,7 @@ class Job_Checklists extends MY_Controller
     {
         parent::__construct();
 
-        $this->page_data['page']->title = 'Job Checklists';
-        $this->page_data['page']->menu = 'job_checklists';
+        
 
         $this->load->model('JobChecklist_model');
         $this->load->model('JobChecklistItem_model');
@@ -20,6 +19,10 @@ class Job_Checklists extends MY_Controller
 
     public function index()
     {        
+        $this->page_data['page']->title = 'Checklist';
+        $this->page_data['page']->menu = 'job_checklists';
+        $this->page_data['title'] = 'Checklist';
+
         $company_id = logged('company_id');
 
         $jobChecklists = $this->JobChecklist_model->getAllByCompanyId($company_id);
@@ -30,10 +33,13 @@ class Job_Checklists extends MY_Controller
 
     public function add_new()
     {
+        $this->page_data['title '] = 'Checklist';
+        $this->page_data['page']->title = 'Add New Job Checklist';
+        $this->page_data['page']->menu = 'job_checklists';
         $checklistAttachType = $this->JobChecklist_model->getAttachType();
 
         $this->page_data['checklistAttachType'] = $checklistAttachType;
-        $this->load->view('job_checklists/add_checklist', $this->page_data);
+        $this->load->view('v2/pages/job_checklists/add_checklist', $this->page_data);
     }
 
     public function create_checklist(){

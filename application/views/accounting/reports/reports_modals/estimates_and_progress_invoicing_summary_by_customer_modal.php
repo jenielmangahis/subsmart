@@ -68,21 +68,6 @@
                         <h6 onclick="column()" class="czLabel" id="custom_row_col_label"><i class='bx bx-fw bxs-right-arrow' id="custom_row_col"></i>Rows/Columns</h6>
                         <div class="col-lg-12 column" id="column">
                             <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <label for="filter-group-by">Group by</label>
-                                    <select class="nsm-field form-select" name="filter_group_by" id="group_by_filter">
-                                        <option value="" selected>None</option>
-                                        <option value="estimate_type">Transaction Type</option>
-                                        <option value="first_name">Customer</option>
-                                        <option value="day">Day</option>
-                                        <option value="week">Week</option>
-                                        <option value="month">Month</option>
-                                        <option value="quarter">Quarter</option>
-                                        <option value="year">Year</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <h6 class="change-col" onclick="ccl()">Change Columns</h6>
                                 <div class="changeCol" id="changeCol">
                                     <h6 class="fw-bold">Select and reorder columns</h6>

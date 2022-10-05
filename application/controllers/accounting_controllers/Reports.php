@@ -531,6 +531,15 @@ class Reports extends MY_Controller {
         $header = json_decode($input['header']);
         $company_name = $input['company_name'];
         $report_title = $input['report_title'];
+
+        $cust_header = [];
+
+        //default values
+        $cust_header['company_title'] = $this->page_data['clients']->business_name;
+        $cust_header['report_title'] = 'Estimates & Progress Invoicing Summary by Customer';
+        $cust_header['date_prepared'] = date("l, F j, Y");
+        $cust_header['time_prepared'] = date("h:i A eP");
+
         if(empty($input)){
             $data = array(
                 "where" => array(
@@ -556,10 +565,9 @@ class Reports extends MY_Controller {
             foreach($customerId as $cid){
                 array_push($customerName, get_estimate_customer_name($cid->id));
             }
-            $data_arr = array("success"=> true, "def" => true, "customer" => $customer, "customerName" => $customerName);
+            $data_arr = array("success"=> true, "def" => true, "customer" => $customer, "customerName" => $customerName, "custHeader" => $cust_header);
         }
 
-        $cust_header = [];
         //header and footer
         if(!empty($header)){
             if(in_array('isCompany', $header)){
@@ -582,6 +590,7 @@ class Reports extends MY_Controller {
 
 
             }else{
+                $cust_header['foot'] = true;
                 $cust_header['date_prepared'] = "";
             }
 
@@ -589,6 +598,7 @@ class Reports extends MY_Controller {
                 $cust_header['time_prepared'] = date("h:i A eP");
                 $cust_header['foot'] = true;
             }else{
+                $cust_header['foot'] = true;
                 $cust_header['time_prepared'] = "";
             }
 

@@ -197,7 +197,8 @@ if(isset($jobs_data)){
                 "<td width=\"20%\"><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
                 //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td  style=\"text-align: center;margin-top: 20px;\" class=\"d-flex\" width=\"15%\"><b style=\"font-size: 16px;\" data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b></td>" +
-                "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button></td>\n" +
+                "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"nsm-button items_remove_btn remove_item_row\"><i class=\'bx bx-trash\'></i></button></td>\n" +
+
                 "</tr>";
             tableBody = $("#jobs_items");
             tableBody.append(markup);
