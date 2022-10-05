@@ -521,7 +521,7 @@ input:checked + .slider:before {
                                                 </td>
                                             <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                            <td width="10%"><input type="text" class="form-control price hidden_mobile_view" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
                                                        <div class="show_mobile_view"><span class="price">0</span>
                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
@@ -639,7 +639,7 @@ input:checked + .slider:before {
                                             <td><input type="number" class="form-control quantity2" name="quantity2[]"
                                                        data-counter="0" id="quantity2_0" value="1"></td>
                                             <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
-                                            <td><input type="number" class="form-control price2" name="price2[]"
+                                            <td><input type="text" class="form-control price2" name="price2[]"
                                                        data-counter="0" id="price2_0" min="0" value="0"><input type="hidden" class="priceqty2" id="priceqty2_0" value="0"></td>
                                             <td><input type="number" class="form-control discount2" name="discount2[]"
                                                        data-counter="0" id="discount2_0" min="0" value="0" readonly></td>

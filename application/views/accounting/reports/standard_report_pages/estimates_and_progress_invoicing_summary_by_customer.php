@@ -4,7 +4,6 @@
         width: 100%;
     }
     .change-col {
-        margin-top: 20px;
         color: blue;
         cursor: pointer;
     }
@@ -298,8 +297,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="nsm-card-footer text-center">
-                                <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>
+                            <div class="nsm-card-footer text-center tbl_footer">
+                                <!-- <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p> -->
                             </div>
                         </div>
                     </div>
@@ -318,8 +317,40 @@
         fetch('<?= base_url('accounting_controllers/reports/EstimatesInvoiceByCustomer') ?>',{
 
         }).then(response => response.json()).then(response => { 
-            var {success, def, customer, customerName} = response;
+            var {success, def, customer, customerName, custHeader} = response;
+            var foot = '';
             if(def){
+                if(custHeader){
+                    if(custHeader['company_title']){
+                        if ( $('.company').children().length > 0 ) {
+                            $("#company_child").remove();
+                        }
+                        $('.company').append(
+                            '<h4 class="text-center fw-bold"><span class="company-name" id="company_child">'+custHeader['company_title']+'</span></h4>'
+                        )
+                    }
+                    if(custHeader['report_title']){
+                        if ( $('.report').children().length > 0 ) {
+                            $("#report_child").remove();
+                        }
+                        $('.report').append(
+                            '<hp class="fw-bold" id="report_child">'+custHeader['report_title']+'</p>'
+                        )
+                    }
+                    if ( $('.tbl_footer').children().length > 0 ) {
+                        $("#date_child").remove();
+                    }
+                    if(custHeader['date_prepared']){
+                        foot += custHeader['date_prepared'];
+                    }
+                    if(custHeader['time_prepared']){
+                        foot += ' '+custHeader['time_prepared'];
+                    }
+                    $('.tbl_footer').append(
+                        '<span id="date_child">'+foot+'</span>'
+                    );
+                }
+
                 $('#head_tbl').append(
                     '<tr><td data-name="Date">DATE</td><td data-name="Num">NUM</td><td data-name="Status">STATUS</td><td data-name="Amount">AMOUNT</td><td data-name="Balance">BALANCE</td><td data-name="Invoiced Amount">INVOICED AMOUNT</td><td data-name="% Invoiced">% AMOUNT</td><td data-name="Remaining Amount">REMAINING AMOUNT</td></tr>'
                 );
@@ -363,10 +394,20 @@
 //RUN REPORT
         $("#runReport").submit(function(e) {
             var header = [];
+            var estimateCol = [];
+            var invoiceCol = [];
             e.preventDefault(); // avoid to execute the actual submit of the form.
 
             $("input.header:checkbox:checked").each(function() {
                 header.push($(this).val());
+            });
+
+            $("input.estimate:checkbox:checked").each(function() {
+                estimateCol.push($(this).val());
+            });
+
+            $("input.invoice:checkbox:checked").each(function() {
+                invoiceCol.push($(this).val());
             });
 
             var company_name = $('.company_name').val();
@@ -382,24 +423,35 @@
             }).then(response => response.json()).then(response => {
                 var {success, cust_header} = response;
                 console.log(response);
-
+                var foot = '';
                 if(cust_header){
-                    if(cust_header['company_title']){
                         if ( $('.company').children().length > 0 ) {
                             $("#company_child").remove();
                         }
                         $('.company').append(
                             '<h4 class="text-center fw-bold"><span class="company-name" id="company_child">'+cust_header['company_title']+'</span></h4>'
                         )
-                    }
-                    if(cust_header['report_title']){
                         if ( $('.report').children().length > 0 ) {
                             $("#report_child").remove();
                         }
                         $('.report').append(
                             '<hp class="fw-bold" id="report_child">'+cust_header['report_title']+'</p>'
                         )
-                    }
+                        
+                        if(cust_header['foot']){
+                            if ( $('.tbl_footer').children().length > 0 ) {
+                                $("#date_child").remove();
+                            }
+                            if(cust_header['date_prepared']){
+                                foot += cust_header['date_prepared'];
+                            }
+                            if(cust_header['time_prepared']){
+                                foot += ' '+cust_header['time_prepared'];
+                            }
+                            $('.tbl_footer').append(
+                                '<span id="date_child">'+foot+'</span>'
+                            );
+                        }
                 }
             }).catch((error)=>{
                 console.log(error);

@@ -512,7 +512,7 @@ input:checked + .slider:before {
                                                             </td>
                                                             <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
                                                                     data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
-                                                            <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
+                                                            <td width="10%"><input type="text" class="form-control price2 hidden_mobile_view" name="price[]"
                                                                     data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->costing; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->costing; ?></div></td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
                                                                     data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" readonly ></td>
@@ -629,7 +629,7 @@ input:checked + .slider:before {
                                             <td><input type="number" class="form-control quantity2" name="quantity2[]"
                                                        data-counter="0" id="quantity2_0" value="<?php echo $data2->qty; ?>"></td>
                                             <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
-                                            <td><input type="number" class="form-control price2" name="price2[]"
+                                            <td><input type="text" class="form-control price2" name="price2[]"
                                                        data-counter="0" id="price2_0" min="0" value="<?php echo $data2->costing; ?>"><input type="hidden" class="priceqty2" id="priceqty2_0" value="<?php echo $data2->costing; ?>"></td>
                                             <td><input type="number" class="form-control discount2" name="discount2[]"
                                                        data-counter="0" id="discount2_0" min="0" value="<?php echo $data2->discount; ?>" readonly></td>

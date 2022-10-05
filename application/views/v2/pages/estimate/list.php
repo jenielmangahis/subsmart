@@ -159,8 +159,8 @@
                                     <td><span class="nsm-badge <?= $badge ?>"><?= $estimate->status; ?></span></td>
                                     <td>
                                         <?php
-                                        $total1 = ((int)$estimate->option1_total) + ((int)$estimate->option2_total);
-                                        $total2 = ((int)$estimate->bundle1_total) + ((int)$estimate->bundle2_total);
+                                        $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
+                                        $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
 
                                         if ($estimate->estimate_type == 'Option') {
                                             echo '$ ' . floatval($total1);

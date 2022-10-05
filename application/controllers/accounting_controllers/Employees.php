@@ -158,6 +158,8 @@ class Employees extends MY_Controller {
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
         $this->page_data['nextPayDate'] = $nextPayDate;
+        $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
+        $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
         $this->page_data['employees'] = $this->get_employees($filters);
         $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
