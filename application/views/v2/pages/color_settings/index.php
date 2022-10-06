@@ -35,7 +35,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Name">Name</td>
+                            <td data-name="Name" style="width:80%;">Name</td>
                             <td data-name="Color Code">Color Code</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -50,7 +50,7 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?= $c->color_name; ?></td>
-                                    <td><span class="nsm-badge" style="background-color: <?= $c->color_code; ?>; color: #fff;"><?= $c->color_code; ?></span></td>
+                                    <td><span class="nsm-badge" style="background-color: <?= $c->color_code; ?>; color: #fff;padding: 3px; display: block;font-size: 14px; width: 100%; text-align:center;"><?= $c->color_code; ?></span></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -58,7 +58,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('workorder/priority/edit/' . $priority->id) ?>">Edit</a>
+                                                    <a class="dropdown-item" name="dropdown_edit" href="<?= base_url('color_settings/edit_color_setting/'.$c->id); ?>">Edit</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-name="<?php echo $c->color_name; ?>" data-id="<?php echo $c->id; ?>">Delete</a>
