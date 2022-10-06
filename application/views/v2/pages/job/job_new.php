@@ -499,7 +499,7 @@
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </ul>
-                                            <input value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
+                                            <input value="<?= (isset($jobs_data) && isset($jobs_data->event_color)) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                                         </div>
                                         <h6>Customer Reminder Notification</h6>
                                         <select name="customer_reminder_notification" class="form-control ">
