@@ -57,7 +57,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Create job checklist.
+                            Edit job checklist. 
                         </div>
                     </div>
                 </div>
@@ -65,34 +65,61 @@
         </div>
     </div>
     <div class="col-12 grid-mb">
-        <?php include viewPath('flash'); ?>
-        <?php echo form_open_multipart('job_checklists/create_checklist', [ 'id' => 'frm-create-checklist', 'class' => 'form-validate checklist-form', 'autocomplete' => 'off' ]); ?>
+        <?php echo form_open_multipart('job_checklist/update_checklist', [ 'class' => 'form-validate checklist-form', 'id' => 'frm-update-checklist', 'autocomplete' => 'off' ]); ?>
+        <input type="hidden" name="cid" value="<?php echo $checklist->id; ?>" id="checklist-id">
+
         <div class="form-group">
             <label>Checklist Name</label> <span class="form-required">*</span>
-            <input type="text" name="checklist_name" value=""  class="form-control" required="" autocomplete="off" />
+            <input type="text" name="checklist_name" value="<?= $checklist->checklist_name; ?>"  class="form-control" required="" autocomplete="off" />
         </div>
         <div class="form-group">
             <label>Attach this checklist to all Work Orders for</label> <span class="form-required">*</span><br />                              
             <small>Select from the options below to which this checklist will be automatically attached when you create a new Work Order.</small>
-            <select class="form-control" id="attach-to-work-order" name="attach_to_job_order" required="">
-                <option value="">- Select -</option>
-                <?php foreach($checklistAttachType as $key => $value){ ?>
-                    <option value="<?= $key; ?>"><?= $value; ?></option>
-                <?php } ?>
+            <br />
+            <select class="form-control" id="attach-to-job-id" name="attach_to_job_id" required="">
+            <option value="">- Select -</option>
+            <?php foreach($checklistAttachType as $key => $value){ ?>
+                <option <?= $checklist->attach_to_job_id == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+            <?php } ?>
             </select>
-        </div> 
+        </div>          
+        <br />
         <div class="checklist-items">
-            <h5 style="width:50%;">Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><i class='bx bx-plus' ></i> Add Item</a></h5>
-            <ul class="checklist-container"></ul>
-        </div>  
+        <h5>Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><i class='bx bx-plus' ></i> Add Item</a></h5>
+        <table class="nsm-table">
+            <thead>
+                <tr>
+                    <td>Item Name</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($checklistItems as $ci){ ?>
+                    <tr>
+                        <td>
+                            <input type="hidden" name="checklistItems[]" value="<?php echo $ci->item_name; ?>" />
+                            <?php echo $ci->item_name; ?>
+                        </td>
+                        <td>
+                            <a class="btn-remove-checklist-item nsm-button danger" href="javascript:void(0);"><i class='bx bx-trash'></i></a>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+
+        </table>
+        </div>              
         <div class="col-md-5" style="padding: 0px;margin-top: 110px;">                            
-            <button type="submit" class="nsm-button primary btn-save-checklist">Save</button>
-            <a class="nsm-button" href="<?php echo base_url('job_checklists/list'); ?>">Cancel</a>
+        <button type="submit" class="nsm-button primary btn-update-checklist">Save</button>
+        <a class="btn btn-default" href="<?php echo base_url('job_checklists/list'); ?>">Cancel</a>
         </div>
     </div>
+    <?php echo form_close(); ?>
 </div>
-<!-- Modals -->
-<?php include viewPath('v2/pages/job_checklists/modals/add_checklist_modal') ?>
+
+<!-- Modal -->
+<?php include viewPath('v2/pages/job_checklists/modals/edit_checklist_modal'); ?>
+
 <?php include viewPath('v2/includes/footer'); ?>
 
 <script>
@@ -121,39 +148,39 @@ $(function(){
         });
     });
 
-    $("#frm-create-checklist").submit(function(e){
+    $("#frm-update-checklist").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'job_checklists/_create_checklist';
-        $(".btn-save-checklist").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        var url = base_url + 'job_checklists/_update_checklist';
+        $(".btn-update-checklist").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
         setTimeout(function () {
             $.ajax({
                  type: "POST",
                  url: url,
-                 data: $("#frm-create-checklist").serialize(),
+                 data: $("#frm-update-checklist").serialize(),
                  dataType: 'json',
                  success: function(o)
                  {
                     if( o.is_success == 1 ){
                         Swal.fire({
                             title: 'Success',
-                            text: 'Job checklist was successfully created.',
+                            text: 'Job checklist was successfully updated.',
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#32243d',
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'Ok'
                         }).then((result) => {
-                            location.href = base_url + "job_checklists/list"; 
+                            location.href = base_url + "/job_checklists/list"; 
                         });
                     }else{
                         Swal.fire({
                           icon: 'error',
-                          title: 'Cannot save data.',
+                          title: 'Cannot find data.',
                           text: o.msg
                         });
                     }
 
-                    $(".btn-save-checklist").html('Save');
+                    $(".btn-update-checklist").html('Save');
                  }
             });
         }, 300);        

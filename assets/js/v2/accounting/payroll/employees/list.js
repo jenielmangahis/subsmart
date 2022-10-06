@@ -228,6 +228,7 @@ $('#add-pay-schedule-modal #pay-frequency').on('change', function() {
         }
     } else {
         if($(this).parent().parent().find('#custom-schedule').length > 0) {
+            $(this).parent().parent().find('#custom-schedule').prop('checked', false).trigger('change');
             $(this).parent().parent().find('#custom-schedule').parent().remove();
         }
     }
@@ -319,12 +320,6 @@ $(document).on('change', '#add-pay-schedule-modal #custom-schedule', function() 
                                     ${paydayOptions}
                                 </select>
                             </div>
-                            <div class="col-12">
-                                <label for="first_pay_days_before">Days before payday</label>
-                                <select name="first_pay_days_before" id="first_pay_days_before" class="form-select nsm-field">
-                                    ${daysBeforeOptions}
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -367,12 +362,6 @@ $(document).on('change', '#add-pay-schedule-modal #custom-schedule', function() 
                                     ${paydayOptions}
                                 </select>
                             </div>
-                            <div class="col-12">
-                                <label for="second_pay_days_before">Days before payday</label>
-                                <select name="second_pay_days_before" id="second_pay_days_before" class="form-select nsm-field">
-                                    ${daysBeforeOptions}
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>`;
@@ -413,38 +402,77 @@ $(document).on('change', '#add-pay-schedule-modal #custom-schedule', function() 
                                     ${paydayOptions}
                                 </select>
                             </div>
-                            <div class="col-12">
-                                <label for="first_pay_days_before">Days before payday</label>
-                                <select name="first_pay_days_before" id="first_pay_days_before" class="form-select nsm-field">
-                                    ${daysBeforeOptions}
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>`;
             }
             
             $(appendString).insertAfter(appendAfterElement);
+            $('#add-pay-schedule-modal #second_payday, #add-pay-schedule-modal #second_pay_day').val('16').trigger('change');
 
             appendAfterElement.parent().find('select:not(.select2-hidden-accessible)').select2({
                 minimumResultsForSearch: -1,
                 dropdownParent: $('#add-pay-schedule-modal')
             });
+
+            if($('#add-pay-schedule-modal #pay-frequency').val() === 'every-month') {
+                customScheduleMonthly();
+            } else {
+                customScheduleTwiceMonth();
+            }
         } else {
             $('#add-pay-schedule-modal #first_payday').parent().parent().remove();
             $('#add-pay-schedule-modal #second_payday').parent().parent().remove();
 
+            if($('#add-pay-schedule-modal #next-payday').length < 1) {
+                var toAppend = `<div class="col-12">
+                    <label for="next-payday">Next payday</label>
+                    <div class="nsm-field-group calendar">
+                        <input type="text" name="next_payday" id="next-payday" class="form-control nsm-field date">
+                    </div>
+                    <p class="m-0">Friday</p>
+                </div>
+                <div class="col-12">
+                    <label for="next-pay-period-end">End of next pay period</label>
+                    <div class="nsm-field-group calendar">
+                        <input type="text" name="next_pay_period_end" id="next-pay-period-end" class="form-control nsm-field date">
+                    </div>
+                    <p class="m-0">Wednesday</p>
+                </div>`;
+
+                $('#add-pay-schedule-modal #pay-frequency').closest('.row').append(toAppend);
+
+                $('#next-payday, #nexy-pay-period-end').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+            }
+        }
+    } else {
+        $('#add-pay-schedule-modal #first_payday').parent().parent().remove();
+        $('#add-pay-schedule-modal #second_payday').parent().parent().remove();
+
+        if($('#add-pay-schedule-modal #next-payday').length < 1) {
+            var curr = new Date();
+            var first = curr.getDate() - curr.getDay();
+            var payPeriodEnd = new Date(curr.setDate(first  + 3));
+            var payDate = new Date(curr.setDate(first  + 5));
+
+            payPeriodEnd = String(payPeriodEnd.getMonth() + 1).padStart(2, '0') + '/' + String(payPeriodEnd.getDate()).padStart(2, '0') + '/' + payPeriodEnd.getFullYear();
+            payDate = String(payDate.getMonth() + 1).padStart(2, '0') + '/' + String(payDate.getDate()).padStart(2, '0') + '/' + payDate.getFullYear();
+
             var toAppend = `<div class="col-12">
                 <label for="next-payday">Next payday</label>
                 <div class="nsm-field-group calendar">
-                    <input type="text" name="next_payday" id="next-payday" class="form-control nsm-field date">
+                    <input type="text" name="next_payday" id="next-payday" class="form-control nsm-field date" value="${payDate}">
                 </div>
                 <p class="m-0">Friday</p>
             </div>
             <div class="col-12">
                 <label for="next-pay-period-end">End of next pay period</label>
                 <div class="nsm-field-group calendar">
-                    <input type="text" name="next_pay_period_end" id="next-pay-period-end" class="form-control nsm-field date">
+                    <input type="text" name="next_pay_period_end" id="next-pay-period-end" class="form-control nsm-field date" value="${payPeriodEnd}">
                 </div>
                 <p class="m-0">Wednesday</p>
             </div>`;
@@ -480,6 +508,97 @@ $(document).on('change', '#add-pay-schedule-modal #next-payday, #add-pay-schedul
     }
 
     upcomingPayPeriods($(this));
+});
+
+$(document).on('change', '#add-pay-schedule-modal #first_payday, #add-pay-schedule-modal #first_pay_month, #add-pay-schedule-modal #first_pay_day, #add-pay-schedule-modal #first_pay_days_before, #add-pay-schedule-modal #second_payday, #add-pay-schedule-modal #second_pay_month, #add-pay-schedule-modal #second_pay_day, #add-pay-schedule-modal #second_pay_days_before', function() {
+    switch($('#add-pay-schedule-modal #pay-frequency').val()) {
+        case 'every-month' :
+            customScheduleMonthly();
+        break;
+        case 'twice-month' :
+            customScheduleTwiceMonth();
+        break;
+    }
+});
+
+$(document).on('change', '#add-pay-schedule-modal [name="end_of_first_pay_period"], #add-pay-schedule-modal [name="end_of_second_pay_period"]', function() {
+    var paydayOptions = '';
+    var daysBeforeOptions = '';
+    for(i = 1; i < 31; i++) {
+        var j = i % 10,
+            k = i % 100;
+
+        var text = i + "th";
+
+        if (j == 1 && k != 11) {
+            var text = i + "st";
+        }
+        if (j == 2 && k != 12) {
+            var text = i + "nd";
+        }
+        if (j == 3 && k != 13) {
+            var text = i + "rd";
+        }
+
+        paydayOptions += `<option value="${i}">${text}</option>`;
+        daysBeforeOptions += `<option value="${i}">${i}</option>`;
+    }
+    paydayOptions += `<option value="0">End of month</option>`;
+    daysBeforeOptions += `<option value="-9">-9</>`;
+    daysBeforeOptions += `<option value="-8">-8</>`;
+    daysBeforeOptions += `<option value="-7">-7</>`;
+    daysBeforeOptions += `<option value="-6">-6</>`;
+    daysBeforeOptions += `<option value="-5">-5</>`;
+    daysBeforeOptions += `<option value="-4">-4</>`;
+    daysBeforeOptions += `<option value="-3">-3</>`;
+    daysBeforeOptions += `<option value="-2">-2</>`;
+    daysBeforeOptions += `<option value="-1">-1</>`;
+
+    if($(this).attr('name') === 'end_of_first_pay_period') {
+        var payNo = 'first';
+    } else {
+        var payNo = 'second';
+    }
+
+    if($(this).val() !== 'end-date') {
+        $(this).parent().parent().next().html(`<label for="${payNo}_pay_days_before">Days before payday</label>
+            <select name="${payNo}_pay_days_before" id="${payNo}_pay_days_before" class="form-select nsm-field">
+                ${daysBeforeOptions}
+            </select>`);
+    } else {
+        $(this).parent().parent().next().html(`<div class="row">
+            <div class="col-12 col-md-6">
+                <label for="${payNo}_pay_month">Month</label>
+                <select name="${payNo}_pay_month" id="${payNo}_pay_month" class="form-select nsm-field">
+                    <option value="same">Same</option>
+                    <option value="previous">Previous</option>
+                    <option value="next">Next</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="${payNo}_pay_day">Day</label>
+                <select name="${payNo}_pay_day" id="${payNo}_pay_day" class="form-select nsm-field">
+                    ${paydayOptions}
+                </select>
+            </div>
+        </div>`);
+
+    }
+
+    $(this).parent().parent().next().find('#second_pay_day').val('16');
+    $(this).parent().parent().next().find('select').select2({
+        minimumResultsForSearch: -1,
+        dropdownParent: $('#add-pay-schedule-modal')
+    });
+
+    switch($('#add-pay-schedule-modal #pay-frequency').val()) {
+        case 'every-month' :
+            customScheduleMonthly();
+        break;
+        case 'twice-month' :
+            customScheduleTwiceMonth();
+        break;
+    }
 });
 
 function upcomingPayPeriods(el)
@@ -590,6 +709,265 @@ function upcomingPayPeriods(el)
             i++;
         });
     }
+}
+
+function customScheduleMonthly() 
+{
+    var firstPayday = parseInt($('#add-pay-schedule-modal #first_payday').val());
+    var endOfPayPeriod = $('#add-pay-schedule-modal [name="end_of_first_pay_period"]:checked').val();
+    var startPeriod = new Date();
+    var endPeriod = new Date();
+    var currentDate = new Date();
+    var payDate = new Date();
+
+    if(firstPayday === 0) {
+        if(currentDate.getDate() === getTotalDaysOfMonth(currentDate.getMonth() + 1, currentDate.getFullYear())) {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0);
+        } else {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        }
+    } else {
+        if(currentDate.getDate() >= firstPayday) {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, firstPayday);
+        } else {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), firstPayday);
+        }
+    }
+
+    if(endOfPayPeriod === 'end-date') {
+        var periodMonth = $('#add-pay-schedule-modal #first_pay_month').val();
+        var periodDay = parseInt($('#add-pay-schedule-modal #first_pay_day').val());
+
+        switch(periodMonth) {
+            case 'same' :
+                if(periodDay === 0) {
+                    var date = getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear());
+                } else {
+                    var date = periodDay;
+                }
+                var endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), date);
+            break;
+            case 'previous' :
+                if(periodDay === 0) {
+                    var date = getTotalDaysOfMonth(payDate.getMonth(), payDate.getFullYear());
+                } else {
+                    var date = periodDay;
+                }
+
+                var endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, date);
+            break;
+            case 'next' :
+                if(periodDay === 0) {
+                    var date = getTotalDaysOfMonth(payDate.getMonth() + 2, payDate.getFullYear());
+                } else {
+                    var date = periodDay;
+                }
+                var endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, date);
+            break;
+        }
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        if(periodDay === 0) {
+            startPeriod.setDate(1);
+        } else {
+            startPeriod.setDate(startPeriod.getDate() + 1);
+            startPeriod.setMonth(startPeriod.getMonth() - 1);
+        }
+    } else {
+        var daysBefore = parseInt($('#add-pay-schedule-modal #first_pay_days_before').val());
+
+        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate());
+        endPeriod.setDate(endPeriod.getDate() - daysBefore);
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        startPeriod.setDate(startPeriod.getDate() - 30);
+    }
+
+    $('#add-pay-schedule-modal  .card.shadow').each(function() {
+        var newDate = String(payDate.getMonth() + 1).padStart(2, '0')+'/'+String(payDate.getDate()).padStart(2, '0')+'/'+payDate.getFullYear();
+
+        $(this).find('p.pay-date').html(newDate);
+
+        if(firstPayday !== 0) {
+            payDate.setMonth(payDate.getMonth() + 1);
+        } else {
+            payDate = new Date(payDate.getFullYear(), payDate.getMonth() + 2, 0);
+        }
+
+        var startPeriodStr = String(startPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(startPeriod.getDate()).padStart(2, '0')+'/'+startPeriod.getFullYear();
+        var endPeriodStr = String(endPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(endPeriod.getDate()).padStart(2, '0')+'/'+endPeriod.getFullYear();
+
+        $($(this).find('p.pay-period').children('span')[0]).html(startPeriodStr);
+        $($(this).find('p.pay-period').children('span')[1]).html(endPeriodStr);
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        startPeriod.setDate(startPeriod.getDate() + 1);
+
+        if(endOfPayPeriod === 'end-date') {
+            if(periodDay === 0) {
+                var monthEndDate = getTotalDaysOfMonth(startPeriod.getMonth() + 1, startPeriod.getFullYear());
+                endPeriod = new Date(startPeriod.getFullYear(), startPeriod.getMonth(), monthEndDate);
+            } else {
+                endPeriod.setMonth(endPeriod.getMonth() + 1);
+            }
+        } else {
+            endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate());
+            endPeriod.setDate(endPeriod.getDate() - daysBefore);
+        }
+    });
+}
+
+function customScheduleTwiceMonth()
+{
+    var firstPayday = parseInt($('#add-pay-schedule-modal #first_payday').val());
+    var endOfFirstPayPeriod = $('#add-pay-schedule-modal [name="end_of_first_pay_period"]:checked').val();
+    var secondPayday = parseInt($('#add-pay-schedule-modal #second_payday').val());
+    var endOfSecondPayPeriod = $('#add-pay-schedule-modal [name="end_of_second_pay_period"]:checked').val();
+    var startPeriod = new Date();
+    var endPeriod = new Date();
+    var currentDate = new Date();
+    var payDate = new Date();
+    var firstPeriodMonth = $('#add-pay-schedule-modal #first_pay_month').val();
+    var firstPeriodDay = parseInt($('#add-pay-schedule-modal #first_pay_day').val());
+    var secondPeriodMonth = $('#add-pay-schedule-modal #second_pay_month').val();
+    var secondPeriodDay = parseInt($('#add-pay-schedule-modal #second_pay_day').val());
+
+    firstPayday = firstPayday === 0 ? getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear()) : firstPayday ;
+    secondPayday = secondPayday === 0 ? getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear()) : secondPayday ;
+
+    if(currentDate.getDate() >= firstPayday) {
+        payDate.setDate(secondPayday);
+    } else {
+        payDate.setDate(firstPayday);
+    }
+
+    if(payDate.getDate() === firstPayday) {
+        if(endOfFirstPayPeriod === 'end-date') {
+            switch(firstPeriodMonth) {
+                case 'same' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), firstPeriodDay);
+                break;
+                case 'previous' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, firstPeriodDay);
+                break;
+                case 'next' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, firstPeriodDay);
+                break;
+            }
+
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+            startPeriod.setDate(startPeriod.getDate() - 14);
+
+        } else {
+            var firstDaysBefore = parseInt($('#add-pay-schedule-modal #first_pay_days_before').val());
+            endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - firstDaysBefore);
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+
+            startPeriod.setMonth(startPeriod.getMonth() - 1);
+            startPeriod.setDate(secondPayday - firstDaysBefore);
+        }
+    } else {
+        if(endOfSecondPayPeriod === 'end-date') {
+            switch(secondPeriodMonth) {
+                case 'same' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), secondPeriodDay);
+                break;
+                case 'previous' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, secondPeriodDay);
+                break;
+                case 'next' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, secondPeriodDay);
+                break;
+            }
+
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), firstPeriodDay + 1);
+        } else {
+            var secondDaysBefore = parseInt($('#add-pay-schedule-modal #second_pay_days_before').val());
+            endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - secondDaysBefore);
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+
+            startPeriod.setDate(firstPayday - secondDaysBefore);
+        }
+    }
+
+    $('#add-pay-schedule-modal  .card.shadow').each(function() {
+        var newDate = String(payDate.getMonth() + 1).padStart(2, '0')+'/'+String(payDate.getDate()).padStart(2, '0')+'/'+payDate.getFullYear();
+
+        $(this).find('p.pay-date').html(newDate);
+
+        if(payDate.getDate() === firstPayday) {
+            if(parseInt($('#add-pay-schedule-modal #second_payday').val()) === 0) {
+                secondPayday = getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear())
+            }
+            payDate.setDate(secondPayday);
+        } else {
+            payDate.setMonth(payDate.getMonth() + 1);
+            if(parseInt($('#add-pay-schedule-modal #first_payday').val()) === 0) {
+                firstPayday = getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear())
+            }
+            payDate.setDate(firstPayday);
+        }
+
+        var startPeriodStr = String(startPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(startPeriod.getDate()).padStart(2, '0')+'/'+startPeriod.getFullYear();
+        var endPeriodStr = String(endPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(endPeriod.getDate()).padStart(2, '0')+'/'+endPeriod.getFullYear();
+
+        $($(this).find('p.pay-period').children('span')[0]).html(startPeriodStr);
+        $($(this).find('p.pay-period').children('span')[1]).html(endPeriodStr);
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        startPeriod.setDate(startPeriod.getDate() + 1);
+
+        if(payDate.getDate() === firstPeriodDay) {
+            if(endOfFirstPayPeriod === 'end-date') {
+                switch(firstPeriodMonth) {
+                    case 'same' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), firstPeriodDay);
+                    break;
+                    case 'previous' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, firstPeriodDay);
+                    break;
+                    case 'next' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, firstPeriodDay);
+                    break;
+                }
+            } else {
+                var firstDaysBefore = parseInt($('#add-pay-schedule-modal #first_pay_days_before').val());
+                endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - firstDaysBefore);
+            }
+        } else {
+            if(endOfSecondPayPeriod === 'end-date') {
+                switch(secondPeriodMonth) {
+                    case 'same' :
+                        if(secondPeriodDay === 0) {
+                            var date = getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear());
+                        } else {
+                            var date = secondPeriodDay;
+                        }
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), date);
+                    break;
+                    case 'previous' :
+                        if(secondPeriodDay === 0) {
+                            var date = getTotalDaysOfMonth(payDate.getMonth(), payDate.getFullYear());
+                        } else {
+                            var date = secondPeriodDay;
+                        }
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, date);
+                    break;
+                    case 'next' :
+                        if(secondPeriodDay === 0) {
+                            var date = getTotalDaysOfMonth(payDate.getMonth() + 2, payDate.getFullYear());
+                        } else {
+                            var date = secondPeriodDay;
+                        }
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, date);
+                    break;
+                }
+            } else {
+                var secondDaysBefore = parseInt($('#add-pay-schedule-modal #second_pay_days_before').val());
+                endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - secondDaysBefore);
+            }
+        }
+    });
 }
 
 function getTotalDaysOfMonth(month, year)

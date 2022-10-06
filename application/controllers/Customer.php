@@ -157,7 +157,7 @@ class Customer extends MY_Controller
                         $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
                         array_push($data_arr, $data_name);
                     }
-                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href='".("customer/preview_/".$customer->prof_id)."''>".$labelName."</label>
+                    $name = "<label class='nsm-link default d-block fw-bold' onclick=\'location.href='customer/preview_/".$customer->prof_id."\'>".$labelName."</label>
                     <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
                     if( $customer->adt_sales_project_id > 0 ){
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';

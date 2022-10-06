@@ -65,7 +65,8 @@ class Job_Checklists extends MY_Controller
         redirect('job_checklists/edit_checklist/' . $cid);
     }
 
-    public function edit_checklist($id){
+    public function edit_checklist($id)
+    {
 
         $company_id = logged('company_id');
 
@@ -77,7 +78,7 @@ class Job_Checklists extends MY_Controller
             $this->page_data['checklist'] = $checklist;
             $this->page_data['checklistAttachType'] = $checklistAttachType;
             $this->page_data['checklistItems'] = $checklistItems;
-            $this->load->view('job_checklists/edit_checklist', $this->page_data);
+            $this->load->view('v2/pages/job_checklists/edit_checklist', $this->page_data);
 
         }else{
             $this->session->set_flashdata('message', 'Cannot find data');
