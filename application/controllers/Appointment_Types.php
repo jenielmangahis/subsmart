@@ -167,6 +167,57 @@ class Appointment_Types extends MY_Controller {
 
         echo json_encode($json_data);
 	}
+
+	public function ajax_update_appointment_type()
+	{
+		$this->load->model('AppointmentType_model');
+
+		$is_success = 0;
+		$msg  = 'Cannot save data';
+
+        $post = $this->input->post();
+        $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);
+        if( $appointmentType ){
+        	if( $post['appointment_type_name'] != '' ){
+	        	$data_appointment_type = [    
+					'name' => $post['appointment_type_name']
+				];
+
+				$this->AppointmentType_model->update($appointmentType->id, $data_appointment_type);	
+
+				$is_success = 1;
+				$msg = '';
+	        }
+        }else{
+        	$msg = 'Cannot find data';
+        }
+        
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+	}
+
+	public function ajax_delete_appointment_type()
+	{
+		$this->load->model('AppointmentType_model');
+
+		$is_success = 0;
+		$msg  = 'Cannot find data';
+
+		$post       = $this->input->post();
+		$company_id = logged('company_id');
+		$appointmentType = $this->AppointmentType_model->getByIdAndCompanyId($post['aid'], $company_id);
+
+		if( $appointmentType ){
+			$this->AppointmentType_model->delete($post['aid']);
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+		echo json_encode($json_data);
+	}
 }
 
 

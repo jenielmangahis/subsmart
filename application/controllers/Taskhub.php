@@ -76,7 +76,7 @@ class Taskhub extends MY_Controller {
 				$taskid = $id;
 			}
 			$task = $this->taskhub_model->getById($taskid);
-			$this->page_data['task'] = $task;
+			$this->page_data['taskHub'] = $task;
 
 			$this->page_data['selected_participants'] = $this->db->query(
 															'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
@@ -175,12 +175,12 @@ class Taskhub extends MY_Controller {
 									       '- Assignee' . "\n";
 						}
 					}
-
+					
 					$data = array(
 						'subject' => $this->input->post('subject'),
 						'description' => $this->input->post('description'),
 						'prof_id' => $this->input->post('customer_id'),
-						'estimated_date_complete' => $this->input->post('estimated_date_complete'),
+						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
 						'status_id' => $status,
 						'priority' => $this->input->post('priority')
 					);
@@ -205,7 +205,7 @@ class Taskhub extends MY_Controller {
 						'description' => $this->input->post('description'),
 						'created_by' => $uid,
 						'date_created' => date('Y-m-d h:i:s'),
-						'estimated_date_complete' => $this->input->post('estimated_date_complete'),
+						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
 						'status_id' => $this->input->post('status'),
 						'company_id' => $company_id,
 						'priority' => $this->input->post('priority')
@@ -269,7 +269,7 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function view($id){
-		$this->page_data['task'] = $this->db->query(
+		$this->page_data['taskHub'] = $task = $this->db->query(
 			'select '.
 			'a.*, '.
 			'CONCAT(cus.first_name, " ", cus.last_name)AS customer_name, '.
@@ -295,20 +295,7 @@ class Taskhub extends MY_Controller {
 			'where a.task_id = ' . $id
 		)->result();
 
-		$this->page_data['updates_and_comments'] = $this->db->query(
-			'select '.
-
-			'a.notes as `text`, '.
-			'a.date_updated as `update_date`, '.
-			'concat(b.FName, " ", b.LName) as `user`, '.
-
-			'1 as `is_update` '.
-
-			'from tasks_updates a '.
-			'left join users b on b.id = a.performed_by '.
-			'where a.task_id = '. $id . ' ' .
-			'union all '.
-
+		$this->page_data['updates_and_comments'] = $this->db->query(			
 			'select '.
 
 			'a.comment as `text`, '.
@@ -329,12 +316,12 @@ class Taskhub extends MY_Controller {
 
 		$this->db->query($sql);
 
-		$this->load->view('workcalender/taskhub/view', $this->page_data);
+		$this->page_data['page']->title = 'Task Hub';		
+		$this->load->view('v2/pages/workcalender/taskhub/view', $this->page_data);
 	}
 
 	public function comment($id){
-		$this->load->model('Settings_model');
-
+		$this->load->model('Settings_model');		
 		$uid = logged('id');
 		$company_id = logged('company_id');
 		
@@ -380,7 +367,7 @@ class Taskhub extends MY_Controller {
 
 		$this->form_validation->set_rules('notes', 'Notes', 'trim|required');
 		if($this->form_validation->run() == false){
-			$this->load->view('workcalender/taskhub/add_update', $this->page_data);
+			$this->load->view('v2/pages/workcalender/taskhub/add_update', $this->page_data);
 		} else {
 			$data = array(
 				'task_id' => $id,
@@ -394,7 +381,7 @@ class Taskhub extends MY_Controller {
 			} else {
 				$this->page_data['error'] = 'Error in creating task update';
 
-				$this->load->view('workcalender/taskhub/add_update', $this->page_data);
+				$this->load->view('v2/pages/workcalender/taskhub/add_update', $this->page_data);
 			}
 		}
 	}

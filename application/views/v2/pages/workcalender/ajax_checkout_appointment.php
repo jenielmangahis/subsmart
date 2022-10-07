@@ -519,12 +519,14 @@
         });
 
         $("#btn_checkout_back").on("click", function() {
-            $("#btn_checkout_back").fadeOut(function() {
-                $("#btn_checkout_payment").fadeIn();
-            });
             $("#checkout_step_2").fadeOut(function() {
                 $("#checkout_step_1").fadeIn();
             });
+            $("#btn_checkout_back").fadeOut(function() {
+                $("#btn_checkout_payment").fadeIn();
+            });
+            $("#cash_payment_form").hide();            
+            $("#converge_payment_form").hide();            
         });
 
         $(document).on("submit", "#frm-cash-payment", function(e) {

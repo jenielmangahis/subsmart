@@ -13,7 +13,7 @@ class Color_Settings extends MY_Controller {
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 
-		$this->page_data['page']->title = 'Color Settings ';
+		$this->page_data['page']->title = 'Color Settings';
 		$this->page_data['page']->menu = 'color_settings';
 	}
 
@@ -35,15 +35,7 @@ class Color_Settings extends MY_Controller {
 
 	public function add_new_color_setting(){
 
-		add_css(array(
-            'assets/css/bootstrap-colorpicker.min.css'
-        ));
-
-        add_footer_js(array(
-            'assets/js/bootstrap-colorpicker.min.js'
-        ));
-
-		$this->load->view('color_settings/add_new', $this->page_data);
+		$this->load->view('v2/pages/color_settings/add_new', $this->page_data);
 	}
 
 	public function create_color_setting(){
@@ -86,18 +78,10 @@ class Color_Settings extends MY_Controller {
 
 	public function edit_color_setting( $color_setting_id ){
 
-		add_css(array(
-            'assets/css/bootstrap-colorpicker.min.css'
-        ));
-
-        add_footer_js(array(
-            'assets/js/bootstrap-colorpicker.min.js'
-        ));
-
         $colorSetting = $this->ColorSettings_model->getById($color_setting_id);
 
         $this->page_data['colorSetting'] = $colorSetting;
-		$this->load->view('color_settings/edit', $this->page_data);
+		$this->load->view('v2/pages/color_settings/edit', $this->page_data);
 	}
 
 	public function update_color_setting() {

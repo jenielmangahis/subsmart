@@ -616,6 +616,7 @@ $route['accounting/employees/set-status/(:any)/(:any)'] = 'accounting_controller
 $route['accounting/employees/add-pay-schedule-form'] = 'accounting_controllers/employees/pay_schedule_form';
 $route['accounting/employees/add-pay-schedule']['post'] = 'accounting_controllers/employees/add_pay_schedule';
 $route['accounting/employees/edit-pay-schedule/(:any)'] = 'accounting_controllers/employees/edit_pay_schedule/$1';
+$route['accounting/employees/get-pay-schedule/(:any)'] = 'accounting_controllers/employees/get_pay_schedule/$1';
 $route['accounting/employees/update-pay-schedule/(:any)']['post'] = 'accounting_controllers/employees/update_pay_schedule/$1';
 $route['accounting/employees/get-pay-date/(:any)'] = 'accounting_controllers/employees/get_pay_date/$1';
 $route['accounting/employees/commission-only-payroll'] = 'accounting_controllers/employees/commission_only_modal';
@@ -828,6 +829,7 @@ $route['settings/_update_email_template'] = 'Settings/ajax_update_email_template
 $route['settings/_create_sms_template'] = 'Settings/ajax_create_sms_template';
 $route['settings/edit_sms_template/(:any)'] = 'Settings/edit_sms_template/$1';
 $route['settings/_update_sms_template'] = 'Settings/ajax_update_sms_template';
+$route['settings/_edit_sms_template'] = 'Settings/ajax_edit_sms_template';
 
 //leads
 $route['online_leads'] = 'Inquiries/online_lead';
@@ -1105,6 +1107,9 @@ $route['cards_file/delete_card'] = 'CardsFile/delete_card';
 $route['cards_file/test_card'] = 'CardsFile/test_card';
 $route['cards_file/edit/(:any)'] = 'CardsFile/edit_card/$1';
 $route['cards_file/update_card'] = 'CardsFile/update_card';
+$route['cards_file/_create_card_vault'] = 'CardsFile/ajax_create_card_vault';
+$route['cards_file/_edit_card_vault'] = 'CardsFile/ajax_edit_card_vault';
+$route['cards_file/_update_card_vault'] = 'CardsFile/ajax_update_card_vault';
 
 //Tools
 $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
@@ -1313,6 +1318,8 @@ $route['appointment_types/edit/(:num)'] = 'Appointment_Types/edit_type/$1';
 $route['appointment_types/update_appointment_type'] = 'Appointment_Types/update_appointment_type';
 $route['appointment_types/delete'] = 'Appointment_Types/delete_appointment_type';
 $route['appointment_types/_create_appointment_type'] = 'Appointment_Types/ajax_create_appointment_type';
+$route['appointment_types/_update_appointment_type'] = 'Appointment_Types/ajax_update_appointment_type';
+$route['appointment_types/_delete_appointment_type'] = 'Appointment_Types/ajax_delete_appointment_type';
 
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
 
