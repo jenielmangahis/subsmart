@@ -395,7 +395,16 @@
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5">
                                                         <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Finish</li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">
+                                                        <a
+                                                            href="#"
+                                                            <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#finish_modal"
+                                                            <?php endif; ?>
+                                                        >
+                                                        Finish
+                                                        </a>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoice'  ? 'active' : ''; ?>">Invoice</li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Completed</li>
                                                 </ul>
@@ -1186,12 +1195,13 @@
 <!-- Approved Job Modal -->
 <?php include viewPath('v2/pages/job/modals/approved_modal'); ?>
 <!-- Finish Job Modal -->
-<div class="modal fade" id="finish_modal" role="dialog">
+<div class="modal fade nsm-modal" id="finish_modal" role="dialog">
     <div class="close-modal" data-bs-dismiss="modal">&times;</div>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Finish Job</h4>
+                <span class="modal-title content-title">Finish Job</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <form id="update_status_to_closed">
                 <div class="modal-body">
@@ -1205,24 +1215,20 @@
                             <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                         <?php } ?>
                     </select>
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-md-12">
-                        <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>">
-                            <button type="button" class="btn btn-primary">
-                                <span class="fa fa-money"></span> Pay Now
-                            </button>
+
+                    <div style="display: flex;margin-top: 1rem;">
+                        <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin: 0;">
+                            <span class="bx bx-fw bx-money"></span> Pay Now
                         </a>
 
-                        <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>" class="btn btn-primary">
-                            <span class="fa fa-paper-plane-o"></span> Send Invoice
+                        <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin-bottom: 0;">
+                            <span class="bx bx-fw bx-send"></span> Send Invoice
                         </a>
                     </div>
                 </div>
-                <br>
                 <div class="modal-footer">
-                    <button type="button" id="" class="btn btn-default" data-bs-dismiss="modal">
-                        <span class="fa fa-remove"></span> Cancel
+                    <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">
+                        Cancel
                     </button>
                 </div>
             </form>

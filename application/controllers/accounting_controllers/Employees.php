@@ -791,6 +791,13 @@ class Employees extends MY_Controller {
         $this->load->view('accounting/employees/edit_pay_schedule', $this->page_data);
     }
 
+    public function get_pay_schedule($id)
+    {
+        $paySched = $this->users_model->getPaySchedule($id);
+
+        echo json_encode($paySched);
+    }
+
     public function update_pay_schedule($id)
     {
         $post = $this->input->post();

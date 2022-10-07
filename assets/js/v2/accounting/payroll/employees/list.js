@@ -601,6 +601,49 @@ $(document).on('change', '#add-pay-schedule-modal [name="end_of_first_pay_period
     }
 });
 
+$(document).on('submit', '#add-pay-schedule-form', function(e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+
+    $.ajax({
+        url: '/accounting/employees/add-pay-schedule',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            var result = JSON.parse(res);
+
+            $('#add_employee_modal #pay-schedule option:selected').removeAttr('selected');
+            $('#add_employee_modal #pay-schedule').append(`<option value="${result.id}" selected>${result.name}</option>`);
+            $('#add_employee_modal #pay-schedule').trigger('change');
+
+            $('#add-pay-schedule-modal').modal('hide');
+            $('#add_employee_modal').modal('show');
+        }
+    });
+});
+
+$(document).on('click', '#add_employee_modal #edit-pay-schedule', function(e) {
+    e.preventDefault();
+    var pay_sched_id = $('#add_employee_modal #pay-schedule').val();
+    
+    if(pay_sched_id !== 'add' && pay_sched_id !== '' && pay_sched_id !== null) {
+        $.get('/accounting/employees/get-pay-schedule/'+pay_sched_id, function(res) {
+            var paySched = JSON.parse(res);
+
+            $('#add-pay-schedule-modal #add-pay-schedule-form').attr('id', 'edit-pay-schedule-form');
+
+            $('#add-pay-schedule-modal #name').val(paySched.name);
+            $('#add-pay-schedule-modal #pay-frequency').val(paySched.pay_frequency).trigger('change');
+
+            $('#add_employee_modal').modal('hide');
+            $('#add-pay-schedule-modal').modal('show');
+        });
+    }
+});
+
 function upcomingPayPeriods(el)
 {
     if(el.attr('id') === 'next-payday') {
@@ -854,17 +897,27 @@ function customScheduleTwiceMonth()
                     endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, firstPeriodDay);
                 break;
             }
-
-            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
-            startPeriod.setDate(startPeriod.getDate() - 14);
-
         } else {
             var firstDaysBefore = parseInt($('#add-pay-schedule-modal #first_pay_days_before').val());
             endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - firstDaysBefore);
-            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        }
 
-            startPeriod.setMonth(startPeriod.getMonth() - 1);
-            startPeriod.setDate(secondPayday - firstDaysBefore);
+        var lastPayDate = new Date(payDate.getFullYear(), payDate.getMonth() -1, secondPayday);
+        if(endOfSecondPayPeriod === 'end-date') {
+            switch(secondPeriodMonth) {
+                case 'same' :
+                    startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth(), secondPeriodDay + 1);
+                break;
+                case 'previous' :
+                    startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth() - 1, secondPeriodDay + 1);
+                break;
+                case 'next' :
+                    startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth() + 1, secondPeriodDay + 1);
+                break;
+            }
+        } else {
+            var secondDaysBefore = parseInt($('#add-pay-schedule-modal #second_pay_days_before').val());
+            startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth(), lastPayDate.getDate() - (secondDaysBefore - 1));
         }
     } else {
         if(endOfSecondPayPeriod === 'end-date') {
@@ -879,14 +932,27 @@ function customScheduleTwiceMonth()
                     endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, secondPeriodDay);
                 break;
             }
-
-            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), firstPeriodDay + 1);
         } else {
             var secondDaysBefore = parseInt($('#add-pay-schedule-modal #second_pay_days_before').val());
             endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - secondDaysBefore);
-            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        }
 
-            startPeriod.setDate(firstPayday - secondDaysBefore);
+        var lastPayDate = new Date(payDate.getFullYear(), payDate.getMonth(), firstPayday);
+        if(endOfFirstPayPeriod === 'end-date') {
+            switch(firstPeriodMonth) {
+                case 'same' :
+                    startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth(), firstPeriodDay + 1);
+                break;
+                case 'previous' :
+                    startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth() - 1, firstPeriodDay + 1);
+                break;
+                case 'next' :
+                    startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth() + 1, firstPeriodDay + 1);
+                break;
+            }
+        } else {
+            var firstDaysBefore = parseInt($('#add-pay-schedule-modal #first_pay_days_before').val());
+            startPeriod = new Date(lastPayDate.getFullYear(), lastPayDate.getMonth(), lastPayDate.getDate() - (firstDaysBefore - 1));
         }
     }
 
@@ -914,10 +980,9 @@ function customScheduleTwiceMonth()
         $($(this).find('p.pay-period').children('span')[0]).html(startPeriodStr);
         $($(this).find('p.pay-period').children('span')[1]).html(endPeriodStr);
 
-        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
-        startPeriod.setDate(startPeriod.getDate() + 1);
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate() + 1);
 
-        if(payDate.getDate() === firstPeriodDay) {
+        if(payDate.getDate() === firstPayday) {
             if(endOfFirstPayPeriod === 'end-date') {
                 switch(firstPeriodMonth) {
                     case 'same' :
