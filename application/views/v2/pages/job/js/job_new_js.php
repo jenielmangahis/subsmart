@@ -13,13 +13,7 @@ if(isset($jobs_data)){
                 method: 'GET',
             }) .then(response => response.json() ).then(response => {
               var { message, data } = response;
-              console.log(response);
               if(message){
-                // for(var x=0; x<data.length;x++){
-                //   $('#customer_id').append(
-                //         '<option value="'+data[x].first_name+'">'+data[x].first_name+' '+data[x].last_name+'</option>'
-                //     );
-                // }
                 var toAppend = '';
                 $.each(data,function(i,o){
                     var selected = '';
@@ -186,7 +180,6 @@ if(isset($jobs_data)){
             var price = $(this).data('price');
             var qty = $(this).data('quantity');
             var item_type = $(this).data('item_type');
-            console.log(idd);
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
@@ -237,7 +230,6 @@ if(isset($jobs_data)){
                 total = Number(total)+ Number(tax) - Number(discount);
                 total = parseFloat(total).toFixed(2);
                 tax_total =  parseFloat(tax).toFixed(2);
-                console.log(tax_total);
 
                 var tax_with_comma = Number(tax_total).toLocaleString('en');
 
@@ -347,7 +339,6 @@ if(isset($jobs_data)){
         // get the tax value and deduct it to subtotal then display over all total
         var taxRate = $('#invoice_tax_total').text();
         var discount = $('#invoice_discount_total').text();
-        console.log(taxRate);
         calculate_subtotal(taxRate, true, discount);
 
         $("#tax_rate").on( 'change', function () {
@@ -684,7 +675,6 @@ if(isset($jobs_data)){
         $("#customer_id").on('change', function () {
             
             var customer_selected = this.value;
-            console.log(customer_selected);
             if(customer_selected !== ""){
                 load_customer_data(customer_selected);
             }else{
@@ -785,7 +775,6 @@ if(isset($jobs_data)){
                 method: 'POST',
                 body: fd
             }).then(response => response.json()).then(response => {
-                console.log(response);
                 var { success, message} = response;
                 if(success){
                     $('#omw_modal').modal('hide');
@@ -833,7 +822,6 @@ if(isset($jobs_data)){
                 method: 'POST',
                 body: fd1
             }).then(response => response.json()).then(response => {
-                console.log(response);
                 var { success, message} = response;
                 if(success){
                     $('#start_modal').modal('hide');
@@ -877,7 +865,6 @@ if(isset($jobs_data)){
                 method: 'POST',
                 body: fd2
             }).then(response => response.json()).then(response => {
-                console.log(response);
                 var { success, message} = response;
                 if(success){
                     $('#approved_modal').modal('hide');
@@ -982,7 +969,6 @@ if(isset($jobs_data)){
             method: 'POST',
             body: postData
         }).then(response => response.json()).then(response => {
-            console.log(response);
             var {success, data} = response;
 
             if(success){

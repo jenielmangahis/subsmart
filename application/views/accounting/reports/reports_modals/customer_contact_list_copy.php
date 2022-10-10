@@ -1,4 +1,4 @@
-<form method="POST" id="runReport">
+<form method="POST" action="<?= base_url('/accounting/reports/view-report/'.$reportTypeId); ?>">
     <div class="modal right fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
         <div class="modal-dialog" role="document">
             <div class="modal-content rounded">
@@ -26,8 +26,8 @@
                                 <h6 class="fw-bold">Select and reorder columns</h6>
                                 <?php foreach(customCols() as $customCols) : ?>
                                 <div class="form-check">
-                                <input type="checkbox" id="sort-asc" name="<?= $customCols['name_in'] ?>" class="form-check-input <?= $customCols['name_in'] ?>" value="<?= $customCols['description'] ?>">
-                                <label for="sort-asc" class="form-check-label"><?= $customCols['name'] ?></label>
+                                    <input type="checkbox" id="sort-asc" name="customer[]" class="form-check-input" value="<?= $customCols['description'] ?>">
+                                    <label for="sort-asc" class="form-check-label"><?= $customCols['name'] ?></label>
                                 </div>
                                 <?php endforeach; ?>
                             </div>

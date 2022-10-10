@@ -45,49 +45,64 @@ if(!function_exists('customCols')){
         $customCols = array(
             array(
                 'name' => 'Customer',
-                'description' => 'first_name, last_name',
+                'description' => 'customer',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'Last Name',
-                'description' => 'last_name',
+                'description' => 'acs_profile.last_name',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'First Name',
-                'description' => 'first_name',
+                'description' => 'acs_profile.first_name',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'Address',
-                'description' => 'city, state, zip_code, cross_street, subdivision',
+                'description' => 'acs_profile.mail_add',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'Phone Number',
-                'description' => 'phone_h',
+                'description' => 'acs_profile.phone_h',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'Email',
-                'description' => 'email',
+                'description' => 'acs_profile.email',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'Status',
-                'description' => 'status',
+                'description' => 'acs_profile.status',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'Notes',
-                'description' => 'notes',
+                'description' => 'acs_profile.notes',
+                'name_in' => 'customer'
             ),array(
                 'name' => 'Billing Address',
-                'description' => 'city, state, zip',
+                'description' => 'acs_billing.card_address',
+                'name_in' => 'billing'
             ),array(
                 'name' => 'Billing Start Date',
-                'description' => 'bill_start_date',
+                'description' => 'acs_billing.bill_start_date',
+                'name_in' => 'billing'
             ),array(
                 'name' => 'Billing End Date',
-                'description' => 'bill_end_date',
+                'description' => 'acs_billing.bill_end_date',
+                'name_in' => 'billing'
             ),array(
                 'name' => 'Recurring Start Date',
-                'description' => 'recurring_start_date',
+                'description' => 'acs_billing.recurring_start_date',
+                'name_in' => 'billing'
             ),array(
                 'name' => 'Recurring End Date',
-                'description' => 'recurring_end_date',
+                'description' => 'acs_billing.recurring_end_date',
+                'name_in' => 'billing'
             ),array(
                 'name' => 'Last Billing Date',
-                'description' => 'last_payment_date',
+                'description' => 'acs_billing.last_payment_date',
+                'name_in' => 'billing'
             ),array(
                 'name' => 'Next Billing Date',
-                'description' => 'next_billing_date',
+                'description' => 'acs_billing.next_billing_date',
+                'name_in' => 'billing'
             ),
         );
         return $customCols;

@@ -308,7 +308,7 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="add-pay-schedule-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="pay-schedule-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <form method="post" id="add-pay-schedule-form">
             <div class="modal-content">

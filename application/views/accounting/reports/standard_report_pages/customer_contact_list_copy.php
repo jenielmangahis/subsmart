@@ -517,21 +517,103 @@
                                 </div>
                             </div>
                             <div class="col-12 nsm-card-content h-auto grid-mb" id="tbl_print_accounts_modal">
-                               
-                            <table class="nsm-table w-100" id="defaultTbl">
-                                    <thead id="def_head">
-                                    </thead>
-                                    <tbody id="def_body">
+                                <?php
+                                    if($tblDefault){
+                                ?>
+                                <table class="nsm-table">
+                                    <thead>
                                         <tr>
+                                            <td data-name="Customer">CUSTOMER</td>
+                                            <td data-name="Phone Numbers">PHONE NUMBERS</td>
+                                            <td data-name="Email">EMAIL</td>
+                                            <td data-name="Billing Address">BILLING ADDRESS</td>
+                                            <td data-name="Shipping Address">SHIPPING ADDRESS</td>
                                         </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach($acs_profile as $acsProfile) : ?>
+                                        <tr>
+                                            <td><?= $acsProfile->first_name.' '. $acsProfile->last_name ?></td>
+                                            <td><?= $acsProfile->phone_h ?></td>
+                                            <td><?= $acsProfile->email ?></td>
+                                            <td>Test billing address</td>
+                                            <td>Test shipping address</td>
+                                        </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
-
-                                <table class="nsm-table" id="filtered_tbl">
+                                <?php }else{ ?>
+                                <table class="nsm-table" id="exportTbl">
                                     <thead>
-                                        <tr id="head_tbl"></tr>
+                                        <tr>
+                                        <?php
+                                        if(!empty($custExp)){
+                                            foreach($custExp as $cust) : 
+                                            
+                                        ?>
+                                            <td data-name="Customer"><?= custom($cust) ?></td>
+                                        <?php 
+                                            $col='';
+                                            endforeach; 
+                                        }else{?>
+                                            <td data-name="Customer">CUSTOMER</td>
+                                            <td data-name="Phone Numbers">PHONE NUMBERS</td>
+                                            <td data-name="Email">EMAIL</td>
+                                            <td data-name="Billing Address">STATUS</td>
+                                            <?php } ?>
+                                        </tr>
                                     </thead>
-                                    <tbody id="body_tbl"></tbody>
+                                    <tbody>
+                                    <?php foreach($acs_profile as $acsProfile) : ?>
+                                        <tr>
+                                            <?php if(!empty($acsProfile->Empty)){ ?>
+                                            <td><? echo $acsProfile->Empty ?></td>
+                                            <?php }else{ ?>
+                                            <?php if(array_key_exists('first_name', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->first_name == null && !empty($acsProfile->first_name)) ? "N/A" : $acsProfile->first_name.' '. $acsProfile->last_name?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('state', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->state == null && !empty($acsProfile->state)) ? "N/A" : $acsProfile->state ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('phone_h', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->phone_h == null) ? "N/A" : $acsProfile->phone_h ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('email', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->email == null && !empty($acsProfile->email)) ? "N/A" : $acsProfile->email ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('status', $acsProfile)) : ?>
+                                                <td><?= ($acsProfile->status == null && !empty($acsProfile->status)) ? "N/A" : $acsProfile->status ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('phone_h', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->notes == null && !empty($acsProfile->notes)) ? "N/A" : $acsProfile->notes ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('bill_start_date', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->bill_start_date == null && !empty($acsProfile->bill_start_date)) ? "N/A" : $acsProfile->bill_start_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('bill_end_date', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->bill_end_date == null && !empty($acsProfile->bill_end_date)) ? "N/A" : $acsProfile->bill_end_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('recurring_start_date', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->recurring_start_date == null && !empty($acsProfile->recurring_start_date)) ? "N/A" : $acsProfile->recurring_start_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('recurring_end_date', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->recurring_end_date == null && !empty($acsProfile->recurring_end_date)) ? "N/A" : $acsProfile->recurring_end_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('last_payment_date', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->last_payment_date == null && !empty($acsProfile->last_payment_date)) ? "N/A" : $acsProfile->last_payment_date ?></td>
+                                            <?php endif; ?>
+                                            <?php if(array_key_exists('next_billing_date', $acsProfile) && !empty($custExp)) : ?>
+                                                <td><?= ($acsProfile->next_billing_date == null && !empty($acsProfile->next_billing_date)) ? "N/A" : $acsProfile->next_billing_date ?></td>
+                                            <?php endif; ?>
+                                            <?php } ?>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                                <?php } ?>
+
+                                <table >
+
                                 </table>
                             </div>
                             <div class="nsm-card-footer text-center">
@@ -574,104 +656,6 @@ var expanded = false;
 // })
 
 $(document).ready(function () {  
-    fetch('<?= base_url('accounting_controllers/reports/getCustomerContactList') ?>', {
-
-    }).then(response => response.json()).then(response => {
-        console.log(response);
-        var {success, acs_profile} = response;
-        if(success){
-            $('#def_head').append(
-                '<tr><td>Customer</td><td>Phone Numbers</td><td>Email</td><td>Billing Address</td><td>Shipping Address</td></tr>'
-            )
-            for(var x=0; x<acs_profile.length; x++){
-                $('#def_body').append(
-                    '<tr><td>'+acs_profile[x].first_name+' '+acs_profile[x].last_name+'</td><td>'+acs_profile[x].phone_h+'</td><td>'+acs_profile[x].email+'</td><td>'+acs_profile[x].city+', '+acs_profile[x].state+', '+acs_profile[x].zip_code+'</td><td>'+acs_profile[x].mail_add+'</td></tr>'
-                )
-            }
-        }
-    }).catch((error) => {
-        console.log(error);
-    })
-
-    $('#runReport').submit(function(e){
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-        var customerCol = [];
-        var customerColText = [];
-        var billingCol = [];
-        var billingColText = [];
-        var customer_is_checked = false;
-        $("input.customer:checkbox:checked").each(function() {
-            if($(this).val() == 'customer'){
-                customerCol.push('acs_profile.first_name');
-                customerCol.push('acs_profile.last_name');
-                customer_is_checked = true;
-                customerColText.push($(this).next('label').text());
-
-                return;
-            }
-            if(($(this).val() == 'acs_profile.first_name' || $(this).val() == 'acs_profile.last_name') && customer_is_checked == true ){
-                customerColText.push($(this).next('label').text());
-                return;
-            }
-            customerColText.push($(this).next('label').text());
-            customerCol.push($(this).val());
-        });
-        $("input.billing:checkbox:checked").each(function() {
-            billingColText.push($(this).next('label').text());
-            billingCol.push($(this).val());
-            
-        });
-
-        //concat two array for header
-        const header = customerColText.concat(billingColText);
-        const key = customerCol.concat(billingCol);
-        
-        //create form data
-        const formData = new FormData();
-        formData.append('customerCol', JSON.stringify(customerCol));
-        formData.append('billingCol', JSON.stringify(billingCol));
-        formData.append('billingColText', JSON.stringify(billingColText));
-        formData.append('customerColText', JSON.stringify(customerColText));
-
-        fetch('<?= base_url('accounting_controllers/reports/getCustomerContactList') ?>',{
-            method: 'POST',
-            body: formData
-        }).then(response => response.json()).then(response => {
-            var {succss, acs_profile} = response;
-            console.log(response);
-            var obj = [];
-            for(var j=0; j<key.length; j++){
-                obj.push(key[j].substring(key[j].indexOf('.') + 1));
-            }
-            $('#filtered_tbl thead > tr').empty();
-            $('#filtered_tbl tbody').empty();
-            $('#defaultTbl').hide();
-            $("#customizeModal").modal('hide');
-
-            //displaying customized headers
-            for(var i = 0; i<header.length; i++){
-                $('#head_tbl').append(
-                '<td>'+header[i]+'</td>'
-                )
-            }
-
-            //displaying data
-            for(var x=0; x<acs_profile.length; x++){
-                var tr = $('#body_tbl').append('<tr></tr>');
-                for(var z=0; z<obj.length;z++){
-                    if(header[x] == 'Customer'){
-                        var t = obj[z];
-                        tr.append('<td>'+acs_profile[x][t]+'</td>')
-                    }
-                }
-            }
-
-            
-        }).catch((error)=>{
-            console.log(error);
-        })
-
-    })
     $('#exportReport').click(function () {  
         var row = $('#exportTbl >tbody >tr').length;
 

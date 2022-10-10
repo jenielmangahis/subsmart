@@ -315,6 +315,36 @@ class AcsProfile_model extends MY_Model
         }
         return $query->result();
     }
+    //get Acs_profile with paramaeters
+
+    public function getProfileWithParam($params)
+    {
+        if(array_key_exists("table",$params) && $params['table'] != NULL){
+            $this->db->from($params['table']);
+        }else{
+            return false;
+        }
+        if(array_key_exists("select",$params) && $params['select'] != NULL){
+            $this->db->select($params['select']);
+        }else{
+            $this->db->select('*');
+        }
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        if(array_key_exists("join", $params)){
+            foreach($params['join'] as $key => $val){
+                if($val != ''){
+                    $this->db->join($key, $val, 'left');
+                }
+            }
+        } 
+        $query = $this->db->get();
+        return $query->result();
+
+    }
 }
 
 /* End of file AcsProfile_model.php */

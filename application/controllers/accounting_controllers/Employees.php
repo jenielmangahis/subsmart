@@ -785,12 +785,6 @@ class Employees extends MY_Controller {
         return $data;
     }
 
-    public function edit_pay_schedule($id)
-    {
-        $this->page_data['paySchedule'] = $this->users_model->getPaySchedule($id);
-        $this->load->view('accounting/employees/edit_pay_schedule', $this->page_data);
-    }
-
     public function get_pay_schedule($id)
     {
         $paySched = $this->users_model->getPaySchedule($id);
