@@ -2078,7 +2078,7 @@ class Job extends MY_Controller
         $icons = $this->Icons_model->getAll();
 
         $this->page_data['icons'] = $icons;
-        $this->load->view('job/job_settings/add_new_job_type', $this->page_data);
+        $this->load->view('v2/pages/job/job_settings/add_new_job_type', $this->page_data);
     }
 
     public function create_job_type()
@@ -2564,7 +2564,6 @@ class Job extends MY_Controller
 
     public function send_customer_invoice_email($id)
     {
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
         $this->load->helper(array('url', 'hashids_helper'));
         $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
@@ -2660,28 +2659,10 @@ class Job extends MY_Controller
             $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='".$nsmart_logo."' /></td></tr>";
             $msg .= "</table>";
             
-            //Email Sending
-            $server    = MAIL_SERVER;
-            $port      = MAIL_PORT ;
-            $username  = MAIL_USERNAME;
-            $password  = MAIL_PASSWORD;
-            $from      = MAIL_FROM;
             $recipient = $customer->email;
-            //$recipient = 'bryann.revina03@gmail.com';
             $attachment = $this->create_job_invoice_pdf($job->job_unique_id);
-            
-            $mail = new PHPMailer;
-            //$mail->SMTPDebug = 4;
-            $mail->isSMTP();
-            $mail->Host = $server;
-            $mail->SMTPAuth = true;
-            $mail->Username   = $username;
-            $mail->Password   = $password;
-            $mail->getSMTPInstance()->Timelimit = 5;
-            $mail->SMTPSecure = 'ssl';
-            $mail->Timeout    =   10; // set the timeout (seconds)
-            $mail->Port = $port;
-            $mail->From = $from;
+
+            $mail = email__getInstance(['subject' => $subject]);
             $mail->FromName = 'NsmarTrac';
             $mail->addAddress($recipient, $recipient);
             $mail->isHTML(true);

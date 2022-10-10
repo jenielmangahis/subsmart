@@ -525,6 +525,48 @@ class Reports extends MY_Controller {
         $data_arr = array("success" => true, "data" => $estimate_data, "header" => $header, "column" => $column, "select" => $selected_col);
         die(json_encode($data_arr));
     }
+    public function getCustomerContactList()
+    {
+        $input = $this->input->post();
+        if(empty($input)){
+            $data = array(
+                'table' => 'acs_profile',
+                'select' => 'first_name, last_name, phone_h, email, mail_add, city, state, zip_code',
+                'where' => array(
+                    'fk_user_id' => logged('id'),
+                    'company_id' => logged('company_id')
+                )
+            );
+            $acs_profile = $this->AcsProfile_model->getProfileWithParam($data);
+            $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
+        }else{
+            $customerCol = json_decode($input['customerCol']);
+            $billingCol = json_decode($input['billingCol']);
+            if($customerCol != 'null' && $billingCol != 'null'){
+                $selected_col = array_merge($customerCol,$billingCol);
+            }else{
+                if($customerCol != 'null'){
+                    $selected_col = $customerCol;
+                }elseif($billingCol != 'null'){
+                    $selected_col = $billingCol;
+                }else{
+                    $selected_col = array('acs_profile.first_name, acs_profile.last_name, acs_profile.phone_h, acs_profile.email, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code');
+                }
+            }
+            if(!empty($selected_col)){
+                $param['select'] = $selected_col;
+            }   
+            //get table param
+            $param['table'] = 'acs_profile';
+            //get join param
+            $param['join'] = array('acs_billing' => 'acs_profile.prof_id = acs_billing.fk_prof_id');
+            $param['where'] = array('acs_profile.fk_user_id' => logged('id'), 'acs_profile.company_id' => logged('company_id'));
+            $acs_profile = $this->AcsProfile_model->getProfileWithParam($param);
+            $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
+        }
+        
+        die(json_encode($data_arr));
+    }
 
     public function EstimatesInvoiceByCustomer(){
         $input = $this->input->post();

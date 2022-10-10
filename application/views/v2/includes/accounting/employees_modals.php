@@ -253,7 +253,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-4 d-flex align-items-center">
-                                    <label for="pay-schedule" class="<?=count($pay_schedules) > 0 || count(array_filter($pay_schedules, function($v) { return $v->use_for_new_employees === "1"; })) > 0 ? '' : 'd-none'?>">starting <span><?=$nextPayDate?></span> <a href="#" class="text-decoration-none text-muted"><i class="bx bx-fw bx-pencil"></i></a></label>
+                                    <label for="pay-schedule" class="<?=count($pay_schedules) > 0 || count(array_filter($pay_schedules, function($v) { return $v->use_for_new_employees === "1"; })) > 0 ? '' : 'd-none'?>">starting <span><?=$nextPayDate?></span> <a href="#" class="text-decoration-none text-muted" id="edit-pay-schedule"><i class="bx bx-fw bx-pencil"></i></a></label>
                                 </div>
                             </div>
                         </div>
@@ -308,9 +308,9 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="add-pay-schedule-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="pay-schedule-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <form method="post" id="pay-schedule-form">
+        <form method="post" id="add-pay-schedule-form">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add a pay schedule</span>
