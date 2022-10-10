@@ -119,7 +119,7 @@ class Settings extends MY_Controller {
         $this->page_data['invoice_templates'] = $emailTemplates;
         $this->page_data['page']->menu = 'email_templates';
         // $this->load->view('settings/email_templates', $this->page_data);
-        $this->load->view('v2/pages/settings/email_templates', $this->page_data);
+        $this->load->view('v2/pages/settings/email_templates/list', $this->page_data);
     }
 
     public function email_templates_edit($id=null)
@@ -142,7 +142,8 @@ class Settings extends MY_Controller {
             redirect(base_url('settings/email_templates'));
         }
         $this->page_data['page']->menu = 'email_templates';
-        $this->load->view('settings/email_templates_edit', $this->page_data);
+        $this->load->view('v2/pages/settings/email_templates/edit', $this->page_data);
+        //$this->load->view('settings/email_templates_edit', $this->page_data);
     }
 
     public function email_templates_create()
@@ -158,7 +159,8 @@ class Settings extends MY_Controller {
         }
 
         $this->page_data['page']->menu = 'email_templates';
-        $this->load->view('settings/email_template_create', $this->page_data);
+        $this->load->view('v2/pages/settings/email_templates/add', $this->page_data);
+        //$this->load->view('settings/email_template_create', $this->page_data);
     }
 
 
@@ -251,6 +253,8 @@ class Settings extends MY_Controller {
             }
         }
 
+        $this->page_data['option_template_types'] = $this->SmsTemplate_model->optionTemplateTypes();
+        $this->page_data['option_details'] = $this->SmsTemplate_model->optionDetails();
         $this->page_data['data_sms_templates'] = $data_sms_templates;
         $this->page_data['page']->menu = 'sms_templates';
         // $this->load->view('settings/sms_templates', $this->page_data);
@@ -1362,6 +1366,20 @@ class Settings extends MY_Controller {
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_edit_sms_template()
+    {
+        $this->load->model('SmsTemplate_model');
+
+        $post = $this->input->post();   
+        $company_id  = logged('company_id');
+        $smsTemplate = $this->SmsTemplate_model->getByIdAndCompanyId($post['smstid'], $company_id);
+        $this->page_data['smsTemplate'] = $smsTemplate;
+        $this->page_data['option_template_types'] = $this->SmsTemplate_model->optionTemplateTypes();
+        $this->page_data['option_details'] = $this->SmsTemplate_model->optionDetails();
+        $this->page_data['page']->menu = 'email_templates';
+        $this->load->view('v2/pages/settings/ajax_edit_sms_template', $this->page_data);
     }
 }
 

@@ -4295,15 +4295,19 @@ class Customer extends MY_Controller
 
     public function group_edit($id=null)
     {
+        $this->page_data['page']->title = 'Edit Group';
+
         $is_allowed = $this->isAllowedModuleAccess(11);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_group';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
+
         if(!$id==NULL){
             // save new updated group data
             $input = $this->input->post();
+            unset($input['name-button']);
             if ($input) {
                 $input['date_added'] = date("d-m-Y h:i A");
                 if ($this->general->update_with_key($input,$id,"customer_groups")) {
@@ -4321,7 +4325,8 @@ class Customer extends MY_Controller
         }else{
             redirect(base_url('customer/group'));
         }
-        $this->load->view('customer/group/edit', $this->page_data);
+        //$this->load->view('customer/group/edit', $this->page_data);
+        $this->load->view('v2/pages/customer/group/edit', $this->page_data);
     }
 
     public function group_add()
@@ -4337,7 +4342,8 @@ class Customer extends MY_Controller
         // pass the $this so that we can use it to load view, model, library or helper classes
         //$customerGroup = new CustomerGroup($this);
         $input = $this->input->post();
-        if ($input) {
+        if ($input) {            
+            unset($input['name-button']);
             $input['user_id'] = logged('id');
             $input['date_added'] = date("d-m-Y h:i A");
             $input['company_id'] = logged('company_id');
@@ -4920,7 +4926,11 @@ class Customer extends MY_Controller
     public function billing_errors(){
         $billingErrors = $this->customer_ad_model->get_customer_billing_errors(logged('company_id'));
         $this->page_data['billingErrors'] = $billingErrors;
-        $this->load->view('customer/billing_error/list', $this->page_data);
+
+        $this->page_data['page']->title = 'Billing Errors';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/billing_error/list', $this->page_data);
+        //$this->load->view('customer/billing_error/list', $this->page_data);
     }
 
     public function ajax_load_company_billing_credit_card_details(){
