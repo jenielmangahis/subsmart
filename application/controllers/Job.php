@@ -2078,7 +2078,7 @@ class Job extends MY_Controller
         $icons = $this->Icons_model->getAll();
 
         $this->page_data['icons'] = $icons;
-        $this->load->view('job/job_settings/add_new_job_type', $this->page_data);
+        $this->load->view('v2/pages/job/job_settings/add_new_job_type', $this->page_data);
     }
 
     public function create_job_type()
