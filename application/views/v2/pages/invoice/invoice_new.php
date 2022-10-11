@@ -204,7 +204,7 @@
                                         </a>
                                     </td>
                                     <td><span class="nsm-badge <?= $badge ?>"><?php echo $invoice->INV_status ?></span></td>
-                                    <td>$<?php echo ($invoice->grand_total); ?></td>
+                                    <td>$<?php echo number_format($invoice->grand_total,2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

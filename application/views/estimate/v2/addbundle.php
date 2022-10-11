@@ -313,6 +313,7 @@ echo put_header_assets();
         <style>
 
         </style>
+            <input type="hidden" id="siteurl" value="<?php echo base_url();?>">
         <div class="row custom__border">
             <div class="col-xl-12">
                 <div class="card">

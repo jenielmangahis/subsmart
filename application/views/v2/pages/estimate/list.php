@@ -163,11 +163,11 @@
                                         $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
 
                                         if ($estimate->estimate_type == 'Option') {
-                                            echo '$ ' . floatval($total1);
+                                            echo '$ ' . number_format(floatval($total1),2);
                                         } elseif ($estimate->estimate_type == 'Bundle') {
-                                            echo '$ ' . floatval($total2);
+                                            echo '$ ' . number_format(floatval($total2),2);
                                         } else {
-                                            echo '$ ' . floatval($estimate->grand_total);
+                                            echo '$ ' . number_format(floatval($estimate->grand_total),2);
                                         }
 
                                         ?>

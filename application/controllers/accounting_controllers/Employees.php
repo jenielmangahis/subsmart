@@ -245,21 +245,66 @@ class Employees extends MY_Controller {
         return $data;
     }
 
-    public function add()
+    public function view($id)
     {
-        $role_id = logged('role');
-		if( $role_id == 1 || $role_id == 2 ){
-			$this->page_data['payscale'] = $this->PayScale_model->getAll();
-		}else{
-			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-		}
+        add_footer_js(array(
+            "assets/js/v2/accounting/payroll/employees/view.js"
+        ));
 
-        $usedPaySched = $this->users_model->getPayScheduleUsed();
-        $nextPayDate = $this->get_next_pay_date($usedPaySched);
+        $employee = $this->users_model->getUser($id);
 
-        $this->page_data['nextPayDate'] = $nextPayDate;
+        switch ($employee->status) {
+            case '0' :
+                $employee->status_text = "Terminated";
+            break;
+            case '2' : 
+                $employee->status_text = "Paid leave of absence";
+            break;
+            case '3' : 
+                $employee->status_text = "Unpaid leave of absence";
+            break;
+            case '4' : 
+                $employee->status_text = "Not on payroll";
+            break;
+            case '5' : 
+                $employee->status_text = "Deceased";
+            break;
+            default : 
+                $employee->status_text = "Active";
+            break;
+        }
+
+        $address = '';
+        $address .= !in_array($employee->address, ['', null]) ? $employee->address.'<br>' : '';
+        $address .= !in_array($employee->city, ['', null]) ? $employee->city.', ' : '';
+        $address .= !in_array($employee->state, ['', null]) ? $employee->state.' ' : '';
+        $address .= !in_array($employee->postal_code, ['', null]) ? $employee->postal_code : '';
+        $employee->complete_address = $address;
+
+        $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
+        if($empPayDetails) {
+            $employee->payment_method = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check';
+
+            if($empPayDetails->pay_type === 'hourly') {
+                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
+            } else if($empPayDetails->pay_type === 'salary') {
+                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
+            } else {
+                $employee->pay_rate = 'Commission only';
+            }
+        } else {
+            $employee->payment_method = 'Missing';
+            $employee->pay_rate = 'Missing';
+        }
+        
+        $paySchedule = $this->users_model->getPaySchedule($empPayDetails->pay_schedule_id);
+        $employee->pay_schedule = $paySchedule;
+
+        $this->page_data['employee'] = $employee;
+        $this->page_data['pay_details'] = $empPayDetails;
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
-        $this->load->view('accounting/employees/add_employee', $this->page_data);
+
+        $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
     }
 
     private function get_next_pay_date($paySched)
