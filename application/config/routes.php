@@ -234,6 +234,7 @@ $route['survey/themes/edit/(:num)'] = 'survey/themeEdit/$1';
 $route['survey/themes/update/(:num)'] = 'survey/updateTheme/$1';
 $route['survey/themes/(:num)'] = 'survey/themeView/$1';
 $route['survey/themes/select/(:any)/(:any)'] = 'survey/selectTheme/$1/$2';
+$route['survey/_load_themes_list'] = 'survey/ajax_load_themes_list';
 
 //question
 $route['survey/update/(:num)/(:any)/(:num)'] = 'survey/updateSurvey/$1/$2/$3';
