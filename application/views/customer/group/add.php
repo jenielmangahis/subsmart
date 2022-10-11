@@ -43,15 +43,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <?php } ?>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 form-group <?php echo (isset($custom_errors['description']) && $custom_errors['description']!='' )?'has-feedback':''; ?>">
+                                        <div class="col-md-12 mt-3 form-group <?php echo (isset($custom_errors['description']) && $custom_errors['description']!='' )?'has-feedback':''; ?>">
                                             <label for="notes">Description <small>(some description for internal use)</small></label>
                                             <textarea name="description" cols="40" rows="3" class="form-control" autocomplete="off"><?php echo (isset($old_data['description']))?$old_data['description']:''  ?></textarea>
                                             <?php if(isset($custom_errors['description']) && $custom_errors['description']!='' ) { ?>
                                                 <label id="title-error" class="error" for="description"><?php echo $custom_errors['description']; ?></label>
                                             <?php } ?>
                                         </div>
-                                        <div class="col-sm-12 mt-3">
-                                            <button type="submit" class="btn btn-flat btn-primary">Submit</button>
+                                        <div class="col-12 mt-3 text-end">
+                                            <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('customer/group') ?>'">Go Back to Customer Group List</button>
+                                            <button type="submit" class="nsm-button primary">Save</button>
                                         </div>
                                     </div>
                                 </div>

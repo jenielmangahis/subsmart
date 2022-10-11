@@ -108,7 +108,7 @@
                         <?php if(count($employees) > 0) : ?>
 						<?php foreach($employees as $employee) : ?>
                         <tr>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$employee['name']?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/employees/view/' . $employee['id']) ?>'"><?=$employee['name']?></td>
                             <td class="pay-rate" data-pay_rate="<?=$employee['pay_rate']?>"><?=$employee['pay_rate']?></td>
                             <td><?=$employee['pay_method']?></td>
                             <td><?=$employee['pay_schedule']?></td>

@@ -11,13 +11,13 @@
 </div>
 <div class="col-12">
     <label class="content-subtitle fw-bold d-block mb-2">Which Employee</label>
-    <select class="nsm-field form-select" name="appointment_user_id" id="edit-appointment-user" multiple="multiple" required>
+    <select class="nsm-field form-select" name="appointment_user_id" id="edit-appointment-user" required>
         <option value="<?= $appointment->user_id; ?>" selected><?= $appointment->employee_name; ?></option>
     </select>
 </div>
 <div class="col-12">
     <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
-    <select class="nsm-field form-select" name="appointment_customer_id" id="edit-appointment-customer" multiple="multiple">
+    <select class="nsm-field form-select" name="appointment_customer_id" id="edit-appointment-customer" >
         <option value="<?= $appointment->prof_id; ?>" selected><?= $appointment->customer_name; ?></option>
     </select>
 </div>
@@ -31,7 +31,7 @@
 </div>
 <div class="col-12">
     <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
-    <select class="nsm-field form-select" name="appointment_tags[]" id="edit-appointment-tags" multiple="multiple" required>
+    <select class="nsm-field form-select" name="appointment_tags[]" id="edit-appointment-tags" required>
         <?php foreach ($a_selected_tags as $key => $value) { ?>
             <option value="<?= $key; ?>" selected><?= $value; ?></option>
         <?php } ?>

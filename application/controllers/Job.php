@@ -823,7 +823,7 @@ class Job extends MY_Controller
                 'company_id' => $job->company_id,
                 'amount' => $input['amount'],
                 'card_number' => $input['card_number'],
-                'exp_month' => $input['exp_month'],
+                'exp_month' => $input['card_mmyy'],
                 'exp_year' => $input['exp_year'],
                 'card_cvc' => $input['card_cvc'],
                 'address' => $customer->mail_add,
@@ -2674,6 +2674,7 @@ class Job extends MY_Controller
                 $this->session->set_flashdata('alert-type', 'danger');
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             } else {
+                $this->general->update_with_key(['status' => 'Invoiced'], $job->id, 'jobs');
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'Your invoice was successfully sent');
             }

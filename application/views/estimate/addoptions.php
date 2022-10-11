@@ -314,6 +314,7 @@ input:checked + .slider:before {
             <style>
 
             </style>
+            <input type="hidden" id="siteurl" value="<?php echo base_url();?>">
             <div class="row custom__border" style="margin-top: -20px;">
                 <div class="col-xl-12">
                     <div class="card">

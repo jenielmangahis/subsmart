@@ -607,7 +607,7 @@ $route['accounting/reconcile/view/showData'] = 'accounting_controllers/reconcile
 $route['accounting/reconcile/view/download/(:any)'] = 'accounting_controllers/reconcile/download/$1';
 
 $route['accounting/employees'] = 'accounting_controllers/employees/index';
-$route['accounting/employees/add'] = 'accounting_controllers/employees/add';
+$route['accounting/employees/view/(:any)'] = 'accounting_controllers/employees/view/$1';
 $route['accounting/employees/create']['post'] = 'accounting_controllers/employees/create';
 $route['accounting/employees/edit/(:any)'] = 'accounting_controllers/employees/edit/$1';
 $route['accounting/employees/update/(:any)']['post'] = 'accounting_controllers/employees/update/$1';

@@ -41,6 +41,12 @@ foreach ($jobs as $job) {
 </div>
 
 <div class="row page-content g-0">
+    <?php if(!empty($this->session->flashdata('alert'))): ?>
+        <div class="alert alert-<?= $this->session->flashdata('alert-type') ?>">
+            <?= $this->session->flashdata('alert') ?>
+        </div>
+    <?php endif; ?>
+
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
@@ -148,7 +154,7 @@ foreach ($jobs as $job) {
                                                     <span class="nsm-badge primary-enhanced"></span>
                                                 <?php
                                             }
-                                            for($y=1;$y < 8 - $badgeCount;$y++){
+                                            for($y=1;$y < 9 - $badgeCount;$y++){
                                                 ?>
                                                     <span class="nsm-badge primary"></span>
                                                 <?php

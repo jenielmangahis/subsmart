@@ -405,7 +405,7 @@
                                                         >
                                                         Finish
                                                         </a>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoice'  ? 'active' : ''; ?>">Invoice</li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>">Invoiced</li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">Completed</li>
                                                 </ul>
                                             </div>

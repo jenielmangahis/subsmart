@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('settings/create_sms_template') ?>'">
+                            <button type="button" class="nsm-button primary btn-add-sms-template">
                                 <i class='bx bx-fw bx-message-rounded-detail'></i> Add New SMS Template
                             </button>
                         </div>
@@ -55,7 +55,7 @@
                                         </td>
                                         <td class="nsm-text-primary">
                                             <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('settings/email_templates_edit/').$d->id; ?>'"><?= $d->title; ?></label>
-                                            <label class="content-subtitle fst-italic d-block"><?php echo $value['name']; ?></label>
+                                            <label class="content-subtitle fst-italic d-block"><?= $value['name']; ?></label>
                                         </td>
                                         <td><?= $d->details==1 ? 'Default Template' : 'Custom Template'; ?></td>
                                         <td>
@@ -65,10 +65,10 @@
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a class="dropdown-item" href="<?= base_url('settings/edit_sms_template/').$d->id; ?>">Edit</a>
+                                                        <a class="dropdown-item btn-edit-sms-template" href="javascript:void(0);" data-id="<?= $d->id; ?>">Edit</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $d->id; ?>">Delete</a>
+                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $d->id; ?>">Delete</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -94,6 +94,72 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Create sms template -->
+            <div class="modal fade nsm-modal fade" id="modalCreateSmsTemplate" aria-labelledby="modalCreateSmsTemplateLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" id="new_feed_modal_label">Create Auto SMS Notification Setting</span>
+                            <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <form method="post" id="frm-add-sms-template">
+                        <div class="modal-body">
+                            <div class="row">                                                                
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Template Name</label>
+                                    <input type="text" class="nsm-field form-control" name="title" id="title" required/>
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Template Type</label>
+                                    <select class="form-control" data-style="btn-white" name="type_id" required>
+                                        <?php foreach($option_template_types as $key => $value){ ?>
+                                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                        <?php } ?>                                    
+                                    </select>
+                                </div>                                    
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Details</label>   
+                                    <select class="form-control" data-style="btn-white" name="details" required>
+                                        <?php foreach($option_details as $key => $value){ ?>
+                                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <label for="">SMS</label>
+                                    <textarea id="summernote" class="nsm-field form-control" name="sms_body" style="width:100%; height: 100px;" required></textarea>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button name="btn_close_create_sms_template" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            <button name="btn_close_modal" type="submit" class="nsm-button primary btn-create-sms-template">Save</button>
+                        </div>
+                        </form>                      
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit sms template -->
+            <div class="modal fade nsm-modal fade" id="modalEditSmsTemplate" aria-labelledby="modalEditSmsTemplateLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" id="new_feed_modal_label">Edit Auto SMS Notification Setting</span>
+                            <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <form method="post" id="frm-update-sms-template">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button name="btn_close_create_sms_template" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            <button name="btn_close_modal" type="submit" class="nsm-button primary btn-update-sms-template">Save</button>
+                        </div>
+                        </form>                      
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -137,6 +203,108 @@
                 }
             });
         });
+
+        $("#frm-add-sms-template").submit(function(e){
+            e.preventDefault();
+            var url = base_url + 'settings/_create_sms_template';
+            $(".btn-create-sms-template").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+            setTimeout(function () {
+                $.ajax({
+                     type: "POST",
+                     url: url,
+                     data: $("#frm-add-sms-template").serialize(),
+                     dataType: 'json',
+                     success: function(o)
+                     {
+                        if( o.is_success == 1 ){
+                            $('#modalCreateSmsTemplate').modal('hide');
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'SMS template was successfully created.',
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }else{
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Cannot save data.',
+                              text: o.msg
+                            });
+                        }
+
+                        $(".btn-create-sms-template").html('Save');
+                     }
+                });
+            }, 300);        
+        });
+
+        $("#frm-update-sms-template").submit(function(e){
+            e.preventDefault();
+            var url = base_url + 'settings/_update_sms_template';
+            $(".btn-update-sms-template").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+            setTimeout(function () {
+                $.ajax({
+                     type: "POST",
+                     url: url,
+                     data: $("#frm-update-sms-template").serialize(),
+                     dataType: 'json',
+                     success: function(o)
+                     {
+                        if( o.is_success == 1 ){
+                            $('#modalEditSmsTemplate').modal('hide');
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'SMS template was successfully updated.',
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }else{
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Cannot save data.',
+                              text: o.msg
+                            });
+                        }
+
+                        $(".btn-update-sms-template").html('Save');
+                     }
+                });
+            }, 300);        
+        });
+    });
+
+    $(document).on('click', '.btn-add-sms-template', function(){
+        $('#modalCreateSmsTemplate').modal('show');
+    });
+
+    $(document).on('click', '.btn-edit-sms-template', function(){
+        var smstid = $(this).data('id');
+        var url = base_url + 'settings/_edit_sms_template';
+
+        $('#modalEditSmsTemplate').modal('show');
+        $("#modalEditSmsTemplate .modal-body").html('<span class="bx bx-loader bx-spin"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {smstid:smstid},
+             success: function(o)
+             {          
+                $('#modalEditSmsTemplate .modal-body').html(o);
+             }
+          });
+        }, 800);
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
