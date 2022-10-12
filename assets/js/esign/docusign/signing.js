@@ -923,7 +923,7 @@ function Signing(hash) {
       }
 
       if (data.has_user) {
-        window.location = `${prefixURL}/eSign/manage?view=sent`;
+        window.location = `${prefixURL}/eSign_v2/manage?view=sent`;
       }
 
       $(this).attr("disabled", false);

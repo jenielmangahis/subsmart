@@ -53,7 +53,7 @@ class Estimate extends MY_Controller
         }else{
             $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
         } */
-
+        echo $tab;
         if (!empty($tab)) {
             $query_tab = $tab;
             if ($tab == 'declined%20by%20customer') {

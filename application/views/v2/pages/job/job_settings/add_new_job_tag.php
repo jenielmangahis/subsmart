@@ -3,6 +3,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
 
 <style>
+.list-icon{
+  list-style: none;
+  height: 400px;
+  overflow: auto;
+  padding: 6px;
+}
+.list-icon li{
+  display: inline-block;
+  /*width: 30%;*/
+  height:100px;
+  margin: 3px;
+}
+.icon-image{
+  height: 50px;
+  width: 50px;
+}
 .page-title {
   font-family: Sarabun, sans-serif !important;
   font-size: 1.75rem !important;
@@ -23,22 +39,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     position: relative;
     bottom: 0px;
   }
-}
-.list-icon{
-  list-style: none;
-  height: 400px;
-  overflow: auto;
-  padding: 6px;
-}
-.list-icon li{
-  display: inline-block;
-  /*width: 30%;*/
-  height:100px;
-  margin: 3px;
-}
-.icon-image{
-  height: 50px;
-  width: 50px;
 }
 </style>
 <div class="row page-content g-0">
@@ -63,32 +63,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <div class="col-6 grid-mb">
-    <?php include viewPath('flash'); ?>
-    <?php echo form_open_multipart('job/save_job_type', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-        <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
-        <div class="form-group">
-            <label>Job Type Name</label> <span class="form-required">*</span>
-            <input type="text" name="job_type_name" value=""  class="form-control" required="" autocomplete="off" />
-        </div>
-        <div class="form-group">
-            <label>Icon / Marker</label> <span class="form-required">*</span><br />
-            <input type="file" name="image" value=""  class="form-control" id="input-upload-image" style="width: 20%;display: inline-block;" autocomplete="off" />
-            <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="width: 20%;display: inline-block;" id="icon-pick-name"><br />
-            <div class="form-check" style="margin-top: 10px;">
-            <input class="form-check-input" type="checkbox" name="is_default_icon" value="1" id="iconList">
-            <label class="form-check-label" for="iconList">
-                Pick from list
-            </label>
+        <?php include viewPath('flash'); ?>
+        <?php echo form_open_multipart('job/save_job_tag', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+            <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
+            <div class="form-group">
+                <label>Job Tag Name</label> <span class="form-required">*</span>
+                <input type="text" name="job_tag_name" value=""  class="form-control" required="" autocomplete="off" />
             </div>
-        </div>
-        <div class="col-md-">
-        <a class="nsm-button" href="<?php echo base_url('job/job_types'); ?>">Cancel</a>
-        <button type="submit" class="nsm-button primary">Submit</button>
-        </div>
-    <?php echo form_close(); ?>
+            <div class="form-group">
+                <label>Icon / Marker</label> <span class="form-required">*</span><br />
+                <input type="file" name="image" value=""  class="form-control" id="input-upload-image" style="width: 20%;display: inline-block;" autocomplete="off" />
+                <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="width: 20%;display: inline-block;" id="icon-pick-name"><br />
+                <div class="form-check" style="margin-top: 10px;">
+                <input class="form-check-input" type="checkbox" name="is_default_icon" value="1" id="iconList">
+                <label class="form-check-label" for="iconList">
+                    Pick from list
+                </label>
+                </div>
+            </div>
+            <div class="" style="margin-top: 78px;">
+            <a class="nsm-button" href="<?php echo base_url('job/job_tags'); ?>">Cancel</a>
+            <button type="submit" class="nsm-button primary">Submit</button>
+            </div>
+        <?php echo form_close(); ?>
     </div>
 </div>
-
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(function(){
@@ -113,5 +112,6 @@ $(function(){
       $("#default-icon-id").val("");
     }
   });
+
 });
 </script>

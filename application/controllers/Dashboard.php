@@ -161,24 +161,6 @@ class Dashboard extends Widgets {
         $companyId = logged('company_id');
         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
 
-        // if($companyId == 1){
-        //     $this->page_data['companies'] = $this->event_model->getCompanies();
-        // }else{
-        //     $this->page_data['upcomingJobs'] = $this->event_model->getRecentCustomer();
-        // }
-        //$this->page_data['jobsStatus']=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
-        //$this->page_data['payment']=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
-        //$this->page_data['paymentInvoice']=$this->event_model->getAllPInvoices();
-        //$this->page_data['paymentInvoices']=$this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
-        //$this->page_data['lostAccounts']=$this->event_model->getAccountSituation('cancel_date'); // lost account count, if Cancel Date Office Info is set
-        //$this->page_data['collectedAccounts']=$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
-        //$this->page_data['techLeaderboards']=$this->event_model->getTechLeaderboards(); // fetch Technicians and customer they are assigned to
-        //$this->page_data['salesLeaderboards']=$this->event_model->getSalesLeaderboards(); // fetch Sales Rep and customer they are assigned to
-        //$this->page_data['customerStatus']=$this->event_model->getCustomerStatusWithCount(); // fetch Sales Rep and customer they are assigned to
-        //$this->page_data['jobsStatus']=$this->event_model->getJobStatusWithCount(); // fetch Sales Rep and customer they are assigned to\
-        //$this->page_data['jobsDone']= $this->event_model->getAllJobs();
-        //$this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
-
         //$this->page_data['events'] = $this->event_model->get_all_events(5);
         //$this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
@@ -458,7 +440,8 @@ class Dashboard extends Widgets {
         $this->load->view('dashboard/calls');
     }
     
-    public function ac_dashboard_sort() {
+    public function ac_dashboard_sort()
+    {
         //$user_id = logged('id');
         $input = $this->input->post();
         if ($this->customer_ad_model->update_data($input, "ac_dashboard_sort", "acds_id")) {
@@ -474,7 +457,8 @@ class Dashboard extends Widgets {
         $this->load->view('blank', $this->page_data);
     }
 
-    public function saveFeed() {
+    public function saveFeed()
+    {
         postAllowed();
 
         $comp_id = logged('company_id');
@@ -493,7 +477,8 @@ class Dashboard extends Widgets {
         redirect('dashboard');
     }
 
-    public function todays_stats(){
+    public function todays_stats()
+    {
         $payment=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $paymentInvoices=$this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
         $jobsDone = $this->event_model->getAllJobs();
@@ -505,7 +490,8 @@ class Dashboard extends Widgets {
 
     }
 
-    public function upcoming_jobs(){
+    public function upcoming_jobs()
+    {
         $companyId = logged('company_id');
 
         if($companyId == 1){
@@ -518,13 +504,15 @@ class Dashboard extends Widgets {
 
     }
 
-    public function customer_status(){
+    public function customer_status()
+    {
         $customerStatus =$this->event_model->getCustomerStatusWithCount(); // fetch Sales Rep and customer they are assigned to
         $data_arr = array("success" => true, "status" => $customerStatus);
         die(json_encode($data_arr));
     }
 
-    public function sales_leaderboard(){
+    public function sales_leaderboard()
+    {
         $salesLeaderboard=$this->event_model->getSalesLeaderboards(); // fetch Sales Rep and customer they are assigned to
         $revenue = [];
         foreach($salesLeaderboard as $sl){
@@ -538,7 +526,8 @@ class Dashboard extends Widgets {
         die(json_encode($data_arr));
     }
 
-    public function tech_leaderboard(){
+    public function tech_leaderboard()
+    {
         $techLeaderboards=$this->event_model->getTechLeaderboards(); // fetch Technicians and customer they are assigned to
         $revenue = [];
         $customerCount = [];
@@ -555,7 +544,8 @@ class Dashboard extends Widgets {
         die(json_encode($data_arr));
     }
 
-    public function jobs_status(){
+    public function jobs_status()
+    {
         //$jobsStatus=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
         $jobsStatus=$this->event_model->getJobStatusWithCount(); // fetch Sales Rep and customer they are assigned to\
 
@@ -563,17 +553,25 @@ class Dashboard extends Widgets {
         die(json_encode($data_arr));
     }
 
-    public function accounting_sales(){
+    public function accounting_sales()
+    {
         $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         $data_arr = array("Success" => true, "mmr" => $mmr);
         die(json_encode($data_arr));
 
     }
 
-    public function jobs(){
+    public function jobs()
+    {
         $jobsDone= $this->event_model->getAllJobs();
         $data_arr = array("success" => true, "jobsDone" => $jobsDone);
         die(json_encode($data_arr));
+    }
+
+    public function getLeadSource()
+    {
+        //$this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
+
     }
     
 }

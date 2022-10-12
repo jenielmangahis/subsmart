@@ -110,7 +110,7 @@ $(document).ready(function() {
             for(var x=0; x<salesLeaderboard.length; x++){
                 var name = salesLeaderboard[x].FName + ' '+ salesLeaderboard[x].LName;
                 var salesRev = 0;
-                if(revenue[x]){
+                if(revenue[x][0]['salesRepRev']){
                     salesRev = parseFloat(revenue[x][0]['salesRepRev']).toFixed(2);
                 }
                 var prof = salesLeaderboard[x].FName[0] + ''+ salesLeaderboard[x].LName[0];
@@ -175,7 +175,6 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
     var prevJob = 0;
     var previousJob = 0;
     var {success, jobsDone} = response;
-    console.log(response);
     var monthNow = date.getMonth()+1;
     var yearNow = date.getFullYear();
     var prev = new Date(date.setMonth(date.getMonth() - 1));
@@ -198,9 +197,6 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
 
 
         }
-        console.log(curJob);
-        console.log(prevJob);
-        console.log(previousJob);
     }
     var jobs = $("#jobs_chart");
     new Chart(jobs, {
@@ -335,13 +331,12 @@ fetch('<?= base_url('Dashboard/accounting_sales') ?>',{
                     amountEight += parseInt(mmr[x].mmr);
                 }else if(new Date('09/01/2022') <= ins && new Date('09/30/2022') >= ins){
                     amountNinth += parseInt(mmr[x].mmr);
-                }else if(new Date('10/01/2022') <= ins && new Date('09/31/2022') >= ins){
+                }else if(new Date('10/01/2022') <= ins && new Date('10/31/2022') >= ins){
                     amountTenth += parseInt(mmr[x].mmr);
-                }else if(new Date('11/01/2022') <= ins && new Date('09/30/2022') >= ins){
+                }else if(new Date('11/01/2022') <= ins && new Date('11/30/2022') >= ins){
                     amountEleven += parseInt(mmr[x].mmr);
-                }else if(new Date('12/01/2022') <= ins && new Date('09/31/2022') >= ins){
+                }else if(new Date('12/01/2022') <= ins && new Date('12/31/2022') >= ins){
                     amountTwelve += parseInt(mmr[x].mmr);
-                    
                 }
             }
         }   
