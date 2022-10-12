@@ -308,6 +308,107 @@ class CardsFile extends MY_Controller {
         $return = ['is_success' => $is_success, 'msg' => $msg];
         return $return;
     }
+
+    public function ajax_create_card_vault(){
+
+    	$is_success = 0;
+        $msg = 'Cannot save data.';
+
+    	$company_id = logged('company_id');
+        $post       = $this->input->post();
+        $isValid    = $this->check_cc($post['card_number']);
+        if( $isValid ){
+        	$data = [
+				'company_id' => $company_id,
+		        'card_owner_first_name' => $post['card_owner_first_name'],
+		        'card_owner_last_name' => $post['card_owner_last_name'],
+				'card_number' => $post['card_number'],
+				'expiration_month' => $post['expiration_month'],
+				'expiration_year' => $post['expiration_year'],
+				'card_cvv' => $post['card_cvv'],
+				'is_primary' => 0,
+				'cc_type' => $isValid,
+				'created' => date("Y-m-d H:i:s"),
+				'modified' => date("Y-m-d H:i:s")
+			];
+
+			$cardsFile = $this->CardsFile_model->create($data);
+			if( $cardsFile > 0 ){				
+				$is_success = 1;
+				$msg = '';
+
+			}
+        }else{
+        	$msg = 'Invalid credit card number';        	
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_card_vault(){
+    	$post = $this->input->post();   
+    	$company_id = logged('company_id');
+
+		$cardFile   = $this->CardsFile_model->getById($post['cvid']);
+		if( $cardFile->company_id == $company_id ){
+			$this->page_data['cardFile'] = $cardFile;
+			$this->load->view('v2/pages/cards_file/ajax_edit_card_vault', $this->page_data);
+		}else{
+			echo 'Cannot find data';
+		}        
+    }
+
+    public function ajax_update_card_vault(){
+
+    	$is_success = 0;
+    	$msg = 'Cannot find data';
+
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+		$cardFile = $this->CardsFile_model->getById($post['cid']);
+		if( $cardFile->company_id == $company_id ){			
+			$isValid = $this->check_cc($post['card_number']);
+	        if( $isValid ){
+	        	$cc_exp_date = $post['expiration_month'] . date("y",strtotime($post['expiration_year'] . "-01-01"));
+	        	$data_cc = [
+		            'card_number' => $post['card_number'],
+		            'exp_date' => $cc_exp_date,
+		            'cvc' => $post['card_cvv'],
+		            'ssl_amount' => 0,
+		            'ssl_first_name' => $post['card_owner_first_name'],
+		            'ssl_last_name' => $post['card_owner_last_name']
+		        ];
+		        $is_valid = $this->converge_check_cc_details_valid($data_cc);
+		        if( $is_valid['is_success'] > 0 ){
+		        	$data = [
+				        'card_owner_first_name' => $post['card_owner_first_name'],
+				        'card_owner_last_name' => $post['card_owner_last_name'],
+						'card_number' => $post['card_number'],
+						'expiration_month' => $post['expiration_month'],
+						'expiration_year' => $post['expiration_year'],
+						'card_cvv' => $post['card_cvv'],
+						'cc_type' => $isValid,
+						'modified' => date("Y-m-d H:i:s")
+					];
+
+					$this->CardsFile_model->updateCardsFile($post['cid'], $data);
+
+					$is_success = 1;
+					$msg = '';
+		        }else{		        	
+		        	$msg = 'Invalid credit card details';
+		        }	        	
+	        }else{
+	        	$msg = $is_valid['msg'];	        	
+	        }	
+		}
+
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
 }
 
 

@@ -296,7 +296,7 @@ class DocuSign extends MYF_Controller
         $this->db->where('role', 'Needs to Sign');
         $recipients = $this->db->get('user_docfile_recipients')->result();
 
-        $mail = getMailInstance();
+        $mail = email__getInstance();
         $templatePath = VIEWPATH . 'esign/docusign/email/void.html';
         $template = file_get_contents($templatePath);
 
@@ -494,7 +494,7 @@ class DocuSign extends MYF_Controller
 
     private function sendCompletedNotice(array $envelope, array $recipients)
     {
-        $mail = getMailInstance(['subject' => $envelope['subject']]);
+        $mail = email__getInstance(['subject' => $envelope['subject']]);
         $templatePath = VIEWPATH . 'esign/docusign/email/completed.html';
         $template = file_get_contents($templatePath);
 
@@ -1809,7 +1809,9 @@ SQL;
 SQL;
 
         $results = $this->db->query($query, [logged('id'), $currUserEmail])->result();
-        $docfileIds = array_map(function ($result) {return $result->docfile_id;}, $results);
+        $docfileIds = array_map(function ($result) {
+            return $result->docfile_id;
+        }, $results);
 
         if (empty($docfileIds)) {
             return [];

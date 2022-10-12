@@ -439,11 +439,12 @@ class Estimate_model extends MY_Model
                         break;
 
                     case 'date-accepted-desc':
-                        $this->db->order_by("(CASE status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 0 ELSE 1 END), date_issued DESC");
+                        $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 0 ELSE 1 END), accepted_date DESC");
+                        // $this->db->order_by("(CASE status WHEN 'Accepted' THEN 0 ELSE 1 END), date_issued DESC");
                         break;
 
                     case 'date-accepted-asc':
-                        $this->db->order_by("(CASE status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 1 ELSE 0 END), date_issued ASC");
+                        $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 1 ELSE 0 END), accepted_date ASC");
                         break;
 
                     case 'number-asc':

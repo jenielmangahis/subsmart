@@ -770,23 +770,23 @@ class Job extends MY_Controller
         if ($input) {
             $payment_data = array();
             if ($input['pay_method'] == 'CASH') {
-                $payment_data['method'] = $input['pay_method'];
+                $payment_data['payment_method'] = $input['pay_method'];
                 $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
                 $payment_data['is_paid'] = 1;
             }
-            $payment_data['paid_datetime'] =date("m-d-Y h:i:s");
+            // $payment_data['paid_datetime'] =date("m-d-Y h:i:s");
             ;
             $check = array(
                 'where' => array(
-                    'jobs_id' => $input['jobs_id']
+                    'job_id' => $input['jobs_id']
                 ),
-                'table' => 'jobs_pay_details'
+                'table' => 'job_payments'
             );
             $exist = $this->general->get_data_with_param($check, false);
             if ($exist) {
-                $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'jobs_pay_details', 'jobs_id');
+                $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
             } else {
-                $updated =  $this->general->add_($payment_data, 'jobs_pay_details');
+                $updated =  $this->general->add_($payment_data, 'job_payments');
             }
         }
 
@@ -832,21 +832,21 @@ class Job extends MY_Controller
             $result = $this->converge_send_sale($converge_data);
             if ($result['is_success']) {
                 $payment_data = array();
-                $payment_data['method'] = $input['pay_method'];
+                $payment_data['payment_method'] = $input['pay_method'];
                 $payment_data['is_paid'] = 1;
-                $payment_data['paid_datetime'] =date("m-d-Y h:i:s");
+                // $payment_data['paid_datetime'] =date("m-d-Y h:i:s");
                 ;
                 $check = array(
                     'where' => array(
-                        'jobs_id' => $input['jobs_id']
+                        'job_id' => $input['jobs_id']
                     ),
-                    'table' => 'jobs_pay_details'
+                    'table' => 'job_payments'
                 );
                 $exist = $this->general->get_data_with_param($check, false);
                 if ($exist) {
-                    $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'jobs_pay_details', 'jobs_id');
+                    $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
                 } else {
-                    $updated =  $this->general->add_($payment_data, 'jobs_pay_details');
+                    $updated =  $this->general->add_($payment_data, 'job_payments');
                 }
 
                 if ($updated) {
@@ -2075,6 +2075,7 @@ class Job extends MY_Controller
             'assets/css/hover.css'
         ));
 
+        $this->page_data['page']->title = "Job Types";
         $icons = $this->Icons_model->getAll();
 
         $this->page_data['icons'] = $icons;
@@ -2407,7 +2408,8 @@ class Job extends MY_Controller
         $icons = $this->Icons_model->getAll();
 
         $this->page_data['icons'] = $icons;
-        $this->load->view('job/add_new_job_tag', $this->page_data);
+        $this->page_data['page']->title = 'Job Tags';
+        $this->load->view('v2/pages/job/job_settings/add_new_job_tag', $this->page_data);
     }
 
     public function edit_job_tag($id)

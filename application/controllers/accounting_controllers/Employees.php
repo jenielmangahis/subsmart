@@ -157,6 +157,9 @@ class Employees extends MY_Controller {
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
+        $cid   = logged('company_id');
+		$roles = $this->users_model->getRoles($cid);
+        $this->page_data['roles'] = $roles;
         $this->page_data['nextPayDate'] = $nextPayDate;
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
@@ -175,25 +178,10 @@ class Employees extends MY_Controller {
         $data = [];
         if(count($employees) > 0) {
             foreach($employees as $employee) {
-                switch ($employee->status) {
-                    case '0' :
-                        $empStatus = "Terminated";
-                    break;
-                    case '2' : 
-                        $empStatus = "Paid leave of absence";
-                    break;
-                    case '3' : 
-                        $empStatus = "Unpaid leave of absence";
-                    break;
-                    case '4' : 
-                        $empStatus = "Not on payroll";
-                    break;
-                    case '5' : 
-                        $empStatus = "Deceased";
-                    break;
-                    default : 
-                        $empStatus = "Active";
-                    break;
+                if($employee->status !== '0') {
+                    $empStatus = "Active";
+                } else {
+                    $empStatus = "Inactive";
                 }
 
                 $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
@@ -253,25 +241,10 @@ class Employees extends MY_Controller {
 
         $employee = $this->users_model->getUser($id);
 
-        switch ($employee->status) {
-            case '0' :
-                $employee->status_text = "Terminated";
-            break;
-            case '2' : 
-                $employee->status_text = "Paid leave of absence";
-            break;
-            case '3' : 
-                $employee->status_text = "Unpaid leave of absence";
-            break;
-            case '4' : 
-                $employee->status_text = "Not on payroll";
-            break;
-            case '5' : 
-                $employee->status_text = "Deceased";
-            break;
-            default : 
-                $employee->status_text = "Active";
-            break;
+        if($employee->status !== '0') {
+            $employee->status_text = "Active";
+        } else {
+            $employee->status_text = "Inactive";
         }
 
         $address = '';
@@ -303,6 +276,17 @@ class Employees extends MY_Controller {
         $this->page_data['employee'] = $employee;
         $this->page_data['pay_details'] = $empPayDetails;
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
+
+        $cid   = logged('company_id');
+		$roles = $this->users_model->getRoles($cid);
+        $this->page_data['roles'] = $roles;
+
+        $role_id = logged('role');
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		}else{
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		}
 
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
     }
@@ -425,27 +409,6 @@ class Employees extends MY_Controller {
         }
 
         redirect('/accounting/employees');
-    }
-
-    public function edit($id)
-    {
-        $role_id = logged('role');
-		if( $role_id == 1 || $role_id == 2 ){
-			$this->page_data['payscale'] = $this->PayScale_model->getAll();
-		}else{
-			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-		}
-
-        $employee = $this->users_model->getUser($id);
-        $payDetails = $this->users_model->getEmployeePayDetails($employee->id);
-        $userPaySched = $this->users_model->getPaySchedule($payDetails->pay_schedule_id);
-        $nextPayDate = $this->get_next_pay_date($userPaySched);
-
-        $this->page_data['nextPayDate'] = $nextPayDate;
-        $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
-        $this->page_data['employee'] = $employee;
-        $this->page_data['payDetails'] = $payDetails;
-        $this->load->view('accounting/employees/edit_employee', $this->page_data);
     }
 
     public function update($id)

@@ -234,6 +234,7 @@ $route['survey/themes/edit/(:num)'] = 'survey/themeEdit/$1';
 $route['survey/themes/update/(:num)'] = 'survey/updateTheme/$1';
 $route['survey/themes/(:num)'] = 'survey/themeView/$1';
 $route['survey/themes/select/(:any)/(:any)'] = 'survey/selectTheme/$1/$2';
+$route['survey/_load_themes_list'] = 'survey/ajax_load_themes_list';
 
 //question
 $route['survey/update/(:num)/(:any)/(:num)'] = 'survey/updateSurvey/$1/$2/$3';
@@ -609,7 +610,6 @@ $route['accounting/reconcile/view/download/(:any)'] = 'accounting_controllers/re
 $route['accounting/employees'] = 'accounting_controllers/employees/index';
 $route['accounting/employees/view/(:any)'] = 'accounting_controllers/employees/view/$1';
 $route['accounting/employees/create']['post'] = 'accounting_controllers/employees/create';
-$route['accounting/employees/edit/(:any)'] = 'accounting_controllers/employees/edit/$1';
 $route['accounting/employees/update/(:any)']['post'] = 'accounting_controllers/employees/update/$1';
 $route['accounting/employees/delete/(:any)'] = 'accounting_controllers/employees/delete/$1';
 $route['accounting/employees/set-status/(:any)/(:any)'] = 'accounting_controllers/employees/set_status/$1/$2';

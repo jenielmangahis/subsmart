@@ -52,9 +52,6 @@
                                             <button class="nav-link" id="nav-paycheck-list-tab" data-bs-toggle="tab" data-bs-target="#nav-paycheck-list" type="button" role="tab" aria-controls="nav-paycheck-list" aria-selected="false">
                                                 Paycheck list
                                             </button>
-                                            <button class="nav-link" id="nav-document-tab" data-bs-toggle="tab" data-bs-target="#nav-document" type="button" role="tab" aria-controls="nav-document" aria-selected="false">
-                                                Document
-                                            </button>
                                             <button class="nav-link" id="nav-notes-tab" data-bs-toggle="tab" data-bs-target="#nav-notes" type="button" role="tab" aria-controls="nav-notes" aria-selected="false">
                                                 Notes
                                             </button>
@@ -69,7 +66,7 @@
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <h4 class="float-start">Personal Info</h4>
-                                                                <button class="nsm-button float-end">Edit</button>
+                                                                <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit_employee_modal">Edit</button>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -95,7 +92,7 @@
                                                             </div>
                                                             <div class="col-12 col-md-4">
                                                                 <h6>Phone number</h6>
-                                                                <h5><?=$employee->phone?></h5>
+                                                                <h5><?=$employee->phone ? $employee->phone : '-'?></h5>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -139,7 +136,7 @@
                                                             </div>
                                                             <div class="col-12 col-md-4">
                                                                 <h6>Employee ID</h6>
-                                                                <h5>-</h5>
+                                                                <h5><?=!in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '-'?></h5>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -149,7 +146,7 @@
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <h4 class="float-start">Pay types</h4>
-                                                                <button class="nsm-button float-end">Edit</button>
+                                                                <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit-pay-types-modal">Edit</button>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -170,9 +167,104 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="nav-paycheck-list" role="tabpanel" aria-labelledby="nav-paycheck-list-tab"></div>
-                                        <div class="tab-pane fade" id="nav-document" role="tabpanel" aria-labelledby="nav-document-tab"></div>
-                                        <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab"></div>
+                                        <div class="tab-pane fade" id="nav-paycheck-list" role="tabpanel" aria-labelledby="nav-paycheck-list-tab">
+                                            <div class="row g-2">
+                                                <div class="col-12 grid-mb text-end">
+                                                    <div class="nsm-page-buttons page-button-container">
+                                                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                                            <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                                                            <div class="row">
+                                                                <div class="col-12 col-md-4">
+                                                                    <label for="filter-date-range">Date range</label>
+                                                                    <select class="nsm-field form-select" name="filter_date" id="filter-date" data-applied="<?=empty($date) ? 'all' : $date?>">
+                                                                        <option value="last-pay-date">Last pay date</option>
+                                                                        <option value="this-month">This month</option>
+                                                                        <option value="this-quarter" selected>This quarter</option>
+                                                                        <option value="this-year">This year</option>
+                                                                        <option value="last-month">Last month</option>
+                                                                        <option value="last-quarter">Last quarter</option>
+                                                                        <option value="last-year">Last year</option>
+                                                                        <option value="first-quarter">First quarter</option>
+                                                                        <option value="second-quarter">Second quarter</option>
+                                                                        <option value="third-quarter">Third quarter</option>
+                                                                        <option value="fourth-quarter">Fourth quarter</option>
+                                                                        <option value="custom">Custom</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <label for="filter-from-date">From</label>
+                                                                    <div class="nsm-field-group calendar">
+                                                                        <input type="text" class="form-control nsm-field date" id="filter-from-date">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <label for="filter-to-date">To</label>
+                                                                    <div class="nsm-field-group calendar">
+                                                                        <input type="text" class="form-control nsm-field date" id="filter-to-date">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mt-3">
+                                                                <div class="col-6">
+                                                                    <button type="button" class="nsm-button" id="cancel-button">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <button type="button" class="nsm-button primary float-end" id="apply-button">
+                                                                        Apply
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <table class="nsm-table" id="transactions-table">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="table-icon text-center">
+                                                            <input class="form-check-input select-all table-select" type="checkbox">
+                                                        </td>
+                                                        <td data-name="Pay Date">PAY DATE</td>
+                                                        <td data-name="Name">NAME</td>
+                                                        <td data-name="Total Pay">TOTAL PAY</td>
+                                                        <td data-name="Net Pay">NET PAY</td>
+                                                        <td data-name="Pay Method">PAY METHOD</td>
+                                                        <td data-name="Check Number">CHECK NUMBER</td>
+                                                        <td data-name="Category">CATEGORY</td>
+                                                        <td data-name="Status">STATUS</td>
+                                                        <td data-name="Manage"></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
+                                            <div class="row g-3">
+                                                <?php if($pay_details->notes) : ?>
+                                                <div class="col-12 col-md-8">
+                                                    <div class="nsm-card primary">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h4 class="float-start">Notes</h4>
+                                                                <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#notes-modal"><i class="bx bx-fw bx-pencil"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php else : ?>
+                                                <div class="col-12 text-center">
+                                                    <h6>You don't have any notes</h6>
+                                                    <button class="nsm-button" data-bs-toggle="modal" data-bs-target="#notes-modal">Add notes</button>
+                                                </div>
+                                                <?php endif;?>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

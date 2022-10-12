@@ -148,7 +148,7 @@ class Mycrm extends MY_Controller {
 		$payments   = $this->CompanySubscriptionPayments_model->getAllByCompanyId($company_id);
 
 		$this->page_data['payments'] = $payments;
-		// $this->load->view('mycrm/order', $this->page_data);
+		//$this->load->view('mycrm/order', $this->page_data);
 		$this->load->view('v2/pages/mycrm/order', $this->page_data);
 
     }
@@ -464,7 +464,10 @@ class Mycrm extends MY_Controller {
         if($payment->company_id == $company_id){
         	$this->page_data['payment'] = $payment;
         	$this->page_data['company'] = $company;
-	        $this->load->view('mycrm/view_payment_details', $this->page_data);     
+        	$this->page_data['page']->title = 'Orders : Payment Details';
+        	$this->page_data['page']->menu = 'cards_file';    
+	        //$this->load->view('mycrm/view_payment_details', $this->page_data);     
+	        $this->load->view('v2/pages/mycrm/view_payment_details', $this->page_data);     
         }else{
         	redirect('mycrm/orders');
         }

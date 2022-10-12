@@ -38,7 +38,7 @@
                         <div class="col-12">
                             <label class="content-title">nSmart App Login Details</label>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Email <small>(Will be use as your username)</small></label>
                             <div class="nsm-field-group icon-right">
                                 <input type="email" class="nsm-field form-control" id="employee_username" name="username" required>
@@ -101,7 +101,10 @@
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Title</label>
                             <select class="nsm-field form-select" name="role" id="employee_role" required>
-                                <option value="" selected="selected" disabled>Select Title</option>
+                                <option value="" disabled>Select Title</option>
+                                <?php foreach ($roles as $r) : ?>
+                                    <option value="<?= $r->id; ?>"><?= $r->title; ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-12 col-md-6">
