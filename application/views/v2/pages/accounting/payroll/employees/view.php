@@ -84,11 +84,7 @@
                                                             </div>
                                                             <div class="col-12 col-md-4">
                                                                 <h6>Home address</h6>
-                                                                <h5><?=$employee->complete_address?></h5>
-                                                            </div>
-                                                            <div class="col-12 col-md-4">
-                                                                <h6>Social security number</h6>
-                                                                <h5></h5>
+                                                                <h5><?=$employee->complete_address ? $employee->complete_address : '-'?></h5>
                                                             </div>
                                                             <div class="col-12 col-md-4">
                                                                 <h6>Phone number</h6>
@@ -153,14 +149,6 @@
                                                             <div class="col-12 col-md-4">
                                                                 <h6>Salary</h6>
                                                                 <h5><?=$employee->pay_rate?></h5>
-                                                            </div>
-                                                            <div class="col-12 col-md-4">
-                                                                <h6>Additional pay types</h6>
-                                                                <h5>-</h5>
-                                                            </div>
-                                                            <div class="col-12 col-md-4">
-                                                                <h6>Time off</h6>
-                                                                <h5>-</h5>
                                                             </div>
                                                         </div>
                                                     </div>
