@@ -16,7 +16,6 @@ function email__getInstance($config = [])
 
     include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     $mail = new PHPMailer;
-    $mail->isSMTP();
     $mail->getSMTPInstance()->Timelimit = 5;
     $mail->Host = $host;
     $mail->SMTPAuth = true;
@@ -32,6 +31,7 @@ function email__getInstance($config = [])
 
     if (emai__isLocalhost()) {
         // Send using gmail
+        $mail->isSMTP();
         $mail->Host = 'tls://smtp.gmail.com:587';
         $mail->port = 587;
         $mail->SMTPOptions = [

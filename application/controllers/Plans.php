@@ -40,6 +40,9 @@ class Plans extends MY_Controller {
 	
 	public function add(){
 		$is_allowed = $this->isAllowedModuleAccess(22);
+		$this->page_data['page']->title = 'Plans';
+
+
         if( !$is_allowed ){
             $this->page_data['module'] = 'plans';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -47,7 +50,7 @@ class Plans extends MY_Controller {
         }
 		$this->page_data['items'] = $this->items_model->getItemlist();
 		// ifPermissions('add_plan');
-		$this->load->view('plans/add', $this->page_data);
+		$this->load->view('v2/pages/plans/add', $this->page_data);
 	}
 
 	public function getitems(){

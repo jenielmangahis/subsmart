@@ -347,7 +347,7 @@ class Employees extends MY_Controller {
             'email' => $this->input->post('email'),
             'password' => hash("sha256",$this->input->post('password')),
             'password_plain' => $this->input->post('password'),
-            'role' => $this->input->post('title'),
+            'role' => $this->input->post('role'),
             'user_type' => $this->input->post('user_type'),
             'status' => $this->input->post('status'),
             'company_id' => logged('company_id'),
@@ -358,7 +358,9 @@ class Employees extends MY_Controller {
             'postal_code' => $this->input->post('zip_code'),
             'payscale_id' => $this->input->post('payscale'),
             'employee_number' => $this->input->post('employee_number'),
-            'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date')))
+            'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date'))),
+            'phone' => $this->input->post('phone'),
+            'mobile' => $this->input->post('mobile')
         ];
 
         $last_id = $this->users_model->addNewEmployee($data);
@@ -373,7 +375,7 @@ class Employees extends MY_Controller {
                 'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
                 'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
                 'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
-                'pay_method' => $this->input->post('pay_method'),
+                'pay_method' => $this->input->post('payment_method'),
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -411,40 +413,60 @@ class Employees extends MY_Controller {
         redirect('/accounting/employees');
     }
 
-    public function update($id)
+    public function update($type, $id)
     {
-        $data = [
-            'FName' => $this->input->post('first_name'),
-            'LName' => $this->input->post('last_name'),
-            'username' => $this->input->post('username'),
-            'email' => $this->input->post('email'),
-            'role' => $this->input->post('title'),
-            'user_type' => $this->input->post('user_type'),
-            'status' => $this->input->post('status'),
-            'profile_img' => $this->input->post('profile_photo'),
-            'address' => $this->input->post('address'),
-            'state' => $this->input->post('state'),
-            'city' => $this->input->post('city'),
-            'postal_code' => $this->input->post('zip_code'),
-            'payscale_id' => $this->input->post('payscale'),
-            'employee_number' => $this->input->post('employee_number'),
-            'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date')))
-        ];
-
-        $user = $this->users_model->update($id,$data);
-
-        if($user) {
-            $payDetails = [
-                'pay_schedule_id' => $this->input->post('pay_schedule'),
-                'pay_type' => $this->input->post('pay_type'),
-                'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
-                'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
-                'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
-                'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
-                'pay_method' => $this->input->post('pay_method'),
-                'updated_at' => date("Y-m-d H:i:s")
+        if($type === 'personal-info') {
+            $data = [
+                'FName' => $this->input->post('first_name'),
+                'LName' => $this->input->post('last_name'),
+                'username' => $this->input->post('username'),
+                'email' => $this->input->post('email'),
+                'role' => $this->input->post('role'),
+                'status' => $this->input->post('status'),
+                'profile_img' => $this->input->post('profile_photo'),
+                'address' => $this->input->post('address'),
+                'state' => $this->input->post('state'),
+                'city' => $this->input->post('city'),
+                'postal_code' => $this->input->post('zip_code'),
+                'phone' => $this->input->post('phone'),
+                'mobile' => $this->input->post('mobile')
             ];
+        } else {
+            switch($type) {
+                case 'payment-method' :
+                    $payDetails = [
+                        'pay_method' => $this->input->post('payment_method')
+                    ];
+                break;
+                case 'employment-details' :
+                    $payDetails = [
+                        'pay_schedule_id' => $this->input->post('pay_schedule')
+                    ];
 
+                    $data = [
+                        'employee_number' => $this->input->post('employee_number'),
+                        'date_hired' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
+                        'payscale_id' => $this->input->post('payscale'),
+                        'user_type' => $this->input->post('user_type'),
+                    ];
+                break;
+                case 'pay-types' :
+                    $payDetails = [
+                        'pay_type' => $this->input->post('pay_type'),
+                        'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
+                        'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
+                        'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
+                        'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
+                    ];
+                break;
+            }
+        }
+
+        if(isset($data)) {
+            $update = $this->users_model->update($id,$data);
+        }
+
+        if(isset($payDetails)) {
             if($this->users_model->getEmployeePayDetails($id)) {
                 $this->users_model->updateEmployeePayDetails($id, $payDetails);
             } else {
@@ -455,13 +477,37 @@ class Employees extends MY_Controller {
 
                 $this->users_model->insertEmployeePayDetails($payDetails);
             }
-
-            $this->session->set_flashdata('success', "Employee details updated successfully.");
-        } else {
-            $this->session->set_flashdata('error', "Please try again!");
         }
 
-        redirect('/accounting/employees');
+        // if($user) {
+        //     $payDetails = [
+        //         'pay_schedule_id' => $this->input->post('pay_schedule'),
+        //         'pay_type' => $this->input->post('pay_type'),
+        //         'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
+        //         'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
+        //         'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
+        //         'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
+        //         'pay_method' => $this->input->post('pay_method'),
+        //         'updated_at' => date("Y-m-d H:i:s")
+        //     ];
+
+        //     if($this->users_model->getEmployeePayDetails($id)) {
+        //         $this->users_model->updateEmployeePayDetails($id, $payDetails);
+        //     } else {
+        //         $payDetails['company_id'] = logged('company_id');
+        //         $payDetails['user_id'] = $id;
+        //         $payDetails['status'] = 1;
+        //         $payDetails['created_at'] = $payDetails['updated_at'];
+
+        //         $this->users_model->insertEmployeePayDetails($payDetails);
+        //     }
+
+        //     $this->session->set_flashdata('success', "Employee details updated successfully.");
+        // } else {
+        //     $this->session->set_flashdata('error', "Please try again!");
+        // }
+
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function delete($id)

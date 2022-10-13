@@ -266,7 +266,7 @@
                             <label class="content-title">How much do you pay this employee?</label>
                             <label class="content-subtitle">If your company offers additional pay types, add them here. These pay types show up when you run payroll.</label>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-4 d-flex align-items-end">
                             <select name="pay_type" id="pay-type" class="form-select nsm-field">
                                 <option value="hourly">Hourly</option>
                                 <option value="salary">Salary</option>

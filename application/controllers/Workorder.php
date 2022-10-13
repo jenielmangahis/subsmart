@@ -136,10 +136,10 @@ class Workorder extends MY_Controller
                     $sort = ['field' => 'work_order_number', 'order' => 'desc'];
                     break;
                 case 'event-date-asc':
-                    $sort = ['field' => 'start_date', 'order' => 'asc'];
+                    $sort = ['field' => 'date_issued', 'order' => 'asc'];
                     break;
                 case 'event-date-desc':
-                    $sort = ['field' => 'start_date', 'order' => 'desc'];
+                    $sort = ['field' => 'date_issued', 'order' => 'desc'];
                     break;
                 case 'priority-asc':
                     $sort = ['field' => 'priority', 'order' => 'asc'];
