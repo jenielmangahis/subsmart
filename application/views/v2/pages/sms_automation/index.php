@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             List all automations.
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('sms_automation/add_sms_automation') ?>'">
+                            <button type="button" name="btn_add_sms_automation" class="nsm-button primary" onclick="location.href='<?php echo url('sms_automation/add_sms_automation') ?>'">
                                 <i class='bx bx-fw bx-message-square-add'></i> Add SMS Automation
                             </button>
                         </div>

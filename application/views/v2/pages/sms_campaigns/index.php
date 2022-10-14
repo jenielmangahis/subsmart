@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                            <!-- <button><i class='bx bx-x'></i></button> -->
                             Listing the campaigns that are currently running.
                         </div>
                     </div>
@@ -28,15 +28,15 @@
                                 <span>Filter by Status: All Campaigns</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" data-id="filter_all" href="javascript:void(0);">All Campaigns</a></li>
-                                <li><a class="dropdown-item" data-id="filter_active" href="javascript:void(0);">Active Campaigns</a></li>
-                                <li><a class="dropdown-item" data-id="filter_scheduled" href="javascript:void(0);">Scheduled</a></li>
-                                <li><a class="dropdown-item" data-id="filter_closed" href="javascript:void(0);">Closed</a></li>
-                                <li><a class="dropdown-item" data-id="filter_draft" href="javascript:void(0);">Draft</a></li>
+                                <li><a class="dropdown-item" name="btn_all" data-id="filter_all" href="javascript:void(0);">All Campaigns</a></li>
+                                <li><a class="dropdown-item" name="btn_active" data-id="filter_active" href="javascript:void(0);">Active Campaigns</a></li>
+                                <li><a class="dropdown-item" name="btn_scheduled" data-id="filter_scheduled" href="javascript:void(0);">Scheduled</a></li>
+                                <li><a class="dropdown-item" name="btn_closed" data-id="filter_closed" href="javascript:void(0);">Closed</a></li>
+                                <li><a class="dropdown-item" name="btn_draft" data-id="filter_draft" href="javascript:void(0);">Draft</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('sms_campaigns/add_sms_blast') ?>'">
+                            <button type="button" name="btn_create_sms_blast" class="nsm-button primary" onclick="location.href='<?php echo url('sms_campaigns/add_sms_blast') ?>'">
                                 <i class='bx bx-fw bx-chat'></i> Create SMS Blast
                             </button>
                         </div>
@@ -49,7 +49,7 @@
                             <td data-name="Campaign">Campaign</td>
                             <td data-name="Send To">Send To</td>
                             <td data-name="Sent on">Sent on</td>
-                            <td data-name="Texts">Texts</td>
+                            <td data-name="Paid">Is Paid</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -103,27 +103,29 @@
                 showCancelButton: true,
                 cancelButtonText: "Cancel"
             }).then((result) => {
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        smsid: campaign_id
-                    },
-                    dataType: "JSON",
-                    success: function(result) {
-                        if (result.sms_id > 1) {
-                            location.href = "<?php echo base_url(); ?>sms_campaigns/edit_campaign/" + result.sms_id;
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: result.msg,
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: {
+                            smsid: campaign_id
+                        },
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.sms_id > 1) {
+                                location.href = "<?php echo base_url(); ?>sms_campaigns/edit_campaign/" + result.sms_id;
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
                         }
-                    },
-                });
+                    });
+                }                
             });
         });
 
@@ -140,45 +142,47 @@
                 showCancelButton: true,
                 cancelButtonText: "Cancel"
             }).then((result) => {
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        smsid: campaign_id
-                    },
-                    dataType: "JSON",
-                    success: function(result) {
-                        if (result.is_success == 1) {
-                            Swal.fire({
-                                title: 'Information',
-                                text: result.msg,
-                                icon: 'info',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: {
+                            smsid: campaign_id
+                        },
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.is_success == 1) {
+                                Swal.fire({
+                                    title: 'Information',
+                                    text: result.msg,
+                                    icon: 'info',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
 
-                            if (activeTab == 'all') {
-                                loadSMSBlasts();
-                            } else if (activeTab == 'active') {
-                                loadSMSBlasts('<?= $status_active; ?>');
-                            } else if (activeTab == 'scheduled') {
-                                loadSMSBlasts('<?= $status_scheduled; ?>');
-                            } else if (activeTab == 'closed') {
-                                loadSMSBlasts('<?= $status_closed; ?>');
-                            } else if (activeTab == 'draft') {
-                                loadSMSBlasts('<?= $status_draft; ?>');
+                                if (activeTab == 'all') {
+                                    loadSMSBlasts();
+                                } else if (activeTab == 'active') {
+                                    loadSMSBlasts('<?= $status_active; ?>');
+                                } else if (activeTab == 'scheduled') {
+                                    loadSMSBlasts('<?= $status_scheduled; ?>');
+                                } else if (activeTab == 'closed') {
+                                    loadSMSBlasts('<?= $status_closed; ?>');
+                                } else if (activeTab == 'draft') {
+                                    loadSMSBlasts('<?= $status_draft; ?>');
+                                }
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
                             }
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: result.msg,
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
-                        }
-                    },
-                });
+                        },
+                    });
+                }                
             });
         });
     });
