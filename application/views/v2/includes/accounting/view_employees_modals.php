@@ -343,7 +343,7 @@
 
 <div class="modal fade nsm-modal" id="notes-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-    <form method="POST" id="edit-notes-form" action="/accounting/employees/update/<?=$employee->id?>">
+    <form method="POST" id="edit-notes-form" action="/accounting/employees/update/notes/<?=$employee->id?>">
     <div class="modal-content">
         <div class="modal-header">
             <span class="modal-title content-title">Add notes</span>

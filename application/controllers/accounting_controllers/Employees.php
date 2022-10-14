@@ -288,6 +288,25 @@ class Employees extends MY_Controller {
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
 
+        $current_month = date('m');
+        $current_year = date('Y');
+        if($current_month>=1 && $current_month<=3) {
+            $start_date = strtotime('1-January-'.$current_year);
+            $end_date = strtotime('1-April-'.$current_year);
+        } else if($current_month>=4 && $current_month<=6) {
+            $start_date = strtotime('1-April-'.$current_year);
+            $end_date = strtotime('1-July-'.$current_year); 
+        } else if($current_month>=7 && $current_month<=9) {
+            $start_date = strtotime('1-July-'.$current_year);
+            $end_date = strtotime('1-October-'.$current_year);
+        } else  if($current_month>=10 && $current_month<=12) {
+            $start_date = strtotime('1-October-'.$current_year);
+            $end_date = strtotime('31-December-'.$current_year);
+        }
+
+        $this->page_data['filter_from'] = date("m/d/Y", $start_date);
+        $this->page_data['filter_to'] = date("m/d/Y", $end_date);
+
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
     }
 
@@ -459,6 +478,11 @@ class Employees extends MY_Controller {
                         'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
                     ];
                 break;
+                case 'notes' :
+                    $payDetails = [
+                        'notes' => $this->input->post('notes')
+                    ];
+                break;
             }
         }
 
@@ -478,34 +502,6 @@ class Employees extends MY_Controller {
                 $this->users_model->insertEmployeePayDetails($payDetails);
             }
         }
-
-        // if($user) {
-        //     $payDetails = [
-        //         'pay_schedule_id' => $this->input->post('pay_schedule'),
-        //         'pay_type' => $this->input->post('pay_type'),
-        //         'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
-        //         'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
-        //         'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
-        //         'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
-        //         'pay_method' => $this->input->post('pay_method'),
-        //         'updated_at' => date("Y-m-d H:i:s")
-        //     ];
-
-        //     if($this->users_model->getEmployeePayDetails($id)) {
-        //         $this->users_model->updateEmployeePayDetails($id, $payDetails);
-        //     } else {
-        //         $payDetails['company_id'] = logged('company_id');
-        //         $payDetails['user_id'] = $id;
-        //         $payDetails['status'] = 1;
-        //         $payDetails['created_at'] = $payDetails['updated_at'];
-
-        //         $this->users_model->insertEmployeePayDetails($payDetails);
-        //     }
-
-        //     $this->session->set_flashdata('success', "Employee details updated successfully.");
-        // } else {
-        //     $this->session->set_flashdata('error', "Please try again!");
-        // }
 
         redirect($_SERVER['HTTP_REFERER']);
     }
@@ -1004,7 +1000,7 @@ class Employees extends MY_Controller {
 
     public function bonus_only_modal()
     {
-        $this->load->view('accounting/employees/bonus_only_payroll');
+        $this->load->view('v2/pages/accounting/payroll/employees/bonus_only_payroll');
     }
 
     public function bonus_only_form($bonusPayType)
@@ -1016,7 +1012,7 @@ class Employees extends MY_Controller {
         $this->page_data['bonusPayType'] = $bonusPayType;
         $this->page_data['accounts'] = $accounts;
         $this->page_data['payDetails'] = $this->users_model->getActiveEmployeePayDetails();
-        $this->load->view('accounting/employees/bonus_only_payroll_form', $this->page_data);
+        $this->load->view('v2/pages/accounting/payroll/employees/bonus_only_payroll_form', $this->page_data);
     }
 
     public function generate_bonus_payroll($bonusPayType)

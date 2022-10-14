@@ -37,6 +37,9 @@
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="run-payroll">Run payroll</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="bonus-only">Bonus only</a></li>
+                                <?php if($commission_pays !== null && count($commission_pays) > 0) : ?>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="commission-only">Commission only</a></li>
+                                <?php endif; ?>
                             </ul>
                         </div>
 
