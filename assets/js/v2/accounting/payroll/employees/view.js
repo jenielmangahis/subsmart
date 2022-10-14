@@ -6,6 +6,14 @@ $(function() {
     });
 });
 
+$('#table-filters').on('click', function(e) {
+    e.stopPropagation();
+});
+
+$('#filter-date').select2({
+    minimumResultsForSearch: -1
+});
+
 $('#edit-employment-details-modal select').select2({
     minimumResultsForSearch: -1,
     dropdownParent: $('#edit-employment-details-modal')

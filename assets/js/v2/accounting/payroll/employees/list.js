@@ -727,6 +727,69 @@ $(document).on('submit', '#edit-pay-schedule-form', function(e) {
     });
 });
 
+$('#run-payroll').on('click', function(e) {
+    e.preventDefault();
+
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="payroll_modal"]').trigger('click');
+});
+
+$('#bonus-only').on('click', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/employees/bonus-only-payroll', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#bonus-payroll-modal').modal('show');
+    });
+});
+
+var bonusPayAsFields = '';
+var bonusPayType = '';
+
+$(document).on('click', '#bonus-payroll-modal #continue-bonus-payroll', function(e) {
+    e.preventDefault();
+
+    bonusPayType = $('#bonus-payroll-modal [name="bonus_as"]:checked').val();
+    bonusPayAsFields = $('#bonus-payroll-modal .modal-content').html();
+
+    $.get('/accounting/employees/bonus-only-payroll-form/'+bonusPayType, function(res) {
+        $('#bonus-payroll-modal .modal-content').html(res);
+        $('#bonus-payroll-modal select').select2({
+            minimumResultsForSearch: -1,
+            dropdownParent: $('#bonus-payroll-modal')
+        });
+        $('#bonus-payroll-modal #payDate').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+    });
+});
+
+// $(document).on('click', '#commission-only', function(e) {
+//     e.preventDefault();
+
+//     $.get('/accounting/employees/commission-only-payroll', function(res) {
+//         $('.append-modal').html(res);
+        
+//         $('#commission-payroll-modal #payDate').datepicker({
+//             uiLibrary: 'bootstrap',
+//             todayBtn: "linked",
+//             language: "de"
+//         });
+//         $('#commission-payroll-modal #payFrom').select2();
+//         $('#commission-payroll-modal').modal('show');
+//     });
+// });
+
 function upcomingPayPeriods(el)
 {
     if(el.attr('id') === 'next-payday') {
