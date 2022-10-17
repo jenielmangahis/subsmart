@@ -1,8 +1,14 @@
+
 <!-- <?php if( $this->session->flashdata('message') != '' ){ ?> -->
-<div class="alert <?php echo $this->session->flashdata('alert_class'); ?> alert-dismissible fade show" style="width: 100%;margin-top: 10px;margin-bottom: 10px;">
-  <p><?php echo $this->session->flashdata('message'); ?></p>
-  <button name="button" type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">×</span>
-  </button>
+
+<div class="row page-content g-0">
+    <div class="row">
+        <div class="col-12">
+            <div class="nsm-callout primary">
+                <button><i class='bx bx-x'></i></button>
+                <?php echo $this->session->flashdata('message'); ?>
+                </div>
+        </div>
+    </div>
 </div>
 <!-- <?php } ?> -->

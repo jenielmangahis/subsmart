@@ -21,7 +21,7 @@ class Sms_Campaigns extends MY_Controller
         $this->load->model('SmsBlastSetting_model');
         $this->load->model('SmsBlastSendTo_model');
 
-        $this->page_data['page']->title = 'SMS Campaigns';
+        $this->page_data['page']->title = 'SMS Blast';
         $this->page_data['page']->menu = '';
 
         add_css(array(
@@ -51,7 +51,7 @@ class Sms_Campaigns extends MY_Controller
     public function add_sms_blast()
     {
         $this->session->unset_userdata('smsBlastId');
-        $this->load->view('sms_campaigns/add_sms_blast', $this->page_data);
+        $this->load->view('v2/pages/sms_campaigns/add_sms_blast', $this->page_data);
     }
 
     public function create_draft_campaign()
@@ -129,7 +129,8 @@ class Sms_Campaigns extends MY_Controller
         $this->page_data['smsSendTo'] = $smsSendTo;
         $this->page_data['customers'] = $customers;
         $this->page_data['customerGroups'] = $customerGroups;
-        $this->load->view('sms_campaigns/add_campaign_send_to', $this->page_data);
+        //$this->load->view('sms_campaigns/add_campaign_send_to', $this->page_data);
+        $this->load->view('v2/pages/sms_campaigns/add_campaign_send_to', $this->page_data);
     }
 
     public function create_campaign_send_to()
@@ -231,7 +232,7 @@ class Sms_Campaigns extends MY_Controller
 
         $this->page_data['company'] = $company;
         $this->page_data['smsCampaign'] = $smsCampaign;
-        $this->load->view('sms_campaigns/build_sms', $this->page_data);
+        $this->load->view('v2/pages/sms_campaigns/build_sms', $this->page_data);
     }
 
     public function create_sms_message()
@@ -279,7 +280,7 @@ class Sms_Campaigns extends MY_Controller
         $this->page_data['service_price'] = $service_price;
         $this->page_data['price_per_sms'] = $price_per_sms;
         $this->page_data['sms_text'] = $sms_text;
-        $this->load->view('sms_campaigns/preview_sms', $this->page_data);
+        $this->load->view('v2/pages/sms_campaigns/preview_sms', $this->page_data);
     }
 
     public function create_send_schedule()
@@ -420,7 +421,7 @@ class Sms_Campaigns extends MY_Controller
 
                 $this->session->set_userdata('smsBlastId', $smsCampaign->id);
                 $this->page_data['smsCampaign'] = $smsCampaign;
-                $this->load->view('sms_campaigns/edit_sms_blast', $this->page_data);
+                $this->load->view('v2/pages/sms_campaigns/edit_sms_blast', $this->page_data);
             } else {
                 $this->session->set_flashdata('message', 'Record not found.');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -502,7 +503,7 @@ class Sms_Campaigns extends MY_Controller
         $this->page_data['service_price'] = $service_price;
         $this->page_data['price_per_sms'] = $price_per_sms;
         $this->page_data['sms_text'] = $sms_text;
-        $this->load->view('sms_campaigns/payment', $this->page_data);
+        $this->load->view('v2/pages/sms_campaigns/payment', $this->page_data);
     }
 
     public function process_payment()
@@ -958,7 +959,7 @@ class Sms_Campaigns extends MY_Controller
                 $this->page_data['smsBlast']   = $smsBlast;
                 $this->page_data['orderPayments'] = $orderPayments;
                 $this->page_data['company'] = $company;
-                $this->load->view('sms_campaigns/payment_details', $this->page_data);
+                $this->load->view('v2/pages/sms_campaigns/payment_details', $this->page_data);
             } else {
                 redirect('sms_automation');
             }
@@ -1026,7 +1027,7 @@ class Sms_Campaigns extends MY_Controller
         $this->load->model('MarketingOrderPayments_model');
         $this->load->model('Business_model');
 
-        $orderPayments = $this->MarketingOrderPayments_model->getById($id);
+        $orderPayments = $this->MarketingOrderPayments_model->getById($id);        
         $smsCampaign   = $this->SmsBlast_model->getByOrderNumber($orderPayments->order_number);
         $company       = $this->Business_model->getByCompanyId($smsCampaign->company_id);
         $statusOptions = $this->SmsBlast_model->statusOptions();
@@ -1035,7 +1036,7 @@ class Sms_Campaigns extends MY_Controller
         $this->page_data['smsCampaign']   = $smsCampaign;
         $this->page_data['orderPayments'] = $orderPayments;
         $this->page_data['company'] = $company;
-        $this->load->view('sms_campaigns/view_payment_details', $this->page_data);
+        $this->load->view('v2/pages/sms_campaigns/view_payment_details', $this->page_data);
     }
 
     public function order_pdf($id)
@@ -1087,7 +1088,7 @@ class Sms_Campaigns extends MY_Controller
 
         $this->page_data['smsBlast'] = $smsBlast;
         $this->page_data['smsLogs']  = $smsLogs;
-        $this->load->view('sms_campaigns/view_logs', $this->page_data);
+        $this->load->view('v2/pages/sms_campaigns/view_logs', $this->page_data);
     }
 }
 

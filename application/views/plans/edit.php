@@ -145,10 +145,10 @@ label>input {
 									<!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
 								</div>
 								   
-								<div class="col-sm-6 mt-3">									
-									<button type="submit" class="btn btn-flat btn-primary">Save</button>
-                  					<a class="btn btn-primary" href="<?php echo base_url('plans'); ?>">Cancel</a>
-								</div>
+									<div class="col-sm-6 mt-3">									
+										<button type="submit" class="btn btn-flat btn-primary">Save</button>
+										<a class="btn btn-primary" href="<?php echo base_url('plans'); ?>">Cancel</a>
+									</div>
 										   
 							</div>
 						</div>

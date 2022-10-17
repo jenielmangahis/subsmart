@@ -110,6 +110,13 @@ class Employees extends MY_Controller {
             "assets/js/v2/accounting/payroll/employees/list.js"
         ));
 
+        $accounts = $this->chart_of_accounts_model->select();
+        $accounts = array_filter($accounts, function($v, $k) {
+            return $v->account_id === 3 || $v->account_id === "3";
+        }, ARRAY_FILTER_USE_BOTH);
+        $this->page_data['accounts'] = $accounts;
+        $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPayType('commission');
+
         $filters = [];
         switch(get('status')) {
             case 'all' :
@@ -912,17 +919,6 @@ class Employees extends MY_Controller {
         echo json_encode(['date' => $payDate]);
     }
 
-    public function commission_only_modal()
-    {
-        $accounts = $this->chart_of_accounts_model->select();
-        $accounts = array_filter($accounts, function($v, $k) {
-            return $v->account_id === 3 || $v->account_id === "3";
-        }, ARRAY_FILTER_USE_BOTH);
-        $this->page_data['accounts'] = $accounts;
-        $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPayType('commission');;
-        $this->load->view('accounting/employees/commission_only_payroll', $this->page_data);
-    }
-
     public function generate_commission_payroll()
     {
         $postData = $this->input->post();
@@ -935,11 +931,11 @@ class Employees extends MY_Controller {
         $this->page_data['payDate'] = date('m/d/Y', strtotime($postData['pay_date']));
 
         $employees = [];
-        foreach($postData['select'] as $key => $empId) {
+        foreach($postData['employees'] as $key => $empId) {
             $emp = $this->users_model->getUser($empId);
             $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
 
-            $empTotalPay = (float)$postData['commission'][$key];
+            $empTotalPay = floatval($postData['commission'][$key]);
             $empTotalPay = number_format($empTotalPay, 2, '.', ',');
 
             $empSocial = ($empTotalPay / 100) * $socialSecurity;
@@ -988,7 +984,7 @@ class Employees extends MY_Controller {
             'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
         ];
 
-        $this->load->view('accounting/employees/commission_payroll_summary', $this->page_data);
+        $this->load->view('v2/pages/accounting/payroll/employees/commission_payroll_summary', $this->page_data);
     }
 
     public function get_employee_pay_details($user_id)
@@ -996,11 +992,6 @@ class Employees extends MY_Controller {
         $empPayDetails = $this->users_model->getEmployeePayDetails($user_id);
 
         echo json_encode($empPayDetails);
-    }
-
-    public function bonus_only_modal()
-    {
-        $this->load->view('v2/pages/accounting/payroll/employees/bonus_only_payroll');
     }
 
     public function bonus_only_form($bonusPayType)
@@ -1027,11 +1018,11 @@ class Employees extends MY_Controller {
         $this->page_data['payDate'] = date('m/d/Y', strtotime($postData['pay_date']));
 
         $employees = [];
-        foreach($postData['select'] as $key => $empId) {
+        foreach($postData['employees'] as $key => $empId) {
             $emp = $this->users_model->getUser($empId);
             $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
 
-            $empTotalPay = (float)$postData['bonus'][$key];
+            $empTotalPay = floatval($postData['bonus'][$key]);
             $empTotalPay = number_format($empTotalPay, 2, '.', ',');
 
             $empSocial = ($empTotalPay / 100) * $socialSecurity;
@@ -1084,6 +1075,6 @@ class Employees extends MY_Controller {
             'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
         ];
 
-        $this->load->view('accounting/employees/bonus_payroll_summary', $this->page_data);
+        $this->load->view('v2/pages/accounting/payroll/employees/bonus_payroll_summary', $this->page_data);
     }
 }

@@ -63,16 +63,18 @@ class Plans extends MY_Controller {
 	public function edit($id){
 
 		//ifPermissions('plan_edit');
+		$this->page_data['page']->title = 'Plans';
 		$this->page_data['items'] = $this->items_model->getItemlist();
 		$this->page_data['plan'] = $this->plans_model->getById($id);
-		$this->load->view('plans/edit', $this->page_data);
+		$this->load->view('v2/pages/plans/edit', $this->page_data);
 	}
 
 	public function view($id){
 
+		$this->page_data['page']->title = 'Plans';
 		$this->page_data['items'] = $this->items_model->getItemlist();
 		$this->page_data['plan'] = $this->plans_model->getById($id);
-		$this->load->view('plans/view', $this->page_data);
+		$this->load->view('v2/pages/plans/view', $this->page_data);
 	}
 
 	public function save(){		

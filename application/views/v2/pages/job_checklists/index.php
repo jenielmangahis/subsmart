@@ -133,16 +133,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   </div>
 </div>
 
-
+<?php include viewPath('v2/pages/job_checklists/modals/delete_checklist_modal') ?>
 
 <script type="text/javascript">
 $(function(){
     $(".delete-job-checklist").click(function(){
+
       var cid = $(this).attr('data-id');
       $("#cid").val(cid);
       $("#modalDeleteChecklist").modal('show');
     });
 });
+function confirm(){
+      Swal.fire({
+          title: 'Confirm',
+          text: 'Your changes have not been saved. Are you sure you want to go back?',
+          icon: 'warning',
+          showCancelButton: true,
+          showDenyButton: true,
+          showConfirmButton: false,
+          confirmButtonColor: '#32243d',
+          confirmButtonText: 'Save',
+          denyButtonText: 'Go back without saving'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              console.log('sure');
+          } else if (result.isDenied) {
+              location.href= '<?= base_url('plans'); ?>';
+          }
+      });
+  }
+
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
 

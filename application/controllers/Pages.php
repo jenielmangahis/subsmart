@@ -338,16 +338,12 @@ class Pages extends MYF_Controller {
     	$this->load->model('Jobs_model');
     	$this->load->model('AcsProfile_model');
     	$this->load->model('Clients_model');
+    	$this->load->model('CompanyOnlinePaymentAccount_model');
 
     	$this->load->helper(array('hashids_helper'));
 
-    	// Set variables
-		$merchantID = "2179135"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
-		$merchantUserID = "adiAPI"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
-		$merchantPinCode = "U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR"; //Converge PIN (64 CHAR A/N)
-
-		//$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-		$url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+    	$token = '';
+		$is_success = false;
 
 		$post = $this->input->post();
 		$job_id   = hashids_decrypt($post['job_id'], '', 15);
@@ -356,51 +352,71 @@ class Pages extends MYF_Controller {
     	$job      = $this->Jobs_model->get_specific_job($job_id);
     	$customer = $this->AcsProfile_model->getByProfId($job->customer_id);
     	$client   = $this->Clients_model->getById($job->company_id);
-		/*Payment Field Variables*/
 
-		// In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
-		$firstname = $customer->first_name; //Post first name
-		$lastname  = $customer->last_name; //Post first name
-		$address   = $customer->mail_add;
-		$zipcode   = $customer->zip_code;
-		$amount    = $post['total_amount']; //Post Tran Amount
-		//$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture user-defined ssl_merchant_txn_id as POST data
-		//$invoicenumber = $_POST['ssl_invoice_number']; //Capture user-defined ssl_invoice_number as POST data
+    	$onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+    	if( $onlinePaymentAccount ){
+    		// Set variables
+    		$merchantID = $onlinePaymentAccount->converge_merchant_id;
+    		$merchantUserID = $onlinePaymentAccount->converge_merchant_user_id;
+    		$merchantPinCode = $onlinePaymentAccount->converge_merchant_pin;
 
-		//Follow the above pattern to add additional fields to be sent in curl request below.
+	    	/*$merchantID = "2159250"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+			$$merchantUserID = "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+			$merchantPinCode = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)*/
 
-		$ch = curl_init();    // initialize curl handle
-		curl_setopt($ch, CURLOPT_URL,$url); // set url to post to
-		curl_setopt($ch,CURLOPT_POST, true); // set POST method
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			/*$merchantID = "2179135"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+			$merchantUserID = "adiAPI"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+			$merchantPinCode = "U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR"; //Converge PIN (64 CHAR A/N)*/
 
-		// Set up the post fields. If you want to add custom fields, you would add them in Converge, and add the field name in the curlopt_postfields string.
-		curl_setopt($ch,CURLOPT_POSTFIELDS,
-		"ssl_merchant_id=$merchantID".
-		"&ssl_user_id=$merchantUserID".
-		"&ssl_pin=$merchantPinCode".
-		"&ssl_transaction_type=CCSALE".
-		"&ssl_first_name=$firstname".
-		"&ssl_last_name=$lastname".
-		"&ssl_avs_address=$address".
-        "&ssl_avs_zip=$zipcode".
-		"&ssl_get_token=Y".
-		"&ssl_add_token=Y".
-		"&ssl_amount=$amount"
-		);
+			//$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
+			$url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
 
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_VERBOSE, true);
 
-		$result = curl_exec($ch); // run the curl procss
-		curl_close($ch); // Close cURL
+			/*Payment Field Variables*/
+			// In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
+			$firstname = $customer->first_name; //Post first name
+			$lastname  = $customer->last_name; //Post first name
+			$address   = $customer->mail_add;
+			$zipcode   = $customer->zip_code;
+			$amount    = $post['total_amount']; //Post Tran Amount
+			//$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture user-defined ssl_merchant_txn_id as POST data
+			//$invoicenumber = $_POST['ssl_invoice_number']; //Capture user-defined ssl_invoice_number as POST data
 
-		//session tokens need to be URL encoded
-		//$token = urlencode($result);
-		$token = $result;
-		$is_success = true;
+			//Follow the above pattern to add additional fields to be sent in curl request below.
+
+			$ch = curl_init();    // initialize curl handle
+			curl_setopt($ch, CURLOPT_URL,$url); // set url to post to
+			curl_setopt($ch,CURLOPT_POST, true); // set POST method
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+			// Set up the post fields. If you want to add custom fields, you would add them in Converge, and add the field name in the curlopt_postfields string.
+			curl_setopt($ch,CURLOPT_POSTFIELDS,
+			"ssl_merchant_id=$merchantID".
+			"&ssl_user_id=$merchantUserID".
+			"&ssl_pin=$merchantPinCode".
+			"&ssl_transaction_type=CCSALE".
+			"&ssl_first_name=$firstname".
+			"&ssl_last_name=$lastname".
+			"&ssl_avs_address=$address".
+	        "&ssl_avs_zip=$zipcode".
+			"&ssl_get_token=Y".
+			"&ssl_add_token=Y".
+			"&ssl_amount=$amount"
+			);
+
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+			$result = curl_exec($ch); // run the curl procss
+			curl_close($ch); // Close cURL
+
+			//session tokens need to be URL encoded
+			//$token = urlencode($result);
+			$token = $result;
+			$is_success = true;
+    	}    	
 
 		$json_data = ['is_success' => $is_success, 'token' => $token];
 
