@@ -220,7 +220,7 @@ label>input {
     </div>
 </div>
 <!-- Modal -->
-<?php include viewPath('v2/pages/plans/modals/add_modal') ?>
+<?php include viewPath('v2/includes/plans/add_modal') ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script src="<?php echo $url->assets ?>js/custom.js"></script>
 

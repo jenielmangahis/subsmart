@@ -5,7 +5,7 @@
             <option value="<?=$accounts[array_key_first($accounts)]->id?>" selected><?=$accounts[array_key_first($accounts)]->name?></option>
         </select>
     </div>
-    <div class="col-md-2 d-flex align-items-center">
+    <div class="col-12 col-md-2 d-flex align-items-center">
         <h6>Balance <?=str_replace('$-', '-$', '$'.number_format(floatval($accounts[array_key_first($accounts)]->balance), 2, '.', ','))?></h6>
     </div>
     <div class="col-12 col-md-2">

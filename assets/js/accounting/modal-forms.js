@@ -248,7 +248,6 @@ $(function() {
         payrollFormData.set('pay_from_account', $('#bank-account').val());
         payrollFormData.set('pay_period', $('#payPeriod').val());
         payrollFormData.set('pay_date', $('#payDate').val());
-        payrollFormData.set('pay_date', $('#payDate').val());
 
         $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
             var row = $(this).closest('tr');

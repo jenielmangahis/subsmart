@@ -34,8 +34,6 @@
     width: 50%;
     padding: 10px;
     font-size: 17px;
-    background-color: #32243d;
-    color: #ffff;
     margin: 10px 0px;
 }
 .checklist-container li a{
@@ -81,14 +79,24 @@
                 <?php } ?>
             </select>
         </div> 
-        <div class="checklist-items">
-            <h5 style="width:50%;">Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><i class='bx bx-plus' ></i> Add Item</a></h5>
-            <ul class="checklist-container"></ul>
-        </div>  
+        <div class="row">
+            <div class="col-6">
+            <div class="checklist-items">
+            <h5 >Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><i class='bx bx-plus' ></i> Add Item</a></h5>
+            <table class="nsm-table">
+                <tbody>
+                    <tr class="checklist-container"></tr>
+                </tbody>
+            </table>
+        </div> 
+            </div>
+        </div> 
         <div class="col-md-5" style="padding: 0px;margin-top: 110px;">                            
             <button type="submit" class="nsm-button primary btn-save-checklist">Save</button>
             <a class="nsm-button" href="<?php echo base_url('job_checklists/list'); ?>">Cancel</a>
         </div>
+        <?php echo form_close(); ?>
+
     </div>
 </div>
 <!-- Modals -->
@@ -104,7 +112,7 @@ $(function(){
     $("#frm-add-checklist-item").submit(function(e){
         e.preventDefault();
         var item_name = $("#item_name").val();
-        var add_row = '<li><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'<a class="btn-remove-checklist-item btn btn-danger btn-sm" href="javascript:void(0);"><i class="fa fa-trash"></i></a></li>';
+        var add_row = '<td><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'</td><td class="text-end"><a class="btn-remove-checklist-item nsm-button error small" href="javascript:void(0);"><i class="bx bx-trash"></i></a></td>';
 
         $(".checklist-container").append(add_row).children(':last').hide().fadeIn(300);
 

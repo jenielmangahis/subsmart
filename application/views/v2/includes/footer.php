@@ -37,6 +37,8 @@
     <?php if( isset($enable_twilio_call) ){ ?>
     <script src="<?= base_url("assets/js/twilio.min.js"); ?>"></script>
     <?php } ?>
+<script src="<?php echo $url->assets ?>js/custom.js"></script>
+
     <?php if( isset($enable_ringcentral_call) ){ ?>
     <script type="text/javascript" src="//cdn.jsdelivr.net/es6-promise/3.1.2/es6-promise.js"></script>
     <script type="text/javascript" src="//cdn.pubnub.com/sdk/javascript/pubnub.4.4.2.js"></script>
