@@ -338,6 +338,7 @@ class Pages extends MYF_Controller {
     	$this->load->model('Jobs_model');
     	$this->load->model('AcsProfile_model');
     	$this->load->model('Clients_model');
+    	$this->load->model('CompanyOnlinePaymentAccount_model');
 
     	$this->load->helper(array('hashids_helper'));
 
