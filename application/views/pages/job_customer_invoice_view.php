@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </style>
 <!-- Remove demo in url for production -->
 <script src="https://api.demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
-<script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script>
+<!-- <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
 <div>
     <!-- page wrapper start -->
     <div>
@@ -296,7 +296,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                           <?php if($onlinePaymentAccount){ ?>
                                             <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
                                               <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY NOW</a>
-                                              <div id="applepay-button" class="apple-pay-button"></div>
+                                              <!-- <div id="applepay-button" class="apple-pay-button"></div> -->
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                               <!-- <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a> -->
@@ -412,10 +412,10 @@ $(function(){
       };
       PayWithConverge.open(paymentFields, callback);
 
-      var paymentData = {
+      /*var paymentData = {
                     ssl_txn_auth_token: token
                                     };
-        ConvergeEmbeddedPayment.initApplePay('applepay-button', paymentData, callback);
+        ConvergeEmbeddedPayment.initApplePay('applepay-button', paymentData, callback);*/
 
       return false;
   }
