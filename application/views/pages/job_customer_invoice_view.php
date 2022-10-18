@@ -96,7 +96,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 </style>
 <!-- Remove demo in url for production -->
-<script src="https://api.demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
 <!-- <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
 <div>
     <!-- page wrapper start -->
