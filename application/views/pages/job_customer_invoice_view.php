@@ -398,12 +398,13 @@ $(function(){
               //showResult("cancelled", "");
           },
           onDeclined: function (response) {
-            Swal.fire({
+            /*Swal.fire({
               icon: 'error',
               title: 'Declined',
               text: JSON.stringify(response, null, '\t')
-            });
+            });*/
             //showResult("declined", JSON.stringify(response, null, '\t'));
+            updateJobToPaid();
           },
           onApproval: function (response) {              
               updateJobToPaid();
