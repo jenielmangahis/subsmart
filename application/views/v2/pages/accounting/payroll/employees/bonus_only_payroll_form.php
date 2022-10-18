@@ -43,7 +43,7 @@
                     <?php if(count($payDetails) > 0) : ?>
                     <?php foreach($payDetails as $payDetail) : ?>
                         <?php $employee = $this->users_model->getUser($payDetail->user_id);?>
-                        <tr>
+                        <tr data-method="<?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$employee->id?>" checked>

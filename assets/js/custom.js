@@ -2675,11 +2675,13 @@ $(document).on("click", "#add_another_zone", function (e) {
 
   $("#table_body_zone").append(html);
 });
-
+var isConfirm = 0;
 $(document).on("click", ".remove", function (e) {
   e.preventDefault();
   $(this).parent().parent().remove();
   var idd = this.id;
+  isConfirm = 1;
+  console.log(isConfirm);
   var count = parseInt($("#count").val()) - 1;
   $("#count").val(count);
   // calculation(count);

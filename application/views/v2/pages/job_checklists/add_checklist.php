@@ -84,8 +84,7 @@
             <div class="checklist-items">
             <h5 >Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><i class='bx bx-plus' ></i> Add Item</a></h5>
             <table class="nsm-table">
-                <tbody>
-                    <tr class="checklist-container"></tr>
+                <tbody class="checklist-container">
                 </tbody>
             </table>
         </div> 
@@ -112,7 +111,7 @@ $(function(){
     $("#frm-add-checklist-item").submit(function(e){
         e.preventDefault();
         var item_name = $("#item_name").val();
-        var add_row = '<td><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'</td><td class="text-end"><a class="btn-remove-checklist-item nsm-button error small" href="javascript:void(0);"><i class="bx bx-trash"></i></a></td>';
+        var add_row = '<tr><td><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'</td><td class="text-end"><a class="btn-remove-checklist-item nsm-button error small" href="javascript:void(0);"><i class="bx bx-trash"></i></a></td></tr>';
 
         $(".checklist-container").append(add_row).children(':last').hide().fadeIn(300);
 
@@ -122,11 +121,12 @@ $(function(){
     });
 
     $(document).on('click', '.btn-remove-checklist-item', function(){
-        console.log($(this).parent('ul').find('li'));
-        console.log($(this).closest('li'));
-        $(this).closest('li').fadeOut(300, function(){
-            $(this).remove();
-        });
+        // console.log($(this).parent('ul').find('li'));
+        // console.log($(this).closest('li'));
+        // $(this).closest('li').fadeOut(300, function(){
+        //     $(this).remove();
+        // });
+        $(this).parent().parent().remove();
     });
 
     $("#frm-create-checklist").submit(function(e){

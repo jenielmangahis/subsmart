@@ -360,7 +360,7 @@ function TemplateCreate() {
 
     let $button = $(event.currentTarget);
     if (event.type.toLowerCase() === "submit") {
-      $button = $form.find(".nsm-button.primary");
+      $button = $form.find(".enter-fields");
     }
 
     $button.attr("disabled", true);
@@ -378,7 +378,7 @@ function TemplateCreate() {
     $button.find(".spinner-border").addClass("d-none");
 
     let nextUrl = `${prefixURL}/vault_v2/mylibrary`;
-    if ($button.hasClass("nsm-button.primary")) {
+    if ($button.hasClass("enter-fields")) {
       nextUrl = `${prefixURL}/esign_v2/Files?template_id=${templateId}&next_step=3`;
     }
 
@@ -539,30 +539,38 @@ function TemplateCreate() {
     const fakeEvent = { target: { files: templateFiles } };
     await onChangeFile(fakeEvent);
 
-    let customerSet = false;
     let _recipients = recipients.map((r) => {
       if (!workorder && !job) return r;
-      if (customerSet || r.name || r.email) return r;
+      if (r.name || r.email) return r;
 
       const { first_name, last_name, email } = workorder || job;
-      r.name = `${first_name} ${last_name}`;
-      r.email = email;
-      customerSet = true;
+      if (email) {
+        r.email = email;
+      }
+
+      if (first_name && last_name) {
+        r.name = `${first_name} ${last_name}`;
+      }
+
       return r;
     });
 
-    // autopopulate customer/client if customer_id param is set
+    // force autopopulate customer/client if customer is set
     if (customer && "first_name" in customer && "last_name" in customer) {
-      _recipients = recipients.map((r) => {
+      _recipients = _recipients.map((r) => {
         if (!["CLIENT", "CUSTOMER"].includes(r.role_name.toUpperCase())) {
           return r;
         }
 
-        if (customerSet || r.name || r.email) return r;
         const { first_name, last_name, email } = customer;
-        r.name = `${first_name} ${last_name}`;
-        r.email = email;
-        customerSet = true;
+        if (email) {
+          r.email = email;
+        }
+
+        if (first_name && last_name) {
+          r.name = `${first_name} ${last_name}`;
+        }
+
         return r;
       });
     }
@@ -583,20 +591,35 @@ function TemplateCreate() {
 
       if (role === "ESA Rep".toUpperCase()) {
         if (job.employee) {
-          recipient.email = job.employee.email;
-          recipient.name = `${job.employee.FName} ${job.employee.LName}`;
+          if (job.employee.email) {
+            recipient.email = job.employee.email;
+          }
+
+          if (job.employee.FName && job.employee.LName) {
+            recipient.name = `${job.employee.FName} ${job.employee.LName}`;
+          }
         }
       }
 
       if (role === "Client".toUpperCase()) {
-        recipient.email = job.email;
-        recipient.name = `${job.first_name} ${job.last_name}`;
+        if (job.email) {
+          recipient.email = job.email;
+        }
+
+        if (job.first_name && job.last_name) {
+          recipient.name = `${job.first_name} ${job.last_name}`;
+        }
       }
 
       if (role === "Admin".toUpperCase()) {
         if (job.admin) {
-          recipient.email = job.admin.email;
-          recipient.name = `${job.admin.FName} ${job.admin.LName}`;
+          if (job.admin.email) {
+            recipient.email = job.admin.email;
+          }
+
+          if (job.admin.FName && job.admin.LName) {
+            recipient.name = `${job.admin.FName} ${job.admin.LName}`;
+          }
         }
       }
     });

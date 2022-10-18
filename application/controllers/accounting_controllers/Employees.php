@@ -1077,4 +1077,10 @@ class Employees extends MY_Controller {
 
         $this->load->view('v2/pages/accounting/payroll/employees/bonus_payroll_summary', $this->page_data);
     }
+
+    public function paycheck_list()
+    {
+        $this->page_data['page']->title = 'Paycheck list';
+        $this->load->view('v2/pages/accounting/payroll/employees/paycheck_list', $this->page_data);
+    }
 }
