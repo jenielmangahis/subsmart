@@ -310,8 +310,8 @@ class Pages extends MYF_Controller {
     	$this->load->helper(array('hashids_helper'));
 
     	// decrypt job id
-    	//$job_id   = hashids_decrypt($eid, '', 15);
-    	$job_id   = $eid;
+    	$job_id   = hashids_decrypt($eid, '', 15);
+    	//$job_id   = $eid;
     	$job      = $this->jobs_model->get_specific_job($job_id);
     	if($job){
             $get_company_info = array(
