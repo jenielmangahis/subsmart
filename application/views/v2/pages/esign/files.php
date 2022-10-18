@@ -267,7 +267,7 @@ echo put_header_assets();
     <input type="hidden" value="3" name="next_step" />
     <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
 
-    <div class="loader">
+    <div class="loader" style="position:fixed;left:0;top:0;height:100vh;width:100vw;">
         <div class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
         </div>
@@ -283,21 +283,21 @@ echo put_header_assets();
                                 <button
                                     data-recipient-color="<?=$recipients[0]['color'];?>"
                                     data-recipient-id="<?=$recipients[0]['id'];?>"
-                                    class="btn btn-secondary dropdown-toggle"
+                                    class="nsm-button dropdown-toggle"
+                                    style="width: 100%;margin:0;"
                                     type="button"
                                     id="recipientsSelect"
                                     data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
                                 >
                                     <i class="fa fa-circle mr-1"></i>
                                     <span><?=$recipients[0]['name'];?></span>
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="recipientsSelect">
+                                <div class="dropdown-menu" aria-labelledby="recipientsSelect" style="width: 100%;">
                                     <?php foreach ($recipients as $recipient): ?>
                                         <a
                                             href="#"
-                                            class="dropdown-item"
+                                            class="nsm-link dropdown-item"
+                                            style="padding: 8px 16px;"
                                             data-recipient-color="<?=$recipient['color'];?>"
                                             data-recipient-id="<?=$recipient['id'];?>"
                                         >
@@ -478,7 +478,7 @@ echo put_header_assets();
 
     <div class="esignBuilder__footer">
         <button type="button" class="btn btn-secondary mr-3 d-none">Back</button>
-        <button type="button" class="btn esignBuilder__submit btn-success" id="submitBUtton">
+        <button type="button" class="nsm-button primary esignBuilder__submit" id="submitBUtton">
             <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -679,7 +679,7 @@ echo put_header_assets();
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
 <?php endif;?>
 
-<?php echo put_footer_assets(); ?>
+<?php // echo put_footer_assets(); ?>
 <style>
     .esignBuilder__field,
     .ui-draggable-dragging {
@@ -701,5 +701,27 @@ echo put_header_assets();
 
     .menu_item:hover {
         background: unset;
+    }
+
+    .content_wrap {
+        padding-top: 1rem !important;
+    }
+    .content_sidebar.content_sidebar-left {
+        position: absolute !important;
+        padding-top: 0 !important;
+    }
+    [id^=pdf-render] {
+        border: 1px solid #d8d8d8;
+    }
+    .nsm-nav .nsm-page-title h4 {
+        font-weight: 700 !important;
+        margin: unset !important;
+        line-height: 0.8 !important;
+        font-size: 1.5rem !important;
+        font-family: inherit !important;
+        text-transform: none !important;
+    }
+    .btn-success {
+        border-color: #198754 !important;
     }
 </style>

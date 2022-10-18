@@ -5,7 +5,7 @@
                 <span>Employees</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Paycheck list'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('accounting/employees') ?>'">
+        <li class="<?php if($page->title == 'Paycheck list'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('accounting/employees/paycheck-list') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Paycheck list</span>
             </a>

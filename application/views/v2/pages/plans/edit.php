@@ -167,7 +167,7 @@ label>input {
 <?php include viewPath('v2/includes/plans/edit_modal') ?>
 <!-- page wrapper end -->
 <?php include viewPath('v2/includes/footer'); ?>
-<!-- <script src="<?php echo $url->assets ?>js/custom.js"></script> -->
+<script src="<?php echo $url->assets ?>js/custom.js"></script>
 <script>
    $(document).ready(function() {   
 	<?php  for($cc=0;$cc<=count(unserialize($plan->items));$cc++){ ?>

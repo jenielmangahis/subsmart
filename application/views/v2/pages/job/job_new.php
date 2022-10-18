@@ -13,9 +13,11 @@
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
 
 <!-- Script for autosaving form -->
+<?php if(!isset($jobs_data)): ?>
+    <!-- autosave only when creating -->
+    <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
+<?php endif; ?>
 
-
-<script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
 
 <style>
     .nsm-table {

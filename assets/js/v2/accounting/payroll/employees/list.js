@@ -788,6 +788,42 @@ $(document).on('click', '#bonus-payroll-modal #continue-bonus-payroll', function
     });
 });
 
+$(document).on('change', '#bonus-payroll-modal #payroll-table thead .select-all', function() {
+    $('#bonus-payroll-modal #payroll-table tbody .select-one').prop('checked', $(this).prop('checked')).trigger('change');
+});
+
+$(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one', function() {
+    var row = $(this).closest('tr');
+
+    if($(this).prop('checked')) {
+        row.find('td:nth-child(3)').html(row.data().method);
+        row.find('td:nth-child(4)').html('<input type="number" name="bonus[]" step="0.01" class="form-control nsm-field text-end">');
+        row.find('td:nth-child(5)').html('<input type="text" name="memo[]" class="form-control nsm-field">');
+        row.find('td:nth-child(6)').html('<p class="m-0"><span class="total-pay">$0.00</span></p>');
+    } else {
+        row.find('td:not(:first-child, :nth-child(2))').html('');
+    }
+});
+
+$(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]', function() {
+    if($(this).val() !== '') {
+        $(this).val(formatter.format(parseFloat($(this).val())).replace('$', ''));
+        $(this).closest('tr').find('.total-pay').html(formatter.format($(this).val()));
+    } else {
+        $(this).closest('tr').find('.total-pay').html('$0.00');
+    }
+
+    var total = 0.00;
+    $('#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]').each(function() {
+        if($(this).val() !== "") {
+            total += parseFloat($(this).val());
+        }
+    });
+
+    $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4)').html(formatter.format(parseFloat(total)));
+    $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formatter.format(parseFloat(total)));
+});
+
 $(document).on('click', '#bonus-payroll-modal #bonus-pay-select', function() {
     $('#bonus-payroll-modal .modal-content').html(bonusPayAsFields);
     $(`#bonus-payroll-modal [name="bonus_as"][value="${bonusPayType}"]`).prop('checked', true).trigger('change');
@@ -900,6 +936,7 @@ $('#commission-payroll-modal .modal-body select:not(#bank-account)').select2({
     minimumResultsForSearch: -1,
     dropdownParent: $('#commission-payroll-modal')
 });
+
 $('#commission-payroll-modal .modal-body select#bank-account').select2({
     ajax: {
         url: '/accounting/get-dropdown-choices',
@@ -928,7 +965,7 @@ $('#commission-only').on('click', function(e) {
 });
 
 $('#commission-payroll-modal #payroll-table thead .select-all').on('change', function() {
-    $('#commission-payroll-modal #payroll-table tbody .select-one').prop('checked', $(this).prop('checked'));
+    $('#commission-payroll-modal #payroll-table tbody .select-one').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
 $('#commission-payroll-modal #payroll-table tbody .select-one').on('change', function() {
@@ -942,6 +979,25 @@ $('#commission-payroll-modal #payroll-table tbody .select-one').on('change', fun
     } else {
         row.find('td:not(:first-child, :nth-child(2))').html('');
     }
+});
+
+$(document).on('change', '#commission-payroll-modal #payroll-table tbody [name="commission[]"]', function() {
+    if($(this).val() !== '') {
+        $(this).val(formatter.format(parseFloat($(this).val())).replace('$', ''));
+        $(this).closest('tr').find('.total-pay').html(formatter.format($(this).val()));
+    } else {
+        $(this).closest('tr').find('.total-pay').html('$0.00');
+    }
+
+    var total = 0.00;
+    $('#commission-payroll-modal #payroll-table tbody [name="commission[]"]').each(function() {
+        if($(this).val() !== "") {
+            total += parseFloat($(this).val());
+        }
+    });
+
+    $('#commission-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4)').html(formatter.format(parseFloat(total)));
+    $('#commission-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formatter.format(parseFloat(total)));
 });
 
 $('#commission-payroll-modal #preview-payroll').on('click', function() {

@@ -260,10 +260,10 @@ class Esign_v2 extends MY_Controller
             'assets/js/esign/docusign/input.autoresize.js',
             'assets/js/esign/v2/step1.js',
             'assets/js/esign/v2/step2.js',
-            'assets/js/esign/step3.js',
+            'assets/js/esign/v2/step3.js',
 
-            'assets/js/v2/bootstrap.bundle.min.js',
-            'assets/js/v2/main.js',
+            // 'assets/js/v2/bootstrap.bundle.min.js',
+            // 'assets/js/v2/main.js',
         ]);
         $this->page_data['page']->title = 'Add Documents to the Envelope';
         $this->load->view('v2/pages/esign/files', $this->page_data);

@@ -82,34 +82,40 @@
                 <option <?= $checklist->attach_to_job_id == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
             <?php } ?>
             </select>
-        </div>          
-        <br />
-        <div class="checklist-items">
-        <h5>Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><i class='bx bx-plus' ></i> Add Item</a></h5>
-        <table class="nsm-table">
-            <thead>
-                <tr>
-                    <td>Item Name</td>
-                    <td>Action</td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($checklistItems as $ci){ ?>
-                    <tr>
-                        <td>
-                            <input type="hidden" name="checklistItems[]" value="<?php echo $ci->item_name; ?>" />
-                            <?php echo $ci->item_name; ?>
-                        </td>
-                        <td>
-                            <a class="btn-remove-checklist-item nsm-button danger" href="javascript:void(0);"><i class='bx bx-trash'></i></a>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
+        </div>   
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="checklist-items">
+                <h5>Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><i class='bx bx-plus' ></i> Add Item</a></h5>
+                <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td>Item Name</td>
+                            <td class="text-end">Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($checklistItems as $ci){ ?>
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="checklistItems[]" value="<?php echo $ci->item_name; ?>" />
+                                    <?php echo $ci->item_name; ?>
+                                </td>
+                                <td class="text-end">
+                                    <a class="btn-remove-checklist-item nsm-button error" href="javascript:void(0);"><i class='bx bx-trash'></i></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
 
-        </table>
-        </div>              
-        <div class="col-md-5" style="padding: 0px;margin-top: 110px;">                            
+                </table>
+            </div>
+        </div>
+    </div>       
+        <br />
+                      
+        <div class="col-md-5">                            
         <button type="submit" class="nsm-button primary btn-update-checklist">Save</button>
         <a class="btn btn-default" href="<?php echo base_url('job_checklists/list'); ?>">Cancel</a>
         </div>
@@ -121,6 +127,7 @@
 <?php include viewPath('v2/pages/job_checklists/modals/edit_checklist_modal'); ?>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<script src="<?php echo $url->assets ?>js/custom.js"></script>
 
 <script>
 $(function(){
@@ -141,11 +148,13 @@ $(function(){
     });
 
     $(document).on('click', '.btn-remove-checklist-item', function(){
-        console.log($(this).parent('ul').find('li'));
-        console.log($(this).closest('li'));
-        $(this).closest('li').fadeOut(300, function(){
-            $(this).remove();
-        });
+        // console.log($(this).parent('ul').find('li'));
+        // console.log($(this).closest('li'));
+        // $(this).closest('li').fadeOut(300, function(){
+        //     $(this).remove();
+        // });
+        $(this).parent().parent().remove();
+
     });
 
     $("#frm-update-checklist").submit(function(e){

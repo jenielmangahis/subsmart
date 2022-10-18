@@ -346,7 +346,8 @@ class Pages extends MYF_Controller {
 		$is_success = false;
 
 		$post = $this->input->post();
-		$job_id   = hashids_decrypt($post['job_id'], '', 15);
+		//$job_id   = hashids_decrypt($post['job_id'], '', 15);
+		$job_id   = $post['job_id'];
     	$job      = $this->Jobs_model->get_specific_job($job_id);
 
     	$job      = $this->Jobs_model->get_specific_job($job_id);

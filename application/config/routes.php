@@ -622,6 +622,7 @@ $route['accounting/employees/generate-commission-payroll']['post'] = 'accounting
 $route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_controllers/employees/get_employee_pay_details/$1';
 $route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
 $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
+$route['accounting/employees/paycheck-list'] = 'accounting_controllers/employees/paycheck_list';
 
 $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
 $route['accounting/contractors/load']['post'] = 'accounting_controllers/contractors/load_contractors';

@@ -3279,7 +3279,7 @@ $(document).ready(function(){
           $preview.find("span").css({ display: "none" });
         },
         edit: function () {
-          window.location = `${prefixURL}/eSign/templateEdit?id=${id}`;
+          window.location = `${prefixURL}/eSign_v2/templateEdit?id=${id}`;
         }
       }
   
