@@ -4,10 +4,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header_front'); ?>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
-<?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
-<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
-<script src="https://api.convergepay.com/hosted-payments/Checkout.js"></script>
-<?php } ?>
+<?php //if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+<!-- Remove demo in url for production -->
+<!-- <script src="https://api.demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
+<?php //} ?>
 <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
 <?php } ?>
@@ -94,7 +95,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         top: 19px;
     }
 </style>
-<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<!-- Remove demo in url for production -->
+<script src="https://api.demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script>
 <div>
     <!-- page wrapper start -->
     <div>
