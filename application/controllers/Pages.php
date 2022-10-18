@@ -373,7 +373,6 @@ class Pages extends MYF_Controller {
 			//$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
 			$url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
 
-
 			/*Payment Field Variables*/
 			// In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
 			$firstname = $customer->first_name; //Post first name
