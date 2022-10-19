@@ -149,6 +149,11 @@ class General_model extends MY_Model {
             return  $this->db->update($table, $input, array($field => $id)) ? true : false;
         }
     }
+    public function update_job_items($input, $where){
+        $this->db->where('job_id', $where['job_id']);
+        $this->db->where('items_id', $where['items_id']);
+        $this->db->update('job_items', $input);
+    }
 
     public function add_($input,$table)
     {

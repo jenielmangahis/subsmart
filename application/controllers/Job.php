@@ -1655,12 +1655,18 @@ class Job extends MY_Controller
                     );
                     $isItem = $this->general->get_data_with_param($check_item, false);
 
+                    $job_items_data = array();
+                    $job_items_data['qty'] = $input['item_qty'][$xx];
+                    $where['job_id'] = $isJob->id;
+                    $where['items_id'] = $input['item_id'][$xx];
                     if(empty($isItem)){
-                        $job_items_data = array();
-                        $job_items_data['job_id'] = $isJob->id; //from jobs table
-                        $job_items_data['items_id'] = $input['item_id'][$xx];
-                        $job_items_data['qty'] = $input['item_qty'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
+                        $job_items_data['items_id'] = $input['item_id'][$xx];
+                        $job_items_data['job_id'] = $isJob->id; //from jobs table
+
+                    }else{
+                        $this->general->update_job_items($job_items_data, $where);
+
                     }
                     unset($job_items_data);
                 }
@@ -1735,7 +1741,7 @@ class Job extends MY_Controller
             header('content-type: application/json');
             exit(json_encode(['id' => $job_number]));
         } else {
-            $data_arr = array("data" => "Success");
+            $data_arr = array("data" => "Success", "qty" => $input['item_qty']);
             exit(json_encode($data_arr));
         }
     }

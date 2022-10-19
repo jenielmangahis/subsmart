@@ -2520,7 +2520,8 @@ class Accounting_modals extends MY_Controller
             $employees = [];
 
             if ($payrollId > 0) {
-                foreach ($data['select'] as $key => $value) {
+                $paychecks = [];
+                foreach ($data['employees'] as $key => $value) {
                     $emp = $this->users_model->getUser($value);
                     $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
                     $empTotalPay = (floatval(str_replace(',', '', $empPayDetails->pay_rate)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]))) + floatval(str_replace(',', '', $data['commission'][$key])) + floatval(str_replace(',', '', $data['bonus'][$key]));
@@ -2540,11 +2541,20 @@ class Accounting_modals extends MY_Controller
                         'employee_net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
                         'employee_memo' => ($data['memo'][$key] === '') ? null : $data['memo'][$key],
                     ];
+
+                    $paychecks[] = [
+                        'company_id' => $company_id,
+                        'employee_id' => $value,
+                        'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
+                        'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
+                        'status' => 1
+                    ];
                 }
             }
 
             if (count($employees) > 0) {
                 $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployees($employees);
+                $insertPaychecks = $this->accounting_paychecks_model->insert_by_batch($paychecks);
 
                 $totalNetPay = array_sum(array_column($employees, 'employee_net_pay'));
                 $account = $this->chart_of_accounts_model->getById($data['pay_from_account']);

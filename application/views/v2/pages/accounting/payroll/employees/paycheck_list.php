@@ -11,18 +11,50 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
+                    <div class="col-12 col-md-4 grid-mb"></div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3" id="expense-table-filters" style="width: max-content">
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content" id="table-filters">
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col grid-mb">
                                         <label for="filter-employee">Employee</label>
                                         <select class="nsm-field form-select" name="filter_employee" id="filter-employee" data-applied="all-employees">
                                             <option value="all-employees" selected>All employees</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-4 grid-mb">
+                                        <label for="filter-date-range">Date range</label>
+                                        <select class="nsm-field form-select" name="filter_date_range" id="filter-date-range" data-applied="last-pay-date">
+                                            <option value="last-pay-date" selected>Last pay date</option>
+                                            <option value="this-month">This month</option>
+                                            <option value="this-quarter">This quarter</option>
+                                            <option value="this-year">This year</option>
+                                            <option value="last-month">Last month</option>
+                                            <option value="last-quarter">Last quarter</option>
+                                            <option value="last-year">Last year</option>
+                                            <option value="first-quarter">First quarter</option>
+                                            <option value="second-quarter">Second quarter</option>
+                                            <option value="third-quarter">Third quarter</option>
+                                            <option value="fourth-quarter">Fourth quarter</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-4 grid-mb">
+                                        <label for="filter-from-date">From</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4 grid-mb">
+                                        <label for="filter-to-date">To</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
@@ -40,7 +72,13 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Share <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="print-save-pdf">Print or save PDF</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>

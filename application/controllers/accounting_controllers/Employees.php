@@ -1080,6 +1080,10 @@ class Employees extends MY_Controller {
 
     public function paycheck_list()
     {
+        add_footer_js(array(
+            "assets/js/v2/accounting/payroll/employees/paycheck-list.js"
+        ));
+
         $this->page_data['page']->title = 'Paycheck list';
         $this->load->view('v2/pages/accounting/payroll/employees/paycheck_list', $this->page_data);
     }
