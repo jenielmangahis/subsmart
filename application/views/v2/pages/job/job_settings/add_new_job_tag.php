@@ -64,7 +64,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <div class="col-6 grid-mb">
         <?php include viewPath('flash'); ?>
-        <?php echo form_open_multipart('job/save_job_tag', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <!-- <?php //echo form_open_multipart('job/save_job_tag', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> -->
+          <form method="post" id="tags_form">
             <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
             <div class="form-group">
                 <label>Job Tag Name</label> <span class="form-required">*</span>
@@ -76,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="width: 20%;display: inline-block;" id="icon-pick-name"><br />
                 <div class="form-check" style="margin-top: 10px;">
                 <input class="form-check-input" type="checkbox" name="is_default_icon" value="1" id="iconList">
-                <label class="form-check-label" for="iconList">
+                <label class="form-check-label">
                     Pick from list
                 </label>
                 </div>
@@ -85,12 +86,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <a class="nsm-button" href="<?php echo base_url('job/job_tags'); ?>">Cancel</a>
             <button type="submit" class="nsm-button primary">Submit</button>
             </div>
-        <?php echo form_close(); ?>
+          </form>
+        <!-- <?php //echo form_close(); ?> -->
     </div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
+  
 $(function(){
+  $("#tags_form").submit(function(e) {
+    // const fd = new FormData();
+    if(!$('#input-upload-image').val() && !$('#iconList').is(':checked')){
+      e.preventDefault();
+      info_alert('', 'Please attach file!', 'warning');
+    }else{
+      $.ajax({
+          url:'<?php echo base_url();?>/job/save_job_tag',
+          type:"post",
+          data:new FormData(this),
+          processData:false,
+          contentType:false,
+          cache:false,
+          async:false,
+          success: function(data){
+              info_alert('', 'Upload Image Successful!', 'success', 1);
+        }
+      });
+    }
+  })
   $("#icon-pick-name").hide();
   $(".a-icon").click(function(){
     var icon_name = $(this).attr("data-name");
@@ -114,4 +137,19 @@ $(function(){
   });
 
 });
+function info_alert(head, message, info, reload){
+    Swal.fire({
+        title: head,
+        text: message,
+        icon: info,
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    })
+    if(reload == 1){
+      window.location.href='<?= base_url(); ?>job/job_tags';
+    }
+}
+
 </script>

@@ -107,13 +107,47 @@ class Contractors extends MY_Controller {
         $this->hasAccessModule(77); 
         
         add_footer_js(array(
-            "assets/js/accounting/payroll/contractors.js"
+            "assets/js/v2/accounting/payroll/contractors/list.js"
         ));
 
-        $this->page_data['contractors'] = $this->vendors_model->get_company_contractors([1]);
+        switch(get('status')) {
+            case 'inactive' :
+                $status = [
+                    0
+                ];
+            break;
+            case 'all' :
+                $status = [
+                    0,
+                    1
+                ];
+            break;
+            default :
+                $status = [
+                    1
+                ];
+            break;
+        }
+
+        $this->page_data['status'] = get('status');
+
+        $contractors = $this->vendors_model->get_company_contractors($status);
+
+        if(!empty(get('search'))) {
+            $search = get('search');
+            $contractors = array_filter($contractors, function($contractor, $key) use ($search) {
+                return stripos($contractor->display_name, $search) !== false;
+            }, ARRAY_FILTER_USE_BOTH);
+
+            $this->page_data['search'] = $search;
+        }
+
+
+        $this->page_data['contractors'] = $contractors;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Contractors";
-        $this->load->view('accounting/contractors/index', $this->page_data);
+        // $this->load->view('accounting/contractors/index', $this->page_data);
+        $this->load->view('v2/pages/accounting/payroll/contractors/list', $this->page_data);
     }
 
     public function load_contractors()

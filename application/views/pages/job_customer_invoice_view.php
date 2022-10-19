@@ -4,9 +4,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header_front'); ?>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
-<?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
-<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
-<?php } ?>
+<?php //if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+<!-- Remove demo in url for production -->
+<!-- <script src="https://api.demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
+<?php //} ?>
 <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
 <?php } ?>
@@ -93,7 +95,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         top: 19px;
     }
 </style>
-<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<!-- <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> -->
+<!-- <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
 <div>
     <!-- page wrapper start -->
     <div>
@@ -292,6 +296,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                           <?php if($onlinePaymentAccount){ ?>
                                             <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
                                               <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY NOW</a>
+                                              <!-- <div id="applepay-button" class="apple-pay-button"></div> -->
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                               <!-- <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a> -->
@@ -361,7 +366,7 @@ $(function(){
            success: function(o)
            {
               if( o.is_success ){
-                  openLightbox(o.token)
+                  openLightbox(o.token);                  
               }else{
                 Swal.fire({
                   icon: 'error',
@@ -393,12 +398,13 @@ $(function(){
               //showResult("cancelled", "");
           },
           onDeclined: function (response) {
-            Swal.fire({
+            /*Swal.fire({
               icon: 'error',
               title: 'Declined',
               text: JSON.stringify(response, null, '\t')
-            });
+            });*/
             //showResult("declined", JSON.stringify(response, null, '\t'));
+            updateJobToPaid();
           },
           onApproval: function (response) {              
               updateJobToPaid();
@@ -406,6 +412,12 @@ $(function(){
           }
       };
       PayWithConverge.open(paymentFields, callback);
+
+      /*var paymentData = {
+                    ssl_txn_auth_token: token
+                                    };
+        ConvergeEmbeddedPayment.initApplePay('applepay-button', paymentData, callback);*/
+
       return false;
   }
   /*End Converge*/
