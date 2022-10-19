@@ -374,9 +374,10 @@ class Events extends MY_Controller
                 'order_by' => 'id',
                 'ordering' => 'DESC',
             ),
-        );
+        );        
 		$this->page_data['page']->title = 'Event Tags';
         $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = 'Event Tags';
         $this->page_data['event_tags'] = $this->general->get_data_with_param($get_job_settings);
         $this->load->view('v2/pages/events/event_tags', $this->page_data);
     }
@@ -896,8 +897,10 @@ class Events extends MY_Controller
 
         $icons = $this->Icons_model->getAll();
 
+        $this->page_data['page']->title = 'Event Tags';
+        $this->page_data['page']->tab   = 'Event Tags';
         $this->page_data['icons'] = $icons;
-        $this->load->view('events/add_new_event_tag', $this->page_data);
+        $this->load->view('v2/pages/events/add_new_event_tag', $this->page_data);
     }
 
     public function edit_event_tags($id)
@@ -913,8 +916,10 @@ class Events extends MY_Controller
         $icons    = $this->Icons_model->getAll();
 
         $this->page_data['eventTag'] = $eventTag;
+        $this->page_data['page']->title = 'Event Tags';
+        $this->page_data['page']->tab   = 'Event Tags';
         $this->page_data['icons'] = $icons;
-        $this->load->view('events/edit_event_tag', $this->page_data);
+        $this->load->view('v2/pages/events/edit_event_tag', $this->page_data);
     }
 
     public function create_new_event_tag()

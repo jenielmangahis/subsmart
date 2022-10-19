@@ -41,13 +41,13 @@ class CronAutoSmsNotification_model extends MY_Model
         return $query;
     }
 
-    public function getByObjectId($obj_id, $filter = array())
+    public function getByObjectId($obj_id, $filters = array())
     {
         $this->db->select('*');
         $this->db->from($this->table);        
         $this->db->where('obj_id', $obj_id);
-        if( !empty($filter) ){
-            foreach($filter as $value){                
+        if( !empty($filters) ){
+            foreach($filters as $value){                            
                 $this->db->where($value['field'], $value['value']);
             }
         }
