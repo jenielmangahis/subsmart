@@ -183,10 +183,10 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                Zip Code
+                Zip Code <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
+                <input required data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
