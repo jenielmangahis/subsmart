@@ -405,7 +405,7 @@ $(function(){
            success: function(o)
            {
               if( o.is_success ){
-                  initiateApplePay(o.token);
+                  //initiateApplePay(o.token);
                   openLightbox(o.token);                  
               }else{
                 Swal.fire({
