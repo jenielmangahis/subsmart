@@ -285,7 +285,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-12">
                                     <h6 class="title-border"></h6>
-                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$subtotal,2,'.',','); ?></span>
+                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></span>
                                     <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
                                     <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>">
                                     <br /><br />
