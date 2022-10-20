@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/contractors_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -39,7 +40,7 @@
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-file'></i> Prepare 1099s
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-contractor-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add a contractor
                             </button>
                             <button type="button" class="nsm-button primary">
@@ -63,7 +64,7 @@
                         <?php if(count($contractors) > 0) : ?>
 						<?php foreach($contractors as $contractor) : ?>
                         <tr>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$contractor->display_name?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/contractors/view/' . $contractor->id) ?>'"><?=$contractor->display_name?></td>
                             <td></td>
                             <td>
                                 <div class="dropdown table-management">
