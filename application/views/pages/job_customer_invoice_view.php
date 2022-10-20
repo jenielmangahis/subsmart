@@ -240,11 +240,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
                                     <br><hr>
 
-                                    <?php if($total_tax > 0): ?>
+                                    <?php //if($total_tax > 0): ?>
                                         <b>Tax </b>
                                         <i class="right-text">$<?= number_format((float)$total_tax,2,'.',','); ?>/i>
                                         <br><hr>
-                                    <?php endif; ?>
+                                    <?php //endif; ?>
 
                                     <?php if($jobs_data->discount != NULL): ?>
                                         <b>Discount </b>
@@ -252,7 +252,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <br><hr>
                                     <?php endif; ?>
 
-                                    <b>` Total</b>
+                                    <b>Total</b>
                                     <b class="right-text">$<?= number_format((float)$grand_total,2,'.',','); ?></b>
                                 </div>
                                 <div class="col-md-4">
@@ -303,7 +303,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                               <input type="hidden" id="converge-token" name="converge_token" value="" />
                                               <a class="btn btn-primary btn-confirm-order btn-pay" href="javascript:void(0);">CONFIRM ORDER</a>
                                               <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);" style="display:none;">PAY NOW</a>
-                                              <div id="applepay-button" class="apple-pay-button"></div>
+                                              <!-- <div id="applepay-button" class="apple-pay-button"></div> -->
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                               <!-- <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a> -->
@@ -410,7 +410,7 @@ $(function(){
            success: function(o)
            {
               if( o.is_success ){
-                  initiateApplePay(o.token);
+                  //initiateApplePay(o.token);
                   openLightbox(o.token);                  
               }else{
                 Swal.fire({
