@@ -215,8 +215,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tbody>
                                         <?php
                                         $subtotal = 0.00;
+                                        $total_tax = 0;
+                                        $total_with_tax = 0;
+                                        $grand_total = 0;
                                         foreach ($jobs_data_items as $item):
-                                            $total = $item->price * $item->qty;
+                                            $total = ($item->price * $item->qty);                                            
                                             ?>
                                             <tr>
                                                 <td><?= $item->title; ?></td>
@@ -225,19 +228,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <td>$<?= number_format((float)$total,2,'.',','); ?></td>
                                             </tr>
                                             <?php
-                                            $subtotal = $subtotal + $total;
+                                            $subtotal       += $total;
+                                            $total_tax += $item->tax;
                                         endforeach;
                                         ?>
                                         </tbody>
                                     </table>
+                                    <?php $grand_total = $subtotal + $total_tax; ?>
                                     <hr>
                                     <b>Sub Total</b>
                                     <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
                                     <br><hr>
 
-                                    <?php if($jobs_data->tax != NULL): ?>
+                                    <?php if($total_tax > 0): ?>
                                         <b>Tax </b>
-                                        <i class="right-text">$0.00</i>
+                                        <i class="right-text">$<?= number_format((float)$total_tax,2,'.',','); ?>/i>
                                         <br><hr>
                                     <?php endif; ?>
 
@@ -247,8 +252,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <br><hr>
                                     <?php endif; ?>
 
-                                    <b>Grand Total</b>
-                                    <b class="right-text">$<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></b>
+                                    <b>` Total</b>
+                                    <b class="right-text">$<?= number_format((float)$grand_total,2,'.',','); ?></b>
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -287,7 +292,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <h6 class="title-border"></h6>
                                     <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></span>
                                     <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
-                                    <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>">
+                                    <input type="hidden" id="total_amount" value="<?= $grand_total; ?>">
                                     <br /><br />
                                     <?php if($jobs_data->status != 'Completed'){ ?>
                                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
