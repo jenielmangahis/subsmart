@@ -142,81 +142,15 @@ class Contractors extends MY_Controller {
             $this->page_data['search'] = $search;
         }
 
+        usort($contractors, function($a, $b) use ($order) {
+            return strcasecmp($a->display_name, $b->display_name);
+        });
+
 
         $this->page_data['contractors'] = $contractors;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Contractors";
-        // $this->load->view('accounting/contractors/index', $this->page_data);
         $this->load->view('v2/pages/accounting/payroll/contractors/list', $this->page_data);
-    }
-
-    public function load_contractors()
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $order = $post['order'][0]['dir'];
-        $start = $post['start'];
-        $limit = $post['length'];
-
-        switch($post['status']) {
-            case 'active' :
-                $status = [
-                    1
-                ];
-            break;
-            case 'inactive' :
-                $status = [
-                    0
-                ];
-            break;
-            case 'all' :
-                $status = [
-                    0,
-                    1
-                ];
-            break;
-        }
-
-        $contractors = $this->vendors_model->get_company_contractors($status);
-
-        $data = [];
-        $search = $post['columns'][0]['search']['value'];
-
-        if(count($contractors) > 0) {
-            foreach($contractors as $contractor) {
-                if($search !== "") {
-                    if(stripos($contractor->name, $search) !== false) {
-                        $data[] = [
-                            'id' => $contractor->id,
-                            'name' => $contractor->display_name,
-                            'status' => $contractor->status
-                        ];
-                    }
-                } else {
-                    $data[] = [
-                        'id' => $contractor->id,
-                        'name' => $contractor->display_name,
-                        'status' => $contractor->status
-                    ];
-                }
-            }
-        }
-
-        usort($data, function($a, $b) use ($order) {
-            if($order === 'asc') {
-                return strcmp($a['name'], $b['name']);
-            } else {
-                return strcmp($b['name'], $a['name']);
-            }
-        });
-
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($contractors),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
     }
 
     public function add()
@@ -227,9 +161,7 @@ class Contractors extends MY_Controller {
             'email' => $this->input->post('email'),
             'contractor' => 1,
             'created_by' => logged('id'),
-            'status' => 1,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
+            'status' => 1
         ];
 
         $contractorId = $this->vendors_model->createVendor($data);
@@ -240,49 +172,129 @@ class Contractors extends MY_Controller {
             $this->session->set_flashdata('error', "Please try again!");
         }
 
-        redirect("accounting/contractors");
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function view($contractorId)
     {
+        $this->hasAccessModule(77); 
         add_footer_js(array(
-            "assets/js/accounting/payroll/view-contractor.js"
+            "assets/js/v2/accounting/payroll/contractors/view.js"
         ));
 
-        $paymentsCount = 0;
-        $checks = $this->vendors_model->get_vendor_check_transactions($contractorId);
-        $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId);
-        $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId);
+        $filter = [];
+        switch(get('date')) {
+            case 'this-month' :
+                $filter['start-date'] = date("Y-m-01");
+                $filter['end-date'] = date("Y-m-t");
+            break;
+            case 'last-3-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -3 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'last-12-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -12 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'year-to-date' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -1 year'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+        }
 
-        $paymentsCount += count($checks);
-        $paymentsCount += count($expenses);
-        $paymentsCount += count($bills);
+        switch(get('type')) {
+            case 'check' :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+                $recordsTotal += count($checks);
+            break;
+            case 'expense' :
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+                $recordsTotal += count($expenses);
+            break;
+            case 'bill-payment' :
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+                $recordsTotal += count($bills);
+            break;
+            default :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+                $recordsTotal += count($checks);
+                $recordsTotal += count($expenses);
+                $recordsTotal += count($bills);
+            break;
+        }
 
-        $paymentsTotal = 0.00;
+        $data = [];
         if($checks && count($checks) > 0) {
             foreach($checks as $check) {
-                $paymentsTotal += floatval($check->total_amount);
-            }
-        }
-        if($expenses && count($expenses) > 0) {
-            foreach($expenses as $expense) {
-                $paymentsTotal += floatval($expense->amount);
-            }
-        }
-        if($bills && count($bills) > 0) {
-            foreach($bills as $bill) {
-                $paymentsTotal += floatval($bill->total_amount);
+                $data[] = [
+                    'date' => $check->payment_date,
+                    'type' => 'Check',
+                    'payment_method' => 'Check',
+                    'amount' => floatval($check->total_amount)
+                ];
             }
         }
 
-        $this->page_data['paymentsTotal'] = number_format($paymentsTotal, 2, '.', ',');
-        $this->page_data['paymentsCount'] = $paymentsCount;
+        if($expenses && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                if($expense->payment_method !== 'Check' && $expense->payment_method !== 'Direct deposit') {
+                    $payMethod = 'Other';
+                } else {
+                    $payMethod = $expense->payment_method;
+                }
+
+                $data[] = [
+                    'date' => $expense->payment_date,
+                    'type' => 'Expense',
+                    'payment_method' => $payMethod,
+                    'amount' => floatval($expense->total_amount)
+                ];
+            }
+        }
+
+        if($bills && count($bills) > 0) {
+            foreach($bills as $bill) {
+                $data[] = [
+                    'date' => $bill->bill_date,
+                    'type' => 'Bill payment',
+                    'payment_method' => 'Check',
+                    'amount' => floatval($bill->total_amount)
+                ];
+            }
+        }
+
+        $data = array_filter($data, function($value, $key) use ($paymentMethod) {
+            switch($paymentMethod) {
+                case 'check' :
+                    return $value['payment_method'] === 'Check';
+                break;
+                case 'direct-deposit' :
+                    return $value['payment_method'] === 'Direct deposit';
+                break;
+                case 'other' :
+                    return $value['payment_method'] === 'Other';
+                break;
+                default :
+                    return true;
+                break;
+            }
+        }, ARRAY_FILTER_USE_BOTH);
+
+        usort($data, function($a, $b) {
+            return strtotime($a['date']) < strtotime($b['date']);
+        });
+
+        $this->page_data['payments'] = $data;
+        $this->page_data['paymentsTotal'] = array_sum(array_column($data, 'amount'));
         $this->page_data['contractorTypes'] = $this->vendors_model->get_contractor_types();
         // $this->page_data['contractor_details'] = $this->accounting_contractors_model->get_contractor_details($contractorId);
         $this->page_data['contractor'] = $this->vendors_model->get_contractor($contractorId);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Contractors";
-        $this->load->view('accounting/contractors/view', $this->page_data);
+        // $this->load->view('accounting/contractors/view', $this->page_data);
+        $this->load->view('v2/pages/accounting/payroll/contractors/view', $this->page_data);
     }
 
     public function update_details($contractorId)

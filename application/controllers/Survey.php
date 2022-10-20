@@ -8,7 +8,7 @@ class Survey extends MY_Controller
   public function __construct(){
       parent::__construct();
 
-      $this->page_data['page']->title = 'Survey Features';
+      $this->page_data['page']->title = 'Survey Wizard';
       $this->page_data['page']->menu = 'Survey';
       $this->load->model('Survey_model', 'survey_model');
 
@@ -89,7 +89,7 @@ class Survey extends MY_Controller
     $this->load->view('v2/pages/survey/index.php', $this->page_data);
   }
 
-  public function add($settings = null){    
+  public function add($settings = null){        
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
@@ -123,7 +123,7 @@ class Survey extends MY_Controller
     exit;
   }
 
-  public function edit($id){
+  public function edit($id){        
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
@@ -131,7 +131,7 @@ class Survey extends MY_Controller
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
     $this->page_data['qTemplate'] = $this->survey_model->getEnabledTemplateQuestions();
     $this->page_data['themes'] = $this->survey_model->getThemes();
-    $this->load->view('survey/edit', $this->page_data);
+    $this->load->view('v2/pages/survey/edit', $this->page_data);
   }
 
   public function updateSurvey($id, $settings = null, $value = null){
@@ -348,11 +348,18 @@ class Survey extends MY_Controller
 
   public function orderUpdate(){
 
-    $data = array_unique($_POST['id']);
-    $data = $this->survey_model->orderUpdate($data);
-    $result = array(
-      'success' => 1
-    );
+    if( $_POST['id'] ){
+      $data = array_unique($_POST['id']);
+      $data = $this->survey_model->orderUpdate($data);
+      $result = array(
+        'success' => 1
+      );  
+    }else{
+      $result = array(
+        'success' => 0
+      );  
+    }
+    
     echo json_encode($result);
     exit;
   }
@@ -376,7 +383,7 @@ class Survey extends MY_Controller
     $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
     $this->page_data['survey_templates'] = $this->survey_model->getThemes();
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
-    $this->load->view('survey/result', $this->page_data);
+    $this->load->view('v2/pages/survey/result', $this->page_data);
   }
   
   public function share($id){
@@ -397,13 +404,13 @@ class Survey extends MY_Controller
   }
 
   public function addSurvey(){
-    $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
+    $templates = file_get_contents('application/views/survey/survey_templates.json');
     $this->page_data['survey_themes'] = $this->survey_model->getThemes();
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->page_data['survey_templates'] = json_decode($templates);
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
-    $this->load->view('survey/add', $this->page_data);
+    $this->load->view('v2/pages/survey/add', $this->page_data);
   }
 
   /* THEMES */
@@ -421,14 +428,13 @@ class Survey extends MY_Controller
     $this->load->view('survey/themes/view', $this->page_data);
   }
 
-  public function themeCreate(){
-    // $this->page_data[""]
-    $this->load->view('survey/themes/create', $this->page_data);
+  public function themeCreate(){        
+    $this->load->view('v2/pages/survey/themes/create', $this->page_data);
   }
 
-  public function themeEdit($id){
+  public function themeEdit($id){    
     $this->page_data['theme'] = $this->survey_model->getThemes($id);
-    $this->load->view('survey/themes/edit',$this->page_data);
+    $this->load->view('v2/pages/survey/themes/edit',$this->page_data);
   }
 
   public function selectTheme($survey_id, $theme_id){
@@ -462,6 +468,7 @@ class Survey extends MY_Controller
     $_POST["sth_primary_image"] = strtolower($filename).".jpg";
     $test = $this->upload->initialize($config);
     $this->upload->do_upload('filePrimaryImage');
+    unset($_POST['name-button']);
     $this->survey_model->addTheme($_POST);
     redirect('survey');
   }
@@ -494,8 +501,9 @@ class Survey extends MY_Controller
       $_POST["sth_primary_image"] = $theme->sth_primary_image;
     }
 
+    unset($_POST['name-button']);
     $this->survey_model->updateTheme($id, $_POST);
-    redirect('survey/themes');
+    redirect('survey');
   }  
 
 
@@ -579,7 +587,7 @@ class Survey extends MY_Controller
     $post       = $this->input->post();
     $survey_id = $post['survey_id'];
     $this->page_data['questions'] = $this->survey_model->getQuestions($survey_id);
-    $this->load->view('survey/ajax_load_survey_questions', $this->page_data);
+    $this->load->view('v2/pages/survey/ajax_load_survey_questions', $this->page_data);
   }
 
   public function ajax_delete_template_answer()
@@ -689,7 +697,7 @@ class Survey extends MY_Controller
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['survey_logic'] = $this->survey_model->getSurveyLogics($id);
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
-    $this->load->view('survey/ajax_load_survey_logic_jump', $this->page_data);
+    $this->load->view('v2/pages/survey/ajax_load_survey_logic_jump', $this->page_data);
   }
 
   public function ajax_logic_add()
@@ -699,7 +707,7 @@ class Survey extends MY_Controller
     $id = $post['survey_id'];    
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
-    $this->load->view('survey/ajax_logic_add', $this->page_data);
+    $this->load->view('v2/pages/survey/ajax_logic_add', $this->page_data);
   }
 
   public function ajax_update_survey_logic()
@@ -736,6 +744,13 @@ class Survey extends MY_Controller
     $json_data = ['is_success' => $is_success, 'msg' => $msg];
     echo json_encode($json_data);
 
+  }
+
+  public function ajax_load_themes_list()
+  {
+    $company_id = logged('company_id');
+    $this->page_data['themes'] = $this->survey_model->getThemesByCompanyId($company_id);
+    $this->load->view('v2/pages/survey/themes/list', $this->page_data);
   }
 
 }

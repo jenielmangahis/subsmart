@@ -904,7 +904,29 @@ $("#shared").jsSocials({
     showCount: false,
     shareIn: "popup",
     text: "nSmarTrac : Survey",
-    shares: ["email", "twitter", "facebook", "linkedin", "pinterest"]
+    //shares: ["email", "twitter", "facebook", "linkedin", "pinterest"]
+    shares: [
+      {
+        share: "email",
+        logo: "bx bx-envelope"
+      }, 
+      {
+        share: "facebook",
+        logo: "bx bxl-facebook-circle"
+      }, 
+      {
+        share: "twitter",
+        logo: "bx bxl-twitter"
+      },
+      {
+        share: "linkedin",
+        logo: "bx bxl-linkedin-square"
+      },
+      {
+        share: "pinterest",
+        logo: "bx bxl-pinterest"
+      },
+    ]
 });
 // var return_first = function () {
 //     var tmp = null;
