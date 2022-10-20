@@ -242,7 +242,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     <?php //if($total_tax > 0): ?>
                                         <b>Tax </b>
-                                        <i class="right-text">$<?= number_format((float)$total_tax,2,'.',','); ?>/i>
+                                        <b class="right-text">$<?= number_format((float)$total_tax,2,'.',','); ?></b>
                                         <br><hr>
                                     <?php //endif; ?>
 
