@@ -2624,7 +2624,6 @@ class Job extends MY_Controller
             $msg .= "</table>";
             
             $grand_total = 0;
-            $total_tax   = 0;
             foreach ($group_items as $type => $items) {
                 $subtotal = 0;
 
@@ -2644,8 +2643,6 @@ class Job extends MY_Controller
                 $grand_total += $subtotal;
             }
 
-            $grand_total = $grand_total + $total_tax;
-
             $nsmart_logo  = base_url("assets/dashboard/images/logo.png");
             $refer_friend = base_url("assets/img/refer_friend.jpg");
             $refer_friend_url = base_url('refer_friend');
@@ -2653,8 +2650,7 @@ class Job extends MY_Controller
             $msg .= "<br /><br />";
             $msg .= "<table>";
             //$msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
-            $msg .= "<tr><td width='300'><h3>Total Tax</h3></td><td><h2>".number_format((float)$total_tax, 2, '.', ',')."</h2></td></tr>";
-            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
+            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$job->total_amount, 2, '.', ',')."</h2></td></tr>";
             $msg .= "<tr><td colspan='2'><br><br></td></tr>";
             $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
             $msg .= "</table>";
