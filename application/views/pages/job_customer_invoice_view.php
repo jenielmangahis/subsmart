@@ -298,7 +298,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                               <input type="hidden" id="converge-token" name="converge_token" value="" />
                                               <a class="btn btn-primary btn-confirm-order btn-pay" href="javascript:void(0);">CONFIRM ORDER</a>
                                               <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);" style="display:none;">PAY NOW</a>
-                                              <div id="applepay-button" class="apple-pay-button"></div>
+                                              <!-- <div id="applepay-button" class="apple-pay-button"></div> -->
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                               <!-- <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a> -->
@@ -371,7 +371,7 @@ $(function(){
        {
           if( o.is_success ){
             $('#converge-token').val(o.token);    
-            initiateApplePay(o.token);          
+            //initiateApplePay(o.token);          
 
             $(".btn-pay-converge").show();
             $(".btn-confirm-order").hide();
