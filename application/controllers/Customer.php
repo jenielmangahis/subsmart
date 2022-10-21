@@ -159,6 +159,9 @@ class Customer extends MY_Controller
                     }
                     array_push($data_arr, $name);
                 }
+                if (in_array('email', $enabled_table_headers)){
+                    array_push($data_arr, $customer->email);
+                }
                 if (in_array('industry', $enabled_table_headers)) {
                     if( $customer->industry_type_id > 0 ){
                         array_push($data_arr, $customer->industry_type);
@@ -172,9 +175,7 @@ class Customer extends MY_Controller
                 if (in_array('state', $enabled_table_headers)){
                     array_push($data_arr, $customer->state);
                 }
-                if (in_array('email', $enabled_table_headers)){
-                    array_push($data_arr, $customer->email);
-                }
+                
                 if (in_array('source', $enabled_table_headers)){
                     $lead =  $customer->lead_source != "" ? $customer->lead_source : 'n/a';
                     array_push($data_arr, $lead);
@@ -222,6 +223,8 @@ class Customer extends MY_Controller
                     $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                 }
                 array_push($data_arr, $name);
+                //email
+                array_push($data_arr, $customer->email);
                 //industry
                 if( $customer->industry_type_id > 0 ){
                     array_push($data_arr, $customer->industry_type);
@@ -232,8 +235,6 @@ class Customer extends MY_Controller
                 array_push($data_arr, $customer->city);
                 //state
                 array_push($data_arr, $customer->state);
-                //email
-                array_push($data_arr, $customer->email);
                 //source
                 $lead =  $customer->lead_source != "" ? $customer->lead_source : 'n/a';
                 array_push($data_arr, $lead);

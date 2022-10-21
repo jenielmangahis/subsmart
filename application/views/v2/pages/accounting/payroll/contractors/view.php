@@ -71,7 +71,7 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <h4 class="float-start">Personal Details</h4>
-                                                        <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit_employee_modal"><i class="bx bx-fw <?=in_array($contractor->contractor_type_id, ['', null]) ? 'bx-plus' : 'bx-pencil'?>"></i></button>
+                                                        <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit-contractor-modal"><i class="bx bx-fw <?=in_array($contractor->contractor_type_id, ['', null]) ? 'bx-plus' : 'bx-pencil'?>"></i></button>
                                                     </div>
                                                 </div>
                                                 <?php if($contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "") : ?>
@@ -101,7 +101,7 @@
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <h6><?=$contractor->contractor_type_id === "1" ? "Social Security number" : "Employer Identification number" ?></h6>
-                                                        <h5><?=$contractor->tax_id?></h5>
+                                                        <h5><?=$contractor->tax_id ? $contractor->tax_id : '-'?></h5>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <h6>Email</h6>

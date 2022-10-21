@@ -172,11 +172,35 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
-    public function getCustomerLists($param = null, $start = 0, $length = 0)
+    public function getCustomerLists($param = null, $start = 0, $length = 0, $record = 0)
     {
         $cid = logged('company_id');        
         $this->db->from("acs_profile");
+        if($record != 0){
+            $this->db->select('COUNT(acs_profile.prof_id) as count');
+            $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
+            $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
+            $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
+            $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');        
+            $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id','left');
+            if( $length > 0 ){            
+                $this->db->limit($length, $start);    
+            }
+    
+            $this->db->where("acs_profile.company_id", $cid);
+            if( $param['search'] != '' ){
+                $this->db->group_start();
+                    $this->db->or_like('acs_profile.last_name', $param['search'], 'both');    
+                    $this->db->or_like('acs_profile.first_name', $param['search'], 'both');    
+                    $this->db->or_like('acs_profile.email', $param['search'], 'both'); 
+                    $this->db->or_like('acs_profile.business_name', $param['search'], 'both'); 
+                $this->db->group_end();   
+            }  
+            $query = $this->db->get();
+        return $query->row()->count;
 
+            // Outputs, 2
+        }
         if($cid == 58){
             // $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
             // acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
