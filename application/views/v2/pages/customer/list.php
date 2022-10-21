@@ -100,9 +100,6 @@
                         </div>
                     </div>
                 </div>
-                <?php
-                echo "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/preview_/5133')."\"'>John Rushing</label>\n";
-                ?>
                 <?php if (!empty($enabled_table_headers)) : ?>
                     <div class="cont">
                         <table class="customerTbl customer-list" id="customer-list" style="width:100%;">

@@ -2602,7 +2602,8 @@ class Job extends MY_Controller
                 $group_items[$type][] = [
                     'item_name' => $ji->title,
                     'item_price' => $ji->price,
-                    'item_qty' => $ji->qty
+                    'item_qty' => $ji->qty,
+                    'item_tax' => $ji->tax
                 ];
             }
             $msg="";
@@ -2630,6 +2631,7 @@ class Job extends MY_Controller
                 $msg .= "<table>";
                 foreach ($items as $i) {
                     $total = $i['item_price'] * $i['item_qty'];
+                    $total_tax = $total_tax + $i['tax'];
                     //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
                     $msg  .= "<tr><td width='300'>".$i['item_name']."</td><td>".number_format((float)$total, 2, '.', ',')."</td></tr>";
                     $subtotal = $subtotal + $total;
@@ -2647,7 +2649,8 @@ class Job extends MY_Controller
 
             $msg .= "<br /><br />";
             $msg .= "<table>";
-            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
+            //$msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
+            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$job->total_amount, 2, '.', ',')."</h2></td></tr>";
             $msg .= "<tr><td colspan='2'><br><br></td></tr>";
             $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
             $msg .= "</table>";
