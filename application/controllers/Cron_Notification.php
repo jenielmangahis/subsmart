@@ -167,6 +167,12 @@ class Cron_Notification extends MYF_Controller {
                 if( $company ){
                     $business_name = $company->business_name;
                 }
+                $tags = '';
+
+                if($job->tags != '' ){
+                    $tags = $job->tags;
+                }
+
                 $order_number  = $job->job_number;
                 $customer_name = $job->first_name . ' ' . $job->last_name;
                 $customer_email = $job->email;
