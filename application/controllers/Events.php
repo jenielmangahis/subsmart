@@ -550,7 +550,7 @@ class Events extends MY_Controller
             'end_date' => $input['end_date'],
             'end_time' => $input['end_time'],
             'event_type' => $input['event_types'],
-            'event_tag' => $input['event_tag'],
+            'event_tag' => $input['event_tags'],
             'event_color' => $input['event_color'],
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
@@ -558,7 +558,7 @@ class Events extends MY_Controller
             'status' => 'Scheduled',//$this->input->post('job_status'),
             'description' => $input['description'],
             'timezone' => $input['timezone'],
-            'created_by' => $input['created_by'],
+            'created_by' => $user_id,
             'company_id' => $comp_id,
             //'date_issued' => date('Y-m-d'),
             'notes' => $input['message'],
@@ -587,7 +587,8 @@ class Events extends MY_Controller
         );
         $this->general->update_with_key($event_settings_data,$event_settings[0]->id, 'event_settings');
 
-        customerAuditLog(logged('id'), $input['customer_id'], $event_id, 'Events', 'Created an event #'.$event_number);
+        //customerAuditLog(logged('id'), $input['customer_id'], $event_id, 'Events', 'Created an event #'.$event_number);
+        customerAuditLog(logged('id'), 0, $event_id, 'Events', 'Created an event #'.$event_number);
 
         echo $event_id;
     }

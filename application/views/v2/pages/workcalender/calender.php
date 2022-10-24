@@ -11,6 +11,11 @@
 .modal {
     z-index: 1051 !important;
 }
+.fc-event-main{
+    font-size: 15px !important;
+    padding: 5px;
+    overflow: auto;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

@@ -87,6 +87,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <button type="submit" class="nsm-button primary">Submit</button>
             </div>
           </form>
+
+          <div class="modal fade nsm-modal fade" id="modalIconList" tabindex="-1" aria-labelledby="modalIconListLabel" aria-hidden="true">
+              <div class="modal-dialog modal-md">
+                  <input type="hidden" name="pid" id="priority_id" value="">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <span class="modal-title content-title">Icon List</span>
+                          <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                      </div>
+                      <div class="modal-body">                
+                          <div class="col-md-12">
+                              <div class="row">
+                                  <ul class="list-icon">
+                                  <?php foreach($icons as $i){ ?>
+                                    <li>
+                                      <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
+                                        <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon">
+                                      </a>
+                                    </li>
+                                  <?php } ?>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>                            
+                  </div>
+              </div>
+          </div>
         <!-- <?php //echo form_close(); ?> -->
     </div>
 </div>
@@ -127,7 +154,7 @@ $(function(){
   });
 
   $("#iconList").change(function(){
-    if ($(this).is(':checked')) {
+    if ($(this).is(':checked')) {      
       $("#modalIconList").modal('show');
     }else{
       $("#input-upload-image").show();
@@ -137,6 +164,7 @@ $(function(){
   });
 
 });
+
 function info_alert(head, message, info, reload){
     Swal.fire({
         title: head,

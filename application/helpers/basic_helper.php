@@ -4919,4 +4919,23 @@ if(!function_exists('set_expense_graph_data')) {
 
         return $is_solar;
     }
+
+    function isApple(){
+        //Detect special conditions devices
+        $iPod    = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
+        $iPhone  = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
+        $iPad    = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
+        $Android = stripos($_SERVER['HTTP_USER_AGENT'],"Android");
+        $webOS   = stripos($_SERVER['HTTP_USER_AGENT'],"webOS");
+
+        //do something with this information
+        $is_apple = false;
+        if( $iPod || $iPhone ){
+            $is_apple = true;
+        }else if($iPad){
+            $is_apple = true;
+        }
+
+        return $is_apple;
+    }
 }

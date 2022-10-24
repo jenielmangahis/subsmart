@@ -324,7 +324,7 @@ if(isset($jobs_data)){
         });
 
 
-        $("#event_tags_option").on( 'change', function () {
+        $("#event_tag_option").on( 'change', function () {
             var tag_id = this.value;
             $.ajax({
                 type: "POST",
@@ -333,15 +333,15 @@ if(isset($jobs_data)){
                 success: function(data)
                 {
                     var template_data = JSON.parse(data);
-                    $('#job_tags_right').val(template_data.name);
-                    console.log(data);
+                    $('#event_tag').val(template_data.name);
+                    //console.log(data);
                 }
             });
         });
 
-        $("#event_type_option").on( 'change', function () {
+        $("#event_types_option").on( 'change', function () {
             var type = this.value;
-            console.log(type);
+            /*console.log(type);
             if(type === 'Estimate'){
                 document.getElementById('convert_to_job').style.display = "block";
                 document.getElementById('customer_select').style.display = "block";
@@ -354,7 +354,7 @@ if(isset($jobs_data)){
                 document.getElementById('customer_maps').style.display = "none";
                 //document.getElementById('btn_omw_status').style.display = "none";
                 document.getElementById('add_another_invoice').style.display = "none";
-            }
+            }*/
             $('#event_type').val(type);
         });
 

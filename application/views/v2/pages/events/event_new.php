@@ -148,7 +148,7 @@ include viewPath('v2/includes/header');
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="content-subtitle fw-bold d-block mb-2">Select Event Type</label>
-                                                    <select name="event_types" class="nsm-field form-select" required>
+                                                    <select name="event_types" id="event_types_option" class="nsm-field form-select" required>
                                                         <option value="" disabled>Select Event Type</option>
                                                         <?php if (!empty($job_types)) : ?>
                                                             <?php foreach ($job_types as $type) : ?>
@@ -161,7 +161,7 @@ include viewPath('v2/includes/header');
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="content-subtitle fw-bold d-block mb-2">Select Event Tag</label>
-                                                    <select name="event_types" class="nsm-field form-select" required>
+                                                    <select name="event_tag" id="event_tag_option" class="nsm-field form-select" required>
                                                         <option value="" disabled>Select Event Tag</option>
                                                         <?php if (!empty($tags)) : ?>
                                                             <?php foreach ($tags as $tag) : ?>
@@ -244,7 +244,7 @@ include viewPath('v2/includes/header');
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <label class="content-subtitle fw-bold d-block mb-2">Event Tags</label>
-                                            <input type="text" class="nsm-field form-control" id="event_tag" name="event_tag" value="<?= isset($jobs_data) ? $jobs_data->event_tag : ''; ?>" readonly>
+                                            <input type="text" class="nsm-field form-control" id="event_tag" name="event_tags" value="<?= isset($jobs_data) ? $jobs_data->event_tag : ''; ?>" readonly>
                                         </div>
                                         <div class="col-12">
                                             <label class="content-subtitle fw-bold d-block mb-2">Description of Event</label>
@@ -378,10 +378,10 @@ include viewPath('v2/includes/header');
         $("#employee_id").select2({
             placeholder: "Select Employee"
         });
-        $("#event_type_option").select2({
+        $("#event_types_option").select2({
             placeholder: "Select Event Type"
         });
-        $("#event_tags_option").select2({
+        $("#event_tag_option").select2({
             placeholder: "Select Event Tag"
         });
     });
