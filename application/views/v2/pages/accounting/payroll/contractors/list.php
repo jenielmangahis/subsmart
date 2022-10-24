@@ -49,12 +49,9 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="contractors-table">
                     <thead>
                         <tr>
-                            <!-- <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
-                            </td> -->
                             <td data-name="Name">NAME</td>
                             <td data-name="Last payment"></td>
                             <td data-name="Manage"></td>
@@ -63,7 +60,7 @@
                     <tbody>
                         <?php if(count($contractors) > 0) : ?>
 						<?php foreach($contractors as $contractor) : ?>
-                        <tr>
+                        <tr data-id="<?=$contractor->id?>" data-name="<?=$contractor->display_name?>">
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/contractors/view/' . $contractor->id) ?>'"><?=$contractor->display_name?></td>
                             <td></td>
                             <td>
@@ -73,13 +70,13 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="#">Write check</a>
+                                            <a class="dropdown-item write-check" href="#">Write check</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create expense</a>
+                                            <a class="dropdown-item create-expense" href="#">Create expense</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create bill</a>
+                                            <a class="dropdown-item create-bill" href="#">Create bill</a>
                                         </li>
                                     </ul>
                                 </div>

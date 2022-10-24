@@ -14,16 +14,16 @@
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 col-md-6">
-                                        <h3 class="m-0"><?=$contractor->display_name?></h3>
+                                        <h3 class="m-0" id="contractor-display-name"><?=$contractor->display_name?></h3>
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <?php if($vendorDetails->status === '0') : ?>
-                                            <button type="button" class="nsm-button" id="make-active">
+                                            <?php if($contractor->status === '0') : ?>
+                                            <button type="button" class="nsm-button" id="make-active" onclick="location.href='<?=base_url('/accounting/contractors/set-status/'.$contractor->id.'/active')?>'">
                                                 Make Active
                                             </button>
                                             <?php else : ?>
-                                            <button type="button" class="nsm-button" id="make-inactive">
+                                            <button type="button" class="nsm-button" id="make-inactive" onclick="location.href='<?=base_url('/accounting/contractors/set-status/'.$contractor->id.'/inactive')?>'">
                                                 Make Inactive
                                             </button>
 
@@ -121,37 +121,37 @@
                                                     <div class="nsm-page-buttons page-button-container">
                                                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                                             <span>
-                                                                Date: All
+                                                                Date: <?=empty($date) ? 'All' : str_replace('-', ' ', ucfirst($date))?>
                                                             </span> <i class='bx bx-fw bx-chevron-down'></i>
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end" id="date-dropdown">
-                                                            <li><a class="dropdown-item active" href="javascript:void(0);">All</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">This month</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Last 3 months</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Last 12 months</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Year to date</a></li>
+                                                            <li><a class="dropdown-item <?=empty($date) || $date === 'all' ? 'active' : ''?>" href="javascript:void(0);">All</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($date) && $date === 'this-month' ? 'active' : ''?>" href="javascript:void(0);">This month</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($date) && $date === 'last-3-months' ? 'active' : ''?>" href="javascript:void(0);">Last 3 months</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($date) && $date === 'last-12-months' ? 'active' : ''?>" href="javascript:void(0);">Last 12 months</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($date) && $date === 'year-to-date' ? 'active' : ''?>" href="javascript:void(0);">Year to date</a></li>
                                                         </ul>
                                                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                                             <span>
-                                                                Type: All
+                                                                Type: <?=empty($type) ? 'All' : str_replace('-', ' ', ucfirst($type))?>
                                                             </span> <i class="bx bx-fw bx-chevron-down"></i>
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end" id="type-dropdown">
-                                                            <li><a class="dropdown-item active" href="javascript:void(0);">All</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Check</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Expense</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Bill payment</a></li>
+                                                            <li><a class="dropdown-item <?=empty($type) || $type === 'all' ? 'active' : ''?>" href="javascript:void(0);">All</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($type) && $type === 'check' ? 'active' : ''?>" href="javascript:void(0);">Check</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($type) && $type === 'expense' ? 'active' : ''?>" href="javascript:void(0);">Expense</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($type) && $type === 'bill-payment' ? 'active' : ''?>" href="javascript:void(0);">Bill payment</a></li>
                                                         </ul>
                                                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                                             <span>
-                                                                Payment method: All
+                                                                Payment method: <?=empty($method) ? 'All' : str_replace('-', ' ', ucfirst($method))?>
                                                             </span> <i class="bx bx-fw bx-chevron-down"></i>
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end" id="method-dropdown">
-                                                            <li><a class="dropdown-item active" href="javascript:void(0);">All</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Check</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Direct deposit</a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Other</a></li>
+                                                            <li><a class="dropdown-item <?=empty($method) || $method === 'all' ? 'active' : ''?>" href="javascript:void(0);">All</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($method) && $method === 'check' ? 'active' : ''?>" href="javascript:void(0);">Check</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($method) && $method === 'direct-deposit' ? 'active' : ''?>" href="javascript:void(0);">Direct deposit</a></li>
+                                                            <li><a class="dropdown-item <?=!empty($method) && $method === 'other' ? 'active' : ''?>" href="javascript:void(0);">Other</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>

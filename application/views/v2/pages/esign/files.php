@@ -724,4 +724,8 @@ echo put_header_assets();
     .btn-success {
         border-color: #198754 !important;
     }
+    #fieldsSidebar {
+        position: sticky !important;
+        top: 0;
+    }
 </style>

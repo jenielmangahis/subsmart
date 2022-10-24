@@ -156,8 +156,8 @@ function Signing(hash) {
         $element.html(createElementFromHTML(valueHtml));
       }
 
-      const topEm = `${pxToEm(top - 8, container)}em`;
-      const leftEm = `${pxToEm(left + 30, container)}em`;
+      const topEm = `${pxToEm(top, container)}em`;
+      const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       $element.on("click", () => {
@@ -417,7 +417,11 @@ function Signing(hash) {
       text = undefined;
     }
 
-    if (field_name === "Text" || text === undefined) {
+    if (
+      field_name === "Text" ||
+      field_name === "TextString" ||
+      text === undefined
+    ) {
       let { value } = fieldValue || { value: "" };
       const { specs: fieldSpecs, unique_key } = field;
       const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
@@ -521,6 +525,13 @@ function Signing(hash) {
       const topEm = `${pxToEm(top, container)}em`;
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
+
+      if (field_name === "TextString") {
+        $element.addClass("completed");
+        $input.prop("required", false);
+        $input.prop("readonly", true);
+      }
+
       return $element;
     }
 
@@ -531,36 +542,17 @@ function Signing(hash) {
     const isOwner = recipient.id === data.recipient.id;
 
     const $fields = fields.map((field) => {
-      const $element = getRenderField({ field, recipient, $page });
+      let $element = getRenderField({ field, recipient, $page });
       const isString = typeof $element === "string";
 
       if ($element === null || isString) {
-        const { field_name, coordinates } = field;
+        const { field_name } = field;
         const text = recipient[field_name.toLowerCase()];
-        const { pageTop: top, left } = JSON.parse(coordinates);
 
-        context.font = "12px monospace";
-        context.textAlign = "start";
+        field.field_name = "TextString";
+        field.value = { value: isString ? $element : text };
 
-        let topAdjust = 16;
-        let leftAdjust = 8;
-        const percentAdjust = 2;
-        const { height, width } = window.getComputedStyle(context.canvas);
-
-        if (height.endsWith("px")) {
-          topAdjust = (percentAdjust / 100) * parseInt(height, 10);
-        }
-
-        if (width.endsWith("px")) {
-          leftAdjust = (percentAdjust / 100) * parseInt(width, 10);
-        }
-
-        context.fillText(
-          isString ? $element : text,
-          left + leftAdjust,
-          top + topAdjust
-        );
-        return;
+        $element = getRenderField({ field, recipient, $page });
       }
 
       if ($element instanceof jQuery && !isOwner) {
