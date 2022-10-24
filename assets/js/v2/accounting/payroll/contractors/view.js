@@ -1,3 +1,8 @@
+const currUrl = window.location.href;
+const urlSplit = currUrl.split('/');
+const contractorId = urlSplit[urlSplit.length - 1].includes('?') ? urlSplit[urlSplit.length - 1].split('?')[0].replace('#', '') : urlSplit[urlSplit.length - 1].replace('#', '');
+const contractorName = $('#contractor-display-name').text().trim();
+
 $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
     if($('#edit-contractor-modal #email').length < 1) {
         var row = $(this).closest('.row');
@@ -24,6 +29,10 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
                 <input type="text" name="suffix" id="suffix" class="form-control nsm-field" value="">
             </div>
             <div class="col-12">
+                <label for="display_name">Display name <span class="text-danger">*</span></label>
+                <input type="text" name="display_name" id="display_name" class="form-control nsm-field" value="${contractorName}" required>
+            </div>
+            <div class="col-12">
                 <label for="social_sec_num">Social Security number <span class="text-danger">*</span></label>
                 <input type="text" name="social_sec_num" id="social_sec_num" class="form-control nsm-field" value="">
             </div>`);
@@ -31,6 +40,10 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
             row.append(`<div class="col-12">
                 <label for="business_name">Business name <span class="text-danger">*</span></label>
                 <input type="text" name="business_name" id="business_name" class="form-control nsm-field" value="">
+            </div>
+            <div class="col-12">
+                <label for="display_name">Display name <span class="text-danger">*</span></label>
+                <input type="text" name="display_name" id="display_name" class="form-control nsm-field" value="${contractorName}" required>
             </div>
             <div class="col-12">
                 <label for="emp_id_num">Employer Identification Number <span class="text-danger">*</span></label>
@@ -140,6 +153,10 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
                 <input type="text" name="suffix" id="suffix" class="form-control nsm-field" value="">
             </div>
             <div class="col-12">
+                <label for="display_name">Display name <span class="text-danger">*</span></label>
+                <input type="text" name="display_name" id="display_name" class="form-control nsm-field" value="${contractorName}" required>
+            </div>
+            <div class="col-12">
                 <label for="social_sec_num">Social Security number <span class="text-danger">*</span></label>
                 <input type="text" name="social_sec_num" id="social_sec_num" class="form-control nsm-field" value="">
             </div>`).insertAfter($(this).parent().parent());
@@ -149,6 +166,10 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
             $(`<div class="col-12">
                 <label for="business_name">Business name <span class="text-danger">*</span></label>
                 <input type="text" name="business_name" id="business_name" class="form-control nsm-field" value="">
+            </div>
+            <div class="col-12">
+                <label for="display_name">Display name <span class="text-danger">*</span></label>
+                <input type="text" name="display_name" id="display_name" class="form-control nsm-field" value="${contractorName}" required>
             </div>
             <div class="col-12">
                 <label for="emp_id_num">Employer Identification Number <span class="text-danger">*</span></label>
@@ -161,4 +182,144 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
 $('#edit-contractor-modal select').select2({
     minimumResultsForSearch: -1,
     dropdownParent: $('#edit-contractor-modal')
-})
+});
+
+$('#write-check').on('click', function(e) {
+    e.preventDefault();    
+
+    $.get('/accounting/get-other-modals/check_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#checkModal #payee').append(`<option value="vendor-${contractorId}">${contractorName}</option>`).trigger('change');
+
+        modalName = '#checkModal';
+        initModalFields('checkModal');
+
+        $('#checkModal').modal('show');
+    });
+});
+
+$('#create-expense').on('click', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/get-other-modals/expense_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#expenseModal #payee').append(`<option value="vendor-${contractorId}">${contractorName}</option>`).trigger('change');
+
+        modalName = '#expenseModal';
+        initModalFields('expenseModal');
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$('#create-bill').on('click', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/get-other-modals/bill_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#billModal #vendor').append(`<option value="${contractorId}">${contractorName}</option>`).trigger('change');
+
+        modalName = '#billModal';
+        initModalFields('billModal');
+
+        $('#billModal').modal('show');
+    });
+});
+
+$('#date-dropdown li a.dropdown-item').on('click', function(e) {
+    e.preventDefault();
+
+    var date = $(this).text().trim().replaceAll(' ', '-').toLowerCase();
+    var type = $('#type-dropdown li a.dropdown-item.active').text().trim().replaceAll(' ', '-').toLowerCase();
+    var method = $('#method-dropdown li a.dropdown-item.active').text().trim().replaceAll(' ', '-').toLowerCase();
+    var url = `${base_url}accounting/contractors/view/${contractorId}?`;
+
+    url += date !== 'all' ? `date=${date}&` : '';
+    url += type !== 'all' ? `type=${type}&` : '';
+    url += method !== 'all' ? `method=${method}` : '';
+
+    if(url.slice(-1) === '&') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '?') {
+        url = url.slice(0, -1);
+    }
+
+    location.href = url;
+});
+
+$('#type-dropdown li a.dropdown-item').on('click', function(e) {
+    e.preventDefault();
+
+    var date = $('#date-dropdown li a.dropdown-item.active').text().trim().replaceAll(' ', '-').toLowerCase();
+    var type = $(this).text().trim().replaceAll(' ', '-').toLowerCase();
+    var method = $('#method-dropdown li a.dropdown-item.active').text().trim().replaceAll(' ', '-').toLowerCase();
+
+    var url = `${base_url}accounting/contractors/view/${contractorId}?`;
+
+    url += date !== 'all' ? `date=${date}&` : '';
+    url += type !== 'all' ? `type=${type}&` : '';
+    url += method !== 'all' ? `method=${method}` : '';
+
+    if(url.slice(-1) === '&') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '?') {
+        url = url.slice(0, -1);
+    }
+
+    location.href = url;
+});
+
+$('#method-dropdown li a.dropdown-item').on('click', function(e) {
+    e.preventDefault();
+
+    var date = $('#date-dropdown li a.dropdown-item.active').text().trim().replaceAll(' ', '-').toLowerCase();
+    var type = $('#type-dropdown li a.dropdown-item.active').text().trim().replaceAll(' ', '-').toLowerCase();
+    var method = $(this).text().trim().replaceAll(' ', '-').toLowerCase();
+
+    var url = `${base_url}accounting/contractors/view/${contractorId}?`;
+
+    url += date !== 'all' ? `date=${date}&` : '';
+    url += type !== 'all' ? `type=${type}&` : '';
+    url += method !== 'all' ? `method=${method}` : '';
+
+    if(url.slice(-1) === '&') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '?') {
+        url = url.slice(0, -1);
+    }
+
+    location.href = url;
+});

@@ -10,10 +10,10 @@
                     <div class="row gy-3">
                         <div class="col-12">
                             <label for="">Contractor type <span class="text-danger">*</span></label>
-                            <?php foreach($contractorTypes as $type) : ?>
+                            <?php foreach($contractorTypes as $contractorType) : ?>
                             <div class="form-check">
-                                <input type="radio" name="contractor_type" id="contractor-<?=strtolower($type->name)?>" class="form-check-input" value="<?=$type->id?>" <?=$contractor->contractor_type_id === $type->id ? 'checked' : ''?>>
-                                <label for="contractor-<?=strtolower($type->name)?>" class="form-check-label"><?="$type->name - $type->description"?></label>
+                                <input type="radio" name="contractor_type" id="contractor-<?=strtolower($contractorType->name)?>" class="form-check-input" value="<?=$contractorType->id?>" <?=$contractor->contractor_type_id === $contractorType->id ? 'checked' : ''?>>
+                                <label for="contractor-<?=strtolower($contractorType->name)?>" class="form-check-label"><?="$contractorType->name - $contractorType->description"?></label>
                             </div>
                             <?php endforeach; ?>
                         </div>

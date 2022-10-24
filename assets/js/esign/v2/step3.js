@@ -165,6 +165,8 @@ function Step3() {
       }
     }
 
+    position.pageTop = position.pageTop - 15; // adjustment
+
     await apiStoreField({
       coordinates: position,
       docfile_id: fileId,

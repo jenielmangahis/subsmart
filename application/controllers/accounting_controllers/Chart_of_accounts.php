@@ -722,12 +722,15 @@ class Chart_of_accounts extends MY_Controller {
         }
 
         add_footer_js(array(
-            "assets/js/accounting/accounting/view-register.js?v=".rand()
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/accounting/chart_of_accounts/view-register.js?v=".rand()
+            // "assets/js/accounting/accounting/chart-of-accounts.js?v=".rand()
         ));
 
         $this->page_data['account'] = $account;
         $this->page_data['type'] = $type;
-        $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
+        // $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
+        $this->load->view('v2/pages/accounting/accounting/chart_of_accounts/view_register', $this->page_data);
     }
 
     public function load_registers($accountId)

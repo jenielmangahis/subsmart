@@ -397,7 +397,7 @@
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5">
                                                         <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>">
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" id="6">
                                                         <a
                                                             href="#"
                                                             <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>
@@ -407,8 +407,8 @@
                                                         >
                                                         Finish
                                                         </a>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>">Invoiced</li>
-                                                    <li class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>">Completed</li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>" id="7">Invoiced</li>
+                                                    <li class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>" id="8">Completed</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -1327,6 +1327,12 @@ add_footer_js(array(
             step = '4';
         }else if($('#5').hasClass('active')){
             step = '5';
+        }else if($('#6').hasClass('active')){
+            step = '6';
+        }else if($('#7').hasClass('active')){
+            step = '7';
+        }else if($('#8').hasClass('active')){
+            step = '8';
         }
 
         for(var x=0; x<step; x++){

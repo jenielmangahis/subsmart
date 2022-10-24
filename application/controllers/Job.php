@@ -260,6 +260,7 @@ class Job extends MY_Controller
             'table' => 'users',
             'select' => 'id,FName,LName',
         );
+        
         $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
 
         // get all job tags
@@ -1660,13 +1661,12 @@ class Job extends MY_Controller
                     $where['job_id'] = $isJob->id;
                     $where['items_id'] = $input['item_id'][$xx];
                     if(empty($isItem)){
-                        $this->general->add_($job_items_data, 'job_items');
                         $job_items_data['items_id'] = $input['item_id'][$xx];
                         $job_items_data['job_id'] = $isJob->id; //from jobs table
+                        $this->general->add_($job_items_data, 'job_items');
 
                     }else{
                         $this->general->update_job_items($job_items_data, $where);
-
                     }
                     unset($job_items_data);
                 }
@@ -2432,7 +2432,8 @@ class Job extends MY_Controller
 
         $this->page_data['icons'] = $icons;
         $this->page_data['jobTag'] = $jobTag;
-        $this->load->view('job/edit_job_tag', $this->page_data);
+        $this->page_data['page']->title = 'Job Tags';
+        $this->load->view('v2/pages/job/job_settings/edit_job_tag', $this->page_data);
     }
 
     public function create_new_job_tag()

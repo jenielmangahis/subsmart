@@ -22,7 +22,8 @@ class General_model extends MY_Model {
         
     }
 
-    public function get_data_with_param($params = array(),$result=TRUE){
+    public function get_data_with_param($params = array(),$result=TRUE)
+    {
 
         if(array_key_exists("table",$params) && $params['table'] != NULL ){
             $this->db->from($params['table']);

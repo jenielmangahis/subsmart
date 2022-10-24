@@ -117,7 +117,7 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$account['id']?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$account['name']?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" <?php if($account['status'] === "1" && !in_array($account['type'], ['Income', 'Cost of Goods Sold', 'Expenses', 'Other Income', 'Other Expense'])) : ?>onclick="location.href='<?php echo base_url('accounting/chart-of-accounts/view-register/'.$account['id']) ?>'" <?php endif; ?>><?=$account['name']?></td>
                             <td><?=$account['type']?></td>
                             <td><?=$account['detail_type']?></td>
                             <td><?=$account['nsmartrac_balance']?></td>

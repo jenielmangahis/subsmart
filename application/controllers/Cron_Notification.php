@@ -20,11 +20,10 @@ class Cron_Notification extends MYF_Controller {
         $this->load->model('CronAutoSmsNotification_model');
 
         $total_sent = 0;  
-        $sent_numbers = array();
         $filter[] = ['field' => 'cron_auto_sms_notification.is_sent', 'value' => 0];
         $filter[] = ['field' => 'cron_auto_sms_notification.is_with_error', 'value' => 0];
         $cronAutoSms  = $this->CronAutoSmsNotification_model->getAll($filter, 15); 
-        foreach($cronAutoSms as $sms){
+        foreach($cronAutoSms as $sms){            
             $is_with_valid_sms_account = false;
             $smsApi = '';
             $client = $this->Clients_model->getById($sms->company_id);
@@ -89,8 +88,22 @@ class Cron_Notification extends MYF_Controller {
                             $this->CronAutoSmsNotification_model->update($sms->id, $data);
                         }    
                     }*/
-                    if( $smsApi == 'ring_central' ){
-                        if( !array_key_exists($sms->mobile_number, $sent_numbers) ){
+
+                    //Check if has duplicate
+                    $filters[] = ['field' => 'mobile_number', 'value' => $sms->mobile_number];
+                    $filters[] = ['field' => 'company_auto_sms_id', 'value' => $sms->company_auto_sms_id];
+                    $filters[] = ['field' => 'is_sent', 'value' => 1];
+                    //$filters[] = ['field' => 'is_with_error', 'value' => 0];
+                    $isDuplicate = $this->CronAutoSmsNotification_model->getByObjectId($sms->obj_id, $filters);
+                    if( $isDuplicate ){
+                        $data = [
+                            'is_sent' => 0,
+                            'is_with_error' => 1,
+                            'err_msg' => 'Duplicate Number'
+                        ];
+                        $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                    }else{
+                        if( $smsApi == 'ring_central' ){
                             $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
                             //$isSent['is_sent'] = true;
                             if( $isSent['is_success'] == 1 ){
@@ -102,8 +115,6 @@ class Cron_Notification extends MYF_Controller {
                                 $this->CronAutoSmsNotification_model->update($sms->id, $data);
 
                                 $total_sent++;
-                                
-                                $sent_numbers[$sms->mobile_number] = $sms->mobile_number;
                             }else{
                                 $err_msg = $isSent['msg'];
                                 $data = [
@@ -112,18 +123,9 @@ class Cron_Notification extends MYF_Controller {
                                     'err_msg' => $err_msg
                                 ];
                                 $this->CronAutoSmsNotification_model->update($sms->id, $data);
-                            }      
-                        }else{
-                            $err_msg = $isSent['msg'];
-                                $data = [
-                                    'is_sent' => 0,
-                                    'is_with_error' => 1,
-                                    'err_msg' => 'Duplicate Number'
-                                ];
-                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                            } 
                         }
-                        
-                    }           
+                    }          
                 } 
             }                               
         }
@@ -165,6 +167,12 @@ class Cron_Notification extends MYF_Controller {
                 if( $company ){
                     $business_name = $company->business_name;
                 }
+                $tags = '';
+
+                if($job->tags != '' ){
+                    $tags = $job->tags;
+                }
+
                 $order_number  = $job->job_number;
                 $customer_name = $job->first_name . ' ' . $job->last_name;
                 $customer_email = $job->email;
