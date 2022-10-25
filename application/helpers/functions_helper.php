@@ -532,4 +532,12 @@ if(!function_exists('get_estimate_customer_name')){
         return $customer;
     }
 }
+
+function get_employee_name($id){
+    $CI = &get_instance();
+    $CI->load->model('users_model'); //model connection
+    $employee = $CI->users_model->getEmployeeName($id);
+    $emp = $employee->FName.' '.$employee->LName;
+    return $emp;
+}
 ?>

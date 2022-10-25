@@ -5,7 +5,7 @@ include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
 <!-- Script for autosaving form -->
-<script src="<?= base_url("assets/js/estimate/autosave-options.js") ?>"></script>
+<!-- <script src="<?= base_url("assets/js/estimate/autosave-options.js") ?>"></script> -->
 
 <div class="wrapper" role="wrapper">
 

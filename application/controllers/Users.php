@@ -2488,6 +2488,8 @@ class Users extends MY_Controller
 		$json = ['is_success' => $is_success, 'msg' => $msg];
 		echo json_encode($json);			
 	}
+
+	
 }
 
 

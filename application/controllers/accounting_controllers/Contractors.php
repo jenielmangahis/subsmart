@@ -183,47 +183,46 @@ class Contractors extends MY_Controller {
         ));
 
         $filter = [];
-        if(!empty(get('date'))) {
-            switch(get('date')) {
-                case 'this-month' :
-                    $filter['start-date'] = date("Y-m-01");
-                    $filter['end-date'] = date("Y-m-t");
-                break;
-                case 'last-3-months' :
-                    $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -3 months'));
-                    $filter['end-date'] = date("Y-m-d");
-                break;
-                case 'last-12-months' :
-                    $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -12 months'));
-                    $filter['end-date'] = date("Y-m-d");
-                break;
-                case 'year-to-date' :
-                    $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -1 year'));
-                    $filter['end-date'] = date("Y-m-d");
-                break;
-            }
-
-            $this->page_data['date'] = get('date');
+        switch(get('date')) {
+            case 'this-month' :
+                $filter['start-date'] = date("Y-m-01");
+                $filter['end-date'] = date("Y-m-t");
+            break;
+            case 'last-3-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -3 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'last-12-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -12 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'year-to-date' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -1 year'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
         }
 
-        if(!empty(get('type'))) {
-            switch(get('type')) {
-                case 'check' :
-                    $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
-                break;
-                case 'expense' :
-                    $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
-                break;
-                case 'bill-payment' :
-                    $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
-                break;
-            }
-
-            $this->page_data['type'] = get('type');
-        } else {
-            $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
-            $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
-            $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+        switch(get('type')) {
+            case 'check' :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+                $recordsTotal += count($checks);
+            break;
+            case 'expense' :
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+                $recordsTotal += count($expenses);
+            break;
+            case 'bill-payment' :
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+                $recordsTotal += count($bills);
+            break;
+            default :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+                $recordsTotal += count($checks);
+                $recordsTotal += count($expenses);
+                $recordsTotal += count($bills);
+            break;
         }
 
         $data = [];
@@ -266,27 +265,22 @@ class Contractors extends MY_Controller {
             }
         }
 
-        if(!empty(get('method'))) {
-            $paymentMethod = get('method');
-            $data = array_filter($data, function($value, $key) use ($paymentMethod) {
-                switch($paymentMethod) {
-                    case 'check' :
-                        return $value['payment_method'] === 'Check';
-                    break;
-                    case 'direct-deposit' :
-                        return $value['payment_method'] === 'Direct deposit';
-                    break;
-                    case 'other' :
-                        return $value['payment_method'] === 'Other';
-                    break;
-                    default :
-                        return true;
-                    break;
-                }
-            }, ARRAY_FILTER_USE_BOTH);
-
-            $this->page_data['method'] = get('method');
-        }
+        $data = array_filter($data, function($value, $key) use ($paymentMethod) {
+            switch($paymentMethod) {
+                case 'check' :
+                    return $value['payment_method'] === 'Check';
+                break;
+                case 'direct-deposit' :
+                    return $value['payment_method'] === 'Direct deposit';
+                break;
+                case 'other' :
+                    return $value['payment_method'] === 'Other';
+                break;
+                default :
+                    return true;
+                break;
+            }
+        }, ARRAY_FILTER_USE_BOTH);
 
         usort($data, function($a, $b) {
             return strtotime($a['date']) < strtotime($b['date']);
@@ -295,9 +289,11 @@ class Contractors extends MY_Controller {
         $this->page_data['payments'] = $data;
         $this->page_data['paymentsTotal'] = array_sum(array_column($data, 'amount'));
         $this->page_data['contractorTypes'] = $this->vendors_model->get_contractor_types();
+        // $this->page_data['contractor_details'] = $this->accounting_contractors_model->get_contractor_details($contractorId);
         $this->page_data['contractor'] = $this->vendors_model->get_contractor($contractorId);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Contractors";
+        // $this->load->view('accounting/contractors/view', $this->page_data);
         $this->load->view('v2/pages/accounting/payroll/contractors/view', $this->page_data);
     }
 
@@ -318,6 +314,7 @@ class Contractors extends MY_Controller {
             'state' => $this->input->post('state'),
             'zip' => $this->input->post('zip_code'),
             'tax_id' => $this->input->post('contractor_type') === "1" ? $this->input->post('social_sec_num') : $this->input->post('emp_id_num'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         $update = $this->vendors_model->update_contractor($contractorId, $basicDetails);
@@ -328,7 +325,7 @@ class Contractors extends MY_Controller {
             $this->session->set_flashdata('error', "Unexpected error, please try again!");
         }
 
-        redirect($_SERVER['HTTP_REFERER']);
+        redirect("accounting/contractors/view/$contractorId");
     }
 
     public function set_status($contractorId, $status)
@@ -345,7 +342,7 @@ class Contractors extends MY_Controller {
             $this->session->set_flashdata('success', 'Unexpected error, please try again!');
         }
 
-        redirect($_SERVER['HTTP_REFERER']);
+        redirect("accounting/contractors/view/$contractorId");
     }
 
     public function load_contractor_payments($contractorId)

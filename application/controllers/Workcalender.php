@@ -855,23 +855,37 @@ class Workcalender extends MY_Controller
                 if ($event->event_description != '') {
                     if ($event->employee_id > 0) {
                         $starttime = $event->start_date . " " . $event->start_time;
-                        $start_date_time = date('Y-m-d\TH:i:s', strtotime($event->start_date . " " . $event->start_time));
-                        $start_date_end  = date('Y-m-d\TH:i:s', strtotime($event->end_date . " " . $event->end_time));
+                        $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
+                        $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
 
                         $title = $event->start_time . " - " . $event->end_time;
-                        /*$custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small><br /><small>" . $event->FName . ' ' . $event->LName . "</small><br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . "</small>";*/
 
-                        $custom_html = $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small>";
                         if (isset($a_settings['work_order_show_customer'])) {
-                            $custom_html .= "<br /><b><small style='font-weight:bolder;'>" . $event->FName . ' ' . $event->LName . "</small></b>";
+                            if( $event->first_name != '' ||  $event->last_name != ''){
+                                $customer_name = $event->first_name . ' ' . $event->last_name;
+                                $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$event->event_number.' ('.$customer_name.')'.'</span><hr />';
+                            }else{
+                                $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$event->event_number.'</span><hr />';
+                            }
                         }
+
+                        if( $event->event_tag != '' ){
+                            $tags = $event->event_tag;
+                        }else{
+                            $tags = '---';
+                        }
+                        $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+
+                        if( $event->FName != '' ||  $event->LName != ''){
+                            $user_assigned = $event->FName . ' ' . $event->LName;
+                        }else{
+                            $user_assigned = '---';
+                        }
+                        $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $user_assigned . "</small>";
+                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . $event->start_time . " - " . $event->end_time . "</small>";
 
                         if (isset($a_settings['work_order_show_details'])) {
-                            $custom_html .= "<br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . " - " . $event->event_description . "</small>";
-                        }
-
-                        if (isset($a_settings['work_order_show_link'])) {
-                            $custom_html .= "<br /><small><a href='".$event->url_link."'>".$event->url_link."</a></small>";
+                            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $event->event_address . "</small>";
                         }
 
                         if (isset($a_settings['work_order_show_price'])) {
@@ -881,7 +895,7 @@ class Workcalender extends MY_Controller
                                 $total_price += ($item->price * $item->qty);
                             }
 
-                            $custom_html .= "<br /><small>Price : ". number_format((float)$total_price, 2, '.', ',') . "</small>";
+                            $custom_html .= "<hr /><small style='font-weight:bold;font-size:17px;'>Total Cost : $". number_format((float)$total_price, 2, '.', ',') . "</small>";
                         }
 
                         $resources_user_events[$inc]['eventId'] = $event->id;
@@ -889,8 +903,8 @@ class Workcalender extends MY_Controller
                         $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
                         $resources_user_events[$inc]['title'] = $title;
                         $resources_user_events[$inc]['customHtml'] = $custom_html;
-                        $resources_user_events[$inc]['start'] = $event->start_date;
-                        $resources_user_events[$inc]['end'] = $event->end_date;
+                        $resources_user_events[$inc]['start'] = $start_date_time;
+                        $resources_user_events[$inc]['end'] = $start_date_end;
                         $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
 
@@ -1109,24 +1123,43 @@ class Workcalender extends MY_Controller
 
                 //$custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
 
-                $custom_html = $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small>";
-
                 if (isset($a_settings['work_order_show_customer'])) {
-                    $custom_html .= "<br /><b><small style='font-weight:bolder;'>" . $j->FName . ' ' . $j->LName . "</small></b>";
+                    if( $j->first_name != '' ||  $j->last_name != ''){
+                        $customer_name = $j->first_name . ' ' . $j->last_name;
+                        $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$j->job_number.' ('.$customer_name.')'.'</span><hr />';
+                    }else{
+                        $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$j->job_number.'</span><hr />';
+                    }
                 }
+                
+                if( $j->tags != '' ){
+                    $tags = $j->tags;
+                }else{
+                    $tags = '---';
+                }
+                $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+
+                if( $j->FName != '' ||  $j->LName != ''){
+                    $user_assigned = $j->FName . ' ' . $j->LName;
+                }else{
+                    $user_assigned = '---';
+                }
+                $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $user_assigned . "</small>";
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . $j->start_time . " - " . $j->end_time . "</small>";
 
                 if (isset($a_settings['work_order_show_details'])) {
-                    $custom_html .= "<br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . " - " . $j->job_description . "</small>";
+                    $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
                 }
 
                 if (isset($a_settings['work_order_show_price'])) {
-                    $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
+                    /*$jobItems = $this->Jobs_model->get_specific_job_items($j->id);
                     $total_price = 0;
                     foreach ($jobItems as $item) {
                         $total_price += ($item->price * $item->qty);
-                    }
+                    }*/
+                    $total_price = $j->amount;
 
-                    $custom_html .= "<br /><small>Price : ". number_format((float)$total_price, 2, '.', ',') . "</small>";
+                    $custom_html .= "<hr /><small style='font-weight:bold;font-size:17px;'>Total Cost : $". number_format((float)$total_price, 2, '.', ',') . "</small>";
                 }
 
                 /*if( isset($a_settings['work_order_show_link']) ){

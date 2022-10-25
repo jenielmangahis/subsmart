@@ -737,7 +737,7 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
-        $this->load->view('job/job_preview', $this->page_data);
+        $this->load->view('v2/pages/job/job_preview', $this->page_data);
     }
 
     public function billing($id=null)
@@ -1736,6 +1736,10 @@ class Job extends MY_Controller
             createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
         }
 
+        if ($jobs_id) { // job is created?
+            $this->sendEmployeeSMSAboutScheduledJob($jobs_id);
+        }
+
         if (!is_null($this->input->get('json', TRUE))) {
             // Returns json data, when ?json is set on URL query string.
             header('content-type: application/json');
@@ -1743,6 +1747,68 @@ class Job extends MY_Controller
         } else {
             $data_arr = array("data" => "Success", "qty" => $input['item_qty']);
             exit(json_encode($data_arr));
+        }
+    }
+
+    public function sendEmployeeSMSAboutScheduledJob($jobId)
+    {
+        $job = $this->jobs_model->get_specific_job($jobId);
+
+        if ($job->status !== 'Scheduled') return;
+        if (empty($job->start_date)) return;
+        if (empty($job->start_time)) return;
+
+        $employeeIdFields = [
+            'employee_id',
+            'employee2_id',
+            'employee3_id',
+            'employee4_id'
+        ];
+
+        $date = DateTime::createFromFormat('Y-m-d', $job->start_date)->format('F d,Y');
+        $time = $job->start_time;
+        $jobNumber = $job->job_number;
+
+        $this->load->model('AcsProfile_model');
+        $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
+        $customerName = $customer->first_name . ' ' . $customer->last_name; 
+        
+        $message = "Job order: ${jobNumber} has been scheduled for customer ${customerName}";
+        $companyId = logged('company_id');
+
+        $employeeIds = [];
+        foreach ($employeeIdFields as $field) {
+            if ($job->$field) {
+                array_push($employeeIds, (int) $job->$field);
+            }
+        }
+
+        if (empty($employeeIds)) return;
+
+        // $this->db->where('company_id', $companyId);
+        $this->db->where_in('id', $employeeIds);
+        $employees = $this->db->get('users')->result();
+
+        $this->load->model('Clients_model');
+        $client = $this->Clients_model->getById($companyId);
+        if ($client->default_sms_api !== 'ring_central') return;
+
+        $this->load->model('RingCentralAccounts_model');
+        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+        if (!$ringCentral) return;
+
+        $this->load->helper('sms_helper');
+
+        foreach ($employees as $employee) {
+            if (empty($employee->mobile)) {
+                continue;
+            }
+
+            $mobile = str_replace('-', '', $employee->mobile);
+            $mobile = str_replace('+1', '', $mobile);
+            $mobile = '+1' . $mobile;
+
+            $result = smsRingCentral($ringCentral, $mobile, $message);
         }
     }
 
@@ -2166,6 +2232,8 @@ class Job extends MY_Controller
 
     public function edit_job_type($job_type_id)
     {
+		$this->page_data['page']->title = 'Job Types';
+
         $this->load->model('Icons_model');
 
         add_css(array(
@@ -2177,7 +2245,7 @@ class Job extends MY_Controller
 
         $this->page_data['jobType'] = $jobType;
         $this->page_data['icons'] = $icons;
-        $this->load->view('job/job_settings/edit_job_type', $this->page_data);
+        $this->load->view('v2/pages/job/job_settings/edit_job_type', $this->page_data);
     }
 
     public function update_job_type()
@@ -2603,8 +2671,7 @@ class Job extends MY_Controller
                 $group_items[$type][] = [
                     'item_name' => $ji->title,
                     'item_price' => $ji->price,
-                    'item_qty' => $ji->qty,
-                    'item_tax' => $ji->tax
+                    'item_qty' => $ji->qty
                 ];
             }
             $msg="";
@@ -2632,7 +2699,6 @@ class Job extends MY_Controller
                 $msg .= "<table>";
                 foreach ($items as $i) {
                     $total = $i['item_price'] * $i['item_qty'];
-                    $total_tax = $total_tax + $i['tax'];
                     //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
                     $msg  .= "<tr><td width='300'>".$i['item_name']."</td><td>".number_format((float)$total, 2, '.', ',')."</td></tr>";
                     $subtotal = $subtotal + $total;
@@ -2650,8 +2716,7 @@ class Job extends MY_Controller
 
             $msg .= "<br /><br />";
             $msg .= "<table>";
-            //$msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
-            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$job->total_amount, 2, '.', ',')."</h2></td></tr>";
+            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
             $msg .= "<tr><td colspan='2'><br><br></td></tr>";
             $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
             $msg .= "</table>";

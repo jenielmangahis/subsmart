@@ -577,7 +577,6 @@ $route['accounting/chart-of-accounts/get-all-account-types'] = 'accounting_contr
 $route['accounting/chart-of-accounts/print-table']['post'] = 'accounting_controllers/chart_of_accounts/print_table';
 $route['accounting/chart-of-accounts/update-accounts-name']['post'] = 'accounting_controllers/chart_of_accounts/update_account_names';
 $route['accounting/chart-of-accounts/view-register/(:any)'] = 'accounting_controllers/chart_of_accounts/view_register/$1';
-$route['accounting/chart-of-accounts/(:any)/load-registers']['post'] = 'accounting_controllers/chart_of_accounts/load_registers/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/print-transactions']['post'] = 'accounting_controllers/chart_of_accounts/print_transactions/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post'] = 'accounting_controllers/chart_of_accounts/export_transactions/$1';
 $route['accounting/chart-of-accounts/(:any)/save-transaction/(:any)']['post'] = 'accounting_controllers/chart_of_accounts/save_transaction/$1/$2';
@@ -869,6 +868,7 @@ $route['sms_automation/payment'] = 'Sms_Automation/payment';
 $route['sms_automation/activate_automation'] = 'Sms_Automation/activate_automation';
 $route['sms_automation/edit_automation/(:num)'] = 'Sms_Automation/edit_sms_automation/$1';
 $route['sms_automation/_delete_automation'] = 'Sms_Automation/ajax_delete_automation';
+$route['sms_automation/_view_sms_automation'] = 'Sms_Automation/ajax_view_sms_automation';
 
 //email blast
 $route['email_campaigns/add_email_blast'] = 'Email_Campaigns/add_email_blast';

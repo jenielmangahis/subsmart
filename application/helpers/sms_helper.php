@@ -76,13 +76,14 @@ function smsTwilio($twilio, $to_number, $message)
     return $result;
 }
 
-function cleanMobileNumber($to_number)
+function cleanMobileNumber($to_number, $extension = '+1')
 {
     $to_number = str_replace("-", "", $to_number);
     $to_number = str_replace(".", "", $to_number);
     $to_number = str_replace(" ", "", $to_number);
     $to_number = str_replace("(", "", $to_number);
     $to_number = str_replace(")", "", $to_number);
+    $to_number = str_replace($extension, "", $to_number);
 
     return $to_number;
 }

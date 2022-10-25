@@ -96,7 +96,7 @@ class Jobs_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
-        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');        
+        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');
         $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id', 'left');
         $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
         $this->db->where("jobs.id", $id);
@@ -107,7 +107,7 @@ class Jobs_model extends MY_Model
     public function get_specific_job_items($id)
     {
         $this->db->from($this->table_items);
-        $this->db->select('items.id,items.title,items.price,items.type,job_items.qty,job_items.location,job_items.points,job_items.tax');
+        $this->db->select('items.id,items.title,items.price,items.type,job_items.qty,job_items.location,job_items.points');
         $this->db->join('items', 'items.id = job_items.items_id', 'left');
         $this->db->where("job_items.job_id", $id);
         $query = $this->db->get();
