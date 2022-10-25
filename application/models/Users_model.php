@@ -913,7 +913,15 @@ class Users_model extends MY_Model
         return $query->row();
     }
 
-    
+    public function getEmployeeName($id){
+		$this->db->select('FName, LName');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+		
+	}
 }
 
 

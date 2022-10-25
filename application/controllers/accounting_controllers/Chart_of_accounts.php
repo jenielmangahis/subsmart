@@ -727,13 +727,36 @@ class Chart_of_accounts extends MY_Controller {
             // "assets/js/accounting/accounting/chart-of-accounts.js?v=".rand()
         ));
 
+        $filters = [];
+        if(!empty(get('search'))) {
+            $filters['search'] = get('search');
+            $this->page_data['search'] = get('search');
+        }
+
+        if(!empty(get('reconcile-status'))) {
+            $this->page_data['reconcile_status'] = get('reconcile-status');
+        }
+
+        if(!empty(get('transaction-type'))) {
+            $filters['type'] = get('transaction-type');
+            $this->page_data['transaction_type'] = get('transaction-type');
+        }
+
+        if(!empty(get('payee'))) {
+            $filters['type'] = get('payee');
+            $this->page_data['payee'] = get('payee');
+        }
+
+        $registers = [];
+
         $this->page_data['account'] = $account;
         $this->page_data['type'] = $type;
+        $this->page_data['registers'] = $registers;
         // $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
         $this->load->view('v2/pages/accounting/accounting/chart_of_accounts/view_register', $this->page_data);
     }
 
-    public function load_registers($accountId)
+    private function get_registers($accountId)
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $column = isset($post['column']) ? $post['column'] : $post['order'][0]['column'];

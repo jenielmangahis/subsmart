@@ -22,7 +22,7 @@
                 <div class="modal-footer">
                     <div class="row w-100">
                         <div class="col-12 col-md-6">
-                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="nsm-button primary close-account-modal" data-bs-dismiss="modal">Cancel</button>
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <button type="submit" name="save" class="nsm-button success">Save</button>

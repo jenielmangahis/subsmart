@@ -15,7 +15,8 @@
 <!-- Script for autosaving form -->
 <?php if(!isset($jobs_data)): ?>
     <!-- autosave only when creating -->
-    <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
+    <!-- disable autosave, because we want to handle form submit - send SMS to employeee -->
+    <!-- <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script> -->
 <?php endif; ?>
 
 
@@ -388,27 +389,19 @@
                                                 <a href="">Draft</a></li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>" id="2">
                                                 <a href="">Schedule</a></li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Arrival' ? 'active' : ''; ?>" id="3" style="display: ;">
-                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-bs-toggle="modal" data-bs-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Arrival </a>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Arrival' ? 'active' : ''; ?>" id="3" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-bs-toggle="modal" data-bs-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
+                                                        <a href="#"> Arrival </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?>" id="4" >
-                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Start </a>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?>" id="4" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
+                                                        <a href="#"> Start </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5">
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?>data-bs-toggle="modal" data-bs-target="#approveThisJobModal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
                                                         <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" id="6">
-                                                        <a
-                                                            href="#"
-                                                            <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#finish_modal"
-                                                            <?php endif; ?>
-                                                        >
-                                                        Finish
-                                                        </a>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>" id="7">Invoiced</li>
-                                                    <li class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>" id="8">Completed</li>
+                                                    <li id="6" class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>data-bs-toggle="modal"data-bs-target="#finish_modal"<?php endif; ?>>
+                                                        <a href="#">Finish</a>
+                                                    <li id="7" class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>">Invoiced</li>
+                                                    <li id="8" class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>">Completed</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -554,13 +547,16 @@
                                         <h6>Assigned To</h6>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 1" id="emp2_id" name="emp2_id"  class="form-control" readonly>
+                                                <input type="text" id="emp2_id" name="emp2_id" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 2" id="emp3_id" name="emp3_id"  class="form-control" readonly>
+                                                <input type="text" id="emp3_id" name="emp3_id" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 3" id="emp4_id" name="emp4_id"  class="form-control" readonly>
+                                                <input type="text" id="emp4_id" name="emp4_id" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly>
                                             </div>
                                         </div>
                                         <br>
@@ -990,9 +986,8 @@
                                                     <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
                                                 <?php endif; ?>
                                                 <?php if(isset($jobs_data)): ?>
-                                                    <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>">
-                                                        <button type="submit" class="nsm-button primary"><i class='bx bx-bx fa-search-plus'></i> Preview</button>
-                                                    </a>
+                                                    <button onclick="location.href='<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>'" class="nsm-button primary"><i class='bx bx-bx bx-search-alt'></i> Preview</button>
+                                                    <!-- <a class="nsm-button primary" href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>"></a> -->
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -1143,12 +1138,12 @@
 <?php include viewPath('v2/pages/job/modals/invoice_import'); ?>
 
 <!-- Signature Modal -->
-<div class="modal fade" id="share_job_modal" role="dialog">
-    <div class="close-modal" data-bs-dismiss="modal">&times;</div>
+<div class="modal fade nsm-modal" id="share_job_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Share Job To Other Employee</h4>
+                <span class="modal-title content-title">Share Job To Other Employee</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <div class="modal-body">
                 <label>Employee 1</label>
@@ -1182,8 +1177,11 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" id="" class="btn btn-primary" data-bs-dismiss="modal">
-                    <span class="fa fa-paper-plane-o"></span> Save / Close
+                <button type="button" id="share_modal_submit" class="nsm-button primary" data-bs-dismiss="modal">
+                <i class='bx bx-paper-plane'></i> Save
+                </button>
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">
+                Close
                 </button>
             </div>
         </div>
@@ -1315,7 +1313,8 @@ add_footer_js(array(
 
 
 <script>
-    $(document).ready(function(){
+
+        var class_name = $('.active').attr('class');
         var class_name = $('.active').attr('class');
         var step = '';
         
@@ -1339,6 +1338,21 @@ add_footer_js(array(
             $('#'+x).addClass('active');
             $('#'+x).addClass('a-bold');
         }
+    $(document).ready(function(){
+        $('#share_modal_submit').click(function() {
+            //employee 2
+            var emp2 = $('#employee2').val();
+            var empText = $('#employee2 :selected').text();
+            $('#emp2_id').val($('#employee2').val());
+            $('#emp2_txt').val($('#employee2 :selected').text());
+            //employee 3 
+            $('#emp3_id').val($('#employee3').val());
+            $('#emp3_txt').val($('#employee3 :selected').text());
+            //employee 4
+            $('#emp4_id').val($('#employee4').val());
+            $('#emp4_txt').val($('#employee4 :selected').text());
+            
+        })
         // if(step == 'step02'){
         //     $('#step01').addClass('active');
         // }

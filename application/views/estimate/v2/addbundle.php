@@ -5,7 +5,7 @@ include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
 <!-- Script for autosaving form -->
-<script src="<?= base_url("assets/js/estimate/autosave-bundle.js") ?>"></script>
+<!-- <script src="<?= base_url("assets/js/estimate/autosave-bundle.js") ?>"></script> -->
 
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>

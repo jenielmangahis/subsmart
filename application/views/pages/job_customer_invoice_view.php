@@ -95,9 +95,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         top: 19px;
     }
 </style>
-<script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script>
 <script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
 <!-- <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> -->
+<!-- <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
 <div>
     <!-- page wrapper start -->
     <div>
@@ -216,7 +216,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php
                                         $subtotal = 0.00;
                                         foreach ($jobs_data_items as $item):
-                                            $total = ($item->price * $item->qty);
+                                            $total = $item->price * $item->qty;
                                             ?>
                                             <tr>
                                                 <td><?= $item->title; ?></td>
@@ -248,7 +248,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php endif; ?>
 
                                     <b>Grand Total</b>
-                                    <b class="right-text">$<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></b>
+                                    <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -285,9 +285,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-12">
                                     <h6 class="title-border"></h6>
-                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></span>
+                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$subtotal,2,'.',','); ?></span>
                                     <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
-                                    <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>">
+                                    <input type="hidden" id="total_amount" value="<?= $subtotal; ?>">
                                     <br /><br />
                                     <?php if($jobs_data->status != 'Completed'){ ?>
                                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
@@ -295,9 +295,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="payment-api-container">
                                           <?php if($onlinePaymentAccount){ ?>
                                             <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
-                                              <input type="hidden" id="converge-token" name="converge_token" value="" />
-                                              <a class="btn btn-primary btn-confirm-order btn-pay" href="javascript:void(0);">CONFIRM ORDER</a>
-                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);" style="display:none;">PAY NOW</a>
+                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY NOW</a>
                                               <!-- <div id="applepay-button" class="apple-pay-button"></div> -->
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
@@ -350,44 +348,7 @@ $(function(){
   }
   //Converge payment
   $(".btn-pay-converge").click(function(){
-    //initiateLightbox();
-    var token = $('#converge-token').val();
-    openLightbox(token);
-  });
-
-  $('.btn-confirm-order').click(function(){
-    var job_id = $("#jobid").val();
-    var total_amount = $("#total_amount").val();
-
-    var url = base_url + '_converge_request_token';
-    $(".btn-confirm-order").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-    setTimeout(function () {
-    $.ajax({
-       type: "POST",
-       url: url,
-       dataType: "json",
-       data: {job_id:job_id, total_amount:total_amount},
-       success: function(o)
-       {
-          if( o.is_success ){
-            $('#converge-token').val(o.token);    
-            //initiateApplePay(o.token);          
-
-            $(".btn-pay-converge").show();
-            $(".btn-confirm-order").hide();
-
-          }else{
-            Swal.fire({
-              icon: 'error',
-              title: 'Cannot Process Payment',
-              text: o.msg
-            });
-
-            $(".btn-confirm-order").html('CONFIRM ORDER');
-          }
-       }
-    });
-    }, 1000);
+    initiateLightbox();
   });
 
   function initiateLightbox () {
@@ -405,7 +366,6 @@ $(function(){
            success: function(o)
            {
               if( o.is_success ){
-                  //initiateApplePay(o.token);
                   openLightbox(o.token);                  
               }else{
                 Swal.fire({
@@ -420,28 +380,6 @@ $(function(){
         });
       }, 1000);
   }
-
-    function initiateApplePay(token){
-        var paymentFields = {
-            ssl_txn_auth_token: token
-        };
-        var callback = {
-            onError: function (error) {
-                //showResult("error", error);
-            },
-            onCancelled: function () {
-                //showResult("cancelled", "");
-            },
-            onDeclined: function (response) {
-                //showResult("declined", JSON.stringify(response, null, '\t'));
-            },
-            onApproval: function (response) {
-                //showResult("approval", JSON.stringify(response, null, '\t'));
-            }
-        };
-        ConvergeEmbeddedPayment.initApplePay('applepay-button', paymentFields, callback);
-        return false;
-    }
 
   function openLightbox (token) {
       var paymentFields = {
@@ -460,13 +398,13 @@ $(function(){
               //showResult("cancelled", "");
           },
           onDeclined: function (response) {
-            Swal.fire({
+            /*Swal.fire({
               icon: 'error',
               title: 'Declined',
               text: JSON.stringify(response, null, '\t')
-            });
+            });*/
             //showResult("declined", JSON.stringify(response, null, '\t'));
-            //updateJobToPaid();
+            updateJobToPaid();
           },
           onApproval: function (response) {              
               updateJobToPaid();

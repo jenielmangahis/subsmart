@@ -7,8 +7,6 @@ echo put_header_assets();
 
 
 <!-- Script for autosaving form -->
-<script src="<?= base_url("assets/js/estimate/autosave-options.js") ?>"></script>
-<!-- Script for autosaving form -->
 <script src="<?= base_url("assets/js/estimate/autosave-bundle-update.js") ?>"></script>
 
 
