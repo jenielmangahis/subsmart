@@ -12,8 +12,7 @@ if (!empty($smsAutomation)) :
             </td>
             <td class="fw-bold nsm-text-primary"><?= $s->automation_name; ?></td>
             <td><?= $optionRuleEvent[$s->rule_event]; ?></td>
-            <td><?= $optionRuleNotifyAt[$s->rule_notify_at]; ?></td>
-            <td>0 - <a href="<?php echo base_url('sms_automation/view_logs/' . $s->id) ?>" class="nsm-link">View Log</td>
+            <td><?= $optionRuleNotifyAt[$s->rule_notify_at]; ?></td>            
             <td><?= $optionStatus[$s->status]; ?></td>
             <td>
                 <div class="dropdown table-management">
@@ -22,7 +21,10 @@ if (!empty($smsAutomation)) :
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" name="dropdown_view" href="<?php echo base_url('sms_automation/view_automation/' . $s->id) ?>">View</a>
+                            <a class="dropdown-item btn-view" name="dropdown_view" href="javascript:void(0);" data-id="<?= $s->id; ?>">View</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" name="dropdown_view" href="<?php echo base_url('sms_automation/view_logs/' . $s->id); ?>">Logs</a>
                         </li>
                         <li>
                             <a class="dropdown-item" name="dropdown_edit" href="<?php echo base_url('sms_automation/edit_automation/' . $s->id) ?>">Edit</a>
