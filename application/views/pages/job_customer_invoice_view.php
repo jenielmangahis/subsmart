@@ -298,7 +298,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                               <input type="hidden" id="converge-token" name="converge_token" value="" />
                                               <a class="btn btn-primary btn-confirm-order btn-pay" href="javascript:void(0);">CONFIRM ORDER</a>
                                               <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);" style="display:none;">PAY NOW</a>
-                                              <!-- <div id="applepay-button" class="apple-pay-button"></div> -->
+                                              <?php if( isApple() ){ ?>
+                                                <div id="applepay-button" class="apple-pay-button"></div>
+                                              <?php } ?>
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                               <!-- <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a> -->
@@ -371,7 +373,9 @@ $(function(){
        {
           if( o.is_success ){
             $('#converge-token').val(o.token);    
-            //initiateApplePay(o.token);          
+            <?php if( isApple() ){ ?>
+            initiateApplePay(o.token);          
+            <?php } ?>
 
             $(".btn-pay-converge").show();
             $(".btn-confirm-order").hide();
@@ -428,6 +432,11 @@ $(function(){
         var callback = {
             onError: function (error) {
                 //showResult("error", error);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Declined',
+                  text: 'Apple Pay not available'
+                });
             },
             onCancelled: function () {
                 //showResult("cancelled", "");
@@ -463,7 +472,7 @@ $(function(){
             Swal.fire({
               icon: 'error',
               title: 'Declined',
-              text: JSON.stringify(response, null, '\t')
+              text: 'Cannot process payment'
             });
             //showResult("declined", JSON.stringify(response, null, '\t'));
             //updateJobToPaid();
@@ -516,7 +525,7 @@ $(function(){
 
     //Paypal
     // Render the PayPal button into #paypal-button-container
-    paypal.Buttons({
+    /*paypal.Buttons({
         style: {
             layout: 'horizontal',
             tagline: false,
@@ -544,7 +553,7 @@ $(function(){
                 updateJobToPaid();       
             });
         }
-    }).render('#paypal-button-container');
+    }).render('#paypal-button-container');*/
 
     /*End paypal*/
 });

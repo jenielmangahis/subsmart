@@ -74,7 +74,7 @@ class Sms_Automation extends MY_Controller {
         $this->page_data['optionRuleNotify'] = $this->SmsAutomation_model->optionRuleNotify();
         $this->page_data['optionRuleNotifyAt'] = $this->SmsAutomation_model->optionRuleNotifyAt();
         $this->page_data['optionCustomerTypeService'] = $this->SmsAutomation_model->optionCustomerTypeService();
-        $this->load->view('sms_automation/add_sms_automation', $this->page_data);
+        $this->load->view('v2/pages/sms_automation/add_sms_automation', $this->page_data);
     }
 
     public function create_draft_automation(){    
@@ -141,7 +141,7 @@ class Sms_Automation extends MY_Controller {
 
         $this->page_data['company'] = $company;
         $this->page_data['smsAutomation'] = $smsAutomation;
-        $this->load->view('sms_automation/build_sms', $this->page_data);
+        $this->load->view('v2/pages/sms_automation/build_sms', $this->page_data);
     }
 
     public function create_sms_message(){
@@ -179,7 +179,7 @@ class Sms_Automation extends MY_Controller {
         $this->page_data['total_sms_price'] = $total_sms_price;
         $this->page_data['price_per_sms'] = $price_per_sms;
         $this->page_data['sms_text'] = $sms_text;
-        $this->load->view('sms_automation/preview_sms', $this->page_data);
+        $this->load->view('v2/pages/sms_automation/preview_sms', $this->page_data);
     }
 
     public function payment(){
@@ -193,7 +193,7 @@ class Sms_Automation extends MY_Controller {
 
         $this->page_data['primaryCard'] = $primaryCard;
         $this->page_data['smsAutomation'] = $smsAutomation;
-        $this->load->view('sms_automation/payment', $this->page_data);
+        $this->load->view('v2/pages/sms_automation/payment', $this->page_data);
     }
 
     public function activate_automation(){
@@ -235,7 +235,7 @@ class Sms_Automation extends MY_Controller {
 		        $this->page_data['optionRuleNotify'] = $this->SmsAutomation_model->optionRuleNotify();
 		        $this->page_data['optionRuleNotifyAt'] = $this->SmsAutomation_model->optionRuleNotifyAt();
 		        $this->page_data['optionCustomerTypeService'] = $this->SmsAutomation_model->optionCustomerTypeService();
-                $this->load->view('sms_automation/edit_sms_automation', $this->page_data);
+                $this->load->view('v2/pages/sms_automation/edit_sms_automation', $this->page_data);
             }else{
                 $this->session->set_flashdata('message', 'Record not found.');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -300,7 +300,26 @@ class Sms_Automation extends MY_Controller {
 
         $this->page_data['smsAutomation'] = $smsAutomation;
         $this->page_data['smsLogs'] = $smsLogs;
-        $this->load->view('sms_automation/view_logs', $this->page_data);    
+        $this->load->view('v2/pages/sms_automation/view_logs', $this->page_data);    
+    }
+
+    public function ajax_view_sms_automation(){
+        $this->load->model('MarketingOrderPayments_model');
+
+        $post = $this->input->post();
+        
+        $smsAutomation = $this->SmsAutomation_model->getById($post['sms_id']);
+        $statusOptions = $this->SmsAutomation_model->optionStatus();
+        $customerTypeOptions = $this->SmsAutomation_model->optionCustomerTypeService();
+        $ruleNotifyAtOptions = $this->SmsAutomation_model->optionRuleNotifyAt();
+        $ruleNotifyOptions   = $this->SmsAutomation_model->optionRuleNotify();  
+
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['smsAutomation']   = $smsAutomation;
+        $this->page_data['ruleNotifyAtOptions'] = $ruleNotifyAtOptions;
+        $this->page_data['ruleNotifyOptions']   = $ruleNotifyOptions;
+        $this->page_data['customerTypeOptions'] = $customerTypeOptions;
+        $this->load->view('v2/pages/sms_automation/ajax_view_automation', $this->page_data);   
     }
 }
 

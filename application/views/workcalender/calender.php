@@ -24,7 +24,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   border-bottom-color: #32243D !important;
 }
 </style>
-W
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
 <?php if( $onlinePaymentAccount ){ ?>
     <?php if( $onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '' ){ ?>

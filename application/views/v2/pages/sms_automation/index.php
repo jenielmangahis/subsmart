@@ -37,7 +37,6 @@
                             <td data-name="Automation Name">Automation Name</td>
                             <td data-name="Event">Event</td>
                             <td data-name="Details">Details</td>
-                            <td data-name="Texts">Texts</td>
                             <td data-name="Active">Active</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -45,6 +44,19 @@
                     <tbody id="sms_automation_container">
                     </tbody>
                 </table>
+            </div>
+
+            <!-- View Modal -->
+            <div class="modal fade nsm-modal fade" id="modalView" aria-labelledby="modalViewLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" id="new_feed_modal_label">View</span>
+                            <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -92,6 +104,26 @@
                 }
             });
         });
+    });
+
+    $(document).on('click', '.btn-view', function(){
+        var url = base_url + 'sms_automation/_view_sms_automation';
+        var sms_id = $(this).data('id');
+
+        $('#modalView').modal('show');
+        $('#modalView .modal-body').html('<span class="bx bx-loader bx-spin"></span>');
+        
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {sms_id:sms_id},             
+             success: function(o)
+             {          
+                $('#modalView .modal-body').html(o);
+             }
+          });
+        }, 800);
     });
 
     function loadSMSAutomation(status = "all") {
