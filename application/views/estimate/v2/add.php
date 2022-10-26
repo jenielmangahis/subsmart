@@ -356,6 +356,19 @@ echo put_header_assets();
                                     <br><br><a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label for="job_name"><b>Customer Email</b></label>
+                                    <input id="estimate-customer-email" type="text" class="form-control" disabled />
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="job_name"><b>Customer Mobile</b></label>
+                                    <input id="estimate-customer-mobile" type="text" class="form-control" disabled />
+                                </div>
+                            </div>
+
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="job_location"><b>Job Location</b></label>
@@ -443,7 +456,7 @@ echo put_header_assets();
                                     <label for="status" class="required"><b>Estimate Status</b></label>
                                     <!-- <input type="text" class="form-control" name="zip" id="zip" required
                                                 placeholder="Enter Estimate Status"/> -->
-                                    <select name="status" class="form-control">
+                                    <select name="status" class="form-control" id="estimate-status">
                                         <option value="Draft">Draft</option>
                                         <option value="Submitted">Submitted</option>
                                         <option value="Accepted">Accepted</option>
@@ -640,9 +653,12 @@ echo put_header_assets();
 
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="nsm-button primary" style="margin: 0; height: 34px;">Save</button>
+                                    <a href="<?php echo url('accounting/newEstimateList') ?>" class="nsm-button" style="color: black;">Cancel</a>
+
+                                    <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn"">Save as draft</button>
+
+                                    <button type="button" class="nsm-button primary" style="margin: 0; height: 34px;" id="estimate-save-btn"">Save</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
-                                    <a href="<?php echo url('accounting/newEstimateList') ?>" class="nsm-button">Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -1057,8 +1073,14 @@ echo put_header_assets();
                 },
                 dataType: 'json',
                 success: function(response) {
-                    // alert('success');
-                    // console.log(response['customer']);
+                    if (response.customer.email) {
+                        $("#estimate-customer-email").val(response.customer.email);
+                    }
+
+                    if (response.customer.phone_m) {
+                        $("#estimate-customer-mobile").val(response.customer.phone_m);
+                    }
+
                     $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
 
                 },
@@ -1481,6 +1503,26 @@ echo put_header_assets();
 
         await sleep(300);
         $($customer).val(params.customer).trigger("change");
+    });
+</script>
+
+<script>
+    window.document.addEventListener("DOMContentLoaded", async () => {
+        const $saveDraftButton = document.getElementById("estimate-save-draft-btn");
+        const $saveButton = document.getElementById("estimate-save-btn");
+
+        const $statusSelect = document.getElementById("estimate-status");
+        const $form = document.getElementById("estimate_form");
+
+        $saveDraftButton.addEventListener("click", () => {
+            $statusSelect.value = "Draft";
+            $form.submit();
+        });
+
+        $saveButton.addEventListener("click", () => {
+            $statusSelect.value = "Submitted";
+            $form.submit();
+        });
     });
 </script>
 

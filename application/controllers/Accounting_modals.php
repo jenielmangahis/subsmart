@@ -9018,7 +9018,7 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        if($field === 'product' && count($selected) > 0 || $field === 'register-account') {
+        if($field === 'product' && count($selected) > 0) {
             array_shift($return['results']);
         }
 

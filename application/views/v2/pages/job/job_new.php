@@ -387,28 +387,20 @@
                                                     <li class="<?= !isset($jobs_data) || $jobs_data->status == '0' || $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>" id="1">
                                                 <a href="">Draft</a></li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>" id="2">
-                                                <a href="">Schedule</a></li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Arrival' ? 'active' : ''; ?>" id="3" style="display: ;">
-                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-bs-toggle="modal" data-bs-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Arrival </a>
+                                                <a href="">Scheduled</a></li>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Arrival' ? 'active' : ''; ?>" id="3" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-bs-toggle="modal" data-bs-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
+                                                        <a href="#"> Arrived </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?>" id="4" >
-                                                        <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>> Start </a>
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?>" id="4" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
+                                                        <a href="#"> Started </a>
                                                     </li>
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5">
                                                         <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" id="6">
-                                                        <a
-                                                            href="#"
-                                                            <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#finish_modal"
-                                                            <?php endif; ?>
-                                                        >
-                                                        Finish
-                                                        </a>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>" id="7">Invoiced</li>
-                                                    <li class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>" id="8">Completed</li>
+                                                    <li id="6" class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>data-bs-toggle="modal"data-bs-target="#finish_modal"<?php endif; ?>>
+                                                        <a href="#">Finished</a>
+                                                    <li id="7" class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>">Invoiced</li>
+                                                    <li id="8" class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>">Completed</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -488,11 +480,11 @@
                                                 <option value="Urgent">Urgent</option>
                                             </select>
                                         </div><br>
-                                        <h6>Select Employee</h6>
+                                        <h6>Sales Rep</h6>
                                             <select id="employee_id" name="employee_id" class="form-control " required>
                                                 <option value="10001">Select All</option>
-                                                <?php if(!empty($employees)): ?>
-                                                    <?php foreach ($employees as $employee): ?>
+                                                <?php if(!empty($sales_rep)): ?>
+                                                    <?php foreach ($sales_rep as $employee): ?>
                                                         <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
@@ -554,6 +546,7 @@
                                         <h6>Assigned To</h6>
                                         <div class="row">
                                             <div class="col-md-4">
+<<<<<<< HEAD
                                                 <input type="text" placeholder="Employee 1" id="emp2_id" name="emp2_id"  class="form-control" readonly>
                                             </div>
                                             <div class="col-md-4">
@@ -561,6 +554,18 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="text" placeholder="Employee 3" id="emp4_id" name="emp4_id"  class="form-control" readonly>
+=======
+                                                <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly>
+>>>>>>> staging-master
                                             </div>
                                         </div>
                                         <br>
@@ -623,7 +628,7 @@
                                                 </table>
                                             </div>
                                             <div class="col-md-8">
-                                                <div class="col-md-12">
+                                                <div class="col-md-12 d-none">
                                                     <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
                                                     <div id="map" class="col-md-6 float-left"></div>
                                                 </div>
@@ -740,8 +745,8 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_tax_total">0.00</label>
-                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        <label id="invoice_tax_total"><?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?></label>
+                                                        <input type="hidden" name="tax" id="tax_total_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <hr>
@@ -766,7 +771,7 @@
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
                                                         <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                        <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
@@ -800,12 +805,12 @@
                                                                     <div id="notes_edit_btn_right" class="pencil" style="width:100%; height:100px;cursor: pointer;">
                                                                         <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
                                                                     </div>
-                                                                    <div id="notes_input_div_right" style="display:none;">
+                                                                    <!-- <div id="notes_input_div_right" style="display:none;">
                                                                         <div style=" height:70px;margin-bottom: 10px;">
-                                                                            <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt_right" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                                                            <textarea cols="40" style="width: 100%;" rows="3" id="note_txt_right" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
                                                                             <button type="button" class="btn btn-primary btn-sm" id="save_memo_right" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
                                                                 </div>
                                                                 <div class="card-footers">
                                                                     <div style="float: right;margin-bottom: 10px;">
@@ -862,7 +867,7 @@
                                                     </div>
                                                 </div>-->
                                                 <div class="col-sm-12">
-                                                    <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at (<?= $company_info->business_phone; ?>) for quality customer service.">
+                                                    <input class="form-control" name="message" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at (<?= $company_info->business_phone; ?>) for quality customer service.">
                                                 </div>
                                                 <div class="col-sm-12">
                                                     <hr>
@@ -990,9 +995,13 @@
                                                     <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
                                                 <?php endif; ?>
                                                 <?php if(isset($jobs_data)): ?>
+<<<<<<< HEAD
                                                     <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>">
                                                         <button type="submit" class="nsm-button primary"><i class='bx bx-bx fa-search-plus'></i> Preview</button>
                                                     </a>
+=======
+                                                    <button type="button" onclick="location.href='<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>'" class="nsm-button primary"><i class='bx bx-bx bx-search-alt'></i> Preview</button>
+>>>>>>> staging-master
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -1151,7 +1160,7 @@
                 <h4 class="modal-title">Share Job To Other Employee</h4>
             </div>
             <div class="modal-body">
-                <label>Employee 1</label>
+                <label>Sales Rep 1</label>
                 <select id="employee2" name="employee2_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -1161,7 +1170,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Employee 2</label>
+                <label>Sales Rep 2</label>
                 <select id="employee3" name="employee3_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -1171,7 +1180,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Employee 3</label>
+                <label>Sales Rep 3</label>
                 <select id="employee4" name="employee4_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>

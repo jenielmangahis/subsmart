@@ -277,7 +277,7 @@ img.company-logo2 {
                                                     <select id="job_tags" name="job_tags" class="form-control custom-select m_select">
                                                         <option value="0">- none -</option>
                                                         <?php foreach($job_tags as $jb){ ?>
-                                                        <option value="<?php echo $jb->id; ?>"><?php echo $jb->name; ?></option>
+                                                        <option value="<?php echo $jb->name; ?>"><?php echo $jb->name; ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>    

@@ -724,8 +724,40 @@ class Chart_of_accounts extends MY_Controller {
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/accounting/chart_of_accounts/view-register.js?v=".rand()
-            // "assets/js/accounting/accounting/chart-of-accounts.js?v=".rand()
+            // "assets/js/accounting/accounting/view-register.js?v=".rand()
         ));
+
+        $filters = [];
+        if(!empty(get('search'))) {
+            $filters['search'] = get('search');
+            $this->page_data['search'] = get('search');
+        }
+
+        if(!empty(get('reconcile-status'))) {
+            $this->page_data['reconcile_status'] = get('reconcile-status');
+        }
+
+        if(!empty(get('transaction-type'))) {
+            $filters['type'] = get('transaction-type');
+            $this->page_data['transaction_type'] = get('transaction-type');
+        }
+
+        if(!empty(get('payee'))) {
+            $filters['type'] = get('payee');
+            $this->page_data['payee'] = get('payee');
+        }
+
+        if(!empty(get('date'))) {
+            $filters['date'] = get('date');
+            $filters['from_date'] = get('from');
+            $filters['to_date'] = get('to');
+
+            $this->page_data['date'] = get('date');
+            $this->page_data['from'] = get('from');
+            $this->page_data['to'] = get('to');
+        }
+
+        $registers = $this->get_transactions($id, $filters);
 
         $this->page_data['account'] = $account;
         $this->page_data['type'] = $type;
@@ -733,15 +765,251 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->view('v2/pages/accounting/accounting/chart_of_accounts/view_register', $this->page_data);
     }
 
-    public function load_registers($accountId)
+    private function get_transactions($accountId, $filters = [])
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $column = isset($post['column']) ? $post['column'] : $post['order'][0]['column'];
-        $order = !is_array($post['order']) ? $post['order'] : $post['order'][0]['dir'];
-        $columnName = $post['columns'][$column]['name'];
-        $start = $post['start'];
-        $limit = $post['length'];
-        $search = $post['columns'][0]['search']['value'];
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+        $data = [];
+
+        switch($post['transaction_type']) {
+            case 'cc-expense' :
+                $data = $this->cc_expense_registers($accountId, $data);
+            break;
+            case 'check' :
+                $data = $this->check_registers($accountId, $data);
+            break;
+            case 'invoice' :
+                $data = $this->invoice_registers($accountId, $data);
+            break;
+            case 'receive-payment' :
+                $data = $this->receive_payment_registers($accountId, $data);
+            break;
+            case 'journal-entry' :
+                $data = $this->journal_registers($accountId, $data);
+            break;
+            case 'bill' :
+                $data = $this->bill_registers($accountId, $data);
+            break;
+            case 'cc-credit' :
+                $data = $this->cc_credit_registers($accountId, $data);
+            break;
+            case 'vendor-credit' :
+                $data = $this->vendor_credit_registers($accountId, $data);
+            break;
+            case 'bill-payment' :
+                $data = $this->bill_payment_registers($accountId, $data);
+            break;
+            case 'cc-bill-payment' :
+                $data = $this->bill_payment_registers($accountId, $data, true);
+            break;
+            case 'transfer' :
+                $data = $this->transfer_registers($accountId, $data);
+            break;
+            case 'deposit' :
+                $data = $this->deposit_registers($accountId, $data);
+            break;
+            case 'cash-expense' :
+                $data = $this->cash_expense_registers($accountId, $data);
+            break;
+            case 'sales-receipt' :
+                $data = $this->sales_receipt_registers($accountId, $data);
+            break;
+            case 'credit-memo' :
+                $data = $this->credit_memo_registers($accountId, $data);
+            break;
+            case 'refund' :
+                $data = $this->refund_registers($accountId, $data);
+            break;
+            case 'inv-qty-adjustment' :
+                $data = $this->quantity_adjustment_registers($accountId, $data);
+            break;
+            case 'expense' :
+                $data = $this->expense_registers($accountId, $data);
+            break;
+            case 'inv-starting-value' :
+                $data = $this->item_starting_value_registers($accountId, $data);
+            break;
+            case 'cc-payment' :
+                $data = $this->credit_card_payment_registers($accountId, $data);
+            break;
+            default : 
+                $data = $this->cc_expense_registers($accountId, $data);
+                $data = $this->check_registers($accountId, $data);
+                $data = $this->invoice_registers($accountId, $data);
+                $data = $this->receive_payment_registers($accountId, $data);
+                $data = $this->journal_registers($accountId, $data);
+                $data = $this->bill_registers($accountId, $data);
+                $data = $this->cc_credit_registers($accountId, $data);
+                $data = $this->vendor_credit_registers($accountId, $data);
+                $data = $this->bill_payment_registers($accountId, $data);
+                $data = $this->transfer_registers($accountId, $data);
+                $data = $this->deposit_registers($accountId, $data);
+                $data = $this->sales_receipt_registers($accountId, $data);
+                $data = $this->credit_memo_registers($accountId, $data);
+                $data = $this->quantity_adjustment_registers($accountId, $data);
+                $data = $this->expense_registers($accountId, $data);
+                $data = $this->item_starting_value_registers($accountId, $data);
+                $data = $this->credit_card_payment_registers($accountId, $data);
+            break;
+        }
+
+        if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $depKey = 'increase';
+            $paymentKey = 'decrease';
+        } else if($accountType->account_name === 'Credit Card') {
+            $depKey = 'charge';
+            $paymentKey = 'payment';
+        } else {
+            $depKey = 'deposit';
+            $paymentKey = 'payment';
+        }
+
+        // Filter
+        $data = array_filter($data, function($reg, $key) use ($filters, $paymentKey, $depKey) {
+            $flag = true;
+
+            if($filters['from_date'] !== "" && strtotime($reg['date']) < strtotime($filters['from_date'])) {
+                $flag = false;
+            }
+
+            if($filters['to_date'] !== "" && strtotime($reg['date']) > strtotime($filters['to_date'])) {
+                $flag = false;
+            }
+
+            if($filters['payee'] !== "all") {
+                $payee = explode('-', $filters['payee']);
+
+                if($reg['payee_type'] !== $payee[0] || $reg['payee_id'] !== $payee[1]) {
+                    $flag = false;
+                }
+            }
+
+            if($filters['search'] !== "") {
+                if(stripos($filters['search'], '<') !== false || stripos($filters['search'], '>') !== false) {
+                    $searchString = str_replace('<', '', $filters['search']);
+                    $searchString = str_replace('>', '', $filters['search']);
+
+                    $searchFloat = floatval($searchString);
+
+                    if(stripos($filters['search'], '<') !== false) {
+                        $flag = floatval($reg[$paymentKey]) < $searchFloat || floatval($reg[$depKey]) < $searchFloat;
+                    } else {
+                        $flag = floatval($reg[$paymentKey]) > $searchFloat || floatval($reg[$depKey]) > $searchFloat;
+                    }
+                } else {
+                    if(is_numeric($filters['search'])) {
+                        if($reg[$paymentKey] !== '' && floatval($filters['search']) !== floatval($reg[$paymentKey])) {
+                            $flag = false;
+                        }
+
+                        if($reg[$depKey] !== '' && floatval($filters['search']) !== floatval($reg[$depKey])) {
+                            $flag = false;
+                        }
+                    } else {
+                        if(stripos($reg['ref_no'], $filters['search']) === false && stripos($reg['memo'], $filters['search']) === false) {
+                            $flag = false;
+                        }
+                    }
+                }
+            }
+
+            return $flag;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        // $displayBalanceOn = [
+        //     'date',
+        //     'reconcile_status'
+        // ];
+
+        // if(in_array($sort['column'], $displayBalanceOn) && $post['transaction_type'] === 'all' && $post['reconcile_status'] === 'all' && $post['payee'] === 'all') {
+        //     $registers = $data;
+
+        //     usort($registers, function($a, $b) {
+        //         if(strtotime($a['date']) === strtotime($b['date'])) {
+        //             return strtotime($a['date_created']) < strtotime($b['date_created']);
+        //         }
+        //         return strtotime($a['date']) < strtotime($b['date']);
+        //     });
+
+        //     $accBalance = floatval($account->balance);
+        //     foreach($registers as $key => $reg) {
+        //         $balance = number_format($accBalance, 2, '.', ',');
+        //         $balance = '$'.$balance;
+        //         $registers[$key]['balance'] = str_replace('$-', '-$', $balance);
+
+        //         $accBalance -= floatval($reg[$depKey]);
+        //         $accBalance += floatval($reg[$paymentKey]);
+        //     }
+
+        //     $data = $registers;
+        // }
+
+        usort($data, function($a, $b) {
+            if($sort['order'] === 'asc') {
+                if(strtotime($a['date']) === strtotime($b['date'])) {
+                    return strtotime($a['date_created']) > strtotime($b['date_created']);
+                }
+                return strtotime($a['date']) > strtotime($b['date']);
+            } else {
+                if(strtotime($a['date']) === strtotime($b['date'])) {
+                    return strtotime($a['date_created']) < strtotime($b['date_created']);
+                }
+                return strtotime($a['date']) < strtotime($b['date']);
+            }
+        });
+
+        if($filters['single_line'] === 0) {
+            $registers = $data;
+
+            $data = [];
+            foreach($registers as $register) {
+                $disPayKey = $paymentKey.'_disabled';
+                $disDepKey = $depKey.'_disabled';
+
+                $data[] = [
+                    'id' => $register['id'],
+                    'date' => $register['date'],
+                    'ref_no_type' => $register['ref_no'],
+                    'ref_no_disabled' => $register['ref_no_disabled'],
+                    'payee_type' => $register['payee_type'],
+                    'payee_id' => $register['payee_id'],
+                    'payee_account' => $register['payee'],
+                    'payee_disabled' => $register['payee_disabled'],
+                    'memo' => $register['memo'],
+                    $paymentKey => $register[$paymentKey],
+                    $depKey => $register[$depKey],
+                    $disPayKey => $register[$paymentKey],
+                    $disDepKey => $register[$disDepKey],
+                    'reconcile_banking_status' => $register['reconcile_status'],
+                    'attachments' => $register['atttachments'],
+                    'tax' => $register['tax'],
+                    'balance' => $register['balance'],
+                ];
+
+                $data[] = [
+                    'id' => $register['id'],
+                    'date' => '',
+                    'ref_no_type' => $register['type'],
+                    'account_id' => $register['account_id'],
+                    'payee_account' => $register['account'],
+                    'account_disabled' => $register['account_disabled'],
+                    'memo' => '',
+                    $paymentKey => '',
+                    $depKey => '',
+                    'reconcile_banking_status' => $register['banking_status'],
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    private function get_registers($accountId, $filters = [])
+    {
+        $search = $filters['search'];
 
         $sort = [
             'column' => $columnName,
@@ -3539,338 +3807,6 @@ class Chart_of_accounts extends MY_Controller {
         }
 
         return $category;
-    }
-
-    private function get_transactions($accountId, $post, $sort = ['column' => 'date', 'order' => 'desc'])
-    {
-        $account = $this->chart_of_accounts_model->getById($accountId);
-        $accountType = $this->account_model->getById($account->account_id);
-        $data = [];
-
-        switch($post['transaction_type']) {
-            case 'cc-expense' :
-                $data = $this->cc_expense_registers($accountId, $data);
-            break;
-            case 'check' :
-                $data = $this->check_registers($accountId, $data);
-            break;
-            case 'invoice' :
-                $data = $this->invoice_registers($accountId, $data);
-            break;
-            case 'receive-payment' :
-                $data = $this->receive_payment_registers($accountId, $data);
-            break;
-            case 'journal-entry' :
-                $data = $this->journal_registers($accountId, $data);
-            break;
-            case 'bill' :
-                $data = $this->bill_registers($accountId, $data);
-            break;
-            case 'cc-credit' :
-                $data = $this->cc_credit_registers($accountId, $data);
-            break;
-            case 'vendor-credit' :
-                $data = $this->vendor_credit_registers($accountId, $data);
-            break;
-            case 'bill-payment' :
-                $data = $this->bill_payment_registers($accountId, $data);
-            break;
-            case 'cc-bill-payment' :
-                $data = $this->bill_payment_registers($accountId, $data, true);
-            break;
-            case 'transfer' :
-                $data = $this->transfer_registers($accountId, $data);
-            break;
-            case 'deposit' :
-                $data = $this->deposit_registers($accountId, $data);
-            break;
-            case 'cash-expense' :
-                $data = $this->cash_expense_registers($accountId, $data);
-            break;
-            case 'sales-receipt' :
-                $data = $this->sales_receipt_registers($accountId, $data);
-            break;
-            case 'credit-memo' :
-                $data = $this->credit_memo_registers($accountId, $data);
-            break;
-            case 'refund' :
-                $data = $this->refund_registers($accountId, $data);
-            break;
-            case 'inv-qty-adjustment' :
-                $data = $this->quantity_adjustment_registers($accountId, $data);
-            break;
-            case 'expense' :
-                $data = $this->expense_registers($accountId, $data);
-            break;
-            case 'inv-starting-value' :
-                $data = $this->item_starting_value_registers($accountId, $data);
-            break;
-            case 'cc-payment' :
-                $data = $this->credit_card_payment_registers($accountId, $data);
-            break;
-            default : 
-                $data = $this->cc_expense_registers($accountId, $data);
-                $data = $this->check_registers($accountId, $data);
-                $data = $this->invoice_registers($accountId, $data);
-                $data = $this->receive_payment_registers($accountId, $data);
-                $data = $this->journal_registers($accountId, $data);
-                $data = $this->bill_registers($accountId, $data);
-                $data = $this->cc_credit_registers($accountId, $data);
-                $data = $this->vendor_credit_registers($accountId, $data);
-                $data = $this->bill_payment_registers($accountId, $data);
-                $data = $this->transfer_registers($accountId, $data);
-                $data = $this->deposit_registers($accountId, $data);
-                $data = $this->sales_receipt_registers($accountId, $data);
-                $data = $this->credit_memo_registers($accountId, $data);
-                $data = $this->quantity_adjustment_registers($accountId, $data);
-                $data = $this->expense_registers($accountId, $data);
-                $data = $this->item_starting_value_registers($accountId, $data);
-                $data = $this->credit_card_payment_registers($accountId, $data);
-            break;
-        }
-
-        if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
-            $depKey = 'increase';
-            $paymentKey = 'decrease';
-        } else if($accountType->account_name === 'Credit Card') {
-            $depKey = 'charge';
-            $paymentKey = 'payment';
-        } else {
-            $depKey = 'deposit';
-            $paymentKey = 'payment';
-        }
-
-        // Filter
-        $data = array_filter($data, function($reg, $key) use ($post, $paymentKey, $depKey) {
-            $flag = true;
-
-            if($post['from_date'] !== "" && strtotime($reg['date']) < strtotime($post['from_date'])) {
-                $flag = false;
-            }
-
-            if($post['to_date'] !== "" && strtotime($reg['date']) > strtotime($post['to_date'])) {
-                $flag = false;
-            }
-
-            if($post['payee'] !== "all") {
-                $payee = explode('-', $post['payee']);
-
-                if($reg['payee_type'] !== $payee[0] || $reg['payee_id'] !== $payee[1]) {
-                    $flag = false;
-                }
-            }
-
-            if($post['search'] !== "") {
-                if(stripos($post['search'], '<') !== false || stripos($post['search'], '>') !== false) {
-                    $searchString = str_replace('<', '', $post['search']);
-                    $searchString = str_replace('>', '', $post['search']);
-
-                    $searchFloat = floatval($searchString);
-
-                    if(stripos($post['search'], '<') !== false) {
-                        $flag = floatval($reg[$paymentKey]) < $searchFloat || floatval($reg[$depKey]) < $searchFloat;
-                    } else {
-                        $flag = floatval($reg[$paymentKey]) > $searchFloat || floatval($reg[$depKey]) > $searchFloat;
-                    }
-                } else {
-                    if(is_numeric($post['search'])) {
-                        if($reg[$paymentKey] !== '' && floatval($post['search']) !== floatval($reg[$paymentKey])) {
-                            $flag = false;
-                        }
-
-                        if($reg[$depKey] !== '' && floatval($post['search']) !== floatval($reg[$depKey])) {
-                            $flag = false;
-                        }
-                    } else {
-                        if(stripos($reg['ref_no'], $post['search']) === false && stripos($reg['memo'], $post['search']) === false) {
-                            $flag = false;
-                        }
-                    }
-                }
-            }
-
-            return $flag;
-        }, ARRAY_FILTER_USE_BOTH);
-
-        $displayBalanceOn = [
-            'date',
-            'reconcile_status'
-        ];
-
-        if(in_array($sort['column'], $displayBalanceOn) && $post['transaction_type'] === 'all' && $post['reconcile_status'] === 'all' && $post['payee'] === 'all') {
-            $registers = $data;
-
-            usort($registers, function($a, $b) {
-                if(strtotime($a['date']) === strtotime($b['date'])) {
-                    return strtotime($a['date_created']) < strtotime($b['date_created']);
-                }
-                return strtotime($a['date']) < strtotime($b['date']);
-            });
-
-            $accBalance = floatval($account->balance);
-            foreach($registers as $key => $reg) {
-                $balance = number_format($accBalance, 2, '.', ',');
-                $balance = '$'.$balance;
-                $registers[$key]['balance'] = str_replace('$-', '-$', $balance);
-
-                $accBalance -= floatval($reg[$depKey]);
-                $accBalance += floatval($reg[$paymentKey]);
-            }
-
-            $data = $registers;
-        }
-
-        usort($data, function($a, $b) use ($sort) {
-            switch($sort['column']) {
-                case 'date' :
-                    if($sort['order'] === 'asc') {
-                        if(strtotime($a['date']) === strtotime($b['date'])) {
-                            return strtotime($a['date_created']) > strtotime($b['date_created']);
-                        }
-                        return strtotime($a['date']) > strtotime($b['date']);
-                    } else {
-                        if(strtotime($a['date']) === strtotime($b['date'])) {
-                            return strtotime($a['date_created']) < strtotime($b['date_created']);
-                        }
-                        return strtotime($a['date']) < strtotime($b['date']);
-                    }
-                break;
-                case 'payment' :
-                    if($sort['order'] === 'asc') {
-                        return $a['payment'] > $b['payment'];
-                    } else {
-                        return $a['payment'] < $b['payment'];
-                    }
-                break;
-                case 'deposit' :
-                    if($sort['order'] === 'asc') {
-                        return $a['deposit'] > $b['deposit'];
-                    } else {
-                        return $a['deposit'] < $b['deposit'];
-                    }
-                break;
-                case 'ref_no' :
-                    if($sort['order'] === 'asc') {
-                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
-                            return false;
-                        }
-    
-                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
-                            return true;
-                        }
-
-                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
-                            return strcmp($a['ref_no'], $b['ref_no']);
-                        }
-
-                        return intval($a['ref_no']) > intval($b['ref_no']);
-                    } else {
-                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
-                            return true;
-                        }
-    
-                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
-                            return false;
-                        }
-
-                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
-                            return strcmp($b['ref_no'], $a['ref_no']);
-                        }
-
-                        return intval($a['ref_no']) < intval($b['ref_no']);
-                    }
-                break;
-                case 'ref_no_type' :
-                    if($sort['order'] === 'asc') {
-                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
-                            return false;
-                        }
-    
-                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
-                            return true;
-                        }
-
-                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
-                            return strcmp($a['ref_no'], $b['ref_no']);
-                        }
-
-                        return intval($a['ref_no']) > intval($b['ref_no']);
-                    } else {
-                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
-                            return true;
-                        }
-    
-                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
-                            return false;
-                        }
-
-                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
-                            return strcmp($b['ref_no'], $a['ref_no']);
-                        }
-
-                        return intval($a['ref_no']) < intval($b['ref_no']);
-                    }
-                break;
-                default :
-                    if($sort['order'] === 'asc') {
-                        return strcmp($a[$sort['column']], $b[$sort['column']]);
-                    } else {
-                        return strcmp($b[$sort['column']], $a[$sort['column']]);
-                    }
-                break;
-            }
-        });
-
-        if(isset($post['start']) && isset($post['length'])) {
-            $data = array_slice($data, $post['start'], $post['length']);
-        }
-        if($post['single_line'] === 0) {
-            $registers = $data;
-
-            $data = [];
-            foreach($registers as $register) {
-                $disPayKey = $paymentKey.'_disabled';
-                $disDepKey = $depKey.'_disabled';
-
-                $data[] = [
-                    'id' => $register['id'],
-                    'date' => $register['date'],
-                    'ref_no_type' => $register['ref_no'],
-                    'ref_no_disabled' => $register['ref_no_disabled'],
-                    'payee_type' => $register['payee_type'],
-                    'payee_id' => $register['payee_id'],
-                    'payee_account' => $register['payee'],
-                    'payee_disabled' => $register['payee_disabled'],
-                    'memo' => $register['memo'],
-                    $paymentKey => $register[$paymentKey],
-                    $depKey => $register[$depKey],
-                    $disPayKey => $register[$paymentKey],
-                    $disDepKey => $register[$disDepKey],
-                    'reconcile_banking_status' => $register['reconcile_status'],
-                    'attachments' => $register['atttachments'],
-                    'tax' => $register['tax'],
-                    'balance' => $register['balance'],
-                ];
-
-                $data[] = [
-                    'id' => $register['id'],
-                    'date' => '',
-                    'ref_no_type' => $register['type'],
-                    'account_id' => $register['account_id'],
-                    'payee_account' => $register['account'],
-                    'account_disabled' => $register['account_disabled'],
-                    'memo' => '',
-                    $paymentKey => '',
-                    $depKey => '',
-                    'reconcile_banking_status' => $register['banking_status'],
-                    'attachments' => '',
-                    'tax' => '',
-                    'balance' => '',
-                ];
-            }
-        }
-
-        return $data;
     }
 
     public function print_transactions($accountId)

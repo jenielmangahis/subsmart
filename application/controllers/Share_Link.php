@@ -1248,6 +1248,27 @@ class Share_Link extends CI_Controller
 
         $this->pdf->load_view('workorder/work_order_pdf_template_solar', $data, $filename, "portrait");
     }
+
+    public function approveEstimate($id)
+    {
+        $this->estimate_model->update($id, ['status' => 'Accepted']);
+
+        $estData = $this->estimate_model->getEstimate($id);
+
+        if($estData->deposit_amount == '0' || $estData->deposit_amount == NULL)
+        {
+            $this->load->view('estimate/approveEstimate');
+        }else{
+            $this->load->view('estimate/payEstimate');
+        }
+    }
+
+    public function declineEstimate()
+    {
+        $this->estimate_model->update($id, ['status' => 'Declined']);
+
+        $this->load->view('estimate/declineEstimate');
+    }
 }
 
 
