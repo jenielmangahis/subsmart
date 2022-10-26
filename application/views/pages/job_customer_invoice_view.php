@@ -292,7 +292,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php if($jobs_data->status != 'Completed'){ ?>
                                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
                                         <div class="payment-msg"></div>
-                                        <div class="payment-api-container">
+                                        <div class="payment-api-container" <?= $jobs_data->total_amount <= 0 ? 'style="display:none;"' : ''; ?>>
                                           <?php if($onlinePaymentAccount){ ?>
                                             <a class="btn btn-primary btn-confirm-order btn-pay" href="javascript:void(0);">CONFIRM ORDER</a>
 
