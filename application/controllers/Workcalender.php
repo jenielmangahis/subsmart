@@ -875,6 +875,7 @@ class Workcalender extends MY_Controller
                             $tags = '---';
                         }
                         $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Status : ' . $event->status . '</small>';
 
                         if( $event->FName != '' ||  $event->LName != ''){
                             $user_assigned = $event->FName . ' ' . $event->LName;
@@ -1138,6 +1139,7 @@ class Workcalender extends MY_Controller
                     $tags = '---';
                 }
                 $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Status : ' . $j->status . '</small>';
 
                 if( $j->FName != '' ||  $j->LName != ''){
                     $user_assigned = $j->FName . ' ' . $j->LName;

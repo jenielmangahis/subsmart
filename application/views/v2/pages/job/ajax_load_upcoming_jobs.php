@@ -96,8 +96,8 @@
             <?php foreach ($upcomingJobs as $jb) : ?>
                 <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?php echo base_url('job/new_job1/' . $jb->id); ?>'">
                     <td>
-                        <div class="nsm-list-icon primary">
-                            <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee_id); ?>');" data-img="<?php echo $data_img; ?>"></div>                            
+                        <div class="nsm-list-icon primary">                            
+                            <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->e_employee_id); ?>');" data-img="<?php echo $data_img; ?>"></div>                            
                         </div>
                     </td>
                     <td>
