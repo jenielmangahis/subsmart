@@ -36,7 +36,7 @@
                     </div>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
-                            <label class="content-title">nSmart App Login Details</label>
+                            <label class="content-title">Login Details</label>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Email <small>(Will be use as your username)</small></label>
@@ -57,8 +57,8 @@
                             </div>
                         </div>
                     </div>
-                    <?php if(isSolarCompany() == 1){ ?>
-                    <div class="row gy-3 mb-4">
+                    <?php //if(isSolarCompany() == 1){ ?>
+                    <!-- <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-title">ADT Sales App Login Details</label>
                         </div>
@@ -80,8 +80,8 @@
                                 <input type="password" class="nsm-field form-control password-field" id="portal_confirm_password" name="portal_confirm_password" />
                             </div>
                         </div>
-                    </div>
-                    <?php } ?>
+                    </div> -->
+                    <?php //} ?>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-title">Other Details</label>
