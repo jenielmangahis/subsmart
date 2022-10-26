@@ -128,7 +128,7 @@
                         </div>
                         <div class="">
                             <div id="printableArea" style="">
-                            <div style="margin-bottom: 20px;margin-left: 0px !important;margin-top:100px;">
+                            <div style="margin-bottom: 10px;margin-left: 0px !important;margin-top:50px;">
                                 <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
                                 <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
                             </div>
@@ -153,21 +153,21 @@
                                 </div>
 
                                 <div class="col-xl-5 left" style="margin-bottom: 33px;">
-                                <h5><span class="fa fa-user-o fa-margin-right"></span> From <br> <span class="invoice-txt"> <?= $company; ?></span></h5>
-                                <div class="col-xl-5 ml-0 pl-0">
+                                <span class="fa fa-user-o fa-margin-right"></span> From <br> <span class="invoice-txt"> <?= $company; ?></span><br />
+                                <!-- <div class="col-xl-5 ml-0 pl-0"> -->
                                     <span class=""><?= $business_address; ?></span><br />
                                     <span class="">EMAIL: <?= $email_address; ?></span><br />
                                     <span class="">PHONE: <?= $phone_number; ?></span>
-                                </div>
+                                <!-- </div> -->
                                 </div>
                                 <div class="clear"></div>
                                 <div class="col-xl-5 left">
-                                <h5><span class="fa fa-user-o fa-margin-right"></span> To <br> <span class="invoice-txt"> <?= $acs_name; ?></span></h5> 
-                                <div class="col-xl-5 ml-0 pl-0">
+                                <span class="fa fa-user-o fa-margin-right"></span> To <br> <span class="invoice-txt"> <?= $acs_name; ?></span><br />
+                                <!-- <div class="col-xl-5 ml-0 pl-0"> -->
                                     <span class=""><?= $acsaddress ?></span><br />
                                     <span class="">EMAIL: <span class=""><?= $acsemail; ?></span><br />
                                     <span class="">PHONE: <span class=""><?= $phone_m; ?></span><br />
-                                </div>
+                                <!-- </div> -->
                                 </div>
                                 <br class="clear"/>    
                                 <table class="table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
@@ -357,11 +357,18 @@
                                 </tbody>
                                 </table> 
                                 <!-- </div> -->
+                                <br><br><br>
+                                <p><b>Deposit Request</b><br />&emsp;<?php if($deposit_request == '1' || $deposit_request == '0'){ echo '$'; }else{ echo '%'; } ?><?php if($deposit_amount == NULL){ echo '0.00'; }else{ $deposit_amount; } ?></p>
 
-                                <hr />
-                                <p><b>Instructions</b><br /><br /><?= $instructions; ?></p>
-                                <p><b>Message</b><br /><br /><?= $customer_message; ?></p>
-                                <p><b>Terms</b><br /><Br /><?= $terms_conditions; ?></p>
+                                <br />
+                                <p><b>Instructions</b><br />&emsp;<?= $instructions; ?></p><br />
+                                <p><b>Message</b><br />&emsp;<?= $customer_message; ?></p><br />
+                                <p><b>Terms</b><br />&emsp;<?= $terms_conditions; ?></p><Br />
+
+                            <div style="float:right;">
+                                <a href="<?php  echo $urlApprove; ?>" style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 24px;border: 0;color: #000021;background: #1de9b6;line-height: 1.15;font-size: 16px;text-decoration:none;">Accept Estimate</a> 
+                                <a href="<?php  echo $urlDecline; ?>" style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 24px;border: 0;color: #fff;background: #ff5000;line-height: 1.15;font-size: 16px;text-decoration:none;">Decline Estimate</a>
+                            </div>
                         
                         </div>
                         </div>
@@ -371,6 +378,8 @@
         </div>
     </div>
     <img src="<?= base_url('tracker/estimate_image_tracker?id='.$eid); ?>">
+    <!-- <br> &emsp; -->
+    <br></br>
 </div>
 </body>
 </html>

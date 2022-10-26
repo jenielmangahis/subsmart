@@ -153,7 +153,7 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
                         <select id="sel-customer" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                             <option value="0">- Select Customer -</option>
@@ -167,12 +167,12 @@ a.btn-primary.btn-md {
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <br><br><a href="<?= base_url('customer/add_advance'); ?>" class="nsm-button primary" target="_new" id=""><i class='bx bx-plus'></i> New Customer</a>
+                        <br><a href="<?= base_url('customer/add_advance'); ?>" class="nsm-button primary" target="_new" id=""><i class='bx bx-plus'></i> New Customer</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="job_location"><b>Job Location</b> (optional)</label>
+                        <label for="job_location"><b>Service Location</b> (optional)</label>
                         <input type="text" class="form-control" name="job_location" id="job_location"
                                 required placeholder="Enter address" autofocus
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
@@ -183,14 +183,14 @@ a.btn-primary.btn-md {
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="job_name"><b>Job Name</b> (optional)</label>
-                        <input type="text" class="form-control" name="job_name" id="job_name"
-                                placeholder="Enter Job Name" required/>
+                        <label for="job_name"><b>Service description</b> (optional)</label>
+                        <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
+                        <textarea class="form-control"></textarea>
                     </div>
-                </div>
+                </div><br.
                 <div class="row">
                     <div class="col-md-4 form-group">
-                        <label for="city">Job Tag</label><label style="float:right;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
+                        <label for="city">Job Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
                         <select class="form-control">
                             <?php foreach($tags as $t){ ?>
                                 <option value="<?= $t->id; ?>"><?= $t->name; ?></option>
@@ -205,7 +205,7 @@ a.btn-primary.btn-md {
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label for="estimate_date" class="required"><b>Ticket#</b></label>
+                                        <label for="estimate_date" class="required"><b>Service Ticket No.</b></label>
                                         <input type="text" class="form-control" name="estimate_number" id="estimate_date"
                                                 required placeholder="Enter Ticket#" autofocus value="TK-0000001" />
                                     </div>
@@ -221,35 +221,92 @@ a.btn-primary.btn-md {
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="expiry_date" class="required"><b>Expiry Date</b></label>
+                                        <label for="expiry_date" class="required"><b>Schedule Time</b></label>
                                         <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                        <div class="input-group date" data-provide="datepicker">
+                                        <!-- <div class="input-group date" data-provide="datepicker">
                                             <input type="text" class="form-control" name="expiry_date" id="expiry_date"
                                                     placeholder="Enter Expiry Date">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
-                                        </div>
+                                        </div> -->
+                                        <select id="intall_time" name="intall_time" class="form-control">
+                                            <option value="8-10">8-10</option>
+                                            <option value="10-12">10-12</option>
+                                            <option value="12-2">12-2</option>
+                                            <option value="2-4">2-4</option>
+                                            <option value="4-6">4-6</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label for="purchase_order_number" class="required"><b>Purchase Order#</b></label>
+                                        <label for="purchase_order_number"><b>Purchase Order#</b></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
-                                            id="purchase_order_number" required placeholder="Enter Purchase Order#"
+                                            id="purchase_order_number" placeholder="Enter Purchase Order#"
                                             autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="zip" class="required"><b>Ticket Status</b></label>
-                                        <input type="text" class="form-control" name="zip" id="zip" required
+                                        <label for="zip"><b>Ticket Status</b></label>
+                                        <input type="text" class="form-control" name="zip" id="zip" 
                                             placeholder="Enter Ticket Status"/>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Panel Type</b></label>
+                                            <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
+                                            </select>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
-                                    <div class="col-md-4 form-group">
-                                        <label for="city">Service Type</label>
-                                        <select class="form-control">
-                                                    <option>---</option>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Service Type</b></label>
+                                        <div class="input-group">
+                                            <select class="form-control">
+                                                        <option>---</option>
+                                            </select>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-success">Add New</button>
+                                            </span>
+                                        </div><!-- /input-group -->
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Warranty Type</b></label>
+                                        <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
                                         </select>
                                     </div>
                                 </div>
@@ -350,7 +407,7 @@ a.btn-primary.btn-md {
                                         </table>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-md-12">
                                         <h6>Request a Deposit</h6>
                                         <span class="help help-sm help-block">You can request an upfront payment on accept Ticket.</span>
@@ -363,10 +420,259 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-6 form-group">
                                         <div class="input-group">
-                                            <!-- <div class="input-group-addon bold">$</div> -->
                                             <input type="text" name="deposit_amount" value="0" class="form-control"
                                                 autocomplete="off">
                                         </div>
+                                    </div>
+                                </div> -->
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <div class="select-wrap">
+                                            <b>Payment Method</b>
+                                                <select name="payment_method" id="payment_method" class="form-control">
+                                                    <option value="">Choose method</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Check">Check</option>
+                                                    <option value="Credit Card">Credit Card</option>
+                                                    <option value="Debit Card">Debit Card</option>
+                                                    <option value="ACH">ACH</option>
+                                                    <option value="Venmo">Venmo</option>
+                                                    <option value="Paypal">Paypal</option>
+                                                    <option value="Square">Square</option>
+                                                    <option value="Invoicing">Invoicing</option>
+                                                    <option value="Warranty Work">Warranty Work</option>
+                                                    <option value="Home Owner Financing">Home Owner Financing</option>
+                                                    <option value="e-Transfer">e-Transfer</option>
+                                                    <option value="Other Credit Card Professor">Other Credit Card Professor</option>
+                                                    <option value="Other Payment Type">Other Payment Type</option>
+                                                </select>
+                                            </div> 
+                                        </div>     
+                                        <div class="form-group col-md-4">
+                                            <b>Amount<small class="help help-sm"> ( $ )</small></b>
+                                            <input type="text" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <b>Billing Date</b>
+                                            <!-- <input type="date" class="form-control input-element border-top-0 border-right-0 border-left-0" name="billing_date" id=""  /> -->
+                                            <select name="billing_date" id="" class="form-control">
+                                                    <option value="">0</option>
+                                                    <?php for ($i=1; $i<=31; $i++ ) { ?>
+                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                        </div>
+                                </div>
+                                
+                                <div class="row">                   
+                                    <div class="col-md-12">
+                                                <div id="invoicing" style="display:none;">
+                                                    <!-- <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br> -->
+                                                    <div class="row">                   
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="monitored_location" class="label-element">Mail Address</label>
+                                                            <input type="text" class="form-control input-element" name="mail-address"
+                                                                id="mail-address" placeholder="Monitored Location"/>
+                                                        </div>
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="city" class="label-element">City</label>
+                                                                <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                                        </div>
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="state" class="label-element">State</label>
+                                                            <input type="text" class="form-control input-element" name="mail_state"
+                                                                id="mail_state" 
+                                                                placeholder="Enter State"/>
+                                                        </div>
+                                                    <!-- </div>
+                                                    <div class="row">   -->
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="zip" class="label-element">ZIP</label> 
+                                                                <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
+                                                        </div>
+
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="cross_street" class="label-element">Cross Street</label>
+                                                            <input type="text" class="form-control input-element" name="mail_cross_street"
+                                                                id="mail_cross_street" 
+                                                                placeholder="Cross Street"/>
+                                                        </div>                                        
+                                                    </div>
+                                                </div>
+                                            <div id="check_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Check Number</label>
+                                                        <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Routing Number</label>
+                                                        <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
+                                                    </div>                                             
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Number</label>
+                                                        <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
+                                                    </div>                                       
+                                                </div>
+                                            </div>
+                                            <div id="credit_card" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                                        <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                        <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                    </div>  
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">CVC</label>
+                                                        <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                    </div>                                             
+                                                </div>
+                                            </div>
+                                            <div id="debit_card" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                        <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                    </div>  
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">CVC</label>
+                                                        <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                    </div>                                            
+                                                </div>
+                                            </div>
+                                            <div id="ach_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Routing Number</label>
+                                                        <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Number</label>
+                                                        <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
+                                                    </div>  
+                                                </div>
+                                            </div>
+                                            <div id="venmo_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Credential</label>
+                                                        <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Note</label>
+                                                        <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
+                                                    </div>  
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Confirmation</label>
+                                                        <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
+                                                    </div>                                            
+                                                </div>
+                                            </div>
+                                            <div id="paypal_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Credential</label>
+                                                        <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Note</label>
+                                                        <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
+                                                    </div>  
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Confirmation</label>
+                                                        <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
+                                                    </div>                                            
+                                                </div>
+                                            </div>
+                                            <div id="square_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Credential</label>
+                                                        <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Note</label>
+                                                        <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
+                                                    </div>  
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Confirmation</label>
+                                                        <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
+                                                    </div>                                            
+                                                </div>
+                                            </div>
+                                            <div id="warranty_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Credential</label>
+                                                        <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Note</label>
+                                                        <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
+                                                    </div>                                         
+                                                </div>
+                                            </div>
+                                            <div id="home_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Credential</label>
+                                                        <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Note</label>
+                                                        <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
+                                                    </div>                                         
+                                                </div>
+                                            </div>
+                                            <div id="e_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Credential</label>
+                                                        <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Account Note</label>
+                                                        <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
+                                                    </div>                                         
+                                                </div>
+                                            </div>
+                                            <div id="other_credit_card" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                                        <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                        <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                                    </div>  
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type" class="label-element">CVC</label>
+                                                        <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                                    </div>                                             
+                                                </div>
+                                            </div>
+                                            <div id="other_payment_area" style="display:none;">
+                                                <div class="row">                   
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type">Account Credential</label>
+                                                        <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="job_type">Account Note</label>
+                                                        <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
+                                                    </div>                                         
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -517,3 +823,249 @@ a.btn-primary.btn-md {
 </script>
 <script type="module"  src="<?= base_url("assets/js/customer/dashboard/index.js") ?>"></script>
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+
+document.getElementById("payment_method").onchange = function() {
+    if (this.value == 'Cash') {
+        // alert('cash');
+		// $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#invoicing').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    	}
+    else if(this.value == 'Invoicing'){
+
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#invoicing').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+	
+    else if(this.value == 'Check'){
+        // alert('Check');
+        $('#cash_area').hide();
+        $('#check_area').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Credit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').show();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Debit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').show();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#invoicing').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'ACH'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').show();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Venmo'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#invoicing').hide();
+        $('#venmo_area').show();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Paypal'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').show();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Square'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').show();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Warranty Work'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').show();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Home Owner Financing'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').show();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'e-Transfer'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').show();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Credit Card Professor'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').show();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Payment Type'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').show();
+    }
+}
+</script>

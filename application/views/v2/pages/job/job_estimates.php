@@ -131,11 +131,11 @@
                                                 <option value="Urgent">Urgent</option>
                                             </select>
                                         </div><br>
-                                        <h6>Select Employee</h6>
+                                        <h6>Sales Rep</h6>
                                             <select id="employee_id" name="employee_id" class="form-control " required>
                                                 <option value="10001">Select All</option>
-                                                <?php if(!empty($employees)): ?>
-                                                    <?php foreach ($employees as $employee): ?>
+                                                <?php if(!empty($sales_rep)): ?>
+                                                    <?php foreach ($sales_rep as $employee): ?>
                                                         <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
@@ -197,13 +197,16 @@
                                         <h6>Assigned To</h6>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 1" id="emp2_id" name="emp2_id"  class="form-control" readonly>
+                                                <input type="text" id="emp2_id" name="emp2_id" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Sales Rep 1' ?>" id="emp2_txt"  class="form-control" readonly>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 2" id="emp3_id" name="emp3_id"  class="form-control" readonly>
+                                                <input type="text" id="emp3_id" name="emp3_id" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Sales Rep 2' ?>" id="emp3_txt" class="form-control" readonly>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 3" id="emp4_id" name="emp4_id"  class="form-control" readonly>
+                                                <input type="text" id="emp4_id" name="emp4_id" hidden>
+                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Sales Rep 3' ?>"  id="emp4_txt"  class="form-control" readonly>
                                             </div>
                                         </div>
                                         <br>
@@ -264,7 +267,7 @@
                                                 </table>
                                             </div>
                                             <div class="col-md-8">
-                                                <div class="col-md-12">
+                                                <div class="col-md-12 d-none">
                                                     <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
                                                     <div id="map" class="col-md-6 float-left"></div>
                                                 </div>
@@ -366,7 +369,7 @@
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
                                                         <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        <input step="any" type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <hr>
@@ -383,7 +386,7 @@
                                                     </div>
                                                     <div class="col-sm-6 text-right pr-3">
                                                         <label id="invoice_tax_total"><?= $jobs_data->tax1_total != null ? number_format((float)$jobs_data->tax1_total,2,'.',',') : '0.00' ?></label>
-                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        <input type="hidden" name="tax" id="tax_total_form_input" value="<?= $jobs_data->tax1_total != null ? number_format((float)$jobs_data->tax1_total,2,'.',',') : '0.00' ?>">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <hr>
@@ -439,8 +442,12 @@
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
-                                                <br>
                                                 <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <small>Message:</small>
+                                                        <?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>
+                                                        <input class="d-none" type="text" name="customer_message" value="<?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>">
+                                                    </div>
                                                     <hr>
                                                 </div>
                                                 <?php if(isset($jobs_data) && $jobs_data->status == 'Invoiced'): ?>
@@ -577,7 +584,7 @@
                         </div>
                     </div>
                 </div>
-                
+             </form>
             </div>
         </div>
     </div>
@@ -662,15 +669,15 @@
 </div>
 
 <!-- Signature Modal -->
-<div class="modal fade" id="share_job_modal" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
+<div class="modal fade nsm-modal" id="share_job_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Share Job To Other Employee</h4>
+                <span class="modal-title content-title">Share Job To Other Employee</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <div class="modal-body">
-                <label>Employee 2</label>
+                <label>Sales Rep 1</label>
                 <select id="employee2" name="employee2_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -680,7 +687,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Employee 3</label>
+                <label>Sales Rep 2</label>
                 <select id="employee3" name="employee3_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -690,7 +697,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Employee 4</label>
+                <label>Sales Rep 3</label>
                 <select id="employee4" name="employee4_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -701,8 +708,11 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" id="" class="btn btn-primary" data-dismiss="modal">
-                    <span class="fa fa-paper-plane-o"></span> Save / Close
+                <button type="button" id="share_modal_submit" class="nsm-button primary" data-bs-dismiss="modal">
+                <i class='bx bx-paper-plane'></i> Save
+                </button>
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">
+                Close
                 </button>
             </div>
         </div>
@@ -741,6 +751,22 @@ add_footer_js(array(
 
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 <script>
+
+$('#share_modal_submit').click(function() {
+            //employee 2
+            var emp2 = $('#employee2').val();
+            var empText = $('#employee2 :selected').text();
+            $('#emp2_id').val($('#employee2').val());
+            $('#emp2_txt').val($('#employee2 :selected').text());
+            //employee 3 
+            $('#emp3_id').val($('#employee3').val());
+            $('#emp3_txt').val($('#employee3 :selected').text());
+            //employee 4
+            $('#emp4_id').val($('#employee4').val());
+            $('#emp4_txt').val($('#employee4 :selected').text());
+            
+        })
+
     $(function(){
         $("#customer_id").select2({
             placeholder: "Select Customer"

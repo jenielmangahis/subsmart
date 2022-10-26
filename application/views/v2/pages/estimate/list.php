@@ -111,6 +111,7 @@
                             <td data-name="Type">Type</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Amount</td>
+                            <td data-name="Amount">Is Email Seen</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -173,6 +174,17 @@
                                         ?>
                                     </td>
                                     <td>
+                                        <?php if ($estimate->is_mail_open == 1): ?>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path fill="#888888" d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z"/>
+                                            </svg>
+                                        <?php else: ?>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path fill="#888888" d="M11.885 14.988l3.104-3.098.011.11c0 1.654-1.346 3-3 3l-.115-.012zm8.048-8.032l-3.274 3.268c.212.554.341 1.149.341 1.776 0 2.757-2.243 5-5 5-.631 0-1.229-.13-1.785-.344l-2.377 2.372c1.276.588 2.671.972 4.177.972 7.733 0 11.985-8.449 11.985-8.449s-1.415-2.478-4.067-4.595zm1.431-3.536l-18.619 18.58-1.382-1.422 3.455-3.447c-3.022-2.45-4.818-5.58-4.818-5.58s4.446-7.551 12.015-7.551c1.825 0 3.456.426 4.886 1.075l3.081-3.075 1.382 1.42zm-13.751 10.922l1.519-1.515c-.077-.264-.132-.538-.132-.827 0-1.654 1.346-3 3-3 .291 0 .567.055.833.134l1.518-1.515c-.704-.382-1.496-.619-2.351-.619-2.757 0-5 2.243-5 5 0 .852.235 1.641.613 2.342z"/>
+                                            </svg>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -180,6 +192,30 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('estimate/view/' . $estimate->id) ?>">View Estimate</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" target="_new">View PDF</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item send-item" href="javascript:void(0);" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>">Send to Customer</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#clone_estimate_modal" data-id="<?php echo $estimate->id ?>" data-wo_num="<?php echo $estimate->estimate_number ?>" data-name="WO-00433">Clone Estimate</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="<?= base_url('job/estimate_job/' . $estimate->id) ?>">Convert to Job</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice') ?>">Convert to Invoice</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" target="_new">Print</a>
                                                 </li>
 
                                                 <?php
@@ -204,26 +240,9 @@
                                                 endif;
                                                 ?>
 
-                                                <li>
-                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#clone_estimate_modal" data-id="<?php echo $estimate->id ?>" data-wo_num="<?php echo $estimate->estimate_number ?>" data-name="WO-00433">Clone Estimate</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice') ?>">Convert to Invoice</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" target="_new">View PDF</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" target="_new">Print</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item send-item" href="javascript:void(0);" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>">Send to Customer</a>
-                                                </li>
+                                               
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" est-id="<?php echo $estimate->id; ?>">Delete</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/estimate_job/' . $estimate->id) ?>">Convert to Job</a>
                                                 </li>
                                             </ul>
                                         </div>

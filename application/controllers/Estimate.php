@@ -1456,6 +1456,7 @@ class Estimate extends MY_Controller
 
         $id = $this->input->post('id');
         $wo_id = $this->input->post('est_id');
+        $urlLogo = $this->input->post('urlLogo');
 
         $workData = $this->estimate_model->getEstimate($wo_id);
         $eid      = hashids_encrypt($workData->id, '', 15);
@@ -1475,8 +1476,18 @@ class Estimate extends MY_Controller
         $items_dataBD2 = $this->estimate_model->getItemlistByIDBundle2($wo_id);
         $items = $this->estimate_model->getEstimatesItems($wo_id);
 
+        
+        $urlApprove = base_url('share_Link/approveEstimate/' . $workData->id);
+        $urlDecline = base_url('share_Link/declineEstimate/' . $workData->id);
+
+        $imageUrl = getCompanyBusinessProfileImage();
+
         $data = array(
             // 'workorder'             => $workorder,
+            'imageUrl'                      => $urlLogo,
+            'estimateID'                    => $workData->id,
+            'urlApprove'                    => $urlApprove,
+            'urlDecline'                    => $urlDecline,
             'company'                       => $cliets->business_name,
             'business_address'              => $cliets->business_address,
             'phone_number'                  => $cliets->phone_number,
@@ -1519,7 +1530,7 @@ class Estimate extends MY_Controller
             'items'                         => $items,
 
             'bundle_discount'               => $workData->bundle_discount,
-            'deposit_amount'                => $workData->deposit_amount,
+            // 'deposit_amount'                => $workData->deposit_amount,
             'bundle1_total'                 => $workData->bundle1_total,
             'bundle2_total'                 => $workData->bundle2_total,
 
@@ -1541,6 +1552,7 @@ class Estimate extends MY_Controller
             'eid'                           => $eid
             // 'source' => $source
         );
+
 
         // $recipient  = "emploucelle@gmail.com";
         $recipient  = $customerData->email;

@@ -1441,7 +1441,7 @@ table input.form-control {
 													<label for="lead_source">Jobs Tags</label>
 													<select id="job_tags" name="job_tags" class="form-control custom-select m_select" disabled>
 														<?php foreach($job_tags as $jb){ ?>
-														<option value="<?php echo $jb->id; ?>" <?php if($workorder->job_tags == $jb->id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $jb->name; ?></option>
+														<option value="<?php echo $jb->name; ?>" <?php if($workorder->job_tags == $jb->id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $jb->name; ?></option>
 														<?php } ?>
 													</select>
 												</div>    

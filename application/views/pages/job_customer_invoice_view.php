@@ -2,13 +2,10 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header_front'); ?>
-<script src="https://js.stripe.com/v3/"></script>
-<script src="https://checkout.stripe.com/checkout.js"></script>
-<?php //if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
-<!-- Remove demo in url for production -->
-<!-- <script src="https://api.demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
-<script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
-<?php //} ?>
+<?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>    
+<?php } ?>
 <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
 <?php } ?>
@@ -95,9 +92,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
         top: 19px;
     }
 </style>
-<script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
-<!-- <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> -->
-<!-- <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script> -->
+<?php if($onlinePaymentAccount->converge_merchant_id != '' && $onlinePaymentAccount->converge_merchant_user_id != ''){ ?>
+    <!-- Remove demo in url for production -->    
+    <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script>
+    <script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+    <!-- <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> -->
+<?php } ?>
 <div>
     <!-- page wrapper start -->
     <div>
@@ -216,7 +216,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php
                                         $subtotal = 0.00;
                                         foreach ($jobs_data_items as $item):
-                                            $total = $item->price * $item->qty;
+                                            $total = ($item->price * $item->qty);
                                             ?>
                                             <tr>
                                                 <td><?= $item->title; ?></td>
@@ -248,7 +248,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php endif; ?>
 
                                     <b>Grand Total</b>
-                                    <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+                                    <b class="right-text">$<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></b>
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -285,26 +285,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-12">
                                     <h6 class="title-border"></h6>
-                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$subtotal,2,'.',','); ?></span>
+                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></span>
                                     <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
-                                    <input type="hidden" id="total_amount" value="<?= $subtotal; ?>">
+                                    <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>">
                                     <br /><br />
                                     <?php if($jobs_data->status != 'Completed'){ ?>
                                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
                                         <div class="payment-msg"></div>
-                                        <div class="payment-api-container">
+                                        <div class="payment-api-container" <?= $jobs_data->total_amount <= 0 ? 'style="display:none;"' : ''; ?>>
                                           <?php if($onlinePaymentAccount){ ?>
+                                            <a class="btn btn-primary btn-confirm-order btn-pay" href="javascript:void(0);">CONFIRM ORDER</a>
+
                                             <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
-                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY NOW</a>
-                                              <!-- <div id="applepay-button" class="apple-pay-button"></div> -->
+                                              <input type="hidden" id="converge-token" name="converge_token" value="" />
+                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);" style="display:none;">PAY VIA CONVERGE</a>
+                                              <?php if( isApple() ){ ?>
+                                                <div id="applepay-button" class="apple-pay-button" style="display:none;"></div>
+                                              <?php } ?>
                                             <?php } ?>
+
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
-                                              <!-- <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a> -->
+                                                <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);" style="display:none;">PAY VIA STRIPE</a>
                                             <?php } ?>
+
                                             <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
-                                              <!-- <div id="paypal-button-container" style="display: inline-block;height: 44px;"></div> -->
+                                              <div id="paypal-button-container" style="display: inline-block;height: 44px;"></div>
                                             <?php } ?>
                                           <?php } ?>
+
                                         </div>
                                         <?php echo form_close(); ?>
                                     <?php } ?>
@@ -348,10 +356,128 @@ $(function(){
   }
   //Converge payment
   $(".btn-pay-converge").click(function(){
-    initiateLightbox();
+    //initiateLightbox();
+    var token = $('#converge-token').val();
+    openLightbox(token);
   });
 
-  function initiateLightbox () {
+  $('.btn-confirm-order').click(function(){
+    var job_id = $("#jobid").val();
+    var total_amount = $("#total_amount").val();
+    <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
+        var url = base_url + '_converge_request_token';
+        $(".btn-confirm-order").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: {job_id:job_id, total_amount:total_amount},
+               success: function(o)
+               {
+                    if( o.is_success ){
+                        $('#converge-token').val(o.token);    
+                        <?php if( isApple() ){ ?>
+                        initiateApplePay(o.token);          
+                        <?php } ?>
+
+                        $(".btn-pay-converge").show();
+
+                        <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+                            $(".btn-pay-stripe").show();
+                        <?php } ?>
+
+                        <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
+                            // Render the PayPal button into #paypal-button-container
+                            paypal.Buttons({
+                                style: {
+                                    layout: 'horizontal',
+                                    tagline: false,
+                                    height:45,
+                                    color:'blue'
+                                },
+                                // Set up the transaction
+                                createOrder: function(data, actions) {
+                                    return actions.order.create({                
+                                        purchase_units: [{
+                                            amount: {
+                                                value: $("#total_amount").val()
+                                            }
+                                        }],
+                                        application_context: {
+                                            shipping_preference: 'NO_SHIPPING'
+                                        }
+                                    });
+                                },
+                                // Finalize the transaction
+                                onApprove: function(data, actions) {
+                                    return actions.order.capture().then(function(details) {
+                                        // Show a success message to the buyer
+                                        //console.log(details);
+                                        updateJobToPaid();       
+                                    });
+                                }
+                            }).render('#paypal-button-container');
+                        <?php } ?>
+                        $(".btn-confirm-order").hide();
+
+                    }else{
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Cannot Process Payment',
+                          text: o.msg
+                        });
+
+                        $(".btn-confirm-order").html('CONFIRM ORDER');
+                    }
+               }
+            });
+        }, 1000);
+    <?php }else{ ?>
+        $(".btn-confirm-order").hide();
+        
+        <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+            $(".btn-pay-stripe").show();
+        <?php } ?>
+
+        <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
+            // Render the PayPal button into #paypal-button-container
+            paypal.Buttons({
+                style: {
+                    layout: 'horizontal',
+                    tagline: false,
+                    height:45,
+                    color:'blue'
+                },
+                // Set up the transaction
+                createOrder: function(data, actions) {
+                    return actions.order.create({                
+                        purchase_units: [{
+                            amount: {
+                                value: $("#total_amount").val()
+                            }
+                        }],
+                        application_context: {
+                            shipping_preference: 'NO_SHIPPING'
+                        }
+                    });
+                },
+                // Finalize the transaction
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        // Show a success message to the buyer
+                        //console.log(details);
+                        updateJobToPaid();       
+                    });
+                }
+            }).render('#paypal-button-container');
+        <?php } ?>
+
+    <?php } ?>
+  });
+
+    //Converge
+    function initiateLightbox () {
       var job_id = $("#jobid").val();
       var total_amount = $("#total_amount").val();
 
@@ -366,6 +492,7 @@ $(function(){
            success: function(o)
            {
               if( o.is_success ){
+                  //initiateApplePay(o.token);
                   openLightbox(o.token);                  
               }else{
                 Swal.fire({
@@ -379,9 +506,36 @@ $(function(){
            }
         });
       }, 1000);
-  }
+    }
 
-  function openLightbox (token) {
+    function initiateApplePay(token){
+        var paymentFields = {
+            ssl_txn_auth_token: token
+        };
+        var callback = {
+            onError: function (error) {
+                //showResult("error", error);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Declined',
+                  text: 'Apple Pay not available'
+                });
+            },
+            onCancelled: function () {
+                //showResult("cancelled", "");
+            },
+            onDeclined: function (response) {
+                //showResult("declined", JSON.stringify(response, null, '\t'));
+            },
+            onApproval: function (response) {
+                //showResult("approval", JSON.stringify(response, null, '\t'));
+            }
+        };
+        ConvergeEmbeddedPayment.initApplePay('applepay-button', paymentFields, callback);
+        return false;
+    }
+
+    function openLightbox (token) {
       var paymentFields = {
               ssl_txn_auth_token: token
       };
@@ -398,13 +552,13 @@ $(function(){
               //showResult("cancelled", "");
           },
           onDeclined: function (response) {
-            /*Swal.fire({
+            Swal.fire({
               icon: 'error',
               title: 'Declined',
-              text: JSON.stringify(response, null, '\t')
-            });*/
+              text: 'Cannot process payment'
+            });
             //showResult("declined", JSON.stringify(response, null, '\t'));
-            updateJobToPaid();
+            //updateJobToPaid();
           },
           onApproval: function (response) {              
               updateJobToPaid();
@@ -413,77 +567,44 @@ $(function(){
       };
       PayWithConverge.open(paymentFields, callback);
 
-      /*var paymentData = {
-                    ssl_txn_auth_token: token
-                                    };
-        ConvergeEmbeddedPayment.initApplePay('applepay-button', paymentData, callback);*/
-
       return false;
-  }
-  /*End Converge*/
+    }
+    /*End Converge*/
 
     //Stripe Payment
     <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>    
-    var handler = StripeCheckout.configure({
-        key: '<?= $onlinePaymentAccount->stripe_publish_key; ?>',
-        image: '',
-        token: function(token) {
-          updateJobToPaid();                  
-        }
-    });
+        var handler = StripeCheckout.configure({
+            key: '<?= $onlinePaymentAccount->stripe_publish_key; ?>',
+            image: '',
+            token: function(token) {
+              updateJobToPaid();                  
+            }
+        });
 
-    $('.btn-pay-stripe').on('click', function(e) {
-    var amountInCents = Math.floor($("#total_amount").val() * 100);
-    var displayAmount = parseFloat(Math.floor($("#total_amount").val() * 100) / 100).toFixed(2);
-    // Open Checkout with further options
-    handler.open({
-        image : '<?= base_url('/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image); ?>',
-        name: $("#job-number").val(),
-        description: 'Total amount ($' + displayAmount + ')',
-        amount: amountInCents,
-    });
-    e.preventDefault();
-    });
+        $('.btn-pay-stripe').on('click', function(e) {
+        var amountInCents = Math.floor($("#total_amount").val() * 100);
+        var displayAmount = parseFloat(Math.floor($("#total_amount").val() * 100) / 100).toFixed(2);
+        // Open Checkout with further options
+        handler.open({
+            image : '<?= base_url('/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image); ?>',
+            name: $("#job-number").val(),
+            description: 'Total amount ($' + displayAmount + ')',
+            amount: amountInCents,
+        });
+        e.preventDefault();
+        });
 
-    // Close Checkout on page navigation
-    $(window).on('popstate', function() {
-    handler.close();
-    });
-  <?php } ?>
+        // Close Checkout on page navigation
+        $(window).on('popstate', function() {
+        handler.close();
+        });
+    <?php } ?>
   /*End Stripe Payment*/
 
     //Paypal
-    // Render the PayPal button into #paypal-button-container
-    paypal.Buttons({
-        style: {
-            layout: 'horizontal',
-            tagline: false,
-            height:45,
-            color:'blue'
-        },
-        // Set up the transaction
-        createOrder: function(data, actions) {
-            return actions.order.create({                
-                purchase_units: [{
-                    amount: {
-                        value: $("#total_amount").val()
-                    }
-                }],
-                application_context: {
-                    shipping_preference: 'NO_SHIPPING'
-                }
-            });
-        },
-        // Finalize the transaction
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                // Show a success message to the buyer
-                //console.log(details);
-                updateJobToPaid();       
-            });
-        }
-    }).render('#paypal-button-container');
-
+    <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
+        
+    <?php } ?>
     /*End paypal*/
 });
 </script>

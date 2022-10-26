@@ -115,7 +115,7 @@
                                                     <br>
                                                     <span>Mobile: </span>
                                                     <?php if ($jobs_data->phone_m!="" || $jobs_data->phone_m!=null): ?>
-                                                    <?= $jobs_data->phone_h;  ?>
+                                                    <!-- <?= $jobs_data->phone_h;  ?> -->
                                                     <?= $jobs_data->phone_m;  ?>
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
@@ -123,8 +123,8 @@
                                                     <?php endif; ?>
                                                     <br>
                                                 </div>
-                                                <div id="map" class="col-md-3"></div>
-                                                <div id="streetViewBody" class="col-md-4"></div>
+                                                <div id="map" class="col-md-3 d-none"></div>
+                                                <div id="streetViewBody" class="col-md-4 d-none"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -157,12 +157,16 @@
                                                     <?php
                                                     $subtotal = $subtotal + $total;
                                                     endforeach;
+                                                    $GRAND_TOTAL = $subtotal + $jobs_data->tax_rate;
                                                 ?>
                                                 </tbody>
                                             </table>
                                             <hr>
-                                            <b>Sub Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></b>
+                                            <b>Sub Total:</b>
+                                            <span class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></span>
+                                            <br>
+                                            <b>Tax Rate:</b>&nbsp;
+                                            <span class="right-text">$<?= number_format((float)$jobs_data->tax_rate, 2, '.', ','); ?></span>
                                             <br>
                                             <hr>
 
@@ -180,24 +184,26 @@
                                             <hr>
                                             <?php endif; ?>
 
-                                            <b>Grand Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></b>
+                                            <b>Grand Total:</b>
+                                            <b class="right-text">$<?= number_format((float)$GRAND_TOTAL, 2, '.', ','); ?></b>
                                         </div>
                                         <div class="col-md-12">
                                             <br><br>
                                             <h6 class="title-border">NOTES :</h6>
-                                            <span><?=  $jobs_data->message; ?></span>
+                                            <span><?= isset($jobs_data->message) ? $jobs_data->message : "No notes given."; ?></span>
                                         </div>
 
                                         <div class="col-md-12">
                                             <br>
                                             <h6 class="title-border">ASSIGNED TO :</h6>
-                                            <?php
-                                                $employee_date = get_employee_name($jobs_data->employee_id);
-                                                $shared1 = get_employee_name($jobs_data->employee2_id);
-                                                $shared2 = get_employee_name($jobs_data->employee3_id);
-                                                $shared3 = get_employee_name($jobs_data->employee4_id);
-                                            ?>
+                                            <div>
+                                                <strong>
+                                                    <span><?= $employee_date = get_employee_name($jobs_data->employee_id); ?></span><br>
+                                                    <span><?= $shared1 = get_employee_name($jobs_data->employee2_id); ?></span><br>
+                                                    <span><?= $shared2 = get_employee_name($jobs_data->employee3_id); ?></span><br>
+                                                    <span><?= $shared3 = get_employee_name($jobs_data->employee4_id); ?></span>
+                                                </strong>
+                                            </div>
                                             <span><?= $employee_date->FName; ?></span>
                                             <span class="fa fa-envelope-open-text icon_preview"></span><br>
                                             <?php if (isset($shared1) && !empty($shared1) && $shared1!=null): ?>

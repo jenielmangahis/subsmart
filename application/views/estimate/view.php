@@ -585,6 +585,7 @@ span.sc-item {
                           <a class="btn btn-info" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
                           <a class="btn btn-success approveEstimate" target="_new" estimateID="<?php echo $estimate->id; ?>"><span class="fa fa-file-pdf-o icon"></span> APPROVE</a>
                           <a class="btn btn-info" href="<?php echo base_url('estimate/') ?>">BACK TO ESTIMATE LIST</a>
+                          <input type="hidden" value="<?php echo getCompanyBusinessProfileImage(); ?>" id="urlLogo">
                         </div>
                       </div>
 
@@ -922,6 +923,7 @@ $(document).on('click touchstart','.send_to_customer',function(){
 
 var id = $(this).attr('acs-id');
 var est_id = $(this).attr('est-id');
+var urlLogo = $('#urlLogo').val();
 // alert(wo_id);
 
 var r = confirm("Send this to customer?");
@@ -930,7 +932,7 @@ if (r == true) {
 	$.ajax({
 	type : 'POST',
 	url : "<?php echo base_url(); ?>estimate/sendEstimateToAcs",
-	data : {id: id, est_id: est_id},
+	data : {id: id, est_id: est_id, urlLogo: urlLogo},
 	success: function(result){
 		//sucess("Email Successfully!");
 		// alert('Email Successfully!');

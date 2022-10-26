@@ -79,6 +79,10 @@ class General_model extends MY_Model {
             }
         }
 
+        if(array_key_exists("distinct",$params) && $params['distinct'] == true ){
+            $this->db->distinct();
+        }
+
         if(array_key_exists("limit", $params)){
             $this->db->limit($params['limit']);
         }

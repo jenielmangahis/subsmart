@@ -61,80 +61,94 @@
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-reconcile-status">Reconcile Status</label>
                                                         <select name="filter_reconcile_status" id="filter-reconcile-status" class="form-select nsm-field">
-                                                            <option value="all" selected>All</option>
-                                                            <option value="reconciled">Reconciled</option>
-                                                            <option value="cleared">Cleared</option>
-                                                            <option value="no-status">No Status</option>
-                                                            <option value="not-reconciled">Not Reconciled</option>
+                                                            <option value="all" <?=empty($reconcile_status) || $reconcile_status === 'all' ? 'selected' : ''?>>All</option>
+                                                            <option value="reconciled" <?=!empty($reconcile_status) && $reconcile_status === 'reconcile' ? 'selected' : ''?>>Reconciled</option>
+                                                            <option value="cleared" <?=!empty($reconcile_status) && $reconcile_status === 'cleared' ? 'selected' : ''?>>Cleared</option>
+                                                            <option value="no-status" <?=!empty($reconcile_status) && $reconcile_status === 'no-status' ? 'selected' : ''?>>No Status</option>
+                                                            <option value="not-reconciled" <?=!empty($reconcile_status) && $reconcile_status === 'not-reconciled' ? 'selected' : ''?>>Not Reconciled</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-transaction-type">Transaction type</label>
                                                         <select name="filter_transaction_type" id="filter-transaction-type" class="form-select nsm-field">
-                                                            <option value="all" selected>All</option>
-                                                            <option value="cc-expense">CC Expense</option>
-                                                            <option value="check">Check</option>
-                                                            <option value="invoice">Invoice</option>
-                                                            <option value="receive-payment">Receive payment</option>
-                                                            <option value="journal-entry">Journal Entry</option>
-                                                            <option value="bill">Bill</option>
-                                                            <option value="cc-credit">CC Credit</option>
-                                                            <option value="vendor-credit">Vendor Credit</option>
-                                                            <option value="bill-payment">Bill Payment</option>
-                                                            <option value="cc-bill-payment">CC Bill Payment</option>
-                                                            <option value="transfer">Transfer</option>
-                                                            <option value="deposit">Deposit</option>
-                                                            <option value="cash-expense">Cash Expense</option>
-                                                            <option value="sales-receipt">Sales Receipt</option>
-                                                            <option value="credit-memo">Credit Memo</option>
-                                                            <option value="refund">Refund</option>
-                                                            <option value="inv-qty-adjustment">Inventory Quantity Adjustment</option>
-                                                            <option value="payroll-check">Payroll Check</option>
-                                                            <option value="tax-payment">Tax Payment</option>
-                                                            <option value="payroll-adjustment">Payroll Adjustment</option>
-                                                            <option value="payroll-refund">Payroll Refund</option>
-                                                            <option value="sales-tax-payment">Sales Tax Payment</option>
-                                                            <option value="sales-tax-adjustment">Sales Tax Adjustment</option>
-                                                            <option value="expense">Expense</option>
-                                                            <option value="inv-starting-value">Inventory Starting Value</option>
-                                                            <option value="cc-payment">Credit Card Payment</option>
+                                                            <option value="all" <?=empty($transaction_type) || $transaction_type === 'all' ? 'selected' : ''?>>All</option>
+                                                            <option value="cc-expense" <?=!empty($transaction_type) && $transaction_type === 'cc-expense' ? 'selected' : ''?>>CC Expense</option>
+                                                            <option value="check" <?=!empty($transaction_type) && $transaction_type === 'check' ? 'selected' : ''?>>Check</option>
+                                                            <option value="invoice" <?=!empty($transaction_type) && $transaction_type === 'invoice' ? 'selected' : ''?>>Invoice</option>
+                                                            <option value="receive-payment" <?=!empty($transaction_type) && $transaction_type === 'receive-payment' ? 'selected' : ''?>>Receive payment</option>
+                                                            <option value="journal-entry" <?=!empty($transaction_type) && $transaction_type === 'journal-entry' ? 'selected' : ''?>>Journal Entry</option>
+                                                            <option value="bill" <?=!empty($transaction_type) && $transaction_type === 'bill' ? 'selected' : ''?>>Bill</option>
+                                                            <option value="cc-credit" <?=!empty($transaction_type) && $transaction_type === 'cc-credit' ? 'selected' : ''?>>CC Credit</option>
+                                                            <option value="vendor-credit" <?=!empty($transaction_type) && $transaction_type === 'vendor-credit' ? 'selected' : ''?>>Vendor Credit</option>
+                                                            <option value="bill-payment" <?=!empty($transaction_type) && $transaction_type === 'bill-payment' ? 'selected' : ''?>>Bill Payment</option>
+                                                            <option value="cc-bill-payment"<?=!empty($transaction_type) && $transaction_type === 'cc-bill-payment' ? 'selected' : ''?>>CC Bill Payment</option>
+                                                            <option value="transfer" <?=!empty($transaction_type) && $transaction_type === 'transfer' ? 'selected' : ''?>>Transfer</option>
+                                                            <option value="deposit" <?=!empty($transaction_type) && $transaction_type === 'deposit' ? 'selected' : ''?>>Deposit</option>
+                                                            <option value="cash-expense" <?=!empty($transaction_type) && $transaction_type === 'cash-expense' ? 'selected' : ''?>>Cash Expense</option>
+                                                            <option value="sales-receipt" <?=!empty($transaction_type) && $transaction_type === 'sales-receipt' ? 'selected' : ''?>>Sales Receipt</option>
+                                                            <option value="credit-memo" <?=!empty($transaction_type) && $transaction_type === 'credit-memo' ? 'selected' : ''?>>Credit Memo</option>
+                                                            <option value="refund" <?=!empty($transaction_type) && $transaction_type === 'refund' ? 'selected' : ''?>>Refund</option>
+                                                            <option value="inv-qty-adjustment" <?=!empty($transaction_type) && $transaction_type === 'inv-qty-adjustment' ? 'selected' : ''?>>Inventory Quantity Adjustment</option>
+                                                            <option value="payroll-check" <?=!empty($transaction_type) && $transaction_type === 'payroll-check' ? 'selected' : ''?>>Payroll Check</option>
+                                                            <option value="tax-payment" <?=!empty($transaction_type) && $transaction_type === 'tax-payment' ? 'selected' : ''?>>Tax Payment</option>
+                                                            <option value="payroll-adjustment" <?=!empty($transaction_type) && $transaction_type === 'payroll-adjustment' ? 'selected' : ''?>>Payroll Adjustment</option>
+                                                            <option value="payroll-refund" <?=!empty($transaction_type) && $transaction_type === 'payroll-refund' ? 'selected' : ''?>>Payroll Refund</option>
+                                                            <option value="sales-tax-payment" <?=!empty($transaction_type) && $transaction_type === 'sales-tax-payment' ? 'selected' : ''?>>Sales Tax Payment</option>
+                                                            <option value="sales-tax-adjustment" <?=!empty($transaction_type) && $transaction_type === 'sales-tax-adjustment' ? 'selected' : ''?>>Sales Tax Adjustment</option>
+                                                            <option value="expense" <?=!empty($transaction_type) && $transaction_type === 'expense' ? 'selected' : ''?>>Expense</option>
+                                                            <option value="inv-starting-value" <?=!empty($transaction_type) && $transaction_type === 'inv-starting-value' ? 'selected' : ''?>>Inventory Starting Value</option>
+                                                            <option value="cc-payment" <?=!empty($transaction_type) && $transaction_type === 'cc-payment' ? 'selected' : ''?>>Credit Card Payment</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-payee">Payee</label>
                                                         <select name="filter_payee" id="filter-payee"class="form-select nsm-field">
-                                                            <option value="all" selected>All</option>
+                                                            <?php if(empty($payee) || $payee === 'all') : ?>
+                                                                <option value="all" selected>All</option>
+                                                            <?php else : ?>
+                                                                <option value="<?=$payee?>"></option>
+                                                            <?php endif; ?>
                                                         </select>
                                                     </div>
                                                     <?php endif; ?>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-date">Date</label>
                                                         <select name="filter_date" id="filter-date" class="form-select nsm-field">
-                                                            <option value="all">All dates</option>
-                                                            <option value="custom">Custom</option>
-                                                            <option value="today">Today</option>
-                                                            <option value="yesterday">Yesterday</option>
-                                                            <option value="this-week">This week</option>
-                                                            <option value="this-month">This month</option>
-                                                            <option value="this-quarter">This quarter</option>
-                                                            <option value="this-year">This year</option>
-                                                            <option value="last-week">Last week</option>
-                                                            <option value="last-month">Last month</option>
-                                                            <option value="last-quarter">Last quarter</option>
-                                                            <option value="last-year">Last year</option>
+                                                            <option value="all" <?=empty($date) || $date === 'all' ? 'selected' : ''?>>All dates</option>
+                                                            <option value="custom" <?=!empty($date) && $date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                                            <option value="today" <?=!empty($date) && $date === 'today' ? 'selected' : ''?>>Today</option>
+                                                            <option value="yesterday" <?=!empty($date) && $date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                                            <option value="this-week" <?=!empty($date) && $date === 'this-week' ? 'selected' : ''?>>This week</option>
+                                                            <option value="this-month" <?=!empty($date) && $date === 'this-month' ? 'selected' : ''?>>This month</option>
+                                                            <option value="this-quarter" <?=!empty($date) && $date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
+                                                            <option value="this-year" <?=!empty($date) && $date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                                            <option value="last-week" <?=!empty($date) && $date === 'last-week' ? 'selected' : ''?>>Last week</option>
+                                                            <option value="last-month" <?=!empty($date) && $date === 'last-month' ? 'selected' : ''?>>Last month</option>
+                                                            <option value="last-quarter" <?=!empty($date) && $date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
+                                                            <option value="last-year" <?=!empty($date) && $date === 'last-year' ? 'selected' : ''?>>Last year</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-from">From</label>
                                                         <div class="nsm-field-group calendar">
-                                                            <input type="text" name="filter_from" id="filter-from" class="form-control nsm-field date">
+                                                            <input type="text" name="filter_from" id="filter-from" class="form-control nsm-field date" value="<?=!empty($from) ? $from : ''?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-to">To</label>
                                                         <div class="nsm-field-group calendar">
-                                                            <input type="text" name="filter_to" id="filter-to" class="form-control nsm-field date">
+                                                            <input type="text" name="filter_to" id="filter-to" class="form-control nsm-field date" value="<?=!empty($to) ? $to : ''?>">
                                                         </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <button type="button" class="nsm-button" id="reset-button">
+                                                            Reset
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <button type="button" class="nsm-button primary float-end" id="apply-button">
+                                                            Apply
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </ul>
@@ -176,7 +190,7 @@
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="checkbox" checked name="col_chk" id="chk_running_balance" class="form-check-input">
-                                                    <label for="chk_running_balance" class="form-check-label">Running Balance</label>
+                                                    <label for="chk_running_balance" class="form-check-label">Balance</label>
                                                 </div>
                                                 <?php else : ?>
                                                 <div class="form-check">

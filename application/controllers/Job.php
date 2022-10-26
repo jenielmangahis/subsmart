@@ -76,12 +76,27 @@ class Job extends MY_Controller
             $this->general->add_($event_settings_data, 'job_settings');
         }
 
+        $get_sales_rep = array(
+            'where' => array(
+                'users.company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName',
+            'join' => array(
+                'table' => 'acs_office',
+                'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                'join_as' => 'left',
+            ),
+        );
+        $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);
+
         $get_employee = array(
             'where' => array(
                 'company_id' => $comp_id
             ),
             'table' => 'users',
-            'select' => 'id,FName,LName',
+            'select' => 'id, FName, LName',
         );
         $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
 
@@ -583,13 +598,27 @@ class Job extends MY_Controller
             $this->general->add_($event_settings_data, 'job_settings');
         }
 
+        $get_sales_rep = array(
+            'where' => array(
+                'users.company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName',
+            'join' => array(
+                'table' => 'acs_office',
+                'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                'join_as' => 'left',
+            ),
+        );
+        $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);
 
         $get_employee = array(
             'where' => array(
                 'company_id' => $comp_id
             ),
             'table' => 'users',
-            'select' => 'id,FName,LName',
+            'select' => 'id, FName, LName',
         );
         $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
 
@@ -1584,15 +1613,23 @@ class Job extends MY_Controller
             'priority' => $input['priority'],//$this->input->post('job_priority'),
             'tags' => $input['tags'],//$this->input->post('job_priority'),
             'status' => 'Scheduled',//$this->input->post('job_status'),
-            'message' => $input['message'],
+            // 'message' => $input['message'],
             'company_id' => $comp_id,
             'date_created' => date('Y-m-d H:i:s'),
             //'notes' => $input['notes'],
             'attachment' => $input['attachment'],
-            'tax_rate' => $input['tax_rate'],
+            'tax_rate' => $input['tax'],
             'job_type' => $input['job_type'],
             'date_issued' => $input['start_date'],
         );
+
+        if (!empty($input['customer_message'])) {
+            $jobs_data['message'] = $input['customer_message'];
+        }
+        if (!empty($input['message'])) {
+            $jobs_data['message'] = $input['message'];
+        }
+
         if(empty($isJob)){
             // INSERT DATA TO JOBS TABLE
             $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
@@ -1658,6 +1695,7 @@ class Job extends MY_Controller
 
                     $job_items_data = array();
                     $job_items_data['qty'] = $input['item_qty'][$xx];
+                    $job_items_data['tax'] = $input['tax'];
                     $where['job_id'] = $isJob->id;
                     $where['items_id'] = $input['item_id'][$xx];
                     if(empty($isItem)){
