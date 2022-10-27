@@ -2,7 +2,7 @@
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 
 <!-- Script for autosaving form -->
-<script src="<?=base_url("assets/js/workorder/autosave.js")?>"></script>
+<!-- <script src="<?=base_url("assets/js/workorder/autosave.js")?>"></script> -->
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

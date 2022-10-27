@@ -358,7 +358,8 @@
                                 </table> 
                                 <!-- </div> -->
                                 <br><br><br>
-                                <p><b>Deposit Request</b><br />&emsp;<?php if($deposit_request == '1' || $deposit_request == '0'){ echo '$'; }else{ echo '%'; } ?><?php if($deposit_amount == NULL){ echo '0.00'; }else{ $deposit_amount; } ?></p>
+                                <p><b>Deposit Request</b><br />&emsp;
+                                <?php echo $deposit_request; ?><?php if($deposit_amount == NULL){ echo '0.00'; }else{ $deposit_amount; } ?></p>
 
                                 <br />
                                 <p><b>Instructions</b><br />&emsp;<?= $instructions; ?></p><br />
