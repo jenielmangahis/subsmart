@@ -1,86 +1,29 @@
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,100" rel="stylesheet">
 <style>
-.nsm-date {
-    /*display: block;*/
-    width: 73px;
-    height: 73px;
-    /*margin: 26px auto;*/
-    background: #fff;
-    text-align: center;
-    font-family: 'Helvetica', sans-serif;
-    position: relative;
-    display: inline-block;
-    margin-bottom: 9px;
-}
-
-.nsm-date .binds {
-    position: absolute;
-    height: 15px;
-    width: 60px;
-    background: transparent;
-    border: 2px solid #999;
-    border-width: 0 5px;
-    top: -6px;
-    left: 0;
-    right: 0;
+.nsm-calendar {
+    background: #DAD1E0;
+    border-radius: 20%;
+    width: 103px;
+    height: 103px;
     margin: auto;
+    vertical-align: middle;
+    text-align: center;
+    font: 300 28.5714285714px Roboto;
 }
-
-.nsm-date .month {
-    background: #6A4A86;
-    display: block;
-    padding: 8px 0;
-    color: #fff;
-    font-size: 12px;
+.nsm-calendar .week {
+    color: red;
+    padding: 13px;
+    padding-bottom: 5px;
+    font-size: 20px;
     font-weight: bold;
-    /*border-bottom: 2px solid #333;*/
-    /*box-shadow: inset 0 -1px 0 0 #666;*/
 }
-
-.nsm-date .day {
-    display: block;
-    margin: 0;
-    padding: 6x 0;
-    font-size: 27px;
-    background-color: #DAD1E0;
-    /*box-shadow: 0 0 3px #ccc;*/
-    position: relative;
+.nsm-calendar .date {
+    font: 45px Roboto;
+    margin-top: -7px;
+    font-weight: bold;
 }
-
-.nsm-date .day::after {
-    content: '';
-    display: block;
-    height: 100%;
-    width: 96%;
-    position: absolute;
-    top: 3px;
-    left: 2%;
-    z-index: -1;
-    box-shadow: 0 0 3px #ccc;
-}
-
-.nsm-date .day::before {
-    content: '';
-    display: block;
-    height: 100%;
-    width: 90%;
-    position: absolute;
-    top: 6px;
-    left: 5%;
-    z-index: -1;
-    box-shadow: 0 0 3px #ccc;
-}
-.nsm-calendar-container{
-    display: inline-block;
-}
-.nsm-calendar-info-container{
-    display: inline-block;
-    width: 119px;
-}
-.vl {
-    border-left: 2px solid #6A4A86;
-    height: 82px;
-    display: inline-block;
-    margin-left: 14px;
+.nsm-list-icon{
+    float: right;
 }
 </style>
 <table class="nsm-table" id="upcoming_jobs_table">
@@ -96,48 +39,68 @@
             <?php foreach ($upcomingJobs as $jb) : ?>
                 <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?php echo base_url('job/new_job1/' . $jb->id); ?>'">
                     <td>
-                        <div class="nsm-list-icon primary">                            
-                            <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->e_employee_id); ?>');" data-img="<?php echo $data_img; ?>"></div>                            
-                        </div>
+                        <?php 
+                            $event_month = date("F", strtotime($jb->start_date));
+                            $event_day   = date("d", strtotime($jb->start_date));
+                            $event_day_word = date("D", strtotime($jb->start_date));
+                        ?>
+                        <div class="nsm-calendar" ng-app="myApp">
+                            <div class="week">
+                                <b><?= $event_day_word; ?></b>
+                            </div>
+                            <div class="date">
+                                <?= $event_day; ?>
+                            </div>
+                        </div>    
+                        <div class="nsm-calendar-info-container" style="text-align:center;">
+                            <span class="nsm-badge primary"><?php echo strtoupper($jb->status); ?></span>
+                            <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?php echo $jb->start_time; ?>-<?php echo $jb->end_time; ?></label>
+                        </div>                    
                     </td>
-                    <td>
-                        <label class="content-title" style="cursor: pointer">                            
+                    <td style="vertical-align: text-top;padding-top: 28px;">
+                        <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">                            
                             <?php 
                                 $tags = '';
                                 if( $jb->tags_name != '' ){
-                                    $tags = ' - ' . $jb->tags_name;
+                                    $tags = $jb->tags_name;
                                 }
 
-                                echo $jb->job_number . ' : ' . $jb->job_type . $tags;
+                                //echo $jb->job_number . ' : SERVICE (' . $tags . ')';
+                                echo $jb->job_number . ' : ' . $tags;
                             ?>        
                         </label>
-                        <?php //if (!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1) : ?>
-                            <!-- <label class="content-subtitle d-block mb-1" style="cursor: pointer"><?= $event->event_description; ?></label> -->
+                        <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                            <i class='bx bxs-user-rectangle'></i> <?= $jb->first_name . ' ' . $jb->last_name; ?>
+                        </label>
+                        <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                            <i class='bx bxs-phone'></i> <?= $jb->cust_phone != '' ? $jb->cust_phone : '---'; ?>
+                        </label>
+                        <label class="content-title" style="cursor: pointer">
+                            <i class='bx bxs-map-pin'></i> <?= $jb->job_location; ?>
+                        </label>
+                        <?php //if (!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1) : ?>
+                            <!-- <label class="content-subtitle d-block" style="cursor: pointer;margin-top: 10px; font-weight: bold;">Total Amount : $<?= number_format((float)$jb->job_total_amount, 2, '.', ','); ?></label> -->
                         <?php //endif; ?>
-                        <?php if (!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1) : ?>
-                            <label class="content-subtitle d-block" style="cursor: pointer"><?= $jb->job_description; ?></label>
-                        <?php endif; ?>
-                        <?php if (!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1) : ?>
-                            <label class="content-subtitle d-block" style="cursor: pointer;margin-top: 10px; font-weight: bold;">Total Amount : $<?= number_format((float)$jb->job_total_amount, 2, '.', ','); ?></label>
-                        <?php endif; ?>
                     </td>
                     <td class="text-end">
-                            <?php 
-                                $event_month = date("F", strtotime($jb->start_date));
-                                $event_day   = date("d", strtotime($jb->start_date));
-                            ?>
-                            <div class="nsm-calendar-container">
-                                <div class="nsm-date">
-                                    <span class="binds"></span>
-                                    <span class="month"><?= $event_month; ?></span>
-                                    <h1 class="day"><?= $event_day; ?></h1>
+                            <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->e_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->e_employee_id); ?>"></div>                            
+                            </div>
+                            <?php if( $jb->employee2_employee_id > 0 ){ ?>
+                                <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                    <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee2_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee2_employee_id); ?>"></div>                            
                                 </div>
-                                <!-- <div class="vl"></div> -->
-                            </div>
-                            <div class="nsm-calendar-info-container" style="text-align:center;">
-                                <span class="nsm-badge primary"><?php echo strtoupper($jb->status); ?></span>
-                                <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?php echo $jb->start_time; ?>-<?php echo $jb->end_time; ?></label>
-                            </div>
+                            <?php } ?>
+                            <?php if( $jb->employee3_employee_id > 0 ){ ?>
+                                <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                    <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee3_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee3_employee_id); ?>"></div>                            
+                                </div>
+                            <?php } ?>
+                            <?php if( $jb->employee4_employee_id > 0 ){ ?>
+                                <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                    <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee4_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee4_employee_id); ?>"></div>                            
+                                </div>
+                            <?php } ?>
                         </div>
                     </td>
                 </tr>

@@ -1,4 +1,32 @@
-<table class="nsm-table" id="upcoming_events_table">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,100" rel="stylesheet">
+<style>
+.nsm-calendar {
+    background: #DAD1E0;
+    border-radius: 20%;
+    width: 103px;
+    height: 103px;
+    margin: auto;
+    vertical-align: middle;
+    text-align: center;
+    font: 300 28.5714285714px Roboto;
+}
+.nsm-calendar .week {
+    color: red;
+    padding: 13px;
+    padding-bottom: 5px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.nsm-calendar .date {
+    font: 45px Roboto;
+    margin-top: -7px;
+    font-weight: bold;
+}
+.nsm-list-icon{
+    float: right;
+}
+</style>
+<table class="nsm-table" id="upcoming_jobs_table">
     <thead>
         <tr>
             <td></td>
@@ -7,57 +35,61 @@
         </tr>
     </thead>
     <tbody>
-        <?php if (!empty($events)) : ?>
-            <?php foreach ($events as $event) : ?>
-                <?php if ($e['type'] == 'g-events') { ?>
-                    <tr class="schedule-events uevent-view-details" style="cursor: pointer" data-event-id="<?= $e['event_id']; ?>">
-                    <?php } else { ?>
-                    <tr class="schedule-events" style="cursor: pointer" onclick="location.href='<?= base_url('events/event_preview/' . $e['event_id']) ?>'">
-                    <?php } ?>
+        <?php if (!empty($upcomingEvents)) : ?>
+            <?php foreach ($upcomingEvents as $ue) : ?>
+                <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?php echo base_url('job/new_job1/' . $jb->id); ?>'">
                     <td>
-                        <div class="nsm-list-icon success">
-                            <i class='bx bx-calendar-event'></i>
-                        </div>
+                        <?php 
+                            $event_month = date("F", strtotime($ue->start_date));
+                            $event_day   = date("d", strtotime($ue->start_date));
+                            $event_day_word = date("D", strtotime($ue->start_date));
+                        ?>
+                        <div class="nsm-calendar" ng-app="myApp">
+                            <div class="week">
+                                <b><?= $event_day_word; ?></b>
+                            </div>
+                            <div class="date">
+                                <?= $event_day; ?>
+                            </div>
+                        </div>    
+                        <div class="nsm-calendar-info-container" style="text-align:center;">
+                            <span class="nsm-badge primary"><?php echo strtoupper($ue->status); ?></span>
+                            <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?php echo $ue->start_time; ?>-<?php echo $ue->end_time; ?></label>
+                        </div>                    
                     </td>
-                    <td>
-                        <?php if ($e['type'] == 'events') { ?>
-                            <label class="content-title" style="cursor: pointer"><?php echo $e['event_number'] . ' : ' . $e['event_type'] . ' - ' . $e['event_tag']; ?></label>
-                        <?php } else { ?>
-                            <label class="content-title" style="cursor: pointer"><?php echo $e['event_type']; ?></label>
-                        <?php } ?>
-
-                        <?php if (!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1) : ?>
-                            <label class="content-subtitle d-block mb-1" style="cursor: pointer"><?= $e['first_name'] . ' ' . $e['last_name']; ?></label>
-                        <?php endif; ?>
-                        <label class="content-subtitle d-block mb-1" style="cursor: pointer"><?php echo strtoupper($e['event_title']); ?></label>
-
-
-                        <input type="hidden" id="<?= $e['event_id']; ?>-event-type" value="<?= $e['type']; ?>" />
-                        <input type="hidden" id="<?= $e['event_id']; ?>-event-title" value="<?= $e['event_title']; ?>" />
-                        <input type="hidden" id="<?= $e['event_id']; ?>-event-start-date" value="<?= $e['start_date']; ?>" />
-                        <input type="hidden" id="<?= $e['event_id']; ?>-event-end-date" value="<?= $e['end_date']; ?>" />
+                    <td style="vertical-align: text-top;padding-top: 28px;">
+                        <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">                            
+                            <?php 
+                                $tags = '';
+                                if( $ue->event_tag != '' ){
+                                    $tags = $ue->event_tag;
+                                }
+                                echo $ue->event_number . ' : ' . $tags;
+                            ?>        
+                        </label>                        
+                        <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                            <i class='bx bx-calendar-event'></i> <?= $ue->event_description != '' ? $ue->event_description : '---'; ?>
+                        </label>
+                        <label class="content-title" style="cursor: pointer">
+                            <i class='bx bxs-map-pin'></i> <?= $ue->event_address; ?>
+                        </label>                        
                     </td>
                     <td class="text-end">
-                        <span class="nsm-badge success"><?php echo strtoupper($jb->status); ?></span>
-                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer">
-                            <?= date('M-d-Y', strtotime($e['start_date'])) ?> |
-                            <?php if ($e['start_time'] == $e['end_time']) { ?>
-                                <?= date("g:i A", strtotime($e['start_time'])); ?>
-                            <?php } else { ?>
-                                <?= date("g:i A", strtotime($e['start_time'])) . ' - ' . date("g:i A", strtotime($e['end_time'])); ?>
-                            <?php } ?>
-                        </label>
-                    </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <tr>
-                    <td colspan="4">
-                        <div class="nsm-empty">
-                            <span>No upcoming events for now.</span>
+                            <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($ue->employee_id); ?>');" data-img="<?php echo userProfileImage($ue->employee_id); ?>"></div>                            
+                            </div>
                         </div>
                     </td>
                 </tr>
-            <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <tr>
+                <td colspan="4">
+                    <div class="nsm-empty">
+                        <span>No upcoming events for now.</span>
+                    </div>
+                </td>
+            </tr>
+        <?php endif; ?>
     </tbody>
 </table>

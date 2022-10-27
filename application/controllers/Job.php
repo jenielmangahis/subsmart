@@ -228,6 +228,20 @@ class Job extends MY_Controller
             'https://html2canvas.hertzen.com/dist/html2canvas.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
+
+        $default_start_date = date("Y-m-d");
+        $default_start_time = '';
+        if( $this->input->get('start_date') ){
+            $default_start_date = $this->input->get('start_date');
+        }
+
+        if( $this->input->get('start_time') ){
+            $default_start_time = $this->input->get('start_time');
+        }
+
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+
         $this->load->view('v2/pages/job/job_new', $this->page_data);
         //$this->load->view('job/job_new', $this->page_data);
     }

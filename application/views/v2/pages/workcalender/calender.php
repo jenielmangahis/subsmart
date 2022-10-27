@@ -1183,11 +1183,16 @@
 
                 $("#appointment_date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
                 $("#appointment_time").val(moment(info.startStr).format('hh:mm A'));
+
+                $("#action_select_date").val(moment(info.startStr).format('YYYY-MM-DD'));
+                $("#action_select_time").val(moment(info.startStr).format('h:mm a'));
+
                 $("#appointment-customer").empty().trigger('change');
                 // $("#appointment-tags").empty().trigger('change');
                 // loadCompanyUsers();
                 // loadCompanyCustomers($("#appointment-customer"));
-                $("#create_appointment_modal").modal('show');
+                $("#calendar_action_select_modal").modal('show');
+                //$("#create_appointment_modal").modal('show');
             },
             slotEventOverlap: false,
             resourceLabelDidMount: function(info) {
@@ -1823,5 +1828,24 @@
         $("#appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
         $("#stripe-appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
     }
+
+    $(document).on('click', '#calendar-add-appointment', function(){
+        $("#calendar_action_select_modal").modal('hide');
+        $("#create_appointment_modal").modal('show');
+    });
+
+    $(document).on('click', '#calendar-add-job', function(){
+        var start_date = $('#action_select_date').val();
+        var start_time = $('#action_select_time').val();
+
+        location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+    });
+
+    $(document).on('click', '#calendar-add-ticket', function(){
+        var start_date = $('#action_select_date').val();
+        var start_time = $('#action_select_time').val();
+
+        location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

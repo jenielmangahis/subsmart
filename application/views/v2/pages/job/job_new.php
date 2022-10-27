@@ -15,7 +15,8 @@
 <!-- Script for autosaving form -->
 <?php if(!isset($jobs_data)): ?>
     <!-- autosave only when creating -->
-    <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script>
+    <!-- disable autosave, because we want to handle form submit - send SMS to employeee -->
+    <!-- <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script> -->
 <?php endif; ?>
 
 
@@ -394,7 +395,7 @@
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'active' : ''; ?>" id="4" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-bs-toggle="modal" data-bs-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
                                                         <a href="#"> Started </a>
                                                     </li>
-                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5">
+                                                    <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?>data-bs-toggle="modal" data-bs-target="#approveThisJobModal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
                                                         <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
                                                     </li>
                                                     <li id="6" class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>data-bs-toggle="modal"data-bs-target="#finish_modal"<?php endif; ?>>
@@ -440,13 +441,18 @@
                                                     <label>From</label>
                                                 </div>
                                                 <div class="col-lg-5">
-                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>&nbsp;&nbsp;
+                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : $default_start_date;  ?>" required>&nbsp;&nbsp;
                                                 </div>
                                                 <div class="col-lg-5">
+                                                    <?php 
+                                                        if( isset($jobs_data) ){
+                                                            $default_start_time = strtolower($jobs_data->start_time);
+                                                        }
+                                                    ?>
                                                     <select id="start_time" name="start_time" class="nsm-field form-select" required>
                                                         <option value="">Start time</option>
                                                         <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                                                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                                            <option <?= $default_start_time == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -546,15 +552,6 @@
                                         <h6>Assigned To</h6>
                                         <div class="row">
                                             <div class="col-md-4">
-<<<<<<< HEAD
-                                                <input type="text" placeholder="Employee 1" id="emp2_id" name="emp2_id"  class="form-control" readonly>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 2" id="emp3_id" name="emp3_id"  class="form-control" readonly>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <input type="text" placeholder="Employee 3" id="emp4_id" name="emp4_id"  class="form-control" readonly>
-=======
                                                 <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
                                                 <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly>
                                             </div>
@@ -565,7 +562,6 @@
                                             <div class="col-md-4">
                                                 <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
                                                 <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly>
->>>>>>> staging-master
                                             </div>
                                         </div>
                                         <br>
@@ -995,13 +991,7 @@
                                                     <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
                                                 <?php endif; ?>
                                                 <?php if(isset($jobs_data)): ?>
-<<<<<<< HEAD
-                                                    <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>">
-                                                        <button type="submit" class="nsm-button primary"><i class='bx bx-bx fa-search-plus'></i> Preview</button>
-                                                    </a>
-=======
                                                     <button type="button" onclick="location.href='<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>'" class="nsm-button primary"><i class='bx bx-bx bx-search-alt'></i> Preview</button>
->>>>>>> staging-master
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -1152,12 +1142,12 @@
 <?php include viewPath('v2/pages/job/modals/invoice_import'); ?>
 
 <!-- Signature Modal -->
-<div class="modal fade" id="share_job_modal" role="dialog">
-    <div class="close-modal" data-bs-dismiss="modal">&times;</div>
+<div class="modal fade nsm-modal" id="share_job_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Share Job To Other Employee</h4>
+                <span class="modal-title content-title">Share Job To Other Employee</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <div class="modal-body">
                 <label>Sales Rep 1</label>
@@ -1191,8 +1181,11 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" id="" class="btn btn-primary" data-bs-dismiss="modal">
-                    <span class="fa fa-paper-plane-o"></span> Save / Close
+                <button type="button" id="share_modal_submit" class="nsm-button primary" data-bs-dismiss="modal">
+                <i class='bx bx-paper-plane'></i> Save
+                </button>
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">
+                Close
                 </button>
             </div>
         </div>
@@ -1218,7 +1211,7 @@
                 <div class="modal-body">
                     <p>This will stop on job duration tracking and mark the job end time.</p>
                     <p>Finish job at:</p>
-                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
+                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
                     <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
                     <input type="hidden" name="status" id="status" value="Closed">
                     <select id="job_start_time" name="job_start_time" class="form-control" required>
@@ -1324,7 +1317,8 @@ add_footer_js(array(
 
 
 <script>
-    $(document).ready(function(){
+
+        var class_name = $('.active').attr('class');
         var class_name = $('.active').attr('class');
         var step = '';
         
@@ -1348,6 +1342,21 @@ add_footer_js(array(
             $('#'+x).addClass('active');
             $('#'+x).addClass('a-bold');
         }
+    $(document).ready(function(){
+        $('#share_modal_submit').click(function() {
+            //employee 2
+            var emp2 = $('#employee2').val();
+            var empText = $('#employee2 :selected').text();
+            $('#emp2_id').val($('#employee2').val());
+            $('#emp2_txt').val($('#employee2 :selected').text());
+            //employee 3 
+            $('#emp3_id').val($('#employee3').val());
+            $('#emp3_txt').val($('#employee3 :selected').text());
+            //employee 4
+            $('#emp4_id').val($('#employee4').val());
+            $('#emp4_txt').val($('#employee4 :selected').text());
+            
+        })
         // if(step == 'step02'){
         //     $('#step01').addClass('active');
         // }
