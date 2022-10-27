@@ -74,25 +74,29 @@ $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function()
         }
     });
 
-    // $(`#print_registers_modal table tr`).each(function() {
-    //     if(chk.prop('checked')) {
-    //         $($(this).find('td')[index - 1]).show();
-    //     } else {
-    //         $($(this).find('td')[index - 1]).hide();
-    //     }
-    // });
+    $(`#print_registers_modal table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
 
-    // $(`#print_preview_registers_modal #registers_table_print tr`).each(function() {
-    //     if(chk.prop('checked')) {
-    //         $($(this).find('td')[index - 1]).show();
-    //     } else {
-    //         $($(this).find('td')[index - 1]).hide();
-    //     }
-    // });
+    $(`#print_preview_registers_modal #registers_table_print tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
 });
 
 $('#account').on('change', function() {
     location.href = `/accounting/chart-of-accounts/view-register/${$(this).val()}`
+});
+
+$('#reset-button').on('click', function() {
+    location.href = `${base_url}accounting/chart-of-accounts/view-register/${$('#account').val()}`;
 });
 
 $('#apply-button').on('click', function() {
@@ -263,4 +267,43 @@ $('#filter-date').on('change', function() {
             $('#filter-to').val(to_date);
         break;
     }
+});
+
+$('#btn_print_registers').on('click', function() {
+    $("#registers_table_print").printThis();
+});
+
+$('.export-items').on('click', function() {
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/chart-of-accounts/view-register/${$('#account').val()}/export-table" method="post" id="export-form"></form>`);
+    }
+
+    var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('chk_', '')}">`);
+    });
+
+    var url = window.location.href;
+    var filtersString = url.replace(`${base_url}accounting/chart-of-accounts/view-register/${$('#account').val()}`, '');
+    if(filtersString.charAt(0) === '?') {
+        filtersString = filtersString.slice(1);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="search" value="${$('#filter-find').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="reconcile_status" value="${$('#filter-reconcile-status').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-transaction-type').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="payee" value="${$('#filter-payee').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="from_date" value="${$('#filter-from').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="to_date" value="${$('#filter-to').attr('data-applied')}">`);
+
+    $('#export-form').append(`<input type="hidden" name="column" value="date">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="desc">`);
+
+    $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).remove();
 });

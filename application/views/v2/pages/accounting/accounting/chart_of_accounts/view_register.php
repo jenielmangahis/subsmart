@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-<?php // include viewPath('v2/includes/accounting/chart_of_accounts_modals'); ?>
+<?php include viewPath('v2/includes/accounting/view_register_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -55,12 +55,12 @@
                                                 <div class="row gy-3">
                                                     <div class="col-12">
                                                         <label for="filter-find">Find</label>
-                                                        <input type="text" name="filter_find" id="filter-find" class="form-control nsm-field" placeholder="Memo, Ref no., $amt, >$amt, <$amt" value="<?=!empty($search) ? $search : ''?>">
+                                                        <input type="text" name="filter_find" id="filter-find" class="form-control nsm-field" placeholder="Memo, Ref no., $amt, >$amt, <$amt" value="<?=!empty($search) ? $search : ''?>" data-applied="<?=!empty($search) ? $search : ''?>">
                                                     </div>
                                                     <?php if($type !== 'A/R') : ?>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-reconcile-status">Reconcile Status</label>
-                                                        <select name="filter_reconcile_status" id="filter-reconcile-status" class="form-select nsm-field">
+                                                        <select name="filter_reconcile_status" id="filter-reconcile-status" class="form-select nsm-field" data-applied="<?=!empty($reconcile_status) ? $reconcile_status : 'all'?>">
                                                             <option value="all" <?=empty($reconcile_status) || $reconcile_status === 'all' ? 'selected' : ''?>>All</option>
                                                             <option value="reconciled" <?=!empty($reconcile_status) && $reconcile_status === 'reconcile' ? 'selected' : ''?>>Reconciled</option>
                                                             <option value="cleared" <?=!empty($reconcile_status) && $reconcile_status === 'cleared' ? 'selected' : ''?>>Cleared</option>
@@ -70,7 +70,7 @@
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-transaction-type">Transaction type</label>
-                                                        <select name="filter_transaction_type" id="filter-transaction-type" class="form-select nsm-field">
+                                                        <select name="filter_transaction_type" id="filter-transaction-type" class="form-select nsm-field" data-applied="<?=!empty($transaction_type) ? $transaction_type : 'all'?>">
                                                             <option value="all" <?=empty($transaction_type) || $transaction_type === 'all' ? 'selected' : ''?>>All</option>
                                                             <option value="cc-expense" <?=!empty($transaction_type) && $transaction_type === 'cc-expense' ? 'selected' : ''?>>CC Expense</option>
                                                             <option value="check" <?=!empty($transaction_type) && $transaction_type === 'check' ? 'selected' : ''?>>Check</option>
@@ -102,7 +102,7 @@
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-payee">Payee</label>
-                                                        <select name="filter_payee" id="filter-payee"class="form-select nsm-field">
+                                                        <select name="filter_payee" id="filter-payee"class="form-select nsm-field" data-applied="<?=!empty($payee) ? $payee : 'all'?>">
                                                             <?php if(empty($payee) || $payee === 'all') : ?>
                                                                 <option value="all" selected>All</option>
                                                             <?php else : ?>
@@ -113,7 +113,7 @@
                                                     <?php endif; ?>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-date">Date</label>
-                                                        <select name="filter_date" id="filter-date" class="form-select nsm-field">
+                                                        <select name="filter_date" id="filter-date" class="form-select nsm-field" data-applied="<?=!empty($date) ? $date : 'all'?>">
                                                             <option value="all" <?=empty($date) || $date === 'all' ? 'selected' : ''?>>All dates</option>
                                                             <option value="custom" <?=!empty($date) && $date === 'custom' ? 'selected' : ''?>>Custom</option>
                                                             <option value="today" <?=!empty($date) && $date === 'today' ? 'selected' : ''?>>Today</option>
@@ -131,13 +131,13 @@
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-from">From</label>
                                                         <div class="nsm-field-group calendar">
-                                                            <input type="text" name="filter_from" id="filter-from" class="form-control nsm-field date" value="<?=!empty($from) ? $from : ''?>">
+                                                            <input type="text" name="filter_from" id="filter-from" class="form-control nsm-field date" value="<?=!empty($from) ? $from : ''?>" data-applied="<?=!empty($from) ? $from : ''?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-to">To</label>
                                                         <div class="nsm-field-group calendar">
-                                                            <input type="text" name="filter_to" id="filter-to" class="form-control nsm-field date" value="<?=!empty($to) ? $to : ''?>">
+                                                            <input type="text" name="filter_to" id="filter-to" class="form-control nsm-field date" value="<?=!empty($to) ? $to : ''?>" data-applied="<?=!empty($to) ? $to : ''?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-6">
@@ -159,7 +159,7 @@
                                             <button type="button" class="nsm-button export-items">
                                                 <i class='bx bx-fw bx-export'></i> Export
                                             </button>
-                                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_account_transactions_modal">
+                                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_registers_modal">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
                                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">

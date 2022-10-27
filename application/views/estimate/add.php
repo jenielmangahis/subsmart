@@ -584,8 +584,8 @@ input:checked + .slider:before {
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <select name="deposit_request" class="form-control">
-                                        <option value="1" selected="selected">Deposit amount $</option>
-                                        <option value="2">Percentage %</option>
+                                        <option value="$" selected="selected">Deposit amount $</option>
+                                        <option value="%">Percentage %</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 form-group">

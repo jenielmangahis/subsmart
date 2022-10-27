@@ -179,11 +179,11 @@ jQuery(document).ready(function() {
         // }
 
         // $( "li.item-ii" ).find( allListElements );
-        $( "div" ).find( "button" ).attr( "name", "name-button" );
-        $( "div" ).find( "button" ).attr( "aria-label", "name-button" );
-        $( "div" ).find( "img" ).attr( "alt", "image" );
-        $( "div" ).find( "frame" ).attr( "title", "frame" );
-        $( "div" ).find( "frame" ).attr( "iframe", "iframe" );
+        // $( "div" ).find( "button" ).attr( "name", "name-button" );
+        // $( "div" ).find( "button" ).attr( "aria-label", "name-button" );
+        // $( "div" ).find( "img" ).attr( "alt", "image" );
+        // $( "div" ).find( "frame" ).attr( "title", "frame" );
+        // $( "div" ).find( "frame" ).attr( "iframe", "iframe" );
 
 
     });

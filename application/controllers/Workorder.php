@@ -7561,8 +7561,8 @@ class Workorder extends MY_Controller
 
 
 
-    $action = $this->input->post('action');
-    if($action == 'submit') {
+        $action = $this->input->post('action');
+        if($action == 'submit') {
 
         $dateIssued = date('Y-m-d', strtotime($this->input->post('current_date')));
 
@@ -7649,6 +7649,8 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        // dd($addQuery);
 
         //SMS Notification
         createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, 0, $user_id);
@@ -7979,7 +7981,7 @@ class Workorder extends MY_Controller
         }
         else{
             echo json_encode(0);
-            // print_r($file_put_contents);die;
+            print_r($file_put_contents);die;
         }
         }
         

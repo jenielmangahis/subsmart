@@ -1263,9 +1263,9 @@ class Share_Link extends CI_Controller
         }
     }
 
-    public function declineEstimate()
+    public function declineEstimate($id)
     {
-        $this->estimate_model->update($id, ['status' => 'Declined']);
+        $this->estimate_model->update($id, ['status' => 'Declined By Customer']);
 
         $this->load->view('estimate/declineEstimate');
     }

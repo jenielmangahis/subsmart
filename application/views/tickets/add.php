@@ -430,7 +430,7 @@ a.btn-primary.btn-md {
                                         <div class="select-wrap">
                                             <b>Payment Method</b>
                                                 <select name="payment_method" id="payment_method" class="form-control">
-                                                    <option value="">Choose method</option>
+                                                    <!-- <option value="">Choose method</option> -->
                                                     <option value="Cash">Cash</option>
                                                     <option value="Check">Check</option>
                                                     <option value="Credit Card">Credit Card</option>
