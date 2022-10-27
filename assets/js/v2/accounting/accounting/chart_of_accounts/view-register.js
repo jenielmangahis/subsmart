@@ -268,8 +268,6 @@ $('#filter-date').on('change', function() {
         break;
     }
 });
-<<<<<<< HEAD
-=======
 
 $('#btn_print_registers').on('click', function() {
     $("#registers_table_print").printThis();
@@ -309,4 +307,3 @@ $('#export-form').on('submit', function(e) {
     this.submit();
     $(this).remove();
 });
->>>>>>> staging-master
