@@ -344,6 +344,29 @@ echo put_header_assets();
                                     <br><br><a class="link-modal-open nsm-link" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                 </div>
                             </div>
+
+                            <?php
+                                $selectedCustomer = null;
+                                foreach ($customers as $customer) {
+                                    if ($customer->prof_id == $estimate->customer_id) {
+                                        $selectedCustomer = $customer;
+                                        break;
+                                    }
+                                }
+                            ?>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label for="job_name"><b>Customer Email</b></label>
+                                    <input id="estimate-customer-email" type="text" class="form-control" disabled value="<?= !is_null($selectedCustomer) ? $selectedCustomer->email : ''; ?>" />
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="job_name"><b>Customer Mobile</b></label>
+                                    <input id="estimate-customer-mobile" type="text" class="form-control" disabled value="<?= !is_null($selectedCustomer) ? $selectedCustomer->phone_m : ''; ?>" />
+                                </div>
+                            </div>
+                            
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="job_location"><b>Job Location</b> </label>
@@ -1174,6 +1197,13 @@ echo put_header_assets();
                     // console.log(response['customer']);
                     $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
 
+                    if (response.customer.email) {
+                        $("#estimate-customer-email").val(response.customer.email);
+                    }
+
+                    if (response.customer.phone_m) {
+                        $("#estimate-customer-mobile").val(response.customer.phone_m);
+                    }
                 },
                 error: function(response) {
                     alert('Error' + response);

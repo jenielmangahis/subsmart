@@ -137,7 +137,7 @@
                                     case "Lost":
                                         $badge = "secondary";
                                         break;
-                                    case "Submitted":
+                                    case "Declined By Customer":
                                         $badge = "error";
                                         break;
                                 endswitch;

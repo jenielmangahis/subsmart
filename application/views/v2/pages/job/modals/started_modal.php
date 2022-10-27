@@ -9,7 +9,7 @@
                 <div class="modal-body">
                     <p>This will stop travel duration tracking and start on job duration tracking.</p>
                     <p>Start job at:</p>
-                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
+                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
                     <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
                     <input type="hidden" name="status" id="start_status" value="Started">
                     <select id="job_start_time" name="job_start_time" class="form-control" required>

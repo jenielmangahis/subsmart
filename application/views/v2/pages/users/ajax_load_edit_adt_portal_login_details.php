@@ -12,7 +12,7 @@
     <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Password</label>
         <div class="nsm-field-group show icon-right">
-            <input type="password" class="nsm-field form-control password-field" value="<?= $userPortalAccess ? $userPortalAccess->password_plain : ''; ?>" id="edit_portal_password" name="portal_password" />
+            <input type="password" class="nsm-field form-control password-field" value="" id="edit_portal_password" name="portal_password" />
         </div>
     </div>
     <div class="col-12 col-md-6">

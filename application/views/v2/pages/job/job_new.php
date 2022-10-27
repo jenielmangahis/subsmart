@@ -1206,7 +1206,7 @@
                 <div class="modal-body">
                     <p>This will stop on job duration tracking and mark the job end time.</p>
                     <p>Finish job at:</p>
-                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
+                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
                     <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
                     <input type="hidden" name="status" id="status" value="Closed">
                     <select id="job_start_time" name="job_start_time" class="form-control" required>

@@ -1026,7 +1026,7 @@ class Users extends MY_Controller
         	$is_with_error = false;
         	$create_portal_access = false;
         	$portal_error = 1;
-        	if( $this->input->post('portal_username') != '' ){
+        	/*if( $this->input->post('portal_username') != '' ){
         		if( $this->input->post('portal_password') != '' && ( $this->input->post('portal_password') == $this->input->post('portal_confirm_password') ) ){     
         			$adtUser = $this->AdtPortal_model->getByEmail($this->input->post('portal_username'));
         			$isAccountExists = $this->UserPortalAccount_model->getByUsername($this->input->post('portal_username'));
@@ -1047,7 +1047,7 @@ class Users extends MY_Controller
         		}else{
         			$is_with_error = true;
         		}
-        	}
+        	}*/
 
         	if( $is_with_error ){
         		if( $portal_error == 1 ){
@@ -2416,50 +2416,23 @@ class Users extends MY_Controller
 		}elseif( $this->input->post('portal_username') == '' ){
 			$msg = 'Please enter username';
 		}else{			
+
+			$is_account_valid = false;
+
 			//Non API Version
 			$adtPortalUser = $this->AdtPortal_model->getByEmail($this->input->post('portal_username'));
-			if( $adtPortalUser ){	
+			if( $adtPortalUser ){
 				$pwCheck = password_verify($this->input->post('portal_password'), $adtPortalUser->password);
 				if( $pwCheck ){
-					$userPortalAccess = $this->UserPortalAccount_model->getByUserId($post['uid']);
-					if( $userPortalAccess ){
-						$data_portal = [
-							'username' => $post['portal_username'],
-							'password_plain' => $post['portal_password']
-						];
-
-						$this->UserPortalAccount_model->update($userPortalAccess->id, $data_portal);
-
-						$is_success = 1;
-						$msg = '';
-					}else{
-						$isAccountExists = $this->UserPortalAccount_model->getByUsername($this->input->post('portal_username'));
-						if( $isAccountExists ){
-							$msg = 'ADT Portal login details already exists';
-						}else{
-							$data_portal = [
-								'user_id' => $post['uid'],
-								'username' => $post['portal_username'],
-								'password_plain' => $post['portal_password']
-							];
-
-							$this->UserPortalAccount_model->create($data_portal);
-
-							$is_success = 1;
-							$msg = '';
-						}						
-					}
-
-					
+					$is_account_valid = true;
 				}else{
 					$msg = 'Login details not valid';
 				}
 			}else{
 				$msg = 'Login details not valid';
 			}
-			//API Version
-			/*$apiIsValid = portalValidateLogin($this->input->post('portal_username'), $this->input->post('portal_password'));
-			if( $apiIsValid['is_valid'] == 1 ){
+
+			if( $is_account_valid ){
 				$userPortalAccess = $this->UserPortalAccount_model->getByUserId($post['uid']);
 				if( $userPortalAccess ){
 					$data_portal = [
@@ -2480,16 +2453,12 @@ class Users extends MY_Controller
 
 				$is_success = 1;
 				$msg = '';
-			}else{
-				$msg = $apiIsValid['msg'];
-			}*/
+			}			
 		}	
 
 		$json = ['is_success' => $is_success, 'msg' => $msg];
 		echo json_encode($json);			
 	}
-
-	
 }
 
 

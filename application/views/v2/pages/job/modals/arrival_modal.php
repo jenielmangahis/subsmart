@@ -11,7 +11,7 @@
                     <div class="col-12">
                         <p>This will start travel duration tracking.</p>
                         <p>Arrive at:</p>
-                        <input type="date" name="omw_date" id="omw_date" class="form-control" required>
+                        <input type="date" name="omw_date" id="omw_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
                         <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
                         <input type="hidden" name="status" id="status" value="Arrival">
                         <select id="omw_time" name="omw_time" class="form-control" required>

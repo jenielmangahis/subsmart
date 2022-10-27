@@ -772,7 +772,7 @@ class Chart_of_accounts extends MY_Controller {
         $accountType = $this->account_model->getById($account->account_id);
         $data = [];
 
-        switch($post['transaction_type']) {
+        switch($filters['type']) {
             case 'cc-expense' :
                 $data = $this->cc_expense_registers($accountId, $data);
             break;
@@ -869,15 +869,15 @@ class Chart_of_accounts extends MY_Controller {
         $data = array_filter($data, function($reg, $key) use ($filters, $paymentKey, $depKey) {
             $flag = true;
 
-            if($filters['from_date'] !== "" && strtotime($reg['date']) < strtotime($filters['from_date'])) {
+            if(!empty($filters['from_date']) && strtotime($reg['date']) < strtotime($filters['from_date'])) {
                 $flag = false;
             }
 
-            if($filters['to_date'] !== "" && strtotime($reg['date']) > strtotime($filters['to_date'])) {
+            if(!empty($filters['to_date']) && strtotime($reg['date']) > strtotime($filters['to_date'])) {
                 $flag = false;
             }
 
-            if($filters['payee'] !== "all") {
+            if(!empty($filters['payee']) && $filters['payee'] !== "all") {
                 $payee = explode('-', $filters['payee']);
 
                 if($reg['payee_type'] !== $payee[0] || $reg['payee_id'] !== $payee[1]) {
@@ -885,7 +885,7 @@ class Chart_of_accounts extends MY_Controller {
                 }
             }
 
-            if($filters['search'] !== "") {
+            if(isset($filters['search']) && $filters['search'] !== "") {
                 if(stripos($filters['search'], '<') !== false || stripos($filters['search'], '>') !== false) {
                     $searchString = str_replace('<', '', $filters['search']);
                     $searchString = str_replace('>', '', $filters['search']);
@@ -946,17 +946,10 @@ class Chart_of_accounts extends MY_Controller {
         // }
 
         usort($data, function($a, $b) {
-            if($sort['order'] === 'asc') {
-                if(strtotime($a['date']) === strtotime($b['date'])) {
-                    return strtotime($a['date_created']) > strtotime($b['date_created']);
-                }
-                return strtotime($a['date']) > strtotime($b['date']);
-            } else {
-                if(strtotime($a['date']) === strtotime($b['date'])) {
-                    return strtotime($a['date_created']) < strtotime($b['date_created']);
-                }
-                return strtotime($a['date']) < strtotime($b['date']);
+            if(strtotime($a['date']) === strtotime($b['date'])) {
+                return strtotime($a['date_created']) > strtotime($b['date_created']);
             }
+            return strtotime($a['date']) > strtotime($b['date']);
         });
 
         if($filters['single_line'] === 0) {

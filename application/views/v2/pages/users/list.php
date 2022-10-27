@@ -169,7 +169,7 @@
                                                 </li>
                                                 <?php if(isSolarCompany() == 1){ ?>
                                                     <li>
-                                                        <a class="dropdown-item change-adt-portal-access" name="btn_adt_portal_access" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Change ADT Portal Access</a>
+                                                        <a class="dropdown-item change-adt-portal-access" name="btn_adt_portal_access" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Set ADT Portal Access</a>
                                                     </li>
                                                 <?php } ?>
                                                 <li>

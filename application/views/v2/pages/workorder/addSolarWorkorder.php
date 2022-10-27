@@ -731,7 +731,7 @@
                     <div class="col-12 text-end">
                         <button type="button" class="nsm-button" onclick="location.href='<?php echo url('workorder') ?>'">Cancel</button>
                         <button type="submit" class="nsm-button">Send to Customer</button>
-                        <button type="submit" class="nsm-button primary" value="submit">Submit</button>
+                        <button type="submit" name="action" class="nsm-button primary" value="submit">Submit</button>
                     </div>
                 </div>
                 <?php echo form_close(); ?>

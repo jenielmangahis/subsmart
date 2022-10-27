@@ -7,7 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/workorder/sign-modal'); ?>
 
 <!-- Script for autosaving form -->
-<script src="<?=base_url("assets/js/workorder/autosave-update.js")?>"></script>
+<!-- <script src="<?=base_url("assets/js/workorder/autosave-update.js")?>"></script> -->
 
     <style>
     label>input {
