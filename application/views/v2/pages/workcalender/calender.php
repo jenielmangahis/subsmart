@@ -103,6 +103,21 @@
                                 </div>
                             </div>
                             <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-header">
+                                        <div class="nsm-card-title">
+                                            <span>Upcoming Service Tickets</span>
+                                        </div>
+                                        <div class="nsm-card-controls">
+                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('job'); ?>">
+                                                See All
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content" id="upcoming_service_tickets_container"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
@@ -339,6 +354,7 @@
         loadMiniCalendar();
         loadWaitList();
         loadUpcomingJobs();
+        loadUpcomingServiceTickets();
         loadUpcomingEvents();
         loadUnscheduledEstimates();
 
@@ -1150,12 +1166,12 @@
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
-                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "Create an Appointment");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Calendar Slot");
 
                 $('.fc-timegrid-slot:before').attr("data-bs-toggle", "popover");
                 $('.fc-timegrid-slot:before').attr("data-bs-trigger", "hover focus");
                 $('.fc-timegrid-slot:before').attr("data-bs-placement", "top");
-                $('.fc-timegrid-slot:before').attr("data-bs-content", "Create an Appointment");
+                $('.fc-timegrid-slot:before').attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Calendar Slot");
 
                 initPopover();
             },
@@ -1183,11 +1199,16 @@
 
                 $("#appointment_date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
                 $("#appointment_time").val(moment(info.startStr).format('hh:mm A'));
+
+                $("#action_select_date").val(moment(info.startStr).format('YYYY-MM-DD'));
+                $("#action_select_time").val(moment(info.startStr).format('h:mm a'));
+
                 $("#appointment-customer").empty().trigger('change');
                 // $("#appointment-tags").empty().trigger('change');
                 // loadCompanyUsers();
                 // loadCompanyCustomers($("#appointment-customer"));
-                $("#create_appointment_modal").modal('show');
+                $("#calendar_action_select_modal").modal('show');
+                //$("#create_appointment_modal").modal('show');
             },
             slotEventOverlap: false,
             resourceLabelDidMount: function(info) {
@@ -1442,6 +1463,23 @@
         });
     }
 
+    function loadUpcomingServiceTickets() {
+        let url = "<?= base_url('calendar/_load_upcoming_service_tickets') ?>";
+        let _container = $("#upcoming_service_tickets_container");
+
+        showLoader(_container);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {},
+            success: function(result) {
+                _container.html(result);
+                $("#upcoming_service_tickets_table").nsmPagination();
+            },
+        });
+    }
+
     function loadUpcomingEvents() {
         let url = "<?= base_url('calendar/_load_upcoming_events') ?>";
         let _container = $("#upcoming_events_container");
@@ -1479,7 +1517,7 @@
     function initPopover() {
         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
         var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-            return new bootstrap.Popover(popoverTriggerEl)
+            return new bootstrap.Popover(popoverTriggerEl,{html: true})
         })
     }
 
@@ -1823,5 +1861,24 @@
         $("#appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
         $("#stripe-appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
     }
+
+    $(document).on('click', '#calendar-add-appointment', function(){
+        $("#calendar_action_select_modal").modal('hide');
+        $("#create_appointment_modal").modal('show');
+    });
+
+    $(document).on('click', '#calendar-add-job', function(){
+        var start_date = $('#action_select_date').val();
+        var start_time = $('#action_select_time').val();
+
+        location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+    });
+
+    $(document).on('click', '#calendar-add-ticket', function(){
+        var start_date = $('#action_select_date').val();
+        var start_time = $('#action_select_time').val();
+
+        location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

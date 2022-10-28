@@ -222,14 +222,26 @@ class Job extends MY_Controller
 
         add_footer_js([
             'assets/js/esign/fill-and-sign/job/approve.js',
-
             'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
             'https://html2canvas.hertzen.com/dist/html2canvas.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
+
+        $default_start_date = date("Y-m-d");
+        $default_start_time = '';
+        if( $this->input->get('start_date') ){
+            $default_start_date = $this->input->get('start_date');
+        }
+
+        if( $this->input->get('start_time') ){
+            $default_start_time = $this->input->get('start_time');
+        }
+
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+
         $this->load->view('v2/pages/job/job_new', $this->page_data);
-        //$this->load->view('job/job_new', $this->page_data);
     }
 
     public function new_job2($id=null)
@@ -1774,10 +1786,6 @@ class Job extends MY_Controller
             createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
         }
 
-        if ($jobs_id) { // job is created?
-            $this->sendEmployeeSMSAboutScheduledJob($jobs_id);
-        }
-
         if (!is_null($this->input->get('json', TRUE))) {
             // Returns json data, when ?json is set on URL query string.
             header('content-type: application/json');
@@ -1785,68 +1793,6 @@ class Job extends MY_Controller
         } else {
             $data_arr = array("data" => "Success", "qty" => $input['item_qty']);
             exit(json_encode($data_arr));
-        }
-    }
-
-    public function sendEmployeeSMSAboutScheduledJob($jobId)
-    {
-        $job = $this->jobs_model->get_specific_job($jobId);
-
-        if ($job->status !== 'Scheduled') return;
-        if (empty($job->start_date)) return;
-        if (empty($job->start_time)) return;
-
-        $employeeIdFields = [
-            'employee_id',
-            'employee2_id',
-            'employee3_id',
-            'employee4_id'
-        ];
-
-        $date = DateTime::createFromFormat('Y-m-d', $job->start_date)->format('F d,Y');
-        $time = $job->start_time;
-        $jobNumber = $job->job_number;
-
-        $this->load->model('AcsProfile_model');
-        $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
-        $customerName = $customer->first_name . ' ' . $customer->last_name; 
-        
-        $message = "Job order: ${jobNumber} has been scheduled for customer ${customerName}";
-        $companyId = logged('company_id');
-
-        $employeeIds = [];
-        foreach ($employeeIdFields as $field) {
-            if ($job->$field) {
-                array_push($employeeIds, (int) $job->$field);
-            }
-        }
-
-        if (empty($employeeIds)) return;
-
-        // $this->db->where('company_id', $companyId);
-        $this->db->where_in('id', $employeeIds);
-        $employees = $this->db->get('users')->result();
-
-        $this->load->model('Clients_model');
-        $client = $this->Clients_model->getById($companyId);
-        if ($client->default_sms_api !== 'ring_central') return;
-
-        $this->load->model('RingCentralAccounts_model');
-        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
-        if (!$ringCentral) return;
-
-        $this->load->helper('sms_helper');
-
-        foreach ($employees as $employee) {
-            if (empty($employee->mobile)) {
-                continue;
-            }
-
-            $mobile = str_replace('-', '', $employee->mobile);
-            $mobile = str_replace('+1', '', $mobile);
-            $mobile = '+1' . $mobile;
-
-            $result = smsRingCentral($ringCentral, $mobile, $message);
         }
     }
 
@@ -2270,8 +2216,6 @@ class Job extends MY_Controller
 
     public function edit_job_type($job_type_id)
     {
-		$this->page_data['page']->title = 'Job Types';
-
         $this->load->model('Icons_model');
 
         add_css(array(
@@ -2280,7 +2224,7 @@ class Job extends MY_Controller
 
         $jobType = $this->JobType_model->getById($job_type_id);
         $icons   = $this->Icons_model->getAll();
-
+        $this->page_data['page']->title = "Job Types";
         $this->page_data['jobType'] = $jobType;
         $this->page_data['icons'] = $icons;
         $this->load->view('v2/pages/job/job_settings/edit_job_type', $this->page_data);
@@ -2677,11 +2621,52 @@ class Job extends MY_Controller
         echo json_encode(['jobs_approval' => $record, 'is_created' => $isCreated]);
     }
 
+    public function invoicePreview($jobId)
+    {
+        echo $this->generateJobInvoiceHTML($jobId, true);
+    }
+
+    public function generateJobInvoiceHTML($jobId)
+    {
+        $this->load->model('jobs_model');
+        $job = $this->jobs_model->get_specific_job($jobId);
+
+        if (!$job) {
+            $this->session->set_flashdata('message', 'Cannot find data.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            return;
+        }
+
+        $this->load->model('general_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->helper(['url', 'hashids_helper', 'functions']);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $job->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+        $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+        $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
+        $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info, false);
+        $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($jobId);
+        $this->page_data['jobs_data'] = $job;
+
+        $encryptedId = hashids_encrypt($job->job_unique_id, '', 15);
+        $paymentLink = base_url('/job_invoice_view/' . $encryptedId);
+        $this->page_data['payment_link'] = $paymentLink;
+
+        return $this->load->view('job/email_template/invoice-new', $this->page_data, true);
+    }
+
     public function send_customer_invoice_email($id)
     {
         $this->load->helper(array('url', 'hashids_helper'));
         $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('invoice_model');
 
         $job = $this->jobs_model->get_specific_job($id);
         if ($job) {
@@ -2709,11 +2694,12 @@ class Job extends MY_Controller
                 $group_items[$type][] = [
                     'item_name' => $ji->title,
                     'item_price' => $ji->price,
-                    'item_qty' => $ji->qty
+                    'item_qty' => $ji->qty,
+                    'item_tax' => $ji->tax
                 ];
             }
             $msg="";
-            $subject = "NsmarTrac : Job Invoice";
+            $subject = "nSmartrac: {$job->job_number} Invoice";
             $img_source = base_url('/uploads/users/business_profile/'.$company->id.'/'.$company->business_image);
             $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$img_source."' /><br />";
             $msg .= "<h1>Your Invoice from ". $company->business_name ."</h1><br />";
@@ -2737,6 +2723,7 @@ class Job extends MY_Controller
                 $msg .= "<table>";
                 foreach ($items as $i) {
                     $total = $i['item_price'] * $i['item_qty'];
+                    $total_tax = $total_tax + $i['tax'];
                     //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
                     $msg  .= "<tr><td width='300'>".$i['item_name']."</td><td>".number_format((float)$total, 2, '.', ',')."</td></tr>";
                     $subtotal = $subtotal + $total;
@@ -2754,7 +2741,8 @@ class Job extends MY_Controller
 
             $msg .= "<br /><br />";
             $msg .= "<table>";
-            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
+            //$msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
+            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$job->total_amount, 2, '.', ',')."</h2></td></tr>";
             $msg .= "<tr><td colspan='2'><br><br></td></tr>";
             $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
             $msg .= "</table>";
@@ -2782,13 +2770,39 @@ class Job extends MY_Controller
             $mail->addAddress($recipient, $recipient);
             $mail->isHTML(true);
             $mail->Subject = $subject;
-            $mail->Body    = $msg;
-            $mail->addAttachment($attachment);
+            $mail->Body    = $this->generateJobInvoiceHTML($job->job_unique_id);
+            // $mail->addAttachment($attachment);
 
             if (!$mail->Send()) {
                 $this->session->set_flashdata('alert-type', 'danger');
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             } else {
+                // START: SEND DATA TO `invoices` TABLE WHEN CLICK ON "SEND INVOICE" BUTTON
+                // START: INCREMENT THE LAST `invoice_number` INSERTED TO CREATE NEW INVOICE NUMBER;
+                $INVOICE_NUMBER_LAST = $this->invoice_model->getlastInsert()[0]->invoice_number;
+                $INVOICE_NUMBER_LAST = str_replace("INV-", "", $INVOICE_NUMBER_LAST);
+                $INVOICE_NUMBER_LAST = "INV-".str_pad($INVOICE_NUMBER_LAST + 1, 9, "0", STR_PAD_LEFT);
+                // END: INCREMENT THE LAST `invoice_number` INSERTED TO CREATE NEW INVOICE NUMBER;
+                $JOB_INFO = $this->jobs_model->GET_JOB_INFO($job->id);
+                $JOB_INFO_ARRAY = array(
+                    "job_id" => $JOB_INFO->id,
+                    "customer_id" => $JOB_INFO->customer_id,
+                    "job_location" => $JOB_INFO->job_location,
+                    "job_name" => $JOB_INFO->job_type,
+                    "job_number" => $JOB_INFO->job_number,
+                    "date_issued" => $JOB_INFO->date_issued,
+                    "status" => $JOB_INFO->status,
+                    "tags" => $JOB_INFO->tags,
+                    "signature" => $JOB_INFO->signature,
+                    "date_created" => $JOB_INFO->date_created,
+                    "date_updated" => $JOB_INFO->date_updated,
+                    "company_id" => $JOB_INFO->company_id,
+                    "invoice_number" => $INVOICE_NUMBER_LAST,
+                    "grand_total" => $JOB_INFO->amount,
+                    "status" => "Submitted",
+                );
+                $this->jobs_model->INSERT_JOB_INFO($JOB_INFO_ARRAY);
+                // END: SEND DATA TO `invoices` TABLE WHEN CLICK ON "SEND INVOICE" BUTTON
                 $this->general->update_with_key(['status' => 'Invoiced'], $job->id, 'jobs');
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'Your invoice was successfully sent');

@@ -26,17 +26,17 @@
     float: right;
 }
 </style>
-<table class="nsm-table" id="upcoming_jobs_table">
+<table class="nsm-table" id="upcoming_service_tickets_table">
     <thead>
         <tr>
             <td></td>
-            <td data-name="Event Details"></td>
+            <td data-name="Service Ticket Details"></td>
             <td data-name="Status"></td>
         </tr>
     </thead>
     <tbody>
-        <?php if (!empty($upcomingEvents)) : ?>
-            <?php foreach ($upcomingEvents as $ue) : ?>
+        <?php if (!empty($upcomingServiceTickets)) : ?>
+            <?php foreach ($upcomingServiceTickets as $ue) : ?>
                 <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?php echo base_url('job/new_job1/' . $jb->id); ?>'">
                     <td>
                         <?php 
@@ -86,7 +86,7 @@
             <tr>
                 <td colspan="4">
                     <div class="nsm-empty">
-                        <span>No upcoming events for now.</span>
+                        <span>No upcoming service tickets for now.</span>
                     </div>
                 </td>
             </tr>

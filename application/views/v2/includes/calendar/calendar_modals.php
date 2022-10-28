@@ -418,3 +418,26 @@
         <?php echo form_close(); ?>
     </div>
 </div>
+
+<!-- Calendar Action Select -->
+<div class="modal fade nsm-modal fade" id="calendar_action_select_modal" tabindex="-1" aria-labelledby="calendar_action_select_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <input type="hidden" id="action_select_date" value="" />        
+        <input type="hidden" id="action_select_time" value="" />        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Select Action</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">                
+                <div class="row-g-3">
+                    <div class="col-12">
+                        <button type="button" id="calendar-add-job" class="nsm-button primary" style="display:block; width: 100%;"><i class='bx bxs-calendar-plus'></i> Create Job</button>
+                        <button type="button" id="calendar-add-ticket" class="nsm-button primary" style="display:block; width: 100%;"><i class='bx bxs-calendar-plus'></i> Create Service Ticket</button>
+                        <button type="button" id="calendar-add-appointment" class="nsm-button primary" style="display:block; width: 100%;"><i class='bx bxs-calendar-plus'></i> Create Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
