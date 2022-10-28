@@ -103,6 +103,21 @@
                                 </div>
                             </div>
                             <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-header">
+                                        <div class="nsm-card-title">
+                                            <span>Upcoming Service Tickets</span>
+                                        </div>
+                                        <div class="nsm-card-controls">
+                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('job'); ?>">
+                                                See All
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content" id="upcoming_service_tickets_container"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
@@ -339,6 +354,7 @@
         loadMiniCalendar();
         loadWaitList();
         loadUpcomingJobs();
+        loadUpcomingServiceTickets();
         loadUpcomingEvents();
         loadUnscheduledEstimates();
 
@@ -1150,12 +1166,12 @@
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
-                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "Create an Appointment");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Calendar Slot");
 
                 $('.fc-timegrid-slot:before').attr("data-bs-toggle", "popover");
                 $('.fc-timegrid-slot:before').attr("data-bs-trigger", "hover focus");
                 $('.fc-timegrid-slot:before').attr("data-bs-placement", "top");
-                $('.fc-timegrid-slot:before').attr("data-bs-content", "Create an Appointment");
+                $('.fc-timegrid-slot:before').attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Calendar Slot");
 
                 initPopover();
             },
@@ -1447,6 +1463,23 @@
         });
     }
 
+    function loadUpcomingServiceTickets() {
+        let url = "<?= base_url('calendar/_load_upcoming_service_tickets') ?>";
+        let _container = $("#upcoming_service_tickets_container");
+
+        showLoader(_container);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {},
+            success: function(result) {
+                _container.html(result);
+                $("#upcoming_service_tickets_table").nsmPagination();
+            },
+        });
+    }
+
     function loadUpcomingEvents() {
         let url = "<?= base_url('calendar/_load_upcoming_events') ?>";
         let _container = $("#upcoming_events_container");
@@ -1484,7 +1517,7 @@
     function initPopover() {
         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
         var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-            return new bootstrap.Popover(popoverTriggerEl)
+            return new bootstrap.Popover(popoverTriggerEl,{html: true})
         })
     }
 

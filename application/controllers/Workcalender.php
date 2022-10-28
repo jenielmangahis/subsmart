@@ -2544,6 +2544,15 @@ class Workcalender extends MY_Controller
         $this->page_data['user'] = $user;
         $this->load->view('workcalender/print_contact', $this->page_data);
     }
+
+    public function ajax_load_upcoming_service_tickets()
+    {
+        
+        $upcomingServiceTickets = array();
+
+        $this->page_data['upcomingServiceTickets'] = $upcomingServiceTickets;        
+        $this->load->view('v2/pages/workcalender/ajax_load_upcoming_service_tickets', $this->page_data);
+    }
 }
 
 

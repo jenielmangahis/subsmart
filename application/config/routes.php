@@ -906,6 +906,7 @@ $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_event
 $route['calendar/_create_google_event'] = 'Workcalender/ajax_create_google_event';
 $route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_calendar';
 $route['calendar/_load_upcoming_events'] = 'Workcalender/ajax_load_upcoming_events';
+$route['calendar/_load_upcoming_service_tickets'] = 'Workcalender/ajax_load_upcoming_service_tickets';
 $route['calendar/_update_drop_event'] = 'Workcalender/ajax_update_event';
 $route['calendar/_update_drop_google_event'] = 'Workcalender/ajax_update_google_event';
 $route['calendar/_create_appointment'] = 'Workcalender/ajax_create_appointment';
