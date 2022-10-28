@@ -105,12 +105,14 @@ class Attachments extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/attachments.js"
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/lists/attachments/list.js"
+            // "assets/js/accounting/attachments.js"
         ));
 
         $this->page_data['attachments'] = $this->accounting_attachments_model->getCompanyAttachments();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/lists/attachment', $this->page_data);
+        $this->load->view('v2/pages/accounting/lists/attachments/list', $this->page_data);
     }
 
     public function upload()

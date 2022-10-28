@@ -902,8 +902,8 @@ function Recipient({
             </div>
           </div>
         </div>
-        <a class="delete-icon" href="#">
-          <i class="fa fa-times-circle-o"></i>
+        <a class="delete-icon nsm-link" href="#">
+          <i class="bx bx-fw bx-x m-0"></i>
         </a>
       </div>
     `;

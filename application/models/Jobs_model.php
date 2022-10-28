@@ -522,7 +522,29 @@ class Jobs_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-}
 
+    // START: GET INFO FROM jobs TABLE TO INSERT IN invoices TABLE
+    public function GET_JOB_INFO($job_id)
+    {
+        $this->db->select('jobs.id, jobs.customer_id, jobs.job_location, jobs.job_type, jobs.job_number, jobs.date_issued, jobs.status, jobs.tags, jobs.signature, jobs.date_created, jobs.date_updated, jobs.company_id, job_payments.amount');
+        $this->db->from($this->table);
+        $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
+        $this->db->where("jobs.id", $job_id);
+        $this->db->order_by('jobs.id', "DESC");
+        $query = $this->db->get();
+        return $query->row();
+    }
+    // END: GET INFO FROM jobs TABLE TO INSERT IN invoices TABLE
+
+    // START: INSERT DATA FROM jobs TABLE to invoices TABLE ON "SEND INVOICE" COMMAND.
+    public function INSERT_JOB_INFO($data)
+    {
+        $INVOICE = $this->db->insert('invoices', $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
+    // END: INSERT DATA FROM jobs TABLE to invoices TABLE ON "SEND INVOICE" COMMAND.
+}
 /* End of file JobType_model.php */
 /* Location: ./application/models/JobType_model.php */
+

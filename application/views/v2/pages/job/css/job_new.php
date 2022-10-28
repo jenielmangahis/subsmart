@@ -202,7 +202,6 @@
     .file-upload-drag {
         display: block;
         position: relative;
-        width: 60%;
     }
     .file-upload-drag .drop {
         width: 100%;

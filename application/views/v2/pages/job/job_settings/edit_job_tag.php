@@ -2,22 +2,6 @@
     defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
 <style>
-    /* width */
-    ::-webkit-scrollbar {
-    width: 10px;
-    }
-    /* Track */
-    ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    }
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-    background: #888;
-    }
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    }
     .page-title {
     font-family: Sarabun, sans-serif !important;
     font-size: 1.75rem !important;
@@ -72,6 +56,10 @@
     .form-required {
     color: red;
     }
+    #input-upload-image, #icon-pick-name {
+        width: 300px;
+        display: inline-block;
+    }
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -120,8 +108,8 @@
                         }
                         ?>
                     <img src="<?= $image_url; ?>" class="marker-icon" /><br>
-                    <input type="file" name="image" value=""  class="form-control" id="input-upload-image" style="width: 20%;display: inline-block;" autocomplete="off" />
-                    <input type="text" name="default-icon-name" disabled="" value="<?= $jobTag->marker_icon; ?>" class="form-control" style="width: 20%;display: inline-block;" id="icon-pick-name"><br />
+                    <input type="file" name="image" value=""  class="form-control" id="input-upload-image" autocomplete="off" />
+                    <input type="text" name="default-icon-name" disabled="" value="<?= $jobTag->marker_icon; ?>" class="form-control" id="icon-pick-name"><br />
                     <div class="form-check" style="margin-top: 10px;">
                         <?php 
                             $is_list = "";
@@ -136,8 +124,8 @@
                     </div>
                 </div>
                 <hr>
-                <div class="">
-                    <a class="btn btn-default" href="<?php echo base_url('job/job_tags'); ?>">Cancel</a>
+                <div class="btn-group">
+                    <a class="nsm-button" href="<?php echo base_url('job/job_tags'); ?>">Cancel</a>
                     <button type="submit" class="nsm-button primary">Submit</button>
                 </div>
                 <?php echo form_close(); ?>
@@ -149,7 +137,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel"><strong>Icon List</strong></h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                                <button onclick='$("#iconList").prop("checked", false);' type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                             </div>
                             <div class="modal-body">
                                 <div class="row">
@@ -168,7 +156,7 @@
                             </div>
                             <div class="modal-footer modal-footer-detail">
                                 <div class="button-modal-list">
-                                    <button type="button" class="nsm-button" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                                    <button onclick='$("#iconList").prop("checked", false);' type="button" class="nsm-button" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                                 </div>
                             </div>
                         </div>

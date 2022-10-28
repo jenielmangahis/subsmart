@@ -697,8 +697,8 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    &nbsp;<div class="file-upload-drag">
+                                                <div class="col-md-4">
+                                                    <div class="file-upload-drag">
                                                         <div class="drop">
                                                             <div class="cont">
                                                                 <div class="tit">
@@ -714,39 +714,57 @@
                                                                     <label>Choose File</label> -->
                                                                 </div>
                                                             </div>
-                                                            <input id="filetoupload" name="filetoupload" type="file" />
+                                                            <input id="attachment-file" name="filetoupload" type="file" />
                                                             <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 row pr-0">
-                                                    <div class="col-sm-6">
-                                                        <label style="padding: 0 .75rem;">Subtotal</label>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                                <div class="col-md-8 row pr-0">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label>Subtotal</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-sm-12">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label class="mb-2">Tax Rate</label>
+                                                            <select id="tax_rate" name="tax_rate" class="form-control">
+                                                                <option value="">None</option>
+                                                                <?php foreach ($tax_rates as $rate) : ?>
+                                                                    <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label id="invoice_tax_total"><?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?></label>
+                                                            <input type="hidden" name="tax" id="tax_total_form_input" value='0'>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <hr>
                                                     </div>
-                                                    <div class="col-sm-6">
-                                                        <small>Tax Rate</small>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label><strong>Total</strong></label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label id="invoice_overall_total"><strong>$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></strong></label>
+                                                            <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-sm-6"> -->
+                                                        <!-- <small>Tax Rate</small> -->
                                                         <!--<a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>-->
-                                                        <select id="tax_rate" name="tax_rate" class="form-control">
-                                                            <option value="">None</option>
-                                                            <?php foreach ($tax_rates as $rate) : ?>
-                                                                <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_tax_total"><?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?></label>
-                                                        <input type="hidden" name="tax" id="tax_total_form_input" value='0'>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
+                                                    <!-- </div> -->
+                                                    <!-- <div class="col-sm-6 text-right pr-3"> -->
+                                                    <!-- </div> -->
+                                                    <!-- <div class="col-sm-12"> -->
+                                                        <!-- <hr> -->
+                                                    <!-- </div> -->
                                                     <!--<div class="col-sm-6 text-right pr-3">
                                                         <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
                                                             <span class="fa fa-plus-square fa-margin-right"></span>Discount
@@ -762,13 +780,13 @@
                                                             <span class="fa fa-plus-square fa-margin-right"></span>Deposit
                                                         </a>
                                                     </div>-->
-                                                    <div class="col-sm-6">
-                                                        <label style="padding: 0 .75rem;">Total</label>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
-                                                    </div>
+                                                    <!-- <div class="col-sm-6"> -->
+                                                        <!-- <label style="padding: 0 .75rem;">Total</label> -->
+                                                    <!-- </div> -->
+                                                    <!-- <div class="col-sm-6 text-right pr-3"> -->
+                                                        <!-- <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label> -->
+                                                        <!-- <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                    <!-- </div> -->
                                                 </div>
                                                 <div class="col-sm-12">
                                                     <hr>

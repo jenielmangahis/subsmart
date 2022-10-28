@@ -25,9 +25,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .marker-icon{
   height: 100px;
-  margin: 30px 0px;
-  border: 1px solid #363636;
-  padding: 10px;
+    margin: 0px;
+    margin-bottom: 10px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    border-radius: 10px;
 } 
 .list-icon{
   list-style: none;
@@ -44,7 +46,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .icon-image{
   height: 50px;
   width: 50px;
-} 
+}
+.JOB_EDIT_LABEL{
+    margin-bottom: 5px;
+    }
+    .JOB_EDIT_FORM_GROUP{
+    margin-bottom: 10px;
+    }
+    .form-required {
+    color: red;
+    }
+    #input-upload-image, #icon-pick-name {
+        width: 300px;
+        display: inline-block;
+    }
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -67,18 +82,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
-
+<div class="container-fluid">
     <div class="row">
-        <div class="col-6 grid-mb">
+        <div class="col-12">
             <?php echo form_open_multipart('job/update_job_type', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                 <input type="hidden" name="eid" value="<?= $jobType->id; ?>">
                 <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
-                <div class="form-group">
-                    <label>Name</label> <span class="form-required">*</span>
+                <div class="form-group JOB_EDIT_FORM_GROUP">
+                    <label class="JOB_EDIT_LABEL">Name</label> <span class="form-required">*</span>
                     <input type="text" name="job_type_name" value="<?= $jobType->title; ?>"  class="form-control" required="" autocomplete="off" />
                 </div>
                 <div class="form-group">
-                    <label>Icon / Marker</label> <span class="form-required">*</span><br />
+                    <label class="JOB_EDIT_LABEL">Icon / Marker</label> <span class="form-required">*</span><br />
                     <?php 
                         if( $jobType->icon_marker != '' ){
                         if( $jobType->is_marker_icon_default_list == 1 ){
@@ -90,8 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         $image_url = base_url('uploads/job_types/no_file.png');
                         }
                     ?>
-                    <img src="<?= $image_url; ?>"  />
-
+                    <img src="<?= $image_url; ?>" class="marker-icon" /><br>
                     <input type="file" name="image" value=""  class="form-control" id="input-upload-image" style="width: 20%;display: inline-block;" autocomplete="off" />
                     <input type="text" name="default-icon-name" disabled="" value="<?= $jobType->icon_marker; ?>" class="form-control" style="width: 20%;display: inline-block;" id="icon-pick-name"><br />
                     <div class="form-check" style="margin-top: 10px;">
@@ -107,7 +121,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </label>
                     </div>
                 </div>  
-                <div class="col-md-">
+                <hr>
+                <div class="btn-group">
                     <a class="nsm-button" href="<?php echo base_url('job/job_types'); ?>">Cancel</a>
                     <button type="submit" class="nsm-button primary">Submit</button>
                 </div>
@@ -116,33 +131,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 </div>
 <div class="modal fade" id="modalIconList" tabindex="-1" role="dialog" aria-labelledby="modalIconListLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div style="max-width: 1000px;" class="modal-dialog modal-lg" role="document">
         <form id="form_add_tag">
-            <div class="modal-dialog modal-md" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <span class="modal-title content-title" id="exampleModalLongTitle">Add New Item</span>
-            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-        </div>
-                <div class="modal-body">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <ul class="list-icon">
-                            <?php foreach($icons as $i){ ?>
-                                <li>
-                                <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
-                                    <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon">
-                                </a>
-                                </li>
-                            <?php } ?>
-                            </ul>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title" id="exampleModalLongTitle">Add New Item</span>
+                        <i onclick='$("#iconList").prop("checked", false);' class="bx bx-fw bx-x m-0 close" data-bs-dismiss="modal" aria-label="Close" style="cursor: pointer;"></i>
+                        <!-- <button onclick='$("#iconList").prop("checked", false);' type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button> -->
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <ul class="list-icon">
+                                    <?php foreach($icons as $i){ ?>
+                                        <li> <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce"><img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon"></a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-detail">
+                        <div class="button-modal-list">
+                            <button onclick='$("#iconList").prop("checked", false);' type="button" class="nsm-button" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                         </div>
                     </div>
                 </div>
-            </div>
         </form>
+        </div>
     </div>
-</div>
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(function(){

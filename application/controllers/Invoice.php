@@ -48,7 +48,6 @@ class Invoice extends MY_Controller
     {
 		$this->page_data['page']->title = 'Invoices & Payments';
         $this->page_data['page']->parent = 'Sales';
-
         $is_allowed = $this->isAllowedModuleAccess(35);
         if (!$is_allowed) {
             $this->page_data['module'] = 'invoice';
@@ -58,14 +57,13 @@ class Invoice extends MY_Controller
 
         $role = logged('role');
         $type = 0;
-        if ($role == 2 || $role == 3 || $role == 6) {
+        if ($role == 2 || $role == 3 || $role == 6 || $role == 8) {
             $comp_id = logged('company_id');
 
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
                 $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
             } else {
-
                 // search
                 if (!empty(get('search'))) {
                     $this->page_data['search'] = get('search');
@@ -96,8 +94,6 @@ class Invoice extends MY_Controller
                 }
             }
         }
-
-
         $this->load->view('v2/pages/invoice/invoice_new', $this->page_data);
     }
 

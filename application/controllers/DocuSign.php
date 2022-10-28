@@ -1119,7 +1119,8 @@ SQL;
         return $this->templateCreate();
     }
 
-    public function apiSendTemplate($templateId)
+
+    public function sendTemplate($templateId, $userId, $companyId)
     {
         header('content-type: application/json');
 
@@ -1146,13 +1147,13 @@ SQL;
         $template = $this->db->get('user_docfile_templates')->row();
 
         $this->db->insert('user_docfile', [
-            'user_id' => logged('id'),
+            'user_id' => $userId,
             'name' => $template->name,
             'type' => count($recipients) > 1 ? 'Multiple' : 'Single',
             'status' => 'Draft',
             'subject' => $subject,
             'message' => $message,
-            'company_id' => logged('company_id'),
+            'company_id' => $companyId,
         ]);
         $docfileId = $this->db->insert_id();
 
@@ -1181,7 +1182,7 @@ SQL;
 
         foreach ($recipients as $recipient) {
             $payload = [
-                'user_id' => logged('id'),
+                'user_id' => $userId,
                 'docfile_id' => $docfileId,
                 'name' => $recipient['name'],
                 'email' => $recipient['email'],
@@ -1224,7 +1225,7 @@ SQL;
                     'doc_page' => $field['doc_page'],
                     'docfile_document_id' => $file->id,
                     'unique_key ' => uniqid(),
-                    'user_id' => logged('id'),
+                    'user_id' => $userId,
                     'user_docfile_recipients_id' => $recipientId,
                     'specs' => $field['specs'],
                 ]);
@@ -1294,6 +1295,18 @@ SQL;
         $this->db->where('id', $envelope['id']);
         $this->db->update('user_docfile', ['status' => 'Waiting for Others']);
         echo $response;
+    }
+
+    public function apiSendTemplatePublic($templateId)
+    {
+        $userId = (int) $this->input->get('user_id', true);
+        $companyId = (int) $this->input->get('company_id', true);
+        $this->sendTemplate($templateId, $userId, $companyId);
+    }
+
+    public function apiSendTemplate($templateId)
+    {
+        $this->sendTemplate($templateId, logged('id'), logged('company_id'));
     }
 
     private function getSigningUrl()
