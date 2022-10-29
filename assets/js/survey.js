@@ -799,7 +799,7 @@ $(document).ready(function(){
   //   return return_first;
   // }
   function copyToClipboard(elem) {
-  	  // create hidden text element, if it doesn't already exist
+      // create hidden text element, if it doesn't already exist
       var targetId = "_hiddenCopyText_";
       var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
       var origSelectionStart, origSelectionEnd;
@@ -829,7 +829,7 @@ $(document).ready(function(){
       // copy the selection
       var succeed;
       try {
-      	  succeed = document.execCommand("copy");
+          succeed = document.execCommand("copy");
       } catch(e) {
           succeed = false;
       }

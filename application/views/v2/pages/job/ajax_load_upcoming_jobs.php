@@ -83,25 +83,24 @@
                         <?php //endif; ?>
                     </td>
                     <td class="text-end">
-                            <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
-                                <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->e_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->e_employee_id); ?>"></div>                            
-                            </div>
-                            <?php if( $jb->employee2_employee_id > 0 ){ ?>
-                                <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
-                                    <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee2_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee2_employee_id); ?>"></div>                            
-                                </div>
-                            <?php } ?>
-                            <?php if( $jb->employee3_employee_id > 0 ){ ?>
-                                <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
-                                    <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee3_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee3_employee_id); ?>"></div>                            
-                                </div>
-                            <?php } ?>
-                            <?php if( $jb->employee4_employee_id > 0 ){ ?>
-                                <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
-                                    <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee4_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee4_employee_id); ?>"></div>                            
-                                </div>
-                            <?php } ?>
+                        <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                            <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->e_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->e_employee_id); ?>"></div>                            
                         </div>
+                        <?php if( $jb->employee2_employee_id > 0 ){ ?>
+                            <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee2_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee2_employee_id); ?>"></div>                            
+                            </div>
+                        <?php } ?>
+                        <?php if( $jb->employee3_employee_id > 0 ){ ?>
+                            <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee3_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee3_employee_id); ?>"></div>                            
+                            </div>
+                        <?php } ?>
+                        <?php if( $jb->employee4_employee_id > 0 ){ ?>
+                            <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($jb->employee4_employee_id); ?>');" data-img="<?php echo userProfileImage($jb->employee4_employee_id); ?>"></div>                            
+                            </div>
+                        <?php } ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

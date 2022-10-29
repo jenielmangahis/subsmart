@@ -139,6 +139,11 @@
                                         <div class="nsm-card-title">
                                             <span>Unscheduled Estimates</span>
                                         </div>
+                                        <div class="nsm-card-controls">
+                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('estimate'); ?>">
+                                                See All
+                                            </a>
+                                        </div>
                                     </div>
                                     <div class="nsm-card-content" id="unscheduled_estimates_container"></div>
                                 </div>
@@ -1166,12 +1171,12 @@
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
-                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Calendar Slot");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Appointment");
 
                 $('.fc-timegrid-slot:before').attr("data-bs-toggle", "popover");
                 $('.fc-timegrid-slot:before').attr("data-bs-trigger", "hover focus");
                 $('.fc-timegrid-slot:before').attr("data-bs-placement", "top");
-                $('.fc-timegrid-slot:before').attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Calendar Slot");
+                $('.fc-timegrid-slot:before').attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Appointment");
 
                 initPopover();
             },
@@ -1207,8 +1212,8 @@
                 // $("#appointment-tags").empty().trigger('change');
                 // loadCompanyUsers();
                 // loadCompanyCustomers($("#appointment-customer"));
-                $("#calendar_action_select_modal").modal('show');
-                //$("#create_appointment_modal").modal('show');
+                //$("#calendar_action_select_modal").modal('show');
+                $("#create_appointment_modal").modal('show');
             },
             slotEventOverlap: false,
             resourceLabelDidMount: function(info) {
@@ -1878,7 +1883,7 @@
         var start_date = $('#action_select_date').val();
         var start_time = $('#action_select_time').val();
 
-        location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+        location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time;
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
