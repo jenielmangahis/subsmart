@@ -1,3 +1,6 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
 <?php include viewPath('v2/includes/header'); ?>
 
 <div class="nsm-fab-container">
@@ -52,6 +55,52 @@
                         </div>
                     </div>
                 </div>
+
+                <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td class="table-icon text-center">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <td data-name="Work Order Number">Ticket No.</td>
+                            <td data-name="Date Issued">Date Created</td>
+                            <td data-name="Customer">Customer</td>
+                            <td data-name="Status">Status</td>
+                            <td data-name="Amount">Amount</td>
+                            <td data-name="Manage"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($tickets as $ticket){ ?>
+                        <tr>
+                            <td><input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0"></td>
+                            <td><?php echo $ticket->ticket_no; ?></td>
+                            <td><?php echo $ticket->created_at; ?></td>
+                            <td><?php echo $ticket->customer_id; ?></td>
+                            <td><?php echo $ticket->ticket_status; ?></td>
+                            <td>$<?php echo number_format($ticket->grandtotal,2); ?></td>
+                            <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('tickets/viewDetails/' . $ticket->id) ?>">View</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-work-id="<?php echo $ticket->id; ?>">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -63,3 +112,4 @@
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
+<?php //include viewPath('includes/footer'); ?>
