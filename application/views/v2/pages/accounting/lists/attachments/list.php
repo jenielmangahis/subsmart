@@ -28,13 +28,16 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="export">Export</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="export-attachments">Export</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="create-invoice">Create invoice</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="create-expense">Create expense</a></li>
                             </ul>
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#upload-attachments-modal">
+                                <i class='bx bx-fw bx-list-plus'></i> Add Attachments
+                            </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_attachments_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
@@ -93,15 +96,15 @@
                     <tbody>
                         <?php if(count($attachments) > 0) : ?>
 						<?php foreach($attachments as $attachment) : ?>
-                        <tr>
+                        <tr data-file="<?=$attachment['thumbnail']?>" data-extension="<?=$attachment['extension']?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$attachment['id']?>">
                                 </div>
                             </td>
                             <td>
                                 <?php if($attachment['type'] === 'Image') : ?>
-                                <div class="table-row-icon img" style="background-image: <?=base_url("uploads/accounting/attachments/".$attachment['stored_name'].".jpg")?>"></div>
+                                <div class="table-row-icon img" style="background-image: url('<?=base_url("uploads/accounting/attachments/".$attachment['thumbnail']."")?>')"></div>
                                 <?php else : ?>
                                 No preview available
                                 <?php endif; ?>
@@ -109,8 +112,14 @@
                             <td><?=$attachment['type']?></td>
                             <td class="fw-bold nsm-text-primary nsm-link default"><?=$attachment['name']?></td>
                             <td><?=$attachment['size']?></td>
-                            <td><?=date('m/d/Y', strtotime($attachment['created_at']))?></td>
-                            <td></td>
+                            <td><?=$attachment['upload_date']?></td>
+                            <td>
+                                <?php if(count($attachment['links']) > 0) : ?>
+                                <?php foreach($attachment['links'] as $link) : ?>
+                                <?=$link['text']?>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </td>
                             <td><?=$attachment['notes']?></td>
                             <td>
                                 <div class="dropdown table-management">
@@ -119,19 +128,19 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="#">Download</a>
+                                            <a class="dropdown-item" href="<?=in_array($attachment['type'], ['Image', 'Pdf']) ? '/uploads/accounting/attachments/'.$attachment['thumbnail'] : '/accounting/attachments/download?filename='.$attachment['thumbnail']?>" target="__blank">Download</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item edit-attachment" href="#">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Delete</a>
+                                            <a class="dropdown-item delete-attachment" href="#">Delete</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create invoice</a>
+                                            <a class="dropdown-item create-invoice" href="#">Create invoice</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create expense</a>
+                                            <a class="dropdown-item create-expense" href="#">Create expense</a>
                                         </li>
                                     </ul>
                                 </div>

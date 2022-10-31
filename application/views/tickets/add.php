@@ -2,6 +2,16 @@
 <?php include viewPath('v2/includes/header'); ?>
 
 <style>
+    
+.signature_mobile
+{
+    display: none;
+}
+
+.show_mobile_view
+{
+    display: none;
+}
 hr{
     border: 0.5px solid #32243d !important;
     width: 100%;
@@ -148,10 +158,11 @@ a.btn-primary.btn-md {
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                            Creating and Copying Customer Service Tickets in the  Customer Service module (CRM) are used to track customer service issues.  Service Tickets can be created from any Service Ticket Workbench or via the Service folder under Sales Category.  User can simply create on the Customer Account or directly from the calendar.  To save time Service Tickets can now also be created via a copy or from the Customer Items Owned screen. 
                         </div>
                     </div>
                 </div>
+                <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                 <div class="row">
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
@@ -173,7 +184,7 @@ a.btn-primary.btn-md {
                 <div class="row">
                     <div class="col-md-6">
                         <label for="job_location"><b>Service Location</b> (optional)</label>
-                        <input type="text" class="form-control" name="job_location" id="job_location"
+                        <input type="text" class="form-control" name="service_location" id="job_location"
                                 required placeholder="Enter address" autofocus
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                     </div>
@@ -185,15 +196,15 @@ a.btn-primary.btn-md {
                     <div class="col-md-6">
                         <label for="job_name"><b>Service description</b> (optional)</label>
                         <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
-                        <textarea class="form-control"></textarea>
+                        <textarea class="form-control" name="service_description"></textarea>
                     </div>
                 </div><br.
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label for="city">Job Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
-                        <select class="form-control">
+                        <select class="form-control" name="job_tag">
                             <?php foreach($tags as $t){ ?>
-                                <option value="<?= $t->id; ?>"><?= $t->name; ?></option>
+                                <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -206,14 +217,14 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Service Ticket No.</b></label>
-                                        <input type="text" class="form-control" name="estimate_number" id="estimate_date"
+                                        <input type="text" class="form-control" name="ticket_no" id="ticket_no"
                                                 required placeholder="Enter Ticket#" autofocus value="TK-0000001" />
                                     </div>
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Ticket Date</b></label>
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" name="estimate_date" id="estimate_date"
+                                            <input type="text" class="form-control" name="ticket_date" id="ticket_date"
                                                     placeholder="Enter Ticket Date">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
@@ -230,7 +241,7 @@ a.btn-primary.btn-md {
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div> -->
-                                        <select id="intall_time" name="intall_time" class="form-control">
+                                        <select id="scheduled_time" name="scheduled_time" class="form-control">
                                             <option value="8-10">8-10</option>
                                             <option value="10-12">10-12</option>
                                             <option value="12-2">12-2</option>
@@ -242,13 +253,13 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label for="purchase_order_number"><b>Purchase Order#</b></label>
-                                        <input type="text" class="form-control" name="purchase_order_number"
-                                            id="purchase_order_number" placeholder="Enter Purchase Order#"
+                                        <input type="text" class="form-control" name="purchase_order_no"
+                                            id="purchase_order_no" placeholder="Enter Purchase Order#"
                                             autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="zip"><b>Ticket Status</b></label>
-                                        <input type="text" class="form-control" name="zip" id="zip" 
+                                        <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
                                             placeholder="Enter Ticket Status"/>
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -289,7 +300,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3 form-group">
                                         <label for="zip"><b>Service Type</b></label>
                                         <div class="input-group">
-                                            <select class="form-control">
+                                            <select class="form-control" name="service_type">
                                                         <option>---</option>
                                             </select>
                                             <span class="input-group-btn">
@@ -325,7 +336,7 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
                                     <div class="col-md-12 table-responsive">
-                                        <table class="table table-hover">
+                                        <!-- <table class="table table-hover">
                                             <input type="hidden" name="count" value="0" id="count">
                                             <thead>
                                             <tr>
@@ -361,9 +372,63 @@ a.btn-primary.btn-md {
                                                 <td><span id="span_total_0">0.00</span></td>
                                             </tr>
                                             </tbody>
+                                        </table> -->
+                                        <table class="table table-hover">
+                                            <input type="hidden" name="count" value="0" id="count">
+                                            <thead style="background-color:#E9E8EA;">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Group</th>
+                                                <!-- <th>Description</th> -->
+                                                <th width="150px">Quantity</th>
+                                                <!-- <th>Location</th> -->
+                                                <th width="150px">Price</th>
+                                                <th class="hidden_mobile_view" width="150px">Discount</th>
+                                                <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
+                                                <th class="hidden_mobile_view">Total</th>
+                                                <th class=""></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="jobs_items_table_body">
+                                            <!-- <tr style="display:none;">
+                                                <td width="30%">
+                                                    <input type="text" class="form-control getItems"
+                                                        onKeyup="getItems(this)" name="items[]">
+                                                    <ul class="suggestions"></ul>
+                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                    <input type="hidden" name="item_id[]" id="itemid" class="item_id" value="0">
+                                                    <input type="hidden" name="packageID[]" value="0">
+                                                </td>
+                                                <td width="20%">
+                                                <div class="dropdown-wrapper">
+                                                    <select name="item_type[]" id="item_typeid" class="form-control">
+                                                        <option value="product">Product</option>
+                                                        <option value="material">Material</option>
+                                                        <option value="service">Service</option>
+                                                        <option value="fee">Fee</option>
+                                                    </select>
+                                                </div>
+
+                                                    </td>
+                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                        data-counter="0" id="quantity_0" value="1"></td>
+                                                <td width="10%"><input type="number" class="form-control price price hidden_mobile_view" name="price[]"
+                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
+                                                        <div class="show_mobile_view">
+                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                        data-counter="0" id="discount_0" min="0" value="0"></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                        data-counter="0" id="tax1_0" min="0" value="0" readonly="">
+                                                        </td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                        data-counter="0" id="item_total_0" min="0" value="0">
+                                                        $<span id="span_total_0">0.00</span></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                            </tr> -->
+                                            </tbody>
                                         </table>
-                                        <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp;
-                                        <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a>
+                                        <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                     </div>
                                 </div>
                             </div>
@@ -382,49 +447,32 @@ a.btn-primary.btn-md {
                                         <table class="table" style="text-align:left;">
                                             <tr>
                                                 <td>Subtotal</td>
-                                                <td></td>
-                                                <td>0.00</td>
+                                                <!-- <td></td> -->
+                                                <td colspan="2" align="right"><span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total"></td>
                                             </tr>
                                             <tr>
-                                                <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment"></td>
-                                                <td style="width:150px;">
-                                                    <select class="form-control">
-                                                        <option>0</option>
-                                                    </select>
-                                                </td>
+                                                <td>Taxes</td>
+                                                <!-- <td></td> -->
+                                                <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment" name="adjustment"></td>
+                                                <td style="width:150px;"><input type="number"  class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="0"></td>
                                                 <td>0.00</td>
                                             </tr>
                                             <tr>
                                                 <td>Markup</td>
                                                 <td><a href="#" style="color:#02A32C;">set markup</a></td>
-                                                <td>0.00</td>
+                                                <td>0.00<input type="hidden" name="markup" id="markup_input_form" class="markup_input" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td><b>Grand Total ($)</b></td>
                                                 <td></td>
-                                                <td><b>0.00</b></td>
+                                                <td><b><span id="grand_total">0.00</span></b><input type="hidden" name="grandtotal" id="grand_total_input" value='0'></td>
                                             </tr>
                                         </table>
                                     </div>
                                 </div>
-                                <!-- <div class="row">
-                                    <div class="col-md-12">
-                                        <h6>Request a Deposit</h6>
-                                        <span class="help help-sm help-block">You can request an upfront payment on accept Ticket.</span>
-                                    </div>
-                                    <div class="col-md-6 form-group">
-                                        <select name="deposit_request" class="form-control">
-                                            <option value="1" selected="selected">Deposit amount $</option>
-                                            <option value="2">Percentage %</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 form-group">
-                                        <div class="input-group">
-                                            <input type="text" name="deposit_amount" value="0" class="form-control"
-                                                autocomplete="off">
-                                        </div>
-                                    </div>
-                                </div> -->
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <div class="select-wrap">
@@ -676,32 +724,46 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
                                 <div class="row">
+                                <!-- <div class="form-group col-md-12"> -->
+                                    <div class="col-md-4">
+                                        <b>Sales Rep's Name</b>
+                                        <input type="text" name="sales_rep" class="form-control" value="<?php echo logged('FName').' '.logged('LName'); ?>">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>Cell Phone</b>
+                                        <input type="text" name="sales_rep_no" class="form-control" value="<?php echo logged('mobile'); ?>" placeholder="Enter Cellphone Number">
+                                    </div>                       
+                                    <div class="col-md-4">
+                                        <b>Team Leader / Mentor</b>
+                                        <input type="text" name="tl_mentor" class="form-control" placeholder="Enter Team Leader/Mentor">
+                                    </div>                                        
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label><h6>Message to Customer</h6></label> <span class="help help-sm help-block">Add a message that will be displayed on the Ticket.</span>
-                                            <textarea name="customer_message" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
+                                            <label><h6>Message to Customer</h6></label><br> <span class="help help-sm help-block">Add a message that will be displayed on the Ticket.</span>
+                                            <textarea name="message" cols="40" rows="4" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label><h6>Terms &amp; Conditions</h6></label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the Ticket.</span>
-                                            <textarea name="terms_conditions" cols="40" rows="2"
-                                                    class="form-control"></textarea>
+                                            <label><h6>Terms &amp; Conditions</h6></label><br> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the Ticket.</span>
+                                            <textarea name="terms_conditions" cols="40" rows="4" class="form-control">YOU EXPRESSLY AUTHORIZE ADI AND ITS AFFILIATES TO RECEIVE PAYMENT FOR THE LISTED SERVICES ABOVE. BY SIGNING BELOW BUYER AGREES TO THE TERMS OF YOUR SERVICE AGREEMENT AND ACKNOWLEDGES RECEIPT OF A COPY OF THIS SERVICE AGREEMENT.</textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-4">
-                                        <label for="billing_date"><h6>Attachments</h6></label>
+                                        <label for="billing_date"><h6>Attachments</h6></label><br> 
                                         <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
-                                        <input type="file" name="est_contract_upload" id="est_contract_upload"
+                                        <input type="file" name="attachments" id="attachments"
                                                 class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><h6>Instructions</h6></label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                            <label><h6>Instructions: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                             <textarea name="instructions" cols="40" rows="2"
                                                     class="form-control"></textarea>
                                         </div>
@@ -793,8 +855,56 @@ a.btn-primary.btn-md {
     </div>
 </div>
 
-<?php echo $file_selection; ?>
+            <!-- Modal -->
+            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>                                                
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">Add
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+<?php //echo $file_selection; ?>
+
+<?php //include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('includes/footer'); ?>
 <script>
     function validatecard() {
         var inputtxt = $('.card-number').val();
@@ -822,7 +932,6 @@ a.btn-primary.btn-md {
     });
 </script>
 <script type="module"  src="<?= base_url("assets/js/customer/dashboard/index.js") ?>"></script>
-<?php include viewPath('v2/includes/footer'); ?>
 
 <script>
 

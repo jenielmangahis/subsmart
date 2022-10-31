@@ -1480,6 +1480,7 @@ class Estimate extends MY_Controller
         $urlApprove = base_url('share_Link/approveEstimate/' . $workData->id);
         $urlDecline = base_url('share_Link/declineEstimate/' . $workData->id);
 
+		$business = $this->business_model->getByCompanyId(logged('company_id'));
         $imageUrl = getCompanyBusinessProfileImage();
 
         $data = array(
@@ -1488,10 +1489,15 @@ class Estimate extends MY_Controller
             'estimateID'                    => $workData->id,
             'urlApprove'                    => $urlApprove,
             'urlDecline'                    => $urlDecline,
-            'company'                       => $cliets->business_name,
-            'business_address'              => $cliets->business_address,
-            'phone_number'                  => $cliets->phone_number,
-            'email_address'                 => $cliets->email_address,
+            // 'company'                       => $cliets->business_name,
+            // 'business_address'              => $cliets->business_address,
+            // 'phone_number'                  => $cliets->phone_number,
+            // 'email_address'                 => $cliets->email_address,
+
+            'company'                       => $business->business_name,
+            'business_address'              => "$business->address, $business->city $business->postal_code",
+            'phone_number'                  => $business->business_phone,
+            'email_address'                 => $business->business_email,
 
             'acs_name'                      => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
             'acsemail'                      => $customerData->email,

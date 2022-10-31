@@ -105,64 +105,35 @@ class Payment_methods extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/payment-method.js"
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/lists/payment_methods/list.js"
+            // "assets/js/accounting/payment-method.js"
         ));
-
-        $this->page_data['methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods('asc', [1]);
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/payment_methods', $this->page_data);
-    }
-
-    public function load_payment_methods()
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $order = $post['order'][0]['dir'];
-        $start = $post['start'];
-        $limit = $post['length'];
 
         $status = [
             1
         ];
 
-        if($post['inactive'] === '1' || $post['inactive'] === 1) {
+        if (!empty(get('inactive') && get('inactive') === '1') ) {
             array_push($status, 0);
+            $this->page_data['inactive'] = true;
         }
 
-        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods($order, $status);
+        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods('asc', $status);
 
-        $data = [];
-        $search = $post['columns'][0]['search']['value'];
+        if(!empty(get('search'))) {
+            $search = get('search');
+            $paymentMethods = array_filter($paymentMethods, function($method, $key) use ($search) {
+                return (stripos($method['name'], $search) !== false);
+            }, ARRAY_FILTER_USE_BOTH);
 
-        if(count($paymentMethods) > 0) {
-            foreach($paymentMethods as $method) {
-                if($search !== "") {
-                    if(stripos($method['name'], $search) !== false) {
-                        $data[] = [
-                            'id' => $method['id'],
-                            'name' => $method['name'],
-                            'credit_card' => $method['credit_card'],
-                            'status' => $method['status']
-                        ];
-                    }
-                } else {
-                    $data[] = [
-                        'id' => $method['id'],
-                        'name' => $method['name'],
-                        'credit_card' => $method['credit_card'],
-                        'status' => $method['status']
-                    ];
-                }
-            }
+            $this->page_data['search'] = $search;
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($paymentMethods),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        $this->page_data['methods'] = $paymentMethods;
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('v2/pages/accounting/lists/payment_methods/list', $this->page_data);
+        // $this->load->view('accounting/payment_methods', $this->page_data);
     }
 
     public function add()

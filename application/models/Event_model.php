@@ -622,13 +622,27 @@ class Event_model extends MY_Model
 
     public function getAllsubs()
     {
-        $query = $this->db->get('acs_billing');
+        $this->db->select('SUM(acs_billing.mmr) AS SUM_BILLING_MMR');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
+        $this->db->where('acs_alarm.acct_type', 'IN-HOUSE');
+        $this->db->or_where('acs_alarm.acct_type', 'PURCHASE');
+        $query = $this->db->get();
+        // if ($query) {
+            return $query->row();
+        // } else {
+            // return false;
+        // }
+        
+        // SELECT SUM(acs_billing.mmr) FROM acs_billing LEFT JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE acs_alarm.acct_type = "IN-HOUSE" OR acs_alarm.acct_type = "PURCHASE";
 
-        if ($query) {
-            return $query->result();
-        } else {
-            return false;
-        }
+        // $query = $this->db->get('acs_billing');
+
+        // if ($query) {
+        //     return $query->result();
+        // } else {
+        //     return false;
+        // }
     }
     public function getAllJobsByCompanyId($company_id)
     {

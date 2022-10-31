@@ -110,7 +110,7 @@ class Attachments extends MY_Controller {
             // "assets/js/accounting/attachments.js"
         ));
 
-        $this->page_data['attachments'] = $this->accounting_attachments_model->getCompanyAttachments();
+        $this->page_data['attachments'] = $this->get_attachment_files();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('v2/pages/accounting/lists/attachments/list', $this->page_data);
     }
@@ -173,12 +173,8 @@ class Attachments extends MY_Controller {
         return $attachmentIds;
     }
 
-    public function load_attachment_files()
+    private function get_attachment_files()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-
         $attachments = $this->accounting_attachments_model->getCompanyAttachments();
 
         $data = [];
@@ -192,7 +188,7 @@ class Attachments extends MY_Controller {
                     switch($link->type) {
                         case 'Vendor' :
                             $vendor = $this->vendors_model->get_vendor_by_id($link->linked_id);
-                            $text = "<p class='m-0'><a href='/accounting/vendors/view/$vendor->id' class='text-info'>";
+                            $text = "<p class='m-0'><a href='/accounting/vendors/view/$vendor->id' class='text-decoration-none'>";
                             $text .= 'Vendor: '.$vendor->display_name;
                             $text .= '</a></p>';
                         break;
@@ -215,7 +211,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($expense->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-expense text-info" data-id="'.$expense->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-expense text-decoration-none" data-id="'.$expense->id.'">';
                             if(in_array($expense->ref_no, ['', '0', null])) {
                                 $text .= "Expense:</a> $amount - $payeeName";
                             } else {
@@ -242,7 +238,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($check->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-check text-info" data-id="'.$check->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-check text-decoration-none" data-id="'.$check->id.'">';
                             if(in_array($check->check_no, ['', '0', null]) || $check->to_print === "1") {
                                 $text .= "Check:</a> $amount - $payeeName";
                             } else {
@@ -258,7 +254,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($bill->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-bill text-info" data-id="'.$bill->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-bill text-decoration-none" data-id="'.$bill->id.'">';
                             if(in_array($bill->bill_no, ['', '0', null])) {
                                 $text .= "Bill:</a> $amount - $payeeName";
                             } else {
@@ -274,7 +270,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($billPayment->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-bill-payment text-info" data-id="'.$billPayment->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-bill-payment text-decoration-none" data-id="'.$billPayment->id.'">';
                             if(in_array($billPayment->check_no, ['', '0', null])) {
                                 $text .= "Bill Payment:</a> $amount - $payeeName";
                             } else {
@@ -290,7 +286,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($purchaseOrder->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-purchase-order text-info" data-id="'.$purchaseOrder->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-purchase-order text-decoration-none" data-id="'.$purchaseOrder->id.'">';
                             if(in_array($purchaseOrder->purchase_order_no, ['', '0', null])) {
                                 $text .= "Purchase Order:</a> $amount - $payeeName";
                             } else {
@@ -306,7 +302,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($vCredit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-vendor-credit text-info" data-id="'.$vCredit->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-vendor-credit text-decoration-none" data-id="'.$vCredit->id.'">';
                             if(in_array($vCredit->ref_no, ['', '0', null])) {
                                 $text .= "Vendor Credit:</a> $amount - $payeeName";
                             } else {
@@ -333,7 +329,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($ccCredit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-cc-credit text-info" data-id="'.$ccCredit->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-cc-credit text-decoration-none" data-id="'.$ccCredit->id.'">';
                             if(in_array($ccCredit->ref_no, ['', '0', null])) {
                                 $text .= "CC-Credit:</a> $amount - $payeeName";
                             } else {
@@ -349,7 +345,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($ccPayment->amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-cc-payment text-info" data-id="'.$ccPayment->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-cc-payment text-decoration-none" data-id="'.$ccPayment->id.'">';
                             $text .= "CC Payment:</a> $amount - $payeeName";
                             $text .= '</p>';
                         break;
@@ -358,7 +354,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-deposit text-info" data-id="'.$deposit->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-deposit text-decoration-none" data-id="'.$deposit->id.'">';
                             $text .= "Deposit:</a> $amount";
                             $text .= '</p>';
                         break;
@@ -367,7 +363,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-transfer text-info" data-id="'.$transfer->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-transfer text-decoration-none" data-id="'.$transfer->id.'">';
                             $text .= "Transfer:</a> $amount";
                             $text .= '</p>';
                         break;
@@ -375,7 +371,7 @@ class Attachments extends MY_Controller {
                             $journal = $this->accounting_journal_entries_model->getById($link->linked_id, logged('company_id'));
                             $amount = '$0.00';
                             
-                            $text = '<p class="m-0"><a href="#" class="view-linked-journal text-info" data-id="'.$journal->id.'">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-journal text-decoration-none" data-id="'.$journal->id.'">';
                             if(in_array($journal->journal_no, ['', '0', null])) {
                                 $text .= "Journal:</a> $amount";
                             } else {
@@ -408,14 +404,7 @@ class Attachments extends MY_Controller {
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($attachments),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        return $data;
     }
 
     public function download()

@@ -60,7 +60,7 @@
                         </div>
                         <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                             <span data-type="title">Total $ Recurring Payment</span>
-                            <h2><?= $total_recurring_payment; ?></h2>
+                            <h2><?php echo "$".number_format($total_recurring_payment->SUM_RECURRING_PAYMENT, 2); ?></h2>
                         </div>
                     </div>
                 </div>
