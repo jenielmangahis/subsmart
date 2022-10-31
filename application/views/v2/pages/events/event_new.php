@@ -69,13 +69,24 @@ include viewPath('v2/includes/header');
                                                     <label class="content-subtitle fw-bold d-block mb-2">From</label>
                                                     <div class="row g-2">
                                                         <div class="col-12 col-md-6">
-                                                            <input type="date" name="start_date" id="start_date" class="nsm-field form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>
+                                                            <?php 
+                                                                if( isset($jobs_data) ){
+                                                                    $default_start_date = $jobs_data->start_date;
+                                                                }
+
+                                                            ?>
+                                                            <input type="date" name="start_date" id="start_date" class="nsm-field form-control" value="<?= $default_start_date;  ?>" required>
                                                         </div>
                                                         <div class="col-12 col-md-6">
+                                                            <?php 
+                                                                if( isset($jobs_data) ){
+                                                                    $default_start_time = strtolower($jobs_data->start_time);
+                                                                }
+                                                            ?>
                                                             <select id="start_time" name="start_time" class="nsm-field form-select" required>
                                                                 <option selected="">Start time</option>
                                                                 <?php for ($x = 0; $x < time_availability(0, TRUE); $x++) { ?>
-                                                                    <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                                                    <option <?= $default_start_time == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>

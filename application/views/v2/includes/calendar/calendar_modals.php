@@ -90,6 +90,7 @@
                 <div class="modal-footer" style="display:block;">
                     <div style="float:left;">
                         <button type="button" id="calendar-add-job" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Job</button>
+                        <button type="button" id="calendar-add-event" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Event</button>
                         <button type="button" id="calendar-add-ticket" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Service Ticket</button>
                     </div>
                     <div style="float:right;">

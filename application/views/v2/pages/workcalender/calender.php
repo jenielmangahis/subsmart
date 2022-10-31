@@ -1885,5 +1885,12 @@
 
         location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time;
     });
+
+    $(document).on('click', '#calendar-add-event', function(){
+        var start_date = $('#action_select_date').val();
+        var start_time = $('#action_select_time').val();
+
+        location.href = base_url + 'events/new_event?start_date='+start_date+'&start_time='+start_time;
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
