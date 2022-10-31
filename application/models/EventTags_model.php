@@ -43,6 +43,23 @@ class EventTags_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByIds($ids = array(), $filters = array())
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where_in('id', $ids);
+
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->like('name', $filters['search'], 'both');                
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getById($id)
     {
         $user_id = logged('id');

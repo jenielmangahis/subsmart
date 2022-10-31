@@ -155,6 +155,19 @@ class Events extends MY_Controller
             //print_r($this->page_data['jobs_data_items'] );
         }
 
+        $default_start_date = date("Y-m-d");
+        $default_start_time = '';
+        if( $this->input->get('start_date') ){
+            $default_start_date = $this->input->get('start_date');
+        }
+
+        if( $this->input->get('start_time') ){
+            $default_start_time = $this->input->get('start_time');
+        }
+
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+
         $this->page_data['page_action'] = $page_action;
         // $this->load->view('events/event_new', $this->page_data);
         $this->load->view('v2/pages/events/event_new', $this->page_data);

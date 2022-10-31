@@ -19,6 +19,7 @@ class Customer extends MY_Controller
         $this->load->model('Esign_model', 'Esign_model');
         $this->load->model('Activity_model','activity');
         $this->load->model('General_model', 'general');
+        $this->load->model('Tickets_model', 'tickets_model');
 
         $this->checkLogin();
 
@@ -4431,7 +4432,7 @@ class Customer extends MY_Controller
 
         $this->hasAccessModule(39);
         // $user_id = logged('id');
-        // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
+        $this->page_data['tickets'] = $this->tickets_model->get_tickets_data();
         $this->load->view('v2/pages/tickets/list', $this->page_data);
     }
 
@@ -4483,6 +4484,7 @@ class Customer extends MY_Controller
 
         $this->page_data['default_customer_id'] = $default_customer_id;
 
+        $this->page_data['items'] = $this->items_model->getItemlist();
         $type = $this->input->get('type');
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $type;

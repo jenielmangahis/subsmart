@@ -820,6 +820,7 @@ class Workcalender extends MY_Controller
         $this->load->model('DealsBookings_model');
         $this->load->model('ColorSettings_model');
         $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -937,7 +938,32 @@ class Workcalender extends MY_Controller
             $start_date_end  = $start_date_time;
             $backgroundColor = "#38a4f8";
 
-            $custom_html = "<i class='fa fa-user'></i> <small class='event-caption'>" . $a->customer_name . " - " . $a->appointment_type . "</small><br /><i class='fa fa-list'></i> <small class='event-caption'>" . $a->appointment_type . "</small>";
+            $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">Appointment - '.$a->customer_name.'</span><hr />';
+
+            $eventTags = array();
+            if( $a->tag_ids != '' ){
+                $a_tags = explode(",", $a->tag_ids);            
+                $eventTags = $this->EventTags_model->getAllByIds($a_tags);
+            }
+            
+
+            if( $eventTags ){
+                $e_tags = array();
+                foreach($eventTags as $t){
+                    $e_tags[] = $t->name;
+                }
+
+                $tags = implode(",", $e_tags);
+            }else{
+                $tags = '---';
+            }
+
+            $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Appointment Type : ' . $a->appointment_type . '</small>';            
+            //$custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-user-circle'></i> Customer : " . $a->customer_name . "</small>";
+            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $a->employee_name . "</small>";
+            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("H:i A", strtotime($a->appointment_time)) . "</small>";
+
 
             $resources_user_events[$inc]['eventId'] = $a->id;
             $resources_user_events[$inc]['eventType'] = 'appointments';

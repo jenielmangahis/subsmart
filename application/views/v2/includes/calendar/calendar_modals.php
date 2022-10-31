@@ -25,7 +25,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="create_appointment_modal" aria-labelledby="create_appointment_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form id="frm-create-appointment" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
@@ -33,6 +33,8 @@
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" id="action_select_date" value="" />        
+                    <input type="hidden" id="action_select_time" value="" />        
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">When</label>
@@ -66,13 +68,16 @@
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                            <select name="appointment_type_id" class="nsm-field form-select" required>
+                            <select name="appointment_type_id" class="nsm-field form-select" required style="display: inline-block;width: 30%;">
                                 <?php $start = 0; ?>
                                 <?php foreach ($appointmentTypes as $a) { ?>
                                     <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
                                 <?php $start++;
                                 } ?>
                             </select>
+                            <a class="nsm-button" href="<?= base_url('appointment_types/index'); ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
+                                <i class='bx bx-fw bx-plus'></i> Manage Type
+                            </a>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
@@ -82,9 +87,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Schedule</button>
+                <div class="modal-footer" style="display:block;">
+                    <div style="float:left;">
+                        <button type="button" id="calendar-add-job" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Job</button>
+                        <button type="button" id="calendar-add-event" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Event</button>
+                        <button type="button" id="calendar-add-ticket" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Service Ticket</button>
+                    </div>
+                    <div style="float:right;">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary">Schedule</button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -420,7 +432,7 @@
 </div>
 
 <!-- Calendar Action Select -->
-<div class="modal fade nsm-modal fade" id="calendar_action_select_modal" tabindex="-1" aria-labelledby="calendar_action_select_modal_label" aria-hidden="true">
+<!-- <div class="modal fade nsm-modal fade" id="calendar_action_select_modal" tabindex="-1" aria-labelledby="calendar_action_select_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <input type="hidden" id="action_select_date" value="" />        
         <input type="hidden" id="action_select_time" value="" />        
@@ -440,4 +452,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

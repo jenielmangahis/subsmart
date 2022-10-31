@@ -302,15 +302,27 @@ class Dashboard extends Widgets {
 
     private function getTotalRecurringPayment()
     {
+        // SELECT SUM(acs_billing.mmr) FROM acs_billing LEFT JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id LEFT JOIN acs_profile ON acs_profile.prof_id = acs_alarm.fk_prof_id WHERE acs_alarm.acct_type = "IN-HOUSE" AND acs_profile.status = "Active";
+
         $companyId = logged('company_id');
-        $this->db->select('SUM(billing.transaction_amount + 0) AS total', false);
-        $this->db->from('acs_billing billing');
-        $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
-        $this->db->where('profile.company_id', $companyId);
-        $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
+        $this->db->select('SUM(acs_billing.mmr) AS SUM_RECURRING_PAYMENT', FALSE);
+        $this->db->from('acs_billing');
+        $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = acs_alarm.fk_prof_id', 'left');
+        $this->db->where('acs_alarm.acct_type', 'IN-HOUSE');
+        $this->db->where('acs_profile.status', 'Active');
         $query = $this->db->get();
         $result = $query->row();
-        return '$' . number_format($result->total, 2);
+        return $result;
+        // return '$' . number_format($result->total, 2);
+        // $this->db->select('SUM(billing.transaction_amount + 0) AS total', false);
+        // $this->db->from('acs_billing billing');
+        // $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
+        // $this->db->where('profile.company_id', $companyId);
+        // $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
+        // $query = $this->db->get();
+        // $result = $query->row();
+        // return '$' . number_format($result->total, 2);
     }
 
     private function getAgreementsToExpireIn30Days()

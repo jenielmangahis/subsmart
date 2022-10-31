@@ -541,7 +541,7 @@ class Jobs_model extends MY_Model
     {
         $INVOICE = $this->db->insert('invoices', $data);
         $insert_id = $this->db->insert_id();
-        return  $insert_id;
+        return $insert_id;
     }
     // END: INSERT DATA FROM jobs TABLE to invoices TABLE ON "SEND INVOICE" COMMAND.
 }

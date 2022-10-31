@@ -127,7 +127,7 @@
                                                 <div id="streetViewBody" class="col-md-4 d-none"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-12" style="margin-top: 16px;">
                                             <h6 class="title-border">JOB DETAILS :</h6>
                                             <table class="table table-bordered">
                                                 <thead>
@@ -190,7 +190,7 @@
                                         <div class="col-md-12">
                                             <br><br>
                                             <h6 class="title-border">NOTES :</h6>
-                                            <span><?= isset($jobs_data->message) ? $jobs_data->message : "No notes given."; ?></span>
+                                            <span><?= isset($jobs_data->message) && strlen($jobs_data->message) ? $jobs_data->message : "No notes given."; ?></span>
                                         </div>
 
                                         <div class="col-md-12">
@@ -390,6 +390,10 @@ add_footer_js(array(
             }
         });
     }
+
+    // Temporarily remove job_preview modal because of no styling
+    $("div#modal-for-start-job-confirmation").remove();
+
     $(document).on("click", "div#modal-for-start-job-confirmation .the-modal-body .close-modal", function(event) {
         $("div#modal-for-start-job-confirmation").fadeOut();
     });

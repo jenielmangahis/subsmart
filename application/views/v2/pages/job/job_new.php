@@ -400,8 +400,12 @@
                                                     </li>
                                                     <li id="6" class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>data-bs-toggle="modal"data-bs-target="#finish_modal"<?php endif; ?>>
                                                         <a href="#">Finished</a>
-                                                    <li id="7" class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>">Invoiced</li>
-                                                    <li id="8" class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>">Completed</li>
+                                                    <li id="7" class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>">
+                                                        <a href="#">Invoiced</a>
+                                                    </li>
+                                                    <li id="8" class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>">
+                                                        <a href="#">Completed</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -551,25 +555,23 @@
                                         </select><br>
                                         <h6>Assigned To</h6>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-sm-12 mb-2">
                                                 <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
                                                 <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-sm-12 mb-2">
                                                 <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
                                                 <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-sm-12">
                                                 <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
                                                 <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly>
                                             </div>
                                         </div>
                                         <br>
-                                        <center>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="btn btn-primary">
-                                            <span class="fa fa-plus"></span> Assign Job
-                                        </a>
-                                        </center>
+                                        <div class="float-end">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="nsm-button primary">Assign Job</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1168,7 +1170,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <div class="modal-body">
-                <label>Sales Rep 1</label>
+                <label>Employee 1</label>
                 <select id="employee2" name="employee2_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -1178,7 +1180,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Sales Rep 2</label>
+                <label>Employee 2</label>
                 <select id="employee3" name="employee3_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -1188,7 +1190,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Sales Rep 3</label>
+                <label>Employee 3</label>
                 <select id="employee4" name="employee4_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
