@@ -60,7 +60,6 @@
                         <tr>
                             <td data-name="Name">NAME</td>
                             <td data-name="Credit Card">CREDIT CARD</td>
-                            <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>

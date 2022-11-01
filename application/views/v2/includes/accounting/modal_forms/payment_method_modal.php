@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title">New Payment Method</span>
+                <span class="modal-title content-title"><?=isset($paymentMethod) ? 'Edit' : 'New'?> Payment Method</span>
                 <button type="button" class="close-payment-method" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <?php 
