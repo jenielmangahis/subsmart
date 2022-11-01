@@ -26,7 +26,7 @@
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-file'></i> Run Report
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="add-payment-method-button">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_payment_methods_modal">
@@ -38,7 +38,7 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked onchange="col(this)" id="col_credit" class="form-check-input">
+                                    <input type="checkbox" checked name="col_chk" id="col_credit" class="form-check-input">
                                     <label for="col_credit" class="form-check-label">Credit Card</label>
                                 </div>
                                 <p class="m-0">Other</p>
@@ -76,7 +76,7 @@
                     <tbody>
                         <?php if(count($methods) > 0) : ?>
 						<?php foreach($methods as $method) : ?>
-                        <tr>
+                        <tr data-id="<?=$method['id']?>">
                             <td class="fw-bold nsm-text-primary nsm-link default"><?=$method['name']?></td>
                             <td>
                                 <?php if($method['credit_card'] === "1") : ?>
@@ -94,12 +94,18 @@
                                         <li>
                                             <a class="dropdown-item" href="#">Run report</a>
                                         </li>
+                                        <?php if($method['status'] === "1" || $method['status'] === 1) : ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item edit-payment-method" href="#">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Make inactive</a>
+                                            <a class="dropdown-item make-inactive" href="#">Make inactive</a>
                                         </li>
+                                        <?php else : ?>
+                                        <li>
+                                            <a class="dropdown-item make-active" href="#">Make active</a>
+                                        </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

@@ -46,4 +46,13 @@ class Accounting_payment_methods_model extends MY_Model {
 			return false;
 		}
 	}
+
+	public function check_payment_method_name($companyId, $name, $status)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('name', $name);
+		$this->db->where('status', $status);
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }

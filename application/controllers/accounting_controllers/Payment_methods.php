@@ -156,18 +156,33 @@ class Payment_methods extends MY_Controller {
             $this->session->set_flashdata('error', "Please try again!");
         }
 
-        redirect('/accounting/payment-methods');
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function inactive($id)
     {
         $result = [];
 
-        $name = $this->accounting_payment_methods_model->getById($id)->name;
+        $paymentMethod = $this->accounting_payment_methods_model->getById($id);
+
+        $attempt = 0;
+        do {
+            $name = $attempt > 0 ? "$paymentMethod->name (deleted-$attempt)" : "$paymentMethod->name (deleted)";
+            $checkName = $this->accounting_payment_methods_model->check_payment_method_name(logged('company_id'), $name, 0);
+
+            $attempt++;
+        } while(!is_null($checkName));
+
+        $data = [
+            'name' => $name
+        ];
+
+        $update = $this->accounting_payment_methods_model->updatePaymentMethod($id, $data);
+
         $delete = $this->accounting_payment_methods_model->delete($id);
 
         if($delete) {
-            $this->session->set_flashdata('success', "$name is now inactive!");
+            $this->session->set_flashdata('success', "$paymentMethod->name is now inactive!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
@@ -177,8 +192,26 @@ class Payment_methods extends MY_Controller {
     {
         $result = [];
 
+        $paymentMethod = $this->accounting_payment_methods_model->getById($id);
+        $explode = explode(' ', $paymentMethod->name);
+        array_pop($explode);
+        $newName = implode(' ', $explode);
+
+        $attempt = 0;
+        do {
+            $name = $attempt > 0 ? "$newName - $attempt" : $newName;
+            $checkName = $this->accounting_payment_methods_model->check_payment_method_name(logged('company_id'), $name, 1);
+
+            $attempt++;
+        } while(!is_null($checkName));
+
+        $data = [
+            'name' => $name
+        ];
+
+        $update = $this->accounting_payment_methods_model->updatePaymentMethod($id, $data);
+
         $activate = $this->accounting_payment_methods_model->activate($id);
-        $name = $this->accounting_payment_methods_model->getById($id)->name;
 
         if($activate) {
             $this->session->set_flashdata('success', "$name is now active!");
@@ -191,7 +224,7 @@ class Payment_methods extends MY_Controller {
     {
         $this->page_data['paymentMethod'] = $this->accounting_payment_methods_model->getById($id);
 
-        $this->load->view('accounting/modals/payment_method_modal', $this->page_data);
+        $this->load->view("v2/includes/accounting/modal_forms/payment_method_modal", $this->page_data);
     }
 
     public function update($id)
@@ -211,7 +244,7 @@ class Payment_methods extends MY_Controller {
             $this->session->set_flashdata('error', "Please try again!");
         }
 
-        redirect('/accounting/payment-methods');
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function print()

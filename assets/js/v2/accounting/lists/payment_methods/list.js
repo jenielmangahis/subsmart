@@ -63,21 +63,120 @@ $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function()
 
     $(`#print_payment_methods_modal table tr`).each(function() {
         if(chk.prop('checked')) {
-            $($(this).find('td')[index - 1]).show();
+            $($(this).find('td')[index]).show();
         } else {
-            $($(this).find('td')[index - 1]).hide();
+            $($(this).find('td')[index]).hide();
         }
     });
 
     $(`#print_preview_payment_methods_modal #payment_methods_table_print tr`).each(function() {
         if(chk.prop('checked')) {
-            $($(this).find('td')[index - 1]).show();
+            $($(this).find('td')[index]).show();
         } else {
-            $($(this).find('td')[index - 1]).hide();
+            $($(this).find('td')[index]).hide();
         }
     });
 });
 
 $("#btn_print_payment_methods").on("click", function() {
     $("#payment_methods_table_print").printThis();
+});
+
+$('#add-payment-method-button').on('click', function(e) {
+    e.preventDefault();
+
+    $.get(`/accounting/get-dropdown-modal/payment_method_modal`, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(result);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${result}
+                </div>
+            `);
+        }
+
+        $('#modal-container #payment-method-modal').modal('show');
+    });
+});
+
+$('#payment-methods-table .edit-payment-method').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+
+    $.get(`/accounting/payment-methods/edit/${id}`, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(result);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${result}
+                </div>
+            `);
+        }
+
+        $('#modal-container #payment-method-modal').modal('show');
+    });
+});
+
+$('#payment-methods-table .make-inactive').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+    var name = row.find('td:first-child').text().trim();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${name}</b> inactive?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/payment-methods/delete/${id}`,
+                type:"DELETE",
+                success:function (result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#payment-methods-table .make-active').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+    var name = row.find('td:first-child').text().trim();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${name}</b> active?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/payment-methods/activate/${id}`,
+                type:"GET",
+                success:function (result) {
+                    location.reload();
+                }
+            });
+        }
+    });
 });
