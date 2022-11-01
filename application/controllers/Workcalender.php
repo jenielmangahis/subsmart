@@ -821,24 +821,13 @@ class Workcalender extends MY_Controller
         $this->load->model('ColorSettings_model');
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
+        $this->load->model('Tickets_model');
 
         $post = $this->input->post();
         $role = logged('role');
         $company_id = logged('company_id');
-        /*if ($role == 2 || $role == 3 || $role == 22) {
-            $company_id = logged('company_id');
-            $events = $this->event_model->getAllByCompany($company_id);
-        }*/
 
         $events = $this->event_model->getAllByCompany($company_id);
-
-        /*if ($role == 4) {
-            $events = $this->event_model->getAllByUserId();
-        }*/
-
-        if (empty($events) && $role == 1) {
-            $events = $this->event_model->getAllByUserId();
-        }
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
         $a_settings = unserialize($settings[0]->value);
@@ -928,6 +917,49 @@ class Workcalender extends MY_Controller
                     }*/
                 }
             }
+        }
+
+        //Service Tickets
+        $serviceTickets = $this->Tickets_model->get_tickets_by_company_id($company_id);
+        foreach($serviceTickets as $st){
+            $start_date_time = date('Y-m-d', strtotime($st->ticket_date));
+            //echo $start_date_time;exit;
+            $start_date_end  = $start_date_time;
+            $backgroundColor = "#ff751a";
+
+            $customer_name =  $st->first_name . ' ' . $st->last_name;
+            $custom_html   = '<span style="font-size:16px;font-weight:bold;display:block;">'.$st->ticket_no.' ('.$customer_name.')'.'</span><hr />';
+
+            $eventTags = array();
+            if( $a->tag_ids != '' ){
+                $a_tags = explode(",", $a->tag_ids);            
+                $eventTags = $this->EventTags_model->getAllByIds($a_tags);
+            }
+            
+
+            if( $st->job_tag != '' ){
+                $tags = $st->job_tag;
+            }else{
+                $tags = '---';
+            }
+
+            $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Sales Representative : " . $st->sales_rep . "</small>";  
+            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $st->service_location . "</small>";
+            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("m/d/Y", strtotime($st->ticket_date)) . "</small>";
+
+
+            $resources_user_events[$inc]['eventId'] = $st->id;
+            $resources_user_events[$inc]['eventType'] = 'service_tickets';
+            $resources_user_events[$inc]['resourceId'] = 'user0';
+            $resources_user_events[$inc]['title'] = 'Service Ticket : ' . date('Y-m-d g:i A', strtotime($st->ticket_date));
+            $resources_user_events[$inc]['customHtml'] = $custom_html;
+            $resources_user_events[$inc]['start'] = $start_date_time;
+            $resources_user_events[$inc]['end'] = $start_date_end;
+            $resources_user_events[$inc]['starttime'] = $start_date_time;
+            $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+            $inc++;
         }
 
         //Appointments
@@ -2573,9 +2605,11 @@ class Workcalender extends MY_Controller
 
     public function ajax_load_upcoming_service_tickets()
     {
-        
-        $upcomingServiceTickets = array();
+        $this->load->model('Tickets_model');
 
+        $cid = logged('company_id');  
+        $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($cid);
+        
         $this->page_data['upcomingServiceTickets'] = $upcomingServiceTickets;        
         $this->load->view('v2/pages/workcalender/ajax_load_upcoming_service_tickets', $this->page_data);
     }

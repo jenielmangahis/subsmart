@@ -35,6 +35,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="action_select_date" value="" />        
                     <input type="hidden" id="action_select_time" value="" />        
+                    <input type="hidden" id="action_select_user" value="" />        
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">When</label>

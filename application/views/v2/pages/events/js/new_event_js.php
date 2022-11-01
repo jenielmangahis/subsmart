@@ -121,9 +121,15 @@ if(isset($jobs_data)){
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ok'
             }).then((result) => {
-                if (result.value) {
-                    window.location.href='<?= base_url(); ?>events/';
-                }
+                //if (result.value) {
+                    var redirect_calendar = $('#redirect-calendar').val();
+                    if( redirect_calendar == 1 ){
+                        window.location.href='<?= base_url(); ?>workcalender';
+                    }else{
+                        window.location.href='<?= base_url(); ?>events/';
+                    }  
+                    
+                //}
             });
         }
         $("#fill_esign_btn").click(function () {

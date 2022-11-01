@@ -36,13 +36,13 @@
     </thead>
     <tbody>
         <?php if (!empty($upcomingServiceTickets)) : ?>
-            <?php foreach ($upcomingServiceTickets as $ue) : ?>
-                <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?php echo base_url('job/new_job1/' . $jb->id); ?>'">
+            <?php foreach ($upcomingServiceTickets as $st) : ?>
+                <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?php echo base_url('tickets/viewDetails/' . $st->id); ?>'">
                     <td>
                         <?php 
-                            $event_month = date("F", strtotime($ue->start_date));
-                            $event_day   = date("d", strtotime($ue->start_date));
-                            $event_day_word = date("D", strtotime($ue->start_date));
+                            $event_month = date("F", strtotime($st->ticket_date));
+                            $event_day   = date("d", strtotime($st->ticket_date));
+                            $event_day_word = date("D", strtotime($st->ticket_date));
                         ?>
                         <div class="nsm-calendar" ng-app="myApp">
                             <div class="week">
@@ -53,33 +53,37 @@
                             </div>
                         </div>    
                         <div class="nsm-calendar-info-container" style="text-align:center;">
-                            <span class="nsm-badge primary"><?php echo strtoupper($ue->status); ?></span>
-                            <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?php echo $ue->start_time; ?>-<?php echo $ue->end_time; ?></label>
+                            <span class="nsm-badge primary"><?php echo strtoupper($st->ticket_status); ?></span>                            
                         </div>                    
                     </td>
-                    <td style="vertical-align: text-top;padding-top: 28px;">
+                    <td style="vertical-align: text-top;padding-top: 17px;">
                         <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">                            
                             <?php 
                                 $tags = '';
-                                if( $ue->event_tag != '' ){
-                                    $tags = $ue->event_tag;
+                                if( $st->job_tag != '' ){
+                                    $tags = $st->job_tag;
                                 }
-                                echo $ue->event_number . ' : ' . $tags;
+                                echo $st->ticket_no . ' : ' . $tags;
                             ?>        
                         </label>                        
                         <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
-                            <i class='bx bx-calendar-event'></i> <?= $ue->event_description != '' ? $ue->event_description : '---'; ?>
+                            <i class='bx bxs-user-rectangle'></i> <?= $st->first_name . ' ' . $st->last_name; ?>
                         </label>
-                        <label class="content-title" style="cursor: pointer">
-                            <i class='bx bxs-map-pin'></i> <?= $ue->event_address; ?>
+                        <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                            <i class='bx bxs-phone'></i> <?= $st->phone_m != '' ? $st->phone_m : '---'; ?>
+                        </label>
+                        <!-- <label class="content-title" style="cursor: pointer">
+                            <i class='bx bxs-map-pin'></i> <?= $st->service_location; ?>
+                        </label> -->
+                        <label class="content-title" style="cursor: pointer;">
+                            <i class='bx bxs-calendar-x'></i> Sheduled Time : <?php echo $st->scheduled_time; ?>
                         </label>                        
                     </td>
-                    <td class="text-end">
+                    <!-- <td class="text-end">
                             <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
                                 <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($ue->employee_id); ?>');" data-img="<?php echo userProfileImage($ue->employee_id); ?>"></div>                            
                             </div>
-                        </div>
-                    </td>
+                    </td> -->
                 </tr>
             <?php endforeach; ?>
         <?php else : ?>

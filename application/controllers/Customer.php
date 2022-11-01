@@ -4484,6 +4484,25 @@ class Customer extends MY_Controller
 
         $this->page_data['default_customer_id'] = $default_customer_id;
 
+        $default_start_date = date("Y-m-d");
+        $default_start_time = '';
+        $default_user = 0;
+        if( $this->input->get('start_date') ){
+            $default_start_date = $this->input->get('start_date');
+        }
+
+        if( $this->input->get('start_time') ){
+            $default_start_time = $this->input->get('start_time');
+        }
+
+        if( $this->input->get('user') ){
+            $default_user = $this->input->get('user');
+        }
+
+        $this->page_data['default_user'] = $default_user;
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+
         $this->page_data['items'] = $this->items_model->getItemlist();
         $type = $this->input->get('type');
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);

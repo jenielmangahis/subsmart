@@ -370,6 +370,7 @@
                     </div>
                 </div>
                 <form method="post" name="myform" id="jobs_form">
+                <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row g-3 align-items-start">
 
                     <div class="col-12 ">
@@ -491,11 +492,16 @@
                                             </select>
                                         </div><br>
                                         <h6>Sales Rep</h6>
+                                            <?php 
+                                                if( isset($jobs_data) ){
+                                                    $default_user = $jobs_data->employee_id;
+                                                }
+                                            ?>
                                             <select id="employee_id" name="employee_id" class="form-control " required>
                                                 <option value="10001">Select All</option>
                                                 <?php if(!empty($sales_rep)): ?>
                                                     <?php foreach ($sales_rep as $employee): ?>
-                                                        <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
+                                                        <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select><br>
