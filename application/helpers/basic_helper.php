@@ -4125,9 +4125,9 @@ function google_credentials(){
     $credentials = [
         'client_id' => '646859198620-ll9trm7obk2olgaoigae4s2hshpf3sle.apps.googleusercontent.com',
         'client_secret' => '-plXDxYZRwx6c1ttmNXE5L2p',
-        'api_key' => 'AIzaSyAXhOG7zvDz1l8tOrdMnmyrhCOL4Uc-Ink'
+        // 'api_key' => 'AIzaSyAXhOG7zvDz1l8tOrdMnmyrhCOL4Uc-Ink',
+        'api_key' => 'AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo' // Working Google Map API Key
     ];
-
     return $credentials;
 }
 
