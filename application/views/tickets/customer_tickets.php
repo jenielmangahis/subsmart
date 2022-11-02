@@ -163,18 +163,14 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
-                <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
+                <?php  //var_dump($customers);  ?>
                 <div class="row">
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
                         <select id="sel-customer" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                             <option value="0">- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
-                                <?php if( $default_customer_id > 0 ){ ?>
-                                    <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php }else{ ?>
-                                    <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php } ?>                                            
+                            <option value="<?php echo $c->prof_id; ?>" <?php if($c->prof_id == $custIndividual->prof_id){ echo "selected"; } ?>><?= $c->first_name . ' ' . $c->last_name; ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -225,7 +221,7 @@ a.btn-primary.btn-md {
                                         <label for="estimate_date" class="required"><b>Ticket Date</b></label>
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" value="<?= date("m/d/Y", strtotime($default_start_date)); ?>" name="ticket_date" id="ticket_date"
+                                            <input type="text" class="form-control" name="ticket_date" id="ticket_date"
                                                     placeholder="Enter Ticket Date">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
