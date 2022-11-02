@@ -1576,6 +1576,8 @@ class Job extends MY_Controller
 
     public function save_job()
     {
+        $this->load->helper(array('hashids_helper'));
+
         $input = $this->input->post();
         $comp_id = logged('company_id');
         $get_job_settings = array(
@@ -1656,6 +1658,10 @@ class Job extends MY_Controller
         if(empty($isJob)){
             // INSERT DATA TO JOBS TABLE
             $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+            //Create hash_id
+            $job_hash_id = hashids_encrypt($jobs_id, '', 15);
+            $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
+            
             customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
 
             // insert data to job items table (items_id, qty, jobs_id)
