@@ -333,7 +333,13 @@ class Tickets extends MY_Controller
     
             //     $notification = $this->tickets_model->save_notification($notif);
 
-            redirect('customer/ticketslist');
+
+            if( $this->input->post('redirect_calendar') == 1){
+                redirect('workcalender');
+            }else{
+                redirect('customer/ticketslist');
+            }
+            
         } else {
             echo json_encode(0);
         }

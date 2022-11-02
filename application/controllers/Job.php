@@ -2680,9 +2680,17 @@ class Job extends MY_Controller
         $this->load->model('invoice_model');
 
         $job = $this->jobs_model->get_specific_job($id);
-        if ($job) {
-            $eid      = hashids_encrypt($job->job_unique_id, '', 15);
-            $job_id   = hashids_decrypt($eid, '', 15);
+        if ($job) {            
+            //Update hashid
+            if( $job->hash_id == '' ){
+                $eid      = hashids_encrypt($job->job_unique_id, '', 15);
+                $job_id   = hashids_decrypt($eid, '', 15);                
+                $this->jobs_model->update($job->id, ['hash_id' => $eid]);
+            }else{
+                $eid      = $job->hash_id;
+                $job_id   = hashids_decrypt($eid, '', 15);
+            }
+
             $url = base_url('/job_invoice_view/' . $eid);
             $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
 
