@@ -230,16 +230,27 @@ class Job extends MY_Controller
 
         $default_start_date = date("Y-m-d");
         $default_start_time = '';
+        $default_user = 0;
+        $redirect_calendar = 0;
         if( $this->input->get('start_date') ){
             $default_start_date = $this->input->get('start_date');
+            $redirect_calendar = 1;
         }
 
         if( $this->input->get('start_time') ){
             $default_start_time = $this->input->get('start_time');
+            $redirect_calendar = 1;
         }
 
+        if( $this->input->get('user') ){
+            $default_user = $this->input->get('user');
+            $redirect_calendar = 1;
+        }
+
+        $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
+        $this->page_data['redirect_calendar']  = $redirect_calendar;
 
         $this->load->view('v2/pages/job/job_new', $this->page_data);
     }
@@ -778,7 +789,7 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
-        $this->load->view('v2/pages/job/job_preview', $this->page_data);
+        $this->load->view('job/job_preview', $this->page_data);
     }
 
     public function billing($id=null)
@@ -2227,7 +2238,7 @@ class Job extends MY_Controller
         $this->page_data['page']->title = "Job Types";
         $this->page_data['jobType'] = $jobType;
         $this->page_data['icons'] = $icons;
-        $this->load->view('v2/pages/job/job_settings/edit_job_type', $this->page_data);
+        $this->load->view('job/job_settings/edit_job_type', $this->page_data);
     }
 
     public function update_job_type()

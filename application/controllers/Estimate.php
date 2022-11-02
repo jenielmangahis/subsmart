@@ -1704,15 +1704,12 @@ class Estimate extends MY_Controller
     {
         $role    = logged('role');
         $user_id = getLoggedUserID();
+        $company_id = logged('company_id');        
 
-        if ($role == 1 || $role == 2) {
-            $scheduledEstimates = $this->estimate_model->getAllPendingEstimates();
-        } else {
-            $scheduledEstimates = $this->estimate_model->getAllPendingEstimatesByUserId($user_id);
-        }
+        $scheduledEstimates = $this->estimate_model->getAllPendingEstimatesByCompanyId($company_id);        
 
         $this->page_data['scheduledEstimates'] = $scheduledEstimates;
-        $this->load->view('estimate/ajax_load_scheduled_estimates', $this->page_data);
+        $this->load->view('v2/pages/estimate/ajax_load_scheduled_estimates', $this->page_data);
     }
 
     public function view($id)

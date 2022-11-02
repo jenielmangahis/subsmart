@@ -45,7 +45,7 @@
         border: 1px solid;
     }
     .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+        /*box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;*/
     }
     .label-width .form-control {
         width: 80% !important;
@@ -337,7 +337,6 @@
     
     
 </style>
-
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
     <input type="hidden" value="<?= $jobs_data->status ?>" id="esignJobStatus" />
@@ -370,6 +369,7 @@
                     </div>
                 </div>
                 <form method="post" name="myform" id="jobs_form">
+                <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row g-3 align-items-start">
 
                     <div class="col-12 ">
@@ -491,11 +491,16 @@
                                             </select>
                                         </div><br>
                                         <h6>Sales Rep</h6>
+                                            <?php 
+                                                if( isset($jobs_data) ){
+                                                    $default_user = $jobs_data->employee_id;
+                                                }
+                                            ?>
                                             <select id="employee_id" name="employee_id" class="form-control " required>
                                                 <option value="10001">Select All</option>
                                                 <?php if(!empty($sales_rep)): ?>
                                                     <?php foreach ($sales_rep as $employee): ?>
-                                                        <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
+                                                        <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select><br>
@@ -579,17 +584,20 @@
                                 <div class="nsm-card primary table-custom" style="margin-top: 30px;">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
-                                            <b>Created By: </b>&nbsp;&nbsp; <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
-                                            <button type="submit" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button primary text-end" style="position: absolute;right: 40px;">
-                                                    <i class='bx bx-fw bx-plus'></i> Add New Customer
-                                            </button>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></strong style="font-size: 17px;">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                     <button type="button" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button primary small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>     
                                     <div class="nsm-card-content">
                                         <div class="row">
-                                            
                                             <hr>
-                                            <div class="col-md-4">
+                                            <div class="col-md-12">
                                                 <h6>Customer Info</h6>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
                                                     <?php if( $default_customer_id > 0 ){ ?>
@@ -625,12 +633,13 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="col-md-8">
-                                                <div class="col-md-12 d-none">
+                                            <!-- <div class="col-md-6">
+                                                <div class="col-md-12">
                                                     <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
                                                     <div id="map" class="col-md-6 float-left"></div>
+                                                    <iframe src="http://maps.google.com/maps?q=514 Brighton Cove FREEPORT, FL 32439&z=16&output=embed" height="450" width="600"></iframe>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
@@ -704,19 +713,27 @@
                                                         <div class="drop">
                                                             <div class="cont">
                                                                 <div class="tit">
-                                                                    <?php if(isset($jobs_data) && $jobs_data->attachment != ""): ?>
-                                                                        <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/attachment/placeholder.jpg"; ?> ">
-                                                                    <?php else: ?>
+                                                                    <?php 
+                                                                        $THUMBNAIL_SRC = (isset($jobs_data)) ? $jobs_data->attachment : "";
+                                                                        if(isset($jobs_data) && $jobs_data->attachment != "") {
+                                                                            $IMG_HIDE_STATUS = "";
+                                                                            $SPAN_HIDE_STATUS = "d-none";
+                                                                        } else {
+                                                                            $IMG_HIDE_STATUS = "d-none";
+                                                                            $SPAN_HIDE_STATUS = "";
+                                                                        }
+                                                                    ?>
+                                                                    <input id="attachment-file" name="filetoupload" type="file" accept="image/png, image/jpg, image/jpeg, image/bmp, image/ico"/>
+                                                                    <img class="<?php echo $IMG_HIDE_STATUS; ?> w-100 IMG_PREVIEW" id="attachment-image" alt="Attachment" src="<?php echo $THUMBNAIL_SRC; ?>">
+                                                                    <button class="btn btn-danger btn-sm REMOVE_THUMBNAIL <?php echo $IMG_HIDE_STATUS; ?>" type="button" style="position: absolute; left: 160px;">Remove</button>
+                                                                    <span class="<?php echo $SPAN_HIDE_STATUS; ?> THUMBNAIL_BOX">
                                                                         <p>Thumbnail</p>
-                                                                        <p class="or-text">Or</p>
-                                                                        <p>URL Link</p>
+                                                                       <!--  <p class="or-text">Or</p>
+                                                                        <p>URL Link</p> -->
                                                                         <i style="color: #0b0b0b;">Upload on Photos/Attachments Box</i>
-                                                                    <?php endif; ?>
-                                                                    <!-- <p class="or-text">Or</p>
-                                                                    <label>Choose File</label> -->
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                                                            <input id="attachment-file" name="filetoupload" type="file" />
                                                             <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
                                                         </div>
                                                     </div>
@@ -736,14 +753,21 @@
                                                             <label class="mb-2">Tax Rate</label>
                                                             <select id="tax_rate" name="tax_rate" class="form-control">
                                                                 <option value="">None</option>
-                                                                <?php foreach ($tax_rates as $rate) : ?>
-                                                                    <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
-                                                                <?php endforeach; ?>
+                                                                <?php 
+                                                                    $SELECTED_TAX = (isset($jobs_data->tax_rate)) ? $jobs_data->tax_rate : '0.00';
+                                                                    foreach ($tax_rates as $rate) {
+                                                                        if ($SELECTED_TAX == number_format(($rate->percentage / 100) * $subtotal, 2,'.',',') && $SELECTED_TAX != "0.00") {
+                                                                            echo "<option selected value='".($rate->percentage / 100)."'>".$rate->name."</option>";
+                                                                        } else {
+                                                                            echo "<option value='".($rate->percentage / 100)."'>".$rate->name."</option>";
+                                                                        }
+                                                                    } 
+                                                                ?>
                                                             </select>
-                                                        </div>
+                                                        </div>                                                      
                                                         <div class="col-sm-6">
                                                             <label id="invoice_tax_total"><?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?></label>
-                                                            <input type="hidden" name="tax" id="tax_total_form_input" value='0'>
+                                                            <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -810,16 +834,24 @@
                                                 </div>
                                                 <br>
                                                 <div class="col-sm-12">
-                                                    <div class="card box_right" id="notes_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
+                                                    <div class="" id="notes_right_card">
                                                         <div class="row">
-                                                            <div class="col-md-12 ">
                                                                 <div class="card-header">
                                                                     <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                                                     <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <div id="notes_edit_btn_right" class="pencil" style="width:100%; height:100px;cursor: pointer;">
-                                                                        <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
+                                                                        <?php 
+                                                                             if (isset($jobs_data)) {
+                                                                                echo "<textarea class='form-control' name='message'>$jobs_data->message</textarea>";
+                                                                             } else {
+                                                                                echo "<textarea class='form-control' name='message'>Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service.</textarea>";
+                                                                             }
+                                                                        ?>
+                                                                        <!-- <textarea class="form-control" name="message"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                                                        <textarea class="form-control" name="message">Thank you for your business, Please call <?= $company_info->business_name; ?> at (<?= $company_info->business_phone; ?>) for quality customer service.</textarea> -->
+                                                                        <!-- <?= isset($jobs_data) ? $jobs_data->message : ''; ?> -->
                                                                     </div>
                                                                     <!-- <div id="notes_input_div_right" style="display:none;">
                                                                         <div style=" height:70px;margin-bottom: 10px;">
@@ -828,7 +860,7 @@
                                                                         </div>
                                                                     </div> -->
                                                                 </div>
-                                                                <div class="card-footers">
+                                                                <!-- <div class="card-footers">
                                                                     <div style="float: right;margin-bottom: 10px;">
                                                                         <a href="javascript:void(0);" id="edit_note_right" class="fa fa-pencil box_footer_icon"></a> &nbsp;
                                                                         <?php if(isset($jobs_data)) : ?>
@@ -836,23 +868,20 @@
                                                                         <a href="#"  class="fa fa-trash box_footer_icon"></a> &nbsp;
                                                                         <?php endif; ?>
                                                                     </div>
-                                                                </div>
-                                                            </div>
+                                                                </div> -->
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <div class="card box_right" id="url_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
+                                                    <div class="" id="url_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                                         <div class="row">
-                                                            <div class="col-md-12 ">
                                                                 <div class="card-header">
                                                                     <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                                                     <h5 style="padding-left: 20px;">Url Link</h5>
                                                                 </div>
                                                                 <div class="card-body">
-
                                                                     <?php
-                                                                    if(isset($jobs_data) && $jobs_data->link != NULL) {
+                                                                    if(isset($jobs_data) && $jobs_data->link = NULL) {
                                                                         ?>
                                                                         <a  target="_blank" href="<?= $jobs_data->link; ?>"><p style="color: darkred;"><?= $jobs_data->link; ?></p></a>
                                                                         <?php
@@ -862,7 +891,6 @@
                                                                         <?php
                                                                     } ?>
                                                                 </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -882,9 +910,6 @@
                                                         </div>
                                                     </div>
                                                 </div>-->
-                                                <div class="col-sm-12">
-                                                    <input class="form-control" name="message" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at (<?= $company_info->business_phone; ?>) for quality customer service.">
-                                                </div>
                                                 <div class="col-sm-12">
                                                     <hr>
                                                 </div>
@@ -1001,7 +1026,7 @@
                                             <input id="signature_link" type="hidden" name="signature_link">
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
-                                            <input id="attachment" type="hidden" name="attachment">
+                                            <input id="attachment" type="hidden" name="attachment" value="<?php echo $THUMBNAIL_SRC; ?>">
                                             <input id="created_by" type="hidden" name="created_by" value="<?= $logged_in_user->id; ?>">
                                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
@@ -1324,6 +1349,7 @@ add_footer_js(array(
     'assets/js/esign/jobs/esign.js',
 ));
 ?>
+<!-- s -->
 <?php include viewPath('v2/includes/footer'); ?>
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
@@ -1471,6 +1497,15 @@ add_footer_js(array(
 
     var geocoder;
     function initMap(address=null) {
+        // var location = "http://api.positionstack.com/v1/forward?access_key=a7ac4cf89ebdccfa51b23071899ae056&query="+encodeURIComponent(address);
+        $.getJSON(location, {})
+          .done(function( data ) {
+             console.log(data[0].latitude);
+             console.log(data[0].longitude);
+          }).fail(function( error ) {
+             console.log("ERROR");
+             console.log(error);
+          });
         if(address == null){
             address = '6866 Pine Forest Rd Pensacola FL 32526';
         }

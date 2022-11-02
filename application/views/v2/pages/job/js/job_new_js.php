@@ -562,22 +562,29 @@ if(isset($jobs_data)){
             document.getElementById('attach_right_card').style.display = "block";
         });
 
-        $("#attachment-file").change(function(){
-            console.log("A file has been selected.");
-            // var form = $('form')[0]; // You need to use standard javascript object here
-            // var formData = new FormData(form);
-            // var form = $('#upload_library_form').serialize();
-            // var formData = new FormData($(form)[0]);
-            var input = document.getElementById('attachment-file');
-            // for (var i = 0; i < input.files.length; i++) {
-            //     console.log(input.files[i]);
-            // }
-            // The Javascript
+
+$(".REMOVE_THUMBNAIL").click(function(event) {
+    event.preventDefault();
+    $("#attachment-file").val(null);
+    $("#attachment-image").attr("src", null);
+    $("#attachment").val(null);
+    $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
+    $(".THUMBNAIL_BOX").removeClass("d-none");
+});
+$("#attachment-file").change(function() {
+    var input = document.getElementById('attachment-file');
+    var fileName = document.getElementById("attachment-file").value;
+    var idxDot = fileName.lastIndexOf(".") + 1;
+    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+    if (extFile != "") {
+        if (extFile == "jpg" || extFile == "jpeg" || extFile == "png" || extFile == "bmp" || extFile == "ico" || extFile == ".jfif" || extFile == ".pjpeg" || extFile == ".pjp") {
+            $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").removeClass("d-none");
+            $(".THUMBNAIL_BOX").addClass("d-none");
             var fileInput = document.getElementById('attachment-file');
             var file = fileInput.files[0];
             var formDatas = new FormData();
             formDatas.append('file', file);
-            //console.log(formDatas);
+            // console.log(formDatas);
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
@@ -589,17 +596,35 @@ if(isset($jobs_data)){
                 beforeSend: function() {
 
                 },
-                success: function (data) {
-                    $('#attachment').val('/'+data);
-                    $("#attachment-image").attr("src",'/'+data);
+                success: function(data) {
+                    if (data.search("png") != -1 || data.search("jpeg") != -1 || data.search("jpg") != -1 || data.search("bmp") != -1 || data.search("ico") != -1 || data.search("jfif") != -1 || data.search("pjpeg") != -1 || data.search("pjp") != -1) {
+                        $('#attachment').val('/' + data);
+                        $("#attachment-image").attr("src", '/' + data);
+                    } else {
+                        $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
+                        $(".THUMBNAIL_BOX").removeClass("d-none");
+                    }
                 },
-                error: function (e) {
-                    //$("#result").text(e.responseText);
+                error: function(e) {
                     console.log("ERROR : ", e);
+                    //$("#result").text(e.responseText);
                     // $("#btnSubmit").prop("disabled", false);
                 }
             });
-        });
+        } else {
+            error('', 'Only png, jpg, jpeg, bmp or ico files are allowed for Thumbnails!', 'error');
+        }
+    }
+    // $("#FILENAME").html($("#attachment-file").val().replace("C:\\fakepath\\", ""));
+    // var form = $('form')[0]; // You need to use standard javascript object here
+    // var formData = new FormData(form);
+    // var form = $('#upload_library_form').serialize();
+    // var formData = new FormData($(form)[0]);
+    // for (var i = 0; i < input.files.length; i++) {
+    //     console.log(input.files[i]);
+    // }
+    // The Javascript
+});
 
         $("#save_memo").on( "click", function( event ) {
             var note = $('#note_txt').val();
@@ -919,9 +944,14 @@ if(isset($jobs_data)){
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ok'
             }).then((result) => {
-                if (result.value) {
-                    window.location.href='<?= base_url(); ?>job/';
-                }
+                //if (result.value) {
+                    var redirect_calendar = $('#redirect-calendar').val();
+                    if( redirect_calendar == 1 ){
+                        window.location.href='<?= base_url(); ?>workcalender';
+                    }else{
+                        window.location.href='<?= base_url(); ?>job/';
+                    }                    
+                //}
             });
         }
         function error(title,text,icon){

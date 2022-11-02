@@ -109,7 +109,7 @@
                                             <span>Upcoming Service Tickets</span>
                                         </div>
                                         <div class="nsm-card-controls">
-                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('job'); ?>">
+                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('customer/ticketslist'); ?>">
                                                 See All
                                             </a>
                                         </div>
@@ -1198,8 +1198,10 @@
                 if (user_id > 0) {
                     var $newOption = $("<option selected='selected'></option>").val(user_id).text(user_name)
                     $("#appointment-user").append($newOption).trigger('change');
+                    $("#action_select_user").val(user_id);
                 } else {
                     $("#appointment-user").empty().trigger('change');
+                    $("#action_select_user").val(0);
                 }
 
                 $("#appointment_date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
@@ -1368,6 +1370,8 @@
                         location.href = base_url + 'promote/view_booking/' + arg.event._def.extendedProps.eventId;
                     } else if (arg.event._def.extendedProps.eventType == 'appointments') {
                         viewAppointment(arg.event._def.extendedProps.eventId);
+                    } else if (arg.event._def.extendedProps.eventType == 'service_tickets') {
+                        location.href = base_url + 'tickets/viewDetails/' + arg.event._def.extendedProps.eventId;
                     } else {
                         location.href = base_url + 'events/event_preview/' + arg.event._def.extendedProps.eventId;
                     }
@@ -1875,22 +1879,42 @@
     $(document).on('click', '#calendar-add-job', function(){
         var start_date = $('#action_select_date').val();
         var start_time = $('#action_select_time').val();
+        var selected_user = $('#action_select_user').val();
 
-        location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+        if( selected_user > 0 ){
+            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;            
+        }else{
+            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+        }
+
     });
 
     $(document).on('click', '#calendar-add-ticket', function(){
         var start_date = $('#action_select_date').val();
         var start_time = $('#action_select_time').val();
+        var selected_user = $('#action_select_user').val();
 
-        location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time;
+        /*if( selected_user > 0 ){                  
+            location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;
+        }else{
+            location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time;            
+        }*/
+
+        location.href = base_url + 'customer/addTicket?start_date='+start_date;            
+
     });
 
     $(document).on('click', '#calendar-add-event', function(){
         var start_date = $('#action_select_date').val();
         var start_time = $('#action_select_time').val();
+        var selected_user = $('#action_select_user').val();
 
-        location.href = base_url + 'events/new_event?start_date='+start_date+'&start_time='+start_time;
+        if( selected_user > 0 ){
+            location.href = base_url + 'events/new_event?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;
+        }else{
+            location.href = base_url + 'events/new_event?start_date='+start_date+'&start_time='+start_time;    
+        }
+        
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

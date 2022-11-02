@@ -53,6 +53,7 @@ include viewPath('v2/includes/header');
                 </div>
 
                 <form method="POST" name="myform" id="events_form">
+                    <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                     <div class="row g-3 align-items-start">
                         <div class="col-12 col-md-4">
                             <div class="row g-3">
@@ -98,7 +99,7 @@ include viewPath('v2/includes/header');
                                                         <div class="col-12 col-md-6">
                                                             <input type="date" name="end_date" id="end_date" class="nsm-field form-control" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
                                                         </div>
-                                                        <div class="col-12 col-md-6">
+                                                        <div class="col-12 col-md-6">                               
                                                             <select id="end_time" name="end_time" class="nsm-field form-select" required>
                                                                 <option selected="">End time</option>
                                                                 <?php for ($x = 0; $x < time_availability(0, TRUE); $x++) { ?>
@@ -110,11 +111,16 @@ include viewPath('v2/includes/header');
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="content-subtitle fw-bold d-block mb-2">Select Employee</label>
+                                                    <?php 
+                                                        if( isset($jobs_data) ){
+                                                            $default_user = $jobs_data->employee_id;
+                                                        }
+                                                    ?>
                                                     <select id="employee_id" name="employee_id" class="nsm-field form-select" required>
                                                         <option selected="">Select Employee</option>
                                                         <?php if (!empty($employees)) : ?>
                                                             <?php foreach ($employees as $employee) : ?>
-                                                                <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->LName . ',' . $employee->FName; ?></option>
+                                                                <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->LName . ',' . $employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>

@@ -63,6 +63,27 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
 
+    
+    public function getCustByProfId($prof_id)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('prof_id', $prof_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    
+    public function getCustByComp($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getProfile($prof_id=null, $col=null, $cust=null, $stat = null, $type = null)
     {
             if($col != null){
