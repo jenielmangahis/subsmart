@@ -4487,18 +4487,24 @@ class Customer extends MY_Controller
         $default_start_date = date("Y-m-d");
         $default_start_time = '';
         $default_user = 0;
+        $redirect_calendar = 0;
+
         if( $this->input->get('start_date') ){
             $default_start_date = $this->input->get('start_date');
+            $redirect_calendar = 1;
         }
 
         if( $this->input->get('start_time') ){
             $default_start_time = $this->input->get('start_time');
+            $redirect_calendar = 1;
         }
 
         if( $this->input->get('user') ){
             $default_user = $this->input->get('user');
+            $redirect_calendar = 1;
         }
 
+        $this->page_data['redirect_calendar'] = $redirect_calendar;
         $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;

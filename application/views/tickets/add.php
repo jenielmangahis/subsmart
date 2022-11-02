@@ -163,6 +163,7 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+                <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>

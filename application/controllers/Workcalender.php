@@ -922,8 +922,7 @@ class Workcalender extends MY_Controller
         //Service Tickets
         $serviceTickets = $this->Tickets_model->get_tickets_by_company_id($company_id);
         foreach($serviceTickets as $st){
-            $start_date_time = date('Y-m-d', strtotime($st->ticket_date));
-            //echo $start_date_time;exit;
+            $start_date_time = date('Y-m-d H:i:s', strtotime($st->ticket_date . " " . $st->scheduled_time)); 
             $start_date_end  = $start_date_time;
             $backgroundColor = "#ff751a";
 
@@ -942,16 +941,16 @@ class Workcalender extends MY_Controller
             }else{
                 $tags = '---';
             }
-
+            $sales_rep = $st->FName . ' ' . $st->LName;
             $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
-            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Sales Representative : " . $st->sales_rep . "</small>";  
+            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Sales Representative : " . $sales_rep . "</small>";  
             $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $st->service_location . "</small>";
-            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("m/d/Y", strtotime($st->ticket_date)) . "</small>";
+            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("g:i A", strtotime($st->scheduled_time)) . "</small>";
 
 
             $resources_user_events[$inc]['eventId'] = $st->id;
             $resources_user_events[$inc]['eventType'] = 'service_tickets';
-            $resources_user_events[$inc]['resourceId'] = 'user0';
+            $resources_user_events[$inc]['resourceId'] = 'user' . $st->sales_rep;
             $resources_user_events[$inc]['title'] = 'Service Ticket : ' . date('Y-m-d g:i A', strtotime($st->ticket_date));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
@@ -1225,8 +1224,7 @@ class Workcalender extends MY_Controller
                 /*if( isset($a_settings['work_order_show_link']) ){
                     $custom_html .= "<br /><small><a href=''>".$event->url_link."</a></small>";
                 }*/
-
-
+                
                 $resources_user_events[$inc]['eventId'] = $j->id;
                 $resources_user_events[$inc]['eventType'] = 'jobs';
                 $resources_user_events[$inc]['resourceId'] = 'job' . $j->employee_id;
@@ -2609,9 +2607,56 @@ class Workcalender extends MY_Controller
 
         $cid = logged('company_id');  
         $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($cid);
-        
+
         $this->page_data['upcomingServiceTickets'] = $upcomingServiceTickets;        
         $this->load->view('v2/pages/workcalender/ajax_load_upcoming_service_tickets', $this->page_data);
+    }
+
+    public function ajax_load_upcoming_schedules()
+    {
+        $this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Estimate_model');
+        $this->load->model('Tickets_model');
+
+        $cid = logged('company_id');
+
+        
+        $upcomingJobs   = $this->Jobs_model->getAllUpcomingJobsByCompanyId($cid);
+        $upcomingEvents = $this->Event_model->getAllUpComingEventsByCompanyId($cid);
+        $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($cid);
+        $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($cid);        
+
+        $upcomingSchedules = array();
+
+        foreach( $upcomingJobs as $job ){
+            $date_index = date("Y-m-d", strtotime($job->start_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'job',
+                'data' => $job
+            ];
+        }
+
+        foreach( $upcomingEvents as $event ){
+            $date_index = date("Y-m-d", strtotime($event->start_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'event',
+                'data' => $event
+            ];
+        }
+
+        foreach( $scheduledEstimates as $estimate ){
+            $date_index = date("Y-m-d", strtotime($estimate->estimate_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'estimate',
+                'data' => $estimate
+            ];
+        }
+
+        ksort($upcomingSchedules);
+
+        $this->page_data['upcomingSchedules'] = $upcomingSchedules;
+        $this->load->view('v2/pages/workcalender/ajax_load_upcoming_schedules', $this->page_data);
     }
 }
 

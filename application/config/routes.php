@@ -929,6 +929,7 @@ $route['calendar/_view_appointment_payment_details'] = 'Workcalender/ajax_view_a
 $route['calendar/_update_calendar_drop_waitlist'] = 'Workcalender/ajax_update_calendar_drop_waitlist';
 $route['calendar/_update_employee_filter'] = 'Workcalender/ajax_update_calendar_employee_filter';
 $route['calendar/_set_appointment_paid'] = 'Workcalender/ajax_set_appointment_paid';
+$route['calendar/_load_upcoming_schedules'] = 'Workcalender/ajax_load_upcoming_schedules';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
