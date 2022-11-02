@@ -622,27 +622,15 @@ class Event_model extends MY_Model
 
     public function getAllsubs()
     {
-        $this->db->select('SUM(acs_billing.mmr) AS SUM_BILLING_MMR');
+        $this->db->select('SUM(acs_billing.mmr) AS TOTAL_MMR, acs_billing.next_billing_date');
         $this->db->from('acs_billing');
         $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
-        $this->db->where('acs_alarm.acct_type', 'IN-HOUSE');
-        $this->db->or_where('acs_alarm.acct_type', 'PURCHASE');
+        $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE())');
+        $this->db->where('acs_alarm.acct_type = "IN-HOUSE"');
+        $this->db->or_where('acs_alarm.acct_type = "PURCHASE"');
         $query = $this->db->get();
-        // if ($query) {
-            return $query->row();
-        // } else {
-            // return false;
-        // }
-        
-        // SELECT SUM(acs_billing.mmr) FROM acs_billing LEFT JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE acs_alarm.acct_type = "IN-HOUSE" OR acs_alarm.acct_type = "PURCHASE";
-
-        // $query = $this->db->get('acs_billing');
-
-        // if ($query) {
-        //     return $query->result();
-        // } else {
-        //     return false;
-        // }
+        return $query->row();
+        // SELECT SUM(acs_billing.mmr) AS TOTAL_MMR, acs_billing.next_billing_date FROM acs_billing LEFT JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE" OR acs_alarm.acct_type = "PURCHASE";
     }
     public function getAllJobsByCompanyId($company_id)
     {

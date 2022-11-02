@@ -91,63 +91,12 @@
                                 <div class="nsm-card primary">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
-                                            <span>Upcoming Jobs</span>
-                                        </div>
-                                        <div class="nsm-card-controls">
-                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('job'); ?>">
-                                                See All
-                                            </a>
-                                        </div>
+                                            <span>Upcoming Schedules</span>
+                                        </div>                                        
                                     </div>
-                                    <div class="nsm-card-content" id="upcoming_jobs_container"></div>
+                                    <div class="nsm-card-content" id="upcoming_schedules_container"></div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-header">
-                                        <div class="nsm-card-title">
-                                            <span>Upcoming Service Tickets</span>
-                                        </div>
-                                        <div class="nsm-card-controls">
-                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('customer/ticketslist'); ?>">
-                                                See All
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="nsm-card-content" id="upcoming_service_tickets_container"></div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="nsm-card">
-                                    <div class="nsm-card-header">
-                                        <div class="nsm-card-title">
-                                            <span>Upcoming Events</span>
-                                        </div>
-                                        <div class="nsm-card-controls">
-                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('events'); ?>">
-                                                See All
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="nsm-card-content" id="upcoming_events_container">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="nsm-card">
-                                    <div class="nsm-card-header">
-                                        <div class="nsm-card-title">
-                                            <span>Unscheduled Estimates</span>
-                                        </div>
-                                        <div class="nsm-card-controls">
-                                            <a role="button" class="nsm-button btn-sm m-0 px-4" href="<?php echo base_url('estimate'); ?>">
-                                                See All
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="nsm-card-content" id="unscheduled_estimates_container"></div>
-                                </div>
-                            </div>
+                            </div>                            
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
@@ -358,10 +307,11 @@
         reloadCalendar();
         loadMiniCalendar();
         loadWaitList();
-        loadUpcomingJobs();
-        loadUpcomingServiceTickets();
-        loadUpcomingEvents();
-        loadUnscheduledEstimates();
+        loadUpcomingSchedules();
+        //loadUpcomingJobs();
+        //loadUpcomingServiceTickets();
+        //loadUpcomingEvents();
+        //loadUnscheduledEstimates();
 
         $('.field-popover').popover();
         $('#add-employee-popover').popover();
@@ -1455,6 +1405,23 @@
         });
     }
 
+    function loadUpcomingSchedules() {
+        let url = "<?= base_url('calendar/_load_upcoming_schedules') ?>";
+        let _container = $("#upcoming_schedules_container");
+
+        showLoader(_container);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {},
+            success: function(result) {
+                _container.html(result);
+                $("#upcoming_schedules_container").nsmPagination();
+            },
+        });
+    }
+
     function loadUpcomingJobs() {
         let url = "<?= base_url('job/_load_upcoming_jobs') ?>";
         let _container = $("#upcoming_jobs_container");
@@ -1876,33 +1843,27 @@
         $("#create_appointment_modal").modal('show');
     });
 
-    $(document).on('click', '#calendar-add-job', function(){
+    // $(document).on('click', '#calendar-add-job', function(){
+    //     var start_date = $('#action_select_date').val();
+    //     var start_time = $('#action_select_time').val();
+
+    //     location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+    // });
+
+    /*$(document).on('click', '#calendar-add-ticket', function(){
         var start_date = $('#action_select_date').val();
         var start_time = $('#action_select_time').val();
         var selected_user = $('#action_select_user').val();
 
-        if( selected_user > 0 ){
-            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;            
-        }else{
-            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
-        }
-
-    });
-
-    $(document).on('click', '#calendar-add-ticket', function(){
-        var start_date = $('#action_select_date').val();
-        var start_time = $('#action_select_time').val();
-        var selected_user = $('#action_select_user').val();
-
-        /*if( selected_user > 0 ){                  
+        if( selected_user > 0 ){                  
             location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;
         }else{
             location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time;            
-        }*/
+        }
 
         location.href = base_url + 'customer/addTicket?start_date='+start_date;            
 
-    });
+    });*/
 
     $(document).on('click', '#calendar-add-event', function(){
         var start_date = $('#action_select_date').val();

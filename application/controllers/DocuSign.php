@@ -1227,6 +1227,45 @@ SQL;
         echo $response;
     }
 
+    public function apiSendCompleteNotice($documentId)
+    {
+        $this->db->where('id', $documentId);
+        $document = $this->db->get('user_docfile')->row();
+
+        if (!$document) {
+            set_status_header(404);
+            exit(json_encode(['error' => 'Document not found']));
+        }
+
+        $this->db->where('docfile_id', $documentId);
+        $this->db->where('completed_at is NULL', null, false);
+        $this->db->where('role !=', 'Receives a copy');
+        $this->db->order_by('id', 'asc');
+        $this->db->limit(1);
+        $pendingRecipient = $this->db->get('user_docfile_recipients')->row();
+
+        if ($pendingRecipient) {
+            header('content-type: application/json');
+            exit(json_encode(['next_recipient' => $pendingRecipient, 'is_sent' => false]));
+        }
+
+        $this->db->where('id', $documentId);
+        $this->db->update('user_docfile', ['status' => 'Completed']);
+
+        $this->db->where('docfile_id', $documentId);
+        $this->db->order_by('id', 'asc');
+        $allRecipients = $this->db->get('user_docfile_recipients')->result_array();
+
+        $this->db->where('id', $documentId);
+        $envelope = $this->db->get('user_docfile')->row_array();
+
+        $envelope['subject'] = 'Your document has been completed';
+        $this->sendCompletedNotice($envelope, $allRecipients);
+
+        header('content-type: application/json');
+        exit(json_encode(['next_recipient' => null, 'is_sent' => true]));
+    }
+
     public function apiSendTemplatePublic($templateId)
     {
         $userId = (int) $this->input->get('user_id', true);

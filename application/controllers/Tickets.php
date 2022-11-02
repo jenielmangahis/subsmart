@@ -333,7 +333,13 @@ class Tickets extends MY_Controller
     
             //     $notification = $this->tickets_model->save_notification($notif);
 
-            redirect('customer/ticketslist');
+
+            if( $this->input->post('redirect_calendar') == 1){
+                redirect('workcalender');
+            }else{
+                redirect('customer/ticketslist');
+            }
+            
         } else {
             echo json_encode(0);
         }
@@ -414,6 +420,74 @@ class Tickets extends MY_Controller
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/customer_tickets', $this->page_data);
+    }
+
+    public function addnewTicketApmt()
+    {
+        
+        $this->hasAccessModule(39);
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Job_tags_model');
+        $this->page_data['page']->title = 'Services';
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        /*if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        }*/
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $this->page_data['custIndividual'] = $this->AcsProfile_model->getCustByProfId($id);
+
+        // dd($this->AcsProfile_model->getCustByProfId($id));
+
+        $default_customer_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_customer_id = $this->input->get('cus_id');
+        }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $type = $this->input->get('type');
+        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+        $this->page_data['appointment_date'] = $this->input->post('appointment_date');
+        $this->page_data['appointment_time'] = $this->input->post('appointment_time');
+        $this->page_data['appointment_user_id'] = $this->input->post('appointment_user_id');
+        $this->page_data['appointment_customer_id'] = $this->input->post('appointment_customer_id');
+        $this->page_data['appointment_type_id'] = $this->input->post('appointment_type_id');
+
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->load->view('tickets/customer_tickets_apmt', $this->page_data);
     }
 
 }

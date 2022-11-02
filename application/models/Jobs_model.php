@@ -104,6 +104,32 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
+    /**
+     * @return mixed
+     */
+    public function get_specific_job_by_hash_id($hash_id)
+    {
+        $cid=logged('company_id');
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,jobs.id as job_unique_id,LName,FName,
+        acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email,
+        job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.amount as total_amount');
+        // $this->db->select('jobs.*,jobs.id as job_unique_id,LName,FName,
+        // acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        // acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email,
+        // job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.amount as total_amount');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');        
+        $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id', 'left');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        $this->db->where("jobs.hash_id", $hash_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function get_specific_job_items($id)
     {
         $this->db->from($this->table_items);

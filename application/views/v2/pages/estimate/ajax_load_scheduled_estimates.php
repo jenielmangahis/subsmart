@@ -56,7 +56,7 @@
                             <span class="nsm-badge primary"><?php echo strtoupper($se->status); ?></span>
                         </div>                    
                     </td>
-                    <td style="vertical-align: text-top;padding-top: 28px;">
+                    <td style="vertical-align: text-top;padding-top: 17px;">
                         <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">                            
                             <?php 
                                 $tags = '---';

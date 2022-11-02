@@ -162,8 +162,8 @@ a.btn-primary.btn-md {
                         </div>
                     </div>
                 </div>
+                <?php echo $appointment_date; ?>
                 <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
-                <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
@@ -225,7 +225,7 @@ a.btn-primary.btn-md {
                                         <label for="estimate_date" class="required"><b>Ticket Date</b></label>
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" value="<?= date("m/d/Y", strtotime($default_start_date)); ?>" name="ticket_date" id="ticket_date"
+                                            <input type="text" class="form-control" name="ticket_date" id="ticket_date"
                                                     placeholder="Enter Ticket Date">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>

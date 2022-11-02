@@ -307,13 +307,11 @@ class Pages extends MYF_Controller {
 
         // load helpers
         $this->load->helper('functions');
-    	$this->load->helper(array('hashids_helper'));
+    	//$this->load->helper(array('hashids_helper'));
 
-    	// decrypt job id
-    	$job_id   = hashids_decrypt($eid, '', 15);
-    	//$job_id   = $eid;
-    	$job      = $this->jobs_model->get_specific_job($job_id);
+    	$job      = $this->jobs_model->get_specific_job_by_hash_id($eid);    	
     	if($job){
+    		$job_id   = $job->id;
             $get_company_info = array(
                 'where' => array(
                     'company_id' => $job->company_id,
@@ -326,7 +324,7 @@ class Pages extends MYF_Controller {
             $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);
     	}else{
-    	    // redirect to 404 page here
+    	    redirect('home');
         }
     	$this->page_data['page']->title = 'nSmartTrac - Customer Job Invoice';	
     	$this->page_data['jobs_data'] = $job;
@@ -356,6 +354,16 @@ class Pages extends MYF_Controller {
     	$client   = $this->Clients_model->getById($job->company_id);
 
     	$onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+
+		if (!is_null($this->input->get('is_estimate', TRUE)) && isset($post['estimate_id'])) {
+			$this->load->model('Estimate_model', 'estimate_model');
+			$estimate = $this->estimate_model->getEstimate($post['estimate_id']);
+			$customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+
+			$client   = $this->Clients_model->getById($estimate->company_id);
+			$onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($estimate->company_id);
+		}
+
     	if( $onlinePaymentAccount ){
     		// Set variables
     		$merchantID = $onlinePaymentAccount->converge_merchant_id;

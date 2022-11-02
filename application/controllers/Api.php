@@ -373,4 +373,19 @@ class Api extends MYF_Controller
         
         exit;   
     }
+
+    public function create_hash_id()
+    {
+        $this->load->helper(array('hashids_helper'));
+
+        $data  = $this->input->post();
+        $hash_id = 0;
+
+        if( $data['id'] > 0 ){
+            $hash_id = hashids_encrypt($data['id'], '', 15);
+        }
+
+        $result = ['hash_id' => $hash_id];
+        echo json_encode($result);
+    }
 }
