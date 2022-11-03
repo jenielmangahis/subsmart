@@ -354,6 +354,16 @@ class Pages extends MYF_Controller {
     	$client   = $this->Clients_model->getById($job->company_id);
 
     	$onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+
+		if (!is_null($this->input->get('is_estimate', TRUE)) && isset($post['estimate_id'])) {
+			$this->load->model('Estimate_model', 'estimate_model');
+			$estimate = $this->estimate_model->getEstimate($post['estimate_id']);
+			$customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+
+			$client   = $this->Clients_model->getById($estimate->company_id);
+			$onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($estimate->company_id);
+		}
+
     	if( $onlinePaymentAccount ){
     		// Set variables
     		$merchantID = $onlinePaymentAccount->converge_merchant_id;
@@ -1199,6 +1209,16 @@ class Pages extends MYF_Controller {
   	$json_data = ['jump_id' => $jump_question_id, 'next_question_id' => $next_question_id];
   	echo json_encode($json_data);
 
+  }
+
+  public function update_estimate_status_accepted() {
+	$this->load->model('Estimate_model', 'estimate_model');
+
+	$post = $this->input->post();    	
+	$this->estimate_model->update($post['estimate_id'], ['status' => 'Accepted']);
+
+	$json_data = ['is_success' => 1];
+	echo json_encode($json_data);
   }
 
 }

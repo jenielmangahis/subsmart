@@ -1843,18 +1843,12 @@
         $("#create_appointment_modal").modal('show');
     });
 
-    $(document).on('click', '#calendar-add-job', function(){
-        var start_date = $('#action_select_date').val();
-        var start_time = $('#action_select_time').val();
-        var selected_user = $('#action_select_user').val();
+    // $(document).on('click', '#calendar-add-job', function(){
+    //     var start_date = $('#action_select_date').val();
+    //     var start_time = $('#action_select_time').val();
 
-        if( selected_user > 0 ){
-            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;            
-        }else{
-            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
-        }
-
-    });
+    //     location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+    // });
 
     /*$(document).on('click', '#calendar-add-ticket', function(){
         var start_date = $('#action_select_date').val();
@@ -1870,6 +1864,36 @@
         location.href = base_url + 'customer/addTicket?start_date='+start_date;            
 
     });*/
+
+     
+    $(document).on('click', '#calendar-add-ticket', function(){
+        // var start_date = $('#action_select_date').val();
+        // var start_time = $('#action_select_time').val();
+        // alert('test');
+
+        var appointment_date = $('#appointment_date').val();
+        var appointment_time = $('#appointment_time').val();
+        var appointment_user_id = $('#appointment-user').val();
+        var appointment_customer_id = $('#appointment-customer').val();
+        var appointment_type_id = $("input[name=appointment_type_id]").val();
+
+        location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id;
+
+        // $.ajax({
+        //     url:"<?php echo base_url(); ?>tickets/addnewTicketApmt",
+        //     type: "POST",
+        //     data: {appointment_date: appointment_date, appointment_time: appointment_time, appointment_user_id:appointment_user_id, appointment_customer_id:appointment_customer_id, appointment_type_id:appointment_type_id},
+        //     success: function(dataResult){
+        //         // $('#table').html(dataResult); 
+        //         alert('success')
+        //     },
+        //         error: function(response){
+        //         alert('Error'+response);
+       
+        //         }
+	    // });
+
+    });
 
     $(document).on('click', '#calendar-add-event', function(){
         var start_date = $('#action_select_date').val();

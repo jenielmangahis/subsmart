@@ -1249,25 +1249,203 @@ class Share_Link extends CI_Controller
         $this->pdf->load_view('workorder/work_order_pdf_template_solar', $data, $filename, "portrait");
     }
 
-    public function approveEstimate($id)
+    public function approveEstimate($hashedId)
     {
-        $this->estimate_model->update($id, ['status' => 'Accepted']);
+        $this->load->helper('hashids_helper');
 
-        $estData = $this->estimate_model->getEstimate($id);
+        $id = hashids_decrypt($hashedId, '', 15);
+        $estimate = $this->estimate_model->getEstimate($id);
 
-        if($estData->deposit_amount == '0' || $estData->deposit_amount == NULL)
-        {
-            $this->load->view('estimate/approveEstimate');
-        }else{
-            $this->load->view('estimate/payEstimate');
+        $status = trim($estimate->status);
+        $this->page_data['estimate'] = $estimate;
+
+		$company = $this->business_model->getByCompanyId($estimate->company_id);
+        $this->page_data['company'] = $company;
+
+        if ($status !== 'Submitted') {
+            $isSuccess = false;
+            $message = 'Something went wrong approving this estimate.';
+
+            switch ($status) {
+                case 'Draft':
+                    $message = 'Estimate with status of draft cannot be approved.';
+                    break;
+
+                case 'Accepted':
+                    $isSuccess = true;
+                    $message = 'This estimate has already been approved.';
+                    break;
+
+                case 'Declined By Customer':
+                    $message = 'This estimate has already been declined.';
+                    break;
+            }
+
+            $this->page_data['message'] = $message;
+            $this->page_data['is_success'] = $isSuccess;
+            $this->load->view('estimate/estimate_status', $this->page_data);
+            return;
         }
+
+        if (
+            (in_array(trim($estimate->deposit_request), ['1', '2']) && is_numeric($estimate->deposit_amount)) &&
+            in_array($status, ['Submitted', 'Draft']) 
+        ) {
+            return redirect('/share_Link/estimate_deposit/' . $hashedId);
+        }
+
+        $this->estimate_model->update($estimate->id, ['status' => 'Accepted']);
+
+        $this->page_data['message'] = 'Estimate has been successfully accepted.';
+        $this->page_data['is_success'] = true;
+        $this->load->view('estimate/estimate_status', $this->page_data);
     }
 
-    public function declineEstimate($id)
+    public function declineEstimate($hashedId)
     {
+        $this->load->helper('hashids_helper');
+
+        $id = hashids_decrypt($hashedId, '', 15);
+        $estimate = $this->estimate_model->getEstimate($id);
+
+        $status = trim($estimate->status);
+        $this->page_data['estimate'] = $estimate;
+
+        $company = $this->business_model->getByCompanyId($estimate->company_id);
+        $this->page_data['company'] = $company;
+
+        if ($status !== 'Submitted') {
+            $isSuccess = false;
+            $message = 'Something went wrong declining this estimate.';
+
+            switch ($status) {
+                case 'Draft':
+                    $message = 'Estimate with status of draft cannot be declined.';
+                    break;
+
+                case 'Accepted':
+                    $message = 'This estimate has already been approved.';
+                    break;
+
+                case 'Declined By Customer':
+                    $isSuccess = true;
+                    $message = 'This estimate has already been declined.';
+                    break;
+            }
+
+            $this->page_data['message'] = $message;
+            $this->page_data['is_success'] = $isSuccess;
+            $this->load->view('estimate/estimate_status', $this->page_data);
+            return;
+        }
+
         $this->estimate_model->update($id, ['status' => 'Declined By Customer']);
 
-        $this->load->view('estimate/declineEstimate');
+        $this->page_data['is_success'] = true;
+        $this->page_data['message'] = 'Estimate has been successfully declined.';
+        $this->load->view('estimate/estimate_status', $this->page_data);
+    }
+
+    public function estimate_deposit($hashedId)
+    {
+        $this->load->model('general_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('Customer_model', 'customer_model');
+
+        $this->load->helper('functions');
+    	$this->load->helper('hashids_helper');
+
+        $estimateId = hashids_decrypt($hashedId, '', 15);
+        $estimate = $this->estimate_model->getEstimate($estimateId);
+        $companyId = $estimate->company_id;
+
+        $status = trim($estimate->status);
+        if ($status === 'Accepted') {
+            return redirect('/share_Link/approveEstimate/' . $hashedId);
+        }
+        if ($status === 'Declined By Customer') {
+            return redirect('/share_Link/declineEstimate/' . $hashedId);
+        }
+
+        $getCompanyInfo = [
+            'where' => [
+                'company_id' => $companyId,
+            ],
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        ];
+
+        $this->page_data['company_info'] = $this->general_model->get_data_with_param($getCompanyInfo, false);
+        $this->page_data['onlinePaymentAccount'] = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($companyId);
+    	$this->page_data['estimate'] = $estimate;
+        $this->page_data['customer'] = $this->customer_model->getCustomer($estimate->customer_id);
+
+        $items_dataOP1 = $this->estimate_model->getItemlistByIDOption1($estimate->id);
+        $items_dataOP2 = $this->estimate_model->getItemlistByIDOption2($estimate->id);
+
+        $items_dataBD1 = $this->estimate_model->getItemlistByIDBundle1($estimate->id);
+        $items_dataBD2 = $this->estimate_model->getItemlistByIDBundle2($estimate->id);
+        $items = $this->estimate_model->getEstimatesItems($estimate->id);
+
+        $workData = $estimate;
+        $data =  [
+            'items_dataOP1'                 => $items_dataOP1,
+            'items_dataOP2'                 => $items_dataOP2,
+            'items_dataBD1'                 => $items_dataBD1,
+            'items_dataBD2'                 => $items_dataBD2,
+
+            'estimate_number'               => $workData->estimate_number,
+            'job_location'                  => $workData->job_location,
+            'job_name'                      => $workData->job_name,
+            'estimate_date'                 => $workData->estimate_date,
+            'expiry_date'                   => $workData->expiry_date,
+            'purchase_order_number'         => $workData->purchase_order_number,
+            'status'                        => $workData->status,
+            'estimate_type'                 => $workData->estimate_type,
+            'type'                          => $workData->type,
+            'deposit_request'               => $workData->deposit_request,
+            'deposit_amount'                => $workData->deposit_amount,
+            'customer_message'              => $workData->customer_message,
+            'terms_conditions'              => $workData->terms_conditions,
+            'instructions'                  => $workData->instructions,
+            'email'                         => $workData->email,
+            'phone'                         => $workData->phone_number,
+            'mobile'                        => $workData->mobile_number,
+            'terms_and_conditions'          => $workData->terms_and_conditions,
+            'terms_of_use'                  => $workData->terms_of_use,
+            'job_description'               => $workData->job_description,
+            'instructions'                  => $workData->instructions,
+            'bundle1_message'               => $workData->bundle1_message,
+            'bundle2_message'               => $workData->bundle2_message,
+
+            'items'                         => $items,
+
+            'bundle_discount'               => $workData->bundle_discount,
+            // 'deposit_amount'                => $workData->deposit_amount,
+            'bundle1_total'                 => $workData->bundle1_total,
+            'bundle2_total'                 => $workData->bundle2_total,
+
+            'option_message'                => $workData->option_message,
+            'option2_message'               => $workData->option2_message,
+            'option1_total'                 => $workData->option1_total,
+            'option2_total'                 => $workData->option2_total,
+
+            'sub_total'                     => $workData->sub_total,
+            'sub_total2'                    => $workData->sub_total2,
+            'tax1_total'                    => $workData->tax1_total,
+            'tax2_total'                    => $workData->tax2_total,
+
+            'grand_total'                   => $workData->grand_total,
+            'adjustment_name'               => $workData->adjustment_name,
+            'adjustment_value'              => $workData->adjustment_value,
+            'markup_type'                   => $workData->markup_type,
+            'markup_amount'                 => $workData->markup_amount,
+        ];
+        foreach ($data as $key => $value) {
+            $this->page_data[$key] = $value;
+        }
+
+		$this->load->view('pages/estimate_deposit', $this->page_data);
     }
 }
 

@@ -334,8 +334,11 @@
         color: #bebebe;
         text-decoration: none !important;
     }
-    
-    
+    #emp2_id, #emp3_id, #emp4_id {
+        background: none;
+        border: 0;
+        font-weight: bold;
+    }
 </style>
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
@@ -371,7 +374,6 @@
                 <form method="post" name="myform" id="jobs_form">
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row g-3 align-items-start">
-
                     <div class="col-12 ">
                         <div class="row g-3">
                             <div class="col-12">
@@ -562,21 +564,56 @@
                                         <div class="row">
                                             <div class="col-sm-12 mb-2">
                                                 <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
-                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly>
+                                                <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
+                                                    <option value="">Select Employee</option>
+                                                    <?php if(!empty($employees)): ?>
+                                                        <?php foreach ($employees as $employee): ?>
+                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly> -->
                                             </div>
                                             <div class="col-sm-12 mb-2">
                                                 <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
-                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly>
+                                                <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
+                                                    <option value="">Select Employee</option>
+                                                    <?php if(!empty($employees)): ?>
+                                                        <?php foreach ($employees as $employee): ?>
+                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
                                             </div>
-                                            <div class="col-sm-12">
+                                            <div class="col-sm-12 mb-4">
                                                 <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
-                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly>
+                                                <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
+                                                    <option value="">Select Employee</option>
+                                                    <?php if(!empty($employees)): ?>
+                                                        <?php foreach ($employees as $employee): ?>
+                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
                                             </div>
                                         </div>
-                                        <br>
+                                        <script type="text/javascript">
+                                            $('#EMPLOYEE_SELECT_2').on('change', function(event) {
+                                                $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
+                                            });
+                                            $('#EMPLOYEE_SELECT_3').on('change', function(event) {
+                                                $("#emp3_id, #employee3_id").val($("#EMPLOYEE_SELECT_3").val());
+                                            });
+                                            $('#EMPLOYEE_SELECT_4').on('change', function(event) {
+                                                $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
+                                            });
+                                        </script>
+                                        <!-- <br>
                                         <div class="float-end">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="nsm-button primary">Assign Job</a>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -1187,7 +1224,7 @@
 <?php include viewPath('v2/pages/job/modals/invoice_import'); ?>
 
 <!-- Signature Modal -->
-<div class="modal fade nsm-modal" id="share_job_modal" role="dialog">
+<!-- <div class="modal fade nsm-modal" id="share_job_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1235,7 +1272,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- On My Way Modal -->
 <?php include viewPath('v2/pages/job/modals/arrival_modal'); ?>
@@ -1498,14 +1535,14 @@ add_footer_js(array(
     var geocoder;
     function initMap(address=null) {
         // var location = "http://api.positionstack.com/v1/forward?access_key=a7ac4cf89ebdccfa51b23071899ae056&query="+encodeURIComponent(address);
-        $.getJSON(location, {})
-          .done(function( data ) {
-             console.log(data[0].latitude);
-             console.log(data[0].longitude);
-          }).fail(function( error ) {
-             console.log("ERROR");
-             console.log(error);
-          });
+        // $.getJSON(location, {})
+        //   .done(function( data ) {
+        //      console.log(data[0].latitude);
+        //      console.log(data[0].longitude);
+        //   }).fail(function( error ) {
+        //      console.log("ERROR");
+        //      console.log(error);
+        //   });
         if(address == null){
             address = '6866 Pine Forest Rd Pensacola FL 32526';
         }
@@ -1521,7 +1558,7 @@ add_footer_js(array(
             title: "Hello World!",
         });
         geocoder = new google.maps.Geocoder();
-        codeAddress(geocoder, map,address);
+        // codeAddress(geocoder, map,address);
     }
 
     function codeAddress(geocoder, map,address) {

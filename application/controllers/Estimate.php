@@ -1477,8 +1477,8 @@ class Estimate extends MY_Controller
         $items = $this->estimate_model->getEstimatesItems($wo_id);
 
         
-        $urlApprove = base_url('share_Link/approveEstimate/' . $workData->id);
-        $urlDecline = base_url('share_Link/declineEstimate/' . $workData->id);
+        $urlApprove = base_url('share_Link/approveEstimate/' . $eid);
+        $urlDecline = base_url('share_Link/declineEstimate/' . $eid);
 
 		$business = $this->business_model->getByCompanyId(logged('company_id'));
         $imageUrl = getCompanyBusinessProfileImage();
