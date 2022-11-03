@@ -471,7 +471,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <?php
                                                         $depositAmount = 0;
                                                         $percentage = null;
-                                                        $isPercentage = $deposit_request === '%';
+                                                        $isPercentage = $deposit_request === '2'; // 1 = $, 2 = %
 
                                                         if ($isPercentage) {
                                                             $percentage = (float) $deposit_amount;
@@ -540,7 +540,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/footer_pages'); ?>
 <script>
     $(function() {
-        function updateEstimateStatus() {}
+        function updateEstimateStatus() {
+            var estimate_id = $("#estimate_id").val();
+            var url = base_url + '_update_estimate_status_accepted';
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: {
+                    estimate_id
+                },
+                success: function(o) {
+                    $(".payment-api-container").hide();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Payment Successful',
+                        text: 'Payment process completed.'
+                    });
+                }
+            });
+        }
 
         //Converge payment
         $(".btn-pay-converge").click(function() {
