@@ -123,6 +123,7 @@ if(isset($jobs_data)){
             }else{
 
                 var form = $(this);
+                console.log(form);
                 const $overlay = document.getElementById('overlay');
  
                 //var url = form.attr('action');
@@ -680,7 +681,7 @@ $("#attachment-file").change(function() {
         });
 
         $("#new_customer_form").submit(function(e) {
-            //alert("asf");
+            $('#NEW_CUSTOMER_MODAL_CLOSE').click();
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
             //var url = form.attr('action');

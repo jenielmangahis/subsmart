@@ -1843,18 +1843,12 @@
         $("#create_appointment_modal").modal('show');
     });
 
-    $(document).on('click', '#calendar-add-job', function(){
-        var start_date = $('#action_select_date').val();
-        var start_time = $('#action_select_time').val();
-        var selected_user = $('#action_select_user').val();
+    // $(document).on('click', '#calendar-add-job', function(){
+    //     var start_date = $('#action_select_date').val();
+    //     var start_time = $('#action_select_time').val();
 
-        if( selected_user > 0 ){
-            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;            
-        }else{
-            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
-        }
-
-    });
+    //     location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+    // });
 
     /*$(document).on('click', '#calendar-add-ticket', function(){
         var start_date = $('#action_select_date').val();

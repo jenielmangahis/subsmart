@@ -354,6 +354,16 @@ class Pages extends MYF_Controller {
     	$client   = $this->Clients_model->getById($job->company_id);
 
     	$onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+
+		if (!is_null($this->input->get('is_estimate', TRUE)) && isset($post['estimate_id'])) {
+			$this->load->model('Estimate_model', 'estimate_model');
+			$estimate = $this->estimate_model->getEstimate($post['estimate_id']);
+			$customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+
+			$client   = $this->Clients_model->getById($estimate->company_id);
+			$onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($estimate->company_id);
+		}
+
     	if( $onlinePaymentAccount ){
     		// Set variables
     		$merchantID = $onlinePaymentAccount->converge_merchant_id;

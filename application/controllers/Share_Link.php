@@ -1251,10 +1251,15 @@ class Share_Link extends CI_Controller
 
     public function approveEstimate($id)
     {
-        $this->estimate_model->update($id, ['status' => 'Accepted']);
-
         $estData = $this->estimate_model->getEstimate($id);
+        if (
+            (in_array(trim($estData->deposit_request), ['$', '%']) && is_numeric($estData->deposit_amount)) &&
+            in_array(trim($estData->status), ['Submitted', 'Draft']) 
+        ) {
+            return redirect('/estimate/deposit/' . $id);
+        }
 
+        $this->estimate_model->update($id, ['status' => 'Accepted']);
         if($estData->deposit_amount == '0' || $estData->deposit_amount == NULL)
         {
             $this->load->view('estimate/approveEstimate');
