@@ -285,7 +285,7 @@ $company_image = base_url('/uploads/users/business_profile/' . $company_info->id
                     <td colspan="2" style="padding: 8px; border: 1px solid; font-size: 20px;">
                         <b>TOTAL INVOICE</b>
                     </td>
-                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float)$grand_total, 2, '.', ','); ?></td>
+                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float)$jobs_data->total_amount, 2, '.', ','); ?></td>
                 </tr>
 
                 <tr>

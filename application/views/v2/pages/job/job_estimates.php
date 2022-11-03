@@ -62,12 +62,10 @@
                             <div class="col-md-4">
                                 <div class="nsm-card primary" style="margin-top: 30px;">
                                     <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title">
-                                            <span>Converting Estimate to Job</span>
-                                        </div>
+                                        <div class="nsm-card-title"><span><i class='bx bx-refresh'></i>&nbsp;Converting Estimate to Job</span></div>
                                     </div>
+                                    <hr>
                                     <div class="nsm-card-content">
-                                        <hr>
                                         <?php if(!isset($jobs_data)): ?>
                                         <p>Import Data from Wordorder/Invoice/Estimates</p>
                                         <div id="import_buttons">
@@ -84,41 +82,38 @@
                                         <hr>
                                         <?php endif; ?>
                                         <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-lg-1">
-                                                    <label>From</label>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data->estimate_date) ?  $jobs_data->estimate_date : '';  ?>" required>&nbsp;&nbsp;
-                                                </div>
-                                                <div class="col-lg-5">
+                                            <div class="row g-3 align-items-center mb-3">
+                                              <div class="col-sm-2">
+                                                <label>From:</label>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->estimate_date : $default_start_date;  ?>" required>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                  <?php if( isset($jobs_data) ){ $default_start_time = strtolower($jobs_data->start_time); } ?>
                                                     <select id="start_time" name="start_time" class="nsm-field form-select" required>
                                                         <option value="">Start time</option>
                                                         <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                                                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                                            <option <?= $default_start_time == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                                         <?php } ?>
                                                     </select>
-                                                </div>
+                                              </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-lg-1">
-                                                    <label>To</label>
-                                                </div>
-                                                <div class="col-lg-5">
-
-                                                    <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data->expiry_date) ?  $jobs_data->expiry_date : (new DateTime())->format('Y-m-d');;  ?>" required>
-
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <select id="end_time" name="end_time" class="nsm-field form-select " required>
+                                            <div class="row g-3 align-items-center">
+                                              <div class="col-sm-2">
+                                                <label>To:</label>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data->expiry_date) ?  $jobs_data->expiry_date : (new DateTime())->format('Y-m-d');  ?>" required>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                  <select id="end_time" name="end_time" class="nsm-field form-select " required>
                                                         <option value="">End time</option>
                                                         <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                                             <option <?= isset($jobs_data) && strtolower($jobs_data->end_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                                         <?php } ?>
-                                                    </select>
-                                                </div>
+                                                </select>
+                                              </div>
                                             </div>
                                         </div>
                                         <br>
@@ -146,7 +141,7 @@
                                                 <?php if(isset($color_settings)): ?>
                                                     <?php foreach ($color_settings as $color): ?>
                                                         <li>
-                                                            <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
+                                                            <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;"" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
                                                                 <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check"></i>'; } ?>
                                                             </a>
                                                         </li>
@@ -196,25 +191,60 @@
                                         </select><br>
                                         <h6>Assigned To</h6>
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <input type="text" id="emp2_id" name="emp2_id" hidden>
-                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Sales Rep 1' ?>" id="emp2_txt"  class="form-control" readonly>
+                                            <div class="col-sm-12 mb-2">
+                                                <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
+                                                <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
+                                                    <option value="">Select Employee</option>
+                                                    <?php if(!empty($employees)): ?>
+                                                        <?php foreach ($employees as $employee): ?>
+                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly> -->
                                             </div>
-                                            <div class="col-md-4">
-                                                <input type="text" id="emp3_id" name="emp3_id" hidden>
-                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Sales Rep 2' ?>" id="emp3_txt" class="form-control" readonly>
+                                            <div class="col-sm-12 mb-2">
+                                                <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
+                                                <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
+                                                    <option value="">Select Employee</option>
+                                                    <?php if(!empty($employees)): ?>
+                                                        <?php foreach ($employees as $employee): ?>
+                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
                                             </div>
-                                            <div class="col-md-4">
-                                                <input type="text" id="emp4_id" name="emp4_id" hidden>
-                                                <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Sales Rep 3' ?>"  id="emp4_txt"  class="form-control" readonly>
+                                            <div class="col-sm-12 mb-4">
+                                                <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
+                                                <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
+                                                    <option value="">Select Employee</option>
+                                                    <?php if(!empty($employees)): ?>
+                                                        <?php foreach ($employees as $employee): ?>
+                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
                                             </div>
                                         </div>
-                                        <br>
+                                        <script type="text/javascript">
+                                            $('#EMPLOYEE_SELECT_2').on('change', function(event) {
+                                                $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
+                                            });
+                                            $('#EMPLOYEE_SELECT_3').on('change', function(event) {
+                                                $("#emp3_id, #employee3_id").val($("#EMPLOYEE_SELECT_3").val());
+                                            });
+                                            $('#EMPLOYEE_SELECT_4').on('change', function(event) {
+                                                $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
+                                            });
+                                        </script>
+                                        <!-- <br>
                                         <center>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="btn btn-primary">
                                             <span class="fa fa-plus"></span> Assign Job
                                         </a>
-                                        </center>
+                                        </center> -->
                                     </div>
                                 </div>
                             </div>
@@ -230,7 +260,7 @@
                                         <div class="row">
                                             
                                             <hr>
-                                            <div class="col-md-4">
+                                            <div class="col-md-12">
                                                 <h6>Customer Info</h6>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
                                                     <?php if( $default_customer_id > 0 ){ ?>
@@ -266,12 +296,12 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="col-md-8">
+                                            <!-- <div class="col-md-8">
                                                 <div class="col-md-12 d-none">
                                                     <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
                                                     <div id="map" class="col-md-6 float-left"></div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
@@ -341,29 +371,91 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    &nbsp;<div class="file-upload-drag">
+                                                <div class="col-md-4">
+                                                    <div class="file-upload-drag">
                                                         <div class="drop">
                                                             <div class="cont">
                                                                 <div class="tit">
-                                                                    <?php if(isset($jobs_data) && $jobs_data->attachment != ""): ?>
-                                                                        <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/attachment/placeholder.jpg"; ?> ">
-                                                                    <?php else: ?>
+                                                                    <?php 
+                                                                        $THUMBNAIL_SRC = (isset($jobs_data)) ? $jobs_data->attachment : "";
+                                                                        if(isset($jobs_data) && $jobs_data->attachment != "") {
+                                                                            $IMG_HIDE_STATUS = "";
+                                                                            $SPAN_HIDE_STATUS = "d-none";
+                                                                        } else {
+                                                                            $IMG_HIDE_STATUS = "d-none";
+                                                                            $SPAN_HIDE_STATUS = "";
+                                                                        }
+                                                                    ?>
+                                                                    <input id="attachment-file" name="filetoupload" type="file" accept="image/png, image/jpg, image/jpeg, image/bmp, image/ico"/>
+                                                                    <img class="<?php echo $IMG_HIDE_STATUS; ?> w-100 IMG_PREVIEW" id="attachment-image" alt="Attachment" src="<?php echo $THUMBNAIL_SRC; ?>">
+                                                                    <button class="btn btn-danger btn-sm REMOVE_THUMBNAIL <?php echo $IMG_HIDE_STATUS; ?>" type="button" style="position: absolute; left: 160px;">Remove</button>
+                                                                    <span class="<?php echo $SPAN_HIDE_STATUS; ?> THUMBNAIL_BOX">
                                                                         <p>Thumbnail</p>
-                                                                        <p class="or-text">Or</p>
-                                                                        <p>URL Link</p>
+                                                                       <!--  <p class="or-text">Or</p>
+                                                                        <p>URL Link</p> -->
                                                                         <i style="color: #0b0b0b;">Upload on Photos/Attachments Box</i>
-                                                                    <?php endif; ?>
-                                                                    <!-- <p class="or-text">Or</p>
-                                                                    <label>Choose File</label> -->
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                                                            <input id="filetoupload" name="filetoupload" type="file" />
                                                             <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 row pr-0">
+                                                <div class="col-md-8 row pr-0">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label>Subtotal</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label class="mb-2">Tax Rate</label>
+                                                            <select id="tax_rate" name="tax_rate" class="form-control">
+                                                                <option value="">None</option>
+                                                                <?php 
+                                                                    $SELECTED_TAX = (isset($jobs_data->tax1_total)) ? $jobs_data->tax1_total : '0.00';
+                                                                    foreach ($tax_rates as $rate) {
+                                                                        if ($SELECTED_TAX == number_format(($rate->percentage / 100) * $subtotal, 2,'.',',') && $SELECTED_TAX != "0.00") {
+                                                                            echo "<option selected value='".($rate->percentage / 100)."'>".$rate->name."</option>";
+                                                                        } else {
+                                                                            echo "<option value='".($rate->percentage / 100)."'>".$rate->name."</option>";
+                                                                        }
+                                                                    } 
+                                                                ?>
+                                                            </select>
+                                                        </div>                                                      
+                                                        <div class="col-sm-6">
+                                                            <label id="invoice_tax_total"><?= isset($jobs_data->tax1_total) ? number_format((float)$jobs_data->tax1_total, 2,'.',',') : '0.00'; ?></label>
+                                                            <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax1_total) ? number_format((float)$jobs_data->tax1_total, 2,'.',',') : '0.00'; ?>">
+                                                        </div>
+                                                        <div class="row mt-3">
+                                                            <div class="col-sm-6">
+                                                                <label>Discount</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_discount_total"><?= isset($jobs_data) ? number_format((float)$jobs_data->bundle_discount,2,'.',',') : '0.00'; ?></label>
+                                                                <input type="hidden" name="sub_discount" id="sub_discount_form_input" value='0'>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <hr>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label><strong>Total</strong></label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label id="invoice_overall_total"><strong>$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></strong></label>
+                                                            <input step="any" type="number" name="sub_total" id="sub_total_form_input" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-md-8 row pr-0">
                                                     <div class="col-sm-6">
                                                         <label style="padding: 0 .75rem;">Subtotal</label>
                                                     </div>
@@ -376,7 +468,7 @@
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <small>Tax Rate</small>
-                                                        <!--<a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>-->
+                                                        <a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>
                                                         <select id="tax_rate" name="tax_rate" class="form-control">
                                                             <option value="0">None</option>
                                                             <?php foreach ($tax_rates as $rate) : ?>
@@ -401,7 +493,7 @@
                                                     <div class="col-sm-12">
                                                         <hr>
                                                     </div>
-                                                    <!--<div class="col-sm-6 text-right pr-3">
+                                                    <div class="col-sm-6 text-right pr-3">
                                                         <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
                                                             <span class="fa fa-plus-square fa-margin-right"></span>Discount
                                                         </a>
@@ -415,7 +507,7 @@
                                                         <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
                                                             <span class="fa fa-plus-square fa-margin-right"></span>Deposit
                                                         </a>
-                                                    </div>-->
+                                                    </div>
                                                     <div class="col-sm-6">
                                                         <label style="padding: 0 .75rem;">Total</label>
                                                     </div>
@@ -423,7 +515,7 @@
                                                         <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <div class="col-sm-12">
                                                     <hr>
                                                 </div>
@@ -445,6 +537,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <small>Message:</small>
+                                                        <!-- <?php echo "<textarea class='form-control' name='message'>$jobs_data->customer_message</textarea>"; ?> -->
                                                         <?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>
                                                         <input class="d-none" type="text" name="customer_message" value="<?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>">
                                                     </div>
@@ -560,7 +653,7 @@
                                             <input id="signature_link" type="hidden" name="signature_link">
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
-                                            <input id="attachment" type="hidden" name="attachment">
+                                            <input id="attachment" type="hidden" name="attachment" value="<?php echo $THUMBNAIL_SRC; ?>">
                                             <input id="created_by" type="hidden" name="created_by" value="<?= $logged_in_user->id; ?>">
                                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
@@ -751,7 +844,6 @@ add_footer_js(array(
 
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 <script>
-
 $('#share_modal_submit').click(function() {
             //employee 2
             var emp2 = $('#employee2').val();

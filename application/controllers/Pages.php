@@ -1210,15 +1210,4 @@ class Pages extends MYF_Controller {
   	echo json_encode($json_data);
 
   }
-
-  public function update_estimate_status_accepted() {
-	$this->load->model('Estimate_model', 'estimate_model');
-
-	$post = $this->input->post();    	
-	$this->estimate_model->update($post['estimate_id'], ['status' => 'Accepted']);
-
-	$json_data = ['is_success' => 1];
-	echo json_encode($json_data);
-  }
-
 }

@@ -169,7 +169,8 @@
                                     <span class="">PHONE: <span class=""><?= $phone_m; ?></span><br />
                                 <!-- </div> -->
                                 </div>
-                                <br class="clear"/>    
+                                <br class="clear"/>
+                                <?php $grandTotal = 0; ?>
                                 <table class="table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
                                 <thead>
                                     <tr>
@@ -212,6 +213,7 @@
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
                                         <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $option1_total, 2); ?></b></td>
+                                        <?php $grandTotal = (float) $option1_total; ?>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Option 1 Message</b></td>
@@ -247,6 +249,7 @@
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
                                         <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $option2_total, 2); ?></b></td>
+                                        <?php $grandTotal = (float) $option2_total; ?>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Option 2 Message</b></td>
@@ -284,6 +287,7 @@
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
                                         <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $bundle1_total, 2); ?></b></td>
+                                        <?php $grandTotal = (float) $bundle1_total; ?>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Bundle 1 Message</b></td>
@@ -319,6 +323,7 @@
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
                                         <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $bundle2_total, 2); ?></b></td>
+                                        <?php $grandTotal = (float) $bundle2_total; ?>
                                         </tr>
                                         <tr>
                                             <td colspan="7" style="padding-top:15px;"><b>Bundle 2 Message</b></td>
@@ -352,6 +357,7 @@
                                         <tr>
                                         <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
                                         <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float) $grand_total, 2); ?></b></td>
+                                        <?php $grandTotal = (float) $grand_total; ?>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -359,7 +365,24 @@
                                 <!-- </div> -->
                                 <br><br><br>
                                 <p><b>Deposit Request</b><br />&emsp;
-                                <?php echo $deposit_request; ?><?php if($deposit_amount == NULL){ echo '0.00'; }else{ $deposit_amount; } ?></p>
+                                <?php
+                                    $depositAmount = 0;
+                                    $percentage = null;
+                                    $isPercentage = in_array(trim($deposit_request), ['2', '%']); // 1 = $, 2 = %
+
+                                    if ($isPercentage) {
+                                        $percentage = (float) $deposit_amount;
+                                        $depositAmount = ($percentage / 100) * $grandTotal;
+                                    } else {
+                                        $depositAmount = (float) $deposit_amount;
+                                    }
+                                ?>
+                                <p>
+                                    <span>$ <?= number_format((float) $depositAmount, 2); ?></span>
+                                    <?php if ($isPercentage): ?>
+                                        <span>(<?= $percentage; ?>%)</span>
+                                    <?php endif; ?>
+                                </p>
 
                                 <br />
                                 <p><b>Instructions</b><br />&emsp;<?= $instructions; ?></p><br />

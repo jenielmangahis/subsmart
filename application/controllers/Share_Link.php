@@ -1288,7 +1288,7 @@ class Share_Link extends CI_Controller
         }
 
         if (
-            (in_array(trim($estimate->deposit_request), ['1', '2']) && is_numeric($estimate->deposit_amount)) &&
+            (in_array(trim($estimate->deposit_request), ['1', '2', '$', '%']) && is_numeric($estimate->deposit_amount)) &&
             in_array($status, ['Submitted', 'Draft']) 
         ) {
             return redirect('/share_Link/estimate_deposit/' . $hashedId);
@@ -1447,6 +1447,16 @@ class Share_Link extends CI_Controller
 
 		$this->load->view('pages/estimate_deposit', $this->page_data);
     }
+
+    public function update_estimate_status_accepted() {
+        $this->load->model('Estimate_model', 'estimate_model');
+    
+        $post = $this->input->post();    	
+        $this->estimate_model->update($post['estimate_id'], ['status' => 'Accepted']);
+    
+        $json_data = ['is_success' => 1];
+        echo json_encode($json_data);
+      }
 }
 
 

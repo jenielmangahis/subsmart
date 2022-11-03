@@ -162,7 +162,13 @@ a.btn-primary.btn-md {
                         </div>
                     </div>
                 </div>
-                <?php echo $appointment_date; ?>
+                <?php 
+                    $appointment_date           = $_GET['appointment_date'];
+                    $appointment_time           = $_GET['appointment_time'];
+                    $appointment_user_id        = $_GET['appointment_user_id'];
+                    $appointment_customer_id    = $_GET['appointment_customer_id'];
+                    $appointment_type_id        = $_GET['appointment_type_id'];
+                ?>
                 <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                 <div class="row">
                     <div class="col-md-6">
@@ -170,11 +176,7 @@ a.btn-primary.btn-md {
                         <select id="sel-customer" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                             <option value="0">- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
-                                <?php if( $default_customer_id > 0 ){ ?>
-                                    <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php }else{ ?>
-                                    <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php } ?>                                            
+                            <option value="<?php echo $c->prof_id; ?>" <?php if($c->prof_id == $appointment_customer_id){ echo "selected"; } ?>><?= $c->first_name . ' ' . $c->last_name; ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -226,7 +228,7 @@ a.btn-primary.btn-md {
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <div class="input-group date" data-provide="datepicker">
                                             <input type="text" class="form-control" name="ticket_date" id="ticket_date"
-                                                    placeholder="Enter Ticket Date">
+                                                    placeholder="Enter Ticket Date" value="<?php $dateScheduled = date('m/d/Y', strtotime($appointment_date)); echo $dateScheduled; ?>">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -242,7 +244,7 @@ a.btn-primary.btn-md {
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div> -->
-                                        <input type="time" class="form-control" name="scheduled_time" id="scheduled_time" required />
+                                        <input type="time" class="form-control" name="scheduled_time" id="scheduled_time" value="<?php $time = date("H:i", strtotime($appointment_time)); echo $time; ?>" required />
                                         <!-- <select id="scheduled_time" name="scheduled_time" class="form-control">
                                             <option value="8-10">8-10</option>
                                             <option value="10-12">10-12</option>
@@ -729,12 +731,12 @@ a.btn-primary.btn-md {
                                 <!-- <div class="form-group col-md-12"> -->
                                     <div class="col-md-4">
                                         <b>Sales Rep's Name</b>
-                                        <input type="text" name="sales_rep_view" class="form-control" value="<?php echo logged('FName').' '.logged('LName'); ?>">
-                                        <input type="hidden" name="sales_rep" class="form-control" value="<?php echo logged('id'); ?>">
+                                        <input type="text" name="sales_rep_view" class="form-control" value="<?php echo $user->FName.' '.$user->LName; ?>" readonly>
+                                        <input type="hidden" name="sales_rep" class="form-control" value="<?php echo $appointment_user_id; ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <b>Cell Phone</b>
-                                        <input type="text" name="sales_rep_no" class="form-control" value="<?php echo logged('mobile'); ?>" placeholder="Enter Cellphone Number">
+                                        <input type="text" name="sales_rep_no" class="form-control" value="<?php echo $user->phone; ?>" placeholder="Enter Cellphone Number" readonly>
                                     </div>                       
                                     <div class="col-md-4">
                                         <b>Team Leader / Mentor</b>

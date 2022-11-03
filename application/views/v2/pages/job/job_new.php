@@ -419,13 +419,11 @@
                             <div class="col-md-4">
                                 <div class="nsm-card primary" style="margin-top: 30px;">
                                     <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title">
-                                            <span>Schedule Job</span>
-                                        </div>
+                                        <div class="nsm-card-title"><span><i class='bx bx-time'></i>&nbsp;Schedule Job</span></div>
                                     </div>
+                                    <hr>
                                     <div class="nsm-card-content">
-                                        <h6 class="page-title "><span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6>
-                                        <hr>
+                                        <!-- <h6 class="page-title "><span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6> -->
                                         <?php if(!isset($jobs_data)): ?>
                                         <p>Import Data from Wordorder/Invoice/Estimates</p>
                                         <div id="import_buttons">
@@ -442,29 +440,41 @@
                                         <hr>
                                         <?php endif; ?>
                                         <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-lg-1">
-                                                    <label>From</label>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : $default_start_date;  ?>" required>&nbsp;&nbsp;
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <?php 
-                                                        if( isset($jobs_data) ){
-                                                            $default_start_time = strtolower($jobs_data->start_time);
-                                                        }
-                                                    ?>
+                                            <div class="row g-3 align-items-center mb-3">
+                                              <div class="col-sm-2">
+                                                <label>From:</label>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : $default_start_date;  ?>" required>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                  <?php if( isset($jobs_data) ){ $default_start_time = strtolower($jobs_data->start_time); } ?>
                                                     <select id="start_time" name="start_time" class="nsm-field form-select" required>
                                                         <option value="">Start time</option>
                                                         <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                                             <option <?= $default_start_time == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                                         <?php } ?>
                                                     </select>
-                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="row g-3 align-items-center">
+                                              <div class="col-sm-2">
+                                                <label>To:</label>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                  <select id="end_time" name="end_time" class="nsm-field form-select " required>
+                                                        <option value="">End time</option>
+                                                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                                            <option <?= isset($jobs_data) && strtolower($jobs_data->end_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                                        <?php } ?>
+                                                </select>
+                                              </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="row">
                                                 <div class="col-lg-1">
                                                     <label>To</label>
@@ -481,7 +491,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <br>
                                         <div class="form-group">
                                             <h6>Select Priority</h6>
@@ -512,7 +522,7 @@
                                                 <?php if(isset($color_settings)): ?>
                                                     <?php foreach ($color_settings as $color): ?>
                                                         <li>
-                                                            <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
+                                                            <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
                                                                 <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check calendar_button" aria-hidden="true"></i>'; } ?>
                                                             </a>
                                                         </li>
@@ -1525,6 +1535,10 @@ add_footer_js(array(
         $("#priority").select2({
             placeholder: ""
         });
+
+        // $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
+        //     placeholder: "Select Employee to Assign",
+        // });
 
         <?php if( $default_customer_id > 0 ){ ?>
             $('#customer_id').click();
