@@ -17,7 +17,11 @@ class Debug extends MY_Controller {
 
     public function generateEmployeeNumber()
     {   
-        echo $date = date("n/j/Y");
+        $this->load->helper(array('url', 'hashids_helper'));
+        //echo $date = date("n/j/Y");
+
+        $eid      = hashids_encrypt(277, '', 15);
+        echo $eid;
         exit;
         $users = $this->users_model->getAllUsers();
         foreach($users as $u){
@@ -1215,6 +1219,165 @@ class Debug extends MY_Controller {
         }
 
         echo 'Total Sync projects : ' . $total_updated;
+        exit;
+    }
+
+    public function testConverge()
+    {
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $data = [
+            'company_id' => 1,
+            'amount' => 200,
+            'card_number' => '4000000000000002',
+            'exp_month' => '04',
+            'exp_year' => '2024',
+            'card_cvc' => '123',
+            'address' => 'test@gmail.com',
+            'zip' => '4026'
+        ];
+
+
+        $is_success = false;
+        $msg = '';
+        
+        $comp_id = logged('company_id');
+        $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+        if ($convergeCred) {
+            $exp_year = date("m/d/" . $data['exp_year']);
+            $exp_date = $data['exp_month'] . date("y", strtotime($exp_year));
+            $converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => $convergeCred->converge_merchant_id,
+                'user_id' => $convergeCred->converge_merchant_user_id,
+                'pin' => $convergeCred->converge_merchant_pin,
+                'demo' => false,
+            ]);
+            $createSale = $converge->request('ccsale', [
+                'ssl_card_number' => $data['card_number'],
+                'ssl_exp_date' => $exp_date,
+                'ssl_cvv2cvc2' => $data['card_cvc'],
+                'ssl_amount' => $data['amount'],
+                'ssl_avs_address' => $data['address'],
+                'ssl_avs_zip' => $data['zip'],
+            ]);
+
+            if ($createSale['success'] == 1) {
+                $is_success = true;
+                $msg = '';
+            } else {
+                $is_success = false;
+                $msg = $createSale['errorMessage'];
+            }
+        } else {
+            $msg = 'Converge account not found';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo "<pre>";
+        print_r($return);
+        exit;
+    }
+
+    public function debugConvergeToken()
+    {
+        $merchantID = "2159250"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+        $merchantUserID = "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+        $merchantPinCode = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
+        $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+
+        $firstname = 'Bryann'; //Post first name
+        $lastname  = 'Revina';
+        $address   = 'Santa Rosa Laguna';
+        $zipcode   = '4026';
+        //$amount    = $post['total_amount']; //Post Tran Amount
+        $amount    = 100; //Post Tran Amount
+
+        /*$ch = curl_init();    // initialize curl handle
+        curl_setopt($ch, CURLOPT_URL,$url); // set url to post to
+        curl_setopt($ch,CURLOPT_POST, true); // set POST method
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);*/
+
+        $ch = curl_init();    // initialize curl handle
+        curl_setopt($ch, CURLOPT_URL,$url); // set POST target URL
+        curl_setopt($ch,CURLOPT_POST, true); // set POST method
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Set up the post fields. If you want to add custom fields, you would add them in Converge, and add the field name in the curlopt_postfields string.
+        curl_setopt($ch,CURLOPT_POSTFIELDS,
+          "ssl_merchant_id=$merchantID".
+          "&ssl_user_id=$merchantUserID".
+          "&ssl_pin=$merchantPinCode".
+          "&ssl_transaction_type=ccsale".
+          "&ssl_amount=$amount"
+        );
+
+        /*curl_setopt($ch,CURLOPT_POSTFIELDS,
+        "ssl_merchant_id=$merchantID".
+        "&ssl_user_id=$merchantUserID".
+        "&ssl_pin=$merchantPinCode".
+        "&ssl_transaction_type=CCSALE".
+        "&ssl_first_name=$firstname".
+        "&ssl_last_name=$lastname".
+        "&ssl_avs_address=$address".
+        "&ssl_avs_zip=$zipcode".
+        "&ssl_get_token=Y".
+        "&ssl_add_token=Y".
+        "&ssl_amount=$amount"
+        );*/
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+        $result = curl_exec($ch); // run the curl procss
+        curl_close($ch); // Close cURL
+
+
+        echo "<pre>";
+        print_r($result);
+        exit;
+    }
+
+    public function createHashIdForExistingJobs()
+    {
+        $this->load->model('Jobs_model');
+
+        $this->load->helper(array('hashids_helper'));
+
+        $total_updated = 0;
+        $jobs = $this->Jobs_model->admin_get_all_jobs();
+        foreach($jobs as $job){
+            $job_hash_id = hashids_encrypt($job->id, '', 15);
+            $this->Jobs_model->update($job->id, ['hash_id' => $job_hash_id]);
+
+            $total_updated++;
+        }
+
+        echo 'Total Updated ' . $total_updated;
+        exit;
+    }
+
+    public function createAppointmentNumberForExistingAppointments()
+    {
+        $this->load->model('Appointment_model');
+
+        $this->load->helper(array('hashids_helper'));
+
+        $total_updated = 0;
+        $appointments = $this->Appointment_model->getAll();
+        foreach($appointments as $apt){
+            $appointment_number = $this->Appointment_model->generateAppointmentNumber($apt->id);
+            $this->Appointment_model->update($apt->id, ['appointment_number' => $appointment_number]);
+
+            $total_updated++;
+        }
+
+        echo 'Total Updated ' . $total_updated;
         exit;
     }
 
