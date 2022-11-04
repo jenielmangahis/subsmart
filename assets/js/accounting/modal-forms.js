@@ -8529,7 +8529,7 @@ $(function() {
 
 const convertToDecimal = (el) => {
     if($(el).val() !== '') {
-        $(this).val(formatter.format(parseFloat($(this).val())).replace('$', ''));
+        $(el).val(formatter.format(parseFloat($(el).val())).replace('$', ''));
     }
 }
 
@@ -9284,7 +9284,27 @@ const submitModalForm = (event, el) => {
 
     if(vendorModals.includes(modalId)) {
         var count = 0;
-        var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
+
+        if($(`#modal-container #modal-form ${modalId} #templateName`).length > 0) {
+            var totalAmount = 0.00;
+
+            $('#modal-container table#category-details-table input[name="category_amount[]"]').each(function() {
+                var value = $(this).val() === "" ? 0.00 : parseFloat($(this).val()).toFixed(2);
+
+                totalAmount = parseFloat(parseFloat(totalAmount) + parseFloat(value)).toFixed(2);
+            });
+
+            $('#modal-container table#item-details-table tbody tr td span.row-total').each(function() {
+                var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html().replace('$', '').replaceAll(',', '')).toFixed(2);
+
+                totalAmount = parseFloat(parseFloat(totalAmount) + parseFloat(value)).toFixed(2);
+            });
+
+            totalAmount = parseFloat(totalAmount).toFixed(2);
+        } else {
+            var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
+        }
+
         data.append('total_amount', totalAmount);
 
         $(`${modalId} table#category-details-table tbody tr`).each(function() {

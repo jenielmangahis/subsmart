@@ -336,17 +336,17 @@ class Recurring_transactions extends MY_Controller {
                 }
 
                 $data[] = [
-                    'id' => $item['id'],
-                    'template_name' => $item['template_name'],
-                    'recurring_type' => ucfirst($item['recurring_type']),
-                    'txn_type' => ucwords(str_replace('np', '', $item['txn_type'])),
-                    'txn_id' => $item['txn_id'],
+                    'id' => $transaction['id'],
+                    'template_name' => $transaction['template_name'],
+                    'recurring_type' => ucfirst($transaction['recurring_type']),
+                    'txn_type' => ucwords(str_replace('np', '', $transaction['txn_type'])),
+                    'txn_id' => $transaction['txn_id'],
                     'recurring_interval' => $interval,
                     'previous_date' => $previous,
-                    'next_date' => $item['status'] === "2" ? "Paused" : $next,
+                    'next_date' => $transaction['status'] === "2" ? "Paused" : $next,
                     'customer_vendor' => $payeeName,
                     'amount' => $total,
-                    'status' => $item['status']
+                    'status' => $transaction['status']
                 ];
             }
         }

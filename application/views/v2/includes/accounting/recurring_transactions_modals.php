@@ -137,7 +137,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button success float-end">OK</button>
+                <button type="button" class="nsm-button success float-end" id="submit-transaction-type">OK</button>
             </div>
         </div>
     </div>

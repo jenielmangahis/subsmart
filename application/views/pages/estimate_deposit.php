@@ -127,8 +127,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-5">
                                     <?php if ($company_info->business_image != "") : ?>
-                                        <img style="width: 100px" id="attachment-image" alt="Attachment" src="https://nsmartrac.com/uploads/users/business_profile/1/Nsmart_logo.png">
-                                        <!-- <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?= base_url('/uploads/users/business_profile/' . $company_info->id . '/' . $company_info->business_image); ?>"> -->
+                                        <!-- <img style="width: 100px" id="attachment-image" alt="Attachment" src="https://nsmartrac.com/uploads/users/business_profile/1/Nsmart_logo.png"> -->
+                                        <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?= base_url('/uploads/users/business_profile/' . $company_info->id . '/' . $company_info->business_image); ?>">
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-3">
@@ -471,7 +471,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <?php
                                                         $depositAmount = 0;
                                                         $percentage = null;
-                                                        $isPercentage = $deposit_request === '2'; // 1 = $, 2 = %
+                                                        $isPercentage = in_array(trim($deposit_request), ['2', '%']); // 1 = $, 2 = %
 
                                                         if ($isPercentage) {
                                                             $percentage = (float) $deposit_amount;
@@ -542,7 +542,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     $(function() {
         function updateEstimateStatus() {
             var estimate_id = $("#estimate_id").val();
-            var url = base_url + '_update_estimate_status_accepted';
+            var url = base_url + 'share_Link/update_estimate_status_accepted';
             $.ajax({
                 type: "POST",
                 url: url,

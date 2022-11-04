@@ -93,7 +93,7 @@
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#transaction-type-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_recurring_transactions_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -136,7 +136,7 @@
                     <tbody>
                         <?php if(count($transactions) > 0) : ?>
 						<?php foreach($transactions as $transaction) : ?>
-                        <tr>
+                        <tr data-id="<?=$transaction['id']?>" data-transaction_id="<?=$transaction['txn_id']?>">
                             <td class="fw-bold nsm-text-primary nsm-link default"><?=$transaction['template_name']?></td>
                             <td><?=ucfirst($transaction['recurring_type'])?></td>
                             <td><?=ucwords(str_replace('np', '', $transaction['txn_type']))?></td>
@@ -152,28 +152,28 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item edit-transaction" href="#">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Use</a>
+                                            <a class="dropdown-item use-transaction" href="#">Use</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Duplicate</a>
+                                            <a class="dropdown-item duplicate-transaction" href="#">Duplicate</a>
                                         </li>
                                         <?php if($transaction['status'] === "2") : ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Resume</a>
+                                            <a class="dropdown-item resume-recurring" href="#">Resume</a>
                                         </li>
                                         <?php else : ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Pause</a>
+                                            <a class="dropdown-item pause-recurring" href="#">Pause</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Skip next date</a>
+                                            <a class="dropdown-item skip-next-date" href="#">Skip next date</a>
                                         </li>
                                         <?php endif; ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Delete</a>
+                                            <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                         </li>
                                     </ul>
                                 </div>

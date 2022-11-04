@@ -100,6 +100,19 @@ class Tickets_model extends MY_Model
         return $query->row();
     }
 
+    public function getUserDetails($id)
+    {
+        $where = array(
+            'id' => $id,
+        );
+
+        $this->db->select('*');
+        $this->db->from('users');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function get_tickets_by_company_id($company_id = 0)
     {
         $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name, users.FName, users.LName');
