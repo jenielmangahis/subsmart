@@ -256,7 +256,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <span><?=  $jobs_data->message; ?></span>
                                 </div>
 
-                                <div class="col-md-4">
+                                <!-- <div class="col-md-4">
                                     <br>
                                     <h6 class="title-border">ASSIGNED TO :</h6>
                                     <?php
@@ -275,13 +275,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php if(isset($shared3) && !empty($shared3) && $shared3!=NULL ): ?>
                                         <span><?= $shared3->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
                                     <?php endif; ?>
-                                </div>
+                                </div> -->
 
-                                <div class="col-md-4">
+                                <!-- <div class="col-md-4">
                                     <br>
                                     <h6 class="title-border">URL LINK :</h6>
                                     <span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-12">
                                     <h6 class="title-border"></h6>

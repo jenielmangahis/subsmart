@@ -45,11 +45,13 @@
                             $schedule_start_time = $schedule['data']->start_time;
                             $schedule_end_time = $schedule['data']->end_time;
                             $schedule_status = $schedule['data']->status;
+                            $schedule_type   = $schedule['data']->job_type;
                             $schedule_tags   = $schedule['data']->tags_name;
                             $schedule_number = $schedule['data']->job_number;
                             $schedule_customer_name = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
-                            $schedule_location = $schedule['data']->job_location != '' ? $schedule['data']->job_location : '---';
+                            //$schedule_location = $schedule['data']->job_location != '' ? $schedule['data']->job_location : '---';
+                            $schedule_location = $schedule['data']->mail_add . ' ' . $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             $schedule_description = '';
 
@@ -73,6 +75,7 @@
                             $schedule_status = $schedule['data']->status;
                             $schedule_tags   = $schedule['data']->event_tag;
                             $schedule_number = $schedule['data']->event_number;
+                            $schedule_type   = $schedule['data']->event_type;
                             $schedule_customer_name = '';
                             $schedule_customer_phone = '';
                             $schedule_location = $schedule['data']->event_address;
@@ -89,6 +92,7 @@
                             $schedule_status = $schedule['data']->status;
                             $schedule_tags   = $schedule['data']->tags;
                             $schedule_number = $schedule['data']->estimate_number;
+                            $schedule_type   = $schedule['data']->estimate_type;
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
                             $schedule_location = $schedule['data']->job_location;
@@ -97,6 +101,24 @@
 
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->user_id;
+                        }elseif( $schedule['type'] == 'ticket' ){
+                            $schedule_view_url = base_url('tickets/viewDetails/' . $schedule['data']->id);
+                            $schedule_date = date("Y-m-d", strtotime($schedule['data']->ticket_date));
+                            $schedule_start_time = date("g:i A", strtotime($schedule['data']->scheduled_time));
+                            $schedule_end_time = '';
+                            $schedule_status = $schedule['data']->ticket_status;
+                            $schedule_tags   = $schedule['data']->job_tag;
+                            $schedule_number = $schedule['data']->ticket_no;
+                            $schedule_type   = $schedule['data']->service_type;
+                            $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
+                            $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
+                            $schedule_location = $schedule['data']->service_location;
+                            $schedule_expiry_date = '';
+                            //$schedule_description = $schedule['data']->service_description;
+                            $schedule_description = '';
+
+                            $assigned_employees = array();
+                            $assigned_employees[] = $schedule['data']->sales_rep;
                         }
                     ?>
                     <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?= $schedule_view_url; ?>'">
@@ -118,12 +140,14 @@
                                 <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
                                 <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
                                 <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
-                                <?php } ?>
+                                <?php }elseif( $schedule_start_time != '' ){  ?>
+                                    <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
+                                <?php } ?>                                
                             </div>                    
                         </td>
                         <td style="vertical-align: text-top;padding-top: 16px;">
                             <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
-                                <?= $schedule_number . ' : ' . $schedule_tags; ?> 
+                                <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
                             </label>
                             <?php if( $schedule_customer_name != '' ){ ?>
                             <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">

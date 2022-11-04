@@ -1849,6 +1849,8 @@ class Workcalender extends MY_Controller
             ];
 
             $last_id = $this->Appointment_model->createAppointment($data_appointment);
+            $appointment_number = $this->Appointment_model->generateAppointmentNumber($last_id);
+            $this->Appointment_model->update($last_id, ['appointment_number' => $appointment_number]);
 
             customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
 
@@ -2618,14 +2620,15 @@ class Workcalender extends MY_Controller
         $this->load->model('Jobs_model');
         $this->load->model('Estimate_model');
         $this->load->model('Tickets_model');
+        $this->load->model('Appointment_model');
 
         $cid = logged('company_id');
-
         
         $upcomingJobs   = $this->Jobs_model->getAllUpcomingJobsByCompanyId($cid);
         $upcomingEvents = $this->Event_model->getAllUpComingEventsByCompanyId($cid);
         $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($cid);
-        $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($cid);        
+        $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($cid);    
+        $upcomingAppointments = $this->Appointment_model->getAllUpcomingAppointmentsByCompany($cid);    
 
         $upcomingSchedules = array();
 
@@ -2650,6 +2653,14 @@ class Workcalender extends MY_Controller
             $upcomingSchedules[$date_index][] = [
                 'type' => 'estimate',
                 'data' => $estimate
+            ];
+        }
+
+        foreach( $upcomingServiceTickets as $ticket ){
+            $date_index = date("Y-m-d", strtotime($ticket->ticket_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'ticket',
+                'data' => $ticket
             ];
         }
 

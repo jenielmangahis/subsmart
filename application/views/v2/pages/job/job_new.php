@@ -531,95 +531,94 @@
                                             </ul>
                                             <input value="<?= (isset($jobs_data) && isset($jobs_data->event_color)) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                                         </div>
-                                        <h6>Customer Reminder Notification</h6>
-                                        <select name="customer_reminder_notification" class="form-control ">
-                                            <option value="0">None</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT30M') ? 'selected' : ''; ?> value="PT30M">30 minutes before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT1H') ? 'selected' : ''; ?> value="PT1H">1 hour before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT2H') ? 'selected' : ''; ?> value="PT2H">2 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT4H') ? 'selected' : ''; ?> value="PT4H">4 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT6H') ? 'selected' : ''; ?> value="PT6H">6 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT8H') ? 'selected' : ''; ?> value="PT8H">8 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT12H') ? 'selected' : ''; ?> value="PT12H">12 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT16H') ? 'selected' : ''; ?> value="PT16H">16 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P1D') ? 'selected' : ''; ?> value="P1D" selected="selected">1 day before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P2D') ? 'selected' : ''; ?> value="P2D">2 days before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT0M') ? 'selected' : ''; ?> value="PT0M">On date of event</option>
-                                        </select><br>
-                                        <h6>Time Zone</h6>
-                                        <select id="inputState" name="timezone" class="form-control ">
-                                            <option value="utc5">Central Time (UTC -5)</option>
-                                        </select><br>
-                                        <h6>Select Job Type</h6>
-                                        <select id="job_type_option" name="jobtypes" class="form-control " required>
-                                            <option value="">Select Type</option>
-                                            <?php if(!empty($job_types)): ?>
-                                                <?php foreach ($job_types as $type): ?>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
-                                                <?php endforeach; ?>
-                                            <?php endif; ?>
-                                        </select><br>
-                                        <h6>Select Job Tag</h6>
-                                        <select id="job_tags" name="tags" class="form-control " required>
-                                            <option value="">Select Tags</option>
-                                            <?php if(!empty($tags)): ?>
-                                                <?php foreach ($tags as $tag): ?>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
-                                                <?php endforeach; ?>
-                                            <?php endif; ?>
-                                        </select><br>
-                                        <h6>Assigned To</h6>
-                                        <div class="row">
-                                            <div class="col-sm-12 mb-2">
-                                                <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
-                                                <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
-                                                    <option value="">Select Employee</option>
-                                                    <?php if(!empty($employees)): ?>
-                                                        <?php foreach ($employees as $employee): ?>
-                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly> -->
-                                            </div>
-                                            <div class="col-sm-12 mb-2">
-                                                <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
-                                                <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
-                                                    <option value="">Select Employee</option>
-                                                    <?php if(!empty($employees)): ?>
-                                                        <?php foreach ($employees as $employee): ?>
-                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
-                                            </div>
-                                            <div class="col-sm-12 mb-4">
-                                                <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
-                                                <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
-                                                    <option value="">Select Employee</option>
-                                                    <?php if(!empty($employees)): ?>
-                                                        <?php foreach ($employees as $employee): ?>
-                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
+                                        <div class="mb-3">
+                                            <h6>Customer Reminder Notification</h6>
+                                            <select id="customer_reminder" name="customer_reminder_notification" class="form-control ">
+                                                <option value="0">None</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT30M') ? 'selected' : ''; ?> value="PT30M">30 minutes before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT1H') ? 'selected' : ''; ?> value="PT1H">1 hour before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT2H') ? 'selected' : ''; ?> value="PT2H">2 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT4H') ? 'selected' : ''; ?> value="PT4H">4 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT6H') ? 'selected' : ''; ?> value="PT6H">6 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT8H') ? 'selected' : ''; ?> value="PT8H">8 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT12H') ? 'selected' : ''; ?> value="PT12H">12 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT16H') ? 'selected' : ''; ?> value="PT16H">16 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P1D') ? 'selected' : ''; ?> value="P1D" selected="selected">1 day before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P2D') ? 'selected' : ''; ?> value="P2D">2 days before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT0M') ? 'selected' : ''; ?> value="PT0M">On date of event</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6>Time Zone</h6>
+                                            <select id="inputState" name="timezone" class="form-control ">
+                                                <option value="utc5">Central Time (UTC -5)</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6>Select Job Type</h6>
+                                            <select id="job_type_option" name="jobtypes" class="form-control " required>
+                                                <option value="">Select Type</option>
+                                                <?php if(!empty($job_types)): ?>
+                                                    <?php foreach ($job_types as $type): ?>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6>Select Job Tag</h6>
+                                            <select id="job_tags" name="tags" class="form-control " required>
+                                                <option value="">Select Tags</option>
+                                                <?php if(!empty($tags)): ?>
+                                                    <?php foreach ($tags as $tag): ?>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6>Assigned To</h6>
+                                            <div class="row">
+                                                <div class="col-sm-12 mb-2">
+                                                    <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                    <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly> -->
+                                                </div>
+                                                <div class="col-sm-12 mb-2">
+                                                    <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                    <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
+                                                </div>
+                                                <div class="col-sm-12 mb-4">
+                                                    <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                    <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
+                                                </div>
                                             </div>
                                         </div>
-                                        <script type="text/javascript">
-                                            $('#EMPLOYEE_SELECT_2').on('change', function(event) {
-                                                $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
-                                            });
-                                            $('#EMPLOYEE_SELECT_3').on('change', function(event) {
-                                                $("#emp3_id, #employee3_id").val($("#EMPLOYEE_SELECT_3").val());
-                                            });
-                                            $('#EMPLOYEE_SELECT_4').on('change', function(event) {
-                                                $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
-                                            });
-                                        </script>
                                         <!-- <br>
                                         <div class="float-end">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="nsm-button primary">Assign Job</a>
@@ -690,8 +689,8 @@
                                         </div>
                                         <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
-                                        <table class="table table-striped">
-                                            <tbody >
+                                        <table class="table table-hover">
+                                            <tbody>
                                                 <tr>
                                                     <td>
                                                         <small>Job Type</small>
@@ -701,11 +700,10 @@
                                                         <small>Job Tags</small>
                                                         <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
                                                     </td>
-                                                    <td></td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table class="table table-striped">
+                                        <table class="table table-hover">
                                             <tbody id="jobs_items">
                                             <?php if(isset($jobs_data)): ?>
                                                 <?php
@@ -715,21 +713,24 @@
                                                 ?>
                                                    <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
-                                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" >
+                                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" readonly>
                                                             <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                         </td>
-                                                        <td width="20%"><small>Qty</small>
+                                                        <td><small>Qty</small>
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                         </td>
-                                                        <td width="20%"><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                                        <td><small>Unit Price</small>
+                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
-                                                        <td width="20%"><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
-                                                        <td style="text-align: center" class="d-flex" width="15%">
-                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
-                                                            <a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                                                        <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
+                                                        <td>
+                                                            <small>Amount</small><br>
+                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                         </td>
                                                     </tr>
                                                 <?php
@@ -739,11 +740,10 @@
                                             <?php endif; ?>
                                             </tbody>
                                         </table>
-                                        <div class="col-sm-12">
-                                            <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
-                                                <span class="fa fa-plus-square fa-margin-right"></span>Add Items
-                                            </a>
-                                        </div>
+                                            <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
+                                                <i class='bx bx-plus'></i>Add Items
+                                            </button>
+                                        <br>
                                         <br>
                                         <div class="col-sm-12">
                                             <p>Description of Job</p>
@@ -1410,6 +1410,16 @@ add_footer_js(array(
 
 
 <script>
+$('#EMPLOYEE_SELECT_2').on('change', function(event) {
+    $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
+});
+$('#EMPLOYEE_SELECT_3').on('change', function(event) {
+    $("#emp3_id, #employee3_id").val($("#EMPLOYEE_SELECT_3").val());
+                                            });
+$('#EMPLOYEE_SELECT_4').on('change', function(event) {
+    $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
+});
+
 
         var class_name = $('.active').attr('class');
         var class_name = $('.active').attr('class');
@@ -1450,60 +1460,40 @@ add_footer_js(array(
             $('#emp4_txt').val($('#employee4 :selected').text());
             
         })
-        // if(step == 'step02'){
-        //     $('#step01').addClass('active');
-        // }
-        // if(step == 'step03'){
-        //     $('#step01').addClass('active');
-        //     $('#step02').addClass('active');
-        // }
-        // if(step == 'step04'){
-        //     $('#step01').addClass('active');
-        //     $('#step02').addClass('active');
-        //     $('#step03').addClass('active');
-        // }
-        // if(step == 'step05'){
-        //     $('#step01').addClass('active');
-        //     $('#step02').addClass('active');
-        //     $('#step03').addClass('active');
-        //     $('#step04').addClass('active');
-        // }
-        // $('#active').addClass('active');
-        // if(class_name)
     })
     $(function(){
-        // $('#customer_id').select2({
-        //     ajax: {
-        //         url: '<?= base_url('autocomplete/_company_customer') ?>',
-        //         dataType: 'json',
-        //         delay: 250,
-        //         data: function (params) {
-        //           return {
-        //             q: params.term, // search term
-        //             page: params.page
-        //           };
-        //         },
-        //         processResults: function (data, params) {
-        //           // parse the results into the format expected by Select2
-        //           // since we are using custom formatting functions we do not need to
-        //           // alter the remote JSON data, except to indicate that infinite
-        //           // scrolling can be used
-        //           params.page = params.page || 1;
+        $('#customer_id').select2({
+            ajax: {
+                url: '<?= base_url('autocomplete/_company_customer') ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  // parse the results into the format expected by Select2
+                  // since we are using custom formatting functions we do not need to
+                  // alter the remote JSON data, except to indicate that infinite
+                  // scrolling can be used
+                  params.page = params.page || 1;
 
-        //           return {
-        //             results: data
-        //             // pagination: {
-        //             //   more: (params.page * 30) < data.total_count
-        //             // }
-        //           };
-        //         },
-        //         cache: true
-        //       },
-        //       placeholder: 'Select Customer',
-        //       minimumInputLength: 0,
-        //       templateResult: formatRepoCustomer,
-        //       templateSelection: formatRepoCustomerSelection
-        // });
+                  return {
+                    results: data
+                    // pagination: {
+                    //   more: (params.page * 30) < data.total_count
+                    // }
+                  };
+                },
+                cache: true
+              },
+              placeholder: 'Select Customer',
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
+    });
 
         function formatRepoCustomerSelection(repo) {
             if( repo.first_name != null ){
@@ -1533,12 +1523,28 @@ add_footer_js(array(
             placeholder: "Sales Rep"
         });
         $("#priority").select2({
-            placeholder: ""
+            placeholder: "Choose Priority..."
         });
 
-        // $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
-        //     placeholder: "Select Employee to Assign",
-        // });
+        $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
+            placeholder: "Select Employee to Assign",
+        });
+
+        $("#customer_reminder").select2({
+            placeholder: "Choose Reminder..."
+        });
+
+        $("#inputState").select2({
+            placeholder: "Select Timezone..."
+        });
+
+        $("#job_type_option").select2({
+            placeholder: "Select Job Type..."
+        });
+
+        $("#job_tags").select2({
+            placeholder: "Select Job Type..."
+        });
 
         <?php if( $default_customer_id > 0 ){ ?>
             $('#customer_id').click();

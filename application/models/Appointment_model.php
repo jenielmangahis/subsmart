@@ -113,6 +113,43 @@ class Appointment_model extends MY_Model
 
         return  $insert_id;
     }
+
+    public function generateAppointmentNumber( $id )
+    {
+        $issue_no = 'APPT-' . str_pad($id, 5,"0",STR_PAD_LEFT);
+        return $issue_no; 
+    }
+
+    public function getAll()
+    {        
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
+        $this->db->join('appointment_types', 'appointments.appointment_type_id = appointment_types.id','left');     
+        $this->db->join('users', 'appointments.user_id = users.id','left');          
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllUpcomingAppointmentsByCompany($company_id)
+    {
+        $where = array(
+            'appointments.company_id'    => $company_id
+          );
+
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
+        $this->db->join('appointment_types', 'appointments.appointment_type_id = appointment_types.id','left');     
+        $this->db->join('users', 'appointments.user_id = users.id','left');     
+        $this->db->where($where);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Appointment_model.php */

@@ -622,15 +622,14 @@ class Event_model extends MY_Model
 
     public function getAllsubs()
     {
-        $this->db->select('SUM(acs_billing.mmr) AS TOTAL_MMR, acs_billing.next_billing_date');
+        $this->db->select('SUM(acs_billing.mmr) AS TOTAL_MMR');
         $this->db->from('acs_billing');
-        $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
-        $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE())');
-        $this->db->where('acs_alarm.acct_type = "IN-HOUSE"');
-        $this->db->or_where('acs_alarm.acct_type = "PURCHASE"');
+        $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id');
+        $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE"');
+        $this->db->or_where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE"');
         $query = $this->db->get();
         return $query->row();
-        // SELECT SUM(acs_billing.mmr) AS TOTAL_MMR, acs_billing.next_billing_date FROM acs_billing LEFT JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE" OR acs_alarm.acct_type = "PURCHASE";
+        // SELECT SUM(acs_billing.mmr) TOTAL_MMR FROM acs_billing JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE" OR MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE";
     }
     public function getAllJobsByCompanyId($company_id)
     {

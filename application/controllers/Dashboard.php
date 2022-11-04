@@ -302,15 +302,14 @@ class Dashboard extends Widgets {
 
     private function getTotalRecurringPayment()
     {
-        // SELECT SUM(acs_billing.mmr) FROM acs_billing LEFT JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id LEFT JOIN acs_profile ON acs_profile.prof_id = acs_alarm.fk_prof_id WHERE acs_alarm.acct_type = "IN-HOUSE" AND acs_profile.status = "Active";
 
+        // SELECT SUM(acs_billing.mmr) AS TOTAL_RECURRING FROM acs_billing JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id JOIN acs_profile ON acs_profile.prof_id = acs_alarm.fk_prof_id WHERE acs_alarm.acct_type = "IN-HOUSE" AND acs_profile.status = "Active";
         $companyId = logged('company_id');
-        $this->db->select('SUM(acs_billing.mmr) AS SUM_RECURRING_PAYMENT', FALSE);
+        $this->db->select('SUM(acs_billing.mmr) AS SUM_RECURRING_PAYMENT');
         $this->db->from('acs_billing');
         $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = acs_alarm.fk_prof_id', 'left');
-        $this->db->where('acs_alarm.acct_type', 'IN-HOUSE');
-        $this->db->where('acs_profile.status', 'Active');
+        $this->db->where("acs_alarm.acct_type = 'IN-HOUSE' AND acs_profile.status = 'Active'");
         $query = $this->db->get();
         $result = $query->row();
         return $result;
