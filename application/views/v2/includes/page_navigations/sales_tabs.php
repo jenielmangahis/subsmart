@@ -33,7 +33,7 @@
         <li class="<?php if($page->title == 'Tickets'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/ticketslist') ?>">
                 <i class='bx bx-fw bx-note'></i>
-                <span>Tickets</span>
+                <span>Service Tickets</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Credit Notes'): echo 'active'; endif; ?>">

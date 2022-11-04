@@ -474,6 +474,8 @@ class Tickets extends MY_Controller
 
         $this->page_data['default_customer_id'] = $default_customer_id;
 
+        $userID = $_GET['appointment_user_id'];
+
         $this->page_data['items'] = $this->items_model->getItemlist();
         $type = $this->input->get('type');
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
@@ -485,6 +487,8 @@ class Tickets extends MY_Controller
         $this->page_data['appointment_user_id'] = $this->input->post('appointment_user_id');
         $this->page_data['appointment_customer_id'] = $this->input->post('appointment_customer_id');
         $this->page_data['appointment_type_id'] = $this->input->post('appointment_type_id');
+
+        $this->page_data['user'] = $this->tickets_model->getUserDetails($userID);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/customer_tickets_apmt', $this->page_data);
