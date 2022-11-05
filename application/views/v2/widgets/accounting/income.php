@@ -94,7 +94,7 @@ endif;
                         </div>
                         <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                             <span>Subscription</span>
-                            <h2><!-- <?php echo "$".number_format($subs->TOTAL_MMR, 2); ?> -->$0</h2>
+                            <h2><?php echo "$".number_format($subs->TOTAL_MMR, 2); ?></h2>
                         </div>
                     </div>
                 </div>

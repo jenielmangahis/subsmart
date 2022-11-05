@@ -150,45 +150,53 @@
                                             </ul>
                                             <input value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                                         </div>
-                                        <h6>Customer Reminder Notification</h6>
-                                        <select name="customer_reminder_notification" class="form-control ">
-                                            <option value="0">None</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT30M') ? 'selected' : ''; ?> value="PT30M">30 minutes before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT1H') ? 'selected' : ''; ?> value="PT1H">1 hour before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT2H') ? 'selected' : ''; ?> value="PT2H">2 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT4H') ? 'selected' : ''; ?> value="PT4H">4 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT6H') ? 'selected' : ''; ?> value="PT6H">6 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT8H') ? 'selected' : ''; ?> value="PT8H">8 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT12H') ? 'selected' : ''; ?> value="PT12H">12 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT16H') ? 'selected' : ''; ?> value="PT16H">16 hours before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P1D') ? 'selected' : ''; ?> value="P1D" selected="selected">1 day before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P2D') ? 'selected' : ''; ?> value="P2D">2 days before</option>
-                                            <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT0M') ? 'selected' : ''; ?> value="PT0M">On date of event</option>
-                                        </select><br>
-                                        <h6>Time Zone</h6>
-                                        <select id="inputState" name="timezone" class="form-control ">
-                                            <option value="utc5">Central Time (UTC -5)</option>
-                                        </select><br>
-                                        <h6>Select Job Type</h6>
-                                        <select id="job_type_option" name="jobtypes" class="form-control " required>
-                                            <option value="">Select Type</option>
-                                            <?php if(!empty($job_types)): ?>
-                                                <?php foreach ($job_types as $type): ?>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
-                                                <?php endforeach; ?>
-                                            <?php endif; ?>
-                                        </select><br>
+                                        <div class="mb-3">
+                                            <h6>Customer Reminder Notification</h6>
+                                            <select name="customer_reminder_notification" class="form-control ">
+                                                <option value="0">None</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT30M') ? 'selected' : ''; ?> value="PT30M">30 minutes before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT1H') ? 'selected' : ''; ?> value="PT1H">1 hour before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT2H') ? 'selected' : ''; ?> value="PT2H">2 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT4H') ? 'selected' : ''; ?> value="PT4H">4 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT6H') ? 'selected' : ''; ?> value="PT6H">6 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT8H') ? 'selected' : ''; ?> value="PT8H">8 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT12H') ? 'selected' : ''; ?> value="PT12H">12 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT16H') ? 'selected' : ''; ?> value="PT16H">16 hours before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P1D') ? 'selected' : ''; ?> value="P1D" selected="selected">1 day before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P2D') ? 'selected' : ''; ?> value="P2D">2 days before</option>
+                                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT0M') ? 'selected' : ''; ?> value="PT0M">On date of event</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6>Time Zone</h6>
+                                            <select id="inputState" name="timezone" class="form-control ">
+                                                <option value="utc5">Central Time (UTC -5)</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6>Select Job Type</h6>
+                                            <select id="job_type_option" name="jobtypes" class="form-control " required>
+                                                <option value="">Select Type</option>
+                                                <?php if(!empty($job_types)): ?>
+                                                    <?php foreach ($job_types as $type): ?>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
                                         <h6>Select Job Tag</h6>
-                                        <select id="job_tags" name="tags" class="form-control " required>
-                                            <option value="">Select Tags</option>
-                                            <?php if(!empty($tags)): ?>
-                                                <?php foreach ($tags as $tag): ?>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
-                                                <?php endforeach; ?>
-                                            <?php endif; ?>
-                                        </select><br>
+                                            <select id="job_tags" name="tags" class="form-control " required>
+                                                <option value="">Select Tags</option>
+                                                <?php if(!empty($tags)): ?>
+                                                    <?php foreach ($tags as $tag): ?>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
                                         <h6>Assigned To</h6>
                                         <div class="row">
                                             <div class="col-sm-12 mb-2">
@@ -305,8 +313,8 @@
                                         </div>
                                         <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
-                                        <table class="table table-striped">
-                                            <tbody >
+                                        <table class="table">
+                                            <tbody>
                                                 <tr>
                                                     <td>
                                                         <small>Job Type</small>
@@ -316,11 +324,10 @@
                                                         <small>Job Tags</small>
                                                         <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
                                                     </td>
-                                                    <td></td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table class="table table-striped">
+                                        <table class="table table-hover">
                                             <tbody id="jobs_items">
                                             <?php if(isset($jobs_data)): ?>
                                                 <?php
@@ -331,23 +338,24 @@
                                                 ?>
                                                     <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
-                                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" >
+                                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control"  readonly>
                                                             <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                         </td>
-                                                        <td width="20%"><small>Qty</small>
+                                                        <td><small>Qty</small>
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                         </td>
-                                                        <td width="20%"><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                                        <td><small>Unit Price</small>
+                                                            <input id='price<?= $item->id ?>' value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
-                                                        <td width="20%"><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
-                                                        <td style="text-align: center" class="d-flex" width="15%">
-                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
+                                                        <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
+                                                        <td>
+                                                            <small>Amount</small><br>
+                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
                                                         </td>
-                                                        <td width="20%">
-                                                            <button style="margin-top: 20px;" type="button" class="nsm-button items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
+                                                        <td>
+                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                         </td>
 
                                                     </tr>
@@ -358,11 +366,10 @@
                                             <?php endif; ?>
                                             </tbody>
                                         </table>
-                                        <div class="col-sm-12">
-                                            <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
-                                                <span class="fa fa-plus-square fa-margin-right"></span>Add Items
-                                            </a>
-                                        </div>
+                                        <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
+                                                <i class='bx bx-plus'></i>Add Items
+                                            </button>
+                                        <br>
                                         <br>
                                         <div class="col-sm-12">
                                             <p>Description of Job</p>
@@ -535,11 +542,28 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
+                                                <script src="https://cdn.ckeditor.com/ckeditor5/35.3.0/classic/ckeditor.js"></script>
                                                     <div class="form-group">
-                                                        <small>Message:</small>
                                                         <!-- <?php echo "<textarea class='form-control' name='message'>$jobs_data->customer_message</textarea>"; ?> -->
-                                                        <?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>
-                                                        <input class="d-none" type="text" name="customer_message" value="<?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>">
+                                                        
+                                                        <input class="d-none customer_message_input" type="text" name="customer_message" value="<?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>">
+                                                        <div id="Message_Editor"><?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?></div>
+                                                        <script>
+                                                    var myEditor;
+                                                        ClassicEditor
+                                                            .create( document.querySelector( '#Message_Editor' ) )
+                                                            .then( editor => {
+                                                                console.log( 'Editor was initialized', editor );
+                                                                myEditor = editor;
+                                                                myEditor.getData();
+                                                            } )
+                                                            .catch( err => {
+                                                                console.error( err.stack );
+                                                            } );
+                                                            $('.ck-editor__editable').change(function(event) {
+                                                                alert('test');
+                                                            });
+                                                        </script>
                                                     </div>
                                                     <hr>
                                                 </div>
@@ -826,14 +850,10 @@ add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
     'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-    'assets/textEditor/summernote-bs4.js',
-
+    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js'
 ));
-
 ?>
 <?php include viewPath('v2/includes/footer'); ?>
-
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
@@ -860,9 +880,6 @@ $('#share_modal_submit').click(function() {
         })
 
     $(function(){
-        $("#customer_id").select2({
-            placeholder: "Select Customer"
-        });
         $("#employee_id").select2({
             placeholder: "Select Employee"
         });
@@ -870,8 +887,30 @@ $('#share_modal_submit').click(function() {
             placeholder: "Sales Rep"
         });
         $("#priority").select2({
-            placeholder: ""
+            placeholder: "Choose Priority..."
         });
+
+        $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
+            placeholder: "Select Employee to Assign",
+        });
+
+        $("#customer_reminder").select2({
+            placeholder: "Choose Reminder..."
+        });
+
+        $("#inputState").select2({
+            placeholder: "Select Timezone..."
+        });
+
+        $("#job_type_option").select2({
+            placeholder: "Select Job Type..."
+        });
+
+        $("#job_tags").select2({
+            placeholder: "Select Job Type..."
+        });
+
+
     });
 </script>
 <script>

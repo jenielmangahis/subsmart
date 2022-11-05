@@ -1,4 +1,6 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
 <?php include viewPath('v2/includes/header'); ?>
 
 <style>
@@ -146,10 +148,15 @@ a.btn-primary.btn-md {
     color: red;
     }
    </style>
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
+        <i class="bx bx-note"></i>
+    </div>
+</div>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -906,8 +913,9 @@ a.btn-primary.btn-md {
 
 <?php //echo $file_selection; ?>
 
-<?php //include viewPath('v2/includes/footer'); ?>
-<?php include viewPath('includes/footer'); ?>
+<script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
+<?php include viewPath('v2/includes/footer'); ?>
+<?php //include viewPath('includes/footer'); ?>
 <script>
     function validatecard() {
         var inputtxt = $('.card-number').val();
