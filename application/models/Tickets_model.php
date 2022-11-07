@@ -18,11 +18,12 @@ class Tickets_model extends MY_Model
         $company_id = logged('company_id');
         
         $where = array(
-            'company_id' => $company_id,
+            'tickets.company_id' => $company_id,
         );
 
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id');
 		$this->db->where($where);
         $query = $this->db->get();
         return $query->result();
@@ -32,6 +33,13 @@ class Tickets_model extends MY_Model
     public function add_ticket_items($data)
     {
         $vendor = $this->db->insert('tickets_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function saveServiceType($data)
+    {
+        $data = $this->db->insert('service_type', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
@@ -57,6 +65,19 @@ class Tickets_model extends MY_Model
 		$this->db->where($where);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function  getServiceType($company_id)
+    {
+        $where = array(
+            'company_id' => $company_id,
+        );
+
+        $this->db->select('*');
+        $this->db->from('service_type');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function get_tickets_company($id)

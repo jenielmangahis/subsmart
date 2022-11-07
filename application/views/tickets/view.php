@@ -93,12 +93,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <?php foreach($items as $item){ ?>
                                 <tr>
                                     <td>#</td>
-                                    <td><?php echo $item->items_id; ?></td>
+                                    <td><?php echo $item->title; ?></td>
                                     <td><?php echo $item->item_type; ?></td>
-                                    <td><?php echo $item->cost; ?></td>
-                                    <td><?php echo $item->qty; ?></td>
-                                    <td><?php echo $item->discount; ?></td>
-                                    <td><?php echo $item->total; ?></td>
+                                    <td style="text-align:center;"><?php echo $item->cost; ?></td>
+                                    <td style="text-align:center;"><?php echo $item->qty; ?></td>
+                                    <td style="text-align:center;"><?php echo $item->discount; ?></td>
+                                    <td style="text-align:center;"><?php echo $item->total; ?></td>
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -114,23 +114,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <table class="table">
                             <tr>
                                 <td>Subtotal</td>
-                                <td style="text-align:right;"><?php echo $item->subtotal; ?></td>
+                                <td style="text-align:right;"><?php echo $tickets->subtotal; ?></td>
                             </tr>
                             <tr>
                                 <td>Taxes</td>
-                                <td style="text-align:right;"><?php echo $item->taxes; ?></td>
+                                <td style="text-align:right;"><?php echo $tickets->taxes; ?></td>
                             </tr>
                             <tr>
-                                <td>Adjustment: <?php echo $item->adjustment; ?></td>
-                                <td style="text-align:right;"><?php echo $item->adjustment_value; ?></td>
+                                <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
+                                <td style="text-align:right;"><?php echo $tickets->adjustment_value; ?></td>
                             </tr>
                             <tr>
                                 <td>Markup</td>
-                                <td style="text-align:right;"><?php echo $item->markup; ?></td>
+                                <td style="text-align:right;"><?php echo $tickets->markup; ?></td>
                             </tr>
                             <tr>
                                 <td>Grand Total</td>
-                                <td style="text-align:right;"><?php echo $item->grandtotal; ?></td>
+                                <td style="text-align:right;"><?php echo $tickets->grandtotal; ?></td>
                             </tr>
                         </table>
                     </div>

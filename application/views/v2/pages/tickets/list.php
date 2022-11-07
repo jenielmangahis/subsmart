@@ -76,7 +76,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <td><input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0"></td>
                             <td><?php echo $ticket->ticket_no; ?></td>
                             <td><?php echo $ticket->created_at; ?></td>
-                            <td><?php echo $ticket->customer_id; ?></td>
+                            <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
                             <td><?php echo $ticket->ticket_status; ?></td>
                             <td>$<?php echo number_format($ticket->grandtotal,2); ?></td>
                             <td>
