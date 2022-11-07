@@ -158,6 +158,8 @@ a.btn-primary.btn-md {
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
+    
+    <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -169,7 +171,6 @@ a.btn-primary.btn-md {
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row">
                     <div class="col-md-6">
@@ -309,11 +310,13 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3 form-group">
                                         <label for="zip"><b>Service Type</b></label>
                                         <div class="input-group">
-                                            <select class="form-control" name="service_type">
-                                                        <option>---</option>
+                                            <select class="form-control" name="service_type" id="service_type">
+                                                <?php foreach($serviceType as $sType){ ?>
+                                                    <option value="<?php echo $sType->service_name; ?>"><?php echo $sType->service_name; ?></option>
+                                                <?php } ?>
                                             </select>
                                             <span class="input-group-btn">
-                                                <button class="btn btn-success">Add New</button>
+                                                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addServiceType">Add New</a>
                                             </span>
                                         </div><!-- /input-group -->
                                     </div>
@@ -787,7 +790,6 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
 
-                                <?php echo form_close(); ?>
 
                                 <!-- Modal Service Address -->
                                 <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
@@ -829,6 +831,29 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
 
+                                <!-- Modal Additional addServiceType -->
+                                <div class="modal fade" id="addServiceType" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Add Service Type</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Service Name
+                                                <input type="text" class="form-control" name="addServiceTypevalue" id="addServiceTypevalue" />
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary saveServiceType">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -865,6 +890,7 @@ a.btn-primary.btn-md {
     </div>
 </div>
 
+<?php echo form_close(); ?>
             <!-- Modal -->
             <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -1188,4 +1214,26 @@ document.getElementById("payment_method").onchange = function() {
         $('#other_payment_area').show();
     }
 }
+</script>
+<script>
+    
+    $(".saveServiceType").on("click", function(e) {
+            let service_name = $("#addServiceTypevalue").val();
+            var $select = $('#service_type');
+
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('tickets/saveServiceType'); ?>",
+                data: {
+                    service_name: service_name
+                },
+                dataType: 'json',
+                success: function(response) {
+                    location.reload();
+                    $('#addServiceType').modal('hide');
+                    $select.selectmenu("refresh", true);
+                }
+            });
+        });
 </script>
