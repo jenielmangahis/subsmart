@@ -2621,6 +2621,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Estimate_model');
         $this->load->model('Tickets_model');
         $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
 
         $cid = logged('company_id');
         
@@ -2661,6 +2662,28 @@ class Workcalender extends MY_Controller
             $upcomingSchedules[$date_index][] = [
                 'type' => 'ticket',
                 'data' => $ticket
+            ];
+        }
+
+        foreach( $upcomingAppointments as $appointment ){
+            $date_index = date("Y-m-d", strtotime($appointment->appointment_date));
+            $appointment_tags = explode(",", $appointment->tag_ids);
+            $eventTags  = $this->EventTags_model->getAllByIds($appointment_tags);
+
+            $appointment_tags = '';
+            $aTags = array();
+            foreach($eventTags as $tags){
+                $aTags[] = $tags->name;
+            }
+
+            if( !empty($aTags) ){
+                $appointment_tags = implode(",", $aTags);
+            }
+            
+            $appointment->appt_tags = $appointment_tags;
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'appointment',
+                'data' => $appointment
             ];
         }
 

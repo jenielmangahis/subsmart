@@ -1417,7 +1417,7 @@
             data: {},
             success: function(result) {
                 _container.html(result);
-                $("#upcoming_schedules_container").nsmPagination();
+                $("#upcoming_schedules_table").nsmPagination();
             },
         });
     }
