@@ -541,31 +541,23 @@
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12">
-                                                <script src="https://cdn.ckeditor.com/ckeditor5/35.3.0/classic/ckeditor.js"></script>
-                                                    <div class="form-group">
-                                                        <!-- <?php echo "<textarea class='form-control' name='message'>$jobs_data->customer_message</textarea>"; ?> -->
-                                                        
-                                                        <input class="d-none customer_message_input" type="text" name="customer_message" value="<?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>">
-                                                        <div id="Message_Editor"><?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?></div>
-                                                        <script>
-                                                    var myEditor;
-                                                        ClassicEditor
-                                                            .create( document.querySelector( '#Message_Editor' ) )
-                                                            .then( editor => {
-                                                                console.log( 'Editor was initialized', editor );
-                                                                myEditor = editor;
-                                                                myEditor.getData();
-                                                            } )
-                                                            .catch( err => {
-                                                                console.error( err.stack );
-                                                            } );
-                                                            $('.ck-editor__editable').change(function(event) {
-                                                                alert('test');
-                                                            });
-                                                        </script>
+                                                <div class="col-sm-12 mb-4">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 mb-2">
+                                                            <h5>Message</h5>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <?php 
+                                                                if (isset($jobs_data)) { 
+                                                                    $MESSAGE = "$jobs_data->customer_message"; 
+                                                                } else { 
+                                                                    $MESSAGE = "Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service";                                                                
+                                                                } 
+                                                            ?>
+                                                            <div id="Message_Editor"><?php echo $MESSAGE; ?></div>
+                                                            <input class="d-none customer_message_input" name="message" value="<?php echo $MESSAGE; ?>">
+                                                        </div>
                                                     </div>
-                                                    <hr>
                                                 </div>
                                                 <?php if(isset($jobs_data) && $jobs_data->status == 'Invoiced'): ?>
                                                 <div class="col-sm-12">
@@ -862,104 +854,127 @@ add_footer_js(array(
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
+
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
+
 <script>
+CKEDITOR.replace( 'Message_Editor', {
+    toolbarGroups: [
+        { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
+        { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },           // Group's name will be used to create voice label.
+        '/',                                                                // Line break - next group will be placed in new line.
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'links' }
+    ],
+    height: '140px',
+});
+CKEDITOR.editorConfig = function( config ) {
+    config.height = '200px';
+};
+
 $('#share_modal_submit').click(function() {
-            //employee 2
-            var emp2 = $('#employee2').val();
-            var empText = $('#employee2 :selected').text();
-            $('#emp2_id').val($('#employee2').val());
-            $('#emp2_txt').val($('#employee2 :selected').text());
-            //employee 3 
-            $('#emp3_id').val($('#employee3').val());
-            $('#emp3_txt').val($('#employee3 :selected').text());
-            //employee 4
-            $('#emp4_id').val($('#employee4').val());
-            $('#emp4_txt').val($('#employee4 :selected').text());
-            
-        })
+    //employee 2
+    var emp2 = $('#employee2').val();
+    var empText = $('#employee2 :selected').text();
+    $('#emp2_id').val($('#employee2').val());
+    $('#emp2_txt').val($('#employee2 :selected').text());
+    //employee 3 
+    $('#emp3_id').val($('#employee3').val());
+    $('#emp3_txt').val($('#employee3 :selected').text());
+    //employee 4
+    $('#emp4_id').val($('#employee4').val());
+    $('#emp4_txt').val($('#employee4 :selected').text());
 
-    $(function(){
-        $("#employee_id").select2({
-            placeholder: "Select Employee"
-        });
-        $("#sales_rep").select2({
-            placeholder: "Sales Rep"
-        });
-        $("#priority").select2({
-            placeholder: "Choose Priority..."
-        });
+})
 
-        $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
-            placeholder: "Select Employee to Assign",
-        });
-
-        $("#customer_reminder").select2({
-            placeholder: "Choose Reminder..."
-        });
-
-        $("#inputState").select2({
-            placeholder: "Select Timezone..."
-        });
-
-        $("#job_type_option").select2({
-            placeholder: "Select Job Type..."
-        });
-
-        $("#job_tags").select2({
-            placeholder: "Select Job Type..."
-        });
-
-
+$(function() {
+    $("#customer_id").select2({
+        placeholder: "Select Customer"
     });
-</script>
-<script>
-    var geocoder;
-    function initMap(address=null) {
-        if(address == null){
-            address = '6866 Pine Forest Rd Pensacola FL 32526';
-        }
-        const myLatLng = { lat: -25.363, lng: 131.044 };
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 12,
-            height:220,
-            center: myLatLng,
-        });
-        new google.maps.Marker({
-            position: myLatLng,
-            map,
-            title: "Hello World!",
-        });
-        geocoder = new google.maps.Geocoder();
-        codeAddress(geocoder, map,address);
-    }
+    $("#sales_rep").select2({
+        placeholder: "Sales Rep"
+    });
+    $("#priority").select2({
+        placeholder: "Choose Priority..."
+    });
 
-    function codeAddress(geocoder, map,address) {
-        geocoder.geocode({'address': address}, function(results, status) {
-            if (status === 'OK') {
-                map.setCenter(results[0].geometry.location);
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: results[0].geometry.location
-                });
-            } else {
-                console.log('Geocode was not successful for the following reason: ' + status);
-            }
-        });
+    $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
+        placeholder: "Select Employee to Assign",
+    });
+
+    $("#customer_reminder").select2({
+        placeholder: "Choose Reminder..."
+    });
+
+    $("#inputState").select2({
+        placeholder: "Select Timezone..."
+    });
+
+    $("#job_type_option").select2({
+        placeholder: "Select Job Type..."
+    });
+
+    $("#job_tags").select2({
+        placeholder: "Select Job Type..."
+    });
+    $("#employee_id").select2({
+        placeholder: "Select Employee"
+    });
+
+});
+var geocoder;
+
+function initMap(address = null) {
+    if (address == null) {
+        address = '6866 Pine Forest Rd Pensacola FL 32526';
     }
-    $("body").delegate(".color-scheme", "click", function(){
-            var id = this.id;
-            $('[id="job_color_id"]').val(id);
-            $( "#"+id ).append( "<i class=\"bx bx-check calendar_button\" style=\"color:#ffffff\" aria-hidden=\"true\"></i>" );
-            remove_others(id);
-        });
-        function remove_others (color_id){
-            $('.color-scheme').each(function(index) {
-                var idd = this.id;
-                if(idd !== color_id){
-                    $( "#"+idd ).empty();
-                }
+    const myLatLng = {
+        lat: -25.363,
+        lng: 131.044
+    };
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        height: 220,
+        center: myLatLng,
+    });
+    new google.maps.Marker({
+        position: myLatLng,
+        map,
+        title: "Hello World!",
+    });
+    geocoder = new google.maps.Geocoder();
+    codeAddress(geocoder, map, address);
+}
+
+function codeAddress(geocoder, map, address) {
+    geocoder.geocode({
+        'address': address
+    }, function(results, status) {
+        if (status === 'OK') {
+            map.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location
             });
+        } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
         }
+    });
+}
+$("body").delegate(".color-scheme", "click", function() {
+    var id = this.id;
+    $('[id="job_color_id"]').val(id);
+    $("#" + id).append("<i class=\"bx bx-check calendar_button\" style=\"color:#ffffff\" aria-hidden=\"true\"></i>");
+    remove_others(id);
+});
+
+function remove_others(color_id) {
+    $('.color-scheme').each(function(index) {
+        var idd = this.id;
+        if (idd !== color_id) {
+            $("#" + idd).empty();
+        }
+    });
+}
 </script>
 

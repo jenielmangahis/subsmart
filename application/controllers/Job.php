@@ -2928,6 +2928,57 @@ class Job extends MY_Controller
         echo 1;
         exit;
     }
+
+
+    public function apiGetJobTypes()
+    {
+        $query = [
+            'where' => [
+                'company_id' => logged('company_id')
+            ],
+            'table' => 'job_types',
+            'select' => 'id,title,icon_marker',
+            'order' => [
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ],
+        ];
+
+        $result = $this->general->get_data_with_param($query);
+
+        $search = strtolower($this->input->get('search'));
+        if (!empty($search)) {
+            $result = array_filter($result, function ($item) use ($search) {
+                return strpos(strtolower($item->title), $search) !== false;
+            });
+        }
+
+        header('content-type: application/json');
+        exit(json_encode(['data' => array_values($result)]));
+    }
+
+    public function apiGetJobTags()
+    {
+        $query = [
+            'where' => [
+                'company_id' => logged('company_id')
+            ],
+            'table' => 'job_tags',
+            'select' => 'id,name,marker_icon',
+        ];
+
+        $result = $this->general->get_data_with_param($query);
+
+        $search = strtolower($this->input->get('search'));
+        if (!empty($search)) {
+            $result = array_filter($result, function ($item) use ($search) {
+                return strpos(strtolower($item->name), $search) !== false;
+            });
+        }
+
+        header('content-type: application/json');
+        exit(json_encode(['data' => array_values($result)]));
+    }
 }
 
 /* End of file Job.php */

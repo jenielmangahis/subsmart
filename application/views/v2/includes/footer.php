@@ -17,6 +17,9 @@
     <!-- Boostrap JS -->
     <script src="<?= base_url("assets/js/v2/bootstrap.bundle.min.js") ?>" crossorigin="anonymous"></script>
     
+    <!-- Timepicker -->
+    <script src="<?php echo $url->assets ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
+    <!-- Custom JS -->
     <script src="<?php echo $url->assets ?>js/custom.js"></script>
     <!-- Sweetalert JS -->
     <script src="<?= base_url("assets/js/v2/sweetalert2.min.js") ?>"></script>

@@ -41,6 +41,19 @@ class AppointmentType_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    public function getAllByCompanyIdAndAppointmentTypeId($company_id, $appointment_type_ids =array())
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where_in('tag_ids', $appointment_type_ids);        
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file AppointmentType_model.php */

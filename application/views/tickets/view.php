@@ -90,17 +90,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <th style="text-align:center;">Total</th>
                             </thead>
                             <tbody>
-                                <?php foreach($items as $item){ ?>
+                                <?php
+                                $i = 1;
+                                 foreach($items as $item){ ?>
                                 <tr>
-                                    <td>#</td>
+                                    <td><?php echo $i; ?></td>
                                     <td><?php echo $item->title; ?></td>
                                     <td><?php echo $item->item_type; ?></td>
-                                    <td style="text-align:center;"><?php echo $item->cost; ?></td>
+                                    <td style="text-align:center;">$<?php echo number_format($item->costing,2); ?></td>
                                     <td style="text-align:center;"><?php echo $item->qty; ?></td>
-                                    <td style="text-align:center;"><?php echo $item->discount; ?></td>
-                                    <td style="text-align:center;"><?php echo $item->total; ?></td>
+                                    <td style="text-align:center;">$<?php echo number_format($item->discount,2); ?></td>
+                                    <td style="text-align:center;">$<?php echo number_format($item->total,2); ?></td>
                                 </tr>
-                                <?php } ?>
+                                <?php 
+                                    $i++;
+                                } ?>
                             </tbody>
                         </table>
                     </div>
@@ -112,25 +116,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-4">
                         <table class="table">
-                            <tr>
+                            <tr style="font-weight:bold;">
                                 <td>Subtotal</td>
-                                <td style="text-align:right;"><?php echo $tickets->subtotal; ?></td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
                             </tr>
-                            <tr>
+                            <tr style="font-weight:bold;">
                                 <td>Taxes</td>
-                                <td style="text-align:right;"><?php echo $tickets->taxes; ?></td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
                             </tr>
-                            <tr>
+                            <tr style="font-weight:bold;">
                                 <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
-                                <td style="text-align:right;"><?php echo $tickets->adjustment_value; ?></td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
                             </tr>
-                            <tr>
+                            <tr style="font-weight:bold;">
                                 <td>Markup</td>
-                                <td style="text-align:right;"><?php echo $tickets->markup; ?></td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
                             </tr>
-                            <tr>
+                            <tr style="font-weight:bold;">
                                 <td>Grand Total</td>
-                                <td style="text-align:right;"><?php echo $tickets->grandtotal; ?></td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
                             </tr>
                         </table>
                     </div>
@@ -138,34 +142,39 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <br><br>
                 <div class="row" style="font-size:16px;">
                     <div class="col-md-12">
-                        <b>Service Description:</u></b> <br> <?php echo $tickets->service_description; ?>
-                    </div>
-                </div>
-                <br><br><br>
-                <div class="row" style="font-size:16px;text-align:center;">
-                    <div class="col-md-6">
-                        Service Location <br><b><?php echo $tickets->service_location; ?></b>
-                    </div>
-                    <div class="col-md-6">
-                        Job Tag <br> <b><?php echo $tickets->job_tag; ?></b>
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;text-align:center;">
-                    <div class="col-md-4">
-                        Panel Type <br> <b><?php echo $tickets->panel_type; ?></b>
-                    </div>
-                    <div class="col-md-4">
-                        Service Type <br> <b><?php echo $tickets->service_type; ?></b>
-                    </div>
-                    <div class="col-md-4">
-                        Warranty Type <br> <b><?php echo $tickets->warranty_type; ?></b>
+                        <b>Service Description:</u></b> <br> <?php if(empty($tickets->service_description)){ echo 'N/A'; }else{ echo $tickets->service_description; } ?>
                     </div>
                 </div>
                 <br><br><br>
                 <div class="row" style="font-size:16px;">
                     <div class="col-md-6">
                         <table class="table" style="width:50%;">
+                            <tr>
+                                <td><b>Service Location: </b></td>
+                                <td><?php echo $tickets->service_location; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Job Tag: </b></td>
+                                <td><?php echo $tickets->job_tag; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Panel Type: </b></td>
+                                <td><?php echo $tickets->panel_type; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Service Type: </b></td>
+                                <td><?php echo $tickets->service_type; ?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Warranty Type: </b></td>
+                                <td><?php echo $tickets->warranty_type; ?></td>
+                            </tr>
+                        <!-- </table>
+                    </div>
+                </div>
+                <div class="row" style="font-size:16px;">
+                    <div class="col-md-6">
+                        <table class="table" style="width:50%;"> -->
                             <tr>
                                 <td><b>Payment Method: </b></td>
                                 <td><?php echo $tickets->payment_method; ?></td>
@@ -308,7 +317,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <table class="table" style="width:50%;float:right;">
                             <tr>
                                 <td><b>Sales Representative</b></td>
-                                <td><?php echo $tickets->sales_rep; ?></td>
+                                <td><?php echo $reps->FName.' '.$reps->LName; ?></td>
                             </tr>
                             <tr>
                                 <td><b>Contact No. </b></td>
@@ -324,7 +333,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <br><br>
                 <div class="row" style="font-size:16px;">
                     <div class="col-md-12">
-                        <b>Message:</u></b> <br> <?php echo $tickets->message; ?>
+                        <b>Message:</u></b> <br><?php if(empty($tickets->message)){ echo 'N/A'; }else{ echo $tickets->message; } ?>
                     </div>
                 </div>
                 <br><br>
@@ -336,13 +345,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <br><br>
                 <div class="row" style="font-size:16px;">
                     <div class="col-md-12">
-                        <b>Attachments:</u></b> <br> <?php echo $tickets->attachments; ?>
+                        <b>Attachments:</u></b> <br> <?php if(empty($tickets->attachments)){ echo 'N/A'; }else{ echo $tickets->attachments; } ?>
                     </div>
                 </div>
                 <br><br>
                 <div class="row" style="font-size:16px;">
                     <div class="col-md-12">
-                        <b>Instructions:</u></b> <br> <?php echo $tickets->instructions; ?>
+                        <b>Instructions:</u></b> <br> <?php if(empty($tickets->instructions)){ echo 'N/A'; }else{ echo $tickets->instructions; } ?> 
                     </div>
                 </div>
                 <br><br>

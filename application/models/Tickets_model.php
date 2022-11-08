@@ -94,13 +94,26 @@ class Tickets_model extends MY_Model
         return $query->row();
     }
 
+    public function get_ticket_representative($ticket_rep)
+    {
+        $where = array(
+            'id' => $ticket_rep,
+        );
+
+        $this->db->select('*');
+        $this->db->from('users');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function get_ticket_items($id)
     {
         $where = array(
             'ticket_id' => $id,
         );
 
-        $this->db->select('*');
+        $this->db->select('*, tickets_items.cost AS costing');
         $this->db->from('tickets_items');
         $this->db->join('items', 'tickets_items.items_id  = items.id');
 		$this->db->where($where);
