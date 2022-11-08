@@ -6183,4 +6183,18 @@ class Customer extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_load_customer_address()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+        $customer = $this->AcsProfile_model->getByProfId($post['prof_id'], $filter);
+
+        $this->page_data['customer'] = $customer;
+        $this->load->view('v2/pages/customer/ajax_load_customer_address', $this->page_data);
+    }
 }

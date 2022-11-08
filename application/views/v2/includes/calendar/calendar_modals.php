@@ -66,6 +66,7 @@
                             <span id="add-customer-popover" data-toggle="popover" data-placement="right"data-container="body">
                                 <select class="nsm-field form-select" name="appointment_customer_id" id="appointment-customer"></select>
                             </span>
+                            <div class="customer-address"></div>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
@@ -237,7 +238,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="view_appointment_modal" tabindex="-1" aria-labelledby="view_appointment_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">View Appointment</span>

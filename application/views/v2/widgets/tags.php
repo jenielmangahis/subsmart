@@ -1,3 +1,10 @@
+<style>
+.btn-manage-tags{
+    position: relative;
+    left: 77%;
+    top: 22px;
+}
+</style>
 <?php
     if(!is_null($dynamic_load) && $dynamic_load == true):
         echo '<div class="col-12 col-lg-4">';
@@ -22,7 +29,8 @@
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="nsm-badge-group tags-container">
+        <a class="nsm-button primary btn-manage-tags" href="<?= base_url('job/job_tags'); ?>">Manage Tags</a>
+        <div class="nsm-badge-group tags-container">            
             <div class="nsm-loader">
                 <i class='bx bx-loader-alt bx-spin'></i>
             </div>

@@ -628,9 +628,23 @@
             templateSelection: formatRepoCustomerSelection
         });
 
+        $('#appointment-customer').on("select2:select", function(e) { 
+            let prof_id = e.params.data.prof_id;
+            let url = "<?= base_url('customer/_load_customer_address') ?>";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {prof_id: prof_id},
+                success: function(result) {
+                    $('.customer-address').html(result);
+                }
+            });
+        });
+
         $('#appointment-tags').select2({
             ajax: {
-                url: base_url + 'autocomplete/_company_event_tags',
+                url: base_url + 'autocomplete/_company_job_tags',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -1050,6 +1064,31 @@
         let bc_resources_url = "<?= base_url('calendar/_get_main_calendar_resources') ?>";
         let bc_resource_users_url = "<?= base_url('calendar/_get_main_calendar_resource_users') ?>";
         let scrollTime = moment().format("HH") + ":00:00";
+        let default_calendar_tab = '<?= $default_calendar_view; ?>';
+        
+        if( default_calendar_tab == 'employee' ){
+            default_calendar_tab = 'employeeTimeline';
+        }
+
+        if( default_calendar_tab == 'month' ){
+            default_calendar_tab = 'monthView';   
+        }
+
+        if( default_calendar_tab == 'day' ){
+            default_calendar_tab = 'dayView';   
+        }
+
+        if( default_calendar_tab == '3d' ){
+            default_calendar_tab = 'threeDaysView';   
+        }
+
+        if( default_calendar_tab == 'week' ){
+            default_calendar_tab = 'weekView';   
+        }
+
+        if( default_calendar_tab == 'list' ){
+            default_calendar_tab = 'listView';   
+        }
 
         calendar = new FullCalendar.Calendar(_calendar, {
             schedulerLicenseKey: '0531798248-fcs-1598103289',
@@ -1059,7 +1098,7 @@
             themeSystem: 'bootstrap5',
             eventDisplay: 'block',
             contentHeight: 750,
-            initialView: 'threeDaysView',
+            initialView: default_calendar_tab,
             views: {
                 employeeTimeline: {
                     type: 'resourceTimeGridDay',
@@ -1165,6 +1204,7 @@
                 // loadCompanyUsers();
                 // loadCompanyCustomers($("#appointment-customer"));
                 //$("#calendar_action_select_modal").modal('show');
+                $('.customer-address').html('');
                 $("#create_appointment_modal").modal('show');
             },
             slotEventOverlap: false,
@@ -1632,7 +1672,7 @@
 
         $('#wishlist-edit-appointment-tags').select2({
             ajax: {
-                url: "<?= base_url('autocomplete/_company_event_tags') ?>",
+                url: "<?= base_url('autocomplete/_company_job_tags') ?>",
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -1727,7 +1767,7 @@
 
         $('#edit-appointment-tags').select2({
             ajax: {
-                url: "<?= base_url('autocomplete/_company_event_tags') ?>",
+                url: "<?= base_url('autocomplete/_company_job_tags') ?>",
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {

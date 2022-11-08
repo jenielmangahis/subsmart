@@ -72,6 +72,31 @@ class Autocomplete extends MY_Controller
         die(json_encode($tags));   
     }
 
+    public function company_job_tags()
+    {
+        $this->load->model('Job_tags_model');
+
+        $search = $this->input->get('q');
+        $filter = ['search' => $search];
+        $cid    = logged('company_id');
+        $tags = $this->Job_tags_model->getJobTagsByCompany($cid, $filter);  
+        
+        foreach($tags as $tag){        
+            if( $tag->marker_icon != '' ){
+                if($tag->is_marker_icon_default_list == 1){
+                    $marker = base_url("uploads/icons/" . $tag->marker_icon);
+                }else{
+                    $marker = base_url("uploads/job_tags/" . $tag->company_id . "/" . $tag->marker_icon);
+                }
+            }else{
+                $marker = base_url("uploads/job_tags/default_no_image.jpg");
+            }         
+            $tag->img_marker   = $marker;
+        }
+
+        die(json_encode($tags));   
+    }
+
     public function company_reasons()
     {
         $this->load->model('CompanyReason_model');

@@ -31,7 +31,7 @@
 </div>
 <div class="col-12">
     <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
-    <select class="nsm-field form-select" name="appointment_tags[]" id="edit-appointment-tags" required>
+    <select class="nsm-field form-select" name="appointment_tags[]" id="edit-appointment-tags" multiple="multiple" required>
         <?php foreach ($a_selected_tags as $key => $value) { ?>
             <option value="<?= $key; ?>" selected><?= $value; ?></option>
         <?php } ?>

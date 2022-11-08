@@ -1,38 +1,36 @@
 <?php if ($appointment) { ?>
     <?php
-    $c_phone = "unknown";
-    $c_email = "unknown";
+    $c_phone = "---";
+    $c_email = "---";
 
-    if ($appointment->customer_phone != '') {
-        $c_phone = $appointment->customer_phone;
+    if ($appointment->cust_phone != '') {
+        $c_phone = $appointment->cust_phone;
     }
 
     if ($appointment->customer_email != '') {
         $c_email = $appointment->customer_email;
     }
     ?>
-    <div class="col-12 col-md-6">
-        <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
-        <label class="content-subtitle fw-bold"><?= $appointment->customer_name; ?></label>
-        <label class="content-subtitle d-block"><span class="fw-bold">Phone:</span> <?= $c_phone; ?></label>
-        <label class="content-subtitle d-block"><span class="fw-bold">Email:</span> <?= $c_email; ?></label>
+    <div class="col-12 col-md-12">
+        <label class="content-subtitle fw-bold d-block mb-2" style="font-size:20px;"><?= $appointment->appointment_number; ?></label>
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-8">
+        <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+        <label class="content-subtitle fw-bold" style="font-size: 16px;margin-bottom: 12px;"><?= $appointment->customer_name; ?></label>
+        <label class="content-subtitle d-block" style="margin-bottom:5px;"><span class="fw-bold"><i class="bx bxs-map-pin"></i> Phone:</span> <?= $c_phone; ?></label>
+        <label class="content-subtitle d-block"><span class="fw-bold"><i class="bx bxs-phone"></i> Address:</span> <?= $appointment->mail_add . ' ' . $appointment->cust_city . ' ' . $appointment->cust_state . ' '. $appointment->cust_zip_code; ?></label>
+        <br />
+        <label class="content-subtitle d-block" style="margin-bottom: 5px;"><span class="fw-bold"><i class='bx bxs-calendar'></i> Schedule:</span> <?= date("l, F d, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?> - <?= date("g:i A", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></label>
+        <label class="content-subtitle d-block"><span class="fw-bold"><i class='bx bx-list-ul'></i> Appointment Type:</span> <?= $appointment->appointment_type; ?></label>
+    </div>
+    <div class="col-12 col-md-4">
         <label class="content-subtitle fw-bold d-block mb-2">Employee</label>
         <div class="d-flex align-items-center">
             <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($appointment->user_id); ?>'); width: 40px;"></div>
             <label class="content-subtitle fw-bold"><?= $appointment->employee_name; ?></label>
         </div>
     </div>
-    <div class="col-12">
-        <label class="content-subtitle fw-bold d-block mb-2">Date & Time</label>
-        <label class="content-subtitle d-block"><?= date("l, F d, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></label>
-        <label class="content-subtitle d-block"><?= date("g:i A", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></label>
-    </div>
-    <div class="col-12">
-        <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-        <label class="content-subtitle d-block"><?= $appointment->appointment_type; ?></label>
-    </div>
+    <hr />
     <div class="col-12">
         <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
         <div class="d-flex">

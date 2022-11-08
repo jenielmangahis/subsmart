@@ -58,8 +58,7 @@ class Settings extends MY_Controller {
         if (!empty($post)) {
             $this->load->model('Settings_model', 'setting_model');
             if (!empty($settings)) {
-                $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
-
+                $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);                
                 if (!empty($settings)) {
 
                     // as where return multiple result as an array
@@ -1049,6 +1048,10 @@ class Settings extends MY_Controller {
                     if( $asms->send_to_assigned_agent == 1 ){
                         $recipients[$asms->id][] = 'Send to Assigned Agent';
                     }                   
+
+                    if( $asms->send_to_customer == 1 ){
+                        $recipients[$asms->id][] = 'Send to Customer';
+                    }                   
                 }
             }            
         }
@@ -1141,7 +1144,7 @@ class Settings extends MY_Controller {
             $msg = 'Please specify sms message';
         }elseif( $post['module_status'] == '' ){
             $msg = 'Please specify status of the module that will trigger auto sms';
-        }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) && !isset($post['send_assigned_agent']) ){
+        }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) && !isset($post['send_assigned_agent']) && !isset($post['send_customer']) ){
             $msg = 'Please specify recipient of the sms notification';
         }else{            
             if( isset($post['send_to_all']) ){
@@ -1179,6 +1182,11 @@ class Settings extends MY_Controller {
                 $send_to_assigned_agent = 1;
             }
 
+            $send_to_customer = 0;
+            if( isset($post['send_customer']) && ($post['module_name'] == 'estimate' || $post['module_name'] == 'job' || $post['module_name'] == 'workorder') ){
+                $send_to_customer = 1;
+            }
+
             $data = [
                 'company_id' => $cid,
                 'module_name' => $post['module_name'],
@@ -1189,6 +1197,7 @@ class Settings extends MY_Controller {
                 'send_to_company_admin' => $send_to_company_admin,                
                 'send_to_assigned_user' => $send_to_assigned_user,
                 'send_to_assigned_agent' => $send_to_assigned_agent,
+                'send_to_customer' => $send_to_customer,
                 'is_enabled' => $post['is_enabled']
             ];
 
@@ -1306,7 +1315,7 @@ class Settings extends MY_Controller {
                 $msg = 'Please specify sms message';
             }elseif( $post['module_status'] == '' ){
                 $msg = 'Please specify status of the module that will trigger auto sms';
-            }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) && !isset($post['send_assigned_agent']) ){
+            }elseif( !isset($post['send_to_all']) && empty($post['send_to']) && !isset($post['send_creator']) && !isset($post['send_company_admin']) && !isset($post['send_assigned_user']) && !isset($post['send_assigned_agent']) && !isset($post['send_customer']) ){
                 $msg = 'Please specify recipient of the sms notification';
             }else{  
                 if( isset($post['send_to_all']) ){
@@ -1344,6 +1353,11 @@ class Settings extends MY_Controller {
                     $send_to_assigned_agent = 1;
                 }
 
+                $send_to_customer = 0;
+                if( isset($post['send_customer']) && ($post['module_name'] == 'estimate' || $post['module_name'] == 'job' || $post['module_name'] == 'workorder') ){
+                    $send_to_customer = 1;
+                }
+
                 $data = [
                     'module_name' => $post['module_name'],
                     'sms_text' => $post['sms_text'],
@@ -1353,6 +1367,7 @@ class Settings extends MY_Controller {
                     'send_to_company_admin' => $send_to_company_admin,                
                     'send_to_assigned_user' => $send_to_assigned_user,
                     'send_to_assigned_agent' => $send_to_assigned_agent,
+                    'send_to_customer' => $send_to_customer,
                     'is_enabled' => $post['is_enabled']
                 ];
 
