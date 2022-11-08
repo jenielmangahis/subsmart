@@ -351,6 +351,10 @@ class Tickets extends MY_Controller
         $user_id  = getLoggedUserID();
 
         $tickets = $this->tickets_model->get_tickets_data_one($id);
+        $ticket_rep  = $tickets->sales_rep;
+
+        $this->page_data['reps'] = $this->tickets_model->get_ticket_representative($ticket_rep);
+        // var_dump($ticket_rep);
 
         $this->page_data['ticketsCompany'] = $this->tickets_model->get_tickets_company($tickets->company_id);
         $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);

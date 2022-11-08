@@ -225,7 +225,6 @@ class Products_and_services extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
         $this->load->view('v2/pages/accounting/sales/products_and_services/list', $this->page_data);
-        // $this->load->view('accounting/products_and_services', $this->page_data);
     }
 
     private function get_items($filters)

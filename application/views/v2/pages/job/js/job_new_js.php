@@ -7,6 +7,60 @@ if(isset($jobs_data)){
 ?>
 
 <script>
+
+$(".REMOVE_THUMBNAIL").click(function(event) {
+    event.preventDefault();
+    $("#attachment-file").val(null);
+    $("#attachment-image").attr("src", null);
+    $("#attachment").val(null);
+    $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
+    $(".THUMBNAIL_BOX").removeClass("d-none");
+});
+$("#attachment-file").change(function() {
+    var input = document.getElementById('attachment-file');
+    var fileName = document.getElementById("attachment-file").value;
+    var idxDot = fileName.lastIndexOf(".") + 1;
+    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+    if (extFile != "") {
+        if (extFile == "jpg" || extFile == "jpeg" || extFile == "png" || extFile == "bmp" || extFile == "ico" || extFile == ".jfif" || extFile == ".pjpeg" || extFile == ".pjp") {
+            $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").removeClass("d-none");
+            $(".THUMBNAIL_BOX").addClass("d-none");
+            var fileInput = document.getElementById('attachment-file');
+            var file = fileInput.files[0];
+            var formDatas = new FormData();
+            formDatas.append('file', file);
+            // console.log(formDatas);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "<?= base_url() ?>/job/add_job_attachments",
+                data: formDatas,
+                processData: false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+
+                },
+                success: function(data) {
+                    if (data.search("png") != -1 || data.search("jpeg") != -1 || data.search("jpg") != -1 || data.search("bmp") != -1 || data.search("ico") != -1 || data.search("jfif") != -1 || data.search("pjpeg") != -1 || data.search("pjp") != -1) {
+                        $('#attachment').val('/' + data);
+                        $("#attachment-image").attr("src", '/' + data);
+                    } else {
+                        $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
+                        $(".THUMBNAIL_BOX").removeClass("d-none");
+                    }
+                },
+                error: function(e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        } else {
+            error('', 'Only png, jpg, jpeg, bmp or ico files are allowed for Thumbnails!', 'error');
+        }
+    }
+});
+
+
     $( window ).on( "load", function() {
     var cust_id = <?php echo $customer  ?>;
       fetch('<?= base_url() ?>/job/get_customers', {
@@ -118,6 +172,7 @@ if(isset($jobs_data)){
         //JOB
         $("#jobs_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
+            $(".customer_message_input").val(window.CKEDITOR.instances.Message_Editor.getData());
             if($('#job_color_id').val()=== ""){
                 error('Sorry!','Event Color is required!','warning');
             }else{
@@ -562,70 +617,6 @@ if(isset($jobs_data)){
             document.getElementById('attach_left_card').style.display = "none";
             document.getElementById('attach_right_card').style.display = "block";
         });
-
-
-$(".REMOVE_THUMBNAIL").click(function(event) {
-    event.preventDefault();
-    $("#attachment-file").val(null);
-    $("#attachment-image").attr("src", null);
-    $("#attachment").val(null);
-    $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
-    $(".THUMBNAIL_BOX").removeClass("d-none");
-});
-$("#attachment-file").change(function() {
-    var input = document.getElementById('attachment-file');
-    var fileName = document.getElementById("attachment-file").value;
-    var idxDot = fileName.lastIndexOf(".") + 1;
-    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-    if (extFile != "") {
-        if (extFile == "jpg" || extFile == "jpeg" || extFile == "png" || extFile == "bmp" || extFile == "ico" || extFile == ".jfif" || extFile == ".pjpeg" || extFile == ".pjp") {
-            $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").removeClass("d-none");
-            $(".THUMBNAIL_BOX").addClass("d-none");
-            var fileInput = document.getElementById('attachment-file');
-            var file = fileInput.files[0];
-            var formDatas = new FormData();
-            formDatas.append('file', file);
-            // console.log(formDatas);
-            $.ajax({
-                type: "POST",
-                enctype: 'multipart/form-data',
-                url: "<?= base_url() ?>/job/add_job_attachments",
-                data: formDatas,
-                processData: false,
-                contentType: false,
-                cache: false,
-                beforeSend: function() {
-
-                },
-                success: function(data) {
-                    if (data.search("png") != -1 || data.search("jpeg") != -1 || data.search("jpg") != -1 || data.search("bmp") != -1 || data.search("ico") != -1 || data.search("jfif") != -1 || data.search("pjpeg") != -1 || data.search("pjp") != -1) {
-                        $('#attachment').val('/' + data);
-                        $("#attachment-image").attr("src", '/' + data);
-                    } else {
-                        $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
-                        $(".THUMBNAIL_BOX").removeClass("d-none");
-                    }
-                },
-                error: function(e) {
-                    console.log("ERROR : ", e);
-                    //$("#result").text(e.responseText);
-                    // $("#btnSubmit").prop("disabled", false);
-                }
-            });
-        } else {
-            error('', 'Only png, jpg, jpeg, bmp or ico files are allowed for Thumbnails!', 'error');
-        }
-    }
-    // $("#FILENAME").html($("#attachment-file").val().replace("C:\\fakepath\\", ""));
-    // var form = $('form')[0]; // You need to use standard javascript object here
-    // var formData = new FormData(form);
-    // var form = $('#upload_library_form').serialize();
-    // var formData = new FormData($(form)[0]);
-    // for (var i = 0; i < input.files.length; i++) {
-    //     console.log(input.files[i]);
-    // }
-    // The Javascript
-});
 
         $("#save_memo").on( "click", function( event ) {
             var note = $('#note_txt').val();

@@ -462,7 +462,7 @@
                                                 <label>To:</label>
                                               </div>
                                               <div class="col-sm-5">
-                                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
+                                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : $default_start_date;  ?>" required>
                                               </div>
                                               <div class="col-sm-5">
                                                   <select id="end_time" name="end_time" class="nsm-field form-select " required>
@@ -557,7 +557,12 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <h6>Select Job Type</h6>
+                                            <div class="d-flex justify-content-between">
+                                                <h6>Select Job Type</h6>
+                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
+                                                    <span class="bx bx-plus"></span>Manage Job Types
+                                                </a>
+                                            </div>
                                             <select id="job_type_option" name="jobtypes" class="form-control " required>
                                                 <option value="">Select Type</option>
                                                 <?php if(!empty($job_types)): ?>
@@ -568,7 +573,12 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <h6>Select Job Tag</h6>
+                                            <div class="d-flex justify-content-between">
+                                                <h6>Select Job Tag</h6>
+                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>">
+                                                    <span class="bx bx-plus"></span>Manage Job Tags
+                                                </a>
+                                            </div>
                                             <select id="job_tags" name="tags" class="form-control " required>
                                                 <option value="">Select Tags</option>
                                                 <?php if(!empty($tags)): ?>
@@ -879,65 +889,37 @@
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
-                                                <br>
-                                                <div class="col-sm-12">
-                                                    <div class="" id="notes_right_card">
-                                                        <div class="row">
-                                                                <div class="card-header">
-                                                                    <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                                    <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <div id="notes_edit_btn_right" class="pencil" style="width:100%; height:100px;cursor: pointer;">
-                                                                        <?php 
-                                                                             if (isset($jobs_data)) {
-                                                                                echo "<textarea class='form-control' name='message'>$jobs_data->message</textarea>";
-                                                                             } else {
-                                                                                echo "<textarea class='form-control' name='message'>Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service.</textarea>";
-                                                                             }
-                                                                        ?>
-                                                                        <!-- <textarea class="form-control" name="message"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
-                                                                        <textarea class="form-control" name="message">Thank you for your business, Please call <?= $company_info->business_name; ?> at (<?= $company_info->business_phone; ?>) for quality customer service.</textarea> -->
-                                                                        <!-- <?= isset($jobs_data) ? $jobs_data->message : ''; ?> -->
-                                                                    </div>
-                                                                    <!-- <div id="notes_input_div_right" style="display:none;">
-                                                                        <div style=" height:70px;margin-bottom: 10px;">
-                                                                            <textarea cols="40" style="width: 100%;" rows="3" id="note_txt_right" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
-                                                                            <button type="button" class="btn btn-primary btn-sm" id="save_memo_right" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
-                                                                        </div>
-                                                                    </div> -->
-                                                                </div>
-                                                                <!-- <div class="card-footers">
-                                                                    <div style="float: right;margin-bottom: 10px;">
-                                                                        <a href="javascript:void(0);" id="edit_note_right" class="fa fa-pencil box_footer_icon"></a> &nbsp;
-                                                                        <?php if(isset($jobs_data)) : ?>
-                                                                        <a href="#"  class="fa fa-history box_footer_icon"></a> &nbsp;
-                                                                        <a href="#"  class="fa fa-trash box_footer_icon"></a> &nbsp;
-                                                                        <?php endif; ?>
-                                                                    </div>
-                                                                </div> -->
+                                                <div class="col-sm-12 mb-4">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 mb-2">
+                                                            <h5>Notes</h5>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <?php 
+                                                                if (isset($jobs_data)) { 
+                                                                    $MESSAGE = "$jobs_data->message"; 
+                                                                } else { 
+                                                                    $MESSAGE = "Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service";                                                                
+                                                                } 
+                                                            ?>
+                                                            <div id="Message_Editor">
+                                                                <?php echo $MESSAGE; ?>
+                                                            </div>
+                                                            <input class="d-none customer_message_input" name="message" value="<?php echo $MESSAGE; ?>">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12">
-                                                    <div class="" id="url_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
-                                                        <div class="row">
-                                                                <div class="card-header">
-                                                                    <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                                    <h5 style="padding-left: 20px;">Url Link</h5>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <?php
-                                                                    if(isset($jobs_data) && $jobs_data->link = NULL) {
-                                                                        ?>
-                                                                        <a  target="_blank" href="<?= $jobs_data->link; ?>"><p style="color: darkred;"><?= $jobs_data->link; ?></p></a>
-                                                                        <?php
-                                                                    }else{
-                                                                        ?>
-                                                                        <span class="help help-sm help-block">Enter url link or a pdf link </span>
-                                                                        <?php
-                                                                    } ?>
-                                                                </div>
+                                                <div class="col-sm-12 mb-4 <?php echo (isset($jobs_data) && $jobs_data->link = NULL) ? '' : 'd-none' ?>">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 mb-2">
+                                                            <h5>Url Link</h5>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <?php if(isset($jobs_data) && $jobs_data->link = NULL) { ?>
+                                                            <a  target="_blank" href="<?= $jobs_data->link; ?>"><p style="color: darkred;"><?= $jobs_data->link; ?></p></a>
+                                                            <?php } else { ?>
+                                                            <span class="help help-sm help-block">Enter url link or a pdf link </span> 
+                                                            <?php } ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -957,9 +939,7 @@
                                                         </div>
                                                     </div>
                                                 </div>-->
-                                                <div class="col-sm-12">
-                                                    <hr>
-                                                </div>
+                                                <div class="col-sm-12"><hr></div>
                                                 <?php if(isset($jobs_data) && $jobs_data->status == 'Invoiced'): ?>
                                                 <div class="col-sm-12">
                                                     <div class="card box_right" id="pd_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
@@ -1291,91 +1271,100 @@
 <!-- Approved Job Modal -->
 <?php include viewPath('v2/pages/job/modals/approved_modal'); ?>
 <!-- Finish Job Modal -->
-<div class="modal fade nsm-modal" id="finish_modal" role="dialog">
-    <div class="close-modal" data-bs-dismiss="modal">&times;</div>
+<div class="modal fade" id="finish_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title">Finish Job</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
-            </div>
-            <form id="update_status_to_closed">
-                <div class="modal-body">
-                    <p>This will stop on job duration tracking and mark the job end time.</p>
-                    <p>Finish job at:</p>
-                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
-                    <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
-                    <input type="hidden" name="status" id="status" value="Closed">
-                    <select id="job_start_time" name="job_start_time" class="form-control" required>
-                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                        <?php } ?>
-                    </select>
-
-                    <div style="display: flex;margin-top: 1rem;">
-                        <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin: 0;">
-                            <span class="bx bx-fw bx-money"></span> Pay Now
-                        </a>
-
-                        <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin-bottom: 0;">
-                            <span class="bx bx-fw bx-send"></span> Send Invoice
-                        </a>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade nsm-modal" id="approveThisJobModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title">Approve Job</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
+                <span class="modal-title content-title" style="font-size: 17px;">Finish Job</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <p>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</p>
-
-                        <div class="nsm-loader" style="height: 100px; min-height: unset;">
-                            <i class="bx bx-loader-alt bx-spin"></i>
+                <form id="update_status_to_closed">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-1">
+                            <label>This will stop on job duration tracking and mark the job end time.</label>
                         </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Finish job at:</label>
+                            <div class="input-group">
+                                <input type="date" name="job_start_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
+                                <select id="job_start_time" name="job_start_time" class="form-control" required>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                        <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
+                            <input type="hidden" name="status" id="status" value="Closed">
+                            <div class="col-sm-12 mb-4">
+                                <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin: 0;">
+                                    <span class="bx bx-fw bx-money"></span> Pay Now
+                                </a>
 
-                        <div class="nsm-empty d-none" style="height: auto; padding: 1rem 0;">
-                            <i class="bx bx-meh-blank"></i>
-                            <span>No eSign template found.</span>
-                        </div>
-
-                        <div class="esign-templates d-none">
-                            <p>Select your template below.</p>
-                            <div class="dropdown">
-                                <button class="nsm-button dropdown-toggle m-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown button
-                                </button>
-                                <ul class="dropdown-menu"></ul>
+                                <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin-bottom: 0;">
+                                    <span class="bx bx-fw bx-send"></span> Send Invoice
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="nsm-button" data-action="approve">Approve</button>
-                    <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">
-                        <i class="bx bx-loader-alt bx-spin"></i>
-                        <span>Approve and eSign</span>
-                    </button>
-                </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="approveThisJobModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Approve Job</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="update_status_to_omw" method="post">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-1">
+                            <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>
+                        </div>
+                        <div class="col-sm-12 mb-4">
+                            <div class="nsm-loader" style="height: 100px; min-height: unset;">
+                            <i class="bx bx-loader-alt bx-spin"></i>
+                            </div>
+
+                            <div class="nsm-empty d-none" style="height: auto; padding: 1rem 0;">
+                                <i class="bx bx-meh-blank"></i>
+                                <span>No eSign template found.</span>
+                            </div>
+
+                            <div class="esign-templates d-none mt-1">
+                                <label class="mb-1">Select your template below:</label>
+                                <div class="dropdown">
+                                    <button class="nsm-button dropdown-toggle m-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dropdown button
+                                    </button>
+                                    <ul class="dropdown-menu"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">
+                        <i class="bx bx-loader-alt bx-spin"></i>
+                        <span>Approve and eSign</span>
+                        </button>
+                        <button type="button" class="nsm-button" data-action="approve">Approve</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <style>
     .dataTables_empty{
@@ -1410,6 +1399,20 @@ add_footer_js(array(
 
 
 <script>
+CKEDITOR.replace( 'Message_Editor', {
+    toolbarGroups: [
+        { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
+        { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },           // Group's name will be used to create voice label.
+        '/',                                                                // Line break - next group will be placed in new line.
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'links' }
+    ],
+    height: '140px',
+});
+CKEDITOR.editorConfig = function( config ) {
+    config.height = '200px';
+};
+
 $('#EMPLOYEE_SELECT_2').on('change', function(event) {
     $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
 });
@@ -1538,13 +1541,13 @@ $('#EMPLOYEE_SELECT_4').on('change', function(event) {
             placeholder: "Select Timezone..."
         });
 
-        $("#job_type_option").select2({
-            placeholder: "Select Job Type..."
-        });
+        // $("#job_type_option").select2({
+        //     placeholder: "Select Job Type..."
+        // });
 
-        $("#job_tags").select2({
-            placeholder: "Select Job Type..."
-        });
+        // $("#job_tags").select2({
+        //     placeholder: "Select Job Type..."
+        // });
 
         <?php if( $default_customer_id > 0 ){ ?>
             $('#customer_id').click();
@@ -1631,3 +1634,4 @@ $('#EMPLOYEE_SELECT_4').on('change', function(event) {
             });
         }
 </script>
+<script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>

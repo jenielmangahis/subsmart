@@ -5033,7 +5033,11 @@ $(function() {
             }
 
             $.get(`/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
-                $('#modal-container').append(result);
+                if(form !== 'item') {
+                    $('#modal-container').append(result);
+                } else {
+                    $('#modal-container').append(`<div class="full-screen-modal">${result}</div>`)
+                }
 
                 switch(form) {
                     case 'account' :
