@@ -1281,6 +1281,8 @@ $route['on-my-way-to-job'] = 'Job/update_jobs_status';
 
 //Inventory
 $route['inventory/export_list'] = 'inventory/inventory_export';
+$route['inventory/add-custom-field']['post'] = 'inventory/add_custom_field';
+$route['inventory/update-custom-field/(:any)']['post'] = 'inventory/update_custom_field/$1';
 
 //Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';

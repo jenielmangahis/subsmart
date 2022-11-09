@@ -87,7 +87,8 @@ class Tickets extends MY_Controller
             'terms_conditions'          => $this->input->post('terms_conditions'),
             'attachments'               => $this->input->post('attachments'),
             'instructions'              => $this->input->post('instructions'),
-            'instructions'              => $this->input->post('instructions'),
+            'customer_phone'            => $this->input->post('customer_phone'),
+            'employee_id'               => $this->input->post('employee_id'),
             'created_by'                => logged('id'),
             'company_id'                => $company_id,
             'created_at'                => date("Y-m-d H:i:s"),
@@ -362,6 +363,90 @@ class Tickets extends MY_Controller
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
         
         $this->load->view('tickets/view', $this->page_data);
+    }
+
+    public function editDetails($id)
+    {
+        $this->hasAccessModule(39);
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Job_tags_model');
+        $this->page_data['page']->title = 'Services';
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        /*if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        }*/
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+
+        $default_customer_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_customer_id = $this->input->get('cus_id');
+        }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+
+        $default_start_date = date("Y-m-d");
+        $default_start_time = '';
+        $default_user = 0;
+        $redirect_calendar = 0;
+
+        if( $this->input->get('start_date') ){
+            $default_start_date = $this->input->get('start_date');
+            $redirect_calendar = 1;
+        }
+
+        if( $this->input->get('start_time') ){
+            $default_start_time = $this->input->get('start_time');
+            $redirect_calendar = 1;
+        }
+
+        if( $this->input->get('user') ){
+            $default_user = $this->input->get('user');
+            $redirect_calendar = 1;
+        }
+
+        $this->page_data['redirect_calendar'] = $redirect_calendar;
+        $this->page_data['default_user'] = $default_user;
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $type = $this->input->get('type');
+        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->load->view('tickets/add', $this->page_data);
     }
 
     

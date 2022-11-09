@@ -4515,6 +4515,7 @@ class Customer extends MY_Controller
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/add', $this->page_data);

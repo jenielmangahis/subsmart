@@ -106,7 +106,7 @@ class Job extends MY_Controller
                 'company_id' => logged('company_id')
             ),
             'table' => 'job_tags',
-            'select' => 'id,name',
+            'select' => 'id,name,marker_icon',
         );
         $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
 
@@ -115,7 +115,7 @@ class Job extends MY_Controller
                 'company_id' => logged('company_id')
             ),
             'table' => 'job_types',
-            'select' => 'id,title',
+            'select' => 'id,title,icon_marker',
             'order' => array(
                 'order_by' => 'id',
                 'ordering' => 'DESC',
@@ -1238,6 +1238,19 @@ class Job extends MY_Controller
             ),
             'table' => 'job_tags',
             'select' => 'name',
+        );
+        echo json_encode($this->general->get_data_with_param($get_template, false), true);
+    }
+
+    public function get_type_selected()
+    {
+        $id = $_POST['id'];
+        $get_template = array(
+            'where' => array(
+                'id' => $id
+            ),
+            'table' => 'job_types',
+            'select' => 'title',
         );
         echo json_encode($this->general->get_data_with_param($get_template, false), true);
     }
@@ -2968,6 +2981,30 @@ class Job extends MY_Controller
         ];
 
         $result = $this->general->get_data_with_param($query);
+
+        $search = strtolower($this->input->get('search'));
+        if (!empty($search)) {
+            $result = array_filter($result, function ($item) use ($search) {
+                return strpos(strtolower($item->name), $search) !== false;
+            });
+        }
+
+        header('content-type: application/json');
+        exit(json_encode(['data' => array_values($result)]));
+    }
+
+    public function apiGetJobTaxRates()
+    {
+        $get_settings= [
+            'where' => [
+                'company_id' => logged('company_id')
+            ],
+            'or_where' => ['is_default' => 1],
+            'table' => 'tax_rates',
+            'select' => '*',
+        ];
+
+        $result = $this->general->get_data_with_param($get_settings);
 
         $search = strtolower($this->input->get('search'));
         if (!empty($search)) {

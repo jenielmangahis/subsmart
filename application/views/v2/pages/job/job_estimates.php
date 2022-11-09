@@ -176,7 +176,12 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <h6>Select Job Type</h6>
+                                            <div class="d-flex justify-content-between">
+                                                <h6>Select Job Type</h6>
+                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
+                                                    <span class="bx bx-plus"></span>Manage Job Types
+                                                </a>
+                                            </div>
                                             <select id="job_type_option" name="jobtypes" class="form-control " required>
                                                 <option value="">Select Type</option>
                                                 <?php if(!empty($job_types)): ?>
@@ -187,7 +192,12 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                        <h6>Select Job Tag</h6>
+                                            <div class="d-flex justify-content-between">
+                                                <h6>Select Job Tag</h6>
+                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>">
+                                                    <span class="bx bx-plus"></span>Manage Job Tags
+                                                </a>
+                                            </div>
                                             <select id="job_tags" name="tags" class="form-control " required>
                                                 <option value="">Select Tags</option>
                                                 <?php if(!empty($tags)): ?>
@@ -223,7 +233,7 @@
                                                 </select>
                                                 <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
                                             </div>
-                                            <div class="col-sm-12 mb-4">
+                                            <div class="col-sm-12 mb-2">
                                                 <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
                                                 <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
                                                     <option value="">Select Employee</option>
@@ -235,6 +245,28 @@
                                                 </select>
                                                 <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
                                             </div>
+                                            <div class="col-sm-12 mb-2">
+                                                    <input type="text" id="emp5_id" name="emp5_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee5_id)){ echo $jobs_data->employee5_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_5" name="employee5_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee5_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-12 mb-2">
+                                                    <input type="text" id="emp6_id" name="emp6_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee6_id)){ echo $jobs_data->employee6_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_6" name="employee6_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee6_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
                                         </div>
                                         <script type="text/javascript">
                                             $('#EMPLOYEE_SELECT_2').on('change', function(event) {
@@ -245,6 +277,12 @@
                                             });
                                             $('#EMPLOYEE_SELECT_4').on('change', function(event) {
                                                 $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
+                                            });
+                                            $('#EMPLOYEE_SELECT_5').on('change', function(event) {
+                                                $("#emp5_id, #employee5_id").val($("#EMPLOYEE_SELECT_5").val());
+                                            });
+                                            $('#EMPLOYEE_SELECT_6').on('change', function(event) {
+                                                $("#emp6_id, #employee6_id").val($("#EMPLOYEE_SELECT_6").val());
                                             });
                                         </script>
                                         <!-- <br>
@@ -420,7 +458,12 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <label class="mb-2">Tax Rate</label>
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6>Tax Rate</h6>
+                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/settings'); ?>">
+                                                                    <span class="bx bx-plus"></span>Manage Tax Rates
+                                                                </a>
+                                                            </div>
                                                             <select id="tax_rate" name="tax_rate" class="form-control">
                                                                 <option value="">None</option>
                                                                 <?php 
@@ -674,6 +717,8 @@
                                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
+                                            <input id="employee5_id" type="hidden" name="employee5_id" value="<?= isset($jobs_data) ? $jobs_data->employee5_id : ''; ?>">
+                                            <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($jobs_data) ? $jobs_data->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
                                                 
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
@@ -898,7 +943,7 @@ $(function() {
         placeholder: "Choose Priority..."
     });
 
-    $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
+    $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4, #EMPLOYEE_SELECT_5, #EMPLOYEE_SELECT_6").select2({
         placeholder: "Select Employee to Assign",
     });
 
@@ -910,13 +955,13 @@ $(function() {
         placeholder: "Select Timezone..."
     });
 
-    $("#job_type_option").select2({
-        placeholder: "Select Job Type..."
-    });
+    // $("#job_type_option").select2({
+    //     placeholder: "Select Job Type..."
+    // });
 
-    $("#job_tags").select2({
-        placeholder: "Select Job Type..."
-    });
+    // $("#job_tags").select2({
+    //     placeholder: "Select Job Type..."
+    // });
     $("#employee_id").select2({
         placeholder: "Select Employee"
     });
@@ -977,4 +1022,4 @@ function remove_others(color_id) {
     });
 }
 </script>
-
+<script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>
