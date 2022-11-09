@@ -187,13 +187,33 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="job_location"><b>Service Location</b></label>
                         <input type="text" class="form-control" name="service_location" id="service_location"
-                                required placeholder="Enter address" autofocus
+                                required placeholder="Enter address"
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                     </div>
-                    <div class="col-md-3" style="display: ;">
+                    <div class="col-md-2">
+                        <label for="job_location"><b>City</b></label>
+                        <input type="text" class="form-control" name="customer_city" id="customer_city"
+                                required placeholder="Enter address" 
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="job_location"><b>State</b></label>
+                        <input type="text" class="form-control" name="customer_state" id="customer_state"
+                                required placeholder="Enter address" 
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="job_location"><b>Zip Code</b></label>
+                        <input type="text" class="form-control" name="customer_zip" id="customer_zip"
+                                required placeholder="Enter address" 
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    </div>
+                    <div class="col-md-2" style="display: ;">
                         <label for="job_location"><b>Customer Phone #</b></label>
                         <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter address" />
                     </div>
@@ -207,7 +227,7 @@ a.btn-primary.btn-md {
                 </div><br.
                 <div class="row">
                     <div class="col-md-4 form-group">
-                        <label for="city">Job Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
+                        <label for="city">Service Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
                         <select class="form-control" name="job_tag">
                             <?php foreach($tags as $t){ ?>
                                 <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
@@ -409,7 +429,7 @@ a.btn-primary.btn-md {
                                             </tr>
                                             </thead>
                                             <tbody id="jobs_items_table_body">
-                                            <tr style="display:none;">
+                                            <tr style="display:;">
                                                 <td width="30%">
                                                     <input type="text" class="form-control getItems"
                                                         onKeyup="getItems(this)" name="items[]">
@@ -443,7 +463,7 @@ a.btn-primary.btn-md {
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                         data-counter="0" id="item_total_0" min="0" value="0">
                                                         $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -477,17 +497,17 @@ a.btn-primary.btn-md {
                                             <tr>
                                                 <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment" name="adjustment"></td>
                                                 <td style="width:150px;"><input type="number"  class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="0"></td>
-                                                <td>0.00</td>
+                                                <td align="right">0.00</td>
                                             </tr>
                                             <tr>
                                                 <td>Markup</td>
                                                 <td><a href="#" style="color:#02A32C;">set markup</a></td>
-                                                <td>0.00<input type="hidden" name="markup" id="markup_input_form" class="markup_input" value="0"></td>
+                                                <td align="right">0.00<input type="hidden" name="markup" id="markup_input_form" class="markup_input" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td><b>Grand Total ($)</b></td>
                                                 <td></td>
-                                                <td><b><span id="grand_total">0.00</span></b><input type="hidden" name="grandtotal" id="grand_total_input" value='0'></td>
+                                                <td align="right"><b><span id="grand_total">0.00</span></b><input type="hidden" name="grandtotal" id="grand_total_input" value='0'></td>
                                             </tr>
                                         </table>
                                     </div>

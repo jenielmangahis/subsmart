@@ -174,7 +174,6 @@ add_css(array(
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <form id="payment_info" method="post">
                                         <div class="card">

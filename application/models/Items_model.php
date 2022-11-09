@@ -31,7 +31,6 @@ class Items_model extends MY_Model
         // // $this->db->order_by('name', $order);
         // $query = $this->db->get($this->table);
         // return $query->result();
-
         $company_id = logged('company_id');
         $this->db->select('*');
         $this->db->from($this->table);
