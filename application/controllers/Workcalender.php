@@ -338,6 +338,16 @@ class Workcalender extends MY_Controller
             }
         }
 
+        //Settings
+        $default_calendar_view = '3d';
+        $settings = $this->settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id); 
+        if( $settings ){
+            $settings = unserialize($settings);
+            if( $settings['calendar_default_tab'] != '' ){
+                $default_calendar_view = $settings['calendar_default_tab'];
+            }
+        }
+
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
         $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
@@ -357,6 +367,7 @@ class Workcalender extends MY_Controller
         $this->page_data['users'] = $this->user_model->getUsers();
 
         $this->page_data['calendar_list'] = $calendar_list;
+        $this->page_data['default_calendar_view'] = $default_calendar_view;
 
         // $this->load->view('workcalender/calender', $this->page_data);
         $this->load->view('v2/pages/workcalender/calender', $this->page_data);
@@ -969,7 +980,7 @@ class Workcalender extends MY_Controller
             $start_date_end  = $start_date_time;
             $backgroundColor = "#38a4f8";
 
-            $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">Appointment - '.$a->customer_name.'</span><hr />';
+            $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'. $a->appointment_number .' - '.$a->customer_name.'</span><hr />';
 
             $eventTags = array();
             if( $a->tag_ids != '' ){
@@ -1941,11 +1952,13 @@ class Workcalender extends MY_Controller
     {
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
 
         $post = $this->input->post();
         $company_id  = logged('company_id');
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $company_id);
-        $tags = $this->EventTags_model->getAllByCompanyId($company_id, array());  
+        //$tags = $this->EventTags_model->getAllByCompanyId($company_id, array());  
+        $tags = $this->Job_tags_model->getAllByCompanyId($company_id, array());  
 
         $a_tags = array();
         $selected_tags = explode(",", $appointment->tag_ids);
@@ -1966,10 +1979,12 @@ class Workcalender extends MY_Controller
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
         $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
 
         $post = $this->input->post();
         $cid  = logged('company_id');
-        $tags = $this->EventTags_model->getAllByCompanyId($cid, array());
+        //$tags = $this->EventTags_model->getAllByCompanyId($cid, array());
+        $tags = $this->Job_tags_model->getAllByCompanyId($cid, array());
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);        
         $appointmentTypes = $this->AppointmentType_model->getAllByCompany($cid, true);
 
@@ -2622,6 +2637,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Tickets_model');
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
 
         $cid = logged('company_id');
         
@@ -2668,11 +2684,12 @@ class Workcalender extends MY_Controller
         foreach( $upcomingAppointments as $appointment ){
             $date_index = date("Y-m-d", strtotime($appointment->appointment_date));
             $appointment_tags = explode(",", $appointment->tag_ids);
-            $eventTags  = $this->EventTags_model->getAllByIds($appointment_tags);
+            //$appointmentTags = $this->EventTags_model->getAllByIds($appointment_tags);
+            $appointmentTags   = $this->Job_tags_model->getAllByIds($appointment_tags);
 
             $appointment_tags = '';
             $aTags = array();
-            foreach($eventTags as $tags){
+            foreach($appointmentTags as $tags){
                 $aTags[] = $tags->name;
             }
 

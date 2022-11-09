@@ -11,6 +11,12 @@
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
+        <li onclick="window.open('<?= base_url('customer/addTicket') ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-chart"></i>
+            </div>
+            <span class="nsm-fab-label">Add Service Ticket</span>
+        </li>
         <li data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-chart"></i>
@@ -76,6 +82,9 @@
 
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
+        <button name="button" type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
+            <i class='bx bx-fw bx bx-fw bx-note'></i> Add Service Ticket
+        </button>
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
             <i class='bx bx-fw bx-chart'></i> Add Estimate
         </button>

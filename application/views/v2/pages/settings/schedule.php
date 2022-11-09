@@ -146,7 +146,7 @@
                     </div>
                     <div class="col-12 col-md-4">
                         <label class="content-title">Calendar Job/Event Display Options</label>
-                        <label class="content-subtitle mb-2">TSet the caledar default view.</label>
+                        <label class="content-subtitle mb-2">Set the calendar information.</label>
 
                         <div class="nsm-card h-auto">
                             <div class="nsm-card-content">
@@ -170,12 +170,46 @@
                                 <a href="<?php echo base_url('settings') . '/notifications' ?>" class="nsm-link">Manage schedule notifications</a>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="mt-3">
+                            <label class="content-title">Calendar Default Tab</label>
+                            <label class="content-subtitle mb-2">Set the calendar default view.</label>
+
+                            <div class="nsm-card h-auto">
+                                <div class="nsm-card-content">
+                                    <div class="form-check">
+                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_employee" value="employee" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'employee' ? "checked=checked" : "" ?>>
+                                        <label class="form-check-label" for="default_tab_employee">Employee</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_month" value="month" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'month' ? "checked=checked" : "" ?>>
+                                        <label class="form-check-label" for="default_tab_month">Month</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_day" value="day" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'day' ? "checked=checked" : "" ?>>
+                                        <label class="form-check-label" for="default_tab_day">Day</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_3d" value="3d" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == '3d' ? "checked=checked" : "" ?>>
+                                        <label class="form-check-label" for="default_tab_3d">3 Days</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_week" value="week" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'week' ? "checked=checked" : "" ?>>
+                                        <label class="form-check-label" for="default_tab_week">Week</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_list" value="list" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'list' ? "checked=checked" : "" ?>>
+                                        <label class="form-check-label" for="default_tab_list">List</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
                         <button type="submit" class="nsm-button primary">Save Changes</button>
-                    </div>
+                    </div>                    
                 </div>
                 <?php echo form_close(); ?>
             </div>
@@ -254,6 +288,11 @@
                 },
             });
         });
+    });
+
+    $(document).on('change', '.chk-default-calendar-tab', function(){
+        $(".chk-default-calendar-tab").prop( "checked", false );
+        $(this).prop( "checked", true );
     });
 
     function checkAuth() {

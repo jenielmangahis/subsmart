@@ -43,6 +43,9 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/inventory_tabs'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/inventory_subtabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">

@@ -9,6 +9,8 @@ class Items_model extends MY_Model
     public $table_invoice = 'invoice_has_items';
     public $table_has_location = 'items_has_storage_loc';
     public $table_offer_code = 'offer_code';
+    public $table_custom_fields = 'inventory_custom_fields';
+    public $table_custom_fields_value = 'inventory_custom_fields_value';
 
     public function __construct()
     {
@@ -558,6 +560,26 @@ class Items_model extends MY_Model
     {
         $this->db->where('item_categories_id', $categoryId);
         $update = $this->db->update($this->table, ['item_categories_id' => 0]);
+        return $update;
+    }
+
+    public function get_custom_fields_by_company_id($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $query = $this->db->get($this->table_custom_fields);
+        return $query->result();
+    }
+
+    public function add_custom_field($data)
+    {
+        $this->db->insert($this->table_custom_fields, $data);
+        return $this->db->insert_id();
+    }
+
+    public function update_custom_field_name($id, $data)
+    {
+        $this->db->where('id', $id);
+        $update = $this->db->update($this->table_custom_fields, $data);
         return $update;
     }
 }

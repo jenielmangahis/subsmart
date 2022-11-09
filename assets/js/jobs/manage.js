@@ -1,6 +1,7 @@
 window.addEventListener("DOMContentLoaded", () => {
   initJobType();
   initJobTag();
+  initTaxRates();
 });
 
 async function initJobType(selector = "#job_type_option") {
@@ -57,11 +58,45 @@ async function initJobTag(selector = "#job_tags") {
         return { search: params.term };
       },
       processResults: (response) => {
+        const results = response.data.map((item) => ({
+          ...item,
+          id: item.id,
+          text: item.name,
+        }));
+
+        window.__jobTags = results;
+        return {
+          results,
+        };
+      },
+    },
+  });
+
+  if ($select.get(0).dataset.value) {
+    $($select).val($select.dataset.value).trigger("change");
+  }
+}
+
+function initTaxRates(selector = "#tax_rate") {
+  const $select = $(selector);
+  if ($select.hasClass("select2-hidden-accessible")) {
+    $select.select2("destroy");
+  }
+
+  $($select).select2({
+    placeholder: "Select Tax Rate",
+    ajax: {
+      url: "/job/apiGetJobTaxRates",
+      dataType: "json",
+      data: (params) => {
+        return { search: params.term };
+      },
+      processResults: (response) => {
         return {
           results: response.data.map((item) => ({
             ...item,
-            id: item.id,
-            text: item.name,
+            id: item.rate,
+            text: `${item.name} (${item.rate}%)`,
           })),
         };
       },
@@ -79,7 +114,19 @@ function templateResult(iconKey) {
       return item.text;
     }
 
-    let icon = item[iconKey];
+    let icon = item[iconKey] || undefined;
+
+    if (!icon && iconKey === "marker_icon" && Array.isArray(window.__jobTags)) {
+      // Fix about weird issue where icon not showing on value
+      const match = window.__jobTags.find((tag) => tag.id === item.id);
+      if (match.marker_icon) {
+        icon = match.marker_icon;
+      }
+    }
+
+    if (!icon && item.element && item.element.dataset.image) {
+      icon = item.element.dataset.image;
+    }
 
     if (typeof icon === "string" && icon.length) {
       icon = `/uploads/icons/${icon}`;

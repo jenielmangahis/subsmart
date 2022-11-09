@@ -46,19 +46,21 @@
                                     <td class="fw-bold nsm-text-primary"><?= $a->name; ?></td>
                                     <td>
                                         <?php $eid = hashids_encrypt($ch->id, '', 15); ?>
-                                        <div class="dropdown table-management">
-                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item btn-edit-appointment-type" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>" name="dropdown_edit" href="javascript:void(0);">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item btn-delete-appointment-type" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $a->name; ?>" data-id="<?= $a->id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <?php if( $a->company_id > 0 ){ ?>
+                                            <div class="dropdown table-management">
+                                                <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item btn-edit-appointment-type" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>" name="dropdown_edit" href="javascript:void(0);">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item btn-delete-appointment-type" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $a->name; ?>" data-id="<?= $a->id; ?>">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

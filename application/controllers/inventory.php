@@ -1064,6 +1064,38 @@ class Inventory extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function settings() 
+    {
+        $this->page_data['page']->title = 'Inventory Settings';
+		$this->page_data['page']->parent = 'Tools';
+
+        $this->page_data['fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+        $this->load->view('v2/pages/inventory/settings', $this->page_data);
+    }
+
+    public function add_custom_field()
+    {
+        $data = [
+            'name' => $this->input->post('custom_field_name'),
+            'company_id' => logged('company_id')
+        ];
+
+        $customFieldId = $this->items_model->add_custom_field($data);
+
+        redirect('inventory/settings');
+    }
+
+    public function update_custom_field($id)
+    {
+        $data = [
+            'name' => $this->input->post('custom_field_name')
+        ];
+
+        $update = $this->items_model->update_custom_field_name($id, $data);
+
+        redirect('inventory/settings');
+    }
 }
 /* End of file items.php */
 

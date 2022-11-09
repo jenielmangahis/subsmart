@@ -1,6 +1,6 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Inventory'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Inventory' || $page->title === 'Inventory Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('inventory')?>">
                 <i class='bx bx-fw bx-box'></i>
                 <span>Inventory</span>

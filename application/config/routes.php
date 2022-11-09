@@ -86,6 +86,7 @@ $route['customer/_update_customer_dispute'] = 'Customer/ajax_update_customer_dis
 $route['customer/_get_messages'] = 'Customer/ajax_get_messages';
 $route['customer/_send_message'] = 'Customer/ajax_send_message';
 $route['customer/_send_login_details'] = 'Customer/ajax_send_login_details';
+$route['customer/_load_customer_address'] = 'Customer/ajax_load_customer_address';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1280,6 +1281,8 @@ $route['on-my-way-to-job'] = 'Job/update_jobs_status';
 
 //Inventory
 $route['inventory/export_list'] = 'inventory/inventory_export';
+$route['inventory/add-custom-field']['post'] = 'inventory/add_custom_field';
+$route['inventory/update-custom-field/(:any)']['post'] = 'inventory/update_custom_field/$1';
 
 //Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
@@ -1308,6 +1311,7 @@ $route['autocomplete/_company_event_tags'] = 'Autocomplete/company_event_tags';
 $route['autocomplete/_company_reasons'] = 'Autocomplete/company_reasons';
 $route['autocomplete/_company_furnishers'] = 'Autocomplete/company_furnishers';
 $route['autocomplete/_company_instructions'] = 'Autocomplete/company_instructions';
+$route['autocomplete/_company_job_tags'] = 'Autocomplete/company_job_tags';
 
 //Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';

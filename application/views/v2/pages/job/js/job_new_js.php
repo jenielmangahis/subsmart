@@ -276,7 +276,7 @@ $("#attachment-file").change(function() {
             var total = parseFloat(subtotal).toFixed(2);
             var tax_total=0;
             if((tax !== 0 || tax !== '') && def == false){
-                tax_total = Number(total) *  Number(tax);
+                tax_total = (Number(tax) / 100) * Number(total);
                 total = Number(total) + Number(tax_total) - Number(discount);
                 total = parseFloat(total).toFixed(2);
                 tax_total =  parseFloat(tax_total).toFixed(2);
@@ -449,8 +449,17 @@ $("#attachment-file").change(function() {
         });
 
         $("#job_type_option").on( 'change', function () {
-            var type = this.value;
-            $('#job_type').val(type);
+            var type_id = this.value;
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/get_type_selected",
+                data: {id : type_id}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var template_data = JSON.parse(data);
+                    $('#job_type').val(template_data.title);
+                }
+            });
         });
 
         //$('#summernote').summernote('code', '');

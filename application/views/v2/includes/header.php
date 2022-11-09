@@ -38,6 +38,7 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datepicker.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 
     <!-- Multi select -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/multiple-select.min.css") ?>">
@@ -406,7 +407,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-group'></i> Affiliates
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == 'Inventory' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Inventory' || $page->title === 'Inventory Settings' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("inventory") ?>">
                                 <i class='bx bx-fw bx-box'></i> Inventory

@@ -817,6 +817,14 @@ if(isset($jobs_data)){
             $('#employee4_id').val(this.value);
             console.log(get_employee_name(this));
         });
+        $("#employee5").on( 'change', function () {
+            $('#employee5_id').val(this.value);
+            console.log(get_employee_name(this));
+        });
+        $("#employee6").on( 'change', function () {
+            $('#employee6_id').val(this.value);
+            console.log(get_employee_name(this));
+        });
 
         $("#start_date").on("change", function(){
             $('#end_date').val(this.value);

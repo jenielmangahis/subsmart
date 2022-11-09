@@ -51,7 +51,7 @@ class Appointment_model extends MY_Model
 
     public function getByIdAndCompanyId($id, $company_id)
     {
-        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, acs_profile.mail_add,acs_profile.city AS cust_city, acs_profile.state AS cust_state,acs_profile.zip_code AS cust_zip_code, acs_profile.phone_m AS cust_phone, appointment_types.name AS appointment_type');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
         $this->db->join('users', 'appointments.user_id = users.id','left');     
@@ -135,11 +135,15 @@ class Appointment_model extends MY_Model
 
     public function getAllUpcomingAppointmentsByCompany($company_id)
     {
+        $start_date = date('Y-m-d');
+        $end_date   = date('Y-m-d', strtotime($start_date . ' +7 day'));
+
         $where = array(
-            'appointments.company_id'    => $company_id
+            'appointments.company_id'    => $company_id,
+            'appointments.appointment_date >=' => $start_date            
           );
 
-        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, acs_profile.mail_add,acs_profile.city AS cust_city, acs_profile.state AS cust_state,acs_profile.zip_code AS cust_zip_code, acs_profile.phone_m AS cust_phone, appointment_types.name AS appointment_type');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
         $this->db->join('appointment_types', 'appointments.appointment_type_id = appointment_types.id','left');     

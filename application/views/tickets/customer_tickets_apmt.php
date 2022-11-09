@@ -152,6 +152,7 @@ a.btn-primary.btn-md {
         <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
     </div>
     
+    <input type="hidden" id="siteurl" value="<?=base_url();?>">
     <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
     <div class="col-12">
         <div class="nsm-page">
@@ -174,7 +175,7 @@ a.btn-primary.btn-md {
                 <div class="row">
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
-                        <select id="sel-customer" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
+                        <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                             <option value="0">- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
                             <option value="<?php echo $c->prof_id; ?>" <?php if($c->prof_id == $appointment_customer_id){ echo "selected"; } ?>><?= $c->first_name . ' ' . $c->last_name; ?></option>
@@ -186,14 +187,15 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                        <label for="job_location"><b>Service Location</b> (optional)</label>
-                        <input type="text" class="form-control" name="service_location" id="job_location"
+                    <div class="col-md-3">
+                        <label for="job_location"><b>Service Location</b></label>
+                        <input type="text" class="form-control" name="service_location" id="service_location"
                                 required placeholder="Enter address" autofocus
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                     </div>
-                    <div class="col-md-3" style="display: none;">
-                        <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a>
+                    <div class="col-md-3" style="display: ;">
+                        <label for="job_location"><b>Customer Phone #</b></label>
+                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter address" />
                     </div>
                 </div>
                 <div class="row">
@@ -327,6 +329,16 @@ a.btn-primary.btn-md {
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
                                         </select>
                                     </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Employee</b></label>
+                                        <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
+                                        <select class="form-control mb-3" name="employee_id">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="row" style="background-color:white;font-size:16px;">
                                     <div class="col-md-3">
@@ -397,7 +409,7 @@ a.btn-primary.btn-md {
                                             </tr>
                                             </thead>
                                             <tbody id="jobs_items_table_body">
-                                            <!-- <tr style="display:none;">
+                                            <tr style="display:none;">
                                                 <td width="30%">
                                                     <input type="text" class="form-control getItems"
                                                         onKeyup="getItems(this)" name="items[]">
@@ -432,7 +444,7 @@ a.btn-primary.btn-md {
                                                         data-counter="0" id="item_total_0" min="0" value="0">
                                                         $<span id="span_total_0">0.00</span></td>
                                                 <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr> -->
+                                            </tr>
                                             </tbody>
                                         </table>
                                         <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
@@ -779,7 +791,7 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
+                                        <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save Appointment</button>
                                         <button type="button" class="nsm-button primary but" style="border-radius: 0 !important;">Preview</button>
                                         <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
                                     </div>
@@ -901,7 +913,7 @@ a.btn-primary.btn-md {
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
+                                    <table id="modal_items_list" class=" table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <td> Name</td>
@@ -1233,4 +1245,71 @@ document.getElementById("payment_method").onchange = function() {
                 }
             });
         });
+</script>
+
+<script>
+    
+$(document).ready(function(){
+ 
+ $('#sel-customer_t').change(function(){
+ var id  = $(this).val();
+//  alert(id);
+
+     $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/addLocationajax",
+         data: {id : id },
+         dataType: 'json',
+         success: function(response){
+            //  alert('success');
+             // console.log(response['customer']);
+         // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+
+         // var phone = response['customer'].phone_h;
+         // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
+         var phone = response['customer'].phone_h;
+             // phone = normalize(phone);
+         
+         var mobile = response['customer'].phone_m;
+             // mobile = normalize(mobile);
+
+         var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+         var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+         
+         $("#service_location").val(response['customer'].mail_add + ',' + response['customer'].city + ',' + response['customer'].state + ',' + response['customer'].zip_code);
+         $("#customer_phone").val(response['customer'].phone_h);
+        //  $("#email").val(response['customer'].email);
+        //  $("#date_of_birth").val(response['customer'].date_of_birth);
+        //  $("#phone_no").val(test_p);
+        //  $("#mobile_no").val(test_m);
+        //  $("#city").val(response['customer'].city);
+        //  $("#state").val(response['customer'].state);
+        //  $("#zip").val(response['customer'].zip_code);
+        //  $("#cross_street").val(response['customer'].cross_street);
+        //  $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+
+        //  $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+
+        //  $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+     
+         },
+             error: function(response){
+             //alert('Error'+response);
+    
+             }
+     });
+});
+});
+</script>
+<script>
+    
+$('#modal_items_list').DataTable({
+    "autoWidth" : false,
+    "columnDefs": [
+    { width: 540, targets: 0 },
+    { width: 100, targets: 0 },
+    { width: 100, targets: 0 }
+    ],
+    "ordering": false,
+});
 </script>

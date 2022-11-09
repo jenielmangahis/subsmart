@@ -4515,6 +4515,7 @@ class Customer extends MY_Controller
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/add', $this->page_data);
@@ -6182,5 +6183,19 @@ class Customer extends MY_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_load_customer_address()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+        $customer = $this->AcsProfile_model->getByProfId($post['prof_id'], $filter);
+
+        $this->page_data['customer'] = $customer;
+        $this->load->view('v2/pages/customer/ajax_load_customer_address', $this->page_data);
     }
 }

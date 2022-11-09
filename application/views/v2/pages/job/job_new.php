@@ -334,7 +334,7 @@
         color: #bebebe;
         text-decoration: none !important;
     }
-    #emp2_id, #emp3_id, #emp4_id {
+    #emp2_id, #emp3_id, #emp4_id, #emp5_id, #emp6_id {
         background: none;
         border: 0;
         font-weight: bold;
@@ -567,7 +567,7 @@
                                                 <option value="">Select Type</option>
                                                 <?php if(!empty($job_types)): ?>
                                                     <?php foreach ($job_types as $type): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>" data-image="<?= $type->icon_marker; ?>"><?= $type->title; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select>
@@ -583,15 +583,15 @@
                                                 <option value="">Select Tags</option>
                                                 <?php if(!empty($tags)): ?>
                                                     <?php foreach ($tags as $tag): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select>
                                         </div>
-                                        <div class="mb-3">
+                                        <div>
                                             <h6>Assigned To</h6>
                                             <div class="row">
-                                                <div class="col-sm-12 mb-2">
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_1">
                                                     <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
                                                     <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
                                                         <option value="">Select Employee</option>
@@ -601,9 +601,8 @@
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
-                                                    <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly> -->
                                                 </div>
-                                                <div class="col-sm-12 mb-2">
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_2">
                                                     <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
                                                     <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
                                                         <option value="">Select Employee</option>
@@ -613,9 +612,8 @@
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
-                                                    <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
                                                 </div>
-                                                <div class="col-sm-12 mb-4">
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_3">
                                                     <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
                                                     <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
                                                         <option value="">Select Employee</option>
@@ -625,10 +623,95 @@
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
-                                                    <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
+                                                </div>
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_4">
+                                                    <input type="text" id="emp5_id" name="emp5_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee5_id)){ echo $jobs_data->employee5_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_5" name="employee5_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee5_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_5">
+                                                    <input type="text" id="emp6_id" name="emp6_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee6_id)){ echo $jobs_data->employee6_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_6" name="employee6_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee6_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- TOMORROW UPDATE: Yelf -->
+                                        <!-- <div class="float-end">
+                                            <div class="group">
+                                                <button class="nsm-button small ADD_ASSIGN_EMPLOYEE" type="button"><i class='bx bx-user-plus'></i>&nbsp;Add</button>
+                                                <button class="nsm-button small REMOVE_ASSIGN_EMPLOYEE" type="button"><i class='bx bx-user-minus'></i>&nbsp;Remove</button>
+                                            </div>
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(function() { 
+                                                var TOTAL_SELECT = 5;
+                                                var ADD_DISABLER = 1;
+                                                var REMOVE_DISABLER = 0;
+                                                var EMPLOYEE_1 = $('#employee2_id').val();
+                                                var EMPLOYEE_2 = $('#employee3_id').val();
+                                                var EMPLOYEE_3 = $('#employee4_id').val();
+                                                var EMPLOYEE_4 = $('#employee5_id').val();
+                                                var EMPLOYEE_5 = $('#employee6_id').val();
+                                                if ($('#employee3_id').val() == "0") {
+                                                    $('.ASSIGNED_TO_2').hide();
+                                                    REMOVE_DISABLER++;
+                                                }
+                                                if ($('#employee4_id').val() == "0") {
+                                                    $('.ASSIGNED_TO_3').hide();
+                                                    REMOVE_DISABLER++;
+                                                }
+                                                if ($('#employee5_id').val() == "") {
+                                                    $('.ASSIGNED_TO_4').hide();
+                                                    REMOVE_DISABLER++;
+                                                }
+                                                if ($('#employee6_id').val() == "") {
+                                                    $('.ASSIGNED_TO_5').hide();
+                                                    REMOVE_DISABLER++;
+                                                }
+                                                if (REMOVE_DISABLER == 4) {
+                                                    $('.REMOVE_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
+                                                }
+                                                if (ADD_DISABLER == 5) {
+                                                    $('.ADD_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
+                                                }
+                                                $('.ADD_ASSIGN_EMPLOYEE').click(function(event) {
+                                                    // console.log(ADD_DISABLER++);
+                                                    if (ADD_DISABLER <= 5) {
+                                                        ADD_DISABLER++;
+                                                        $('.ASSIGNED_TO_'+ADD_DISABLER).show();
+                                                    } 
+                                                    if (ADD_DISABLER > 4){
+                                                        $('.ADD_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
+                                                    }
+                                                    if (ADD_DISABLER >= 2) {
+                                                        $('.REMOVE_ASSIGN_EMPLOYEE').removeAttr('disabled');
+                                                    }
+                                                });
+                                                $('.REMOVE_ASSIGN_EMPLOYEE').click(function(event) {
+                                                    $('.ASSIGNED_TO_'+ADD_DISABLER).hide();
+                                                    if (ADD_DISABLER <= 2) {
+                                                        $('.REMOVE_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
+                                                    }
+                                                    if (ADD_DISABLER <= 5) {
+                                                        $('.ADD_ASSIGN_EMPLOYEE').removeAttr('disabled');
+                                                    }
+                                                    ADD_DISABLER--;
+                                                });
+                                            });
+                                        </script> -->
                                         <!-- <br>
                                         <div class="float-end">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="nsm-button primary">Assign Job</a>
@@ -807,7 +890,12 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <label class="mb-2">Tax Rate</label>
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6>Tax Rate</h6>
+                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/settings'); ?>">
+                                                                    <span class="bx bx-plus"></span>Manage Tax Rates
+                                                                </a>
+                                                            </div>
                                                             <select id="tax_rate" name="tax_rate" class="form-control">
                                                                 <option value="">None</option>
                                                                 <?php 
@@ -1058,6 +1146,8 @@
                                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
+                                            <input id="employee5_id" type="hidden" name="employee5_id" value="<?= isset($jobs_data) ? $jobs_data->employee5_id : ''; ?>">
+                                            <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($jobs_data) ? $jobs_data->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
                                                 <?php if(!isset($jobs_data) || $jobs_data->status == 'Scheduled') : ?>
                                                     <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
@@ -1418,10 +1508,17 @@ $('#EMPLOYEE_SELECT_2').on('change', function(event) {
 });
 $('#EMPLOYEE_SELECT_3').on('change', function(event) {
     $("#emp3_id, #employee3_id").val($("#EMPLOYEE_SELECT_3").val());
-                                            });
+});
 $('#EMPLOYEE_SELECT_4').on('change', function(event) {
     $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
 });
+$('#EMPLOYEE_SELECT_5').on('change', function(event) {
+    $("#emp5_id, #employee5_id").val($("#EMPLOYEE_SELECT_5").val());
+});
+$('#EMPLOYEE_SELECT_6').on('change', function(event) {
+    $("#emp6_id, #employee6_id").val($("#EMPLOYEE_SELECT_6").val());
+});
+
 
 
         var class_name = $('.active').attr('class');
@@ -1461,7 +1558,12 @@ $('#EMPLOYEE_SELECT_4').on('change', function(event) {
             //employee 4
             $('#emp4_id').val($('#employee4').val());
             $('#emp4_txt').val($('#employee4 :selected').text());
-            
+            //employee 5
+            $('#emp5_id').val($('#employee5').val());
+            $('#emp5_txt').val($('#employee5 :selected').text());
+            //employee 5
+            $('#emp6_id').val($('#employee6').val());
+            $('#emp6_txt').val($('#employee6 :selected').text());
         })
     })
     $(function(){
@@ -1529,7 +1631,7 @@ $('#EMPLOYEE_SELECT_4').on('change', function(event) {
             placeholder: "Choose Priority..."
         });
 
-        $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4").select2({
+        $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4, #EMPLOYEE_SELECT_5, #EMPLOYEE_SELECT_6").select2({
             placeholder: "Select Employee to Assign",
         });
 
