@@ -16,6 +16,9 @@
     padding: 5px;
     overflow: auto;
 }
+.timepicker-icon{
+    font-size: 30px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -455,6 +458,23 @@
         });
 
         $(".timepicker").datetimepicker({
+            format: 'hh:mm A'
+        });
+
+        var dateNow = new Date();
+
+        $(".timepicker-from").datetimepicker({            
+            format: 'hh:mm A',            
+        }).on('dp.change', function(e){             
+            var default_interval = "<?= $default_time_to_interval; ?>";
+            if( default_interval > 0 ){
+                var formatedValue = e.date.format(e.date._f);
+                var newDateTime = moment(formatedValue, "LT").add(default_interval, 'hours').format('LT');
+                $('.timepicker-to').val(newDateTime);            
+            }            
+        });
+
+        $(".timepicker-to").datetimepicker({
             format: 'hh:mm A'
         });
 
@@ -1098,7 +1118,7 @@
             themeSystem: 'bootstrap5',
             eventDisplay: 'block',
             contentHeight: 750,
-            initialView: default_calendar_tab,
+            initialView: default_calendar_tab,            
             views: {
                 employeeTimeline: {
                     type: 'resourceTimeGridDay',
@@ -1122,11 +1142,9 @@
                     buttonText: 'Month'
                 },
                 weekView: {
-                    type: 'timeGridWeek',
+                    type: 'dayGridWeek',
                     buttonText: 'Week',
                     allDaySlot: false,
-                    slotDuration: '00:15',
-                    slotLabelInterval: '01:00'
                 },
                 listView: {
                     type: 'listWeek',
@@ -1195,6 +1213,14 @@
 
                 $("#appointment_date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
                 $("#appointment_time").val(moment(info.startStr).format('hh:mm A'));
+
+                var default_interval = "<?= $default_time_to_interval; ?>";
+                if( default_interval > 0 ){
+                    var appointmentTimeTo = moment(info.startStr).add(default_interval, 'hours').format('hh:mm A');
+                    $('#appointment_time_to').val(appointmentTimeTo);
+                }else{
+                    $('#appointment_time_to').val(moment(info.startStr).format('hh:mm A'));
+                }
 
                 $("#action_select_date").val(moment(info.startStr).format('YYYY-MM-DD'));
                 $("#action_select_time").val(moment(info.startStr).format('h:mm a'));
@@ -1561,7 +1587,7 @@
         }
 
         var $container = $(
-            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_h + ' / ' + repo.email + '</small></div>'
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_m + ' / ' + repo.email + '</small></div>'
         );
 
         return $container;
@@ -1703,8 +1729,14 @@
             autoclose: true,
         });
 
-        $(".timepicker").datetimepicker({
-            format: 'hh:mm A'
+        $(".timepicker").datetimepicker({            
+            format: 'hh:mm A',
+            icons: {                
+                up: "bx bx-chevron-up",
+                down: "bx bx-chevron-down",
+                next: 'bx bx-chevron-right',
+                previous: 'bx bx-chevron-left'
+            },
         });
     }
 
@@ -1824,6 +1856,17 @@
             }
         });
     }
+
+    $(document).on('click', '.fc-weekView-button', function(){   
+        /*$('#calendar').fullCalendar('option', 'visibleRange', {
+          start: '2022-11-01',
+          end: '2022-11-02'
+        })   */  
+        /*const scroller = $('.fc-scrollgrid-section-body .fc-scroller').last();
+        const [date] = moment().toISOString().split(':');
+        const position = $(`.fc-timeline-slot[data-date^="${date}"]`).last().position();
+        scroller.scrollLeft(600);*/
+    });    
 
     function computeCheckoutTotals() {
         let total_price = 0;

@@ -35,7 +35,8 @@ class Workcalender extends MY_Controller
 
         add_footer_js(array(
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
             'assets/js/quick_launch.js',
@@ -53,6 +54,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('Settings_model');
 
         add_css(array(
             'assets/css/bootstrap-multiselect.min.css',
@@ -75,9 +77,24 @@ class Workcalender extends MY_Controller
         $this->page_data['events'] = array();
         $this->session->set_userdata('calendar_filter_eids', 'multiselect-all');
 
-        // setting of the calender
-        $calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
 
+
+        // setting of the calender
+        $calender_settings = $this->Settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);        
+        //$calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $default_time_to   = date("H:00 A");
+        $default_time_to_interval = 0;
+        if( $calender_settings != '' ){
+            $a_settings = unserialize($calender_settings);
+            if( $a_settings['job_time_setting'] > 0 ){
+                $default_time_to = date("H:00 A", strtotime("+".$a_settings['job_time_setting'].' hours'));
+                $default_time_to_interval = $a_settings['job_time_setting'];
+            }
+        } 
+
+        $this->page_data['default_time_to'] = $default_time_to;
+        $this->page_data['default_time_to_interval'] = $default_time_to_interval;
+        
         if (!empty($events)) {
             foreach ($events as $key => $event) {
                 $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
@@ -980,7 +997,8 @@ class Workcalender extends MY_Controller
             $start_date_end  = $start_date_time;
             $backgroundColor = "#38a4f8";
 
-            $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'. $a->appointment_number .' - '.$a->customer_name.'</span><hr />';
+            //$appointment_number = strtoupper(str_replace("APPT", $a->appointment_type, $a->appointment_number));
+            $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'. $a->appointment_number .'</span><hr />';
 
             $eventTags = array();
             if( $a->tag_ids != '' ){
@@ -999,12 +1017,15 @@ class Workcalender extends MY_Controller
             }else{
                 $tags = '---';
             }
-
-            $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+            
+            $custom_html .= '<small style="font-size:15px;"><i class="bx bx-user-circle"></i> Customer : ' . $a->customer_name . '</small>';
+            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $a->mail_add . " " . $a->cust_city . " " . $a->cust_state . " " . $a->cust_zip_code . "</small>";
+            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
             $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Appointment Type : ' . $a->appointment_type . '</small>';            
             //$custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-user-circle'></i> Customer : " . $a->customer_name . "</small>";
             $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $a->employee_name . "</small>";
             $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("H:i A", strtotime($a->appointment_time)) . "</small>";
+            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-link"></i> View</small>';
 
 
             $resources_user_events[$inc]['eventId'] = $a->id;
@@ -1829,13 +1850,14 @@ class Workcalender extends MY_Controller
     public function ajax_create_appointment()
     {
         $this->load->model('Appointment_model');
+        $this->load->model('AppointmentType_model');
 
         $post       = $this->input->post();
         $company_id = logged('company_id');
         $is_success = false;
         $message    = 'Cannot create appointment';
 
-        if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
+        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
 
             if( $post['appointment_tags'] != '' ){
                 $tags = implode(",", $post['appointment_tags']);
@@ -1843,13 +1865,16 @@ class Workcalender extends MY_Controller
                 $tags = '';
             }
 
+            $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);            
             $data_appointment = [
                 'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
-                'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
+                'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
+                'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
                 'user_id' => $post['appointment_user_id'],
                 'prof_id' => $post['appointment_customer_id'],
                 'company_id' => $company_id,
                 'tag_ids' => $tags,
+                'url_link' => $post['ulr_link'],
                 'total_item_price' => 0,
                 'total_item_discount' => 0,
                 'total_amount' => 0,
@@ -1860,7 +1885,7 @@ class Workcalender extends MY_Controller
             ];
 
             $last_id = $this->Appointment_model->createAppointment($data_appointment);
-            $appointment_number = $this->Appointment_model->generateAppointmentNumber($last_id);
+            $appointment_number = $this->Appointment_model->generateAppointmentNumber($last_id, $appointmentType->name);
             $this->Appointment_model->update($last_id, ['appointment_number' => $appointment_number]);
 
             customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
