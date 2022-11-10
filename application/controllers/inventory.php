@@ -261,6 +261,9 @@ class Inventory extends MY_Controller
 
     public function add()
     {
+        $this->page_data['page']->title = 'Inventory';
+        $this->page_data['page']->parent = 'Tools';
+
         $input = $this->input->post();
         if($input){
             $config = array(
@@ -317,9 +320,13 @@ class Inventory extends MY_Controller
             'select' => '*',
         );
         $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
-
-        $this->page_data['page_title'] = 'Add Inventory Item';
-        $this->load->view('inventory/add', $this->page_data);
+        $this->page_data['page']->title = 'Inventory';
+        $this->page_data['page']->parent = 'Tools';
+        $this->load->view('v2/pages/inventory/action/inventory_add', $this->page_data);
+        // $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+        // $this->page_data['page_title'] = 'Add Inventory Item';
+        // $this->load->view('inventory/add', $this->page_data);
+        // $this->load->view('v2/pages/inventory/add', $this->page_data);
     }
   
     public function saveItemsCategories()
@@ -367,11 +374,18 @@ class Inventory extends MY_Controller
         $input = $this->input->post();
         $input['is_active'] =  1;
         $input['company_id'] =  logged('company_id');
+
+        $customFields = $input['custom_field'];
+        unset($input['custom_field']);
         if ($this->general->add_($input, "items")) {
-            echo "1";
+            $this->session->set_flashdata('success', "Item successfully saved.");
+            // echo "1";
         } else {
-            echo "0";
+            $this->session->set_flashdata('error', "Error saving item.");
+            // echo "0";
         }
+
+        redirect('inventory');
     }
 
     public function  update_service_item()
