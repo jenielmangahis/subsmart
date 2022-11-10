@@ -37,7 +37,7 @@ class Appointment_model extends MY_Model
             'is_wait_list' => 0
           );
 
-        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type,acs_profile.mail_add,acs_profile.city AS cust_city, acs_profile.state AS cust_state,acs_profile.zip_code AS cust_zip_code');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
         $this->db->join('appointment_types', 'appointments.appointment_type_id = appointment_types.id','left');     
@@ -114,10 +114,15 @@ class Appointment_model extends MY_Model
         return  $insert_id;
     }
 
-    public function generateAppointmentNumber( $id )
+    public function generateAppointmentNumber( $id, $service_type )
     {
-        $issue_no = 'APPT-' . str_pad($id, 5,"0",STR_PAD_LEFT);
-        return $issue_no; 
+        if( $service_type != '' ){
+            $appointment_number = strtoupper($service_type) . '-' . str_pad($id, 5,"0",STR_PAD_LEFT);
+        }else{
+            $appointment_number = 'APPT-' . str_pad($id, 5,"0",STR_PAD_LEFT);
+        }
+        
+        return $appointment_number; 
     }
 
     public function getAll()

@@ -5,7 +5,7 @@
             <input type="text" name="appointment_date" class="nsm-field form-control datepicker" value="<?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?>" placeholder="Date" required style="padding: 0.375rem 0.75rem;">
         </div>
         <div class="col-12 col-md-6">
-            <input type="text" name="appointment_time" class="nsm-field form-control timepicker" value="<?= date("h:i A", strtotime($appointment->appointment_time)); ?>" placeholder="Time" required />
+            <input type="text" name="appointment_time" class="nsm-field form-control timepicker" value="<?= date("h:i A", strtotime($appointment->appointment_time_from)); ?>" placeholder="Time" required />
         </div>
     </div>
 </div>
