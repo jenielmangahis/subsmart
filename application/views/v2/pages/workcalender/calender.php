@@ -1,6 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/calendar/calendar_modals'); ?>
+<link rel="stylesheet" href="<?= base_url("assets/js/v2/drawer/drawer.css") ?>">
+<link rel="stylesheet" href="<?= base_url("assets/js/v2/pg-calendar/css/pignose.calendar.css") ?>">
 <style>
 .bs-popover-top .arrow:after, .bs-popover-top .arrow:before {
   border-top-color: #32243D !important;
@@ -64,6 +66,9 @@
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('job/new_job1') ?>'">
                                     <i class='bx bx-fw bx-message-square-error'></i> New Job
                                 </button>
+                                <button type="button" class="nsm-button drawer-toggle">
+                                    <i class='bx bxs-calendar'></i> Mini Calendar
+                                </button>
 
                                 <?php if (!empty($users)) : ?>
                                     <div class="nsm-input-group ms-2">
@@ -85,7 +90,7 @@
                 </form>
 
                 <div class="row">
-                    <div class="col-12 col-md-8">
+                    <div class="col-12 col-md-12">
                         <div class="row g-3">
                             <div class="col-12 mb-3">
                                 <div id='calendar'></div>
@@ -102,194 +107,18 @@
                             </div>                            
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
-                        <div class="accordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#mini_calendar_collapse" aria-expanded="true" aria-controls="mini_calendar_collapse">
-                                        Mini Calendar
-                                    </button>
-                                </h2>
-                                <div id="mini_calendar_collapse" class="accordion-collapse collapse show">
-                                    <div class="accordion-body">
-                                        <div id="right-calendar"></div>
-                                        <div class="calendar-tooltip"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button content-title collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#calendars" aria-expanded="false" aria-controls="calendars">
-                                        Calendars
-                                    </button>
-                                </h2>
-                                <div id="calendars" class="accordion-collapse collapse">
-                                    <div class="accordion-body">
-                                        <?php if (!empty($calendar_list)) : ?>
-                                            <label class="content-subtitle">Which calendar entries do you wish to show</label>
-                                            <table class="nsm-table">
-                                                <thead>
-                                                    <tr>
-                                                        <td data-name="Main">Main</td>
-                                                        <td data-name="Mini">Mini</td>
-                                                        <td data-name="Calendar Name">Calendar Name</td>
-                                                        <td data-name="Manage"></td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    if (!empty($calendar_list)) :
-                                                    ?>
-                                                        <?php
-                                                        foreach ($calendar_list as $calendar) :
-                                                            $is_checked = "";
-                                                            $is_mini_checked = "";
-
-                                                            if (!empty($enabled_calendar)) {
-                                                                if (in_array($calendar['id'], $enabled_calendar)) {
-                                                                    $is_checked = 'checked="checked"';
-                                                                }
-                                                            }
-
-                                                            if (!empty($enabled_mini_calendar)) {
-                                                                if (in_array($calendar['id'], $enabled_mini_calendar)) {
-                                                                    $is_mini_checked = 'checked="checked"';
-                                                                }
-                                                            }
-
-                                                            $rowBgColor = '#38a4f8';
-                                                            if ($calendar['backgroundColor'] != '') {
-                                                                $rowBgColor = $calendar['backgroundColor'];
-                                                            }
-                                                        ?>
-                                                            <tr>
-                                                                <td style="background-color: <?php echo $rowBgColor; ?>">
-                                                                    <input class="form-check-input select-primary chk-calendar-entries" type="checkbox" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>">
-                                                                </td>
-                                                                <td style="background-color: <?php echo $rowBgColor; ?>">
-                                                                    <input class="form-check-input select-primary chk-calendar-mini-entries" type="checkbox" <?php echo $is_mini_checked; ?> data-id="<?php echo $calendar['id']; ?>">
-                                                                </td>
-                                                                <td style="background-color: <?php echo $rowBgColor; ?>"><?php echo $calendar['summary']; ?></td>
-                                                                <td style="background-color: <?php echo $rowBgColor; ?>">
-                                                                    <!-- <a class="nsm-link default" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>">Edit</a> -->
-                                                                </td>
-                                                            </tr>
-                                                        <?php
-                                                        endforeach;
-                                                        ?>
-                                                    <?php
-                                                    else :
-                                                    ?>
-                                                        <tr>
-                                                            <td colspan="4">
-                                                                <div class="nsm-empty">
-                                                                    <span>No results found.</span>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    <?php
-                                                    endif;
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        <?php else : ?>
-                                            <label class="content-subtitle">To enable mini calendar events filtering, bind your gmail account in <a class="nsm-link" href="<?= base_url('settings/schedule') ?>">Calendar Settings</a></label>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button content-title collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#recent_contacts" aria-expanded="false" aria-controls="recent_contacts">
-                                        Recent Contacts
-                                    </button>
-                                </h2>
-                                <div id="recent_contacts" class="accordion-collapse collapse">
-                                    <div class="accordion-body">
-                                        <table class="nsm-table">
-                                            <thead>
-                                                <tr>
-                                                    <td class="table-icon"></td>
-                                                    <td data-name="Name">Name</td>
-                                                    <td data-name="Manage"></td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                if (!empty($get_recent_users)) :
-                                                ?>
-                                                    <?php
-                                                    foreach ($get_recent_users as $key => $recent_user) :
-                                                    ?>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="nsm-profile">
-                                                                    <?php
-                                                                    if ($recent_user->profile_img != null) {
-                                                                        $img_filename = userProfileImage($recent_user->id);
-                                                                        $default_imp_img = $img_filename;
-                                                                    } else {
-                                                                        $default_imp_img = base_url('uploads/users/default.png');
-                                                                    }
-                                                                    ?>
-                                                                    <div class="nsm-profile" style="background-image: url('<?php echo $default_imp_img ?>');"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="nsm-text-primary">
-                                                                <label class="content-title"><?php echo $recent_user->FName . " " . $recent_user->LName  ?></label>
-                                                                <label class="content-subtitle"><?php echo $recent_user->email ?></label>
-                                                            </td>
-                                                            <td class="text-end">
-                                                                <a class="nsm-button btn-sm" href="tel:<?= $recent_user->phone; ?>"><i class='bx bxs-phone'></i></a>
-                                                                <a class="nsm-button btn-sm" href="mailto:<?= $recent_user->email; ?>"><i class='bx bx-mail-send'></i></a>
-                                                                <a class="nsm-button btn-sm" target="_blank" href="<?= base_url('workcalender/print_contact/' . $recent_user->id); ?>"><i class='bx bx-printer'></i></a>
-                                                            </td>
-                                                        </tr>
-                                                    <?php
-                                                    endforeach;
-                                                    ?>
-                                                <?php
-                                                else :
-                                                ?>
-                                                    <tr>
-                                                        <td colspan="3">
-                                                            <div class="nsm-empty">
-                                                                <span>No results found.</span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                <?php
-                                                endif;
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button content-title collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#wait_list" aria-expanded="false" aria-controls="wait_list">
-                                        Wait List
-                                    </button>
-                                </h2>
-                                <div id="wait_list" class="accordion-collapse collapse">
-                                    <div class="accordion-body">
-                                        <div class="row g-3">
-                                            <div class="col-12 text-end">
-                                                <button type="button" class="nsm-button m-0 primary" id="btn_add_wait_list">
-                                                    <i class='bx bx-fw bx-plus'></i> Add Wait List
-                                                </button>
-                                            </div>
-                                            <div class="col-12">
-                                                <div id="wait_list_container"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+
+                <div class="calendar-drawer drawer--right">
+                    <header role="banner">
+                        <nav class="drawer-nav" role="navigation">
+                          <ul class="drawer-menu">
+                            <li><?php include viewPath('v2/includes/calendar/drawer_nav'); ?></li>                            
+                          </ul>
+                        </nav>
+                      </header>
+                </div>
+
             </div>
         </div>
     </div>
@@ -299,6 +128,7 @@
         <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD&disable-funding=credit,card"></script>
     <?php } ?>
 <?php } ?>
+<script src='<?= base_url("assets/js/v2/pg-calendar/pignose.calendar.full.js") ?>'></script>
 <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
@@ -315,6 +145,8 @@
         //loadUpcomingServiceTickets();
         //loadUpcomingEvents();
         //loadUnscheduledEstimates();
+
+        $('.calendar-drawer').drawer();
 
         $('.field-popover').popover();
         $('#add-employee-popover').popover();
@@ -1425,11 +1257,62 @@
     }
 
     function loadMiniCalendar() {
-        let events_url = "<?= base_url('settings/_get_google_enabled_calendars') ?>";
+        $('.mini-calendar').pignoseCalendar({
+            scheduleOptions: {
+                colors: {
+                    holiday: '#2fabb7',
+                    seminar: '#5c6270',
+                    meetup: '#ef8080'
+                }
+            },
+            schedules: [{
+                name: 'holiday',
+                date: '2017-08-08'
+            }, {
+                name: 'holiday',
+                date: '2017-09-16'
+            }, {
+                name: 'holiday',
+                date: '2017-10-01',
+            }, {
+                name: 'holiday',
+                date: '2017-10-05'
+            }, {
+                name: 'holiday',
+                date: '2017-10-18',
+            }, {
+                name: 'seminar',
+                date: '2017-11-14'
+            }, {
+                name: 'seminar',
+                date: '2017-12-01',
+            }, {
+                name: 'meetup',
+                date: '2018-01-16'
+            }, {
+                name: 'meetup',
+                date: '2018-02-01',
+            }, {
+                name: 'meetup',
+                date: '2018-02-18'
+            }, {
+                name: 'meetup',
+                date: '2018-03-04',
+            }, {
+                name: 'meetup',
+                date: '2018-04-01'
+            }, {
+                name: 'meetup',
+                date: '2022-11-17',
+            }],
+            //select: onSelectHandler
+        });
+        /*let events_url = "<?= base_url('settings/_get_google_enabled_calendars') ?>";
         let _calendar = document.getElementById('right-calendar');
 
         var calendar = new FullCalendar.Calendar(_calendar, {
             schedulerLicenseKey: '0531798248-fcs-1598103289',
+            themeSystem: 'bootstrap5',
             initialView: 'dayGridMonth',
             events: {
                 url: events_url,
@@ -1454,7 +1337,7 @@
             },
         });
 
-        calendar.render();
+        calendar.render();*/
     }
 
     function loadWaitList() {

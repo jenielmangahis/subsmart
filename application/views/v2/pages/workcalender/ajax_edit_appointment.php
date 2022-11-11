@@ -4,8 +4,11 @@
         <div class="col-12 col-md-6">
             <input type="text" name="appointment_date" class="nsm-field form-control datepicker" value="<?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?>" placeholder="Date" required style="padding: 0.375rem 0.75rem;">
         </div>
-        <div class="col-12 col-md-6">
-            <input type="text" name="appointment_time" class="nsm-field form-control timepicker" value="<?= date("h:i A", strtotime($appointment->appointment_time_from)); ?>" placeholder="Time" required />
+        <div class="col-12 col-md-3">
+            <input type="text" name="appointment_time_from" class="nsm-field form-control timepicker" value="<?= date("h:i A", strtotime($appointment->appointment_time_from)); ?>" placeholder="Time From" required />
+        </div>
+        <div class="col-12 col-md-3">
+            <input type="text" name="appointment_time_to" class="nsm-field form-control timepicker" value="<?= date("h:i A", strtotime($appointment->appointment_time_to)); ?>" placeholder="Time To" required />
         </div>
     </div>
 </div>
@@ -36,4 +39,8 @@
             <option value="<?= $key; ?>" selected><?= $value; ?></option>
         <?php } ?>
     </select>
+</div>
+<div class="col-12">
+    <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
+    <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" value="<?= $appointment->url_link; ?>">
 </div>

@@ -48,11 +48,11 @@ if (!empty($dealsSteals)) :
                             <li>
                                 <a class="dropdown-item close-item" name="dropdown_close_deal" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Close Deal</a>
                             </li>
-                            <?php if ($ds->status != 1) : ?>
+                            <?php //if ($ds->status != 1) : ?>
                                 <li>
                                     <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Delete</a>
                                 </li>
-                            <?php endif; ?>
+                            <?php //endif; ?>
                         <?php endif; ?>
                         
                         <?php if($ds->status == $status_ended): ?>

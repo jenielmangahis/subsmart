@@ -13,6 +13,7 @@ class Email_Automation extends MY_Controller {
         $this->load->model('CustomerGroup_model');
 
 		$this->page_data['page']->title = 'Email Automation';
+        $this->page_data['page']->tab  = 'Email Automation';
 		$this->page_data['page']->menu = '';	
 	}
 
@@ -43,7 +44,7 @@ class Email_Automation extends MY_Controller {
         $this->page_data['optionCustomerType'] = $optionCustomerType;
         $this->page_data['optionRuleNotifyAt'] = $optionRuleNotifyAt;
         $this->page_data['emailAutomationTemplates'] = $emailAutomationTemplates;
-        $this->load->view('email_automation/add_email_automation', $this->page_data);
+        $this->load->view('v2/pages/email_automation/add_email_automation', $this->page_data);
     }
 
     public function ajax_get_template_message(){
@@ -67,11 +68,13 @@ class Email_Automation extends MY_Controller {
 		$emailAutomationTemplates = $this->MarketingEmailAutomationTemplate_model->getAllByCompanyId($cid);
 
 		$this->page_data['emailAutomationTemplates'] = $emailAutomationTemplates;
-		$this->load->view('email_automation/templates', $this->page_data);
+        $this->page_data['page']->tab  = 'Default Templates';
+		$this->load->view('v2/pages/email_automation/templates/list', $this->page_data);
 	}
 
     public function add_template(){
-        $this->load->view('email_automation/add_template', $this->page_data);
+        $this->page_data['page']->tab  = 'Default Templates';
+        $this->load->view('v2/pages/email_automation/templates/add_template', $this->page_data);
     }
 
     public function edit_template($id){
@@ -80,7 +83,8 @@ class Email_Automation extends MY_Controller {
         if( $emailTemplate->company_id == $cid ){
 
             $this->page_data['emailTemplate'] = $emailTemplate;
-            $this->load->view('email_automation/edit_template', $this->page_data);
+            $this->page_data['page']->tab  = 'Default Templates';
+            $this->load->view('v2/pages/email_automation/templates/edit_template', $this->page_data);
         }else{
             $this->session->set_flashdata('message', 'Record not found');
             $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -92,11 +96,13 @@ class Email_Automation extends MY_Controller {
     public function save_template(){
         postAllowed();
 
+        $cid  = logged('company_id');
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         if( !empty($post) ){
         	$data = array(
+                'company_id' => $cid,
         		'user_id' => $user['id'],
         		'name' => post('name'),
         		'email_subject' => post('email_subject'),
@@ -214,7 +220,7 @@ class Email_Automation extends MY_Controller {
                 $this->page_data['optionCustomerType'] = $optionCustomerType;
                 $this->page_data['optionRuleNotifyAt'] = $optionRuleNotifyAt;
                 $this->page_data['emailAutomationTemplates'] = $emailAutomationTemplates;
-                $this->load->view('email_automation/edit_email_automation', $this->page_data);
+                $this->load->view('v2/pages/email_automation/edit_email_automation', $this->page_data);
             }else{
                 $this->session->set_flashdata('message', 'Email Automation not found');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -508,6 +514,29 @@ class Email_Automation extends MY_Controller {
             }else{
                 $msg = 'Cannot find record';    
             }
+        }else{
+            $msg = 'Cannot find record';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_template(){
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg    = '';
+
+        $post = $this->input->post(); 
+        $template = $this->MarketingEmailAutomationTemplate_model->getById($post['tid']);
+        if( $template && $template->company_id == $company_id ){
+            $this->MarketingEmailAutomationTemplate_model->deleteById($post['tid']);
+            $is_success = 1;
+            $msg = 'Record deleted';
         }else{
             $msg = 'Cannot find record';
         }

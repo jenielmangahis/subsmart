@@ -58,10 +58,13 @@ class Workcalender extends MY_Controller
 
         add_css(array(
             'assets/css/bootstrap-multiselect.min.css',
+            'assets/js/v2/drawer/drawer.min.css',            
         ));
 
         add_footer_js(array(
             'assets/js/bootstrap-multiselect.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.js',
+            'assets/js/v2/drawer/drawer.min.js',
         ));
 
 
@@ -1025,8 +1028,11 @@ class Workcalender extends MY_Controller
             //$custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-user-circle'></i> Customer : " . $a->customer_name . "</small>";
             $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $a->employee_name . "</small>";
             $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("H:i A", strtotime($a->appointment_time)) . "</small>";
-            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-link"></i> View</small>';
-
+            if( $a->url_link == '' ){
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-link"></i> ---</small>';
+            }else{
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-link"></i> '. $a->url_link .'</small>';
+            }
 
             $resources_user_events[$inc]['eventId'] = $a->id;
             $resources_user_events[$inc]['eventType'] = 'appointments';
@@ -1874,7 +1880,7 @@ class Workcalender extends MY_Controller
                 'prof_id' => $post['appointment_customer_id'],
                 'company_id' => $company_id,
                 'tag_ids' => $tags,
-                'url_link' => $post['ulr_link'],
+                'url_link' => $post['url_link'],
                 'total_item_price' => 0,
                 'total_item_discount' => 0,
                 'total_amount' => 0,
@@ -2040,7 +2046,7 @@ class Workcalender extends MY_Controller
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['aid'], $cid);
 
         if( $appointment ){
-            if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] > 0) {
+            if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] > 0) {
 
                 if( $post['appointment_tags'] != '' ){
                     $tags = implode(",", $post['appointment_tags']);
@@ -2050,11 +2056,13 @@ class Workcalender extends MY_Controller
 
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
-                    'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
+                    'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
+                    'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
                     'user_id' => $post['appointment_user_id'],
                     'prof_id' => $post['appointment_customer_id'],
                     'tag_ids' => $tags,
-                    'appointment_type_id' => $post['appointment_type_id']
+                    'appointment_type_id' => $post['appointment_type_id'],
+                    'url_link' => $post['url_link']
                 ];
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);
