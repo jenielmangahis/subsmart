@@ -43,8 +43,11 @@
                                 <div class="col-12 col-md-6">
                                     <input type="text" name="appointment_date" id="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;">
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <input type="text" name="appointment_time" id="appointment_time" class="nsm-field form-control timepicker" placeholder="Time" required />
+                                <div class="col-12 col-md-3">
+                                    <input type="text" name="appointment_time_from" id="appointment_time" class="nsm-field form-control timepicker-from" value="" placeholder="Time From" required />
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <input type="text" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control timepicker-to" placeholder="Time To" value="<?= $default_time_to; ?>" required />
                                 </div>
                             </div>
                         </div>
@@ -86,6 +89,10 @@
                             <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
                                 <select class="nsm-field form-select" name="appointment_tags[]" id="appointment-tags" multiple="multiple"></select>
                             </span>
+                        </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
+                            <input type="text" name="ulr_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
                         </div>
                     </div>
                 </div>

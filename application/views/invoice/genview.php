@@ -97,6 +97,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <div class="row">
                                 <div class="row col-sm-12">
+                                    <script>
+                                        const $template = document.createElement("template");
+                                        $template.innerHTML = `<?= $invoice_template; ?>`;
+
+                                        class InvoicePreview extends HTMLElement {
+                                            constructor() {
+                                                super();
+                                                const shadowRoot = this.attachShadow({ mode: "open" });
+                                                shadowRoot.appendChild($template.content.cloneNode(true));
+                                            }
+                                        }
+
+                                        try {
+                                            window.customElements.define("invoice-preivew", InvoicePreview);
+                                        } catch (error) {}
+                                    </script>
+                                    <invoice-preivew></invoice-preivew>
+                                </div>
+                                <div class="row col-sm-12" style="display: none;">
                                     <div class="col-sm-6">
                                         <div class="invoice-paper" id="presenter-paper">
                                         <div class="presenter-paper-sm" id="presenter-paper-sm"></div>
@@ -365,6 +384,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </p>
                                         </div>
                                     </div>
+                                </div>
                                 </div>
                                 <div class="offset-1 col-md-5">
                                     <div class="panel-info margin-bottom">

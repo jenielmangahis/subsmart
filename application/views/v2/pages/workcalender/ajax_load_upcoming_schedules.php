@@ -25,6 +25,16 @@
 .nsm-list-icon{
     float: right;
 }
+.location-list{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.location-list li{
+    margin-right: 0px;
+    vertical-align: top;
+    display: inline-block;
+}
 </style>
 <table class="nsm-table" id="upcoming_schedules_table">
     <thead>
@@ -52,7 +62,8 @@
                             $schedule_customer_name = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
                             //$schedule_location = $schedule['data']->job_location != '' ? $schedule['data']->job_location : '---';
-                            $schedule_location = $schedule['data']->mail_add . ' ' . $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            $schedule_location = $schedule['data']->mail_add;
+                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             $schedule_description = '';
 
@@ -82,6 +93,7 @@
                             $schedule_customer_name = '';
                             $schedule_customer_phone = '';
                             $schedule_location = $schedule['data']->event_address;
+                            $schedule_location_b = '';
                             $schedule_expiry_date = '';
                             $schedule_description = $schedule['data']->event_description != '' ? $schedule['data']->event_description : '---';;
 
@@ -101,6 +113,7 @@
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
                             $schedule_location = $schedule['data']->job_location;
+                            $schedule_location_b = '';
                             $schedule_expiry_date = $schedule['data']->expiry_date;
                             $schedule_description = '';
 
@@ -120,6 +133,7 @@
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
                             $schedule_location = $schedule['data']->service_location;
+                            $schedule_location_b = '';
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
@@ -135,11 +149,15 @@
                             $schedule_end_time = '';
                             $schedule_status = '';
                             $schedule_tags   = $schedule['data']->appt_tags;
+
+                            //$schedule_number = strtoupper(str_replace("APPT", $schedule['data']->appointment_type, $schedule['data']->appointment_number));
+
                             $schedule_number = $schedule['data']->appointment_number;
                             $schedule_type   = $schedule['data']->appointment_type;
                             $schedule_customer_name  = $schedule['data']->customer_name;
                             $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
-                            $schedule_location = $schedule['data']->mail_add . ' ' . $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            $schedule_location   = $schedule['data']->mail_add;
+                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
@@ -192,7 +210,10 @@
                                 </label>
                                 <?php } ?>
                                 <label class="content-title" style="cursor: pointer">
-                                    <i class='bx bxs-map-pin'></i> <?= $schedule_location; ?>
+                                    <ul class="location-list">
+                                        <li><i class='bx bxs-map-pin'></i></li>
+                                        <li><?= $schedule_location; ?><?= $schedule_location_b != '' ? "<br />" . $schedule_location_b : ''; ?></li>
+                                    </ul>                                    
                                 </label>
                                 <?php if( $schedule_description != '' ){ ?>
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">

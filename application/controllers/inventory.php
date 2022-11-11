@@ -322,11 +322,10 @@ class Inventory extends MY_Controller
         $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
+        $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
         $this->load->view('v2/pages/inventory/action/inventory_add', $this->page_data);
-        // $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
         // $this->page_data['page_title'] = 'Add Inventory Item';
         // $this->load->view('inventory/add', $this->page_data);
-        // $this->load->view('v2/pages/inventory/add', $this->page_data);
     }
   
     public function saveItemsCategories()
@@ -377,12 +376,25 @@ class Inventory extends MY_Controller
 
         $customFields = $input['custom_field'];
         unset($input['custom_field']);
-        if ($this->general->add_($input, "items")) {
-            $this->session->set_flashdata('success', "Item successfully saved.");
-            // echo "1";
+
+        $itemId = $this->items_model->insert($input);
+        if ($itemId) {
+            if($customFields) {
+                $customFieldsValue = [];
+                foreach($customFields as $fieldId => $value) {
+                    $customFieldsValue[] = [
+                        'custom_field_id' => $fieldId,
+                        'value' => $value,
+                        'item_id' => $itemId
+                    ];
+                }
+
+                $this->items_model->insert_custom_fields_value($customFieldsValue);
+            }
+
+            echo "1";
         } else {
-            $this->session->set_flashdata('error', "Error saving item.");
-            // echo "0";
+            echo "0";
         }
 
         redirect('inventory');
@@ -1108,7 +1120,7 @@ class Inventory extends MY_Controller
 
         $update = $this->items_model->update_custom_field_name($id, $data);
 
-        redirect('inventory/settings');
+        redirect($_SERVER['HTTP_REFERER']);
     }
 }
 /* End of file items.php */

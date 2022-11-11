@@ -556,7 +556,7 @@ span.sc-item {
             <?php include viewPath('v2/includes/page_navigations/estimate_subtabs'); ?>
         </div>
             <br class="clear"/>
-            <div class="row" style="padding-right:4%;padding-left:4%;">                
+            <div class="row" style="padding-right:10%;padding-left:10%;">                
                 <div class="col-xl-12">
                   <?php include viewPath('flash'); ?>
                     <div class="">
@@ -590,243 +590,271 @@ span.sc-item {
                       </div>
 
                       <div id="printableArea" style="">
-                          <div style="margin-bottom: 20px;margin-left: 0px !important;margin-top:10px;">
-                            <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
-                            <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 180px; max-height: 180px;" />
-                          </div>
-                          
-                            <div class="col-xl-5 right" style="float: right;margin-top:-150px;">
-                                <div style="text-align: right;">
-                                  <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
-                                  <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
-                                </div>
-                                <div class="" style="float: right;margin-top: 20px;">
-                                  <table style="text-align: right;">
-                                    <tr>
-                                      <td style="text-align: right;">Estimate Date: &emsp;</td>
-                                      <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
-                                    </tr>
-                                    <tr>
-                                      <td style="text-align: right;">Expiry Date: &emsp;</td>
-                                      <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
-                                    </tr>
-                                  </table>
-                                </div>
+                          <div class="row">
+                            <div class="col-md-2">
+                                <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
+                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" />
                             </div>
+                            <div class="col-md-7">
 
-                            <div class="col-xl-5 left" style="margin-bottom: 33px;">
-                              <h5><span class="fa fa-user-o fa-margin-right"></span> From <br> <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
-                              <div class="col-xl-5 ml-0 pl-0">
-                                <span class="ul-text"><?php echo $client->street; ?></span><br>
-		         							   		<span class="ul-text"><?php echo $client->city .', '.$client->state.' '. $client->postal_code; ?></span><br>
-                                <span class="">EMAIL: <?= $client->email_address; ?></span><br />
-                                <span class="">PHONE: <?= $client->phone_number; ?></span>
+                            </div>
+                            <div class="col-md-3">
+                                    <table class="table table-borderless">
+                                      <tr>
+                                        <td colspan="2" style="text-align:center;"><h2>ESTIMATE</h2></td>
+                                      </tr>
+                                      <tr>
+                                        <td style="text-align: ;">Estimate No:</td>
+                                        <td style="text-align: right;"><?= $estimate->estimate_number; ?></td>
+                                      </tr>
+                                      <tr>
+                                        <td style="text-align: ;">Estimate Date:</td>
+                                        <td style="text-align: right;"><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
+                                      </tr>
+                                      <tr>
+                                        <td style="text-align: ;">Expiry Date:</td>
+                                        <td style="text-align: right;"><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
+                                      </tr>
+                                    </table>
                               </div>
                             </div>
-                            <div class="clear"></div>
-                            <div class="col-xl-5 left">
-                              <h5><span class="fa fa-user-o fa-margin-right"></span> To <br> <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
-                              <div class="col-xl-5 ml-0 pl-0">
-                                <span class=""><?= $customer->mail_add . " " . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
-                                <span class="">EMAIL: <span class=""><?= $customer->email; ?></span><br />
-                                <span class="">PHONE: <span class=""><?= $customer->phone_w; ?></span><br />
-                              </div>
+                          <!-- </div> -->
+                          <br><br><br>
+                          <div class="row">
+                            <div class="col-md-6" style="margin-bottom: ;font-size:16px;">
+                              <h4>From</h4>
+                                <span class="invoice-txt"><h4><?= $client->business_name; ?></h4></span></h5>
+                                <div class="col-xl-5 ml-0 pl-0">
+                                  <span class="ul-text"><?php echo $client->business_address; ?></span><br>
+                                  <span class=""><?= $client->email_address; ?></span><br />
+                                  <span class=""><?= $client->phone_number; ?></span>
+                                </div>
                             </div>
-                            <br class="clear"/>    
-                            <table class="table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
+                            <div class="col-md-6" style="text-align:right;font-size:16px;">
+                                <h4>To</h4>
+                                <span class="invoice-txt text-capitalize"> <h4><?= $customer->first_name . ' ' . $customer->last_name; ?></h4></span></h5> 
+                                <div class="">
+                                  <span class=""><?= $customer->mail_add . " " . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
+                                  <span class=""><span class=""><?= $customer->email; ?></span><br />
+                                  <span class=""><span class=""><?= $customer->phone_w; ?></span><br />
+                                </div>
+                            </div>
+                          </div>
+
+                            <table class="table table-print table-items table-bordered" style="width: 100%; margin-top: 45px;">
                             <thead>
-                                <tr>
-                                    <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
-                                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
-                                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
-                                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
-                                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
-                                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
-                                    <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
+                                <tr style="background-color:#1D88F3; color:white;">
+                                    <th>#</th>
+                                    <th style="text-align: center;">Items</th>
+                                    <th style="text-align: center;">Item Type</th>
+                                    <th style="text-align: center;">Price</th>
+                                    <th style="text-align: center;">Qty</th>
+                                    <th style="text-align: center;">Discount</th>
+                                    <th style="text-align: center;">Tax</th>
+                                    <th style="text-align: center;">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php if($estimate->estimate_type == 'Option'){ ?>
+                            <?php if($estimate->estimate_type == 'Option'){ $ia = 1; $ib = 1; ?>
                                 <tr>
                                     <td colspan="7" style="padding:15px;"><b>Option 1</b></td>
                                 </tr>
                               <?php foreach($items_dataOP1 as $itemData1){ ?>
                                     <tr class="table-items__tr">
-                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:30px; text-align:center;"><?php echo $ia; ?></td>
                                       <td valign="top" style="width:45%;"><?= $itemData1->title; ?></td>
                                       <td valign="top" style="width:20%;"><?= $itemData1->type; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float)$itemData1->costing,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format((float)$itemData1->costing,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->qty; ?></td>
-                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->discount; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float)$itemData1->total,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemData1->discount,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemData1->tax,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format((float)$itemData1->total,2); ?></td>
                                     </tr>
-                                  <?php } ?>
+                                  <?php $ia++; } ?>
                                 
-                                <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->sub_total, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->sub_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$estimate->option1_total, 2); ?></b></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="1" style="text-align: right;"><b>$ <?= number_format((float)$estimate->option1_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-top:15px;"><b>Option 1 Message</b></td>
+                                    <td colspan="8" style="padding-top:15px;"><b>Option 1 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-bottom:30px;"><?= $estimate->option_message; ?></td>
+                                    <td colspan="8" style="padding-bottom:30px;"><?= $estimate->option_message; ?></td>
                                 </tr>
 
                                 <tr>
-                                    <td colspan="7" style="padding:15px;"><b>Option 2</b></td>
+                                    <td colspan="8" style="padding:15px;"><b>Option 2</b></td>
                                 </tr>
                             <?php foreach($items_dataOP2 as $itemData2){ ?>
                                     <tr class="table-items__tr">
-                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:30px; text-align:center;"><?php echo $ib; ?></td>
                                       <td valign="top" style="width:45%;"><?= $itemData2->title; ?></td>
                                       <td valign="top" style="width:20%;"><?= $itemData2->type; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData2->costing,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemData2->costing,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->qty; ?></td>
-                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->discount; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData2->total,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemData2->discount,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemData2->tax,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemData2->total,2); ?></td>
                                     </tr>
-                                  <?php } ?>
+                                  <?php $ib++; } ?>
                                 
-                                <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->sub_total2, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->sub_total2, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax2_total, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax2_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$estimate->option2_total, 2); ?></b></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="1" style="text-align: right;"><b>$ <?= number_format((float)$estimate->option2_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-top:15px;"><b>Option 2 Message</b></td>
+                                    <td colspan="8" style="padding-top:15px;"><b>Option 2 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-bottom:15px;"><?= $estimate->option2_message; ?></td>
+                                    <td colspan="8" style="padding-bottom:15px;"><?= $estimate->option2_message; ?></td>
                                 </tr>
 
-                            <?php }elseif($estimate->estimate_type == 'Bundle'){ ?>
+                            <?php }elseif($estimate->estimate_type == 'Bundle'){ $ix =1;  $iy =1; ?>
 
                               <tr>
-                                    <td colspan="7" style="padding:15px;"><b>Bundle 1</b></td>
+                                    <td colspan="8" style="padding:15px;"><b>Bundle 1</b></td>
                                 </tr>
                               <?php foreach($items_dataBD1 as $itemDatabd1){ ?>
                                     <tr class="table-items__tr">
-                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:30px; text-align:center;"><?php echo $ix; ?></td>
                                       <td valign="top" style="width:45%;"><?= $itemDatabd1->title; ?></td>
                                       <td valign="top" style="width:20%;"><?= $itemDatabd1->type; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd1->costing,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemDatabd1->costing,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->qty; ?></td>
-                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->discount; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd1->total,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemDatabd1->discount,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemDatabd1->tax,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemDatabd1->total,2); ?></td>
                                     </tr>
-                                  <?php } ?>
+                                  <?php $ix++; } ?>
                                 
-                                <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->bundle1_total, 2); ?></b></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="1" style="text-align: right;"><b>$ <?= number_format($estimate->bundle1_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-top:15px;"><b>Bundle 1 Message</b></td>
+                                    <td colspan="8" style="padding-top:15px;"><b>Bundle 1 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-bottom:30px;"><?= $estimate->bundle1_message; ?></td>
+                                    <td colspan="8" style="padding-bottom:30px;"><?= $estimate->bundle1_message; ?></td>
                                 </tr>
 
                                 <tr>
-                                    <td colspan="7" style="padding:15px;"><b>Bundle 2</b></td>
+                                    <td colspan="8" style="padding:15px;"><b>Bundle 2</b></td>
                                 </tr>
                             <?php foreach($items_dataBD2 as $itemDatabd2){ ?>
                                     <tr class="table-items__tr">
-                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:30px; text-align:center;"><?php echo $iy; ?></td>
                                       <td valign="top" style="width:45%;"><?= $itemDatabd2->title; ?></td>
                                       <td valign="top" style="width:20%;"><?= $itemDatabd2->type; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd2->costing,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemDatabd2->costing,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->qty; ?></td>
-                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->discount; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd2->total,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemDatabd2->discount,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemDatabd2->tax,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemDatabd2->total,2); ?></td>
                                     </tr>
-                                  <?php } ?>
+                                  <?php $iy++; } ?>
                                 
-                                <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total2, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total2, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax2_total, 2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format($estimate->tax2_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->bundle2_total, 2); ?></b></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="1" style="text-align: right;"><b>$ <?= number_format($estimate->bundle2_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-top:15px;"><b>Bundle 2 Message</b></td>
+                                    <td colspan="8" style="padding-top:15px;"><b>Bundle 2 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="padding-bottom:15px;"><?= $estimate->bundle2_message; ?></td>
+                                    <td colspan="8" style="padding-bottom:15px;"><?= $estimate->bundle2_message; ?></td>
                                 </tr>
 
-                            <?php }else{ ?>
+                            <?php }else{ $i = 1; ?>
+                              
                                 <?php foreach($items_data as $itemData){ ?>
                                     <tr class="table-items__tr">
-                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:30px; text-align:center;"><?php echo $i; ?></td>
                                       <td valign="top" style="width:45%;"><?= $itemData->title; ?></td>
                                       <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iCost,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemData->iCost,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->qty; ?></td>
-                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->discount; ?></td>
-                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iTotal,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemData->discount,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;">$<?= number_format($itemData->tax,2); ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($itemData->iTotal,2); ?></td>
                                     </tr>
-                                  <?php } ?>
+                                  <?php $i++; } ?>
                                 
-                                <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format((int)$estimate->sub_total,2); ?></p></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$ <?= number_format((int)$estimate->sub_total,2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;">
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                                  <td colspan="1" style="text-align: right;">
                                     <p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$estimate->grand_total, 2); ?></b></td>
+                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="1" style="text-align: right;"><b>$ <?= number_format((float)$estimate->grand_total, 2); ?></b></td>
                                 </tr>
                             <?php } ?>
+
                             </tbody>
                             </table>
                             <!-- </div> -->
                                 <?php //print_r($estimate); ?>
-                            <hr />
-                            <p><b>Instructions</b><br /><br /><?php echo $estimate->instructions; ?></p>
+                            <br />
+                            <b>Instructions</b><br>
+                            <?php echo $estimate->instructions; ?>
+
                             <?php if($estimate->estimate_type == 'Standard'){ ?>
-                            <p><b>Message</b><br /><br /><?= $estimate->customer_message; ?></p>
+                            <b>Message</b><br><?= $estimate->customer_message; ?>
                             <?php } ?>
-                            <p><b>Terms</b><br /><Br /><?= $estimate->terms_conditions; ?></p>
+                            <b>Terms</b><br><?= $estimate->terms_conditions; ?>
                       
                             <?php }else{ ?>
                               <div class="alert alert-primary" role="alert">
@@ -835,7 +863,7 @@ span.sc-item {
                             <?php } ?>
                       </div>
 
-                      <div class="row" style="margin-top: 30px;">
+                      <div class="row" style="margin-top: 100px;">
                           <div class="col-md-4 form-group">
                               <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary" aria-expanded="false">
                                 <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate List
