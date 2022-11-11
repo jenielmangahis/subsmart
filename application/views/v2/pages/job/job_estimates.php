@@ -209,7 +209,7 @@
                                         </div>
                                         <h6>Assigned To</h6>
                                         <div class="row">
-                                            <div class="col-sm-12 mb-2">
+                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_1">
                                                 <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
                                                 <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
                                                     <option value="">Select Employee</option>
@@ -221,7 +221,7 @@
                                                 </select>
                                                 <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly> -->
                                             </div>
-                                            <div class="col-sm-12 mb-2">
+                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_2">
                                                 <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
                                                 <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
                                                     <option value="">Select Employee</option>
@@ -233,7 +233,7 @@
                                                 </select>
                                                 <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
                                             </div>
-                                            <div class="col-sm-12 mb-2">
+                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_3">
                                                 <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
                                                 <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
                                                     <option value="">Select Employee</option>
@@ -245,7 +245,7 @@
                                                 </select>
                                                 <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
                                             </div>
-                                            <div class="col-sm-12 mb-2">
+                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_4">
                                                     <input type="text" id="emp5_id" name="emp5_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee5_id)){ echo $jobs_data->employee5_id; } ?>" hidden>
                                                     <select id="EMPLOYEE_SELECT_5" name="employee5_" class="form-control">
                                                         <option value="">Select Employee</option>
@@ -256,7 +256,7 @@
                                                         <?php endif; ?>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm-12 mb-2">
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_5">
                                                     <input type="text" id="emp6_id" name="emp6_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee6_id)){ echo $jobs_data->employee6_id; } ?>" hidden>
                                                     <select id="EMPLOYEE_SELECT_6" name="employee6_" class="form-control">
                                                         <option value="">Select Employee</option>
@@ -268,23 +268,12 @@
                                                     </select>
                                                 </div>
                                         </div>
-                                        <script type="text/javascript">
-                                            $('#EMPLOYEE_SELECT_2').on('change', function(event) {
-                                                $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
-                                            });
-                                            $('#EMPLOYEE_SELECT_3').on('change', function(event) {
-                                                $("#emp3_id, #employee3_id").val($("#EMPLOYEE_SELECT_3").val());
-                                            });
-                                            $('#EMPLOYEE_SELECT_4').on('change', function(event) {
-                                                $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
-                                            });
-                                            $('#EMPLOYEE_SELECT_5').on('change', function(event) {
-                                                $("#emp5_id, #employee5_id").val($("#EMPLOYEE_SELECT_5").val());
-                                            });
-                                            $('#EMPLOYEE_SELECT_6').on('change', function(event) {
-                                                $("#emp6_id, #employee6_id").val($("#EMPLOYEE_SELECT_6").val());
-                                            });
-                                        </script>
+                                        <div class="float-end">
+                                            <div class="group">
+                                                <button class="nsm-button small ADD_ASSIGN_EMPLOYEE" type="button"><i class='bx bx-user-plus'></i>&nbsp;Add</button>
+                                                <button class="nsm-button small REMOVE_ASSIGN_EMPLOYEE" type="button"><i class='bx bx-user-minus'></i>&nbsp;Remove</button>
+                                            </div>
+                                        </div>
                                         <!-- <br>
                                         <center>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="btn btn-primary">
@@ -903,6 +892,64 @@ add_footer_js(array(
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 
 <script>
+
+$('#EMPLOYEE_SELECT_2').on('change', function(event) {
+    $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
+});
+$('#EMPLOYEE_SELECT_3').on('change', function(event) {
+    $("#emp3_id, #employee3_id").val($("#EMPLOYEE_SELECT_3").val());
+});
+$('#EMPLOYEE_SELECT_4').on('change', function(event) {
+    $("#emp4_id, #employee4_id").val($("#EMPLOYEE_SELECT_4").val());
+});
+$('#EMPLOYEE_SELECT_5').on('change', function(event) {
+    $("#emp5_id, #employee5_id").val($("#EMPLOYEE_SELECT_5").val());
+});
+$('#EMPLOYEE_SELECT_6').on('change', function(event) {
+    $("#emp6_id, #employee6_id").val($("#EMPLOYEE_SELECT_6").val());
+});
+
+// START: ADD AND REMOVE BUTTON IN "ASSIGNED TO"
+$(function() {
+    // JUST A COUNTER VARIABLE
+    var TOTAL = 1;
+
+    // HIDDEN INPUTS
+    var HIDDEN_1 = $('.ASSIGNED_TO_1 > select');
+    var HIDDEN_2 = $('.ASSIGNED_TO_2 > select');
+    var HIDDEN_3 = $('.ASSIGNED_TO_3 > select');
+    var HIDDEN_4 = $('.ASSIGNED_TO_4 > select');
+    var HIDDEN_5 = $('.ASSIGNED_TO_5 > select');
+
+    // ACTUAL DROPDOWN ELEMENTS
+    (HIDDEN_2.val() == '') ? $('.ASSIGNED_TO_2').hide(): TOTAL++;
+    (HIDDEN_3.val() == '') ? $('.ASSIGNED_TO_3').hide(): TOTAL++;
+    (HIDDEN_4.val() == '') ? $('.ASSIGNED_TO_4').hide(): TOTAL++;
+    (HIDDEN_5.val() == '') ? $('.ASSIGNED_TO_5').hide(): TOTAL++;
+
+    $(".ADD_ASSIGN_EMPLOYEE").click(function(event) {
+        (TOTAL == 4) ? $(".ADD_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+        if (TOTAL >= 1 && TOTAL < 5) {
+            TOTAL++;
+            $('.ASSIGNED_TO_' + TOTAL).show();
+        }
+        (TOTAL == 1) ? $(".REMOVE_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+        (TOTAL == 2) ? $(".REMOVE_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';
+    });
+    $(".REMOVE_ASSIGN_EMPLOYEE").click(function(event) {
+        if (TOTAL > 1 && TOTAL <= 5) {
+            $('.ASSIGNED_TO_' + TOTAL).hide();
+            $(".ASSIGNED_TO_" + TOTAL + "> select").val('').change();
+            TOTAL--;
+        }
+        (TOTAL <= 4) ? $(".ADD_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';
+        (TOTAL == 1) ? $(".REMOVE_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+    });
+    (TOTAL == 1) ? $(".REMOVE_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+});
+// END: ADD AND REMOVE BUTTON IN "ASSIGNED TO"
+
+
 CKEDITOR.replace( 'Message_Editor', {
     toolbarGroups: [
         { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.

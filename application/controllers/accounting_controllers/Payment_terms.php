@@ -105,12 +105,34 @@ class Payment_terms extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/terms.js"
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/lists/payment_terms/list.js"
+            // "assets/js/accounting/terms.js"
         ));
 
-        $this->page_data['terms'] = $this->accounting_terms_model->getCompanyTerms('asc', [1]);
+        $status = [
+            1
+        ];
+
+        if (!empty(get('inactive') && get('inactive') === '1') ) {
+            array_push($status, 0);
+            $this->page_data['inactive'] = true;
+        }
+
+        $terms = $this->accounting_terms_model->getCompanyTerms('asc', $status);
+
+        if(!empty(get('search'))) {
+            $search = get('search');
+            $terms = array_filter($terms, function($term, $key) use ($search) {
+                return (stripos($term['name'], $search) !== false);
+            }, ARRAY_FILTER_USE_BOTH);
+
+            $this->page_data['search'] = $search;
+        }
+
+        $this->page_data['terms'] = $terms;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/terms', $this->page_data);
+        $this->load->view('v2/pages/accounting/lists/payment_terms/list', $this->page_data);
     }
 
     public function add()
@@ -230,7 +252,7 @@ class Payment_terms extends MY_Controller {
     {
         $this->page_data['term'] = $this->accounting_terms_model->get_by_id($id, logged('company_id'));
 
-        $this->load->view('accounting/modals/term_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/term_modal', $this->page_data);
     }
 
     public function update($id)

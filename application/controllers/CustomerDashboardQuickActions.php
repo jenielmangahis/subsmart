@@ -31,7 +31,7 @@ class CustomerDashboardQuickActions extends MY_Controller
             ],
             [
                 'text' => 'Submit Service Ticket',
-                'url' => base_url('/customer/addTicket?cus_id=:customerid'),
+                'url' => base_url('/tickets/addTicketCust/:customerid'),
                 'sub_text' => 'Tickets',
             ],
             [

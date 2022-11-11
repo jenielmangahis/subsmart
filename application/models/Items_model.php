@@ -581,6 +581,12 @@ class Items_model extends MY_Model
         $update = $this->db->update($this->table_custom_fields, $data);
         return $update;
     }
+
+    public function insert_custom_fields_value($fieldsValue)
+    {
+        $this->db->insert_batch($this->table_custom_fields_value, $fieldsValue);
+        return $this->db->insert_id();
+    }
 }
 
 

@@ -1,4 +1,6 @@
 <?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/inventory/inventory_settings_modals'); ?>
+
 <div class="row page-content g-0">
 <div class="col-12 mb-3">
     <?php include viewPath('v2/includes/page_navigations/inventory_tabs'); ?>
@@ -41,7 +43,7 @@
                                         </div>
                                         <div class="col-lg-5 mb-2">
                                             <label>Retail Price</label>
-                                            <input type="text" class="form-control " name="price" id="price" />
+                                            <input type="text" class="form-control " name="retail" id="retail" />
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <label>Cost Per</label>
@@ -123,6 +125,19 @@
                                             <label>Attach Image</label>
                                             <input type="file" onchange="readURL(this);" name="attached_image" class="form-control" id="attached_image">
                                         </div>
+                                        <?php foreach($custom_fields as $field) : ?>
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <div class="row g-3">
+                                                <div class="col-6">
+                                                    <label class="content-subtitle fw-bold d-block mb-2"><?=$field->name; ?></label>
+                                                </div>
+                                                <div class="col-6 text-end">
+                                                    <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-edit-field" data-id="<?=$field->id; ?>" data-name="<?=$field->name; ?>">Edit</a>
+                                                </div>
+                                            </div>
+                                            <input type="text" name="custom_field[<?=$field->id?>]" class="nsm-field form-control"/>
+                                        </div>
+                                        <?php endforeach; ?>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
                                                 <button class="nsm-button" type="button" onclick="window.location.replace('/inventory')">Cancel</button>
@@ -173,5 +188,19 @@
                 }
             });
         });
+
+    $(document).ready(function() {
+        $(document).on("click", ".btn-edit-field", function() {
+            let _this = $(this);
+            let id = _this.attr("data-id");
+            let name = _this.attr("data-name");
+            let _modal = $("#custom-field-modal");
+
+            _modal.find(".modal-title").html("Update " + name);
+            _modal.find('form').attr('action', `${base_url}inventory/update-custom-field/${id}`);
+            _modal.find('#custom-field-name').val(name);
+            _modal.modal("show");
+        });
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

@@ -75,7 +75,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <tr>
                             <td><input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0"></td>
                             <td><?php echo $ticket->ticket_no; ?></td>
-                            <td><?php echo $ticket->created_at; ?></td>
+                            <td><?php $originalDate = $ticket->created_at;
+                                $newDate = date("M d, Y", strtotime($originalDate)); echo $newDate; ?></td>
                             <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
                             <td><?php echo $ticket->ticket_status; ?></td>
                             <td>$<?php echo number_format($ticket->grandtotal,2); ?></td>

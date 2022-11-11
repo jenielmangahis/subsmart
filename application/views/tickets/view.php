@@ -15,28 +15,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <div class="col-12">
         <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;">
-            <div class="nsm-page-content" style="box-shadow: 0.5rem 0.5rem #6a4a86, -0.5rem -0.5rem #E8E2EE;padding:2%;">
+            <div class="nsm-page-content" style="padding:2%;">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 200px; max-height: 180px;" class=""/> 
+                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class=""/> 
                         <?php //echo $tickets->id; ?>
                     </div>
                     <div class="col-md-6">
                         <div style="float:right;">
-                            <div style="text-align:right;">
-                                <h1>Tickets</h1>
-                                <h4><?php echo $tickets->ticket_no; ?></h4>
-                            </div>
-                            <br>
+                            <!-- <div style="text-align: center;border:solid gray 1px;">
+                                <h5>Ticket no</h5><hr>
+                                <h5><?php //echo $tickets->ticket_no; ?></h5>
+                            </div> -->
                             <div style="font-size:16px;">
-                            <table class="table table-borderless">
+                            <table class="table-bordered">
+                                <tr>
+                                    <td colspan="2" style="text-align: center;"><h5>Ticket no</h5></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align: center;"><h5><?php echo $tickets->ticket_no; ?></h5></td>
+                                </tr>
                                 <tr>
                                     <td>Scheduled Date:</td>
                                     <td><?php echo $tickets->ticket_date; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Scheduled Time:</td>
-                                    <td><?php echo $tickets->ticket_no; ?></td>
+                                    <td><?php echo $tickets->scheduled_time; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Purchase Order No:</td>
@@ -53,34 +58,67 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
-                        <h4>From</h4>
+                    <div class="col-md-4">
+                        <!-- <h4>From</h4> -->
                         <div style="font-size:16px;">
-                            <span><?php echo $ticketsCompany->business_name; ?></span><br>
-                            <span><b>Name:</b> <?php echo $ticketsCompany->first_name .' '. $ticketsCompany->last_name; ?></span><br>
-                            <span><b>Address:</b> <?php echo $ticketsCompany->business_address; ?></span><br>
-                            <span><b>Email:</b> <?php echo $ticketsCompany->email_address; ?></span><br>
-                            <span><b>Contact:</b> <?php echo $ticketsCompany->phone_number; ?></span><br>
+                            <?php echo $ticketsCompany->business_name; ?></span> <br>
+                            <?php echo $ticketsCompany->first_name .' '. $ticketsCompany->last_name; ?><br>
+                            <?php echo $ticketsCompany->business_address; ?><br>
+                            <?php echo $ticketsCompany->email_address; ?><br>
+                            <?php echo $ticketsCompany->phone_number; ?>
+                        </div>
+                    <!-- </div>
+                </div> -->
+                <br><br>
+                <!-- <div class="row">
+                    <div class="col-md-4"> -->
+                        <!-- <h4>To</h4> -->
+                        <div style="font-size:16px;">
+                            <span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span><br>
+                            <span><?php echo $tickets->mail_add .' '. $tickets->city .' '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
+                            <span><?php echo $tickets->email; ?></span><br>
+                            <span><?php echo $tickets->phone_h; ?></span>
                         </div>
                     </div>
                 </div>
                 <br><br>
                 <div class="row">
-                    <div class="col-md-12">
-                        <h4>To</h4>
-                        <div style="font-size:16px;">
-                            <span><b>Name:</b> <?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span><br>
-                            <span><b>Address:</b> <?php echo $tickets->mail_add .' '. $tickets->city .' '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
-                            <span><b>Email:</b> <?php echo $tickets->email; ?></span><br>
-                            <span><b>Contact:</b> <?php echo $tickets->phone_h; ?></span><br>
-                        </div>
+                    <div class="col-md-9">
+                        <b>Service Location: </b> <br>
+                        <?php echo $tickets->service_location; ?>
+                    </div>
+                    <div class="col-md-3" style="text-align:center;border:solid gray 1px;">
+                        <b>Sales Representative</b> <br>
+                        <?php echo $reps->FName.' '.$reps->LName; ?><br>
+                        <?php echo $tickets->sales_rep_no; ?><br>
+                        <span>Team Lead/Mentor</span>: 
+                        <?php echo $tickets->tl_mentor; ?>
                     </div>
                 </div>
-                <br><br>
+                <br>
+                <div class="row" style="font-size:16px;">
+                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                        <b>Job Tag </b> <br>
+                        <?php echo $tickets->job_tag; ?>
+                    </div>
+                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                        <b>Panel Type </b> <br>
+                        <?php echo $tickets->panel_type; ?>
+                    </div>
+                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                        <b>Service Type </b> <br>
+                        <?php echo $tickets->service_type; ?>
+                    </div>
+                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                        <b>Warranty Type</b> <br>
+                        <?php echo $tickets->warranty_type; ?>
+                    </div>
+                </div>
+                <br>
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table">
-                            <thead style="background-color: #E4D6FA;">
+                        <table class="table table-bordered">
+                            <thead style="background-color: #F3F3F3;">
                                 <th>#</th>
                                 <th>Items</th>
                                 <th>Item Type</th>
@@ -109,83 +147,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </table>
                     </div>
                 </div>
-                <br>
                 <div class="row">
-                    <div class="col-md-8">
-
-                    </div>
                     <div class="col-md-4">
-                        <table class="table">
-                            <tr style="font-weight:bold;">
-                                <td>Subtotal</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Taxes</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Markup</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Grand Total</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-12">
-                        <b>Service Description:</u></b> <br> <?php if(empty($tickets->service_description)){ echo 'N/A'; }else{ echo $tickets->service_description; } ?>
-                    </div>
-                </div>
-                <br><br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-6">
-                        <table class="table" style="width:50%;">
-                            <tr>
-                                <td><b>Service Location: </b></td>
-                                <td><?php echo $tickets->service_location; ?></td>
-                            </tr>
-                            <tr>
-                                <td><b>Job Tag: </b></td>
-                                <td><?php echo $tickets->job_tag; ?></td>
-                            </tr>
-                            <tr>
-                                <td><b>Panel Type: </b></td>
-                                <td><?php echo $tickets->panel_type; ?></td>
-                            </tr>
-                            <tr>
-                                <td><b>Service Type: </b></td>
-                                <td><?php echo $tickets->service_type; ?></td>
-                            </tr>
-                            <tr>
-                                <td><b>Warranty Type: </b></td>
-                                <td><?php echo $tickets->warranty_type; ?></td>
-                            </tr>
-                        <!-- </table>
-                    </div>
-                </div>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-6">
-                        <table class="table" style="width:50%;"> -->
+                        <table class="table table-borderless" style="width:50%;">
                             <tr>
                                 <td><b>Payment Method: </b></td>
-                                <td><?php echo $tickets->payment_method; ?></td>
+                                <td style="text-align:;"><?php echo $tickets->payment_method; ?></td>
                             </tr>
                             <tr>
                                 <td><b>Payment Amount: </b></td>
-                                <td>$<?php echo number_format($tickets->payment_amount,2); ?></td>
+                                <td style="text-align:;">$<?php echo number_format($tickets->payment_amount,2); ?></td>
                             </tr>
                             <tr>
                                 <td><b>Billing Date: </b></td>
-                                <td><?php echo $tickets->billing_date; ?></td>
+                                <td style="text-align:;"><?php echo $tickets->billing_date; ?></td>
                             </tr>
                             <tr>
                                 <td colspan="2">
@@ -312,22 +287,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </td>
                             </tr>
                         </table>
+                        
                     </div>
-                    <div class="col-md-6">
-                        <table class="table" style="width:50%;float:right;">
-                            <tr>
-                                <td><b>Sales Representative</b></td>
-                                <td><?php echo $reps->FName.' '.$reps->LName; ?></td>
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                        <table class="table table-bordered">
+                            <tr style="font-weight:bold;">
+                                <td>Subtotal</td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
                             </tr>
-                            <tr>
-                                <td><b>Contact No. </b></td>
-                                <td><?php echo $tickets->sales_rep_no; ?></td>
+                            <tr style="font-weight:bold;">
+                                <td>Taxes</td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
                             </tr>
-                            <tr>
-                                <td><b>Team Lead/Mentor</b></td>
-                                <td><?php echo $tickets->tl_mentor; ?></td>
+                            <tr style="font-weight:bold;">
+                                <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
+                            </tr>
+                            <tr style="font-weight:bold;">
+                                <td>Markup</td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
+                            </tr>
+                            <tr style="font-weight:bold;">
+                                <td>Grand Total</td>
+                                <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
                             </tr>
                         </table>
+                        
+                    </div>
+                </div>
+                <br><br>
+                <div class="row" style="font-size:16px;">
+                    <div class="col-md-12">
+                        <b>Service Description:</u></b> <br> <?php if(empty($tickets->service_description)){ echo 'N/A'; }else{ echo $tickets->service_description; } ?>
                     </div>
                 </div>
                 <br><br>
