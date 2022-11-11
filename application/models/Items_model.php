@@ -31,7 +31,6 @@ class Items_model extends MY_Model
         // // $this->db->order_by('name', $order);
         // $query = $this->db->get($this->table);
         // return $query->result();
-
         $company_id = logged('company_id');
         $this->db->select('*');
         $this->db->from($this->table);
@@ -581,6 +580,12 @@ class Items_model extends MY_Model
         $this->db->where('id', $id);
         $update = $this->db->update($this->table_custom_fields, $data);
         return $update;
+    }
+
+    public function insert_custom_fields_value($fieldsValue)
+    {
+        $this->db->insert_batch($this->table_custom_fields_value, $fieldsValue);
+        return $this->db->insert_id();
     }
 }
 

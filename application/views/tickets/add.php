@@ -191,15 +191,35 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
-                        <label for="job_location"><b>Service Location</b></label>
+                    <div class="col-md-4">
+                        <label for="job_location" class="required"><b>Service Location</b></label>
                         <input type="text" class="form-control" name="service_location" id="service_location"
-                                required placeholder="Enter address" autofocus
+                                required placeholder="Enter Location"
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                     </div>
-                    <div class="col-md-3" style="display: ;">
-                        <label for="job_location"><b>Customer Phone #</b></label>
-                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter address" />
+                    <div class="col-md-2">
+                        <label for="job_location" class="required"><b>City</b></label>
+                        <input type="text" class="form-control" name="customer_city" id="customer_city"
+                                required placeholder="Enter City" 
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="job_location" class="required"><b>State</b></label>
+                        <input type="text" class="form-control" name="customer_state" id="customer_state"
+                                required placeholder="Enter State" 
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="job_location" class="required"><b>Zip Code</b></label>
+                        <input type="text" class="form-control" name="customer_zip" id="customer_zip"
+                                required placeholder="Enter Zip Code" 
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    </div>
+                    <div class="col-md-2" style="display: ;">
+                        <label for="job_location" class="required"><b>Customer Phone #</b></label>
+                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number" />
                     </div>
                 </div>
                 <div class="row">
@@ -211,7 +231,7 @@ a.btn-primary.btn-md {
                 </div><br.
                 <div class="row">
                     <div class="col-md-4 form-group">
-                        <label for="city">Job Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
+                        <label for="city">Service Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
                         <select class="form-control" name="job_tag">
                             <?php foreach($tags as $t){ ?>
                                 <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
@@ -447,7 +467,7 @@ a.btn-primary.btn-md {
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                         data-counter="0" id="item_total_0" min="0" value="0">
                                                         $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -1278,7 +1298,10 @@ $(document).ready(function(){
          var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
          var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
          
-         $("#service_location").val(response['customer'].mail_add + ',' + response['customer'].city + ',' + response['customer'].state + ',' + response['customer'].zip_code);
+         $("#service_location").val(response['customer'].mail_add);
+         $("#customer_city").val(response['customer'].city);
+         $("#customer_state").val(response['customer'].state);
+         $("#customer_zip").val(response['customer'].zip_code);
          $("#customer_phone").val(response['customer'].phone_h);
         //  $("#email").val(response['customer'].email);
         //  $("#date_of_birth").val(response['customer'].date_of_birth);

@@ -648,74 +648,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- TOMORROW UPDATE: Yelf -->
-                                        <!-- <div class="float-end">
+                                        <div class="float-end">
                                             <div class="group">
                                                 <button class="nsm-button small ADD_ASSIGN_EMPLOYEE" type="button"><i class='bx bx-user-plus'></i>&nbsp;Add</button>
                                                 <button class="nsm-button small REMOVE_ASSIGN_EMPLOYEE" type="button"><i class='bx bx-user-minus'></i>&nbsp;Remove</button>
                                             </div>
                                         </div>
-                                        <script type="text/javascript">
-                                            $(function() { 
-                                                var TOTAL_SELECT = 5;
-                                                var ADD_DISABLER = 1;
-                                                var REMOVE_DISABLER = 0;
-                                                var EMPLOYEE_1 = $('#employee2_id').val();
-                                                var EMPLOYEE_2 = $('#employee3_id').val();
-                                                var EMPLOYEE_3 = $('#employee4_id').val();
-                                                var EMPLOYEE_4 = $('#employee5_id').val();
-                                                var EMPLOYEE_5 = $('#employee6_id').val();
-                                                if ($('#employee3_id').val() == "0") {
-                                                    $('.ASSIGNED_TO_2').hide();
-                                                    REMOVE_DISABLER++;
-                                                }
-                                                if ($('#employee4_id').val() == "0") {
-                                                    $('.ASSIGNED_TO_3').hide();
-                                                    REMOVE_DISABLER++;
-                                                }
-                                                if ($('#employee5_id').val() == "") {
-                                                    $('.ASSIGNED_TO_4').hide();
-                                                    REMOVE_DISABLER++;
-                                                }
-                                                if ($('#employee6_id').val() == "") {
-                                                    $('.ASSIGNED_TO_5').hide();
-                                                    REMOVE_DISABLER++;
-                                                }
-                                                if (REMOVE_DISABLER == 4) {
-                                                    $('.REMOVE_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
-                                                }
-                                                if (ADD_DISABLER == 5) {
-                                                    $('.ADD_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
-                                                }
-                                                $('.ADD_ASSIGN_EMPLOYEE').click(function(event) {
-                                                    // console.log(ADD_DISABLER++);
-                                                    if (ADD_DISABLER <= 5) {
-                                                        ADD_DISABLER++;
-                                                        $('.ASSIGNED_TO_'+ADD_DISABLER).show();
-                                                    } 
-                                                    if (ADD_DISABLER > 4){
-                                                        $('.ADD_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
-                                                    }
-                                                    if (ADD_DISABLER >= 2) {
-                                                        $('.REMOVE_ASSIGN_EMPLOYEE').removeAttr('disabled');
-                                                    }
-                                                });
-                                                $('.REMOVE_ASSIGN_EMPLOYEE').click(function(event) {
-                                                    $('.ASSIGNED_TO_'+ADD_DISABLER).hide();
-                                                    if (ADD_DISABLER <= 2) {
-                                                        $('.REMOVE_ASSIGN_EMPLOYEE').attr('disabled', 'disabled');
-                                                    }
-                                                    if (ADD_DISABLER <= 5) {
-                                                        $('.ADD_ASSIGN_EMPLOYEE').removeAttr('disabled');
-                                                    }
-                                                    ADD_DISABLER--;
-                                                });
-                                            });
-                                        </script> -->
-                                        <!-- <br>
-                                        <div class="float-end">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="nsm-button primary">Assign Job</a>
-                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -1519,7 +1457,45 @@ $('#EMPLOYEE_SELECT_6').on('change', function(event) {
     $("#emp6_id, #employee6_id").val($("#EMPLOYEE_SELECT_6").val());
 });
 
+// START: ADD AND REMOVE BUTTON IN "ASSIGNED TO"
+$(function() {
+    // JUST A COUNTER VARIABLE
+    var TOTAL = 1;
+    
+    // HIDDEN INPUTS
+    var HIDDEN_1 = $('.ASSIGNED_TO_1 > select');
+    var HIDDEN_2 = $('.ASSIGNED_TO_2 > select');
+    var HIDDEN_3 = $('.ASSIGNED_TO_3 > select');
+    var HIDDEN_4 = $('.ASSIGNED_TO_4 > select');
+    var HIDDEN_5 = $('.ASSIGNED_TO_5 > select');
 
+    // ACTUAL DROPDOWN ELEMENTS
+    (HIDDEN_2.val() == '') ? $('.ASSIGNED_TO_2').hide(): TOTAL++;
+    (HIDDEN_3.val() == '') ? $('.ASSIGNED_TO_3').hide(): TOTAL++;
+    (HIDDEN_4.val() == '') ? $('.ASSIGNED_TO_4').hide(): TOTAL++;
+    (HIDDEN_5.val() == '') ? $('.ASSIGNED_TO_5').hide(): TOTAL++;
+
+    $(".ADD_ASSIGN_EMPLOYEE").click(function(event) {
+        (TOTAL == 4) ? $(".ADD_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+        if (TOTAL >= 1 && TOTAL < 5) {
+            TOTAL++;
+            $('.ASSIGNED_TO_' + TOTAL).show();
+        }
+        (TOTAL == 1) ? $(".REMOVE_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+        (TOTAL == 2) ? $(".REMOVE_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';
+    });
+    $(".REMOVE_ASSIGN_EMPLOYEE").click(function(event) {
+        if (TOTAL > 1 && TOTAL <= 5) {
+            $('.ASSIGNED_TO_' + TOTAL).hide();
+            $(".ASSIGNED_TO_" + TOTAL + "> select").val('').change();
+            TOTAL--;
+        }
+        (TOTAL <= 4) ? $(".ADD_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';
+        (TOTAL == 1) ? $(".REMOVE_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+    });
+    (TOTAL == 1) ? $(".REMOVE_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
+});
+// END: ADD AND REMOVE BUTTON IN "ASSIGNED TO"
 
         var class_name = $('.active').attr('class');
         var class_name = $('.active').attr('class');

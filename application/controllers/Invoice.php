@@ -1177,7 +1177,45 @@ class Invoice extends MY_Controller
         $this->page_data['payments'] = $this->invoice_model->getPayments($inv_no);
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
 
+        $this->page_data['invoice_template'] = $this->generateInvoiceHTML($id);
         $this->load->view('invoice/genview', $this->page_data);
+    }
+
+    public function invoicePreview($id)
+    {
+        echo $this->generateInvoiceHTML($id);
+    }
+
+    public function generateInvoiceHTML($id)
+    {
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
+
+        $invoice = get_invoice_by_id($id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+        }
+
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $invoice->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info, false);
+        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+
+        return $this->load->view('invoice/invoice-new', $this->page_data, true);
     }
 
     /**

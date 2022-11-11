@@ -84,19 +84,19 @@
     }
 
     $(function(){
-        $("#exp_month").select2({
-            placeholder: "Month"
-        });
+        // $("#exp_month").select2({
+        //     placeholder: "Month"
+        // });
 
-        $("#exp_year").select2({
-            placeholder: "Year"
-        });
-        $("#day_of_month_ach").select2({
-            placeholder: "Day of Month"
-        });
-        $("#invoice_term").select2({
-            placeholder: ""
-        });
+        // $("#exp_year").select2({
+        //     placeholder: "Year"
+        // });
+        // $("#day_of_month_ach").select2({
+        //     placeholder: "Day of Month"
+        // });
+        // $("#invoice_term").select2({
+        //     placeholder: ""
+        // });
 
         // hide default
         $("#payment_collected").hide("slow");
@@ -162,6 +162,53 @@
         $(".invoicing_field").hide("slow");
     }
 
-
-
+    function HIDE_ALL() {
+        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED').hide();
+    }
+    function SHOW_ALL() {
+        $('.PAYMENT_BUTTON').show();
+    }
+    HIDE_ALL();
+    $('.CREDIT_CARD').show();
+    $('#MODE_OF_PAYMENT').change(function(event) {
+        var SELECTED_PAYMENT = $('#MODE_OF_PAYMENT').val();
+        if (SELECTED_PAYMENT == "CREDIT_CARD") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.CREDIT_CARD').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "CASH") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.CASH').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "ACH") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.ACH').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "VENMO" || SELECTED_PAYMENT == "SQUARE") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.VENMO').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "PAYPAL") {
+            HIDE_ALL();
+            $('.PAYMENT_BUTTON').hide();
+            $('.VENMO').fadeIn('fast');
+            $('.PAYPAL').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "INVOICING") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.INVOICING_FIELD').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "WARRANTY_WORK" || SELECTED_PAYMENT == "HOME_OWNER_FINANCING" || SELECTED_PAYMENT == "OTHERS") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.DOCUMENT_SIGNED').fadeIn('fast');
+            $('.VENMO').fadeIn('fast');
+            $('.VENMO_CONFIRMATION').hide();
+        }
+    });
 </script>

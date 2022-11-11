@@ -812,7 +812,15 @@ class Job extends MY_Controller
 
             $this->page_data['jobs_data'] = $jobs_data;
         }
-        $this->load->view('job/job_billing', $this->page_data);
+        $this->page_data['page']->title = 'Jobs Billing';
+        $this->load->view('v2/pages/job/job_billing', $this->page_data);
+
+        // if ($this->input->get('v1', TRUE)) {
+        //     $this->load->view('job/job_billing', $this->page_data);
+        // } else {
+        //     $this->page_data['page']->title = 'Jobs Billing';
+        //     $this->load->view('job/job_billing_v2', $this->page_data);
+        // }
     }
 
     public function update_payment_details()
@@ -1640,6 +1648,8 @@ class Job extends MY_Controller
             'employee2_id' => $input['employee2_id'],
             'employee3_id' => $input['employee3_id'],
             'employee4_id' => $input['employee4_id'],
+            'employee5_id' => $input['employee5_id'],
+            'employee6_id' => $input['employee6_id'],
             'job_name' => $input['job_name'],
             'job_description' => $input['job_description'],
             'start_date' => $input['start_date'],
@@ -1814,6 +1824,12 @@ class Job extends MY_Controller
         }
         if( $input['employee4_id'] > 0 ){
             createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
+        }
+        if( $input['employee5_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee5_id'], 0);
+        }
+        if( $input['employee6_id'] > 0 ){
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee6_id'], 0);
         }
 
         if (!is_null($this->input->get('json', TRUE))) {

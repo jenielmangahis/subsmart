@@ -44,6 +44,20 @@ class Clients_model extends MY_Model
         return $query->result();
     }
 
+    public function get_company($id)
+    {
+
+        $where = array(
+            'id' => $id,
+        );
+
+        $this->db->select('*');
+        $this->db->from('clients');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getById($id)
     {
         //$user_id = logged('company_id');

@@ -75,7 +75,6 @@
         $(document).on("click", ".update-item", function() {
             let id = $(this).attr('field-id');
             let name = $(this).attr('field-name');
-            // $('#custom_id').val(id);
             $('#custom-field-modal form').attr('action', `${base_url}inventory/update-custom-field/${id}`);
             $('#custom-field-name').val(name);
         });

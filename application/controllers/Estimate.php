@@ -1723,7 +1723,7 @@ class Estimate extends MY_Controller
 
         if ($estimate) {
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-            $client   = $this->Clients_model->getById($company_id);
+            $client   = $this->Clients_model->get_company($company_id);
 
             $this->page_data['customer'] = $customer;
             $this->page_data['client'] = $client;
