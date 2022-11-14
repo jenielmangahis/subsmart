@@ -162,70 +162,20 @@ class Payment_terms extends MY_Controller {
         redirect('/accounting/terms');
     }
 
-    public function load_terms()
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $order = $post['order'][0]['dir'];
-        $start = $post['start'];
-        $limit = $post['length'];
-
-        $status = [
-            1
-        ];
-
-        if($post['inactive'] === '1' || $post['inactive'] === 1) {
-            array_push($status, 0);
-        }
-
-        $terms = $this->accounting_terms_model->getCompanyTerms($order, $status);
-
-        $data = [];
-        $search = $post['columns'][0]['search']['value'];
-
-        if(count($terms) > 0) {
-            foreach($terms as $term) {
-                if($search !== "") {
-                    if(stripos($term['name'], $search) !== false) {
-                        $data[] = [
-                            'id' => $term['id'],
-                            'name' => $term['name'],
-                            'type' => $term['type'],
-                            'net_due_days' => $term['net_due_days'],
-                            'day_of_month_due' => $term['day_of_month_due'],
-                            'minimum_days_to_pay' => $term['minimum_days_to_pay'],
-                            'status' => $term['status']
-                        ];
-                    }
-                } else {
-                    $data[] = [
-                        'id' => $term['id'],
-                        'name' => $term['name'],
-                        'type' => $term['type'],
-                        'net_due_days' => $term['net_due_days'],
-                        'day_of_month_due' => $term['day_of_month_due'],
-                        'minimum_days_to_pay' => $term['minimum_days_to_pay'],
-                        'status' => $term['status']
-                    ];
-                }
-            }
-        }
-
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($terms),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
-    }
-
     public function delete($id)
     {
-        $result = [];
+        $term = $this->accounting_terms_model->get_by_id($id, logged('company_id'));
 
-        $delete = $this->accounting_terms_model->delete($id);
-        $name = $this->accounting_terms_model->get_by_id($id, logged('company_id'))->name;
+        $attempt = 0;
+        do {
+            $name = $attempt > 0 ? "$term->name (deleted-$attempt)" : "$term->name (deleted)";
+            $checkName = $this->accounting_terms_model->check_name(logged('company_id'), $name, 0);
+
+            $attempt++;
+        } while(!is_null($checkName));
+
+        $delete = $this->accounting_terms_model->inactive($id, $name);
+        $name = $term->name;
 
         if($delete) {
             $this->session->set_flashdata('success', "$name is now inactive!");
@@ -236,10 +186,22 @@ class Payment_terms extends MY_Controller {
 
     public function activate($id)
     {
-        $result = [];
+        $term = $this->accounting_terms_model->get_by_id($id, logged('company_id'));
 
-        $activate = $this->accounting_terms_model->activate($id);
-        $name = $this->accounting_terms_model->get_by_id($id, logged('company_id'))->name;
+        $explode = explode(' ', $term->name);
+        array_pop($explode);
+        $newName = implode(' ', $explode);
+
+        $attempt = 0;
+        do {
+            $name = $attempt > 0 ? "$newName - $attempt" : $newName;
+            $checkName = $this->accounting_terms_model->check_name(logged('company_id'), $name, 1);
+
+            $attempt++;
+        } while(!is_null($checkName));
+
+        $activate = $this->accounting_terms_model->activate($id, $name);
+        $name = $term->name;
 
         if($activate) {
             $this->session->set_flashdata('success', "$name is now active!");

@@ -71,7 +71,7 @@
                         <?php if(count($terms) > 0) : ?>
 						<?php foreach($terms as $term) : ?>
                         <tr data-id="<?=$term['id']?>">
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$term['name']?><?=$term['status'] === '0' ? ' (deleted)' : ''?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$term['name']?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -90,7 +90,7 @@
                                         </li>
                                         <?php else : ?>
                                         <li>
-                                            <a class="dropdown-item make-inactive" href="#">Make active</a>
+                                            <a class="dropdown-item make-active" href="#">Make active</a>
                                         </li>
                                         <?php endif; ?>
                                     </ul>

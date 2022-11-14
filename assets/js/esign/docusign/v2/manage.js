@@ -141,7 +141,7 @@ const columns = {
   manage: function (_, _, row) {
     if (row.signing_url) {
       return `
-        <a href="${row.signing_url}" class="btn btn-sm btn-primary" style="color:#fff;">
+        <a href="${row.signing_url}" class="nsm-button" target="_blank" style="margin: 0;">
           Continue Signing
         </a>
       `;
@@ -221,7 +221,7 @@ const columns = {
       secondaryMenu = secondaryMenuItems.join("");
     }
 
-    return `
+    const dropdown = `
       <div class="dropdown table-management">
         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
             <i class="bx bx-fw bx-dots-vertical-rounded"></i>
@@ -232,6 +232,19 @@ const columns = {
         </ul>
       </div>
     `;
+
+    if (row.next_recipient && row.next_recipient.signing_url) {
+      return `
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+          <a href="${row.next_recipient.signing_url}" class="nsm-button" target="_blank" style="margin: 0; margin-right: 8px;">
+          Continue Signing (${row.next_recipient.name})
+          </a>
+          ${dropdown}
+        </div>
+      `;
+    }
+
+    return dropdown;
   },
   lastChanged: function (_, _, row) {
     let { updated_at } = row;
