@@ -5002,6 +5002,63 @@ class Admin extends CI_Controller
 
         fpassthru($f);
     }
+
+    public function plaid_error_logs()
+    {
+        $this->load->model('PlaidErrorLogs_model');
+
+        $search = '';
+        if( get('search') != '' ){
+            $search  = trim(get('search'));
+            $search_param = ['search' => $search];
+            $plaidErrorLogs = $this->PlaidErrorLogs_model->getAll($search_param);
+        }else{            
+            $plaidErrorLogs = $this->PlaidErrorLogs_model->getAll();
+        }        
+
+        $this->page_data['search']   = $search;
+        $this->page_data['plaidErrorLogs']  = $plaidErrorLogs;
+        $this->page_data['page_title']  = 'Plaid API Error Logs';
+        $this->page_data['page_parent'] = 'Plaid API Error Logs';
+        $this->load->view('admin/plaid_error_logs/list', $this->page_data);
+    }
+
+    public function export_plaid_error_logs()
+    {
+        $this->load->model('PlaidErrorLogs_model');
+
+        $logs   = $this->PlaidErrorLogs_model->getAll();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "plaid_error_logs_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'Date', 'Error');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($logs)) {
+            foreach ($logs as $log) {
+                $csvData = array(
+                    $log->business_name,
+                    date('F g, Y g:i A', strtotime($log->log_date)),
+                    $log->log_msg
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
 }
 
 /* End of file Admin.php */
