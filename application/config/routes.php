@@ -501,7 +501,6 @@ $route['accounting/recurring-transactions/skip-batch']['post'] = "accounting_con
 // Accounting payment terms
 $route['accounting/terms'] = "accounting_controllers/payment_terms/index";
 $route['accounting/terms/add'] = "accounting_controllers/payment_terms/add";
-$route['accounting/terms/load-terms']['post'] = 'accounting_controllers/payment_terms/load_terms';
 $route['accounting/terms/edit/(:any)'] = 'accounting_controllers/payment_terms/edit/$1';
 $route['accounting/terms/delete/(:any)']['DELETE'] = "accounting_controllers/payment_terms/delete/$1";
 $route['accounting/terms/activate/(:any)'] = "accounting_controllers/payment_terms/activate/$1";

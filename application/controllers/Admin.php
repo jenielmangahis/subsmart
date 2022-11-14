@@ -2793,7 +2793,8 @@ class Admin extends CI_Controller
 
         $this->page_data['jobs'] = $this->jobs_model->admin_get_all_jobs();
         $this->page_data['title'] = 'Jobs';
-        $this->load->view('admin/job/list', $this->page_data);
+        // $this->load->view('admin/job/list', $this->page_data);
+        $this->load->view('v2/pages/job/list', $this->page_data);
     }
 
     public function update_plan_status()

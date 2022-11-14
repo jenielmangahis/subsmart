@@ -21,14 +21,14 @@ class Accounting_terms_model extends MY_Model {
 		return $this->db->where('company_id', getLoggedCompanyID())->where_in('status', $status)->order_by('name', $order)->get($this->table)->result_array();
 	}
 
-	public function delete($id) {
+	public function inactive($id, $name) {
         return $this->db->where(['company_id' => getLoggedCompanyID(), 'id' => $id])
-                ->update($this->table, ['status' => 0, 'updated_at' => date('Y-m-d h:i:s')]);
+                ->update($this->table, ['status' => 0, 'name' => $name]);
     }
 
-	public function activate($id) {
+	public function activate($id, $name) {
         return $this->db->where(['company_id' => getLoggedCompanyID(), 'id' => $id])
-                ->update($this->table, ['status' => 1, 'updated_at' => date('Y-m-d h:i:s')]);
+                ->update($this->table, ['status' => 1, 'name' => $name]);
     }
 
 	public function updateTerm($id, $data) {
@@ -63,5 +63,14 @@ class Accounting_terms_model extends MY_Model {
 
         $query = $this->db->get();
         return $query->result();
+	}
+
+	public function check_name($companyId, $name, $status)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('name', $name);
+		$this->db->where('status', $status);
+		$query = $this->db->get($this->table);
+		return $query->row();
 	}
 }

@@ -6,6 +6,8 @@ $due_date = 'Due on receipt';
 if ($invoice->due_date > date('Y-m-d')) {
     $due_date = date('m/d/Y', strtotime($invoice->due_date));
 }
+
+$payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
 ?>
 
 <!doctype html>
@@ -231,6 +233,11 @@ if ($invoice->due_date > date('Y-m-d')) {
 
                 <tr>
                     <td colspan="3" rowspan="5">
+
+                        <a href="<?= $payment_link; ?>" class="payinvoice">
+                            <b>PAY INVOICE</b>
+                        </a>
+
                         <?php
                         $paymentMethods = [];
                         if ($invoice->accept_credit_card) array_push($paymentMethods, 'Credit Card');
@@ -239,7 +246,7 @@ if ($invoice->due_date > date('Y-m-d')) {
                         if ($invoice->accept_direct_deposit) array_push($paymentMethods, 'Direct Deposit');
                         ?>
                         <?php if (!empty($paymentMethods)) : ?>
-                            <div>
+                            <div style="text-align: center; margin-top: 16px;">
                                 <strong>Accepted payment methods</strong>
                                 <div>
                                     <?= implode(', ', $paymentMethods); ?>

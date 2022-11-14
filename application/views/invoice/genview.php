@@ -41,12 +41,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input type="hidden" id="autoOpenModalRP" value="<?php echo $record_payment ?>">
                                         <input type="hidden" id="recordPaymentInvoiceId" value="<?php echo $invoice->id ?>">
                                         <?php if(strtolower($invoice->status) === 'paid') : ?>
-                                        <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
+                                        <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
                                         <?php elseif(strtolower($invoice->status) === 'due') : ?>
                                             <a class="btn btn-primary margin-right-sec" class="link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-usd fa-margin-right"></span> Pay Now</a>
                                             <a class="btn btn-primary margin-right-sec" class="link-modal-open recordPaymentBtn" href="javascript:void(0)" data-toggle="modal" data-target="#modalRecordPayment" data-id="<?php echo $invoice->id ?>"><span class="fa fa-usd fa-margin-right"></span> Record Payment</a>
                                         <?php else : ?>
-                                            <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
+                                            <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
                                             <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id .'?scheduled=1') ?>"><span class="fa fa-calendar fa-margin-right"></span>
                                                 Schedule
                                             </a>
@@ -56,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="btn-group" role="group" aria-label="...">
                                             <a class="btn btn-sec" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>"><span class="fa fa-edit"></span> Edit</a>
                                             <a class="btn btn-sec" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank"><span class="fa fa-file-pdf-o fa-margin-right"></span> PDF</a>
-                                            <a class="btn btn-sec" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" target="_blank"><span class="fa fa-print fa-margin-right"></span> Print</a>
+                                            <a class="btn btn-sec" href="<?php echo base_url('invoice/print/'. $invoice->id . '?format=print') ?>" target="_blank"><span class="fa fa-print fa-margin-right"></span> Print</a>
                                         </div>
                                         <div class="dropdown dropdown-btn dropdown-inline margin-left-sec">
                                             <button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
@@ -64,12 +64,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                 <?php if(strtolower($invoice->status) === 'due') : ?>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Send Reminder</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Resend Invoice</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Send Reminder</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Resend Invoice</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-share-modal="open" data-invoice-id="297845" data-url="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" data-invoice-custom-number="INV-000500"><span class="fa fa-link icon"></span> Share Invoice Link</a></li>
                                                 <?php elseif(strtolower($invoice->status) === 'paid') : ?>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Resend Invoice</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Send Receipt</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Resend Invoice</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><span class="fa fa-envelope-o icon"></span> Send Receipt</a></li>
                                                 <?php else: ?>
                                                 <li role="presentation"><a role="menuitem" class="openMarkAsSent" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#markAsSent" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-check-square-o icon"></span> Mark as Sent</a></li>
                                                 <?php endif; ?>    

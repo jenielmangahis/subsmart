@@ -24,29 +24,36 @@
     .nsm-table {
         display: none;
     }
+
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
     }
+
     div[wrapper__section] {
         padding: 60px 10px !important;
     }
-    .card_plus_sign{
+
+    .card_plus_sign {
         float: right;
         padding-right: 40px;
         font-size: 20px;
         display: block;
         margin-top: -38px;
     }
-    .box_footer_icon{
+
+    .box_footer_icon {
         font-size: 20px;
     }
-    .box_right{
+
+    .box_right {
         border-color: #e0e0e0 !important;
         border: 1px solid;
     }
-    .card{
+
+    .card {
         /*box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;*/
     }
+
     .label-width .form-control {
         width: 80% !important;
     }
@@ -82,6 +89,7 @@
         box-shadow: 0 2px 13px -1px rgba(0, 0, 0, 0.2);
         transition: all ease 0.25s;
     }
+
     #progress-bar-container li:hover::after {
         background: #555;
     }
@@ -114,6 +122,7 @@
         border-radius: 50px;
         transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.25);
     }
+
     #progress-content-section {
         position: relative;
         top: 100px;
@@ -157,6 +166,7 @@
         margin: auto;
         max-width: auto;
     }
+
     #progress-bar-container {
         position: relative;
         width: 90%;
@@ -164,6 +174,7 @@
         height: 100%;
         margin-top: 65px;
     }
+
     #progress-bar-container ul {
         padding-top: 15px;
         z-index: 999;
@@ -171,6 +182,7 @@
         width: 100%;
         margin-top: -40px;
     }
+
     #progress-bar-container li::before {
         content: " ";
         display: block;
@@ -205,16 +217,18 @@
     }
 
     @keyframes FadeInUp {
-    0% {
-        transform: translateY(15px);
-        opacity: 0;
+        0% {
+            transform: translateY(15px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0px);
+            opacity: 1;
+        }
     }
-    100% {
-        transform: translateY(0px);
-        opacity: 1;
-    }
-    }
-    .card_header{
+
+    .card_header {
         text-align: left;
     }
 
@@ -227,7 +241,8 @@
         line-height: 1.428571429;
         border-radius: 20px;
     }
-    .calendar_button{
+
+    .calendar_button {
         color: #ffffff;
         font-size: 20px;
         padding-top: 3px;
@@ -236,14 +251,17 @@
     .color-box-custom {
         padding: 20px 0px;
     }
+
     .color-box-custom ul {
         margin: 0px;
         padding: 0px;
         list-style: none;
     }
+
     .color-box-custom ul li {
         display: inline-block;
     }
+
     .color-box-custom ul li span {
         width: 30px;
         height: 30px;
@@ -251,53 +269,71 @@
         background-color: #000;
         display: block;
     }
+
     .color-box-custom ul li span.bg-1 {
         background-color: #4baf51;
     }
+
     .color-box-custom ul li span.bg-2 {
         background-color: #d86566;
     }
+
     .color-box-custom ul li span.bg-3 {
         background-color: #e57399;
     }
+
     .color-box-custom ul li span.bg-4 {
         background-color: #b273b3;
     }
+
     .color-box-custom ul li span.bg-5 {
         background-color: #8b63d7;
     }
+
     .color-box-custom ul li span.bg-6 {
         background-color: #678cda;
     }
+
     .color-box-custom ul li span.bg-7 {
         background-color: #59bdb3;
     }
+
     .color-box-custom ul li span.bg-8 {
         background-color: #64ae89;
     }
+
     .color-box-custom ul li span.bg-9 {
         background-color: #f1a740;
     }
+
     .table-custom table th,
     .table-custom table td {
         border: none;
     }
+
     .table-custom table {
         border: none;
     }
+
     .table-custom table td a i {
         color: #45a73c;
         padding-left: 0px;
     }
+
     .table-custom table td.d-flex {
         padding-top: 23px;
     }
+
     .table-custom table td a {
         padding-left: 11px;
     }
-    .table-hover tbody tr:hover, .table-striped tbody tr:nth-of-type(odd), .thead-default th {
+
+    .table-hover tbody tr:hover,
+    .table-striped tbody tr:nth-of-type(odd),
+    .thead-default th {
         background-color: #fff;
     }
+
     .upload input[type=file]:before {
         width: 100%;
         height: 60px;
@@ -311,12 +347,15 @@
         color: #fff;
         border-radius: 0px;
     }
+
     .upload.workorder input[type=file]:before {
         content: 'Upload Workorder';
     }
+
     .upload.invoice input[type=file]:before {
         content: 'Upload Invoice';
     }
+
     .upload input[type=file] {
         cursor: pointer;
         width: 100%;
@@ -324,20 +363,48 @@
         overflow: hidden;
     }
 
-    .modal{
+    .modal {
         z-index: 999999 !important;
     }
-    .a-bold{
+
+    .a-bold {
         color: black !important;
     }
-    .items-8 li a{
+
+    .items-8 li a {
         color: #bebebe;
         text-decoration: none !important;
     }
-    #emp2_id, #emp3_id, #emp4_id, #emp5_id, #emp6_id {
+
+    #emp2_id,
+    #emp3_id,
+    #emp4_id,
+    #emp5_id,
+    #emp6_id {
         background: none;
         border: 0;
         font-weight: bold;
+    }
+
+    .loader {
+        padding: 136px 0;
+/*        border: 1px solid lightgray; */
+/*        border-radius: 10px;*/
+    }
+
+    .loader>div {
+        width: 25px;
+        height: 25px;
+    }
+
+    .loader>span {
+        vertical-align: super;
+        margin-left: 10px;                                                        
+    }
+
+    #TEMPORARY_MAP_VIEW {
+        border: 1px solid lightgray; 
+        border-radius: 10px;
     }
 </style>
 <?php if(isset($jobs_data)): ?>
@@ -674,9 +741,10 @@
                                     <div class="nsm-card-content">
                                         <div class="row">
                                             <hr>
-                                            <div class="col-md-12">
+                                            <div class="col-md-5">
                                                 <h6>Customer Info</h6>
-                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                                                    <option selected value hidden>- Select Customer -</option>
                                                     <?php if( $default_customer_id > 0 ){ ?>
                                                         <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        
@@ -710,13 +778,19 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <!-- <div class="col-md-6">
+                                            <div class="col-md-7">
                                                 <div class="col-md-12">
-                                                    <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
-                                                    <div id="map" class="col-md-6 float-left"></div>
-                                                    <iframe src="http://maps.google.com/maps?q=514 Brighton Cove FREEPORT, FL 32439&z=16&output=embed" height="450" width="600"></iframe>
+                                                    <!-- <div id="streetViewBody" class="col-md-6 float-left no-padding"></div> -->
+                                                    <!-- <div id="map" class="col-md-6 float-left"></div> -->
+                                                    <iframe id="TEMPORARY_MAP_VIEW" height="300" width="100%" style="display: none;"></iframe>
+                                                    <div class="text-center MAP_LOADER">
+                                                        <div class="loader">
+                                                            <div class="spinner-border" role="status"></div>
+                                                            <span style="">Loading Map...</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div> -->
+                                            </div>
                                         </div>
                                         <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
@@ -1422,6 +1496,7 @@ add_footer_js(array(
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
+
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 <!-- Modals -->
 
@@ -1570,7 +1645,6 @@ $(function() {
                 },
                 cache: true
               },
-              placeholder: 'Select Customer',
               minimumInputLength: 0,
               templateResult: formatRepoCustomer,
               templateSelection: formatRepoCustomerSelection

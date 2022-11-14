@@ -1181,6 +1181,12 @@ class Invoice extends MY_Controller
         $this->load->view('invoice/genview', $this->page_data);
     }
 
+    public function print($id)
+    {
+        $this->page_data['invoice_template'] = $this->generateInvoiceHTML($id);
+        $this->load->view('invoice/print', $this->page_data);
+    }
+
     public function invoicePreview($id)
     {
         echo $this->generateInvoiceHTML($id);
@@ -1281,6 +1287,32 @@ class Invoice extends MY_Controller
         $this->session->set_flashdata('alert', 'invoice has been Deleted Successfully');
 
         redirect('invoice');
+    }
+
+    public function emailInvoice($invoiceId)
+    {
+        $this->load->model('AcsProfile_model');
+
+        $invoice = get_invoice_by_id($invoiceId);
+        $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+
+        $mail = email__getInstance();
+        $mail->FromName = 'NsmarTrac';
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+        $mail->addAddress($customer->email, $customerName);
+        $mail->isHTML(true);
+        $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
+        $mail->Body = $this->generateInvoiceHTML($invoice->id);
+
+        if (!$mail->Send()) {
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Cannot send email.');
+        } else {
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Your invoice was successfully sent');
+        }
+
+        redirect('invoice/genview/' . $invoiceId);
     }
 
     /**

@@ -33,6 +33,26 @@
     .card{
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+    .loader {
+        padding: 136px 0;
+        border: 1px solid lightgray; 
+        border-radius: 10px;
+    }
+
+    .loader>div {
+        width: 25px;
+        height: 25px;
+    }
+
+    .loader>span {
+        vertical-align: super;
+        margin-left: 10px;                                                        
+    }
+
+    #TEMPORARY_MAP_VIEW {
+        border: 1px solid lightgray; 
+        border-radius: 10px;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -295,9 +315,9 @@
                                         <div class="row">
                                             
                                             <hr>
-                                            <div class="col-md-12">
+                                            <div class="col-md-5">
                                                 <h6>Customer Info</h6>
-                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
                                                     <?php if( $default_customer_id > 0 ){ ?>
                                                         <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        
@@ -331,12 +351,19 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <!-- <div class="col-md-8">
-                                                <div class="col-md-12 d-none">
-                                                    <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
-                                                    <div id="map" class="col-md-6 float-left"></div>
+                                            <div class="col-md-7">
+                                                <div class="col-md-12">
+                                                    <!-- <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
+                                                    <div id="map" class="col-md-6 float-left"></div> -->
+                                                    <div class="text-center MAP_LOADER">
+                                                        <div class="loader">
+                                                            <div class="spinner-border" role="status"></div>
+                                                            <span style="">Loading Map...</span>
+                                                        </div>
+                                                    </div>
+                                                    <iframe id="TEMPORARY_MAP_VIEW" height="300" width="100%" style="display: none;"></iframe>
                                                 </div>
-                                            </div> -->
+                                            </div>
                                         </div>
                                         <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
@@ -979,10 +1006,60 @@ $('#share_modal_submit').click(function() {
 
 })
 
+
 $(function() {
-    $("#customer_id").select2({
-        placeholder: "Select Customer"
+    $('#customer_id').select2({
+            ajax: {
+                url: '<?= base_url('autocomplete/_company_customer') ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  // parse the results into the format expected by Select2
+                  // since we are using custom formatting functions we do not need to
+                  // alter the remote JSON data, except to indicate that infinite
+                  // scrolling can be used
+                  params.page = params.page || 1;
+
+                  return {
+                    results: data
+                    // pagination: {
+                    //   more: (params.page * 30) < data.total_count
+                    // }
+                  };
+                },
+                cache: true
+              },
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
     });
+
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+          
+        }
+
+        function formatRepoCustomer(repo) {
+          if (repo.loading) {
+            return repo.text;
+          }
+
+          var $container = $(
+            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_h+' / '+repo.email+'</small></div>'
+          );
+
+          return $container;
+        }
     $("#sales_rep").select2({
         placeholder: "Sales Rep"
     });
@@ -1012,6 +1089,11 @@ $(function() {
     $("#employee_id").select2({
         placeholder: "Select Employee"
     });
+
+    <?php if( $default_customer_id > 0 ){ ?>
+            $('#customer_id').click();
+            load_customer_data('<?= $default_customer_id; ?>');
+    <?php } ?>
 
 });
 var geocoder;
@@ -1068,5 +1150,104 @@ function remove_others(color_id) {
         }
     });
 }
+
+
+function load_customer_data($id){
+        // $.ajax({
+        //     type: "POST",
+        //     url: "<?= base_url() ?>/job/get_customer_selected",
+        //     data: {id : $id}, // serializes the form's elements.
+        //     success: function(data)
+        //     {
+        //         console.log(data);
+        //         var customer_data = JSON.parse(data);
+        //         $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
+        //         if(customer_data.mail_add !== null){
+        //             $('#cust_address').text(customer_data.mail_add + ' ');
+        //         }
+        //         $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
+        //         $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //         $('#cust_number').text(customer_data.phone_h);
+        //         $('#cust_email').text(customer_data.email);
+        //         $('#mail_to').attr("href","mailto:"+customer_data.email);
+        //         initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //         loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //     }
+        // });
+        var ADDR_1 = "";
+        var ADDR_2 = "";
+        var postData = new FormData();
+        postData.append('id', $id);
+
+        fetch('<?= base_url('job/get_customer_selected') ?>', {
+            method: 'POST',
+            body: postData
+        }).then(response => response.json()).then(response => {
+            var {success, data} = response;
+
+            if(success){
+                var phone_h = '(xxx) xxx-xxxx';
+                $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
+                // if(data.mail_add !== null){
+                //     $('#cust_address').text(data.mail_add + ' ');
+                // }
+                if(data.cross_street !== null){
+                    $('#cust_address').text(data.cross_street + ' ');
+                    ADDR_1 = data.cross_street;
+                }
+                if(data.phone_h){
+                    if(data.phone_h.includes('Mobile:')){
+                    phone_h = ((data.phone_h).slice(0,13))
+                }else{
+                    phone_h = data.phone_h;
+                }
+                }
+                if(data.city || data.state || data.zip_code){
+                    $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+                    ADDR_2 = data.city + ',' + ' ' + data.state + ' ' + data.zip_code;
+                }else{
+                    $('#cust_address2').text('-------------');
+                }
+                if(data.email){
+                    $('#cust_email').text(data.email);
+                }else{
+                    $('#cust_email').text('xxxxx@xxxxx.xxx');
+                }
+                $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
+                $('#cust_number').text(phone_h);
+                $('#mail_to').attr("href","mailto:"+data.email);
+                $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
+                $('.MAP_LOADER').fadeIn();
+                $('#TEMPORARY_MAP_VIEW').hide();
+                // console.log(data.cross_street + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                // initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                // loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+            }
+        })
+    }
+
+// $('#TEMPORARY_MAP_VIEW').load(function(){
+//     alert('loaded!');
+// });
+
+$('#TEMPORARY_MAP_VIEW').on("load", function() {
+   $('.MAP_LOADER').hide();
+   $('#TEMPORARY_MAP_VIEW').fadeIn();
+});
+
+$("#customer_id").on('change', function () {
+            
+            var customer_selected = this.value;
+            if(customer_selected !== ""){
+                load_customer_data(customer_selected);
+            }else{
+                $('#cust_fullname').text('xxxxx xxxxx');
+                $('#cust_address').text('-------------');
+                $('#cust_number').text('(xxx) xxx-xxxx');
+                $('#cust_email').text('xxxxx@xxxxx.xxx');
+                initMap();
+            }
+        });
+
 </script>
 <script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>

@@ -1216,7 +1216,7 @@ class Job extends MY_Controller
                 'prof_id' => $id
             ),
             'table' => 'acs_profile',
-            'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,zip_code',
+            'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,cross_street,zip_code',
         );
         $data = $this->general->get_data_with_param($get_customer, false);
         $data_arr = array("success" => true, "data" => $data);
