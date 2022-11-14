@@ -110,7 +110,9 @@ class Tags extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/banking/tags/tags.js"
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/banking/tags/list.js"
+            // "assets/js/accounting/banking/tags/tags.js"
         ));
 
         $getTags = $this->tags_model->getTags();
@@ -134,7 +136,8 @@ class Tags extends MY_Controller {
 
         $this->page_data['tags'] = $tags;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/tags/index', $this->page_data);
+        // $this->load->view('accounting/tags/index', $this->page_data);
+        $this->load->view('v2/pages/accounting/banking/tags/list', $this->page_data);
     }
 
     public function get_group_tags()
@@ -335,7 +338,7 @@ class Tags extends MY_Controller {
         $tags = $this->input->post('tags');
 
         foreach($tags as $tag) {
-            $explode = explode('-', $tag);
+            $explode = explode('_', $tag);
             $id = $explode[array_key_last($explode)];
             if(stripos($tag, 'tag') !== false) {
                 $this->tags_model->delete($id, 'tag');

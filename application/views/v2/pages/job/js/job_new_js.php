@@ -994,6 +994,8 @@ $("#attachment-file").change(function() {
         //         loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
         //     }
         // });
+        var ADDR_1 = "";
+        var ADDR_2 = "";
         var postData = new FormData();
         postData.append('id', $id);
 
@@ -1006,8 +1008,12 @@ $("#attachment-file").change(function() {
             if(success){
                 var phone_h = '(xxx) xxx-xxxx';
                 $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
-                if(data.mail_add !== null){
-                    $('#cust_address').text(data.mail_add + ' ');
+                // if(data.mail_add !== null){
+                //     $('#cust_address').text(data.mail_add + ' ');
+                // }
+                if(data.cross_street !== null){
+                    $('#cust_address').text(data.cross_street + ' ');
+                    ADDR_1 = data.cross_street;
                 }
                 if(data.phone_h){
                     if(data.phone_h.includes('Mobile:')){
@@ -1018,10 +1024,10 @@ $("#attachment-file").change(function() {
                 }
                 if(data.city || data.state || data.zip_code){
                     $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+                    ADDR_2 = data.city + ',' + ' ' + data.state + ' ' + data.zip_code;
                 }else{
                     $('#cust_address2').text('-------------');
                 }
-
                 if(data.email){
                     $('#cust_email').text(data.email);
                 }else{
@@ -1030,13 +1036,23 @@ $("#attachment-file").change(function() {
                 $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
                 $('#cust_number').text(phone_h);
                 $('#mail_to').attr("href","mailto:"+data.email);
-                initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
-                loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
-            
+                $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
+                $('.MAP_LOADER').fadeIn();
+                $('#TEMPORARY_MAP_VIEW').hide();
+                // console.log(data.cross_street + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                // initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                // loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
             }
         })
     }
-    
 
+// $('#TEMPORARY_MAP_VIEW').load(function(){
+//     alert('loaded!');
+// });
+
+$('#TEMPORARY_MAP_VIEW').on("load", function() {
+   $('.MAP_LOADER').hide();
+   $('#TEMPORARY_MAP_VIEW').fadeIn();
+});
 
 </script>

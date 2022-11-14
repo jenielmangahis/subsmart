@@ -189,6 +189,31 @@ class DocuSign extends MYF_Controller
 
             $this->db->where('docfile_id', $document->id);
             $document->recipients = $this->db->get('user_docfile_recipients')->result();
+
+            if ($document->status === 'Waiting for Others') {
+                // makes sure to order recipients.
+                $recipientsCopy = array_merge([], $document->recipients);
+                usort($recipientsCopy, function ($recipientA, $recipientB) {
+                    return (int) $recipientA->id - (int) $recipientB->id;
+                });
+
+                $nextSignsInPerson = current(array_filter($recipientsCopy, function ($recipient) {
+                    return $recipient->role === 'Signs in Person' && is_null($recipient->completed_at);
+                }));
+
+                if ($nextSignsInPerson) {
+                    $document->next_recipient = $nextSignsInPerson;
+
+                    $message = json_encode([
+                        'recipient_id' => $document->next_recipient->id,
+                        'document_id' => $document->id,
+                    ]);
+
+                    $hash = encrypt($message, $this->password);
+                    $document->next_recipient->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
+                }
+            }
+
             array_push($data, $document);
         }
 
@@ -1873,6 +1898,21 @@ SQL;
         $this->db->where_in('id', $docfileIds);
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();
+    }
+
+    public function apiGetHash()
+    {
+        $recipientId = $this->input->get('recipient_id', true);
+        $decrypted = $this->input->get('document_id', true);
+
+        $message = json_encode(['recipient_id' => $recipientId, 'document_id' => $decrypted]);
+        $hash = encrypt($message, $this->password);
+        $url = rtrim($this->getSigningUrl(), '/') . '/signing?hash=' . $hash;
+
+        header('content-type: application/json');
+        echo json_encode([
+            'data' => $url
+        ]);
     }
 }
 

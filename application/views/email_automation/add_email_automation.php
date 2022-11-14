@@ -76,7 +76,6 @@ label>input {
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
-
                         <div class="row">
                           <div class="col-sm-6 left">
                             <h3 class="page-title">Add Email Automation</h3>
@@ -110,7 +109,7 @@ label>input {
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for=""><b>Send</b><br /><small>This represents the time when we send the text.</small></label><br />
-                                    <select class="form-control" name="rule_notify_at" style="width: 55%;">
+                                    <select class="form-control" name="rule_notify_at" style="width: 55%; display: inline-block;">
                                       <?php foreach($optionRuleNotifyAt as $key => $value){ ?>
                                         <option value="<?= $key; ?>"><?= $value; ?></option>
                                       <?php } ?>
@@ -119,7 +118,7 @@ label>input {
                                       <label class="weight-normal margin-right-sec" data-automation="rule_notity_op_before"><input type="radio" name="rule_notify_op" value="+" checked="checked">
                                           <span data-automation="rule_notity_op_after_text">After event</span>
                                       </label>
-                                      <label class="weight-normal" data-automation="rule_notity_op_after"><input type="radio" name="rule_notify_op" value="-">
+                                      <label class="weight-normal" data-automation="rule_notity_op_after"><input type="radio" name="rule_notify_op" value="-" style="margin-right:5px;">
                                         <span data-automation="rule_notity_op_before_text">Before event</span>
                                       </label>
                                     </div>

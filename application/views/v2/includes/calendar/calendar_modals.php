@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
-                            <input type="text" name="ulr_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
+                            <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
                         </div>
                     </div>
                 </div>
