@@ -27,10 +27,14 @@
 }
 .calendar-title-header{
     border-bottom: 1px solid;
-    padding: 8px 0px;
+    padding: 8px 2px;
+}
+.calendar-tile-details{
+    padding: 0px 2px;
 }
 .calendar-tile-minmax{
-    display: inline-block;
+    /*display: inline-block;*/
+    display: none;
     float: right;
     margin-right: 17px;
     color: #ffffff;
@@ -999,6 +1003,8 @@
             default_calendar_tab = 'listView';   
         }
 
+        var defaultDate = '2022-11-18';
+
         calendar = new FullCalendar.Calendar(_calendar, {
             schedulerLicenseKey: '0531798248-fcs-1598103289',
             headerToolbar: {
@@ -1031,9 +1037,22 @@
                     buttonText: 'Month'
                 },
                 weekView: {
-                    type: 'dayGridWeek',
+                    //type: 'dayGridWeek',
+                    nowIndicator: true,
+                    type: 'timeGridWeek',
+                    buttonText: 'Week',
+                    allDaySlot: false, 
+                    scrollTime: scrollTime,
+                    /*nowIndicator: true,
+                    expandRows: true,
+                    nowIndicator: true,
+                    type: 'timeGrid',
+                    duration: {
+                        days: 7
+                    },
                     buttonText: 'Week',
                     allDaySlot: false,
+                    scrollTime: scrollTime*/
                 },
                 listView: {
                     type: 'listWeek',
@@ -1062,6 +1081,9 @@
                 displayEventEnd: true,
                 allDaySlot: false,
                 //timeFormat: 'h(:mm)a'
+            },
+            eventAfterAllRender: function(view) {
+                $('.calendar-tile-details').hide();
             },
             dayCellDidMount(info) {
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
