@@ -52,9 +52,21 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <label class="content-subtitle fw-bold d-block mb-2">Which Employee</label>
+                            <label class="content-subtitle fw-bold d-block mb-2">Created By</label>
+                            <span id="wait-list-created-by">
+                                <input type="text" value="<?= $userLogged->FName . ' ' . $userLogged->LName; ?>" class="nsm-field form-select" readonly="readonly" disabled="disabled">
+                            </span>                                                        
+                        </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Assigned Techincian</label>
                             <span id="wait-list-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
-                                <select class="nsm-field form-select" name="appointment_user_id" id="appointment-user"></select>
+                                <select class="nsm-field form-select" name="appointment_user_id[]" id="appointment-user" multiple="multiple"></select>
+                            </span>                                                        
+                        </div>
+                        <div class="col-12 appointment-add-sales-agent" style="display:none;">
+                            <label class="content-subtitle fw-bold d-block mb-2">Sales Agent</label>
+                            <span id="wait-list-add-sales-agent-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                <select class="nsm-field form-select" name="appointment_sales_agent_id" id="appointment-sales-agent-id"></select>
                             </span>                                                        
                         </div>
                         <div class="col-12">
@@ -73,7 +85,7 @@
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                            <select name="appointment_type_id" class="nsm-field form-select" required style="display: inline-block;width: 30%;">
+                            <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required style="display: inline-block;width: 30%;">
                                 <?php $start = 0; ?>
                                 <?php foreach ($appointmentTypes as $a) { ?>
                                     <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
@@ -85,14 +97,36 @@
                             </a>
                         </div>
                         <div class="col-12">
-                            <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
-                            <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
-                                <select class="nsm-field form-select" name="appointment_tags[]" id="appointment-tags" multiple="multiple"></select>
-                            </span>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Invoice Number</label>
+                                    <input type="text" id="appointment-invoice-number" name="appointment_invoice_number" class="nsm-field form-control" required="" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Price</label>
+                                    <input type="number" id="appointment-price" name="appointment_price" class="nsm-field form-control" required="" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12">
-                            <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
-                            <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
+                                    <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                        <select class="nsm-field form-select" name="appointment_tags[]" id="appointment-tags" multiple="multiple"></select>
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
+                                    <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="col-12">
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
+                                <textarea id="appointment-notes" name="appointment_notes" class="nsm-field form-control"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -257,8 +291,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button error" id="btn_delete_appointment">Delete</button>
-                <button type="button" class="nsm-button" id="btn_checkout_appointment">Checkout</button>
-                <button type="button" class="nsm-button" style="display: none;" id="btn_payment_details_appointment">Payment Details</button>
+                <!-- <button type="button" class="nsm-button" id="btn_checkout_appointment">Checkout</button>
+                <button type="button" class="nsm-button" style="display: none;" id="btn_payment_details_appointment">Payment Details</button> -->
                 <button type="button" class="nsm-button primary" id="btn_edit_appointment">Edit</button>
             </div>
         </div>
