@@ -1251,7 +1251,7 @@ define('methods/init',['../manager/index', '../component/classNames', '../compon
         var _loop = function _loop(_i2) {
           var iDate = DateManager.Convert(local.dateManager.year, local.dateManager.month, _i2);
           var iDateFormat = iDate.format('YYYY-MM-DD');
-          var $unit = $(helper.format('<div class="{0} {0}-date {0}-{3}" data-date="{1}"><a href="#">{2}</a></div>', helper.getSubClass('unit'), iDate.format('YYYY-MM-DD'), _i2, global.languages.weeks.en[iDate.weekday()].toLowerCase()));
+          var $unit = $(helper.format('<div class="{0} {0}-date {0}-{3}" data-date="{1}"><span class="event-date">{2}</span></div>', helper.getSubClass('unit'), iDate.format('YYYY-MM-DD'), _i2, global.languages.weeks.en[iDate.weekday()].toLowerCase()));
 
           if (context.settings.enabledDates.length > 0) {
             if ($.inArray(iDateFormat, context.settings.enabledDates) === -1) {
