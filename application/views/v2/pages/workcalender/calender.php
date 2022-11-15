@@ -21,6 +21,31 @@
 .timepicker-icon{
     font-size: 30px;
 }
+.calendar-tile-details{
+    /*display: none;*/
+    margin-top: 11px;
+}
+.calendar-title-header{
+    border-bottom: 1px solid;
+    padding: 8px 2px;
+}
+.calendar-tile-details{
+    padding: 0px 2px;
+}
+.calendar-tile-minmax{
+    /*display: inline-block;*/
+    display: none;
+    float: right;
+    margin-right: 17px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+}
+.calendar-tile-assigned-tech{
+    min-width: 25px !important;
+    height: 25px !important;
+    margin-right: 5px !important;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -163,6 +188,11 @@
         $('#wait-list-add-employee-popover').popover({
             title: 'Which Employee', 
             content: "Assign employee that will handle the appointment",
+            trigger: 'hover'
+        });
+        $('#wait-list-add-sales-agent-popover').popover({
+            title: 'Which Sales Agent', 
+            content: "Assign Sales Agent that will handle the service or job",
             trigger: 'hover'
         });
         $('#waitlist-date-popover').popover({
@@ -336,6 +366,9 @@
                                 reloadCalendar();
                             //}
                         });
+
+                        $("#create_appointment_modal").modal('hide');
+                        _this.trigger("reset");
                     } else {
                         Swal.fire({
                             title: 'Error',
@@ -344,9 +377,7 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         });
-                    }
-                    $("#create_appointment_modal").modal('hide');
-                    _this.trigger("reset");
+                    }                    
 
                     _this.find("button[type=submit]").html("Schedule");
                     _this.find("button[type=submit]").prop("disabled", false);
@@ -417,6 +448,36 @@
         });
 
         $('#appointment-user').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_users',
+                dataType: 'json',
+                delay: 250,                
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                /*formatResult: function(item) {
+                    return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+                },*/
+                cache: true
+            },
+            dropdownParent: $("#create_appointment_modal"),
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        $('#appointment-sales-agent-id').select2({
             ajax: {
                 url: base_url + 'autocomplete/_company_users',
                 dataType: 'json',
@@ -942,6 +1003,8 @@
             default_calendar_tab = 'listView';   
         }
 
+        var defaultDate = '2022-11-18';
+
         calendar = new FullCalendar.Calendar(_calendar, {
             schedulerLicenseKey: '0531798248-fcs-1598103289',
             headerToolbar: {
@@ -974,9 +1037,22 @@
                     buttonText: 'Month'
                 },
                 weekView: {
-                    type: 'dayGridWeek',
+                    //type: 'dayGridWeek',
+                    nowIndicator: true,
+                    type: 'timeGridWeek',
+                    buttonText: 'Week',
+                    allDaySlot: false, 
+                    scrollTime: scrollTime,
+                    /*nowIndicator: true,
+                    expandRows: true,
+                    nowIndicator: true,
+                    type: 'timeGrid',
+                    duration: {
+                        days: 7
+                    },
                     buttonText: 'Week',
                     allDaySlot: false,
+                    scrollTime: scrollTime*/
                 },
                 listView: {
                     type: 'listWeek',
@@ -1005,6 +1081,9 @@
                 displayEventEnd: true,
                 allDaySlot: false,
                 //timeFormat: 'h(:mm)a'
+            },
+            eventAfterAllRender: function(view) {
+                $('.calendar-tile-details').hide();
             },
             dayCellDidMount(info) {
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
@@ -1258,55 +1337,31 @@
 
     function loadMiniCalendar() {
         $('.mini-calendar').pignoseCalendar({
+            click: function(event, context) {
+                // this is clicked button.
+                var $this = $(this);
+
+                return false;
+            },
             scheduleOptions: {
                 colors: {
-                    holiday: '#2fabb7',
-                    seminar: '#5c6270',
-                    meetup: '#ef8080'
+                    /*job: '#2fabb7',
+                    event: '#5c6270',
+                    estimate: '#ef8080',
+                    ticket: '#FF751A',
+                    appointment: '#38A4F8',*/
+                    job: '#342442',
+                    event: '#342442',
+                    estimate: '#342442',
+                    ticket: '#342442',
+                    appointment: '#342442',
                 }
             },
-            schedules: [{
-                name: 'holiday',
-                date: '2017-08-08'
-            }, {
-                name: 'holiday',
-                date: '2017-09-16'
-            }, {
-                name: 'holiday',
-                date: '2017-10-01',
-            }, {
-                name: 'holiday',
-                date: '2017-10-05'
-            }, {
-                name: 'holiday',
-                date: '2017-10-18',
-            }, {
-                name: 'seminar',
-                date: '2017-11-14'
-            }, {
-                name: 'seminar',
-                date: '2017-12-01',
-            }, {
-                name: 'meetup',
-                date: '2018-01-16'
-            }, {
-                name: 'meetup',
-                date: '2018-02-01',
-            }, {
-                name: 'meetup',
-                date: '2018-02-18'
-            }, {
-                name: 'meetup',
-                date: '2018-03-04',
-            }, {
-                name: 'meetup',
-                date: '2018-04-01'
-            }, {
-                name: 'meetup',
-                date: '2022-11-17',
-            }],
+            schedules: <?= $mini_calendar_events; ?>,
             //select: onSelectHandler
         });
+
+        $('.pignose-calendar-button-schedule-container').prev('span.event-date').addClass('event-font-white');
         /*let events_url = "<?= base_url('settings/_get_google_enabled_calendars') ?>";
         let _calendar = document.getElementById('right-calendar');
 
@@ -1873,5 +1928,19 @@
         }
         
     });
+
+    $(document).on('click', '.add-appointment-type', function(){
+        var appointment_type = $(this).val();
+        if( appointment_type ==  3 || appointment_type == 1 ){
+            $('.appointment-add-sales-agent').show();
+        }else{
+            $('.appointment-add-sales-agent').hide();
+        }
+    });
+
+    /*$(document).on('click', '.calendar-tile-minmax', function(){
+        var tile_id = $(this).data('id');
+        $('.job-tile-'+tile_id).hide();        
+    });*/
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

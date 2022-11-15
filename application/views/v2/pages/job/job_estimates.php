@@ -35,8 +35,8 @@
     }
     .loader {
         padding: 136px 0;
-        border: 1px solid lightgray; 
-        border-radius: 10px;
+/*        border: 1px solid lightgray; */
+/*        border-radius: 10px;*/
     }
 
     .loader>div {

@@ -93,7 +93,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-work-id="<?php echo $ticket->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -114,3 +114,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
+<script>
+    $(document).on('click', '.delete-ticket', function(){
+        var tkID = $(this).attr('data-tk-id');
+
+            $.ajax({
+                method: 'POST',
+                url: '<?php echo base_url(); ?>tickets/deleteTicket',
+                dataType: 'json',
+                data: {tkID: tkID},
+                success: function (e) {
+                   alert('success');
+                    
+                }
+            });
+        });
+</script>

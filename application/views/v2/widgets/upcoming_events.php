@@ -7,7 +7,7 @@ endif;
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span>Upcoming Events</span>
+            <span>Upcoming Calendar</span>
         </div>
         <div class="nsm-card-controls">
             <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url() ?>events">

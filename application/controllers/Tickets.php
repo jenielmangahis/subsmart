@@ -447,9 +447,11 @@ class Tickets extends MY_Controller
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);
+        $this->page_data['itemLists'] = $this->tickets_model->get_ticket_items($id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
-        $this->load->view('tickets/add', $this->page_data);
+        $this->load->view('tickets/edit_ticket', $this->page_data);
     }
 
     
@@ -605,6 +607,13 @@ class Tickets extends MY_Controller
         $json_data  = ['is_success' => $is_success];
 
         echo json_encode($json_data);
+    }
+
+    public function deleteTicket()
+    {
+        $ticketID = $this->input->post('tkID');
+        $is_success =  $this->tickets_model->delete_tickets($ticketID);
+        echo json_encode($is_success);
     }
 
 }

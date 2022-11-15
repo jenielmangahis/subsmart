@@ -133,7 +133,7 @@
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
                             $schedule_location = $schedule['data']->service_location;
-                            $schedule_location_b = '';
+                            $schedule_location_b = $schedule['data']->acs_city . ' ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip;
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';

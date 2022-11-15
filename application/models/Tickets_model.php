@@ -184,6 +184,14 @@ class Tickets_model extends MY_Model
             return false;
         }
     }
+
+    public function delete_tickets($id)
+    {
+
+        $this->db->where('id',$id);
+        $this->db->delete('tickets');
+        return true;
+    }
 }
 
 ?>

@@ -358,6 +358,11 @@ class Workcalender extends MY_Controller
             }
         }
 
+        //Default created by
+        $user_id = logged('id');
+        $userLogged = $this->Users_model->getUser($user_id);
+        $this->page_data['userLogged'] = $userLogged; 
+
         //Settings
         $default_calendar_view = '3d';
         $settings = $this->settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id); 
@@ -373,6 +378,7 @@ class Workcalender extends MY_Controller
 
         $this->load->model('Users_model', 'user_model');
 
+        $this->page_data['mini_calendar_events'] = $this->mini_caleendar_events();
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['appointmentTypes'] = $this->AppointmentType_model->getAllByCompany($company_id, true);
         $this->page_data['settings'] = $settings;
@@ -853,6 +859,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
         $this->load->model('Tickets_model');
+        $this->load->model('Job_tags_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -1001,38 +1008,32 @@ class Workcalender extends MY_Controller
             $backgroundColor = "#38a4f8";
 
             //$appointment_number = strtoupper(str_replace("APPT", $a->appointment_type, $a->appointment_number));
-            $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'. $a->appointment_number .'</span><hr />';
+            $custom_html = '<div class="calendar-title-header">';
+                $tags = '---';
+                if( $a->tag_ids != '' ){
+                    $a_tags = explode(",", $a->tag_ids);     
+                    $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+                    foreach($appointmentTags as $t){
+                        $e_tags[] = $t->name;
+                    }
 
-            $eventTags = array();
-            if( $a->tag_ids != '' ){
-                $a_tags = explode(",", $a->tag_ids);            
-                $eventTags = $this->EventTags_model->getAllByIds($a_tags);
-            }
-            
-
-            if( $eventTags ){
-                $e_tags = array();
-                foreach($eventTags as $t){
-                    $e_tags[] = $t->name;
+                    $tags = implode(",", $e_tags);
                 }
 
-                $tags = implode(",", $e_tags);
-            }else{
-                $tags = '---';
-            }
-            
-            $custom_html .= '<small style="font-size:15px;"><i class="bx bx-user-circle"></i> Customer : ' . $a->customer_name . '</small>';
-            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $a->mail_add . " " . $a->cust_city . " " . $a->cust_state . " " . $a->cust_zip_code . "</small>";
-            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
-            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Appointment Type : ' . $a->appointment_type . '</small>';            
-            //$custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-user-circle'></i> Customer : " . $a->customer_name . "</small>";
-            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $a->employee_name . "</small>";
-            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("H:i A", strtotime($a->appointment_time)) . "</small>";
-            if( $a->url_link == '' ){
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-link"></i> ---</small>';
-            }else{
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-link"></i> '. $a->url_link .'</small>';
-            }
+                $customer_name = $j->first_name . ' ' . $j->last_name;
+                $custom_html  .= '<span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . '-' . $tags . ' : ' . $a->customer_name . '</span>';
+                //$custom_html .= '<a class="calendar-tile-minmax" data-id="'.$j->id.'"><i class="bx bx-chevron-down"></i></a>';
+            $custom_html .= '</div>';
+
+            $custom_html .= '<div class="calendar-tile-details appointment-tile-'.$a->id.'">';
+                $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
+                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                $assigned_technician = unserialize($a->asisgned_employee_ids);
+                foreach($assigned_technician as $eid){
+                    $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                }
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("H:i A", strtotime($a->appointment_time_from)) . ' to ' . date("H:i A", strtotime($a->appointment_time_to)) . "</small>";                
+            $custom_html .= '</div>';
 
             $resources_user_events[$inc]['eventId'] = $a->id;
             $resources_user_events[$inc]['eventType'] = 'appointments';
@@ -1219,45 +1220,68 @@ class Workcalender extends MY_Controller
 
                 //$custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
 
-                if (isset($a_settings['work_order_show_customer'])) {
-                    if( $j->first_name != '' ||  $j->last_name != ''){
-                        $customer_name = $j->first_name . ' ' . $j->last_name;
-                        $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$j->job_number.' ('.$customer_name.')'.'</span><hr />';
-                    }else{
-                        $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$j->job_number.'</span><hr />';
-                    }
-                }
-                
+                $custom_html = '<div class="calendar-title-header">';
+
                 if( $j->tags != '' ){
                     $tags = $j->tags;
                 }else{
                     $tags = '---';
                 }
-                $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Status : ' . $j->status . '</small>';
 
-                if( $j->FName != '' ||  $j->LName != ''){
-                    $user_assigned = $j->FName . ' ' . $j->LName;
-                }else{
-                    $user_assigned = '---';
+                if (isset($a_settings['work_order_show_customer'])) {
+                    if( $j->first_name != '' ||  $j->last_name != ''){
+                        $customer_name = $j->first_name . ' ' . $j->last_name;
+                        $custom_html .= '<span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.'-'.$tags.' : '.$customer_name.'</span>';
+                    }else{
+                        $custom_html .= '<span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.'-'.$tags.'</span>';                        
+                    }
                 }
-                $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $user_assigned . "</small>";
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . $j->start_time . " - " . $j->end_time . "</small>";
+
+                $custom_html .= '<a class="calendar-tile-minmax" data-id="'.$j->id.'"><i class="bx bx-chevron-down"></i></a>';
+                $custom_html .= '</div>';
+                
+                $custom_html .= '<div class="calendar-tile-details job-tile-'.$j->id.'">';
+                //$custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
+                //$custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Status : ' . $j->status . '</small>';
 
                 if (isset($a_settings['work_order_show_details'])) {
-                    $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
+                    $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $j->mail_add . ", ". $j->cust_zipcode. "</small>";
                 }
 
-                if (isset($a_settings['work_order_show_price'])) {
-                    /*$jobItems = $this->Jobs_model->get_specific_job_items($j->id);
+                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+
+                $assigned_employees = array();
+                $assigned_employees[] = $j->employee_id;
+                if( $j->employee2_id > 0 ){
+                    $assigned_employees[] = $j->employee2_id;
+                }
+                if( $j->employee3_id > 0 ){
+                    $assigned_employees[] = $j->employee3_id;
+                }
+                if( $j->employee4_id > 0 ){
+                    $assigned_employees[] = $j->employee4_id;
+                }
+
+                foreach($assigned_employees as $eid){
+                    $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                }
+                
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $j->start_time . " - " . $j->end_time . "</small>";
+
+                
+
+                /*if (isset($a_settings['work_order_show_price'])) {
+                    $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
                     $total_price = 0;
                     foreach ($jobItems as $item) {
                         $total_price += ($item->price * $item->qty);
-                    }*/
+                    }
                     $total_price = $j->amount;
 
                     $custom_html .= "<hr /><small style='font-weight:bold;font-size:17px;'>Total Cost : $". number_format((float)$total_price, 2, '.', ',') . "</small>";
-                }
+                }*/
+
+                $custom_html .= "</div>";
 
                 /*if( isset($a_settings['work_order_show_link']) ){
                     $custom_html .= "<br /><small><a href=''>".$event->url_link."</a></small>";
@@ -1859,11 +1883,12 @@ class Workcalender extends MY_Controller
         $this->load->model('AppointmentType_model');
 
         $post       = $this->input->post();
+        $user_id    = getLoggedUserID();
         $company_id = logged('company_id');
         $is_success = false;
         $message    = 'Cannot create appointment';
 
-        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
+        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && !empty($post['appointment_user_id']) && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
 
             if( $post['appointment_tags'] != '' ){
                 $tags = implode(",", $post['appointment_tags']);
@@ -1871,12 +1896,17 @@ class Workcalender extends MY_Controller
                 $tags = '';
             }
 
+            $sales_agent_id = 0;
+            if( $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 1 ){
+                $sales_agent_id = $post['appointment_sales_agent_id'];
+            }
+
             $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);            
             $data_appointment = [
                 'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
                 'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
                 'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
-                'user_id' => $post['appointment_user_id'],
+                'user_id' => $user_id,
                 'prof_id' => $post['appointment_customer_id'],
                 'company_id' => $company_id,
                 'tag_ids' => $tags,
@@ -1887,6 +1917,11 @@ class Workcalender extends MY_Controller
                 'appointment_type_id' => $post['appointment_type_id'],
                 'is_paid' => 0,
                 'is_wait_list' => 0,
+                'asisgned_employee_ids' => serialize($post['appointment_user_id']),
+                'notes' => $post['appointment_notes'],
+                'cost' => $post['appointment_price'],
+                'sales_agent_id' => $sales_agent_id,
+                'invoice_number' => $post['appointment_invoice_number'],
                 'created' => date("Y-m-d H:i:s")
             ];
 
@@ -1989,6 +2024,18 @@ class Workcalender extends MY_Controller
         $company_id  = logged('company_id');
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $company_id);
         //$tags = $this->EventTags_model->getAllByCompanyId($company_id, array());  
+
+        $text_tags = '';
+        if( $appointment->tag_ids != '' ){
+            $a_tags = explode(",", $appointment->tag_ids);     
+            $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+            foreach($appointmentTags as $t){
+                $e_tags[] = $t->name;
+            }
+
+            $text_tags = implode(",", $e_tags);
+        }
+
         $tags = $this->Job_tags_model->getAllByCompanyId($company_id, array());  
 
         $a_tags = array();
@@ -2000,6 +2047,7 @@ class Workcalender extends MY_Controller
         }
 
         $this->page_data['a_tags'] = $a_tags;
+        $this->page_data['text_tags'] = $text_tags;
         $this->page_data['appointment'] = $appointment;
         // $this->load->view('workcalender/ajax_load_view_appointment', $this->page_data);
         $this->load->view('v2/pages/workcalender/ajax_load_view_appointment', $this->page_data);
@@ -2741,6 +2789,90 @@ class Workcalender extends MY_Controller
 
         $this->page_data['upcomingSchedules'] = $upcomingSchedules;
         $this->load->view('v2/pages/workcalender/ajax_load_upcoming_schedules', $this->page_data);
+    }
+
+    public function mini_caleendar_events()
+    {
+        $this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Estimate_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
+
+        $cid = logged('company_id');
+        
+        $upcomingJobs   = $this->Jobs_model->getAllUpcomingJobsByCompanyId($cid);
+        $upcomingEvents = $this->Event_model->getAllUpComingEventsByCompanyId($cid);
+        $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($cid);
+        $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($cid);    
+        $upcomingAppointments = $this->Appointment_model->getAllUpcomingAppointmentsByCompany($cid);    
+
+        $upcomingSchedules = array();
+
+        $unique_dates = array();
+        foreach( $upcomingJobs as $job ){
+            $date = date("Y-m-d", strtotime($job->start_date));
+            if( !array_key_exists($date, $unique_dates) ){
+                $upcomingSchedules[] = [
+                    'name' => 'job',
+                    'date' => $date
+                ];
+
+                $unique_dates[$date] = $date;
+            }                        
+        }
+
+        foreach( $upcomingEvents as $event ){
+            $date = date("Y-m-d", strtotime($event->start_date));
+            if( !array_key_exists($date, $unique_dates) ){
+                $upcomingSchedules[] = [
+                    'name' => 'event',
+                    'date' => $date
+                ];            
+
+                $unique_dates[$date] = $date;
+            }            
+        }
+
+        foreach( $scheduledEstimates as $estimate ){
+            $date = date("Y-m-d", strtotime($estimate->estimate_date));
+            if( !array_key_exists($date, $unique_dates) ){
+                $upcomingSchedules[] = [
+                    'name' => 'estimate',
+                    'date' => $date
+                ]; 
+
+                $unique_dates[$date] = $date;
+            }            
+        }
+
+        foreach( $upcomingServiceTickets as $ticket ){
+            $date = date("Y-m-d", strtotime($ticket->ticket_date));
+            if( !array_key_exists($date, $unique_dates) ){
+                $upcomingSchedules[] = [
+                    'name' => 'ticket',
+                    'date' => $date
+                ]; 
+
+                $unique_dates[$date] = $date;
+            }            
+        }
+
+        foreach( $upcomingAppointments as $appointment ){
+            $date = date("Y-m-d", strtotime($appointment->appointment_date));
+            if( !array_key_exists($date, $unique_dates) ){
+                $upcomingSchedules[] = [
+                    'name' => 'appointment',
+                    'date' => $date
+                ]; 
+
+                $unique_dates[$date] = $date;
+            }            
+        }
+
+        return json_encode($upcomingSchedules);
     }
 }
 
