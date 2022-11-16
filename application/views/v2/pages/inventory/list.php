@@ -232,7 +232,7 @@ table.dataTable.no-footer {
                                             <a class="dropdown-item edit-item" href="javascript:void(0)" data-id="<?= $item[3]; ?>">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $item[3]; ?>">Delete</a>
+                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $item[10]; ?>">Delete</a>
                                         </li>
                                     </ul>
                                 </div>

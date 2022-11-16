@@ -56,6 +56,16 @@ class Tickets extends MY_Controller
 
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
+        
+        $action = $this->input->post('action');
+        if($action == 'Scheduled') 
+        {
+            $status = 'Scheduled';
+        }else{
+            $status = $this->input->post('ticket_status');
+        }
+
+        // dd($status);
 
         // dd($this->input->post());
         $new_data = array(
@@ -69,11 +79,13 @@ class Tickets extends MY_Controller
             'ticket_no'                 => $this->input->post('ticket_no'),
             'ticket_date'               => $this->input->post('ticket_date'),
             'scheduled_time'            => $this->input->post('scheduled_time'),
+            'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
             'purchase_order_no'         => $this->input->post('purchase_order_no'),
-            'ticket_status'             => $this->input->post('ticket_status'),
+            'ticket_status'             => $status,
             'panel_type'                => $this->input->post('panel_type'),
             'service_type'              => $this->input->post('service_type'),
             'warranty_type'             => $this->input->post('warranty_type'),
+            'technicians'               => $this->input->post('assign_tech'),
             'subtotal'                  => $this->input->post('subtotal'),
             'taxes'                     => $this->input->post('taxes'),
             'adjustment'                => $this->input->post('adjustment'),
@@ -505,6 +517,27 @@ class Tickets extends MY_Controller
         }
 
         $this->page_data['default_customer_id'] = $default_customer_id;
+        
+        //Settings
+            $prefix = 'TK-';
+            $lastInserted = $this->tickets_model->getlastInsert($company_id);
+            if( $lastInserted ){
+                $next = $lastInserted->ticket_no;
+                $arr = explode("-", $next);
+                $val = $arr[1];
+
+                $next_num = $val + 1;
+                // dd($next_num);
+            }else{
+                $next_num = 1;
+            }
+
+        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        // dd($next_num);
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
 
         $this->page_data['items'] = $this->items_model->getItemlist();
         $type = $this->input->get('type');
@@ -512,6 +545,8 @@ class Tickets extends MY_Controller
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/customer_tickets', $this->page_data);
@@ -571,6 +606,28 @@ class Tickets extends MY_Controller
 
         $userID = $_GET['appointment_user_id'];
 
+        //Settings
+            $prefix = 'TK-';
+            $lastInserted = $this->tickets_model->getlastInsert($company_id);
+            if( $lastInserted ){
+                $next = $lastInserted->ticket_no;
+                $arr = explode("-", $next);
+                $val = $arr[1];
+
+                $next_num = $val + 1;
+                // dd($next_num);
+            }else{
+                $next_num = 1;
+            }
+
+        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        // dd($next_num);
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
+
+
         $this->page_data['items'] = $this->items_model->getItemlist();
         $type = $this->input->get('type');
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
@@ -583,6 +640,8 @@ class Tickets extends MY_Controller
         $this->page_data['appointment_user_id'] = $this->input->post('appointment_user_id');
         $this->page_data['appointment_customer_id'] = $this->input->post('appointment_customer_id');
         $this->page_data['appointment_type_id'] = $this->input->post('appointment_type_id');
+        
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         $this->page_data['user'] = $this->tickets_model->getUserDetails($userID);
 

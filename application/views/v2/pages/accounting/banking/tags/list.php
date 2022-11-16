@@ -21,9 +21,11 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search by tag name">
-                        </div>
+                        <form action="<?php echo base_url('accounting/tags') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Search by tag name" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
@@ -55,13 +57,13 @@
                     <tbody>
                         <?php if(count($tags) > 0) : ?>
 						<?php foreach($tags as $index => $tag) : ?>
-                        <tr <?=$tag['type'] === 'group' ? 'data-bs-toggle="collapse" data-bs-target=".collapse-'.$index.'"' : ''?> data-id="<?=$tag['id']?>" data-type="<?=$tag['type']?>">
+                        <tr data-id="<?=$tag['id']?>" data-type="<?=$tag['type']?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$tag['type']?>_<?=$tag['id']?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default">
+                            <td class="fw-bold nsm-text-primary nsm-link default" <?=$tag['type'] === 'group' ? 'data-bs-toggle="collapse" data-bs-target=".collapse-'.$index.'"' : ''?>>
                                 <?php if($tag['type'] === 'group') : ?>
                                     <span><i class='bx bx-fw bx-chevron-down'></i> <?=$tag['name']?> (<?=count($tag['tags'])?>)</span>
                                 <?php else : ?>
@@ -80,17 +82,17 @@
                                         </li>
                                         <?php if($tag['type'] === 'group') : ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Add tag</a>
+                                            <a class="dropdown-item add-tag" href="#">Add tag</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit group</a>
+                                            <a class="dropdown-item edit-group" href="#">Edit group</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item delete-group" href="#">Delete group</a>
                                         </li>
                                         <?php else : ?>
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit group</a>
+                                            <a class="dropdown-item edit-tag" href="#">Edit tag</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item delete-tag" href="#">Delete tag</a>
@@ -120,7 +122,7 @@
                                             <a class="dropdown-item" href="#">Run Report</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Edit group</a>
+                                            <a class="dropdown-item edit-tag" href="#">Edit tag</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item delete-tag" href="#">Delete tag</a>

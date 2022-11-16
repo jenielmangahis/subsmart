@@ -4503,6 +4503,28 @@ class Customer extends MY_Controller
             $default_user = $this->input->get('user');
             $redirect_calendar = 1;
         }
+        
+        
+        //Settings
+        $prefix = 'TK-';
+        $lastInserted = $this->tickets_model->getlastInsert($company_id);
+        if( $lastInserted ){
+            $next = $lastInserted->ticket_no;
+            $arr = explode("-", $next);
+            $val = $arr[1];
+
+            $next_num = $val + 1;
+            // dd($next_num);
+        }else{
+            $next_num = 1;
+        }
+
+        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        // dd($next_num);
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
 
         $this->page_data['redirect_calendar'] = $redirect_calendar;
         $this->page_data['default_user'] = $default_user;

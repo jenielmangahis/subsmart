@@ -436,7 +436,7 @@ class Inventory extends MY_Controller
         $attempt = 0;
         do {
             $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
-            $checkName = $this->items_model->check_name($company_id, $name);
+            $checkName = $this->items_model->check_name($company_id, $name, 1);
 
             $attempt++;
         } while(!is_null($checkName));
@@ -780,8 +780,8 @@ class Inventory extends MY_Controller
         
         foreach($cat as $key => $c) {
             if(!empty($c)) {
-                $header = array($key, "header", "", "");
-                array_push($result,$header);
+                // $header = array($key, "header", "", "");
+                // array_push($result,$header);
 
                 foreach($c as $v) {
                     $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model,$v->qty_order,$v->re_order_points, $v->id);
@@ -803,14 +803,14 @@ class Inventory extends MY_Controller
             $attempt = 0;
             do {
                 $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
-                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+                $checkName = $this->items_model->check_name(logged('company_id'), $name, 1);
 
                 $attempt++;
             } while(!is_null($checkName));
 
             $condition = ['id' => $id, 'company_id' => logged('company_id')];
             $update = $this->items_model->update($data, $condition);
-            // $this->items_model->delete($id);
+            $this->items_model->delete($id);
         }
 
         echo json_encode(true);
