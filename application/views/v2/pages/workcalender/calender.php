@@ -23,28 +23,38 @@
 }
 .calendar-tile-details{
     /*display: none;*/
-    margin-top: 11px;
+    /*margin-top: 11px;*/
 }
-.calendar-title-header{
+.calendar-title-header{    
+    padding: 2px;
+    display: inline-flex;
     border-bottom: 1px solid;
-    padding: 8px 2px;
+    min-width: 100%;
 }
 .calendar-tile-details{
-    padding: 0px 2px;
+    padding-top: 11px !important;
+}
+.calendar-tile-view{
+    display: block;
+    font-size: 12px !important;
+    margin: 5px 0px !important;
+    width: 60px;
+}
+.calendar-tile-view i{
+    position: relative;
+    top: 2px;
 }
 .calendar-tile-minmax{
-    /*display: inline-block;*/
-    display: none;
-    float: right;
-    margin-right: 17px;
+    margin-left: 0px !important;
     color: #ffffff;
-    font-size: 20px;
-    font-weight: bold;
 }
 .calendar-tile-assigned-tech{
     min-width: 25px !important;
     height: 25px !important;
     margin-right: 5px !important;
+}
+.calendar-tile-minmax:hover{
+    color: #ffffff;
 }
 </style>
 <div class="row page-content g-0">
@@ -1003,8 +1013,6 @@
             default_calendar_tab = 'listView';   
         }
 
-        var defaultDate = '2022-11-18';
-
         calendar = new FullCalendar.Calendar(_calendar, {
             schedulerLicenseKey: '0531798248-fcs-1598103289',
             headerToolbar: {
@@ -1042,6 +1050,7 @@
                     type: 'timeGridWeek',
                     buttonText: 'Week',
                     allDaySlot: false, 
+                    expandRows: true,
                     scrollTime: scrollTime,
                     /*nowIndicator: true,
                     expandRows: true,
@@ -1082,10 +1091,9 @@
                 allDaySlot: false,
                 //timeFormat: 'h(:mm)a'
             },
-            eventAfterAllRender: function(view) {
-                $('.calendar-tile-details').hide();
+            eventDidMount : function(info) {                                
             },
-            dayCellDidMount(info) {
+            dayCellDidMount(info) {                
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
@@ -1152,13 +1160,13 @@
                 img.setAttribute("class", "datagrid-image");
                 info.el.prepend(img);
             },
-            eventContent: function(eventInfo) {
+            eventContent: function(eventInfo) {                
                 return {
                     html: eventInfo.event.extendedProps.customHtml
                 }
             },
             defaultDate: "<?php echo date('Y-m-d'); ?>",
-            editable: true,
+            /*editable: true,
             droppable: true, // this allows things to be dropped onto the calendar
             drop: function(arg) {
                 //console.log(arg);
@@ -1282,14 +1290,15 @@
                         }
                     });
                 }
-            },
+            },*/
             navLinks: true, // can click day/week names to navigate views
             eventLimit: true, // allow "more" link when too many events
             events: events,
             eventClick: function(arg) {
                 var apiUrl = '';
                 var isGet = 1;
-                if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
+                //console.log(arg);
+                /*if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
                     //alert(arg.event._def.extendedProps.eventType);
                     if (arg.event._def.extendedProps.eventType == 'jobs') {
                         location.href = base_url + 'job/job_preview/' + arg.event._def.extendedProps.eventId;
@@ -1307,12 +1316,12 @@
                         arg.event._def.extendedProps.googleCalendarLink,
                         '_blank' // <- This is what makes it open in a new window.
                     );
-                }
+                }*/
             },
             loading: function(isLoading) {
                 if (isLoading) {
                     $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="' + base_url + '/assets/img/spinner.gif" style="display:inline;" /> Loading Events...</div>');
-                } else {
+                } else {                    
                     $(".left-calendar-loading").html('');
                 }
 
@@ -1333,6 +1342,7 @@
         });
 
         calendar.render();
+
     }
 
     function loadMiniCalendar() {
@@ -1358,8 +1368,29 @@
                 }
             },
             schedules: <?= $mini_calendar_events; ?>,
-            //select: onSelectHandler
+            select: miniCalenarOnSelectHandler
         });
+
+        function miniCalenarOnSelectHandler(date, context) {            
+            var selected_date = '';
+
+            if (date[0] !== null) {
+                selected_date = date[0].format('YYYY-MM-DD');
+            }
+
+            if (date[0] !== null && date[1] !== null) {
+                selected_date = ' ~ ';
+            }
+            else if (date[0] === null && date[1] == null) {
+                selected_date = 'nothing';
+            }
+
+            if (date[1] !== null) {
+                selected_date = date[1].format('YYYY-MM-DD');
+            }
+
+            $('#view_upcoming_schedules_modal').modal('show');
+        }
 
         $('.pignose-calendar-button-schedule-container').prev('span.event-date').addClass('event-font-white');
         /*let events_url = "<?= base_url('settings/_get_google_enabled_calendars') ?>";
@@ -1795,7 +1826,17 @@
         });
     }
 
-    $(document).on('click', '.fc-weekView-button', function(){   
+    $(document).on('click', '.fc-monthView-button', function(){
+        $('.calendar-tile-details').hide();
+    });
+    $(document).on('click', '.fc-weekView-button', function(){  
+        const current_date = '<?= date("Y-m-d"); ?>';      
+        const position = $('[data-date="'+current_date+'"]').last().position();
+        console.log(position);
+        $(".fc-view-harness-active").animate({            
+            scrollLeft: position.top// Scroll to 01:00 pm
+        }, 1000); 
+
         /*$('#calendar').fullCalendar('option', 'visibleRange', {
           start: '2022-11-01',
           end: '2022-11-02'
@@ -1932,15 +1973,61 @@
     $(document).on('click', '.add-appointment-type', function(){
         var appointment_type = $(this).val();
         if( appointment_type ==  3 || appointment_type == 1 ){
-            $('.appointment-add-sales-agent').show();
+            $('.appointment-add-sales-agent').fadeIn(500);
+            $('.invoice-price-container').fadeIn(500);
+        }else if( appointment_type ==  2 ){
+            $('.appointment-add-sales-agent').fadeOut(500);
+            $('.invoice-price-container').fadeIn(500);
         }else{
-            $('.appointment-add-sales-agent').hide();
+            $('.appointment-add-sales-agent').fadeOut(500);
+            $('.invoice-price-container').fadeOut(500);
         }
     });
 
-    /*$(document).on('click', '.calendar-tile-minmax', function(){
-        var tile_id = $(this).data('id');
-        $('.job-tile-'+tile_id).hide();        
-    });*/
+    $(document).on('change', '.add-appointment-priority', function(){
+        var selected = $(this).val();
+        if( selected == 'Others' ){
+            $('.priority-others').fadeIn(500);
+        }else{
+            $('.priority-others').fadeOut(400);
+        }
+    });
+
+    function hide_event_details(){
+      $('.calendar-tile-details').hide();
+    };
+   window.setTimeout( hide_event_details, 1500 );
+
+    $(document).on('click', '.calendar-tile-minmax', function(){
+        var tile_id   = $(this).data('id');
+        var tile_type = $(this).data('type');
+
+        if( $(this).hasClass('c-max') ){
+            $('.'+tile_type+'-tile-'+tile_id).fadeIn(300);        
+            $(this).removeClass('c-max');
+        }else{
+            $(this).addClass('c-max');
+            $('.'+tile_type+'-tile-'+tile_id).fadeOut(300);   
+        }
+    });
+
+    $(document).on('click', '.calendar-tile-view', function(){
+        var tile_id   = $(this).data('id');
+        var tile_type = $(this).data('type');
+
+        if( tile_type == 'appointment' ){
+            viewAppointment(tile_id);
+        }else if( tile_type == 'job' ){
+            location.href = base_url + 'job/job_preview/' + tile_id;
+        }else if( tile_type == 'ticket' ){
+            location.href = base_url + 'tickets/viewDetails/' + tile_id;
+        }else if( tile_type == 'event' ){
+            location.href = base_url + 'events/event_preview/' + tile_id;
+        }
+    });
+
+    $(document).on('click', '.pignose-calendar-unit', function(){
+
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
