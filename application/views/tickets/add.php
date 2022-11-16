@@ -248,7 +248,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Service Ticket No.</b></label>
                                         <input type="text" class="form-control" name="ticket_no" id="ticket_no"
-                                                required placeholder="Enter Ticket#" autofocus value="TK-0000001" />
+                                                required placeholder="Enter Ticket#" a value="<?= $prefix . $next_num; ?>" />
                                     </div>
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Ticket Date</b></label>
@@ -262,7 +262,7 @@ a.btn-primary.btn-md {
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="expiry_date" class="required"><b>Schedule Time</b></label>
+                                        <label for="expiry_date" class="required"><b>Schedule Time From</b></label>
                                         <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <!-- <div class="input-group date" data-provide="datepicker">
                                             <input type="text" class="form-control" name="expiry_date" id="expiry_date"
@@ -280,6 +280,10 @@ a.btn-primary.btn-md {
                                             <option value="4-6">4-6</option>
                                         </select> -->
                                     </div>
+                                    <div class="col-md-3">
+                                        <label for="expiry_date" class="required"><b>Schedule Time To</b></label>
+                                        <input type="time" class="form-control" name="scheduled_time_to" id="scheduled_time_to" required />
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
@@ -290,8 +294,19 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="zip"><b>Ticket Status</b></label>
-                                        <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
-                                            placeholder="Enter Ticket Status"/>
+                                        <!-- <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
+                                            placeholder="Enter Ticket Status"/> -->
+                                        <select id="ticket_status" name="ticket_status" class="form-control">
+                                            <option value="New">New</option>
+                                            <option value="Draft">Draft</option>
+                                            <option value="Scheduled">Scheduled</option>
+                                            <option value="Arrived">Arrived</option>
+                                            <option value="Started">Started</option>
+                                            <option value="Approved">Approved</option>
+                                            <option value="Finished">Finished</option>
+                                            <option value="Invoiced">Invoiced</option>
+                                            <option value="Completed">Completed</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label for="zip"><b>Panel Type</b></label>
@@ -326,19 +341,29 @@ a.btn-primary.btn-md {
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
                                             </select>
                                     </div>
+                                    <div class="col-md-3">
+                                        <label for="purchase_order_number"><b>Assigned Techincian</b></label>
+                                        <input type="text" class="form-control" name="assign_tech" id="assign_tech" />
+                                    </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-3 form-group">
                                         <label for="zip"><b>Service Type</b></label>
                                         <div class="input-group">
-                                            <select class="form-control" name="service_type" id="service_type">
-                                                <?php foreach($serviceType as $sType){ ?>
-                                                    <option value="<?php echo $sType->service_name; ?>"><?php echo $sType->service_name; ?></option>
-                                                <?php } ?>
+                                            <!-- <select class="form-control" name="service_type" id="service_type">
+                                                <?php //foreach($serviceType as $sType){ ?>
+                                                    <option value="<?php //echo $sType->service_name; ?>"><?php //echo $sType->service_name; ?></option> -->
+                                                <?php //} ?>
+                                            <!-- </select> -->
+                                            <select id="service_type" name="service_type" class="form-control">
+                                                <option value="Services">Services</option>
+                                                <option value="Event">Event</option>
+                                                <option value="Estimate">Estimate</option>
+                                                <option value="Job">Job</option>
                                             </select>
-                                            <span class="input-group-btn">
+                                            <!-- <span class="input-group-btn">
                                                 <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addServiceType">Add New</a>
-                                            </span>
+                                            </span> -->
                                         </div><!-- /input-group -->
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -354,7 +379,7 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Employee</b></label>
+                                        <label for="zip"><b>Created By</b></label>
                                         <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
                                         <select class="form-control mb-3" name="employee_id">
                                             <option value="0">Select Name</option>
@@ -815,9 +840,9 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
-                                        <button type="button" class="nsm-button primary but" style="border-radius: 0 !important;">Preview</button>
-                                        <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
+                                        <button name="action"value="Draft" type="submit"  class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
+                                        <button name="action"value="Scheduled" type="submit"  class="nsm-button primary but" style="border-radius: 0 !important;">Schedule</button>
+                                        <a href="<?php echo url('customer/ticketslist') ?>" class="btn but-red">Cancel this</a>
                                     </div>
                                 </div>
 
