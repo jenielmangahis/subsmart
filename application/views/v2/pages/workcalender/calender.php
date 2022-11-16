@@ -1897,8 +1897,9 @@
         var appointment_user_id = $('#appointment-user').val();
         var appointment_customer_id = $('#appointment-customer').val();
         var appointment_type_id = $("input[name=appointment_type_id]").val();
+        var appointment_time_to = $('#appointment_time_to').val();
 
-        location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id;
+        location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id+'&appointment_time_to='+appointment_time_to;
 
         // $.ajax({
         //     url:"<?php echo base_url(); ?>tickets/addnewTicketApmt",

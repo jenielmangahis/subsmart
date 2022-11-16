@@ -3229,7 +3229,7 @@ $(document).ready(function(){
         uploadThumbnail: function () {
           const $modal = $("#uploadTemplateThumbnail");
           const $input = $modal.find("#uploadTemplateThumbnailFile");
-          const $button = $modal.find(".btn-primary");
+          const $button = $modal.find(".nsm-button.primary");
           const $inputName = $input.parent().find(".custom-file-label__inner");
           const $preview = $modal.find("#uploadTemplateThumbnailFilePreview");
   
@@ -3580,7 +3580,7 @@ $(document).ready(function(){
     });
   
     const $modal = $("#usersModal");
-    const $submit = $modal.find(".btn-primary");
+    const $submit = $modal.find(".nsm-button.primary");
   
     $modal.modal("show");
     $submit.off("click");
@@ -3628,7 +3628,7 @@ $(document).ready(function(){
     const urlPrefix = "";
   
     const $modal = $("#deleteTemplateModal");
-    const $submit = $modal.find(".btn-primary");
+    const $submit = $modal.find(".nsm-button.primary");
   
     $modal.modal("show");
     $submit.off("click");

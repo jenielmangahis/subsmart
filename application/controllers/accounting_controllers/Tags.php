@@ -115,21 +115,60 @@ class Tags extends MY_Controller {
             // "assets/js/accounting/banking/tags/tags.js"
         ));
 
+        if(!empty(get('search'))) {
+            $search = get('search');
+            $this->page_data['search'] = $search;
+        }
+
         $getTags = $this->tags_model->getTags();
 
         $tags = [];
         foreach($getTags as $key => $tag) {
             if($tag['type'] !== 'group-tag') {
-                $tags[] = [
-                    'id' => $tag['id'],
-                    'name' => $tag['name'],
-                    'transactions' => '',
-                    'type' => $tag['type'],
-                    'parentIndex' => $tag['parentIndex'],
-                ];
-    
-                if($tag['type'] === 'group') {
-                    $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                if(!empty($search)) {
+                    if (stripos($tag['name'], $search) !== false) {
+                        $tags[] = [
+                            'id' => $tag['id'],
+                            'name' => $tag['name'],
+                            'transactions' => '',
+                            'type' => $tag['type'],
+                            'parentIndex' => $tag['parentIndex'],
+                        ];
+
+                        if($tag['type'] === 'group') {
+                            $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                        }
+                    } else {
+                        if($tag['type'] === 'group') {
+                            $groupTags = array_filter($tag['tags'], function($value, $key) use ($search) {
+                                return stripos($value['name'], $search) !== false;
+                            }, ARRAY_FILTER_USE_BOTH);
+
+                            if(count($groupTags) > 0) {
+                                $tags[] = [
+                                    'id' => $tag['id'],
+                                    'name' => $tag['name'],
+                                    'transactions' => '',
+                                    'type' => $tag['type'],
+                                    'parentIndex' => $tag['parentIndex'],
+                                ];
+
+                                $tags[array_key_last($tags)]['tags'] = $groupTags;
+                            }
+                        }
+                    }
+                } else {
+                    $tags[] = [
+                        'id' => $tag['id'],
+                        'name' => $tag['name'],
+                        'transactions' => '',
+                        'type' => $tag['type'],
+                        'parentIndex' => $tag['parentIndex'],
+                    ];
+
+                    if($tag['type'] === 'group') {
+                        $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                    }
                 }
             }
         }

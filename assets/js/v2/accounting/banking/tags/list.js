@@ -1,20 +1,20 @@
-$('.nsm-table tr[data-bs-toggle="collapse"]').on('click', function(e) {
+$('.nsm-table td[data-bs-toggle="collapse"]').on('click', function(e) {
     var target = e.currentTarget.dataset.target;
 
     $(target).collapse('toggle');
 
-    if($(this).find('td:nth-child(2)').find('i').hasClass('bx-chevron-down')) {
-        $(this).find('td:nth-child(2)').find('i').removeClass('bx-chevron-down').addClass('bx-chevron-up');
+    if($(this).find('i').hasClass('bx-chevron-down')) {
+        $(this).find('i').removeClass('bx-chevron-down').addClass('bx-chevron-up');
     } else {
-        $(this).find('td:nth-child(2)').find('i').removeClass('bx-chevron-up').addClass('bx-chevron-down');
+        $(this).find('i').removeClass('bx-chevron-up').addClass('bx-chevron-down');
     }
 });
 
-// $("#search_field").on("input", debounce(function() {
-//     let _form = $(this).closest("form");
+$("#search_field").on("input", debounce(function() {
+    let _form = $(this).closest("form");
 
-//     _form.submit();
-// }, 1500));
+    _form.submit();
+}, 1500));
 
 $('#create-tag-form').on('submit', function(e) {
     e.preventDefault();
@@ -261,6 +261,95 @@ $('#tags-table .delete-tag, #tags-table .delete-group').on('click', function(e) 
                     location.reload();
                 }
             });
+        }
+    });
+});
+
+$('#tags-table .add-tag').on('click', function(e) {
+    var id = $(this).closest('tr').data('id');
+    var name = $(this).closest('tr').find('td:nth-child(2)').text().trim().split(' ');
+    name.pop();
+    name = name.join(' ');
+
+    $('#tag-modal select#group').append(`<option value="${id}" selected>${name}</option>`).trigger('change');
+
+    $('#tag-modal').modal('show');
+});
+
+var rowHtml = '';
+$('#tags-table .edit-group, #tags-table .edit-tag').on('click', function(e) {
+    var id = $(this).closest('tr').data().id;
+    var type = $(this).closest('tr').data().type;
+    var name = $(this).closest('tr').find('td:nth-child(2)').text().trim().split(' ');
+
+    if(type === 'group') {
+        name.pop();
+    }
+    name = name.join(' ');
+
+    rowHtml = $(this).closest('tr').html();
+
+    $(this).closest('tr').removeAttr('data-bs-target').removeAttr('data-bs-toggle');
+    $(this).closest('tr').html(`<td colspan="4">
+        <a class="float-end cancel-edit" href="javascript:void(0)"><i class="bx bx-fw bx-x m-0"></i></a>
+        <form class="edit-form">
+            <div class="row">
+                <div class="col-12 col-md-2">
+                    <input type="text" name="name" value="${name}" class="form-control nsm-field">
+                </div>
+                <div class="col-12 col-md-auto">
+                    <button class="nsm-button primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </td>`);
+});
+
+$(document).on('click', '#tags-table .cancel-edit', function(e) {
+    e.preventDefault();
+
+    if($(this).closest('tr').data().type === 'group') {
+        $(this).closest('tr').attr('data-bs-toggle', 'collapse');
+
+        var index = $(this).closest('tr').index();
+        $(this).closest('tr').attr('data-bs-target', `.collapse-${index}`);
+    }
+    $(this).closest('tr').html(rowHtml);
+});
+
+$(document).on('submit', '#tags-table .edit-form', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+    var type = row.data().type;
+
+    var data = new FormData(this);
+
+    $.ajax({
+        url:`/accounting/tags/update/${id}/${type}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success:function (res) {
+            if(row.data().type === 'group') {
+                row.attr('data-bs-toggle', 'collapse');
+        
+                var index = row.index();
+                row.attr('data-bs-target', `.collapse-${index}`);
+
+                var childTags = $(`#tags-table tr.collapse-${index}`).length;
+                var nameHtml = `<span><i class="bx bx-fw bx-chevron-down"></i> ${data.get('name')} (${childTags})</span>`;
+            } else {
+                if(row.data().type === 'group-tag') {
+
+                }
+                var nameHtml = data.get('name');
+            }
+            row.html(rowHtml);
+
+            row.find('td:nth-child(2)').html(nameHtml);
         }
     });
 });
