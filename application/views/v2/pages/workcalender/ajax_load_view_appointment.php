@@ -27,6 +27,15 @@
     vertical-align: top;
     display: inline-block;
 }
+.small-label{
+    text-align: center;
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    background-color: #DAD1E0;
+    padding: 5px;
+    margin-top: 9px;
+}
 </style>
 <?php if ($appointment) { ?>
     <?php
@@ -62,20 +71,26 @@
                 </li>
             </ul>    
         <br />
-        <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;"><span class="fw-bold"><i class='bx bxs-calendar'></i> </span> <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
+        <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
+            <span class="fw-bold"><i class='bx bxs-calendar'></i></span> 
+            <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
+        <?php if( $appointment->appointment_type_id != 4 ) { ?> 
+            <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
+                <span class="fw-bold"><i class='bx bx-phone-call'></i></span>
+                <?= $appointment->priority; ?>
+            </label>
+        <?php } ?>        
         <!-- <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-list-ul'></i> Appointment Type:</span> <?= $appointment->appointment_type; ?></label> -->
-        <!-- <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-link'></i> </span> 
+        <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-link'></i> </span> 
             <?php if( $appointment->url_link != ''){ ?>
-                <a href="<?= $appointment->url_link; ?>"><?= $appointment->url_link; ?></a>
+                <a href="<?= $appointment->url_link; ?>" target="_new"><?= $appointment->url_link; ?></a>
             <?php }else{ ?>
                 ---
             <?php } ?>
-        </label> -->
+        </label>
         <label class="content-subtitle d-block mb-2 font-15">
-            <a href="<?= $appointment->url_link; ?>">
-            <span class="fw-bold"><i class='bx bx-link'></i> </span> 
+            <span class="fw-bold"><i class='bx bx-barcode' ></i> </span> 
             <?= $appointment->invoice_number . ' - $' . number_format($appointment->cost,2); ?>
-            </a>
         </label>
     </div>
     <div class="col-12 col-md-5">
@@ -90,13 +105,19 @@
                 <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($appointment->sales_agent_id); ?>'); width: 40px;"></div>
             </div>
         <?php } ?>
-        <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header" style="margin-top: 8px;">Technician</label>
+
+        <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header" style="margin-top: 8px;">
+            <?= $appointment->appointment_type_id == 4 ? 'Attendees' : 'Technician'; ?>            
+        </label>
         <div class="d-flex align-items-center">
             <?php $assigned_technician = unserialize($appointment->asisgned_employee_ids); ?>
             <?php foreach($assigned_technician as $aid){ ?>
                 <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($aid); ?>'); width: 40px;"></div>
             <?php } ?>            
         </div>
+        <?php if( $appointment->appointment_type_id == 4 ) { ?>        
+            <small class="small-label"><i class='bx bxs-calendar-event'></i> <?= $appointment->priority; ?></small>
+        <?php } ?>
     </div>
     <hr />
     <!-- <div class="col-12">

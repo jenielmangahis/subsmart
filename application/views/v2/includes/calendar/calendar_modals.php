@@ -41,7 +41,7 @@
                             <label class="content-subtitle fw-bold d-block mb-2">When</label>
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
-                                    <input type="text" name="appointment_date" id="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;">
+                                    <input type="text" name="appointment_date" id="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;">                                    
                                 </div>
                                 <div class="col-12 col-md-3">
                                     <input type="text" name="appointment_time_from" id="appointment_time" class="nsm-field form-control timepicker-from" value="" placeholder="Time From" required />
@@ -58,7 +58,7 @@
                             </span>                                                        
                         </div>
                         <div class="col-12">
-                            <label class="content-subtitle fw-bold d-block mb-2">Assigned Techincian</label>
+                            <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Attendees</label>
                             <span id="wait-list-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
                                 <select class="nsm-field form-select" name="appointment_user_id[]" id="appointment-user" multiple="multiple"></select>
                             </span>                                                        
@@ -84,27 +84,41 @@
                             <div class="customer-address"></div>
                         </div>
                         <div class="col-12">
-                            <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                            <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required style="display: inline-block;width: 30%;">
-                                <?php $start = 0; ?>
-                                <?php foreach ($appointmentTypes as $a) { ?>
-                                    <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
-                                <?php $start++;
-                                } ?>
-                            </select>
-                            <a class="nsm-button" href="<?= base_url('appointment_types/index'); ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
-                                <i class='bx bx-fw bx-plus'></i> Manage Type
-                            </a>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
+                                    <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required style="display: inline-block;width: 60%;">
+                                        <?php $start = 0; ?>
+                                        <?php foreach ($appointmentTypes as $a) { ?>
+                                            <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
+                                        <?php $start++;
+                                        } ?>
+                                    </select>
+                                    <a class="nsm-button" href="<?= base_url('appointment_types/index'); ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
+                                        <i class='bx bx-fw bx-plus'></i> Manage Type
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
+                                    <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
+                                        <?php foreach($appointmentPriorityEventOptions as $priority){ ?>
+                                            <option value="<?= $priority; ?>"><?= $priority; ?></option>
+                                        <?php } ?>
+                                    </select>   
+                                    <input type="text" value="" name="appointment_priority_others" placeholder="Please specify" class="nsm-field form-select priority-others" style="margin-top:5px;display: none;">
+                                </div>
+                            </div>
+                            
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 invoice-price-container" style="display:none;">
                             <div class="row">
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Invoice Number</label>
-                                    <input type="text" id="appointment-invoice-number" name="appointment_invoice_number" class="nsm-field form-control" required="" />
+                                    <input type="text" id="appointment-invoice-number" name="appointment_invoice_number" class="nsm-field form-control" />
                                 </div>
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Price</label>
-                                    <input type="number" id="appointment-price" name="appointment_price" class="nsm-field form-control" required="" />
+                                    <input type="number" id="appointment-price" name="appointment_price" class="nsm-field form-control" />
                                 </div>
                             </div>
                         </div>
@@ -471,6 +485,21 @@
             </div>
         </div>
         <?php echo form_close(); ?>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="view_upcoming_schedules_modal" tabindex="-1" aria-labelledby="view_upcoming_schedules_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Upcoming Schedules</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3" id="view_appointment_container">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

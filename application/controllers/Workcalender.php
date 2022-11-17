@@ -376,8 +376,13 @@ class Workcalender extends MY_Controller
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
         $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
+        $appointmentPriorityOptions = $this->Appointment_model->priorityOptions();
+        $appointmentPriorityEventOptions = $this->Appointment_model->priorityEventOptions();
+        
         $this->load->model('Users_model', 'user_model');
 
+        $this->page_data['appointmentPriorityOptions']      = $appointmentPriorityOptions;
+        $this->page_data['appointmentPriorityEventOptions'] = $appointmentPriorityEventOptions;
         $this->page_data['mini_calendar_events'] = $this->mini_caleendar_events();
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['appointmentTypes'] = $this->AppointmentType_model->getAllByCompany($company_id, true);
@@ -885,47 +890,28 @@ class Workcalender extends MY_Controller
                         $starttime = $event->start_date . " " . $event->start_time;
                         $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-
                         $title = $event->start_time . " - " . $event->end_time;
 
-                        if (isset($a_settings['work_order_show_customer'])) {
-                            if( $event->first_name != '' ||  $event->last_name != ''){
-                                $customer_name = $event->first_name . ' ' . $event->last_name;
-                                $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$event->event_number.' ('.$customer_name.')'.'</span><hr />';
+                        $custom_html = '<div class="calendar-title-header">';
+                            if( $event->event_tag != '' ){
+                                $tags = $event->event_tag;
                             }else{
-                                $custom_html = '<span style="font-size:16px;font-weight:bold;display:block;">'.$event->event_number.'</span><hr />';
-                            }
-                        }
-
-                        if( $event->event_tag != '' ){
-                            $tags = $event->event_tag;
-                        }else{
-                            $tags = '---';
-                        }
-                        $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
-                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Status : ' . $event->status . '</small>';
-
-                        if( $event->FName != '' ||  $event->LName != ''){
-                            $user_assigned = $event->FName . ' ' . $event->LName;
-                        }else{
-                            $user_assigned = '---';
-                        }
-                        $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Employee Assigned : " . $user_assigned . "</small>";
-                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . $event->start_time . " - " . $event->end_time . "</small>";
-
-                        if (isset($a_settings['work_order_show_details'])) {
-                            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $event->event_address . "</small>";
-                        }
-
-                        if (isset($a_settings['work_order_show_price'])) {
-                            $eventItems = $this->event_model->get_specific_event_items($event->id);
-                            $total_price = 0;
-                            foreach ($eventItems as $item) {
-                                $total_price += ($item->price * $item->qty);
+                                $tags = '---';
                             }
 
-                            $custom_html .= "<hr /><small style='font-weight:bold;font-size:17px;'>Total Cost : $". number_format((float)$total_price, 2, '.', ',') . "</small>";
-                        }
+                            if (isset($a_settings['work_order_show_customer'])) {
+                                $custom_html  .= '<a class="calendar-tile-minmax event-min-max-'.$event->id.'" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $event->event_number . ' - ' . $tags . '</span></a>';
+                            }
+                        $custom_html .= '</div>';
+
+                        $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
+                        $custom_html .= '<div class="calendar-tile-details event-tile-'.$event->id.'">';
+                            $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $event->event_address . "</small>";
+                            $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                            $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($event->employee_id).'\'); width: 20px;display:inline-block;"></div>';
+                            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $event->start_time . " - " . $event->end_time . "</small>";
+                            $custom_html .= $view_btn;
+                        $custom_html .= '</div>';
 
                         $resources_user_events[$inc]['eventId'] = $event->id;
                         $resources_user_events[$inc]['eventType'] = 'events';
@@ -938,21 +924,7 @@ class Workcalender extends MY_Controller
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
 
                         $inc++;
-                    }/*elseif($event->employee_id == 0) {
-                        foreach($get_users as $get_user) {
-                            $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
-                            $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
-                            $resources_user_events[$inc]['eventId'] = $event->id;
-                            $resources_user_events[$inc]['eventType'] = 'events';
-                            $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
-                            $resources_user_events[$inc]['title'] = $event->event_description;
-                            $resources_user_events[$inc]['start'] = $start_date_time;
-                            $resources_user_events[$inc]['end'] = $start_date_end;
-                            $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-                        $inc++;
-                        }
-
-                    }*/
+                    }
                 }
             }
         }
@@ -964,27 +936,26 @@ class Workcalender extends MY_Controller
             $start_date_end  = $start_date_time;
             $backgroundColor = "#ff751a";
 
-            $customer_name =  $st->first_name . ' ' . $st->last_name;
-            $custom_html   = '<span style="font-size:16px;font-weight:bold;display:block;">'.$st->ticket_no.' ('.$customer_name.')'.'</span><hr />';
+            $custom_html = '<div class="calendar-title-header">';
+                if( $st->job_tag != '' ){
+                    $tags = $st->job_tag;
+                }else{
+                    $tags = '---';
+                }
 
-            $eventTags = array();
-            if( $a->tag_ids != '' ){
-                $a_tags = explode(",", $a->tag_ids);            
-                $eventTags = $this->EventTags_model->getAllByIds($a_tags);
-            }
-            
+                $customer_name =  $st->first_name . ' ' . $st->last_name;
+                $view_btn      = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="ticket" data-id="'.$st->id.'"><i class="bx bx-window-open"></i> View</a>';
 
-            if( $st->job_tag != '' ){
-                $tags = $st->job_tag;
-            }else{
-                $tags = '---';
-            }
-            $sales_rep = $st->FName . ' ' . $st->LName;
-            $custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
-            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-user-pin'></i> Sales Representative : " . $sales_rep . "</small>";  
-            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bxs-location-plus'></i> Location : " . $st->service_location . "</small>";
-            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> Schedule : ' . date("g:i A", strtotime($st->scheduled_time)) . "</small>";
+                $custom_html  .= '<a class="calendar-tile-minmax" data-type="ticket" data-id="'.$st->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $st->ticket_no . ' - ' . $tags . ' : ' . $customer_name . $tools . '</span></a>';
+            $custom_html .= '</div>';
 
+            $custom_html .= '<div class="calendar-tile-details ticket-tile-'.$st->id.'">';
+                $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $st->service_location . ", " . $st->acs_zip . "</small>";
+                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($st->employee_id).'\'); width: 20px;display:inline-block;"></div>';
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($st->scheduled_time)) . "</small>";
+                $custom_html .= $view_btn;
+            $custom_html .= '</div>';
 
             $resources_user_events[$inc]['eventId'] = $st->id;
             $resources_user_events[$inc]['eventType'] = 'service_tickets';
@@ -1021,18 +992,20 @@ class Workcalender extends MY_Controller
                 }
 
                 $customer_name = $j->first_name . ' ' . $j->last_name;
-                $custom_html  .= '<span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . '-' . $tags . ' : ' . $a->customer_name . '</span>';
-                //$custom_html .= '<a class="calendar-tile-minmax" data-id="'.$j->id.'"><i class="bx bx-chevron-down"></i></a>';
+                $view_btn         = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="appointment" data-id="'.$a->id.'"><i class="bx bx-window-open"></i> View</a>';
+                $custom_html  .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . ' - ' . $tags . ' : ' . $a->customer_name . '</span></a>';
+                //$custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'"><i class="bx bx-chevron-down"></i></a>';
             $custom_html .= '</div>';
 
             $custom_html .= '<div class="calendar-tile-details appointment-tile-'.$a->id.'">';
                 $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
-                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
                 $assigned_technician = unserialize($a->asisgned_employee_ids);
                 foreach($assigned_technician as $eid){
                     $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
                 }
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("H:i A", strtotime($a->appointment_time_from)) . ' to ' . date("H:i A", strtotime($a->appointment_time_to)) . "</small>";                
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("H:i A", strtotime($a->appointment_time_from)) . ' to ' . date("H:i A", strtotime($a->appointment_time_to)) . "</small>";  
+                $custom_html .= $view_btn;              
             $custom_html .= '</div>';
 
             $resources_user_events[$inc]['eventId'] = $a->id;
@@ -1228,16 +1201,16 @@ class Workcalender extends MY_Controller
                     $tags = '---';
                 }
 
+                $view_btn = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="job" data-id="'.$j->id.'"><i class="bx bx-window-open"></i> View</a>';
+
                 if (isset($a_settings['work_order_show_customer'])) {
                     if( $j->first_name != '' ||  $j->last_name != ''){
                         $customer_name = $j->first_name . ' ' . $j->last_name;
-                        $custom_html .= '<span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.'-'.$tags.' : '.$customer_name.'</span>';
+                        $custom_html .= '<a class="calendar-tile-minmax job-min-max-'.$j->id.'" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
                     }else{
-                        $custom_html .= '<span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.'-'.$tags.'</span>';                        
+                        $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';                        
                     }
                 }
-
-                $custom_html .= '<a class="calendar-tile-minmax" data-id="'.$j->id.'"><i class="bx bx-chevron-down"></i></a>';
                 $custom_html .= '</div>';
                 
                 $custom_html .= '<div class="calendar-tile-details job-tile-'.$j->id.'">';
@@ -1248,7 +1221,7 @@ class Workcalender extends MY_Controller
                     $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $j->mail_add . ", ". $j->cust_zipcode. "</small>";
                 }
 
-                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";                
 
                 $assigned_employees = array();
                 $assigned_employees[] = $j->employee_id;
@@ -1268,7 +1241,7 @@ class Workcalender extends MY_Controller
                 
                 $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $j->start_time . " - " . $j->end_time . "</small>";
 
-                
+                $custom_html .= $view_btn;
 
                 /*if (isset($a_settings['work_order_show_price'])) {
                     $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
@@ -1897,8 +1870,22 @@ class Workcalender extends MY_Controller
             }
 
             $sales_agent_id = 0;
+            $price = 0;
+            $invoice_number = '';
             if( $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 1 ){
                 $sales_agent_id = $post['appointment_sales_agent_id'];
+                $price = $post['appointment_price'];
+                $invoice_number = $post['appointment_invoice_number'];
+            }
+
+            if( $post['appointment_type_id'] == 2 ){
+                $price = $post['appointment_price'];
+                $invoice_number = $post['appointment_invoice_number'];   
+            } 
+
+            $appointment_priority = $post['appointment_priority'];
+            if( $post['appointment_priority'] == 'Others' ){
+                $appointment_priority = $post['appointment_priority_others'];
             }
 
             $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);            
@@ -1916,12 +1903,13 @@ class Workcalender extends MY_Controller
                 'total_amount' => 0,
                 'appointment_type_id' => $post['appointment_type_id'],
                 'is_paid' => 0,
+                'priority' => $appointment_priority,
                 'is_wait_list' => 0,
                 'asisgned_employee_ids' => serialize($post['appointment_user_id']),
                 'notes' => $post['appointment_notes'],
-                'cost' => $post['appointment_price'],
+                'cost' => $price,
                 'sales_agent_id' => $sales_agent_id,
-                'invoice_number' => $post['appointment_invoice_number'],
+                'invoice_number' => $invoice_number,
                 'created' => date("Y-m-d H:i:s")
             ];
 

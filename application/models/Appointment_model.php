@@ -159,6 +159,32 @@ class Appointment_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function priorityOptions()
+    {
+        $options = [
+            0 => 'Call 10 minutes out',
+            1 => 'Call 20 minutes out',
+            2 => 'Call 30 minutes out',
+            3 => 'Standard',            
+            4 => 'Low',
+            5 => 'Emergency',
+            6 => 'Urgent'           
+        ];
+
+        return $options;
+    }
+
+    public function priorityEventOptions()
+    {
+        $options = [
+            0 => 'Optional',
+            1 => 'Mandatory',
+            2 => 'Invitation Only'
+        ];
+
+        return $options;
+    }
 }
 
 /* End of file Appointment_model.php */

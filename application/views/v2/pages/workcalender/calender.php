@@ -22,7 +22,7 @@
     font-size: 30px;
 }
 .calendar-tile-details{
-    /*display: none;*/
+    display: none;
     /*margin-top: 11px;*/
 }
 .calendar-title-header{    
@@ -55,6 +55,11 @@
 }
 .calendar-tile-minmax:hover{
     color: #ffffff;
+}
+.fc .fc-daygrid-event{    
+}
+.multiple-date{
+    z-index: 999 !important;
 }
 </style>
 <div class="row page-content g-0">
@@ -168,6 +173,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script type="text/javascript">
+
     var calendar;
 
     $(document).ready(function() {
@@ -195,11 +201,11 @@
             content: "Pick a tags that will describe this appointment",
             trigger: 'hover'
         });
-        $('#wait-list-add-employee-popover').popover({
-            title: 'Which Employee', 
-            content: "Assign employee that will handle the appointment",
+        $('#wait-list-add-employee-popover').popover({    
+            content:'Who will attend the event',
+            title:'Attendees',        
             trigger: 'hover'
-        });
+        });        
         $('#wait-list-add-sales-agent-popover').popover({
             title: 'Which Sales Agent', 
             content: "Assign Sales Agent that will handle the service or job",
@@ -980,6 +986,10 @@
         let customer_events = <?php echo json_encode($resources_user_events) ?>;
 
         renderCalendar(_calendar, _timezone, events);
+
+        /*window.setTimeout( function(){
+            $('.calendar-tile-details').hide();
+        }, 1500 );*/
     }
 
     function renderCalendar(_calendar, _timezone, events) {
@@ -1021,7 +1031,8 @@
             themeSystem: 'bootstrap5',
             eventDisplay: 'block',
             contentHeight: 750,
-            initialView: default_calendar_tab,            
+            initialView: default_calendar_tab,  
+            progressiveEventRendering: false,          
             views: {
                 employeeTimeline: {
                     type: 'resourceTimeGridDay',
@@ -1091,9 +1102,13 @@
                 allDaySlot: false,
                 //timeFormat: 'h(:mm)a'
             },
-            eventDidMount : function(info) {                                
-            },
-            dayCellDidMount(info) {                
+            eventDidMount : function(info) {  
+                /*if( info.event._def.extendedProps.eventType == 'jobs' ){
+                    $(info.el).addClass('multiple-date');
+                }
+                console.log(info);       */
+            },  
+            dayCellDidMount(info) {                         
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
@@ -1107,6 +1122,8 @@
                 initPopover();
             },
             selectable: true,
+            slotEventOverlap: true,
+            eventOverlap: true,
             select: function(info) {
                 //console.log(info);
                 //alert('selected ' + info.startStr + ' to ' + info.endStr);
@@ -1151,8 +1168,8 @@
                 //$("#calendar_action_select_modal").modal('show');
                 $('.customer-address').html('');
                 $("#create_appointment_modal").modal('show');
+
             },
-            slotEventOverlap: false,
             resourceLabelDidMount: function(info) {
                 //console.log(info);
                 let img = document.createElement('img');
@@ -1298,6 +1315,7 @@
                 var apiUrl = '';
                 var isGet = 1;
                 //console.log(arg);
+
                 /*if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
                     //alert(arg.event._def.extendedProps.eventType);
                     if (arg.event._def.extendedProps.eventType == 'jobs') {
@@ -1972,6 +1990,8 @@
     });
 
     $(document).on('click', '.add-appointment-type', function(){
+        var appointmentEventPriorityOptions = <?= json_encode($appointmentPriorityEventOptions); ?>;
+        var appointmentPriorityOptions      = <?= json_encode($appointmentPriorityOptions); ?>;
         var appointment_type = $(this).val();
         if( appointment_type ==  3 || appointment_type == 1 ){
             $('.appointment-add-sales-agent').fadeIn(500);
@@ -1982,6 +2002,39 @@
         }else{
             $('.appointment-add-sales-agent').fadeOut(500);
             $('.invoice-price-container').fadeOut(500);
+        }
+
+        if( appointment_type == 4 ){
+            $('.create-tech-attendees').text('Attendees');
+            $('#wait-list-add-employee-popover').popover('dispose');
+            $('#wait-list-add-employee-popover').popover({    
+                content:'Who will attend the event',
+                title:'Attendees',        
+                trigger: 'hover'
+            });
+
+            var $el = $(".add-appointment-priority");
+            $el.empty(); // remove old options
+            $.each(appointmentEventPriorityOptions, function(key,value) {
+              $el.append($("<option></option>")
+                 .attr("value", value).text(value));
+            });
+
+        }else{
+            $('.create-tech-attendees').text('Assigned Techincian');
+            $('#wait-list-add-employee-popover').popover('dispose');
+            $('#wait-list-add-employee-popover').popover({    
+                content:'Assign employee that will handle the appointment',
+                title:'Which Employee',        
+                trigger: 'hover'
+            }); 
+
+            var $el = $(".add-appointment-priority");
+            $el.empty(); // remove old options
+            $.each(appointmentPriorityOptions, function(key,value) {
+              $el.append($("<option></option>")
+                 .attr("value", value).text(value));
+            });           
         }
     });
 
@@ -1994,11 +2047,6 @@
         }
     });
 
-    function hide_event_details(){
-      $('.calendar-tile-details').hide();
-    };
-   window.setTimeout( hide_event_details, 1500 );
-
     $(document).on('click', '.calendar-tile-minmax', function(){
         var tile_id   = $(this).data('id');
         var tile_type = $(this).data('type');
@@ -2006,9 +2054,13 @@
         if( $(this).hasClass('c-max') ){
             $('.'+tile_type+'-tile-'+tile_id).fadeIn(300);        
             $(this).removeClass('c-max');
+            //$(this).parent().closest('.fc-daygrid-event').addClass('multiple-date');
+            $('.'+tile_type+'-min-max-'+tile_id).parent().closest('.fc-daygrid-event').addClass('multiple-date');
         }else{
             $(this).addClass('c-max');
             $('.'+tile_type+'-tile-'+tile_id).fadeOut(300);   
+            $('.'+tile_type+'-min-max-'+tile_id).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
+            //$(this).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
         }
     });
 

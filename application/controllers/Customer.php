@@ -6220,4 +6220,30 @@ class Customer extends MY_Controller
         $this->page_data['customer'] = $customer;
         $this->load->view('v2/pages/customer/ajax_load_customer_address', $this->page_data);
     }
+
+    public function ajax_update_address_mobile()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $customer = $this->AcsProfile_model->getByProfId($post['cus_prof']);
+        if( $customer ){
+            $data = [
+                'mail_add' => $post['cus_address'],
+                'city' => $post['cus_city'],
+                'state' => $post['cus_state'],
+                'zip_code' => $post['cus_zip'],
+                'phone_m' => $post['cus_mobile']
+            ];
+
+            $this->general->update_with_key_field($data, $post['cus_prof'],'acs_profile','prof_id');
+            $is_success = 1;
+        }
+
+        $json_data = ['is_success' => $is_success];
+        echo json_encode($json_data);
+    }
 }
