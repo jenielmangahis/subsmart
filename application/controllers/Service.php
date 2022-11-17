@@ -34,7 +34,8 @@ class Service extends MY_Controller {
 	public function add()
 	{
 		// ifPermissions('roles_add');
-		$this->load->view('service/add', $this->page_data);
+		// $this->load->view('service/add', $this->page_data);
+		$this->load->view('v2/pages/inventory/action/services_add', $this->page_data);
 	}
 
 	public function save()

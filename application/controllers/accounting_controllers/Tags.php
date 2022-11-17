@@ -390,7 +390,8 @@ class Tags extends MY_Controller {
     public function transactions()
     {
         add_footer_js(array(
-            "assets/js/accounting/banking/tags/tags-transactions.js"
+            "assets/js/v2/accounting/banking/tags/transactions.js"
+            // "assets/js/accounting/banking/tags/tags-transactions.js"
         ));
 
         $groups = [];
@@ -406,13 +407,37 @@ class Tags extends MY_Controller {
             }
         }
 
+        $tags = $this->tags_model->getCompanyTags();
+        $tags = array_column($tags, 'id');
+
+        if(!empty(get('type'))) {
+            $this->page_data['type'] = get('type');
+
+            if(get('type') === 'money-in') {
+                $this->page_data['moneyIn'] = get('money-in');
+            } else {
+                $this->page_data['moneyOut'] = get('money-out');
+            }
+        }
+
+        if(!empty(get('date'))) {
+            $this->page_data['date'] = get('date');
+            $this->page_data['fromDate'] = get('from');
+            $this->page_data['toDate'] = get('to');
+        }
+
+        if(!empty(get('contact'))) {
+            $this->page_data['contact']->value = '';
+            $this->page_data['contact']->name = '';
+        }
+
         $filter = [
             'company_id' => logged('company_id'),
-            'untagged' => true,
-            'type' => 'all',
-            'tags' => [82, 75, 76],
-            'from' => date("Y-m-d", strtotime("-1 year")),
-            'to' => date("Y-m-d")
+            'untagged' => !empty(get('untagged')),
+            'type' => !empty(get('type')) ? get('type') : 'all',
+            'tags' => $tags,
+            'from' => !empty(get('from')) ? get('from') : date("Y-m-d", strtotime("-1 year")),
+            'to' => !empty(get('to')) ? get('to') : date("Y-m-d")
         ];
 
         $this->page_data['transactions'] = $this->get_transactions($filter);
@@ -420,7 +445,8 @@ class Tags extends MY_Controller {
         $this->page_data['groups'] = $groups;
         $this->page_data['ungrouped'] = $this->tags_model->get_ungrouped();
         $this->page_data['untagged'] = $this->input->get('untagged') === 'true';
-        $this->load->view('accounting/tags/transactions', $this->page_data);
+        $this->load->view('v2/pages/accounting/banking/tags/transactions', $this->page_data);
+        // $this->load->view('accounting/tags/transactions', $this->page_data);
     }
 
     public function load_transactions()

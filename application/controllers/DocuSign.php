@@ -1199,12 +1199,16 @@ SQL;
             ]);
         }
 
+        $this->db->where('id', $docfileId);
+        $document = $this->db->get('user_docfile')->row();
+
         // copy template recipients to user_docfile_recipients and
         // template recipient fields to user_docfile_fields
 
         $this->db->where('template_id', $template->id);
         $templateRecipients = $this->db->get('user_docfile_templates_recipients')->result_array();
 
+        $idToDocumentMap = [];
         foreach ($recipients as $recipient) {
             $payload = [
                 'user_id' => $userId,
@@ -1236,24 +1240,34 @@ SQL;
             $recipientId = $this->db->insert_id();
 
             $this->db->where('recipients_id', $matchedRecipient['id']);
+            $this->db->where('user_id', $matchedRecipient['user_id']);
+            $this->db->where('template_id', $matchedRecipient['template_id']);
             $recipientFields = $this->db->get('user_docfile_templates_fields')->result_array();
 
+            $createdRecipientsFields = [];
             foreach ($recipientFields as $field) {
-                $this->db->where('docfile_id', $docfileId);
-                $this->db->where('template_id', $field['docfile_document_id']);
-                $file = $this->db->get('user_docfile_documents')->row(); // the file where the field belongs
+                if (!array_key_exists($field['docfile_document_id'], $idToDocumentMap)) {
+                    $this->db->where('docfile_id', $docfileId);
+                    $this->db->where('template_id', $field['docfile_document_id']);
+                    $idToDocumentMap[$field['docfile_document_id']] = $this->db->get('user_docfile_documents')->row(); // the file where the field belongs
+                }
 
-                $this->db->insert('user_docfile_fields', [
+                array_push($createdRecipientsFields, [
                     'coordinates' => $field['coordinates'],
                     'docfile_id' => $docfileId,
                     'field_name' => $field['field_name'],
                     'doc_page' => $field['doc_page'],
-                    'docfile_document_id' => $file->id,
+                    'docfile_document_id' => $idToDocumentMap[$field['docfile_document_id']]->id,
                     'unique_key ' => uniqid(),
                     'user_id' => $userId,
                     'user_docfile_recipients_id' => $recipientId,
                     'specs' => $field['specs'],
                 ]);
+            }
+
+            $groupedFields = array_chunk($createdRecipientsFields, 50);
+            foreach ($groupedFields as $group) {
+                $this->db->insert_batch('user_docfile_fields', $group);
             }
 
             if (!is_null($workorderId)) {

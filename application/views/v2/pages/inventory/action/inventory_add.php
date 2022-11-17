@@ -14,39 +14,44 @@
         Locations are places, like warehouses, sites, or work vehicles, where inventory is stored. Product items represent products in your inventory stored at a particular location, such as bolts stored in a warehouse. Each product item is associated with a product and a location in nSmarTrac.
     </div>
 </div>
-<div class="col-12">
-    <div class="nsm-page">
-        <div class="nsm-page-content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-6">
-                        <div class="nsm-card primary">
-                            <div class="nsm-card-header">
-                                <div class="right-text"><span class="page-title " style="font-weight: bold;font-size: 16px;"><i class='bx bxs-layer-plus'></i>&nbsp;Add New Item</span></div>
-                            </div>
-                            <hr>
-                            <div class="nsm-card-body">
-                                <form id="inventory_form">
+<form id="inventory_form">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="nsm-card primary">
+                                <div class="nsm-card-header">
+                                    <div class="nsm-card-title">
+                                        <span class="d-block">
+                                            <div class="right-text">
+                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-layer-plus'></i>&nbsp;Add New Item</span>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="nsm-card-body">
                                     <div class="row">
-                                        <div class="col-lg-6 mb-2">
-                                            <label>Item Name</label>
+                                        <div class="col-lg-4 mb-2">
+                                            <strong>Item Name</strong>
                                             <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="title" id="title" required/>
                                         </div>
-                                        <div class="col-lg-6 mb-2">
-                                            <label>Brand</label>
+                                        <div class="col-lg-4 mb-2">
+                                            <strong>Brand</strong>
                                             <input type="text" class="form-control " name="brand" id="brand" />
                                         </div>
-                                        <div class="col-lg-5 mb-2">
-                                            <label>Price</label>
+                                        <div class="col-lg-2 mb-2">
+                                            <strong>Price</strong>
                                             <input type="number" step="any" class="form-control " name="price" id="price" required/>
                                         </div>
-                                        <div class="col-lg-5 mb-2">
-                                            <label>Retail Price</label>
+                                        <div class="col-lg-2 mb-2">
+                                            <strong>Retail Price</strong>
                                             <input type="text" class="form-control " name="retail" id="retail" />
                                         </div>
                                         <div class="col-lg-2 mb-2">
-                                            <label>Cost Per</label>
+                                            <strong>Cost Per</strong>
                                             <select class="form-control" name="cost_per" id="cost_per" required>
                                                 <option value="each" selected>Each</option>
                                                 <option>Weight</option>
@@ -57,11 +62,11 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-2 mb-2">
-                                            <label>Unit</label>
+                                            <strong>Unit</strong>
                                             <input type="text" class="form-control " name="units" id="units" />
                                         </div>
-                                        <div class="col-lg-5 mb-2">
-                                            <label>Vendor</label>
+                                        <div class="col-lg-3 mb-2">
+                                            <strong>Vendor</strong>
                                             <select class="form-control" name="vendor_id" id="vendor_id" required>
                                                 <option value="0">Select</option>
                                                 <?php foreach($vendors as $vendor) : ?>
@@ -69,44 +74,44 @@
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
-                                        <div class="col-lg-5 mb-2">
-                                            <label>Item Type</label>
+                                        <div class="col-lg-2 mb-2">
+                                            <strong>Item Type</strong>
                                             <select class="form-control" name="type" id="type" required>
                                                 <option value="Product">Product</option>
                                                 <option value="Service">Service</option>
                                                 <option value="QSP">QSP</option>
                                             </select>
                                         </div>
-                                        <div class="col-lg-12 mb-2">
-                                            <label>Product URL</label>
+                                        <div class="col-lg-3 mb-2">
+                                            <strong>Product URL</strong>
                                             <input type="text" class="form-control " name="url" id="url" />
                                         </div>
-                                        <div class="col-lg-4 mb-2">
-                                            <label>Costs of Goods</label>
+                                        <div class="col-lg-2 mb-2">
+                                            <strong>Costs of Goods</strong>
                                             <input type="text" class="form-control " name="COGS" id="COGS" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
-                                            <label>Model Number</label>
+                                            <strong>Model Number</strong>
                                             <input type="text" class="form-control " name="model" id="model" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
-                                            <label>Serial Number</label>
+                                            <strong>Serial Number</strong>
                                             <input type="text" class="form-control " name="serial_number" id="serial_number" />
                                         </div>
-                                        <div class="col-lg-5 mb-2">
-                                            <label>Points</label>
+                                        <div class="col-lg-2 mb-2">
+                                            <strong>Points</strong>
                                             <input type="text" class="form-control " name="points" id="points" />
                                         </div>
-                                        <div class="col-lg-3 mb-2">
-                                            <label>Quantity Order</label>
+                                        <div class="col-lg-4 mb-2">
+                                            <strong>Quantity Order</strong>
                                             <input type="text" class="form-control " name="qty_order" id="qty_order" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
-                                            <label>Reorder Point</label>
+                                            <strong>Reorder Point</strong>
                                             <input type="text" class="form-control " name="re_order_points" id="re_order_points" /> 
                                         </div>
-                                        <div class="col-lg-12 mb-2">
-                                            <label>Item Group</label>
+                                        <div class="col-lg-4 mb-2">
+                                            <strong>Item Group</strong>
                                             <select class="form-control" name="item_categories_id" id="item_categories_id">
                                                 <option value="">Select</option>
                                                 <?php foreach($item_categories as $cat) : ?>
@@ -115,21 +120,21 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-12 mb-2">
-                                            <label>Description</label>
+                                            <strong>Description</strong>
                                             <textarea rows="3" id="descriptionItem" name="description" class="form-control"  required></textarea>
                                         </div>
                                         <!-- <div class="col-lg-12 mb-2">
                                             <img src="" id="img_profile">
-                                        </div> -->
+                                            </div> -->
                                         <div class="col-lg-12 mb-2">
-                                            <label>Attach Image</label>
+                                            <strong>Attach Image</strong>
                                             <input type="file" onchange="readURL(this);" name="attached_image" class="form-control" id="attached_image">
                                         </div>
                                         <?php foreach($custom_fields as $field) : ?>
                                         <div class="col-12 col-lg-6 mb-2">
                                             <div class="row g-3">
                                                 <div class="col-6">
-                                                    <label class="content-subtitle fw-bold d-block mb-2"><?=$field->name; ?></label>
+                                                    <strong class="content-subtitle fw-bold d-block mb-2"><?=$field->name; ?></strong>
                                                 </div>
                                                 <div class="col-6 text-end">
                                                     <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-edit-field" data-id="<?=$field->id; ?>" data-name="<?=$field->name; ?>">Edit</a>
@@ -145,16 +150,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3"></div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</form>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
