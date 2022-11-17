@@ -1,6 +1,9 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/inventory/inventory_modals'); ?>
 <style type="text/css">
+    table {
+        width: 100% !important;
+    }
     .dataTables_filter, .dataTables_length{
         display: none;
     }

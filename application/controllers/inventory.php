@@ -108,18 +108,21 @@ class Inventory extends MY_Controller
         if($page == null){
             $this->load->view('v2/pages/inventory/services', $this->page_data);
         }else if ($page == 'add'){
-            $this->load->view('inventory/services_add', $this->page_data);
+            // $this->load->view('inventory/services_add', $this->page_data);
+            $this->load->view('v2/pages/inventory/action/services_add', $this->page_data);
         }
     }
 
     public function edit_services($id)
     {
+        $this->page_data['page']->title = 'Services';
         $comp_id = logged('company_id');        
         $arg     = array('company_id'=>$comp_id, 'id' => $id, 'is_active'=>1);
         $item    = $this->items_model->getCompanyItemById($comp_id, $id);
 
         $this->page_data['item'] = $item;
-        $this->load->view('inventory/services_edit', $this->page_data);
+        // $this->load->view('inventory/services_edit', $this->page_data);
+        $this->load->view('v2/pages/inventory/action/services_edit', $this->page_data);
     }
 
     public function fees($page = null)
@@ -156,7 +159,8 @@ class Inventory extends MY_Controller
         if($page == null){
             $this->load->view('v2/pages/inventory/fees', $this->page_data);
         }else if ($page == 'add'){
-            $this->load->view('inventory/fees_add', $this->page_data);
+            // $this->load->view('inventory/fees_add', $this->page_data);
+            $this->load->view('v2/pages/inventory/action/fees_add', $this->page_data);
         }
     }
 
@@ -883,10 +887,21 @@ class Inventory extends MY_Controller
     }
 
     public function edit_fee( $id  ){
-        $cid = logged('company_id');
-        $item = $this->items_model->getCompanyItemById($cid, $id);
+        // $this->page_data['page']->title = 'Fees';
+        // $this->page_data['page']->parent = 'Tools';
+        // $cid = logged('company_id');
+        // $item = $this->items_model->getCompanyItemById($cid, $id);
+        // $this->page_data['item'] = $item;
+        // $this->load->view('inventory/fees_edit', $this->page_data);
+
+        $this->page_data['page']->title = 'Fees';
+        $this->page_data['page']->parent = 'Tools';
+        $comp_id = logged('company_id');        
+        $arg     = array('company_id'=>$comp_id, 'id' => $id, 'is_active'=>1);
+        $item    = $this->items_model->getCompanyItemById($comp_id, $id);
         $this->page_data['item'] = $item;
-        $this->load->view('inventory/fees_edit', $this->page_data);
+        // $this->load->view('inventory/fees_edit', $this->page_data);
+        $this->load->view('v2/pages/inventory/action/fees_edit', $this->page_data);
     }
 
     public function update_fees(){

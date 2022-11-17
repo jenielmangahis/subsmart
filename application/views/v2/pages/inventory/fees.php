@@ -1,6 +1,25 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/inventory/inventory_modals'); ?>
-
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+<style type="text/css">
+    table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('inventory/fees/add') ?>'">
         <i class='bx bx-plus'></i>
@@ -25,7 +44,7 @@
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Fees">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Fees">
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -47,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <!-- <table class="nsm-table">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
@@ -113,7 +132,54 @@
                         endif;
                         ?>
                     </tbody>
-                </table>
+                </table> -->
+                 <div class="row">
+                    <table class="nsm-table" id="FEES_TABLE">
+                        <thead>
+                            <tr>
+                                <td class="table-icon text-center">
+                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                </td>
+                                <td data-name="Item">Item</td>
+                                <td data-name="Cost">Cost</td>
+                                <td data-name="Billing Type">Billing Type</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($items as $item) : ?>
+                                    <tr>
+                                        <td>
+                                            <div class="table-row-icon table-checkbox">
+                                                <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>">
+                                            </div>
+                                        </td>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
+                                            <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
+                                        </td>
+                                        <td><?php echo $item[4]; ?></td>
+                                        <td><?php echo $item[5]; ?></td>
+                                        <td>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?= base_url('inventory/fees/edit/'.$item[3]) ?>">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $item[3]; ?>">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -123,11 +189,23 @@
     $(document).ready(function() {
         let selectedIds = [];
 
-        $(".nsm-table").nsmPagination();
+var FEES_TABLE = $("#FEES_TABLE").DataTable({
+        "ordering": false,
+        language: {
+            processing: '<span>Fetching data...</span>'
+        },
+});
 
-        $("#search_field").on("input", debounce(function() {
-            tableSearch($(this));
-        }, 1000));
+$("#search_field_custom").keyup(function() {
+        FEES_TABLE.search($(this).val()).draw()
+    });
+FEES_TABLE_SETTINGS = FEES_TABLE.settings();
+
+        // $(".nsm-table").nsmPagination();
+
+        // $("#search_field").on("input", debounce(function() {
+        //     tableSearch($(this));
+        // }, 1000));
 
         $(document).on("change", ".table-select", function() {
             let id = $(this).attr("data-id");
