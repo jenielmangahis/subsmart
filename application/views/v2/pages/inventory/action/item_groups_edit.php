@@ -8,7 +8,7 @@
 <div class="col-12">
     <div class="nsm-callout primary">
         <button><i class='bx bx-x'></i></button>
-        Create New Item Category.
+        Update Item Category.
     </div>
 </div>
 <form id="item_category_form">
@@ -23,7 +23,7 @@
                                     <div class="nsm-card-title">
                                         <span class="d-block">
                                             <div class="right-text">
-                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bx-fw bx-category'></i>&nbsp;Add New Item Category</span>
+                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bx-fw bx-category'></i>&nbsp;Edit Item Category</span>
                                             </div>
                                         </span>
                                     </div>
@@ -31,13 +31,14 @@
                                 <hr>
                                 <div class="nsm-card-body">
                                     <div class="row">
+                                        <input type="hidden" name="icid" value="<?php echo $itemCategory->item_categories_id; ?>">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Name</strong>
-                                            <input type="text" class="form-control" name="category_name" id="category_name" required/>
+                                            <input value="<?php echo $itemCategory->name; ?>" type="text" class="form-control" name="category_name" id="category_name" required/>
                                         </div>
                                         <div class="col-lg-12 mb-2">
                                             <strong>Description</strong>
-                                            <textarea class="form-control" name="category_description" id="category_description"></textarea>
+                                            <textarea class="form-control" name="category_description" id="category_description"><?php echo $itemCategory->description; ?></textarea>
                                         </div>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
@@ -66,7 +67,7 @@ $("#item_category_form").submit(function (e) {
     //var url = form.attr('action');
     $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>/inventory/_create_item_category",
+        url: "<?= base_url() ?>/inventory/_update_item_category",
         data: form.serialize(), // serializes the form's elements.
         success: function (data) {
             // console.log(data);

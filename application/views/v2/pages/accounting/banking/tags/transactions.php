@@ -132,9 +132,9 @@
                                     <div class="col">
                                         <label for="tag-group-<?=$group['id']?>"><?=$group['name']?></label>
                                         <select id="tag-group-<?=$group['id']?>" class="nsm-field form-select" multiple="multiple">
-                                            <option value="all">All <?=$group['name']?> tags</option>
+                                            <option value="all" <?=isset($selected[$group['id']]) && in_array('all', $selected[$group['id']]) ? 'selected' : ''?>>All <?=$group['name']?> tags</option>
                                             <?php foreach($group['tags'] as $tag) : ?>
-                                            <option value="<?=$tag->id?>"><?=$tag->name?></option>
+                                            <option value="<?=$tag->id?>" <?=isset($selected[$group['id']]) && in_array($tag->id, $selected[$group['id']]) ? 'selected' : ''?>><?=$tag->name?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -145,9 +145,9 @@
                                     <div class="col">
                                         <label for="filter-ungrouped">Ungrouped</label>
                                         <select class="nsm-field form-select" name="filter_ungrouped" id="filter-ungrouped" multiple="multiple">
-                                            <option value="all">All ungrouped tags</option>
+                                            <option value="all" <?=isset($selected['ungrouped']) && in_array('all', $selected['ungrouped']) ? 'selected' : ''?>>All ungrouped tags</option>
                                             <?php foreach($ungrouped as $uTag) : ?>
-                                                <option value="<?=$uTag->id?>"><?=$uTag->name?></option>
+                                                <option value="<?=$uTag->id?>" <?=isset($selected['ungrouped']) && in_array($uTag->id, $selected['ungrouped']) ? 'selected' : ''?>><?=$uTag->name?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -194,7 +194,7 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
                                 </div>
                             </td>
                             <td><?=$transaction['date']?></td>
@@ -204,14 +204,30 @@
                             <td><?=$transaction['type']?></td>
                             <td>
                                 <?php 
-                                    $amount = '$'.$transaction['amount'];
+                                    $amount = '$'.number_format(floatval($transaction['amount']), 2);
                                     echo str_replace('$-', '-$', $amount);
                                 ?>
                             </td>
                             <td>
-                                <?php foreach($transaction['tags'] as $tag) : ?>
-                                <span class="nsm-badge"><?=$tag->name?></span>
-                                <?php endforeach; ?>
+                                <?php if(count($transaction['tags']) > 0) : ?>
+                                <span class="nsm-badge"><?=$transaction['tags'][0]->name?></span>
+                                <?php if(count($transaction['tags']) > 1) : ?>
+                                <div class="dropdown d-inline-block">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        + <?=count($transaction['tags']) - 1?>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end p-3">
+                                        <?php foreach($transaction['tags'] as $index => $tag) : ?>
+                                        <?php if($index > 0) : ?>
+                                        <li>
+                                            <span class="nsm-badge"><?=$tag->name?></span>
+                                        </li>
+                                        <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                                <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

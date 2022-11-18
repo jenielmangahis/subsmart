@@ -173,13 +173,13 @@ class Tags_model extends MY_Model
             $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
             $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('accounting_bank_deposit.id', $transactionsWithTags);
         } else {
             $this->db->where_in('accounting_bank_deposit.id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('accounting_bank_deposit.id', $taggedIds);
                 $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -224,13 +224,13 @@ class Tags_model extends MY_Model
             $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
             $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
         } else {
             $this->db->where_in('accounting_expense.id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('accounting_expense.id', $taggedIds);
                 $this->db->where('accounting_expense.company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -275,13 +275,13 @@ class Tags_model extends MY_Model
             $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
             $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
         } else {
             $this->db->where_in('accounting_expense.id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('accounting_expense.id', $taggedIds);
                 $this->db->where('accounting_expense.company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -325,13 +325,13 @@ class Tags_model extends MY_Model
             $this->db->where('payee_type', $filters['contact_type']);
             $this->db->where('payee_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
         } else {
             $this->db->where_in('id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -373,13 +373,13 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
         } else {
             $this->db->where_in('id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -420,13 +420,13 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
         } else {
             $this->db->where_in('id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -467,13 +467,13 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
         } else {
             $this->db->where_in('id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -515,13 +515,13 @@ class Tags_model extends MY_Model
             $this->db->where('payee_type', $filters['contact_type']);
             $this->db->where('payee_id', $filters['contact_id']);
         }
-        if(intval($filters['untagged']) === 1) {
+        if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
         } else {
             $this->db->where_in('id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
-            if(intval($filters['untagged']) === 1) {
+            if($filters['untagged']) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {

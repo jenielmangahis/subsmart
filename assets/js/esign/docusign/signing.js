@@ -438,7 +438,7 @@ function Signing(hash) {
         value = customer[specs.name] || "";
       }
 
-      if (specs.value) {
+      if (specs.value && !value) {
         value = specs.value;
       }
 
@@ -656,7 +656,10 @@ function Signing(hash) {
         }
 
         try {
-          $formula.val(eval(formula));
+          let value = eval(formula);
+          value = Math.round((value + Number.EPSILON) * 100) / 100;
+
+          $formula.val(value);
           $formula.attr("value", $formula.val());
         } catch (error) {
           $formula.val("Invalid");

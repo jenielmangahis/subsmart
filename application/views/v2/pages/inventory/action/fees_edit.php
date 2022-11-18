@@ -23,7 +23,7 @@
                                     <div class="nsm-card-title">
                                         <span class="d-block">
                                             <div class="right-text">
-                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-wrench'></i>&nbsp;Add New Inventory Fee</span>
+                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bx-fw bx-dollar-circle'></i>&nbsp;Edit Inventory Fee</span>
                                             </div>
                                         </span>
                                     </div>
@@ -56,7 +56,7 @@
                                             <div class="float-end">
                                             	<input type="hidden" name="type" value="fees"/>
                                                 <input type="hidden" name="fid" value="<?php echo $item->id; ?>">
-                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory/services')">Cancel</button>
+                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory/fees')">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
