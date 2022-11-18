@@ -14,6 +14,8 @@ class Inventory extends MY_Controller
         $this->page_data['page']->title = 'Inventory Management';
         $this->page_data['page']->menu = 'items';
         $this->load->model('Items_model', 'items_model');
+        $this->load->model('Vendor_model', 'vendor_model');
+        $this->load->model('ItemCategory_model', 'itemcategory_model');
         $this->load->library('form_validation');
         $this->load->helper('file');
         $this->load->model('General_model', 'general');
@@ -181,7 +183,8 @@ class Inventory extends MY_Controller
         if($page == null){
             $this->load->view('v2/pages/inventory/item_groups', $this->page_data);
         }else if ($page == 'add'){
-            $this->load->view('inventory/item_groups_add', $this->page_data);
+            // $this->load->view('inventory/item_groups_add', $this->page_data);
+            $this->load->view('v2/pages/inventory/action/item_groups_add', $this->page_data);
         }
     }
 
@@ -820,6 +823,29 @@ class Inventory extends MY_Controller
         echo json_encode(true);
     }
 
+    function deleteMultipleVendor() {
+        postAllowed();
+        $ids = explode(",",$this->input->post('ids'));
+        
+        foreach($ids as $id) {
+            $this->vendor_model->deleteByVendorId($id);
+        }
+
+        echo json_encode(true);
+    }
+
+    function deleteMultipleItemGroup() {
+        postAllowed();
+        $ids = explode(",",$this->input->post('ids'));
+        
+        foreach($ids as $id) {
+            $this->itemcategory_model->deleteByItemCategoryId($id);
+        }
+
+        echo json_encode(true);
+    }
+
+
     function addNewItemLocation() {
         postAllowed();
 
@@ -926,12 +952,15 @@ class Inventory extends MY_Controller
             $this->session->set_flashdata('alert_class', 'alert-danger');            
         }
 
-        redirect('inventory/fees');
+        redirect('v2/pages/inventory/fees');
     }
 
     public function add_vendor()
     {
-        $this->load->view('inventory/vendor_add', $this->page_data);
+        $this->page_data['page']->title = 'Vendors';
+        $this->page_data['page']->parent = 'Tools';
+        // $this->load->view('inventory/vendor_add', $this->page_data);
+        $this->load->view('v2/pages/inventory/action/vendors_add', $this->page_data);
     }
 
     public function ajax_create_vendor()
@@ -967,36 +996,41 @@ class Inventory extends MY_Controller
     public function edit_vendor( $id )
     {
         $this->load->model('Vendor_model');
+        $this->page_data['page']->title = 'Vendors';
+        $this->page_data['page']->parent = 'Tools';
 
         $cid  = logged('company_id');
         $vendor = $this->Vendor_model->getByIdAndCompanyId($id, $cid);
         if( $vendor ){
             $this->page_data['vendor'] = $vendor;
-            $this->load->view('inventory/vendor_edit', $this->page_data);
+            // $this->load->view('inventory/vendor_edit', $this->page_data);
+            $this->load->view('v2/pages/inventory/action/vendors_edit', $this->page_data);
         }else{
             
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');   
 
-            redirect('inventory/vendors');
+            redirect('v2/pages/inventory/vendors');
         }
     }
 
     public function edit_item_category( $id )
     {
         $this->load->model('ItemCategory_model');
+        $this->page_data['page']->title = 'Item Categories';
+        $this->page_data['page']->parent = 'Tools';
 
         $cid  = logged('company_id');
         $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($id, $cid);
         if( $itemCategory ){
             $this->page_data['itemCategory'] = $itemCategory;
-            $this->load->view('inventory/item_groups_edit', $this->page_data);
+            $this->load->view('v2/pages/inventory/action/item_groups_edit', $this->page_data);
         }else{
             
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');   
 
-            redirect('inventory/item_groups');
+            redirect('v2/pages/inventory/item_groups');
         }
     }
 

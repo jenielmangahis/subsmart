@@ -19,24 +19,26 @@ $('#tags-filter-dropdown select').on('change', function() {
     var el = $(this);
     var value = el.select2('val');
 
-    var flag = false;
-    for(i = 0; i < value.length; i++) {
-        if(value[i].includes(`all`)) {
-            flag = true;
+    if(value !== null) {
+        var flag = false;
+        for(i = 0; i < value.length; i++) {
+            if(value[i].includes(`all`)) {
+                flag = true;
+            }
         }
-    }
-    if(flag === true && el.children('option:not(:checked)').length > 0) {
-        if(el.attr('id') === 'filter-ungrouped' && value.includes('all') || value.includes(`all`)) {
-            var value = [];
-            var i = 0;
-            el.children('option').each(function() {
-                value[i] = $(this).attr('value');
-
-                i++;
-            });
+        if(flag === true && el.children('option:not(:checked)').length > 0) {
+            if(el.attr('id') === 'filter-ungrouped' && value.includes('all') || value.includes(`all`)) {
+                var value = [];
+                var i = 0;
+                el.children('option').each(function() {
+                    value[i] = $(this).attr('value');
+    
+                    i++;
+                });
+            }
+    
+            el.val(value).change();
         }
-
-        el.val(value).change();
     }
 });
 
@@ -358,6 +360,61 @@ $('#reset-filters-button').on('click', function() {
     $('#filter-contact').html('<option value="all-contacts" selected>All contacts</option>').trigger('change');
 
     $('#apply-filters-button').trigger('click');
+});
+
+$('#apply-tags-button').on('click', function() {
+    var type = $('#filter-type').val();
+    var moneyIn = $('#filter-money-in').val();
+    var moneyOut = $('#filter-money-out').val();
+    var date = $('#filter-date').val();
+    var from = $('#filter-from').val();
+    var to = $('#filter-to').val();
+    var contact = $('#filter-contact').val();
+    var untagged = $('#show_untagged_transactions').prop('checked');
+
+    var url = `${base_url}accounting/tags/transactions?`;
+
+    url += type !== 'all-transactions' ? `type=${type}&` : '';
+    url += type === 'money-in' && moneyIn !== 'all' ? `money-in=${moneyIn}&` : '';
+    url += type === 'money-out' && moneyOut !== 'all' ? `money-out=${moneyOut}&` : '';
+    url += date !== 'last-365-days' ? `date=${date}&` : '';
+    url += date !== 'last-365-days' && from !== '' ? `from=${from}&` : '';
+    url += date !== 'last-365-days' && to !== '' ? `to=${to}&` : '';
+    url += contact !== 'all-contacts' ? `contact=${contact}&` : '';
+    url += untagged ? `untagged=${untagged}&` : '';
+
+    $('#tags-filter-dropdown select:not(#filter-ungrouped)').each(function() {
+        var id = $(this).attr('id');
+        id = id.replace('tag-group-', '');
+        
+        url += $(this).val() !== null && $(this).val().length > 0 ? `${id}=${$(this).val().join(',')}&` : '';
+    });
+
+    url +=  $('#tags-filter-dropdown #filter-ungrouped').val() !== null && $('#tags-filter-dropdown #filter-ungrouped').val().length > 0 ? `ungrouped=${$('#tags-filter-dropdown #filter-ungrouped').val().join(',')}` : '';
+
+    if(url.slice(-1) === '#') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '&') {
+        url = url.slice(0, -1);
+    }
+
+    if(url.slice(-1) === '?') {
+        url = url.slice(0, -1);
+    }
+
+    location.href = url;
+});
+
+$('#reset-tags-button').on('click', function() {
+    $('#tags-filter-dropdown select').each(function() {
+        $(this).val([]).trigger('change');
+    });
+
+    $('#tags-filter-dropdown #show_untagged_transactions').prop('checked', false);
+
+    $('#apply-tags-button').trigger('click');
 });
 
 $(function() {

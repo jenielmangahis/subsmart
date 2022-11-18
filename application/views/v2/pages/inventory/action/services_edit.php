@@ -23,7 +23,7 @@
                                     <div class="nsm-card-title">
                                         <span class="d-block">
                                             <div class="right-text">
-                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-wrench'></i>&nbsp;Edit <?= $item->title; ?> Service</span>
+                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-wrench'></i>&nbsp;Edit Service</span>
                                             </div>
                                         </span>
                                     </div>

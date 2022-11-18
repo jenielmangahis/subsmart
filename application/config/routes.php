@@ -87,6 +87,7 @@ $route['customer/_get_messages'] = 'Customer/ajax_get_messages';
 $route['customer/_send_message'] = 'Customer/ajax_send_message';
 $route['customer/_send_login_details'] = 'Customer/ajax_send_login_details';
 $route['customer/_load_customer_address'] = 'Customer/ajax_load_customer_address';
+$route['customer/_update_address_mobile'] = 'Customer/ajax_update_address_mobile';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';

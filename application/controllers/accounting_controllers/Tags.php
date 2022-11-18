@@ -394,8 +394,50 @@ class Tags extends MY_Controller {
             // "assets/js/accounting/banking/tags/tags-transactions.js"
         ));
 
+
+        $filter = [
+            'company_id' => logged('company_id'),
+            'untagged' => !empty(get('untagged')),
+            'type' => !empty(get('type')) ? get('type') : 'all',
+            // 'tags' => [],
+            'from' => !empty(get('from')) ? date("Y-m-d", strtotime(get('from'))) : null,
+            'to' => !empty(get('to')) ? date("Y-m-d", strtotime(get('to'))) : null
+        ];
+
         $groups = [];
         $tagGroups = $this->tags_model->getGroup();
+
+        $selectedTags = [];
+        $this->page_data['selected'] = [];
+        foreach($tagGroups as $group) {
+            $selected = get($group['id']);
+
+            if($selected) {
+                $selected = explode(',', $selected);
+
+                $this->page_data['selected'][$group['id']] = $selected;
+
+                if($selected[0] === 'all') {
+                    unset($selected[0]);
+                    foreach($selected as $tagId) {
+                        $selectedTags[] = $tagId;
+                    }
+                }
+            }
+        }
+
+        if(!empty(get('ungrouped'))) {
+            $selected = explode(',', get('ungrouped'));
+
+            $this->page_data['selected']['ungrouped'] = $selected;
+
+            if($selected[0] === 'all') {
+                unset($selected[0]);
+                foreach($selected as $tagId) {
+                    $selectedTags[] = $tagId;
+                }
+            }
+        }
 
         foreach($tagGroups as $group) {
             $groupTags = $this->tags_model->get_group_tags($group['id']);
@@ -407,8 +449,16 @@ class Tags extends MY_Controller {
             }
         }
 
-        $tags = $this->tags_model->getCompanyTags();
-        $tags = array_column($tags, 'id');
+        $this->page_data['untagged'] = !empty(get('untagged'));
+
+        if(empty(get('ungrouped')) && count($selectedTags)) {
+            $tags = $this->tags_model->getCompanyTags();
+            $tags = array_column($tags, 'id');
+        } else {
+            $tags = $selectedTags;
+        }
+
+        $filter['tags'] = $tags;
 
         if(!empty(get('type'))) {
             $this->page_data['type'] = get('type');
@@ -427,24 +477,24 @@ class Tags extends MY_Controller {
         }
 
         if(!empty(get('contact'))) {
-            $this->page_data['contact']->value = '';
+            $cont = explode('-', get('contact'));
+            $this->page_data['contact']->value = get('contact');
             $this->page_data['contact']->name = '';
+
+            $filter['contact_type'] = $cont[0];
+            $filter['contact_id'] = $cont[1];
         }
 
-        $filter = [
-            'company_id' => logged('company_id'),
-            'untagged' => !empty(get('untagged')),
-            'type' => !empty(get('type')) ? get('type') : 'all',
-            'tags' => $tags,
-            'from' => !empty(get('from')) ? get('from') : date("Y-m-d", strtotime("-1 year")),
-            'to' => !empty(get('to')) ? get('to') : date("Y-m-d")
-        ];
+        $transactions = $this->get_transactions($filter);
 
-        $this->page_data['transactions'] = $this->get_transactions($filter);
+        usort($transactions, function($a, $b) {
+            return strtotime($a['date']) < strtotime($b['date']);
+        });
+
+        $this->page_data['transactions'] = $transactions;
         $this->page_data['page']->title = 'Transactions by tag';
         $this->page_data['groups'] = $groups;
         $this->page_data['ungrouped'] = $this->tags_model->get_ungrouped();
-        $this->page_data['untagged'] = $this->input->get('untagged') === 'true';
         $this->load->view('v2/pages/accounting/banking/tags/transactions', $this->page_data);
         // $this->load->view('accounting/tags/transactions', $this->page_data);
     }
