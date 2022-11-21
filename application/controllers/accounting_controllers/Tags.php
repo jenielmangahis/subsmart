@@ -390,6 +390,7 @@ class Tags extends MY_Controller {
     public function transactions()
     {
         add_footer_js(array(
+            "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/banking/tags/transactions.js"
             // "assets/js/accounting/banking/tags/tags-transactions.js"
         ));
@@ -399,7 +400,6 @@ class Tags extends MY_Controller {
             'company_id' => logged('company_id'),
             'untagged' => !empty(get('untagged')),
             'type' => !empty(get('type')) ? get('type') : 'all',
-            // 'tags' => [],
             'from' => !empty(get('from')) ? date("Y-m-d", strtotime(get('from'))) : null,
             'to' => !empty(get('to')) ? date("Y-m-d", strtotime(get('to'))) : null
         ];
@@ -415,10 +415,13 @@ class Tags extends MY_Controller {
             if($selected) {
                 $selected = explode(',', $selected);
 
-                $this->page_data['selected'][$group['id']] = $selected;
+                if(!empty($selected)) {
+                    $this->page_data['selected'][$group['id']] = $selected;
 
-                if($selected[0] === 'all') {
-                    unset($selected[0]);
+                    if($selected[0] === 'all') {
+                        unset($selected[0]);
+                    }
+
                     foreach($selected as $tagId) {
                         $selectedTags[] = $tagId;
                     }
@@ -433,6 +436,7 @@ class Tags extends MY_Controller {
 
             if($selected[0] === 'all') {
                 unset($selected[0]);
+
                 foreach($selected as $tagId) {
                     $selectedTags[] = $tagId;
                 }
@@ -464,8 +468,10 @@ class Tags extends MY_Controller {
             $this->page_data['type'] = get('type');
 
             if(get('type') === 'money-in') {
+                $filter['money-in'] = get('money-in');
                 $this->page_data['moneyIn'] = get('money-in');
             } else {
+                $filter['money-out'] = get('money-out');
                 $this->page_data['moneyOut'] = get('money-out');
             }
         }
@@ -477,9 +483,22 @@ class Tags extends MY_Controller {
         }
 
         if(!empty(get('contact'))) {
+            $this->page_data['contact'] = new stdClass();
             $cont = explode('-', get('contact'));
+
+            switch($cont[0]) {
+                case 'customer' :
+                    $customer = $this->accounting_customers_model->get_by_id($cont[1]);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+                break;
+                case 'vendor' :
+                    $vendor = $this->vendors_model->get_vendor_by_id($cont[1]);
+                    $name = $vendor->display_name;
+                break;
+            }
+
             $this->page_data['contact']->value = get('contact');
-            $this->page_data['contact']->name = '';
+            $this->page_data['contact']->name = $name;
 
             $filter['contact_type'] = $cont[0];
             $filter['contact_id'] = $cont[1];
@@ -597,19 +616,25 @@ class Tags extends MY_Controller {
                 $data = $this->get_checks($data, $filter);
                 $data = $this->get_cc_expenses($data, $filter);
                 $data = $this->get_purchase_orders($data, $filter);
+                $data = $this->get_invoices($data, $filter);
+                $data = $this->get_sales_receipts($data, $filter);
+                $data = $this->get_credit_memos($data, $filter);
             break;
             case 'money-in' :
                 switch($filter['money-in']) {
                     case 'all' :
+                        $data = $this->get_invoices($data, $filter);
+                        $data = $this->get_sales_receipts($data, $filter);
                         $data = $this->get_cc_credits($data, $filter);
                         $data = $this->get_vendor_credits($data, $filter);
+                        $data = $this->get_credit_memos($data, $filter);
                         $data = $this->get_deposits($data, $filter);
                     break;
                     case 'invoice' :
-
+                        $data = $this->get_invoices($data, $filter);
                     break;
                     case 'sales-receipt' :
-
+                        $data = $this->get_sales_receipts($data, $filter);
                     break;
                     case 'estimate' :
 
@@ -621,7 +646,7 @@ class Tags extends MY_Controller {
                         $data = $this->get_vendor_credits($data, $filter);
                     break;
                     case 'credit-memo' :
-
+                        $data = $this->get_credit_memos($data, $filter);
                     break;
                     case 'activity-charge' :
 
@@ -1028,6 +1053,102 @@ class Tags extends MY_Controller {
                 'amount' => $purchaseOrder->total_amount,
                 'tags' => $tags
             ];
+        }
+
+        return $data;
+    }
+
+    private function get_invoices($data = [], $filter)
+    {
+        $invoices = $this->tags_model->get_invoices($filter);
+
+        foreach($invoices as $invoice) {
+            $tags = $this->tags_model->get_transaction_tags('Invoice', $invoice->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+            }
+
+            $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+            $name = $customer->first_name . ' ' . $customer->last_name;
+
+            $data[] = [
+                'id' => $invoice->id,
+                'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                'from_to' => $name,
+                'category' => $this->category_col('Invoice', $invoice->id),
+                'memo' => $invoice->message_on_invoice,
+                'type' => 'Invoice',
+                'amount' => $invoice->grand_total,
+                'tags' => $tags
+            ];
+        }
+
+        return $data;
+    }
+
+    private function get_sales_receipts($data = [], $filter)
+    {
+        $salesReceipts = $this->tags_model->get_sales_receipts($filter);
+
+        foreach($salesReceipts as $salesReceipt) {
+            $tags = $this->tags_model->get_transaction_tags('Sales Receipt', $salesReceipt->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+
+                $customer = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+                $name = $customer->first_name . ' ' . $customer->last_name;
+
+                $data[] = [
+                    'id' => $salesReceipt->id,
+                    'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                    'from_to' => $name,
+                    'category' => $this->category_col('Sales Receipt', $salesReceipt->id),
+                    'memo' => $salesReceipt->message_sales_receipt,
+                    'type' => 'Sales Receipt',
+                    'amount' => $salesReceipt->total_amount,
+                    'tags' => $tags
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    private function get_credit_memos($data = [], $filter)
+    {
+        $creditMemos = $this->tags_model->get_credit_memos($filter);
+
+        foreach($creditMemos as $creditMemo) {
+            $tags = $this->tags_model->get_transaction_tags('Credit Memo', $creditMemo->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+
+                $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+                $name = $customer->first_name . ' ' . $customer->last_name;
+
+                $data[] = [
+                    'id' => $creditMemo->id,
+                    'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'from_to' => $name,
+                    'category' => $this->category_col('Credit Memo', $creditMemo->id),
+                    'memo' => $creditMemo->message_credit_memo,
+                    'type' => 'Credit Memo',
+                    'amount' => $creditMemo->total_amount,
+                    'tags' => $tags
+                ];
+            }
         }
 
         return $data;

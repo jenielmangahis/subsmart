@@ -254,89 +254,110 @@ $(document).on("change", ".table-select", function() {
             toggleBatchDelete(_this.prop("checked"));
         });
 
-        $("#delete_selected").on("click", function() {
-            let params = {
-                ids: $("#selected_ids").val(),
-            }
+$("#delete_selected").on("click", function() {
+    let params = {
+        ids: $("#selected_ids").val(),
+    }
 
-            Swal.fire({
-                title: 'Delete Selected Items',
-                text: "Are you sure you want to delete the selected items?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('inventory/deleteMultipleVendor') ?>",
-                        data: params,
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Delete Success',
-                                text: "Selected data has been deleted successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });
-                        },
-                    });
-                }
-            });
-        });
-
-
-    $(document).on("click", ".delete-item", function () {
-        let id = $(this).attr('data-id');
-
+    Swal.fire({
+        title: 'Delete Selected Items',
+        text: "Are you sure you want to delete the selected items?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
         Swal.fire({
-            title: 'Delete Vendor',
-            text: "Are you sure you want to delete this vendor?",
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
+            title: 'Delete Success',
+            text: "Selected data has been deleted successfully!",
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
         }).then((result) => {
             if (result.value) {
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url('/inventory/vendor/delete') ?>",
-                    data: {
-                        id: id
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.is_success == 1) {
-                            Swal.fire({
-                                title: 'Delete Success',
-                                text: "Data has been deleted successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Delete Failed',
-                                text: "Please try again later.",
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
-                        }
-                    }
-                });
+                location.reload();
             }
         });
+        if (result.value) {
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('inventory/deleteMultipleVendor') ?>",
+                data: params,
+                success: function(response) {
+                    // Swal.fire({
+                    //     title: 'Delete Success',
+                    //     text: "Selected data has been deleted successfully!",
+                    //     icon: 'success',
+                    //     showCancelButton: false,
+                    //     confirmButtonText: 'Okay'
+                    // }).then((result) => {
+                    //     if (result.value) {
+                    //         location.reload();
+                    //     }
+                    // });
+                },
+            });
+        }
     });
+});
+
+$(document).on("click", ".delete-item", function() {
+    let id = $(this).attr('data-id');
+
+    Swal.fire({
+        title: 'Delete Vendor',
+        text: "Are you sure you want to delete this vendor?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        Swal.fire({
+            title: 'Delete Success',
+            text: "Data has been deleted successfully!",
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
+        }).then((result) => {
+            if (result.value) {
+                location.reload();
+            }
+        });
+        if (result.value) {
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('/inventory/vendor/delete') ?>",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                success: function(data) {
+                    // if (data.is_success == 1) {
+                    //     Swal.fire({
+                    //         title: 'Delete Success',
+                    //         text: "Data has been deleted successfully!",
+                    //         icon: 'success',
+                    //         showCancelButton: false,
+                    //         confirmButtonText: 'Okay'
+                    //     }).then((result) => {
+                    //         if (result.value) {
+                    //             location.reload();
+                    //         }
+                    //     });
+                    // } else {
+                    //     Swal.fire({
+                    //         title: 'Delete Failed',
+                    //         text: "Please try again later.",
+                    //         icon: 'error',
+                    //         showCancelButton: false,
+                    //         confirmButtonText: 'Okay'
+                    //     });
+                    // }
+                }
+            });
+        }
+    });
+});
 function toggleBatchDelete(enable=True){
         enable ? $("#delete_selected").removeClass("disabled") : $("#delete_selected").addClass("disabled");
     }

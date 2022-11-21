@@ -161,7 +161,7 @@ class Tags_model extends MY_Model
         $this->db->select('accounting_bank_deposit.*');
         $this->db->from('accounting_bank_deposit');
         $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
-        $this->db->where('accounting_bank_deposit.status', 1);
+        $this->db->where('accounting_bank_deposit.status !=', 0);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('accounting_bank_deposit.date >=', $filters['from']);
         }
@@ -169,19 +169,42 @@ class Tags_model extends MY_Model
             $this->db->where('accounting_bank_deposit.date <=', $filters['to']);
         }
         if(!is_null($filters['contact_id'])) {
-            $this->db->where_in('accounting_bank_deposit.id', $ids);
+            if(count($ids) > 0) {
+                $this->db->where_in('accounting_bank_deposit.id', $ids);
+            }
             $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
             $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('accounting_bank_deposit.id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('accounting_bank_deposit.id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('accounting_bank_deposit.id', $taggedIds);
+        //         $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('accounting_bank_deposit.date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('accounting_bank_deposit.date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id'])) {
+        //             $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
+        //             $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('accounting_bank_deposit.id', $taggedIds);
+        //     }
+        // }
         if($filters['untagged']) {
             $this->db->where_not_in('accounting_bank_deposit.id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('accounting_bank_deposit.id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('accounting_bank_deposit.id', $taggedIds);
                 $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
+                $this->db->where('accounting_bank_deposit.status !=', 0);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('accounting_bank_deposit.date >=', $filters['from']);
                 }
@@ -192,6 +215,10 @@ class Tags_model extends MY_Model
                     $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
                     $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('accounting_bank_deposit.id', $transactionsWithTags);
             } else {
                 $this->db->where_in('accounting_bank_deposit.id', $taggedIds);
             }
@@ -212,7 +239,7 @@ class Tags_model extends MY_Model
         $this->db->select('accounting_expense.*');
         $this->db->from('accounting_expense');
         $this->db->where('accounting_expense.company_id', $filters['company_id']);
-        $this->db->where('accounting_expense.status', 1);
+        $this->db->where('accounting_expense.status !=', 0);
         $this->db->where('accounting_chart_of_accounts.account_id !=', $filters['not_acc_type']);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('accounting_expense.payment_date >=', $filters['from']);
@@ -226,13 +253,12 @@ class Tags_model extends MY_Model
         }
         if($filters['untagged']) {
             $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('accounting_expense.id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('accounting_expense.id', $taggedIds);
                 $this->db->where('accounting_expense.company_id', $filters['company_id']);
+                $this->db->where('accounting_expense.status !=', 0);
+                $this->db->where('accounting_chart_of_accounts.account_id !=', $filters['not_acc_type']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('accounting_expense.payment_date >=', $filters['from']);
                 }
@@ -243,10 +269,39 @@ class Tags_model extends MY_Model
                     $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
                     $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('accounting_expense.id', $transactionsWithTags);
             } else {
                 $this->db->where_in('accounting_expense.id', $taggedIds);
             }
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('accounting_expense.id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('accounting_expense.id', $taggedIds);
+        //         $this->db->where('accounting_expense.company_id', $filters['company_id']);
+        //         $this->db->where('accounting_expense.status', 1);
+        //         $this->db->where('accounting_chart_of_accounts.account_id !=', $filters['not_acc_type']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('accounting_expense.payment_date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('accounting_expense.payment_date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id'])) {
+        //             $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
+        //             $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('accounting_expense.id', $taggedIds);
+        //     }
+        // }
         $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_expense.payment_account_id');
         $this->db->group_by('accounting_expense.id');
         $query = $this->db->get();
@@ -263,7 +318,7 @@ class Tags_model extends MY_Model
         $this->db->select('accounting_expense.*');
         $this->db->from('accounting_expense');
         $this->db->where('accounting_expense.company_id', $filters['company_id']);
-        $this->db->where('accounting_expense.status', 1);
+        $this->db->where('accounting_expense.status !=', 0);
         $this->db->where('accounting_chart_of_accounts.account_id', $filters['acc_type']);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('accounting_expense.payment_date >=', $filters['from']);
@@ -275,15 +330,39 @@ class Tags_model extends MY_Model
             $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
             $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('accounting_expense.id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('accounting_expense.id', $taggedIds);
+        //         $this->db->where('accounting_expense.company_id', $filters['company_id']);
+        //         $this->db->where('accounting_expense.status', 1);
+        //         $this->db->where('accounting_chart_of_accounts.account_id', $filters['acc_type']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('accounting_expense.payment_date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('accounting_expense.payment_date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id'])) {
+        //             $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
+        //             $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('accounting_expense.id', $taggedIds);
+        //     }
+        // }
         if($filters['untagged']) {
             $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('accounting_expense.id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('accounting_expense.id', $taggedIds);
                 $this->db->where('accounting_expense.company_id', $filters['company_id']);
+                $this->db->where('accounting_expense.status !=', 0);
+                $this->db->where('accounting_chart_of_accounts.account_id', $filters['acc_type']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('accounting_expense.payment_date >=', $filters['from']);
                 }
@@ -294,6 +373,10 @@ class Tags_model extends MY_Model
                     $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
                     $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('accounting_expense.id', $transactionsWithTags);
             } else {
                 $this->db->where_in('accounting_expense.id', $taggedIds);
             }
@@ -314,7 +397,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_check');
         $this->db->where('company_id', $filters['company_id']);
-        $this->db->where('accounting_check.status', 1);
+        $this->db->where('accounting_check.status !=', 0);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('payment_date >=', $filters['from']);
         }
@@ -325,15 +408,36 @@ class Tags_model extends MY_Model
             $this->db->where('payee_type', $filters['contact_type']);
             $this->db->where('payee_id', $filters['contact_id']);
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('id', $taggedIds);
+        //         $this->db->where('company_id', $filters['company_id']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('payment_date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('payment_date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id'])) {
+        //             $this->db->where('payee_type', $filters['contact_type']);
+        //             $this->db->where('payee_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('id', $taggedIds);
+        //     }
+        // }
         if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('accounting_check.status !=', 0);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('payment_date >=', $filters['from']);
                 }
@@ -344,6 +448,10 @@ class Tags_model extends MY_Model
                     $this->db->where('payee_type', $filters['contact_type']);
                     $this->db->where('payee_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
             } else {
                 $this->db->where_in('id', $taggedIds);
             }
@@ -363,7 +471,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_bill');
         $this->db->where('company_id', $filters['company_id']);
-        $this->db->where_in('accounting_bill.status', [1, 2]);
+        $this->db->where('accounting_bill.status !=', 0);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('bill_date >=', $filters['from']);
         }
@@ -373,15 +481,35 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('id', $taggedIds);
+        //         $this->db->where('company_id', $filters['company_id']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('bill_date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('bill_date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+        //             $this->db->where('vendor_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('id', $taggedIds);
+        //     }
+        // }
         if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('accounting_bill.status !=', 0);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('bill_date >=', $filters['from']);
                 }
@@ -391,6 +519,10 @@ class Tags_model extends MY_Model
                 if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
                     $this->db->where('vendor_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
             } else {
                 $this->db->where_in('id', $taggedIds);
             }
@@ -410,7 +542,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_purchase_order');
         $this->db->where('company_id', $filters['company_id']);
-        $this->db->where_in('accounting_purchase_order.status', [1, 2]);
+        $this->db->where('accounting_purchase_order.status !=', 0);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('purchase_order_date >=', $filters['from']);
         }
@@ -420,15 +552,35 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('id', $taggedIds);
+        //         $this->db->where('company_id', $filters['company_id']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('purchase_order_date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('purchase_order_date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+        //             $this->db->where('vendor_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('id', $taggedIds);
+        //     }
+        // }
         if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('accounting_purchase_order.status !=', 0);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('purchase_order_date >=', $filters['from']);
                 }
@@ -438,6 +590,10 @@ class Tags_model extends MY_Model
                 if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
                     $this->db->where('vendor_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
             } else {
                 $this->db->where_in('id', $taggedIds);
             }
@@ -457,7 +613,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_vendor_credit');
         $this->db->where('company_id', $filters['company_id']);
-        $this->db->where_in('accounting_vendor_credit.status', [1, 2]);
+        $this->db->where('accounting_vendor_credit.status !=', 0);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('payment_date >=', $filters['from']);
         }
@@ -467,15 +623,35 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('id', $taggedIds);
+        //         $this->db->where('company_id', $filters['company_id']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('payment_date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('payment_date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+        //             $this->db->where('vendor_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('id', $taggedIds);
+        //     }
+        // }
         if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('accounting_vendor_credit.status !=', 0);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('payment_date >=', $filters['from']);
                 }
@@ -485,6 +661,10 @@ class Tags_model extends MY_Model
                 if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
                     $this->db->where('vendor_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
             } else {
                 $this->db->where_in('id', $taggedIds);
             }
@@ -504,7 +684,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_credit_card_credits');
         $this->db->where('company_id', $filters['company_id']);
-        $this->db->where('accounting_credit_card_credits.status', 1);
+        $this->db->where('accounting_credit_card_credits.status !=', 0);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('payment_date >=', $filters['from']);
         }
@@ -515,15 +695,36 @@ class Tags_model extends MY_Model
             $this->db->where('payee_type', $filters['contact_type']);
             $this->db->where('payee_id', $filters['contact_id']);
         }
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('id', $taggedIds);
+        //         $this->db->where('company_id', $filters['company_id']);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('payment_date >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('payment_date <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id'])) {
+        //             $this->db->where('payee_type', $filters['contact_type']);
+        //             $this->db->where('payee_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('id', $taggedIds);
+        //     }
+        // }
         if($filters['untagged']) {
             $this->db->where_not_in('id', $transactionsWithTags);
-        } else {
-            $this->db->where_in('id', $transactionsWithTags);
-        }
-        if(count($filters['tags']) > 0) {
-            if($filters['untagged']) {
+
+            if(count($filters['tags']) > 0) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('accounting_credit_card_credits.status !=', 0);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
                     $this->db->where('payment_date >=', $filters['from']);
                 }
@@ -534,11 +735,195 @@ class Tags_model extends MY_Model
                     $this->db->where('payee_type', $filters['contact_type']);
                     $this->db->where('payee_id', $filters['contact_id']);
                 }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
             } else {
                 $this->db->where_in('id', $taggedIds);
             }
         }
         $this->db->group_by('accounting_credit_card_credits.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_invoices($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Invoice');
+        }
+        $transactionsWithTags = $this->get_tagged_ids('Invoice');
+
+        $this->db->select('*');
+        $this->db->from('invoices');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('view_flag', 0);
+        $this->db->where('voided', 0);
+        $this->db->where('is_recurring', 0);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('date_issued >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('date_issued <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'customer') {
+            $this->db->where('customer_id', $filters['contact_id']);
+        }
+
+        // if($filters['untagged']) {
+        //     $this->db->where_not_in('id', $transactionsWithTags);
+        // } else {
+        //     $this->db->where_in('id', $transactionsWithTags);
+        // }
+        // if(count($filters['tags']) > 0) {
+        //     if($filters['untagged']) {
+        //         $this->db->or_where_in('id', $taggedIds);
+        //         $this->db->where('company_id', $filters['company_id']);
+        //         $this->db->where('view_flag', 0);
+        //         $this->db->where('voided', 0);
+        //         $this->db->where('is_recurring', 0);
+        //         if(isset($filters['from']) && !is_null($filters['from'])) {
+        //             $this->db->where('date_issued >=', $filters['from']);
+        //         }
+        //         if(isset($filters['to']) && !is_null($filters['to'])) {
+        //             $this->db->where('date_issued <=', $filters['to']);
+        //         }
+        //         if(!is_null($filters['contact_id'])) {
+        //             $this->db->where('payee_type', $filters['contact_type']);
+        //             $this->db->where('payee_id', $filters['contact_id']);
+        //         }
+        //     } else {
+        //         $this->db->where_in('id', $taggedIds);
+        //     }
+        // }
+        if($filters['untagged']) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+
+            if(count($filters['tags']) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('view_flag', 0);
+                $this->db->where('voided', 0);
+                $this->db->where('is_recurring', 0);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('date_issued >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('date_issued <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'customer') {
+                    $this->db->where('customer_id', $filters['contact_id']);
+                }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $this->db->group_by('id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_sales_receipts($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Sales Receipt');
+        }
+        $transactionsWithTags = $this->get_tagged_ids('Sales Receipt');
+
+        $this->db->select('*');
+        $this->db->from('accounting_sales_receipt');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('sales_receipt_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('sales_receipt_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'customer') {
+            $this->db->where('customer_id', $filters['contact_id']);
+        }
+
+        if($filters['untagged']) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+
+            if(count($filters['tags']) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('status !=', 0);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('sales_receipt_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('sales_receipt_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'customer') {
+                    $this->db->where('customer_id', $filters['contact_id']);
+                }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $this->db->group_by('id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_credit_memos($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Credit Memo');
+        }
+        $transactionsWithTags = $this->get_tagged_ids('Credit Memo');
+
+        $this->db->select('*');
+        $this->db->from('accounting_credit_memo');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('credit_memo_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('credit_memo_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'customer') {
+            $this->db->where('customer_id', $filters['contact_id']);
+        }
+
+        if($filters['untagged']) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+
+            if(count($filters['tags']) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                $this->db->where('status !=', 0);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('credit_memo_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('credit_memo_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'customer') {
+                    $this->db->where('customer_id', $filters['contact_id']);
+                }
+            }
+        } else {
+            if(count($filters['tags']) > 0) {
+                $this->db->where_in('id', $transactionsWithTags);
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $this->db->group_by('id');
         $query = $this->db->get();
         return $query->result();
     }

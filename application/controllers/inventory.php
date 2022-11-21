@@ -407,6 +407,39 @@ class Inventory extends MY_Controller
         redirect('inventory');
     }
 
+    public function edit_item( $id )
+    {
+        $this->page_data['page']->title = 'Inventory';
+        $this->page_data['page']->parent = 'Tools';
+        $get_vendors = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'vendor',
+            'select' => '*',
+        );
+        $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
+        $get_items_categories = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'item_categories',
+            'select' => '*',
+        );
+        $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
+        $this->page_data['item'] = $this->items_model->getByID($id);
+        $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+        $this->load->view('v2/pages/inventory/action/inventory_edit', $this->page_data);
+    }
+
+    public function update_item() {
+        $data = $this->input->post();
+        $id   = $data['id'];
+        unset($data['id']);        
+        $company_id =  logged('company_id');
+        if ( $this->items_model->update($data, array("id" => $id, 'company_id' => $company_id)) ) {
+            echo "1";
+        } else {
+            echo "0";
+        }
+    }
+
     public function  update_service_item()
     {
         $data = $this->input->post();

@@ -213,6 +213,15 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function getByID($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getRows($params = array())
     {
         $this->db->select('*');

@@ -207,8 +207,8 @@ function Signing(hash) {
       const html = `<div class="docusignField ${baseClassName}"></div>`;
       const $element = createElementFromHTML(html);
 
-      const topEm = `${pxToEm(top + 2.5, container)}em`;
-      const leftEm = `${pxToEm(left + 7, container)}em`;
+      const topEm = `${pxToEm(top, container)}em`;
+      const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       if (is_required) {

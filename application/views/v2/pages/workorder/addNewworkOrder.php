@@ -774,6 +774,60 @@
     </div>
 </div>
 
+<?php //include viewPath('includes/footer'); ?>
+
+<?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+    
+    $(document).ready(function() {
+// Replace 'td' with your html tag
+$("#terms_of_use_text").html(function() { 
+
+// var companyName = $('#company_name').val();
+// var now = new Date();
+// now.setDate(now.getDate()+3);
+// var n=3; //number of days to add. 
+// var t = new Date();
+// t.setDate(t.getDate() + n); 
+// var month = "0"+(t.getMonth()+1);
+// var date = "0"+t.getDate();
+// month = month.slice(-2);
+// date = date.slice(-2);
+// var date = " "+ month +"-"+date +"-"+t.getFullYear();
+
+
+// var startDate = "16-APR-2021";
+var startDate = new Date();
+// var daaa = new Date();
+
+// var date = d.getDate();
+// var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+// var year = d.getFullYear();
+    
+// var startDate = date + "-" + month + "-" + year;
+
+// startDate = new Date(startDate.replace(/-/g, "/"));
+var endDate = "", noOfDaysToAdd = 3, count = 0;
+while(count < noOfDaysToAdd){
+    endDate = new Date(startDate.setDate(startDate.getDate() + 1));
+    if(endDate.getDay() != 0 && endDate.getDay() != 6){
+    count++;
+    }
+}
+//alert(endDate);
+var month = "0"+(endDate.getMonth()+1);
+var date = "0"+endDate.getDate();
+month = month.slice(-2);
+date = date.slice(-2);
+var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
+
+// alert(now);  
+  return $(this).html().replace("{current_date_3}", date);  
+
+});
+});
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         initPopover();
@@ -2002,4 +2056,3 @@
         $("#other_payment_area").addClass("d-none");
     }
 </script>
-<?php include viewPath('v2/includes/footer'); ?>

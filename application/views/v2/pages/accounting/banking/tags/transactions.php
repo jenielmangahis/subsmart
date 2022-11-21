@@ -167,13 +167,13 @@
                                 </div>
                             </ul>
 
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_transactions_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="transactions-table">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">

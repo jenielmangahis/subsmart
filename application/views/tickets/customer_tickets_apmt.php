@@ -340,7 +340,7 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="purchase_order_number"><b>Assigned Techincian</b></label>
-                                        <input type="text" class="form-control" name="assign_tech" id="assign_tech" />
+                                        <input type="text" class="form-control" name="assign_tech" id="assign_tech" value="<?php echo $appointment_user_id; ?>"/>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">

@@ -1,10 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 <link rel="stylesheet" href="<?php echo $url->assets ?>sass/styles.scss">
 <div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/workorder'); ?>
+<?php //include viewPath('includes/sidebars/workorder'); ?>
 <style>
 .active-template
 {
@@ -14,7 +15,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 </style>
     <!-- page wrapper start -->
-    <div wrapper__section>
+    
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/workorder_subtabs'); ?>
+    </div>
         <div class="container-fluid p-40">
             <div class="card">
                 <!-- <h3>Work Order Templates</h3> -->

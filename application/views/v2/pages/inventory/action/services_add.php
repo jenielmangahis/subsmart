@@ -78,7 +78,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-$("#service_form").submit(function (e) {
+$("#service_form").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $(this);
     console.log(form);
@@ -87,20 +87,20 @@ $("#service_form").submit(function (e) {
         type: "POST",
         url: "<?= base_url() ?>/inventory/save_new_item",
         data: form.serialize(), // serializes the form's elements.
-        success: function (data) {
+        success: function(data) {
             // console.log(data);
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Service was added successfully!',
-            }).then((result) => {
-                window.location.href = "/inventory/services";
-            });
         }
+    });
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Service was added successfully!',
+    }).then((result) => {
+        window.location.href = "/inventory/services";
     });
 });
 
-$('#TIME_ESTIMATE').change(function (event) {
+$('#TIME_ESTIMATE').change(function(event) {
     $('#estimated_time').val(moment($('#TIME_ESTIMATE').val(), 'hh:mm').format('hh:mm A'));
 });
 </script>

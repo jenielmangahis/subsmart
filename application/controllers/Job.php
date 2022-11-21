@@ -145,7 +145,7 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'is_active' => 1
+                'is_active' => 1,
             ),
             'table' => 'items',
             'select' => 'items.id,title,price,type',

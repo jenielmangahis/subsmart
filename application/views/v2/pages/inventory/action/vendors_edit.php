@@ -94,7 +94,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-$("#vendor_form").submit(function (e) {
+    $("#vendor_form").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $(this);
     // console.log(form);
@@ -103,16 +103,16 @@ $("#vendor_form").submit(function (e) {
         type: "POST",
         url: "<?= base_url() ?>/inventory/_update_vendor",
         data: form.serialize(), // serializes the form's elements.
-        success: function (data) {
+        success: function(data) {
             // console.log(data);
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Vendor was updated successfully!',
-            }).then((result) => {
-                window.location.href = "/inventory/vendors";
-            });
         }
+    });
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Vendor was updated successfully!',
+    }).then((result) => {
+        window.location.href = "/inventory/vendors";
     });
 });
 </script>
