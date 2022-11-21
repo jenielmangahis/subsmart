@@ -60,7 +60,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-$("#item_category_form").submit(function (e) {
+$("#item_category_form").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $(this);
     // console.log(form);
@@ -69,16 +69,16 @@ $("#item_category_form").submit(function (e) {
         type: "POST",
         url: "<?= base_url() ?>/inventory/_update_item_category",
         data: form.serialize(), // serializes the form's elements.
-        success: function (data) {
+        success: function(data) {
             // console.log(data);
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Category was added successfully!',
-            }).then((result) => {
-                window.location.href = "/inventory/item_groups";
-            });
         }
+    });
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Category was added successfully!',
+    }).then((result) => {
+        window.location.href = "/inventory/item_groups";
     });
 });
 </script>

@@ -119,7 +119,25 @@ body {
 
   input[type="checkbox"],
   input[type="radio"] {
+    width: #{em(25)};
+    height: #{em(25)};
+    padding: 0 !important;
+    margin: 0 !important;
     // outline: #{em(2)} var(--border-style) #bf1e2e;
+  }
+
+  .form-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: #{em(25)};
+    height: #{em(25)};
+    padding: 0 !important;
+  }
+
+  .docusignField__checkbox,
+  .docusignField__radio {
+    height: unset !important;
   }
 
   &--finished,

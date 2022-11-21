@@ -337,7 +337,16 @@ $('#apply-filters-button').on('click', function() {
     url += date !== 'last-365-days' && from !== '' ? `from=${from}&` : '';
     url += date !== 'last-365-days' && to !== '' ? `to=${to}&` : '';
     url += contact !== 'all-contacts' ? `contact=${contact}&` : '';
-    url += untagged ? `untagged=${untagged}` : '';
+    url += untagged ? `untagged=${untagged}&` : '';
+
+    $('#tags-filter-dropdown select:not(#filter-ungrouped)').each(function() {
+        var id = $(this).attr('id');
+        id = id.replace('tag-group-', '');
+        
+        url += $(this).val() !== null && $(this).val().length > 0 ? `${id}=${$(this).val().join(',')}&` : '';
+    });
+
+    url +=  $('#tags-filter-dropdown #filter-ungrouped').val() !== null && $('#tags-filter-dropdown #filter-ungrouped').val().length > 0 ? `ungrouped=${$('#tags-filter-dropdown #filter-ungrouped').val().join(',')}` : '';
 
     if(url.slice(-1) === '#') {
         url = url.slice(0, -1);
@@ -415,6 +424,104 @@ $('#reset-tags-button').on('click', function() {
     $('#tags-filter-dropdown #show_untagged_transactions').prop('checked', false);
 
     $('#apply-tags-button').trigger('click');
+});
+
+$("#btn_print_transactions").on("click", function() {
+    $("#transactions_table_print").printThis();
+});
+
+$('#transactions-table tbody tr td:not(:first-child)').on('click', function() {
+    var row = $(this).parent();
+    var id = row.find('.select-one').val().split('-');
+    id = id[id.length - 1];
+    var type = row.find('td:nth-child(6)').text().trim() === 'Credit card expense' ? 'Expense' : row.find('td:nth-child(6)').text().trim();
+    type = type === 'Activity charge' ? 'Delayed Charge' : type;
+    type = type === 'Activity credit' ? 'Delayed Credit' : type;
+
+    var data = {
+        id: id,
+        type: type
+    };
+
+    $.get(`/accounting/view-transaction/${type.replace(' ', '-').toLowerCase()}/${data.id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        switch(type.replace(' ', '-').toLowerCase()) {
+            case 'expense' :
+                initModalFields('expenseModal', data);
+
+                $('#expenseModal').modal('show');
+            break;
+            case 'check' :
+                initModalFields('checkModal', data);
+
+                $('#checkModal').modal('show');
+            break;
+            case 'bill' :
+                initModalFields('billModal', data);
+
+                $('#billModal').modal('show');
+            break;
+            case 'cc-credit' :
+                initModalFields('creditCardCreditModal', data);
+
+                $('#creditCardCreditModal').modal('show');
+            break;
+            case 'vendor-credit' :
+                initModalFields('vendorCreditModal', data);
+
+                $('#vendorCreditModal').modal('show');
+            break;
+            case 'deposit' :
+                initModalFields('depositModal', data);
+
+                $('#depositModal').modal('show');
+            break;
+            case 'purchase-order' :
+                initModalFields('purchaseOrderModal', data);
+
+                $('#purchaseOrderModal').modal('show');
+            break;
+            case 'invoice' :
+                initModalFields('invoiceModal', data);
+
+                $('#invoiceModal').modal('show');
+            break;
+            case 'sales-receipt' :
+                initModalFields('salesReceiptModal', data);
+
+                $('#salesReceiptModal').modal('show');
+            break;
+            case 'credit-memo' :
+                initModalFields('creditMemoModal', data);
+
+                $('#creditMemoModal').modal('show');
+            break;
+            case 'delayed-charge' :
+                initModalFields('delayedChargeModal', data);
+
+                $('#delayedChargeModal').modal('show');
+            break;
+            case 'refund-receipt' :
+                initModalFields('refundReceiptModal', data);
+
+                $('#refundReceiptModal').modal('show');
+            break;
+            case 'delayed-credit' :
+                initModalFields('delayedCreditModal', data);
+
+                $('#delayedCreditModal').modal('show');
+            break;
+        }
+    });
 });
 
 $(function() {

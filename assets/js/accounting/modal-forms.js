@@ -8336,7 +8336,7 @@ $(function() {
     });
 
     $(document).on('change', '#modal-container form .modal #adjustment_input_cm', function() {
-        var value = $(this).val();
+        var value = $(this).val() === '' ? 0.00 : $(this).val();
         var subtotal = $('#modal-container form .modal span.transaction-subtotal').html().replace('$', '').replaceAll(',', '');
         var taxes = $('#modal-container form .modal span.transaction-taxes').html().replace('$', '').replaceAll(',', '');
         var discounts = $('#modal-container form .modal span.transaction-discounts').html().replace('$', '').replaceAll(',', '');

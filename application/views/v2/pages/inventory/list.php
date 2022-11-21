@@ -232,7 +232,7 @@ table.dataTable.no-footer {
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item edit-item" href="javascript:void(0)" data-id="<?= $item[3]; ?>">Edit</a>
+                                            <a class="dropdown-item edit-item" href="<?= base_url('inventory/edit_item/' . $item[3]); ?>" data-id="<?= $item[3]; ?>">Edit</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $item[10]; ?>">Delete</a>
@@ -355,87 +355,110 @@ INVENTORY_TABLE_SETTINGS = INVENTORY_TABLE.settings();
             toggleBatchDelete(_this.prop("checked"));
         });
 
-        $("#delete_selected").on("click", function() {
-            let params = {
-                ids: $("#selected_ids").val(),
+$("#delete_selected").on("click", function() {
+    let params = {
+        ids: $("#selected_ids").val(),
+    }
+
+    Swal.fire({
+        title: 'Delete Selected Items',
+        text: "Are you sure you want to delete the selected items?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        Swal.fire({
+            title: 'Delete Success',
+            text: "Selected data has been deleted successfully!",
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
+        }).then((result) => {
+            if (result.value) {
+                location.reload();
             }
-
-            Swal.fire({
-                title: 'Delete Selected Items',
-                text: "Are you sure you want to delete the selected items?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('inventory/deleteMultiple') ?>",
-                        data: params,
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Delete Success',
-                                text: "Selected data has been deleted successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });
-                        },
-                    });
-                }
+        });
+        if (result.value) {
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('inventory/deleteMultiple') ?>",
+                data: params,
+                success: function(response) {
+                    // Swal.fire({
+                    //     title: 'Delete Success',
+                    //     text: "Selected data has been deleted successfully!",
+                    //     icon: 'success',
+                    //     showCancelButton: false,
+                    //     confirmButtonText: 'Okay'
+                    // }).then((result) => {
+                    //     if (result.value) {
+                    //         location.reload();
+                    //     }
+                    // });
+                },
             });
+        }
+    });
+});
+
+$(document).on("click", ".delete-item", function() {
+    let id = $(this).attr('data-id');
+
+    Swal.fire({
+        title: 'Delete Inventory Item',
+        text: "Are you sure you want to delete this item?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        Swal.fire({
+            title: 'Delete Success',
+            text: "Data has been deleted successfully!",
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
+        }).then((result) => {
+            if (result.value) {
+                location.reload();
+            }
         });
 
-        $(document).on("click", ".delete-item", function() {
-            let id = $(this).attr('data-id');
-
-            Swal.fire({
-                title: 'Delete Inventory Item',
-                text: "Are you sure you want to delete this item?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('/inventory/delete') ?>",
-                        data: {
-                            id: id
-                        },
-                        success: function(data) {
-                            if (data === "1") {
-                                Swal.fire({
-                                    title: 'Delete Success',
-                                    text: "Data has been deleted successfully!",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        location.reload();
-                                    }
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Delete Failed',
-                                    text: "Please try again later.",
-                                    icon: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                });
-                            }
-                        }
-                    });
+        if (result.value) {
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('/inventory/delete') ?>",
+                data: {
+                    id: id
+                },
+                success: function(data) {
+                    // if (data === "1") {
+                    //     Swal.fire({
+                    //         title: 'Delete Success',
+                    //         text: "Data has been deleted successfully!",
+                    //         icon: 'success',
+                    //         showCancelButton: false,
+                    //         confirmButtonText: 'Okay'
+                    //     }).then((result) => {
+                    //         if (result.value) {
+                    //             location.reload();
+                    //         }
+                    //     });
+                    // } else {
+                    //     Swal.fire({
+                    //         title: 'Delete Failed',
+                    //         text: "Please try again later.",
+                    //         icon: 'error',
+                    //         showCancelButton: false,
+                    //         confirmButtonText: 'Okay'
+                    //     });
+                    // }
                 }
             });
-        });
+        }
+    });
+});
     });
 
     function toggleBatchDelete(enable=True){
