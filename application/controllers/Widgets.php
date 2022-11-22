@@ -582,4 +582,85 @@ class Widgets extends MY_Controller
         $this->page_data['hey'] = 'Test';
         return $this->page_data;
     }
+
+    public function getUpcomingCalendar()
+    {
+        $this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Estimate_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
+
+        $cid = logged('company_id');
+        
+        $upcomingJobs   = $this->Jobs_model->getAllUpcomingJobsByCompanyId($cid);
+        $upcomingEvents = $this->Event_model->getAllUpComingEventsByCompanyId($cid);
+        $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($cid);
+        $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($cid);    
+        $upcomingAppointments = $this->Appointment_model->getAllUpcomingAppointmentsByCompany($cid);    
+
+        $upcomingSchedules = array();
+
+        foreach( $upcomingJobs as $job ){
+            $date_index = date("Y-m-d", strtotime($job->start_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'job',
+                'data' => $job
+            ];
+        }
+
+        foreach( $upcomingEvents as $event ){
+            $date_index = date("Y-m-d", strtotime($event->start_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'event',
+                'data' => $event
+            ];
+        }
+
+        foreach( $scheduledEstimates as $estimate ){
+            $date_index = date("Y-m-d", strtotime($estimate->estimate_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'estimate',
+                'data' => $estimate
+            ];
+        }
+
+        foreach( $upcomingServiceTickets as $ticket ){
+            $date_index = date("Y-m-d", strtotime($ticket->ticket_date));
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'ticket',
+                'data' => $ticket
+            ];
+        }
+
+        foreach( $upcomingAppointments as $appointment ){
+            $date_index = date("Y-m-d", strtotime($appointment->appointment_date));
+            $appointment_tags = explode(",", $appointment->tag_ids);
+            //$appointmentTags = $this->EventTags_model->getAllByIds($appointment_tags);
+            $appointmentTags   = $this->Job_tags_model->getAllByIds($appointment_tags);
+
+            $appointment_tags = '';
+            $aTags = array();
+            foreach($appointmentTags as $tags){
+                $aTags[] = $tags->name;
+            }
+
+            if( !empty($aTags) ){
+                $appointment_tags = implode(",", $aTags);
+            }
+            
+            $appointment->appt_tags = $appointment_tags;
+            $upcomingSchedules[$date_index][] = [
+                'type' => 'appointment',
+                'data' => $appointment
+            ];
+        }
+
+        ksort($upcomingSchedules);
+
+        $this->page_data['upcomingSchedules'] = $upcomingSchedules;
+        $this->load->view('v2/widgets/ajax_load_upcoming_schedules', $this->page_data);
+    }
 }

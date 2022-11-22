@@ -145,8 +145,8 @@
                         }elseif( $schedule['type'] == 'appointment' ){
                             $schedule_view_url = base_url('tickets/viewDetails/' . $schedule['data']->id);
                             $schedule_date = date("Y-m-d", strtotime($schedule['data']->appointment_date));
-                            $schedule_start_time = date("g:i A", strtotime($schedule['data']->appointment_time));
-                            $schedule_end_time = '';
+                            $schedule_start_time = date("g:i A", strtotime($schedule['data']->appointment_time_from));
+                            $schedule_end_time   = date("g:i A", strtotime($schedule['data']->appointment_time_to));
                             $schedule_status = '';
                             $schedule_tags   = $schedule['data']->appt_tags;
 
