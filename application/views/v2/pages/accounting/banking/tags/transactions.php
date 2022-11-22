@@ -16,6 +16,15 @@
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Update tags</span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a href="#" class="dropdown-item disabled" id="add-tags">Add tags</a>
+                                    <a href="#" class="dropdown-item disabled" id="remove-tags">Remove tags</a>
+                                </li>
+                            </ul>
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filters</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content" id="transactions-filter-dropdown">
