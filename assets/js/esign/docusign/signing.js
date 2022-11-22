@@ -258,7 +258,13 @@ function Signing(hash) {
                   </div>
                 `);
 
-            $currElement.css({ top, left, position: "absolute" });
+            const topEm = `${pxToEm(parseInt(top))}em`;
+            const leftEm = `${pxToEm(parseInt(left))}em`;
+            $currElement.css({
+              top: topEm,
+              left: leftEm,
+              position: "absolute",
+            });
             return $currElement;
           })
         );
@@ -438,7 +444,7 @@ function Signing(hash) {
         value = customer[specs.name] || "";
       }
 
-      if (specs.value && !value) {
+      if (specs.value && !value && data.recipient.id === recipient.id) {
         value = specs.value;
       }
 
