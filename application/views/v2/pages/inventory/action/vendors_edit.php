@@ -103,16 +103,18 @@
         type: "POST",
         url: "<?= base_url() ?>/inventory/_update_vendor",
         data: form.serialize(), // serializes the form's elements.
-        success: function(data) {
-            // console.log(data);
-        }
+        // success: function(data) {
+        //     console.log(data);
+        // }
     });
     Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Vendor was updated successfully!',
     }).then((result) => {
-        window.location.href = "/inventory/vendors";
+        if (result.isConfirmed) {
+            window.location.href = "/inventory/vendors";
+        }
     });
 });
 </script>

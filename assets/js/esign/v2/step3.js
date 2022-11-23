@@ -949,6 +949,16 @@ function Step3() {
           }
         });
 
+        // values must be unique
+
+        const values = [...subCheckbox.map((s) => s.value)];
+        if (specs.value) values.push(specs.value);
+
+        if (new Set(values).size !== values.length) {
+          alert("Value must be unique.");
+          return;
+        }
+
         const fieldName = $(".options #optionsFieldName").val().trim();
         specs = {
           ...specs,

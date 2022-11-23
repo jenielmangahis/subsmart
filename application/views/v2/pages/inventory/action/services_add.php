@@ -81,22 +81,24 @@
 $("#service_form").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $(this);
-    console.log(form);
+    // console.log(form);
     //var url = form.attr('action');
     $.ajax({
         type: "POST",
         url: "<?= base_url() ?>/inventory/save_new_item",
         data: form.serialize(), // serializes the form's elements.
-        success: function(data) {
-            // console.log(data);
-        }
+        // success: function(data) {
+        //     console.log(data);
+        // }
     });
     Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Service was added successfully!',
     }).then((result) => {
-        window.location.href = "/inventory/services";
+        // if (result.isConfirmed) {
+            window.location.href = "/inventory/services";
+        // }
     });
 });
 

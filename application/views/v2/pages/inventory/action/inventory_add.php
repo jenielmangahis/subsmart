@@ -175,22 +175,24 @@ function readURL(input) {
 $("#inventory_form").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $(this);
-    console.log(form.serialize());
+    // console.log(form.serialize());
     var url = form.attr('action');
     $.ajax({
         type: "POST",
         url: "<?= base_url() ?>/inventory/save_new_item",
         data: form.serialize(), // serializes the form's elements.
-        success: function(data) {
-            // console.log(data);
-        }
+        // success: function(data) {
+        //     console.log(data);
+        // }
     });
     Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Item was added successfully!',
     }).then((result) => {
-        window.location.href = "<?= base_url()?>/inventory";
+        // if (result.isConfirmed) {
+            window.location.href = "<?= base_url()?>/inventory";
+        // }
     });
 });
 

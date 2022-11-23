@@ -82,16 +82,18 @@ $("#fees_form").submit(function(e) {
         type: "POST",
         url: "<?= base_url() ?>/inventory/save_new_item",
         data: form.serialize(), // serializes the form's elements.
-        success: function(data) {
-            // console.log(data);
-        }
+        // success: function(data) {
+        //     console.log(data);
+        // }
     });
     Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Inventory Fee was added successfully!',
     }).then((result) => {
-        window.location.href = "/inventory/fees";
+        // if (result.isConfirmed) {
+            window.location.href = "/inventory/fees";
+        // }
     });
 });
 </script>

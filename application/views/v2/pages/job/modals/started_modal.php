@@ -34,27 +34,3 @@
         </div>
     </div>
 </div>
-
-
-<!-- TEMPLATE MODAL DESIGN -->
-<!-- <div class="modal fade" id="start_modal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Arrival</span>
-                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button"></i>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12 mt-1 mb-1">
-                        <label></label>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="nsm-button primary"><i class="bx bx-paper-plane"></i> Save</button>
-                    <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
