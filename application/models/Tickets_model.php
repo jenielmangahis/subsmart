@@ -203,6 +203,26 @@ class Tickets_model extends MY_Model
         }
     }
 
+    public function get_utickets_by_company_id_and_date($company_id = 0, $date)
+    {
+        $date = date('m/d/Y', strtotime($date));
+
+        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name,acs_profile.phone_m');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = tickets.customer_id', 'left');        
+        $this->db->where('tickets.company_id', $company_id);
+        $this->db->where('tickets.ticket_date',$date);
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
     public function delete_tickets($id)
     {
 

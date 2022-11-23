@@ -63,7 +63,7 @@
                             $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
                             //$schedule_location = $schedule['data']->job_location != '' ? $schedule['data']->job_location : '---';
                             $schedule_location = $schedule['data']->mail_add;
-                            $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             $schedule_description = '';
 
@@ -133,7 +133,7 @@
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
                             $schedule_location = $schedule['data']->service_location;
-                            $schedule_location_b = $schedule['data']->acs_city . ', ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip;
+                            $schedule_location_b = $schedule['data']->acs_city . ' ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip;
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
@@ -157,17 +157,13 @@
                             $schedule_customer_name  = $schedule['data']->customer_name;
                             $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
                             $schedule_location   = $schedule['data']->mail_add;
-                            $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
 
                             $assigned_employees = array();
-                            $emp_ids = unserialize($schedule['data']->assigned_employee_ids);
-                            foreach($emp_ids as $eid){
-                                $assigned_employees[] = $eid;    
-                            }
-                            //$assigned_employees[] = $schedule['data']->user_id;
+                            $assigned_employees[] = $schedule['data']->user_id;
 
                             $is_valid = 1;
                         }

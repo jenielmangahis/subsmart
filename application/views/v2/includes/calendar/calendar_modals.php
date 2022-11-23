@@ -495,10 +495,7 @@
                 <span class="modal-title content-title">Upcoming Schedules</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body">
-                <div class="row g-3" id="view_appointment_container">
-                </div>
-            </div>
+            <div class="modal-body" id="view_upcoming_schedules_container"></div>
         </div>
     </div>
 </div>
