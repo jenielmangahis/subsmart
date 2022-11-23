@@ -13,11 +13,11 @@
                         <table id="items_table" class="table table-hover" style="width: 100%;">
                             <thead>
                             <tr>
-                                <td> Name</td>
-                                <td> Qty</td>
-                                <td> Price</td>
-                                <td> Type</td>
-                                <td> Action</td>
+                                <td>Name</td>
+                                <td>Qty</td>
+                                <td>Price</td>
+                                <td>Type</td>
+                                <td>Action</td>
                             </tr>
                             </thead>
                             <tbody>

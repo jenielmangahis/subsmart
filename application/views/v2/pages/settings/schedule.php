@@ -5,6 +5,35 @@
     .calendar-account .nsm-card:hover {
         border-color: #6a4a86;
     }
+    .event-colors{
+        list-style: none;
+        padding: 0px;
+        margin-top: 28px;
+    }
+    .event-colors li{
+        display: inline-block;
+        margin: 5px;
+        width: 100%;
+    }
+    .event-colors .e-color{
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        border: 3px solid #fff;
+    }
+    .event-colors .e-color-name{
+        position: relative;
+        top: -10px;
+    }
+    .event-colors .e-color-actions{
+        float: right;
+    }
+    .event-colors .e-color-actions a{
+        display: inline-block;
+        margin: 5px;
+        font-size: 11px;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -52,7 +81,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-12 col-md-4">
                         <label class="content-title">Calendar Default View</label>
-                        <label class="content-subtitle mb-2">TSet the caledar default view.</label>
+                        <label class="content-subtitle mb-2">Set the caledar default view.</label>
                         <select name="calendar_default_view" class="nsm-field form-select" required>
                             <?php foreach (config_item('calender_views') as $key => $zone) { ?>
                                 <option value="<?php echo $zone ?>" <?php echo ($settings['calendar_default_view'] === $key) ? "selected" : "" ?>>
@@ -83,7 +112,7 @@
                         <label class="content-title mb-2">Calendar Day Ends On</label>
                         <input type="text" name="calender_day_ends_on" class="nsm-field form-control timepicker" value="<?php echo (!empty($settings['calender_day_ends_on'])) ? $settings['calender_day_ends_on'] : '' ?>" required />
                     </div>
-                </div>
+                </div>                
                 <div class="row g-3 mb-2">
                     <div class="col-12 col-md-4 calendar-account">
                         <label class="content-title">Calendar Account</label>
@@ -143,6 +172,31 @@
                                 </div>
                             </li>
                         </ul>
+
+                        <div class="mt-5">
+                            <label class="content-title">Calendar Event Color</label>
+                            <label class="content-subtitle mb-2" style="display:block;width: 100%;">
+                                Define event color to easily identity an event.
+                                <a class="nsm-button primary btn-add-event-color" href="javascript:void(0);" style="float:right;font-size: 11px;"><i class='bx bx-plus-circle'></i> Add Event Color</a>
+                            </label>
+                            <?php $row_count = 0; ?>
+                            <ul class="event-colors">
+                                <?php foreach ($colorSettings as $c) { ?>
+                                    <?php $rowid = generateRandomString(5); ?>
+                                    <li id="c-row-<?= $rowid; ?>">
+                                        <input type="hidden" name="color_name[]" value="<?= $c->color_name; ?>" />
+                                        <input type="hidden" name="color_code[]" value="<?= $c->color_code; ?>" />
+                                        <span class="e-color" style="background-color: <?= $c->color_code; ?>;"></span> 
+                                        <span class="e-color-name"><?= $c->color_name; ?></span>
+                                        <span class="e-color-actions">
+                                            <a class="nsm-button primary btn-edit-event-color" data-id="<?= $rowid; ?>" data-cname="<?= $c->color_name; ?>" data-ccode="<?= $c->color_code; ?>"><i class='bx bx-calendar-edit'></i></a>
+                                            <a class="nsm-button primary btn-delete-event-color" href="javascript:void(0);"><i class='bx bx-trash' ></i></a>
+                                        </span>
+                                    </li>
+                                    <?php $row_count++; ?>
+                                <?php } ?>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-12 col-md-4">
                         <label class="content-title">Calendar Job/Event Display Options</label>
@@ -214,15 +268,149 @@
                 <?php echo form_close(); ?>
             </div>
         </div>
+
+        <!-- Add event color -->
+        <div class="modal fade nsm-modal fade" id="modalAddEventColor" aria-labelledby="modalAddEventColorLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title" id="new_feed_modal_label">Add Event Color</span>
+                        <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Name</label>
+                                <input type="text" name="color_name" id="add-color-name" value=""  class="nsm-field form-control" required="" autocomplete="off" />
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Color</label>
+                                <input type="text" name="color_code" id="add-color-code" class="nsm-field form-control" required="" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button name="btn_close_modal" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button name="btn_add_event_color" type="button" class="nsm-button primary btn-append-event-color">Add</button>
+                    </div>
+                    </form>                      
+                </div>
+            </div>
+        </div>
+
+        <!-- Add edit color -->
+        <div class="modal fade nsm-modal fade" id="modalEditEventColor" aria-labelledby="modalEditEventColorLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title" id="new_feed_modal_label">Edit Event Color</span>
+                        <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit-color-id" value="">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Name</label>
+                                <input type="text" name="edit_color_name" id="edit-color-name" value=""  class="nsm-field form-control" required="" autocomplete="off" />
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Color</label>
+                                <input type="text" name="edit_color_code" id="edit-color-code" class="nsm-field form-control" required="" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button name="btn_close_modal" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button name="btn_add_event_color" type="button" class="nsm-button primary btn-update-event-color">Update</button>
+                    </div>
+                    </form>                      
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
-
+<link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/bootstrap-colorpicker.min.css") ?>">
+<script src="<?= base_url("assets/js/bootstrap-colorpicker.min.js"); ?>"></script>
 <script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#add-color-code').colorpicker({
+            horizontal: true,
+            format: "hex"
+        });
+
+        $('#edit-color-code').colorpicker({
+            horizontal: true,
+            format: "hex"
+        });
+
         $(".timepicker").datetimepicker({
             format: 'hh:mm A'
         });
+
+        $('.btn-add-event-color').click(function(){
+            $('#modalAddEventColor').modal('show');
+        });
+
+        $(document).on('click', '.btn-edit-event-color', function(){
+            var cname = $(this).data('cname');
+            var ccode = $(this).data('ccode');
+            var cid   = $(this).data('id');
+
+            $('#edit-color-name').val(cname);
+            $('#edit-color-code').val(ccode);
+            $('#edit-color-id').val(cid);
+
+            $('#edit-color-code').colorpicker('setValue', ccode);
+
+            $('#modalEditEventColor').modal('show');
+        });
+
+        $(document).on('click', '.btn-delete-event-color', function(){
+            $(this).closest('li').fadeOut(300,function(){
+                $(this).closest('li').remove();
+            });
+        });
+
+        $('.btn-append-event-color').click(function(){
+            var color_name = $('#add-color-name').val();
+            var color_code = $('#add-color-code').val();
+            var color_id   = generateRowId(5);
+            var append_color = '<li id="c-row-'+color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button primary btn-edit-event-color" data-id="'+color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button primary btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
+            $('.event-colors').append(append_color);
+
+            $('#modalAddEventColor').modal('hide');
+            $('#add-color-name').val('');
+            $('#add-color-code').val('');
+        });
+
+        $('.btn-update-event-color').click(function(){
+            var color_name = $('#edit-color-name').val();
+            var color_code = $('#edit-color-code').val();
+            var color_id   = $('#edit-color-id').val();
+            var new_color_id = generateRowId(5);
+
+            var update_append_color = '<li id="c-row-'+new_color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button primary btn-edit-event-color" data-id="'+new_color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button primary btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
+
+            $('#c-row-'+color_id).fadeOut(300, function(){ 
+                $('#c-row-'+color_id).remove();               
+                $(update_append_color).hide().appendTo(".event-colors").fadeIn(300);
+            });
+
+            $('#modalEditEventColor').modal('hide');            
+        });
+
+        function generateRowId(length) {
+            var result           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
 
         $("#btn_disconnect_gmail").click(function() {
             Swal.fire({

@@ -29,6 +29,8 @@ class Settings extends MY_Controller {
 
     public function schedule()
     {
+        $this->load->model('ColorSettings_model');
+
 		$this->page_data['page']->title = 'Calendar Settings';
 		$this->page_data['page']->parent = 'Calendar';
 
@@ -57,6 +59,19 @@ class Settings extends MY_Controller {
 
         if (!empty($post)) {
             $this->load->model('Settings_model', 'setting_model');
+
+            //Color Settings
+            $this->ColorSettings_model->deleteAllByCompanyId($company_id);
+            foreach($post['color_name'] as $key => $value){
+                $data = [
+                    'company_id' => $company_id,
+                    'user_id' => logged('id'),
+                    'color_name' => $value,
+                    'color_code' => $post['color_code'][$key]
+                ];
+                $colorSetting = $this->ColorSettings_model->create($data);
+            }
+
             if (!empty($settings)) {
                 $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);                
                 if (!empty($settings)) {
@@ -94,6 +109,11 @@ class Settings extends MY_Controller {
             if( $googleAccount ){
                 $is_glink = true;
             }
+
+            $args = array('company_id' => logged('company_id'));
+            $colorSettings = $this->ColorSettings_model->getByWhere($args);
+
+            $this->page_data['colorSettings'] = $colorSettings;
             $this->page_data['is_glink'] = $is_glink;
             $this->page_data['page']->menu = 'settings';
             // $this->load->view('settings/schedule', $this->page_data);

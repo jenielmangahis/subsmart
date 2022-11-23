@@ -745,20 +745,21 @@ $("#attachment-file").change(function() {
             $('#end_date').val(this.value);
         });
 
-        $('#items_table').DataTable({
-            "lengthChange": false,
-            "searching" : true,
-            "pageLength": 5,
-            "order": [],
+        var ITEMS_TABLE = $('#items_table').DataTable({
+            "ordering": false,
         });
+        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+            ITEMS_TABLE.search($(this).val()).draw()
+        });
+        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
 
-        $('#device_audit').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 5,
-            "paging" : false,
-            "order": [],
-        });
+        // $('#device_audit').DataTable({
+        //     "lengthChange": false,
+        //     "searching" : false,
+        //     "pageLength": 5,
+        //     "paging" : false,
+        //     "ordering" : false,
+        // });
 
         $('#estimates_table').DataTable({
             "lengthChange": false,

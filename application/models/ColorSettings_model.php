@@ -82,6 +82,11 @@ class ColorSettings_model extends MY_Model
     public function deleteColorById($id){
         $this->db->delete($this->table, array('id' => $id));
     } 
+
+    public function deleteAllByCompanyId($company_id){
+        $this->db->delete($this->table, array('company_id' => $company_id));
+    } 
+
 }
 
 /* End of file ColorSettings_model.php */

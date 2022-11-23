@@ -551,6 +551,141 @@ $('#transactions-table tbody .select-one').on('change', function() {
     }
 });
 
+$('#add-tags').on('click', function(e) {
+    e.preventDefault();
+    var checked = $('#transactions-table tbody tr:visible input.select-one:checked');
+
+    $('#add-tags-modal .selected-transaction-count').html(checked.length);
+
+    $('#add-tags-modal').modal('show');
+});
+
+$('#add-tags-modal').on('hidden.bs.modal', function() {
+    $('#add-tags-modal .selected-transaction-count').html(0);
+
+    $('#add-tags-modal #tags').val([]).trigger('change');
+});
+
+$('#add-tags-modal #tags').select2({
+    placeholder: 'Start typing to add a tag',
+    dropdownParent: $('#add-tags-modal'),
+    allowClear: true,
+    ajax: {
+        url: '/accounting/get-job-tags',
+        dataType: 'json'
+    }
+});
+
+$('#apply-add-tags').on('click', function() {
+    var data = new FormData();
+    var tags = $('#add-tags-modal #tags').val();
+    var checked = $('#transactions-table tbody tr:visible input.select-one:checked');
+
+    checked.each(function() {
+        data.append('transactions[]', $(this).val());
+    });
+
+    $.each(tags, function(index, value) {
+        data.append('tags[]', value);
+    });
+
+    $.ajax({
+        url: '/accounting/tags/transactions/add-tags',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            location.reload();
+        }
+    });
+});
+
+$('#remove-tags').on('click', function(e) {
+    e.preventDefault();
+    var checked = $('#transactions-table tbody tr:visible input.select-one:checked');
+
+    $('#remove-tags-modal .selected-transaction-count').html(checked.length);
+
+    initialize_remove_tags_table();
+    $('#remove-tags-modal').modal('show');
+});
+
+$('#remove-tags-modal').on('hidden.bs.modal', function() {
+    $('#remove-tags-modal #search-tags-to-remove'.val(''));
+    $('#remove-tags-modal #remove-tags-table tbody').html('');
+});
+
+$(document).on('change', '#remove-tags-modal #remove-tags-table input[type="checkbox"]', function() {
+    var el = $(this);
+    var row = $(this).closest('tr');
+    var index = row.index();
+    var rowData = row.data();
+
+    if(rowData.type === 'group' || rowData.type === 'ungrouped-group') {
+        for(i = index + 2; i <= $('#remove-tags-table tbody tr').length; i++) {
+            var r = $(`#remove-tags-table tbody tr:nth-child(${i})`);
+            var rData = r.data();
+
+            if(rData.type === 'group-tag' || rData.type === 'ungrouped-tag') {
+                r.find('input[type="checkbox"]').prop('checked', el.prop('checked')).change();
+            } else {
+                break;
+            }
+        }
+    } else {
+        // var text = $('#remove-tags-modal #remove-tags-table thead tr th span').html();
+        // var textSplit = text.split(' ');
+
+        // if(el.prop('checked')) {
+        //     var total = parseInt(textSplit[0]) + 1;
+        // } else {
+        //     var total = parseInt(textSplit[0]) - 1;
+        // }
+
+        // $('#remove-tags-modal #remove').prop('disabled', total < 1);
+        // $('#remove-tags-modal #remove-tags-table thead tr th span').html(total+' selected');
+    }
+});
+
+function initialize_remove_tags_table() {
+    var data = new FormData();
+    var checked = $('#transactions-table tbody tr:visible input.select-one:checked');
+    
+    checked.each(function() {
+        data.append('transactions[]', $(this).val());
+    });
+
+    data.set('search', $('#remove-tags-modal #search-tags-to-remove').val());
+
+    $.ajax({
+        url: '/accounting/tags/transactions/load-tags-to-remove',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            $.each(res, function(index, value) {
+                $('#remove-tags-table tbody').append(`<tr data-type="${value.type}" data-id="${value.id}">
+                    <td>
+                        <div class="table-row-icon table-checkbox">
+                            <input class="form-check-input select-one table-select" type="checkbox" value="${value.type}-${value.id}">
+                        </div>
+                    </td>
+                    <td>${value.type.includes('tag') ? '&emsp;' : ''}${value.name}</td>
+                    <td class="text-end"></td>
+                </tr>`);
+
+                if(value.type.includes('tag')) {
+                    $('#remove-tags-table tbody tr:last-child td:last-child').html(`${value.count} transaction${parseInt(value.count) > 1 ? 's' : ''}`);
+                }
+            });
+        }
+    })
+}
+
 $(function() {
     $('.date').datepicker({
         format: 'mm/dd/yyyy',

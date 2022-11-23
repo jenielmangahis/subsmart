@@ -176,6 +176,7 @@ function Signing(hash) {
         isChecked,
         name,
         is_required,
+        value: valueSpec,
       } = JSON.parse(field.specs) || {};
 
       if (!name) {
@@ -215,6 +216,7 @@ function Signing(hash) {
         $element.addClass(`${baseClassName}--isRequired`);
       }
 
+      const inputName = `${name}-${field.unique_key}`;
       $element.append(`
             <div class="form-check">
               <input
@@ -222,7 +224,10 @@ function Signing(hash) {
                 type="${inputType}"
                 id="${field.unique_key}"
                 ${isChecked ? "checked" : ""}
-                ${name ? `name=${name}` : ""}
+                name="${inputName}"
+                ${valueSpec ? `value="${valueSpec}"` : ""}
+                data-is-parent="true"
+                data-parent-id="${field.unique_key}"
               >
               <span class="form-check-indicator">x</span>
               <label
@@ -235,7 +240,7 @@ function Signing(hash) {
       if (subCheckbox.length) {
         $element.append(
           subCheckbox.map((option) => {
-            const { id, top = 0, left = 0 } = option;
+            const { id, top = 0, left = 0, value: valueOption } = option;
             let { isChecked = false } = option;
             if (value.subCheckbox) {
               const f =
@@ -251,7 +256,9 @@ function Signing(hash) {
                       type="${inputType}"
                       id="${id}"
                       ${isChecked ? "checked" : ""}
-                      ${name ? `name=${name}` : ""}
+                      name="${inputName}"
+                      ${valueOption ? `value="${valueOption}"` : ""}
+                      data-parent-id="${field.unique_key}"
                     >
                     <span class="form-check-indicator">x</span>
                     <label class="form-check-label invisible" for="${id}"></label>
@@ -335,7 +342,7 @@ function Signing(hash) {
 
         if ((!subCheckbox || !subCheckbox.length) && name) {
           const $duplicate = $(
-            `[type=checkbox][name=${name}]:not([id=${field.unique_key}])`
+            `[type=checkbox][name^="${name}"]:not([id="${field.unique_key}"])`
           );
           const id = $duplicate.attr("id");
           const duplicateField = data.fields.find((f) => f.unique_key === id);
@@ -352,6 +359,95 @@ function Signing(hash) {
                 }),
               });
             }
+          }
+        }
+
+        const thisValue = $this.val();
+        const thisID = $this.attr("id");
+        // handle options with subcheckbox
+        if (
+          subCheckbox.length &&
+          inputType === "radio" &&
+          thisValue &&
+          thisID
+        ) {
+          const $duplicate = $(
+            `[type=radio][name^="${name}"][value="${thisValue}"]:not([id="${thisID}"])`
+          );
+
+          const parentId = $duplicate.data("parent-id");
+          const duplicateField = data.fields.find(
+            (f) => f.unique_key === parentId
+          );
+
+          if ($duplicate.length && parentId && duplicateField) {
+            const isParent = $duplicate.attr("data-is-parent");
+            const isChecked = $this.is(":checked");
+            const specs = JSON.parse(duplicateField.specs) || {};
+
+            if (isParent) {
+              specs.isChecked = isChecked;
+            } else {
+              const matchedSubCheckbox = specs.subCheckbox.some(
+                (s) => s.value === thisValue
+              );
+
+              if (matchedSubCheckbox) {
+                specs.isChecked = false;
+                specs.subCheckbox = specs.subCheckbox.map((s) => {
+                  if (s.value !== thisValue) return s;
+                  return { ...s, isChecked };
+                });
+              }
+            }
+
+            $duplicate.prop("checked", isChecked);
+            await storeFieldValue({
+              id: duplicateField.id,
+              value: JSON.stringify(specs),
+            });
+          }
+        }
+
+        if (
+          subCheckbox.length &&
+          inputType === "checkbox" &&
+          thisValue &&
+          thisID
+        ) {
+          const $duplicate = $(
+            `[type=checkbox][name^="${name}"][value="${thisValue}"]:not([id="${thisID}"])`
+          );
+
+          const parentId = $duplicate.data("parent-id");
+          const duplicateField = data.fields.find(
+            (f) => f.unique_key === parentId
+          );
+
+          if ($duplicate.length && parentId && duplicateField) {
+            const isParent = $duplicate.attr("data-is-parent");
+            const isChecked = $this.is(":checked");
+            const specs = JSON.parse(duplicateField.specs) || {};
+
+            if (isParent) {
+              specs.isChecked = isChecked;
+            } else {
+              specs.isChecked = $(`#${parentId}`).is(":checked");
+            }
+
+            specs.subCheckbox = specs.subCheckbox.map((s) => {
+              if (s.value !== thisValue) {
+                return { ...s, isChecked: $(`#${s.id}`).is(":checked") };
+              }
+
+              return { ...s, isChecked };
+            });
+
+            $duplicate.prop("checked", isChecked);
+            storeFieldValue({
+              id: duplicateField.id,
+              value: JSON.stringify(specs),
+            });
           }
         }
 
