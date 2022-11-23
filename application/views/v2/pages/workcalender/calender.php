@@ -34,15 +34,15 @@
 .calendar-tile-details{
     padding-top: 11px !important;
 }
-.calendar-tile-view{
-    display: block;
+.calendar-tile-view, .calendar-tile-add-gcalendar{
+    display: inline-block;
     font-size: 12px !important;
     margin: 5px 0px !important;
-    width: 60px;
+    /*width: 60px;*/
 }
-.calendar-tile-view i{
+.calendar-tile-view i, .calendar-tile-add-gcalendar i{
     position: relative;
-    top: 2px;
+    top: 1px;
 }
 .calendar-tile-minmax{
     margin-left: 0px !important;
@@ -1397,10 +1397,10 @@
             }
 
             if (date[0] !== null && date[1] !== null) {
-                selected_date = ' ~ ';
+                selected_date = '';
             }
             else if (date[0] === null && date[1] == null) {
-                selected_date = 'nothing';
+                selected_date = '';
             }
 
             if (date[1] !== null) {
@@ -1408,6 +1408,19 @@
             }
 
             $('#view_upcoming_schedules_modal').modal('show');
+
+            let url = "<?= base_url('calendar/_load_upcoming_calendar_by_date') ?>";
+            let _container = $("#view_upcoming_schedules_container");
+            showLoader(_container);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data:{selected_date:selected_date},
+                success: function(result) {
+                    _container.hide().html(result).fadeIn(500);
+                },
+            });
         }
 
         $('.pignose-calendar-button-schedule-container').prev('span.event-date').addClass('event-font-white');
@@ -2079,8 +2092,43 @@
         }
     });
 
-    $(document).on('click', '.pignose-calendar-unit', function(){
+    $(document).on('click', '.calendar-tile-add-gcalendar', function(){
+        var tile_id   = $(this).data('id');
+        var tile_type = $(this).data('type');
 
+        let url = "<?php echo base_url('calendar/_add_to_google_calendar'); ?>";
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                tile_id: tile_id,
+                tile_type: tile_type
+            },
+            success: function(result) {
+                if (result.is_success) {
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "New calendar fee has been added successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: result.message,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            }
+        });
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

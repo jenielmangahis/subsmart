@@ -240,7 +240,7 @@
   width: 2.4em;
   height: 2.4em;
   border-radius: 50%;
-  color: #000000;
+  /*color: #000000;*/
   line-height: 2.4em;
   text-align: center;
   text-decoration: none;
@@ -437,4 +437,8 @@
   width: 2.4em !important;
   height: 2.4em !important;
 
+}
+/*Custom*/
+.with-event{
+  color: #ffffff !important;
 }

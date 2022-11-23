@@ -189,7 +189,29 @@ class Event_model extends MY_Model
         $this->db->where('events.start_date >=',$start_date);
         $this->db->order_by('events.start_date', 'ASC');
 
-        $query = $this->db->limit(5);
+        //$query = $this->db->limit(5);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function getAllEventsByCompanyIdAndDate($company_id = 0, $date)
+    {
+        $date = date('Y-m-d', strtotime($date));        
+
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = `events.customer_id', 'left');
+        $this->db->join('users', 'users.id = events.employee_id', 'left');
+        $this->db->from($this->table);
+        $this->db->where('events.company_id', $company_id);
+        $this->db->where('events.start_date',$date);
+        $this->db->order_by('events.start_date', 'ASC');
+
+        //$query = $this->db->limit(5);
         $query = $this->db->get();
 
         if ($query) {
