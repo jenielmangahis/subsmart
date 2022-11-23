@@ -68,16 +68,18 @@ $("#item_category_form").submit(function(e) {
         type: "POST",
         url: "<?= base_url() ?>/inventory/_create_item_category",
         data: form.serialize(), // serializes the form's elements.
-        success: function(data) {
-            // console.log(data);
-        }
+        // success: function(data) {
+        //     console.log(data);
+        // }
     });
     Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Category was added successfully!',
     }).then((result) => {
-        window.location.href = "/inventory/item_groups";
+        // if (result.isConfirmed) {
+            window.location.href = "/inventory/item_groups";
+        // }
     });
 });
 </script>

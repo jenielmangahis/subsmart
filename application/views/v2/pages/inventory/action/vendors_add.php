@@ -102,16 +102,18 @@ $("#vendor_form").submit(function(e) {
         type: "POST",
         url: "<?= base_url() ?>/inventory/_create_vendor",
         data: form.serialize(), // serializes the form's elements.
-        success: function(data) {
-            // console.log(data);
-        }
+        // success: function(data) {
+        //     console.log(data);
+        // }
     });
     Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Vendor was added successfully!',
     }).then((result) => {
-        window.location.href = "/inventory/vendors";
+        // if (result.isConfirmed) {
+            window.location.href = "/inventory/vendors";
+        // }
     });
 });
 </script>

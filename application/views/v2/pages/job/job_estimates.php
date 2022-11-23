@@ -53,6 +53,26 @@
         border: 1px solid lightgray; 
         border-radius: 10px;
     }
+    table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+    }
+    table.dataTable.no-footer {
+         border-bottom: 0px !important; 
+         margin-bottom: 10px !important;
+    }
+    tbody, td, tfoot, th, thead, tr {
+        border-color: inherit;
+        border-style: solid;
+        border-color: lightgray;
+        border-width: 0;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -785,54 +805,50 @@
 <?php include viewPath('job/modals/fill_esign'); ?>
 
 <!-- Modal -->
-<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="items_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> Name</td>
-                                <td> Qty</td>
-                                <td> Price</td>
-                                <td> Type</td>
-                                <td> Action</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($items)): ?>
-                                <?php foreach ($items as $item): ?>
-                                    <?php $item_qty = get_total_item_qty($item->id); ?>
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
+                        </div>
+                        <div class="col-sm-12">
+                            <table id="items_table" class="table table-hover w-100">
+                                <thead class="bg-light">
                                     <tr>
-                                        <td><?= $item->title; ?></td>
-                                        <td><?= $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
-                                        <td><?= $item->price; ?></td>
-                                        <td><?=ucfirst($item->type); ?></td>
-                                        <td>
-                                            <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                            <i class='bx bx-plus'></i>
-                                            </button>
-                                        </td>
+                                        <td style="width: 0% !important;"></td>
+                                        <td><strong>Name</strong></td>
+                                        <td><strong>Qty</strong></td>
+                                        <td><strong>Price</strong></td>
+                                        <td><strong>Type</strong></td>
                                     </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        if (!empty($items)) {
+                                            foreach ($items as $item) {
+                                               $item_qty = get_total_item_qty($item->id);
+                                               if ($item_qty[0]->total_qty > 0) {
+                                    ?>
+                                    <tr>
+                                        <td style="width: 0% !important;">
+                                            <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                        </td>
+                                        <td><?php echo $item->title; ?></td>
+                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
+                                        <td><?php echo $item->price; ?></td>
+                                        <td><?php echo $item->type; ?></td>
+                                    </tr>
+                                    <?php } } } ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
             </div>
         </div>
     </div>
@@ -976,6 +992,13 @@ $(function() {
 });
 // END: ADD AND REMOVE BUTTON IN "ASSIGNED TO"
 
+var ITEMS_TABLE = $('#items_table').DataTable({
+            "ordering": false,
+        });
+        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+            ITEMS_TABLE.search($(this).val()).draw()
+        });
+        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
 
 CKEDITOR.replace( 'Message_Editor', {
     toolbarGroups: [

@@ -18,12 +18,10 @@
     <!-- disable autosave, because we want to handle form submit - send SMS to employeee -->
     <!-- <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script> -->
 <?php endif; ?>
-
-
 <style>
-    .nsm-table {
+    /*.nsm-table {
         display: none;
-    }
+    }*/
 
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
@@ -405,6 +403,26 @@
     #TEMPORARY_MAP_VIEW {
         border: 1px solid lightgray; 
         border-radius: 10px;
+    }
+    table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+    }
+    table.dataTable.no-footer {
+         border-bottom: 0px !important; 
+         margin-bottom: 10px !important;
+    }
+    tbody, td, tfoot, th, thead, tr {
+        border-color: inherit;
+        border-style: solid;
+        border-color: lightgray;
+        border-width: 0;
     }
 </style>
 <?php if(isset($jobs_data)): ?>
@@ -1080,10 +1098,67 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <?php endif; ?>
 
-                                                <?php if(isset($jobs_data) && $jobs_data->status != 'Scheduled'): ?>
+                                                <?php if (isset($jobs_data) && $jobs_data->status != "Scheduled") { ?>
+                                                    <style>
+                                                        .table-bordered td, .table-bordered th {
+                                                            border: 1px solid #dee2e6 !important;
+                                                        }
+                                                    </style>
+                                                <div class="col-sm-12">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 mb-2">
+                                                            <h5>Devices Audit</h5>
+                                                            <label>Record all Items used on Jobs</label>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <table id="device_audit" class="nsm-table table-bordered w-100">
+                                                                <thead class="bg-light">
+                                                                    <tr>
+                                                                        <!-- <td style="width: 0 !important;"></td> -->
+                                                                        <td><strong>Name</strong></td>
+                                                                        <td><strong>Type</strong></td>
+                                                                        <td><strong>Points</strong></td>
+                                                                        <td><strong>Price</strong></td>
+                                                                        <td><strong>Qty</strong></td>
+                                                                        <td><strong>SubTotal</strong></td>
+                                                                        <td><strong>Location</strong></td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="device_audit_datas-DISABLED">
+                                                                    <?php 
+                                                                        if (isset($jobs_data_items)) { 
+                                                                            $subtotal = 0.00;
+                                                                            foreach ($jobs_data_items as $item) {
+                                                                            $total = $item->price * $item->qty;
+                                                                    ?>
+                                                                    <tr>
+                                                                        <!-- <td style="width: 0 !important;">
+                                                                            <center>
+                                                                                <div class="btn-group">
+                                                                                    <button type="button" class="btn btn-outline-primary border-0 edit_item_list" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>"><i class='bx bxs-edit' ></i></button>
+                                                                                    <button type="button" class="btn btn-outline-danger border-0 remove_audit_item_row"><i class='bx bxs-trash-alt' ></i></button>
+                                                                                </div>
+                                                                            </center>
+                                                                        </td> -->
+                                                                        <td><?php echo $item->title; ?></td>
+                                                                        <td><?php echo $item->type; ?></td>
+                                                                        <td><?php echo $item->points; ?></td>
+                                                                        <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
+                                                                        <td><?php echo $item->qty; ?></td>
+                                                                        <td><?php echo number_format((float)$total,2,'.',','); ?></td>
+                                                                        <td><?php echo $item->location; ?></td>
+                                                                    </tr>
+                                                                    <?php } } ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php } ?>
+
+                                                <!-- <?php if(isset($jobs_data) && $jobs_data->status != 'Scheduled'): ?>
                                                 <div class="col-sm-12">
                                                     <div class="card box_right">
                                                         <div class="row">
@@ -1124,9 +1199,6 @@
                                                                                     <td ><a href="#" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>" class="edit_item_list">
                                                                                             <span class="fa fa-edit"></span>
                                                                                         </a>
-                                                                                        <!--<a href="javascript:void(0)" class="remove_audit_item_row">
-                                                                                            <span class="fa fa-trash"></span></i>
-                                                                                        </a>-->
                                                                                     </td>
                                                                                 </tr>
                                                                             <?php $subtotal = $subtotal + $total; endforeach; ?>
@@ -1144,7 +1216,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <?php endif; ?>
+                                                <?php endif; ?> -->
                                             </div>
                                             <br>
                                         </div>
@@ -1203,56 +1275,50 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade nsm-modal" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="items_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> Name</td>
-                                <td> Qty</td>
-                                <td> Price</td>
-                                <td> Type</td>
-                                <td> Action</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($items)): ?>
-                                <?php foreach ($items as $item): ?>
-                                    <?php $item_qty = get_total_item_qty($item->id); ?>
-                                    <?php if($item_qty[0]->total_qty > 0): ?>
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
+                        </div>
+                        <div class="col-sm-12">
+                            <table id="items_table" class="table table-hover w-100">
+                                <thead class="bg-light">
                                     <tr>
-                                        <td><?= $item->title; ?></td>
-                                        <td><?= $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
-                                        <td><?= $item->price; ?></td>
-                                        <td><?=ucfirst($item->type); ?></td>
-                                        <td>
-                                            <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="nsm-button primary select_item">
-                                            <i class='bx bx-plus'></i>
-                                            </button>
-                                        </td>
+                                        <td style="width: 0% !important;"></td>
+                                        <td><strong>Name</strong></td>
+                                        <td><strong>Qty</strong></td>
+                                        <td><strong>Price</strong></td>
+                                        <td><strong>Type</strong></td>
                                     </tr>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        if (!empty($items)) {
+                                            foreach ($items as $item) {
+                                               $item_qty = get_total_item_qty($item->id);
+                                               if ($item_qty[0]->total_qty > 0) {
+                                    ?>
+                                    <tr>
+                                        <td style="width: 0% !important;">
+                                            <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                        </td>
+                                        <td><?php echo $item->title; ?></td>
+                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
+                                        <td><?php echo $item->price; ?></td>
+                                        <td><?php echo $item->type; ?></td>
+                                    </tr>
+                                    <?php } } } ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
             </div>
         </div>
     </div>

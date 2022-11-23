@@ -1444,7 +1444,7 @@ class Tags extends MY_Controller {
 
     public function load_tags_to_remove()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
+        $post = $this->input->post();
         $search = $post['search'];
 
         $transactions = $post['transactions'];
@@ -1475,6 +1475,24 @@ class Tags extends MY_Controller {
                 break;
                 case 'cc_credit' :
                     $transactionType = 'CC Credit';
+                break;
+                case 'invoice' :
+                    $transactionType = 'Invoice';
+                break;
+                case 'credit_memo' :
+                    $transactionType = 'Credit Memo';
+                break;
+                case 'sales_receipt' :
+                    $transactionType = 'Sales Receipt';
+                break;
+                case 'refund_receipt' :
+                    $transactionType = 'Refund Receipt';
+                break;
+                case 'activity_credit' :
+                    $transactionType = 'Delayed Credit';
+                break;
+                case 'activity_charge' :
+                    $transactionType = 'Delayed Charge';
                 break;
             }
 
@@ -1554,14 +1572,7 @@ class Tags extends MY_Controller {
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($data),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $post['start'], $post['length'])
-        ];
-
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     public function remove_tags()

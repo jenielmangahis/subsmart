@@ -92,7 +92,9 @@ $("#fees_form").submit(function(e) {
         title: 'Success',
         text: 'Inventory Fee was updated successfully!',
     }).then((result) => {
-        window.location.href = "/inventory/fees";
+        if (result.isConfirmed) {
+            window.location.href = "/inventory/fees";
+        }
     });
 });
 </script>
