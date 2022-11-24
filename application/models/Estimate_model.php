@@ -548,6 +548,23 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllPendingEstimatesByCompanyIdAndDate($company_id = 0, $date)
+    {
+        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status, estimates.tags, estimates.job_location, estimates.expiry_date, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, acs_profile.phone_m');
+
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
+
+        $date = date('Y-m-d', strtotime($date));        
+        
+        $this->db->where('estimate_date', $date);
+        $this->db->where('estimates.status', 'Submitted');
+        $this->db->where('estimates.company_id', $company_id);
+        $this->db->order_by('estimate_date', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllPendingEstimates()
     {
         $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');

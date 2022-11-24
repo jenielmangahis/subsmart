@@ -35,8 +35,25 @@
     vertical-align: top;
     display: inline-block;
 }
+#mini_upcoming_schedules_table td .bx{
+    position: relative;
+    top: 1px;
+}
+.gray-block{
+    display: block;
+    padding: 5px;
+    background-color: #d9d9d9;
+}
+.purple-block{
+    display: block;
+    padding: 5px;
+    background-color: #6A4A86;
+    color: #ffffff;
+    margin-bottom: 0px !important;
+}
 </style>
-<table class="nsm-table" id="upcoming_schedules_table">
+<div style="overflow: auto; max-height:580px;">
+<table class="nsm-table" id="mini_upcoming_schedules_table">
     <thead>
         <tr>
             <td></td>
@@ -167,7 +184,6 @@
                             foreach($emp_ids as $eid){
                                 $assigned_employees[] = $eid;    
                             }
-                            //$assigned_employees[] = $schedule['data']->user_id;
 
                             $is_valid = 1;
                         }
@@ -200,37 +216,35 @@
                                 </div>                    
                             </td>
                             <td style="vertical-align: text-top;padding-top: 16px;">
-                                <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
+                                <label class="content-title purple-block" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
                                     <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
                                 </label>
                                 <?php if( $schedule_customer_name != '' ){ ?>
-                                <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                                <label class="content-title gray-block" style="cursor: pointer;margin-bottom: 4px;">
                                     <i class='bx bxs-user-rectangle'></i> <?= $schedule_customer_name; ?>
+                                    <?php if( $schedule_customer_phone != '' ){ ?>
+                                        / <i class='bx bxs-phone' style="margin-left:10px'"></i> <?= $schedule_customer_phone; ?>
+                                    <?php } ?>
                                 </label>
-                                <?php } ?>
-                                <?php if( $schedule_customer_phone != '' ){ ?>
-                                <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
-                                    <i class='bx bxs-phone'></i> <?= $schedule_customer_phone; ?>
-                                </label>
-                                <?php } ?>
-                                <label class="content-title" style="cursor: pointer">
+                                <?php } ?>                                
+                                <label class="content-title gray-block" style="cursor: pointer">
                                     <ul class="location-list">
                                         <li><i class='bx bxs-map-pin'></i></li>
                                         <li><?= $schedule_location; ?><?= $schedule_location_b != '' ? "<br />" . $schedule_location_b : ''; ?></li>
                                     </ul>                                    
                                 </label>
                                 <?php if( $schedule_description != '' ){ ?>
-                                    <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                                    <label class="content-title gray-block" style="cursor: pointer;margin-bottom: 4px;">
                                         <i class='bx bx-calendar-event'></i> <?= $schedule_description; ?>
                                     </label>
                                 <?php } ?>
                                 <?php if( $schedule_expiry_date != '' ){ ?>
-                                    <label class="content-title" style="cursor: pointer; color:#ff4d4d;">
+                                    <label class="content-title gray-block" style="cursor: pointer; color:#ff4d4d;">
                                         <i class='bx bxs-calendar-x'></i> Expiry Date : <?= date("m/d/Y", strtotime($schedule_expiry_date)); ?>
                                     </label>
                                 <?php } ?>
                             </td>
-                            <td class="text-end">
+                            <td class="text-end" style="width:25% !important;">
                                 <?php foreach($assigned_employees as $eid){ ?>
                                     <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
                                         <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
@@ -252,3 +266,4 @@
         <?php } ?>
     </tbody>
 </table>
+</div>

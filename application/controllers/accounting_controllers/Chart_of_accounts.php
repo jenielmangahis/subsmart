@@ -917,33 +917,26 @@ class Chart_of_accounts extends MY_Controller {
             return $flag;
         }, ARRAY_FILTER_USE_BOTH);
 
-        // $displayBalanceOn = [
-        //     'date',
-        //     'reconcile_status'
-        // ];
+        $registers = $data;
 
-        // if(in_array($sort['column'], $displayBalanceOn) && $post['transaction_type'] === 'all' && $post['reconcile_status'] === 'all' && $post['payee'] === 'all') {
-        //     $registers = $data;
+        usort($registers, function($a, $b) {
+            if(strtotime($a['date']) === strtotime($b['date'])) {
+                return strtotime($a['date_created']) < strtotime($b['date_created']);
+            }
+            return strtotime($a['date']) < strtotime($b['date']);
+        });
 
-        //     usort($registers, function($a, $b) {
-        //         if(strtotime($a['date']) === strtotime($b['date'])) {
-        //             return strtotime($a['date_created']) < strtotime($b['date_created']);
-        //         }
-        //         return strtotime($a['date']) < strtotime($b['date']);
-        //     });
+        $accBalance = floatval($account->balance);
+        foreach($registers as $key => $reg) {
+            $balance = number_format($accBalance, 2, '.', ',');
+            $balance = '$'.$balance;
+            $registers[$key]['balance'] = str_replace('$-', '-$', $balance);
 
-        //     $accBalance = floatval($account->balance);
-        //     foreach($registers as $key => $reg) {
-        //         $balance = number_format($accBalance, 2, '.', ',');
-        //         $balance = '$'.$balance;
-        //         $registers[$key]['balance'] = str_replace('$-', '-$', $balance);
+            $accBalance -= floatval($reg[$depKey]);
+            $accBalance += floatval($reg[$paymentKey]);
+        }
 
-        //         $accBalance -= floatval($reg[$depKey]);
-        //         $accBalance += floatval($reg[$paymentKey]);
-        //     }
-
-        //     $data = $registers;
-        // }
+        $data = $registers;
 
         usort($data, function($a, $b) {
             if(strtotime($a['date']) === strtotime($b['date'])) {

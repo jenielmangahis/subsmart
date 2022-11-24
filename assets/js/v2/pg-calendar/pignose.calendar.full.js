@@ -1288,6 +1288,7 @@ define('methods/init',['../manager/index', '../component/classNames', '../compon
             if (nameOfSchedules.length > 0) {
               //$unit.data('schedules', currentSchedules);
               var $schedulePinContainer = $(context.global.calendarScheduleContainerHtml);
+              $unit.addClass('with-event');
               $schedulePinContainer.appendTo($unit);
               nameOfSchedules.map(function (name, index) {
                 if (context.settings.scheduleOptions.colors[name]) {

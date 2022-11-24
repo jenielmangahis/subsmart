@@ -338,9 +338,15 @@ a.btn-primary.btn-md {
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
                                             </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <!-- <div class="col-md-3">
                                         <label for="purchase_order_number"><b>Assigned Techincian</b></label>
                                         <input type="text" class="form-control" name="assign_tech" id="assign_tech" value="<?php echo $appointment_user_id; ?>"/>
+                                    </div> -->
+                                    
+                                    <div class="col-md-3" id="technicianDiv">
+                                        <label for="purchase_order_number"><b>Assigned Technician</b></label>
+                                        <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
+                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple"></select>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
@@ -991,6 +997,56 @@ a.btn-primary.btn-md {
 
 <?php //include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+    $('#appointment-user').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_users',
+                dataType: 'json',
+                delay: 250,                
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                /*formatResult: function(item) {
+                    return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+                },*/
+                cache: true
+            },
+            dropdownParent: $("#technicianDiv"),
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+</script>
 <script>
     function validatecard() {
         var inputtxt = $('.card-number').val();

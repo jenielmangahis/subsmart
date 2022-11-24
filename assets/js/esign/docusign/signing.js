@@ -342,7 +342,7 @@ function Signing(hash) {
 
         if ((!subCheckbox || !subCheckbox.length) && name) {
           const $duplicate = $(
-            `[type=checkbox][name^="${name}"]:not([id="${field.unique_key}"])`
+            `[type=checkbox][name^="${name}-"]:not([id="${field.unique_key}"])`
           );
           const id = $duplicate.attr("id");
           const duplicateField = data.fields.find((f) => f.unique_key === id);
@@ -372,7 +372,7 @@ function Signing(hash) {
           thisID
         ) {
           const $duplicate = $(
-            `[type=radio][name^="${name}"][value="${thisValue}"]:not([id="${thisID}"])`
+            `[type=radio][name^="${name}-"][value="${thisValue}"]:not([id="${thisID}"])`
           );
 
           const parentId = $duplicate.data("parent-id");
@@ -409,14 +409,9 @@ function Signing(hash) {
           }
         }
 
-        if (
-          subCheckbox.length &&
-          inputType === "checkbox" &&
-          thisValue &&
-          thisID
-        ) {
+        if (subCheckbox.length && thisValue && thisID) {
           const $duplicate = $(
-            `[type=checkbox][name^="${name}"][value="${thisValue}"]:not([id="${thisID}"])`
+            `[type="${inputType}"][name^="${name}-"][value="${thisValue}"]:not([id="${thisID}"])`
           );
 
           const parentId = $duplicate.data("parent-id");

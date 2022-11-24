@@ -628,23 +628,85 @@ $(document).on('change', '#remove-tags-modal #remove-tags-table input[type="chec
             var rData = r.data();
 
             if(rData.type === 'group-tag' || rData.type === 'ungrouped-tag') {
-                r.find('input[type="checkbox"]').prop('checked', el.prop('checked')).change();
+                r.find('input[type="checkbox"]').prop('checked', el.prop('checked'));
             } else {
                 break;
             }
         }
     } else {
-        // var text = $('#remove-tags-modal #remove-tags-table thead tr th span').html();
-        // var textSplit = text.split(' ');
+        var parent = row.prev();
 
-        // if(el.prop('checked')) {
-        //     var total = parseInt(textSplit[0]) + 1;
-        // } else {
-        //     var total = parseInt(textSplit[0]) - 1;
-        // }
+        if(parent.data().type.includes('tag')) {
+            do {
+                parent = parent.prev();
+            } while(parent.data().type.includes('tag'));
+        }
 
-        // $('#remove-tags-modal #remove').prop('disabled', total < 1);
-        // $('#remove-tags-modal #remove-tags-table thead tr th span').html(total+' selected');
+        var flag = true;
+        for(i = parent.index() + 2; i <= $('#remove-tags-table tbody tr').length; i++) {
+            var r = $(`#remove-tags-table tbody tr:nth-child(${i})`);
+            var rData = r.data();
+
+            if(rData.type === 'group-tag' || rData.type === 'ungrouped-tag') {
+                if(r.find('input[type="checkbox"]').prop('checked') === false) {
+                    flag = false;
+                }
+            } else {
+                break;
+            }
+        }
+
+        parent.find('input[type="checkbox"]').prop('checked', flag);
+    }
+
+    var total = $('#remove-tags-modal #remove-tags-table tbody tr:not([data-type="group"], [data-type="ungrouped-group"]) input[type="checkbox"]:checked').length
+
+    $('#remove-tags-modal #remove-tags-button').prop('disabled', total < 1);
+    $('#remove-tags-modal #remove-tags-table thead tr td span').html(total+' selected');
+});
+
+$('#remove-tags-modal #search-tags-to-remove').on('keyup', function() {
+    $('#remove-tags-modal #remove-tags-table thead tr td span').html('0 selected');
+    initialize_remove_tags_table();
+});
+
+$('#remove-tags-button').on('click', function() {
+    var data = new FormData();
+
+    var checked = $('#transactions-table tbody tr:visible input.select-one:checked');
+
+    checked.each(function() {
+        data.append('transactions[]', $(this).val());
+    });
+
+    if($('#remove-tags-modal #remove-tags-table tbody tr input[type="checkbox"]:checked').length > 0) {
+        $('#remove-tags-modal #remove-tags-table tbody tr input[type="checkbox"]:checked').each(function() {
+            var row = $(this).closest('tr');
+            var rowData = row.data();
+            if(rowData.type === 'group-tag' || rowData.type === 'ungrouped-tag') {
+                data.append('tags[]', rowData.id);
+            }
+        });
+    
+        $.ajax({
+            url: '/accounting/tags/transactions/remove-tags',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                location.reload();
+            }
+        });
+    } else {
+        Swal.fire({
+            text: "Please selected at least 1 tag to remove.",
+            icon: 'error',
+            showCloseButton: true,
+            confirmButtonColor: '#2ca01c',
+            confirmButtonText: 'OK',
+            timer: 2000
+        })
     }
 });
 

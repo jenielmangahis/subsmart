@@ -42,12 +42,12 @@
                 <span>Appointment Types</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Color Settings'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Color Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('color_settings/index') ?>">
                 <i class='bx bx-fw bx-brush'></i>
                 <span>Color Settings</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'Calendar Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('settings/schedule') ?>">
                 <i class='bx bx-fw bx-calendar-edit'></i>

@@ -307,3 +307,21 @@ $('#export-form').on('submit', function(e) {
     this.submit();
     $(this).remove();
 });
+
+$('#registers-table tbody tr').on('click', function() {
+    if($('#chk_show_in_one_line').prop('checked')) {
+
+    } else {
+        if($(this).find('input').length < 1 && !$(this).hasClass('action-row') && $(this).find('.nsm-empty').length < 1) {
+            if($('#registers-table tbody tr.editting').length > 0) {
+                $('#registers-table tbody tr.editting').next().find('#cancel-edit').trigger('click');
+            }
+            $(this).addClass('editting');
+            // if($(this).hasClass('odd')) {
+            //     $(this).next().addClass('editting');
+            // } else {
+            //     $(this).prev().addClass('editting');
+            // }
+        }
+    }
+});
