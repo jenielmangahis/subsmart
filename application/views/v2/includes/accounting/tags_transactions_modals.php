@@ -166,7 +166,7 @@
                             <thead>
                                 <tr>
                                     <td colspan="2">TAGS TO REMOVE</td>
-                                    <td class="text-end">0 selected</td>
+                                    <td class="text-end"><span>0 selected</span></td>
                                 </tr>
                             </thead>
                             <tbody></tbody>
