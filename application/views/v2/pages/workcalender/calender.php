@@ -2098,30 +2098,33 @@
 
         let url = "<?php echo base_url('calendar/_add_to_google_calendar'); ?>";
 
+        $('#loading_modal').modal('show');
+        $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Connecting to your google account....');
+
         $.ajax({
             type: "POST",
             url: url,
+            dataType:'json',
             data: {
                 tile_id: tile_id,
                 tile_type: tile_type
             },
             success: function(result) {
+                $('#loading_modal').modal('hide');
                 if (result.is_success) {
                     Swal.fire({
                         title: 'Save Successful!',
-                        text: "New calendar fee has been added successfully.",
+                        text: "Calendar schedule was successfully added to your google calendar.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
+                        
                     });
                 } else {
                     Swal.fire({
                         title: 'Error',
-                        text: result.message,
+                        text: 'Google API Error.Cannot add to your google calendar.',
                         icon: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'

@@ -104,13 +104,13 @@ class Settings extends MY_Controller {
 
         } else {
             $this->load->model('GoogleAccounts_model');
-            $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
+            $googleAccount = $this->GoogleAccounts_model->getByCompanyId($company_id);
             $is_glink = false;
             if( $googleAccount ){
                 $is_glink = true;
             }
 
-            $args = array('company_id' => logged('company_id'));
+            $args = array('company_id' => $company_id);
             $colorSettings = $this->ColorSettings_model->getByWhere($args);
 
             $this->page_data['colorSettings'] = $colorSettings;
@@ -669,12 +669,13 @@ class Settings extends MY_Controller {
 
         $this->load->model('GoogleAccounts_model');
 
+        $company_id = logged('company_id');
         $google_credentials = google_credentials();
         $profile = google_get_oauth2_token($_POST['token'], $google_credentials['client_id'], $google_credentials['client_secret']);
 
         $user = $this->session->userdata('logged');
         $data = [
-            'user_id' => $user['id'],
+            'company_id' => $company_id,
             'google_email' => $profile['user']->email,
             'google_access_token' => $profile['access_token'],
             'google_refresh_token' => $profile['refreshToken'],
@@ -682,7 +683,7 @@ class Settings extends MY_Controller {
         ];
         $googleAccount = $this->GoogleAccounts_model->create($data);
         if( $googleAccount ){
-            $google_user_api    = $this->GoogleAccounts_model->getByAuthUser();
+            $google_user_api = $this->GoogleAccounts_model->getByCompanyId($company_id);
             $access_token = "";
             $refresh_token = "";
             $google_client_id = "";

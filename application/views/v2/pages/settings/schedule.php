@@ -226,6 +226,32 @@
                         </div>
 
                         <div class="mt-3">
+                        <label class="content-title">Auto add to Google Calendar</label>
+                        <label class="content-subtitle mb-2">Select which module will auto add to your google calendar.</label>
+
+                        <div class="nsm-card h-auto">
+                            <div class="nsm-card-content">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Appointment" <?= !empty($settings['google_calendar']) && in_array('Appointment', $settings['google_calendar']) ? "checked=checked" : "" ?>>
+                                    <label class="form-check-label" for="work_order_show_customer">Appointment</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Job" <?= !empty($settings['google_calendar']) && in_array('Job', $settings['google_calendar']) ? "checked=checked" : "" ?>>
+                                    <label class="form-check-label" for="work_order_show_details">Job</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Event" <?= !empty($settings['google_calendar']) && in_array('Event', $settings['google_calendar']) ? "checked=checked" : "" ?>>
+                                    <label class="form-check-label" for="work_order_show_price">Events</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Service Ticket" <?= !empty($settings['google_calendar']) && in_array('Service Ticket', $settings['google_calendar']) ? "checked=checked" : "" ?>>
+                                    <label class="form-check-label" for="work_order_show_link">Service Tickets</label>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="mt-3">
                             <label class="content-title">Calendar Default Tab</label>
                             <label class="content-subtitle mb-2">Set the calendar default view.</label>
 
@@ -510,14 +536,23 @@
 
                 },
                 success: function(data) {
-                    location.href = base_url + 'settings/schedule?calendar_update=1';
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Calendar Gmail/Gsuit Account Updated Successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                    //location.href = base_url + 'settings/schedule?calendar_update=1';
                 },
                 error: function(e) {
                     console.log(e);
                 }
             });
-        } else {
-            alert('warning!');
         }
     }
 </script>

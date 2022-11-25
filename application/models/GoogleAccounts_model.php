@@ -52,6 +52,17 @@ class GoogleAccounts_model extends MY_Model
 
         $query = $this->db->get()->row();
         return $query;
+    }   
+
+    public function getByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
     }    
 
     public function deleteByUserId($user_id){

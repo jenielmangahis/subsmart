@@ -183,6 +183,19 @@ class Tickets_model extends MY_Model
         }
     }
 
+    public function get_tickets_by_id_and_company_id($id = 0, $company_id = 0)
+    {
+        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name, users.FName, users.LName');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = tickets.customer_id', 'left');        
+        $this->db->join('users', 'users.id = tickets.sales_rep', 'left');        
+        $this->db->where('tickets.company_id', $company_id);
+        $this->db->where('tickets.id', $id);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function get_upcoming_tickets_by_company_id($company_id = 0)
     {
         $start_date = date('m/d/Y');
