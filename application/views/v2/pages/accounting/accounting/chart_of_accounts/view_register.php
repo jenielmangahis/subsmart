@@ -292,11 +292,11 @@
                                         <?php foreach($registers as $register) : ?>
                                         <tr>
                                             <td><?=$register['date']?></td>
-                                            <td><?=$register['ref_no']?></td>
+                                            <td data-disabled="<?=$register['ref_no_disabled']?>"><?=$register['ref_no']?></td>
                                             <?php if ($type !== 'A/R' && $type !== 'A/P') : ?>
                                             <td><?=$register['type']?></td>
-                                            <td><?=$register['payee']?></td>
-                                            <td><?=$register['account']?></td>
+                                            <td data-type="<?=$register['payee_type']?>" data-id="<?=$register['payee_id']?>" data-disabled="<?=$register['payee_disabled']?>"><?=$register['payee']?></td>
+                                            <td data-id="<?=$register['account_id']?>" data-disabled="<?=$register['account_disabled']?>" data-field="<?=$register['account_field']?>"><?=$register['account']?></td>
                                             <?php else : ?>
                                             <td><?=$type === 'A/R' ? $register['customer'] : $register['vendor']?></td>
                                             <?php endif;?>
@@ -305,28 +305,28 @@
                                             <?php endif; ?>
                                             <?php switch($type) {
                                                 case 'Asset' : ?>
-                                                <td><?=$register['decrease']?></td>
-                                                <td><?=$register['increase']?></td>
+                                                <td data-disabled="<?=$register['decrease_disabled']?>"><?=$register['decrease']?></td>
+                                                <td data-disabled="<?=$register['increase_disabled']?>"><?=$register['increase']?></td>
                                                 <?php break;
                                                 case 'Liability' : ?>
-                                                <td><?=$register['increase']?></td>
-                                                <td><?=$register['decrease']?></td>
+                                                <td data-disabled="<?=$register['increase_disabled']?>"><?=$register['increase']?></td>
+                                                <td data-disabled="<?=$register['decrease_disabled']?>"><?=$register['decrease']?></td>
                                                 <?php break;
                                                 case 'Credit Card' : ?>
-                                                <td><?=$register['charge']?></td>
-                                                <td><?=$register['payment']?></td>
+                                                <td data-disabled="<?=$register['charge_disabled']?>"><?=$register['charge']?></td>
+                                                <td data-disabled="<?=$register['payment_disabled']?>"><?=$register['payment']?></td>
                                                 <?php break;
                                                 case 'A/R' : ?>
-                                                <td><?=$register['charge_credit']?></td>
-                                                <td><?=$register['payment']?></td>
+                                                <td data-disabled="<?=$register['charge_credit_disabled']?>"><?=$register['charge_credit']?></td>
+                                                <td data-disabled="<?=$register['payment_disabled']?>"><?=$register['payment']?></td>
                                                 <?php break;
                                                 case 'A/P' : ?>
-                                                <td><?=$register['billed']?></td>
-                                                <td><?=$register['paid']?></td>
+                                                <td data-disabled="<?=$register['billed_disabled']?>"><?=$register['billed']?></td>
+                                                <td data-disabled="<?=$register['paid_disabled']?>"><?=$register['paid']?></td>
                                                 <?php break;
                                                 default : ?>
-                                                <td><?=$register['payment']?></td>
-                                                <td><?=$register['deposit']?></td>
+                                                <td data-disabled="<?=$register['payment_disabled']?>"><?=$register['payment']?></td>
+                                                <td data-disabled="<?=$register['deposit_disabled']?>"><?=$register['deposit']?></td>
                                                 <?php break;
                                             } ?>
                                             <?php if ($type !== 'A/R' && $type !== 'A/P') : ?>

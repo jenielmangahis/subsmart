@@ -1503,72 +1503,105 @@ class Tags extends MY_Controller {
         }
 
         $data = [];
-        foreach($groups as $group) {
+        foreach($groups as $group)
+        {
             $tagsExisted = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, $group['id']);
 
-            $found = [];
-            foreach($tagsExisted as $groupTag) {
+            if(count($tagsExisted) > 0) {
                 if($search !== '') {
-                    if(stripos($groupTag->name, $search) !== false) {
-                        $found[] = $groupTag;
+                    $searched = array_filter($tagsExisted, function($v, $k) use ($search) {
+                        return stripos($v->name, $search) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+    
+                    if(count($searched) > 0) {
+                        $data[] = [
+                            'id' => $group['id'],
+                            'type' => 'group',
+                            'name' => $group['name']
+                        ];
+        
+                        foreach($tagsExisted as $gTag) {
+                            $count = array_filter($existingTags, function($v, $k) use ($gTag) {
+                                return $gTag->id === $v;
+                            }, ARRAY_FILTER_USE_BOTH);
+    
+                            $data[] = [
+                                'id' => $gTag->id,
+                                'type' => 'group-tag',
+                                'name' => $gTag->name,
+                                'count' => count($count)
+                            ];
+                        }
                     }
                 } else {
-                    $found[] = $groupTag;
-                }
-            }
-
-            if(count($found) > 0) {
-                $data[] = [
-                    'id' => $group['id'],
-                    'type' => 'group',
-                    'name' => $group['name']
-                ];
-
-                foreach($found as $gTag) {
-                    $count = array_filter($existingTags, function($v, $k) use ($gTag, $search) {
-                        return $gTag->id === $v;
-                    }, ARRAY_FILTER_USE_BOTH);
-
                     $data[] = [
-                        'id' => $gTag->id,
-                        'type' => 'group-tag',
-                        'name' => $gTag->name,
-                        'count' => count($count)
+                        'id' => $group['id'],
+                        'type' => 'group',
+                        'name' => $group['name']
                     ];
+    
+                    foreach($tagsExisted as $gTag) {
+                        $count = array_filter($existingTags, function($v, $k) use ($gTag) {
+                            return $gTag->id === $v;
+                        }, ARRAY_FILTER_USE_BOTH);
+    
+                        $data[] = [
+                            'id' => $gTag->id,
+                            'type' => 'group-tag',
+                            'name' => $gTag->name,
+                            'count' => count($count)
+                        ];
+                    }
                 }
             }
         }
 
         $ungroupedExists = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, null);
-        $foundUngrouped = [];
-        foreach($ungroupedExists as $ungrouped) {
+        if(count($ungroupedExists) > 0) {
             if($search !== '') {
-                if(stripos($ungrouped->name, $search) !== false) {
-                    $foundUngrouped[] = $ungrouped;
+                $searched = array_filter($ungroupedExists, function($v, $k) use ($search) {
+                    return stripos($v->name, $search) !== false;
+                }, ARRAY_FILTER_USE_BOTH);
+    
+                if(count($searched) > 0) {
+                    $data[] = [
+                        'id' => 'ungrouped',
+                        'type' => 'ungrouped-group',
+                        'name' => 'Ungrouped'
+                    ];
+        
+                    foreach($searched as $ugTag) {
+                        $count = array_filter($existingTags, function($v, $k) use ($ugTag) {
+                            return $ugTag->id === $v;
+                        }, ARRAY_FILTER_USE_BOTH);
+        
+                        $data[] = [
+                            'id' => $ugTag->id,
+                            'type' => 'ungrouped-tag',
+                            'name' => $ugTag->name,
+                            'count' => count($count)
+                        ];
+                    }
                 }
             } else {
-                $foundUngrouped[] = $ungrouped;
-            }
-        }
-
-        if(count($foundUngrouped) > 0) {
-            $data[] = [
-                'id' => 'ungrouped',
-                'type' => 'ungrouped-group',
-                'name' => 'Ungrouped',
-            ];
-
-            foreach($foundUngrouped as $ugTag) {
-                $count = array_filter($existingTags, function($v, $k) use ($ugTag) {
-                    return $ugTag->id === $v;
-                }, ARRAY_FILTER_USE_BOTH);
-
                 $data[] = [
-                    'id' => $ugTag->id,
-                    'type' => 'ungrouped-tag',
-                    'name' => $ugTag->name,
-                    'count' => count($count)
+                    'id' => 'ungrouped',
+                    'type' => 'ungrouped-group',
+                    'name' => 'Ungrouped'
                 ];
+    
+                foreach($ungroupedExists as $ugTag) {
+                    $count = array_filter($existingTags, function($v, $k) use ($ugTag) {
+                        return $ugTag->id === $v;
+                    }, ARRAY_FILTER_USE_BOTH);
+    
+                    $data[] = [
+                        'id' => $ugTag->id,
+                        'type' => 'ungrouped-tag',
+                        'name' => $ugTag->name,
+                        'count' => count($count)
+                    ];
+                }
             }
         }
 
@@ -1602,6 +1635,24 @@ class Tags extends MY_Controller {
                 break;
                 case 'cc_credit' :
                     $transactionType = 'CC Credit';
+                break;
+                case 'invoice' :
+                    $transactionType = 'Invoice';
+                break;
+                case 'credit_memo' :
+                    $transactionType = 'Credit Memo';
+                break;
+                case 'sales_receipt' :
+                    $transactionType = 'Sales Receipt';
+                break;
+                case 'refund_receipt' :
+                    $transactionType = 'Refund Receipt';
+                break;
+                case 'activity_credit' :
+                    $transactionType = 'Delayed Credit';
+                break;
+                case 'activity_charge' :
+                    $transactionType = 'Delayed Charge';
                 break;
             }
 

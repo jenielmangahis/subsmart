@@ -612,6 +612,7 @@ $('#remove-tags').on('click', function(e) {
 });
 
 $('#remove-tags-modal').on('hidden.bs.modal', function() {
+    $('#remove-tags-modal .selected-transaction-count').html(0);
     $('#remove-tags-modal #search-tags-to-remove'.val(''));
     $('#remove-tags-modal #remove-tags-table tbody').html('');
 });
@@ -711,6 +712,7 @@ $('#remove-tags-button').on('click', function() {
 });
 
 function initialize_remove_tags_table() {
+    $('#remove-tags-modal #remove-tags-table tbody').html('');
     var data = new FormData();
     var checked = $('#transactions-table tbody tr:visible input.select-one:checked');
     
