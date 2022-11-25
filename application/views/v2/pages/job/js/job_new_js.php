@@ -251,15 +251,23 @@ $("#attachment-file").change(function() {
                 "</tr>";
             tableBody = $("#jobs_items");
             tableBody.append(markup);
-            markup2 = "<tr id=\"sss\">" +
-                "<td >"+title+"</td>\n" +
-                "<td >0</td>\n" +
-                "<td >"+price+"</td>\n" +
-                "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
-                "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
-                "</tr>";
+            // markup2 = "<tr id=\"sss\">" +
+            //     "<td >"+title+"</td>\n" +
+            //     "<td >0</td>\n" +
+            //     "<td >"+price+"</td>\n" +
+            //     "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
+            //     "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
+            //     "<td ></td>\n" +
+            //     "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
+            //     "</tr>";
+            markup2 = "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>";
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
             calculate_subtotal();
@@ -344,7 +352,7 @@ $("#attachment-file").change(function() {
         });
 
         $("body").delegate(".remove_audit_item_row", "click", function(){
-            $(this).parent().parent().remove();
+            $(this).parent().parent().parent().parent().remove();
             calculate_subtotal();
         });
 

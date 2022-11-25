@@ -1,4 +1,34 @@
 <?php include viewPath('v2/includes/header'); ?>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<style>
+    .nsm-table {
+        /*display: none;*/
+    }
+    .nsm-badge.primary-enhanced {
+        background-color: #6a4a86;
+    }
+        table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
+.nsm-button:hover {
+     border-color: gray !important; 
+     background-color: white !important; 
+     color: black !important; 
+}
+</style>
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('job/add_new_job_type'); ?>'">
@@ -25,7 +55,12 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-sm-6">
+                        <div class="nsm-field-group search form-group">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TYPE_SEARCHBAR" placeholder="Search Type...">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('job/add_new_job_type'); ?>'">
                                 <i class='bx bx-fw bx-book'></i> New Job Type
@@ -33,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table id="JOB_TYPE_TABLE" class="nsm-table w-100">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
@@ -43,59 +78,42 @@
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($job_types)) :
-                        ?>
-                            <?php
-                            foreach ($job_types as $types) :
+                            if (!empty($job_types)) {
+                                foreach ($job_types as $types) {
                             ?>
-                                <tr>
-                                    <td>
-                                        <?php
-                                        if ($types->icon_marker != '') :
-                                            if ($types->is_marker_icon_default_list == 1) :
-                                                $marker = base_url("uploads/icons/" . $types->icon_marker);
-                                            else :
-                                                $marker = base_url("uploads/job_types/" . $types->company_id . "/" . $types->icon_marker);
-                                            endif;
-                                        else :
-                                            $marker = base_url("uploads/job_types/default_no_image.jpg");
-                                        endif;
-                                        ?>
-                                        <div class="table-row-icon img" style="background-image: url('<?php echo $marker ?>')"></div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $types->title; ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/edit_job_type/' . $types->id); ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $types->id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="3">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
+                        <tr>
+                            <td style="width: 0px !important;">
+                                <?php
+                                    if ($types->icon_marker != '') {
+                                       if ($types->is_marker_icon_default_list == 1) {
+                                            $marker = base_url("uploads/icons/" . $types->icon_marker);
+                                       } else {
+                                            $marker = base_url("uploads/job_types/" . $types->company_id . "/" . $types->icon_marker);
+                                       }
+                                    } else {
+                                        $marker = base_url("uploads/job_types/default_no_image.jpg");
+                                    }
+                                ?>
+                                <div class="table-row-icon img" style="background-image: url('<?php echo $marker ?>')"></div>
+                            </td>
+                            <td class="fw-bold nsm-text-primary"><?= $types->title; ?></td>
+                            <td>
+                                <div class="dropdown table-management">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" href="<?= base_url('job/edit_job_type/' . $types->id); ?>">Edit</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $types->id; ?>">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php } } ?>
                     </tbody>
                 </table>
             </div>
@@ -103,10 +121,21 @@
     </div>
 </div>
 
-
 <script type="text/javascript">
+var JOB_TYPE_TABLE = $("#JOB_TYPE_TABLE").DataTable({
+    "ordering": false,
+    language: {
+        processing: '<span>Fetching data...</span>'
+    },
+});
+
+$("#CUSTOM_TYPE_SEARCHBAR").keyup(function() {
+    JOB_TYPE_TABLE.search($(this).val()).draw()
+});
+JOB_TYPE_TABLE_SETTINGS = JOB_TYPE_TABLE.settings();
+
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        // $(".nsm-table").nsmPagination();
 
         $(document).on("click", ".delete-item", function( event ) {
             var ID = $(this).attr("data-id");

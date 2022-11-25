@@ -1116,7 +1116,7 @@
                                                             <table id="device_audit" class="nsm-table table-bordered w-100">
                                                                 <thead class="bg-light">
                                                                     <tr>
-                                                                        <!-- <td style="width: 0 !important;"></td> -->
+                                                                        <!-- <td style="width: 0% !important;"></td> -->
                                                                         <td><strong>Name</strong></td>
                                                                         <td><strong>Type</strong></td>
                                                                         <td><strong>Points</strong></td>
@@ -1126,7 +1126,7 @@
                                                                         <td><strong>Location</strong></td>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody id="device_audit_datas-DISABLED">
+                                                                <tbody id="device_audit_append">
                                                                     <?php 
                                                                         if (isset($jobs_data_items)) { 
                                                                             $subtotal = 0.00;
@@ -1134,11 +1134,11 @@
                                                                             $total = $item->price * $item->qty;
                                                                     ?>
                                                                     <tr>
-                                                                        <!-- <td style="width: 0 !important;">
+                                                                        <!-- <td style="width: 0% !important;">
                                                                             <center>
                                                                                 <div class="btn-group">
-                                                                                    <button type="button" class="btn btn-outline-primary border-0 edit_item_list" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>"><i class='bx bxs-edit' ></i></button>
-                                                                                    <button type="button" class="btn btn-outline-danger border-0 remove_audit_item_row"><i class='bx bxs-trash-alt' ></i></button>
+                                                                                    <button type="button" class="btn btn-light edit_item_list" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>"><i class='bx bxs-edit' ></i></button>
+                                                                                    <button type="button" class="btn btn-light remove_audit_item_row"><i class='bx bxs-trash-alt' ></i></button>
                                                                                 </div>
                                                                             </center>
                                                                         </td> -->
@@ -1157,7 +1157,6 @@
                                                     </div>
                                                 </div>
                                                 <?php } ?>
-
                                                 <!-- <?php if(isset($jobs_data) && $jobs_data->status != 'Scheduled'): ?>
                                                 <div class="col-sm-12">
                                                     <div class="card box_right">
@@ -1323,7 +1322,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade nsm-modal" id="estimates_import" tabindex="-1" aria-labelledby="newcustomerLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -1431,6 +1429,52 @@
         </div>
     </div>
 </div> -->
+
+
+<!-- 
+                                                <script type="text/javascript">
+        $(".select_item").click(function () {
+            var TR_ID = this.id;
+            var ITEM_NAME = $(this).data('itemname');
+            var ITEM_TYPE = $(this).data('item_type');
+            var POINTS = "";
+            var PRICE = $(this).data('price');
+            var QUANTITY = $(this).data('quantity');
+            var SUB_TOTAL = parseFloat(PRICE * QUANTITY).toFixed(2);
+            var LOCATION = "";
+
+            var id = this.id;
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
+            var qty = $(this).data('quantity');
+            var item_type = $(this).data('item_type');
+            var total_ = price * qty;
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            // markup2 = "<tr id=\"sss\">" +
+            //     "<td >"+title+"</td>\n" +
+            //     "<td >0</td>\n" +
+            //     "<td >"+price+"</td>\n" +
+            //     "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
+            //     "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
+            //     "<td ></td>\n" +
+            //     "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
+            //     "</tr>";\
+            markup2 = "<tr id='"+TR_ID+"'>" +
+                      "<td>"+ITEM_NAME+"</td>" +
+                      "<td>"+ITEM_TYPE+"</td>" +
+                      "<td>"+POINTS+"</td>" +
+                      "<td>"+PRICE+"</td>" +
+                      "<td>"+QUANTITY+"</td>" +
+                      "<td>"+SUB_TOTAL+"</td>" +
+                      "<td>"+LOCATION+"</td>" +
+                      "</tr>";
+            tableBody2 = $("#device_audit_append");
+            tableBody2.append(markup2);
+            // calculate_subtotal();
+        });
+</script> -->
+
 
 <!-- On My Way Modal -->
 <?php include viewPath('v2/pages/job/modals/arrival_modal'); ?>
