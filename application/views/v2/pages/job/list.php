@@ -2,7 +2,6 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
-
 <style>
     .nsm-table {
         /*display: none;*/
@@ -24,10 +23,11 @@ table.dataTable.no-footer {
      border-bottom: 0px solid #111; 
      margin-bottom: 10px;
 }
-.nsm-button:hover {
+#CUSTOM_FILTER_DROPDOWN:hover {
      border-color: gray !important; 
      background-color: white !important; 
      color: black !important; 
+     cursor: pointer;
 }
 </style>
 

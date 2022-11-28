@@ -1,7 +1,38 @@
 <?php include viewPath('v2/includes/header'); ?>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<style>
+    .nsm-table {
+        /*display: none;*/
+    }
+    .nsm-badge.primary-enhanced {
+        background-color: #6a4a86;
+    }
+        table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
+#CUSTOM_FILTER_DROPDOWN:hover {
+     border-color: gray !important; 
+     background-color: white !important; 
+     color: black !important;
+     cursor: pointer; 
+}
+</style>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/new_event') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
         <i class='bx bx-user-plus'></i>
     </div>
 </div>
@@ -25,27 +56,30 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search form-group">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_EVENT_SEARCHBAR" placeholder="Search Event...">
+                            <input class="d-none" id="CUSTOM_FILTER_SEARCHBAR" type="text" placeholder="Filter" data-index="20">
+                        </div>
+                    </div>
+                    <div class="col-6 grid-mb text-end">
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by <?= $filter_status != '' ? ucfirst($filter_status) : 'All'; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="<?= base_url('events'); ?>">All</a></li>
-                                <li><a class="dropdown-item" href="<?= base_url('events?status=draft'); ?>">Draft</a></li>
-                                <li><a class="dropdown-item" href="<?= base_url('events?status=scheduled'); ?>">Scheduled</a></li>
-                                <li><a class="dropdown-item" href="<?= base_url('events?status=started'); ?>">Started</a></li>
-                                <li><a class="dropdown-item" href="<?= base_url('events?status=finished'); ?>">Finished</a></li>
-                            </ul>
+                            <select id="CUSTOM_FILTER_DROPDOWN" class="dropdown-toggle nsm-button">
+                                <option selected value="">All</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Started">Started</option>
+                                <option value="Finished">Finished</option>
+                            </select>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('events/new_event') ?>'">
-                                <i class='bx bx-fw bx-calendar-event'></i> New Event
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
+                            <i class='bx bx-fw bx-calendar-event'></i> New Event
                             </button>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table id="EVENT_TABLE" class="nsm-table w-100">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
@@ -61,59 +95,34 @@
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($events)) :
-                        ?>
-                            <?php
-                            foreach ($events as $event) :
+                            if (!empty($events)) {
+                                foreach ($events as $event) {
                             ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-calendar-event'></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $event->event_number; ?></td>
-                                    <td><?php echo date_format(date_create($event->date_created), "m/d/Y"); ?></td>
-                                    <td><?= $event->FName . ' ' . $event->LName; ?></td>
-                                    <td>$<?= number_format((float)$event->amount, 2, '.', ','); ?></td>
-                                    <td><?= $event->event_type; ?></td>
-                                    <td><?= $event->event_tag; ?></td>
-                                    <td><?= ucfirst($event->status); ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('events/event_preview/') . $event->id; ?>">Preview</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('events/new_event/') . $event->id; ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $event->id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="8">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon">
+                                    <i class='bx bx-calendar-event'></i>
+                                </div>
+                            </td>
+                            <td class="fw-bold nsm-text-primary"><?php echo $event->event_number; ?></td>
+                            <td><?php echo date_format(date_create($event->date_created), "m/d/Y"); ?></td>
+                            <td><?php echo $event->FName . ' ' . $event->LName; ?></td>
+                            <td>$<?php echo number_format((float)$event->amount, 2, '.', ','); ?></td>
+                            <td><?php echo $event->event_type; ?></td>
+                            <td><?php echo $event->event_tag; ?></td>
+                            <td><?php echo ucfirst($event->status); ?></td>
+                            <td>
+                                <div class="dropdown table-management">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="<?php echo base_url('events/event_preview/') . $event->id; ?>">Preview</a></li>
+                                        <li><a class="dropdown-item" href="<?php echo base_url('events/new_event/') . $event->id; ?>">Edit</a></li>
+                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $event->id; ?>">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php } } ?>
                     </tbody>
                 </table>
             </div>
@@ -123,8 +132,25 @@
 
 
 <script type="text/javascript">
+var EVENT_TABLE = $("#EVENT_TABLE").DataTable({
+    "ordering": false,
+    language: {
+        processing: '<span>Fetching data...</span>'
+    },
+});
+
+$("#CUSTOM_EVENT_SEARCHBAR").keyup(function() {
+    EVENT_TABLE.search($(this).val()).draw()
+});
+EVENT_TABLE_SETTINGS = EVENT_TABLE.settings();
+
+$('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
+    $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
+    EVENT_TABLE.columns(7).search(this.value).draw();
+});
+
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        // $(".nsm-table").nsmPagination();
 
         $(document).on("click", ".delete-item", function(event) {
             var ID = $(this).data("id");
@@ -139,7 +165,7 @@
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('events/delete_event') ?>",
+                        url: "<?php echo base_url('events/delete_event') ?>",
                         data: {
                             job_id: ID
                         }, // serializes the form's elements.

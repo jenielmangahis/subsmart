@@ -1,3 +1,5 @@
+const accountId = $('#account').val();
+
 $(function() {
     $('.date').datepicker({
         format: 'mm/dd/yyyy',
@@ -109,7 +111,7 @@ $('#apply-button').on('click', function() {
     url += $('#filter-date').val() !== 'all' ? `date=${$('#filter-date').val()}&` : '';
     url += $('#filter-from').val() !== '' ? `from=${$('#filter-from').val()}&` : '';
     url += $('#filter-to').val() !== '' ? `to=${$('#filter-to').val()}&` : '';
-    url += $('#chk_show_in_one_line').prop('checked') === false ? `single-line=0&` : '';
+    url += $('#chk_show_in_one_line').prop('checked') === false ? `single-line=false&` : '';
 
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 
@@ -637,14 +639,16 @@ $('#registers-table tbody tr').on('click', function() {
 });
 
 $(document).on('click', '#registers-table tbody tr.action-row #cancel-edit', function() {
-    if($('#show_in_one_line').prop('checked')) {
-        // var row = $('#registers-table tbody tr.editting');
+    if($('#chk_show_in_one_line').prop('checked')) {
+        var row = $('#registers-table tbody tr.editting');
 
-        // row.find('td').each(function() {
+        row.find('td').each(function() {
+            var data = $(this).data();
 
-        // });
-        // $('#registers-table tbody tr.editting').removeClass('editting');
-        // $('#registers-table tbody tr.action-row').remove();
+            $(this).html(data.value);
+        });
+        $('#registers-table tbody tr.editting').removeClass('editting');
+        $('#registers-table tbody tr.action-row').remove();
     } else {
         // $('#registers-table tbody tr.editting td').each(function() {
         //     var el = $(this);
@@ -668,4 +672,308 @@ $(document).on('click', '#registers-table tbody tr.action-row #cancel-edit', fun
         // $('#registers-table tbody tr.editting').removeClass('editting');
         // $('#registers-table tbody tr.action-row').remove();
     }
+});
+
+$(document).on('click', '#registers-table tbody tr.action-row #save-transaction', function() {
+    var data = new FormData();
+    var row = $('#registers-table tbody tr.editting');
+    var rowData = row.data();
+
+    $('#registers-table tbody tr.editting td').each(function() {
+        if($(this).find('select').length === 0) {
+            var field = $(this).find('input');
+        } else {
+            var field = $(this).find('select');
+        }
+
+        if(field.length > 0) {
+            data.set(field.attr('name'), field.val());
+        }
+    });
+
+    $('#registers-table tbody tr.action-row #attachments-container .attachment-item').each(function() {
+        var id = $(this).data('id');
+        data.append('attachments[]', id);
+    });
+
+    if(rowData.hasOwnProperty('child_id')) {
+        data.set('child_id', rowData.child_id);
+    }
+
+    $.ajax({
+        url: '/accounting/chart-of-accounts/'+accountId+'/save-transaction/'+rowData.id,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            location.reload();
+        }
+    });
+});
+
+$(document).on('click', '#registers-table tbody tr.action-row #delete-transaction', function() {
+    var html = 'Are you sure you want to delete this transaction?';
+
+    if($('#chk_show_in_one_line').prop('checked')) {
+        var row = $('#registers-table tbody tr.editting');
+        var data = row.data();
+        var transactionType = data.type.replaceAll(' ', '-').toLowerCase();
+
+        switch(data.type) {
+            case 'CC Expense' :
+                transactionType = 'expense';
+            break;
+            case 'CC Bill Payment' :
+                transactionType = 'bill-payment';
+            break;
+        }
+
+        var accountRow = $('#registers-table thead tr td[data-name="Account"]').index();
+        var account = $(row.find('td')[accountRow]).text().trim();
+
+        if(account === '-Split-') {
+            html = 'This is just one part of a split transaction. Deleting it will remove the whole transaction. Are you sure you want to delete?'
+        }
+    } else {
+        // var data = $('#registers-table').DataTable().row($('#registers-table tbody tr.even.editting')).data();
+        // var transactionType = data.ref_no_type.replaceAll(' ', '-').toLowerCase();
+
+        // switch(data.type) {
+        //     case 'CC Expense' :
+        //         transactionType = 'expense';
+        //     break;
+        //     case 'CC Bill Payment' :
+        //         transactionType = 'bill-payment';
+        //     break;
+        // }
+
+        // if(data.payee_account === '-Split-') {
+        //     html = 'This is just one part of a split transaction. Deleting it will remove the whole transaction. Are you sure you want to delete?'
+        // }
+    }
+
+    Swal.fire({
+        html: html,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/delete-transaction/${transactionType}/${data.id}`,
+                type: 'DELETE',
+                success: function(result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '#registers-table tbody tr.action-row #edit-transaction', function() {
+    var row = $('#registers-table tbody tr.editting');
+    var data = row.data();
+    var transactionType = data.type;
+    switch(data.type) {
+        case 'CC Expense' :
+            transactionType = 'expense';
+        break;
+        case 'CC Bill Payment' :
+            transactionType = 'bill-payment';
+        break;
+    }
+    transactionType = transactionType.replaceAll(' ', '-').toLowerCase();
+
+    $.get(`/accounting/view-transaction/${transactionType}/${data.id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        switch(transactionType) {
+            case 'expense' :
+                initModalFields('expenseModal', data);
+
+                // $('#expenseModal #payee').trigger('change');
+
+                $('#expenseModal').modal('show');
+            break;
+            case 'check' :
+                initModalFields('checkModal', data);
+
+                // $('#checkModal #payee').trigger('change');
+        
+                $('#checkModal').modal('show');
+            break;
+            case 'journal' :
+                initModalFields('journalEntryModal', data);
+
+                $('#journalEntryModal').modal('show');
+            break;
+            case 'bill' :
+                initModalFields('billModal', data);
+
+                $('#billModal').modal('show');
+            break;
+            case 'cc-credit' :
+                initModalFields('creditCardCreditModal', data);
+
+                $('#creditCardCreditModal').modal('show');
+            break;
+            case 'vendor-credit' :
+                initModalFields('vendorCreditModal', data);
+
+                $('#vendorCreditModal').modal('show');
+            break;
+            case 'bill-payment' :
+                $('#billPaymentModal #vendor').trigger('change');
+
+                initModalFields('billPaymentModal', data);
+        
+                initBillsTable(data);
+        
+                $('#billPaymentModal .dropdown-menu').on('click', function(e) {
+                    e.stopPropagation();
+                });
+        
+                $('#billPaymentModal').modal('show');
+            break;
+            case 'transfer' :
+                initModalFields('transferModal', data);
+
+                $('#transferModal #transfer_from_account').trigger('change');
+                $('#transferModal #transfer_to_account').trigger('change');
+
+                $('#transferModal').modal('show');
+            break;
+            case 'deposit' :
+                // rowCount = 8;
+                // rowInputs = $('#depositModal table tbody tr:first-child()').html();
+                // blankRow = $('#depositModal table tbody tr:last-child()').html();
+
+                // $('#depositModal table.clickable tbody tr:first-child()').remove();
+                // $('#depositModal table tbody tr:last-child()').remove();
+
+                initModalFields('depositModal', data);
+
+                $('#depositModal').modal('show');
+            break;
+            case 'inventory-qty-adjust' :
+                rowInputs = $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child()').html();
+                blankRow = $('#inventoryModal table#inventory-adjustments-table tbody tr:nth-child(2)').html();
+                rowCount = $('#inventoryModal table#inventory-adjustments-table tbody tr').length;
+
+                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child()').html(blankRow);
+                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child() td:nth-child(2)').html(1);
+
+                initModalFields('inventoryModal', data);
+
+                $('#inventoryModal').modal('show');
+            break;
+            case 'inventory-starting-value' :
+                initModalFields('adjust-starting-value-modal', data);
+
+		        $('#adjust-starting-value-modal').modal('show');
+            break;
+            case 'credit-card-pmt' :
+                initModalFields('payDownCreditModal', data);
+
+                $('#payDownCreditModal').modal('show');
+            break;
+            case 'credit-memo' :
+                initModalFields('creditMemoModal', data);
+
+                $('#creditMemoModal').modal('show');
+            break;
+            case 'sales-receipt' :
+                initModalFields('salesReceiptModal', data);
+
+                $('#salesReceiptModal').modal('show');
+            break;
+            case 'refund-receipt' :
+                initModalFields('refundReceiptModal', data);
+
+                $('#refundReceiptModal').modal('show');
+            break;
+            case 'delayed-credit' :
+                initModalFields('delayedCreditModal', data);
+
+                $('#delayedCreditModal').modal('show');
+            break;
+            case 'delayed-charge' :
+                initModalFields('delayedChargeModal', data);
+
+                $('#delayedChargeModal').modal('show');
+            break;
+            case 'invoice' :
+                initModalFields('invoiceModal', data);
+
+                $('#invoiceModal').modal('show');
+            break;
+        }
+    });
+});
+
+$(document).on('click', '#registers-table tbody tr.action-row #add-attachment', function() {
+    $('#registers-table tbody tr.action-row input#files').trigger('click');
+});
+
+$(document).on('change', '#registers-table tbody tr.action-row input#files', function() {
+    var data = new FormData();
+    var totalfiles = this.files.length;
+
+    for (var index = 0; index < totalfiles; index++) {
+        data.append("files[]", this.files[index]);
+    }
+
+    $.ajax({
+        url: '/accounting/chart-of-accounts/add-attachment',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var attachments = JSON.parse(result);
+
+            if($('#registers-table tbody tr.action-row #attachments-container div.attachment-item').length < 1) {
+                $('#registers-table tbody tr.action-row #attachments-container').append('<h6 class="mt-0">ATTACHMENTS</h6>');
+            }
+
+            for(i in attachments) {
+                var html = `<div class="d-inline-block px-1 attachment-item" data-id="${attachments[i].id}">
+                    <h6 class="m-0"><a class="text-decoration-none view-attachment">${attachments[i].name}</a class="text-decoration-none">&nbsp;&nbsp;<a href="#" class="text-muted remove-attachment">&times;</a></h6>
+                </div>`;
+                $('#registers-table tbody tr.action-row #attachments-container').append(html);
+            }
+        }
+    });
+});
+
+$('#chk_show_in_one_line').on('change', function() {
+    var url = `${base_url}accounting/chart-of-accounts/view-register/${$('#account').val()}?`;
+
+    url += $('#filter-find').attr('data-applied') !== '' ? `search=${$('#filter-find').attr('data-applied')}&` : '';
+    url += $('#filter-reconcile-status').attr('data-applied') !== 'all' ? `reconcile-status=${$('#filter-reconcile-status').attr('data-applied')}&` : '';
+    url += $('#filter-transaction-type').attr('data-applied') !== 'all' ? `transaction-type=${$('#filter-transaction-type').attr('data-applied')}&` : '';
+    url += $('#filter-payee').attr('data-applied') !== 'all' ? `payee=${$('#filter-payee').attr('data-applied')}&` : '';
+    url += $('#filter-date').attr('data-applied') !== 'all' ? `date=${$('#filter-date').attr('data-applied')}&` : '';
+    url += $('#filter-from').attr('data-applied') !== '' ? `from=${$('#filter-from').attr('data-applied')}&` : '';
+    url += $('#filter-to').attr('data-applied') !== '' ? `to=${$('#filter-to').attr('data-applied')}&` : '';
+    url += $(this).prop('checked') === false ? `single-line=false&` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
 });

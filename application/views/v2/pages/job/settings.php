@@ -1,5 +1,37 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/job/job_settings_modals'); ?>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<style>
+    .nsm-table {
+        /*display: none;*/
+    }
+    .nsm-badge.primary-enhanced {
+        background-color: #6a4a86;
+    }
+        table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
+#CUSTOM_FILTER_DROPDOWN:hover {
+     border-color: gray !important; 
+     background-color: white !important; 
+     color: black !important;
+     cursor: pointer; 
+}
+</style>
+
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -32,18 +64,23 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search form-group">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TAX_SEARCHBAR" placeholder="Search Tax Rate...">
+                        </div>
+                    </div>
+                    <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_tax_rate_modal">
-                                <i class='bx bx-fw bx-receipt'></i> Add Tax Rate
+                            <i class='bx bx-fw bx-receipt'></i> Add Tax Rate
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#job_settings_modal">
-                                <i class='bx bx-fw bx-cog'></i>
+                            <i class='bx bx-fw bx-cog'></i>
                             </button>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table id="TAX_SETTINGS_TABLE" class="nsm-table">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
@@ -54,55 +91,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if (!empty($tax_rates)) :
-                        ?>
-                            <?php
-                            foreach ($tax_rates as $rate) :
+                        <?php 
+                            if (!empty($tax_rates)) {
+                                foreach ($tax_rates as $rate) {
                             ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-receipt'></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $rate->name; ?></td>
-                                    <td><?= $rate->rate; ?> %</td>
-                                    <td><?= date("m-d-Y h:i A",strtotime($rate->date_created)); ?></td>
-                                    <td>
-                                        <?php if( $rate->is_default != 1 ){ ?>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item edit-item" href="javascript:void(0);" data-name="<?= $rate->name; ?>" data-percentage="<?= $rate->rate; ?>" data-id="<?= $rate->id; ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $rate->id; ?>">Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        <?php } ?>                                        
-                                    </td>
-                                </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="5">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                            </td>
+                            <td class="fw-bold nsm-text-primary"><?php echo $rate->name; ?></td>
+                            <td><?php echo $rate->rate; ?> %</td>
+                            <td><?php echo date("m-d-Y h:i A",strtotime($rate->date_created)); ?></td>
+                            <td>
+                                <?php if( $rate->is_default != 1 ){ ?>
+                                <div class="dropdown table-management">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item edit-item" href="javascript:void(0);" data-name="<?php echo $rate->name; ?>" data-percentage="<?php echo $rate->rate; ?>" data-id="<?php echo $rate->id; ?>">Edit</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $rate->id; ?>">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <?php } ?>                                        
+                            </td>
+                        </tr>
+                        <?php } } ?>
                     </tbody>
                 </table>
             </div>
@@ -110,11 +130,21 @@
     </div>
 </div>
 
-
-
 <script type="text/javascript">
+var TAX_SETTINGS_TABLE = $("#TAX_SETTINGS_TABLE").DataTable({
+    "ordering": false,
+    language: {
+        processing: '<span>Fetching data...</span>'
+    },
+});
+
+$("#CUSTOM_TAX_SEARCHBAR").keyup(function() {
+    TAX_SETTINGS_TABLE.search($(this).val()).draw()
+});
+TAX_SETTINGS_TABLE_SETTINGS = TAX_SETTINGS_TABLE.settings();
+
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        // $(".nsm-table").nsmPagination();
 
         $(document).on("click", ".edit-item", function( event ){
             var ID = $(this).attr("data-id");
@@ -142,7 +172,7 @@
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('/job/delete_tax_rate') ?>", 
+                        url: "<?php echo base_url('/job/delete_tax_rate') ?>", 
                         data: {id : ID}, // serializes the form's elements.
                         success: function(data)
                         {
@@ -164,7 +194,7 @@
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('/job/add_tax_rate') ?>",
+                url: "<?php echo base_url('/job/add_tax_rate') ?>",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
@@ -184,7 +214,7 @@
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('/job/update_tax_rate') ?>",
+                url: "<?php echo base_url('/job/update_tax_rate') ?>",
                 data: form.serialize(), // serializes the form's elements.
                 dataType: 'json',
                 success: function(data)
@@ -209,7 +239,7 @@
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('/job/update_settings') ?>",
+                url: "<?php echo base_url('/job/update_settings') ?>",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
@@ -237,7 +267,7 @@
                     window.location.reload();
                 }
             }else{
-                window.location.href='<?= base_url(); ?>job/settings/'+is_reload;
+                window.location.href='<?php echo base_url(); ?>job/settings/'+is_reload;
             }
         });
     }
