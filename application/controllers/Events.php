@@ -45,6 +45,25 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/list', $this->page_data);
     }
 
+    public function event_types() {
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'event_types',
+            'select' => '*',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['page']->title = 'Event Types';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = 'Event Types';
+        $test =  $this->page_data['event_types'] = $this->general->get_data_with_param($get_job_types);
+        $this->load->view('v2/pages/events/event_types', $this->page_data);
+    }
+
     public function new_event($id=null) {
 		$this->page_data['page']->title = 'Event Scheduler Tool';
         $this->page_data['page']->parent = 'Sales';
@@ -405,22 +424,6 @@ class Events extends MY_Controller
         $this->page_data['page']->tab = 'Event Tags';
         $this->page_data['event_tags'] = $this->general->get_data_with_param($get_job_settings);
         $this->load->view('v2/pages/events/event_tags', $this->page_data);
-    }
-
-    public function event_types() {
-        $get_job_types = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'event_types',
-            'select' => '*',
-            'order' => array(
-                'order_by' => 'id',
-                'ordering' => 'DESC',
-            ),
-        );
-        $this->page_data['event_types'] = $this->general->get_data_with_param($get_job_types);
-        $this->load->view('events/job_settings/job_types', $this->page_data);
     }
 
     public function bird_eye_view() {

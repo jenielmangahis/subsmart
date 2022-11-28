@@ -757,6 +757,8 @@ class Chart_of_accounts extends MY_Controller {
             $this->page_data['to'] = get('to');
         }
 
+        $this->page_data['single_line'] = get('single-line');
+
         $registers = $this->get_transactions($id, $filters);
 
         $this->page_data['account'] = $account;

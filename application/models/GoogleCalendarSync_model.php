@@ -1,11 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class GoogleAccounts_model extends MY_Model
+class GoogleCalendarSync_model extends MY_Model
 {
-    public $table = 'google_accounts';
-    public $status_active = 1;
-    public $status_closed = 0;
+    public $table = 'google_calendar_sync';
 
     public function getAll($filters=array())
     {
@@ -41,39 +39,17 @@ class GoogleAccounts_model extends MY_Model
         return $query;
     }
 
-    public function getByAuthUser()
+    public function getAllToSync()
     {
-        $user_id = logged('id');
+        $id = logged('id');
 
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('is_sync', 0);
+        $this->db->order_by('id', 'ASC');
 
-        $this->db->where('user_id', $user_id);
-
-        $query = $this->db->get()->row();
-        return $query;
-    }   
-
-    public function getByCompanyId($company_id)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-
-        $this->db->where('company_id', $company_id);
-
-        $query = $this->db->get()->row();
-        return $query;
-    }    
-
-    public function deleteByUserId($user_id){
-
-        $this->db->delete($this->table, array('user_id' => $user_id));
-
-    }
-
-    public function getDefaultAutoSyncCalendarName(){
-        $calendar_name = 'NsmarTrac';
-        return $calendar_name;
+        $query = $this->db->get();
+        return $query->result();
     }
 }
 

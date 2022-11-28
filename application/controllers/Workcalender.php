@@ -12,6 +12,8 @@ class Workcalender extends MY_Controller
 
         $this->checkLogin();
 
+        $this->load->helper('google_calendar_helper');
+
         $this->page_data['page']->title = 'Work Calender';
         $this->page_data['page']->menu  = 'Workcalender';
         $this->page_data['module']      = 'calendar';
@@ -70,12 +72,13 @@ class Workcalender extends MY_Controller
 
         $role = logged('role');
         $company_id = logged('company_id');
-        if ($role == 2 || $role == 3) {           
+        $events = $this->event_model->getAllByCompany($company_id);
+        /*if ($role == 2 || $role == 3) {           
             $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
             $events = $this->event_model->getAllByUserId();
-        }
+        }*/
 
         $this->page_data['events'] = array();
         $this->session->set_userdata('calendar_filter_eids', 'multiselect-all');
@@ -298,7 +301,7 @@ class Workcalender extends MY_Controller
         $enabled_calendar = array();
         $enabled_mini_calendar = array();
         $calendar_list    = array();
-        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+        $google_user_api  = $this->GoogleAccounts_model->getByCompanyId($company_id);
         if ($google_user_api) {
             $google_credentials = google_credentials();
 
@@ -880,7 +883,7 @@ class Workcalender extends MY_Controller
             $user_timezone = 'UTC';
         }
 
-        $google_user_api       = $this->GoogleAccounts_model->getByAuthUser();
+        $google_user_api       = $this->GoogleAccounts_model->getByCompanyId($company_id);
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
@@ -905,13 +908,19 @@ class Workcalender extends MY_Controller
                             }
                         $custom_html .= '</div>';
 
-                        $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a><a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
+                        $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
+
+                        $gcalendar_btn = '';
+                        if( $google_user_api ){
+                            $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                        }
+
                         $custom_html .= '<div class="calendar-tile-details event-tile-'.$event->id.'">';
                             $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $event->event_address . "</small>";
                             $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
                             $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($event->employee_id).'\'); width: 20px;display:inline-block;"></div>';
                             $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $event->start_time . " - " . $event->end_time . "</small>";
-                            $custom_html .= $view_btn;
+                            $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
                         $custom_html .= '</div>';
 
                         $resources_user_events[$inc]['eventId'] = $event->id;
@@ -947,7 +956,12 @@ class Workcalender extends MY_Controller
                 $customer_name =  $st->first_name . ' ' . $st->last_name;
                 $view_btn      = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="ticket" data-id="'.$st->id.'"><i class="bx bx-window-open"></i> View</a>';
 
-                $custom_html  .= '<a class="calendar-tile-minmax" data-type="ticket" data-id="'.$st->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $st->ticket_no . ' - ' . $tags . ' : ' . $customer_name . $tools . '</span></a>';
+                $gcalendar_btn = '';
+                if( $google_user_api ){
+                    $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="ticket" data-id="'.$st->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                }
+
+                $custom_html  .= '<a class="calendar-tile-minmax" data-type="ticket" data-id="'.$st->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $st->ticket_no . ' - ' . $tags . ' : ' . $customer_name  . '</span></a>';
             $custom_html .= '</div>';
 
             $custom_html .= '<div class="calendar-tile-details ticket-tile-'.$st->id.'">';
@@ -955,7 +969,7 @@ class Workcalender extends MY_Controller
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
                 $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($st->employee_id).'\'); width: 20px;display:inline-block;"></div>';
                 $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($st->scheduled_time)) . "</small>";
-                $custom_html .= $view_btn;
+                $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
             $custom_html .= '</div>';
 
             $resources_user_events[$inc]['eventId'] = $st->id;
@@ -1027,161 +1041,6 @@ class Workcalender extends MY_Controller
             $inc++;
         }
 
-        //Google Events
-        $googleColor = $this->ColorSettings_model->getByCompanyIdAndColorName($company_id, 'Google');
-        $enabled_calendar = array();
-        $calendar_list    = array();        
-        if ($google_user_api) {
-            $google_credentials = google_credentials();
-
-            $access_token = "";
-            $refresh_token = "";
-            $google_client_id = "";
-            $google_secrect = "";
-            $calendar_list = array();
-
-            if (isset($google_user_api->google_access_token)) {
-                $access_token = $google_user_api->google_access_token;
-            }
-
-            if (isset($google_user_api->google_refresh_token)) {
-                $refresh_token = $google_user_api->google_refresh_token;
-            }
-
-            if (isset($google_credentials['client_id'])) {
-                $google_client_id = $google_credentials['client_id'];
-            }
-
-            if (isset($google_credentials['client_secret'])) {
-                $google_secrect = $google_credentials['client_secret'];
-            }
-
-            //Set Client
-            $client = new Google_Client();
-            $client->setClientId($google_client_id);
-            $client->setClientSecret($google_secrect);
-            $client->setAccessToken($access_token);
-            //$client->refreshToken($refresh_token);
-            $client->setScopes(array(
-                'email',
-                'profile',
-                'https://www.googleapis.com/auth/calendar',
-            ));
-            $client->setApprovalPrompt('force');
-            $client->setAccessType('offline');
-
-            //Request
-            $access_token = $client->getAccessToken();
-            if(!$client->isAccessTokenExpired()) {
-                $calendar     = new Google_Service_Calendar($client);
-                $data = $calendar->calendarList->listCalendarList();
-
-                $calendar_list = $data->getItems();
-                $email = $google_user_api->google_email;
-                $enabled_mini_calendar = array();
-                if ($google_user_api->enabled_calendars != '') {
-                    $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);   
-                }                
-
-                foreach ($calendar_list as $cl) {
-                    if (in_array($cl['id'], $enabled_mini_calendar) && !empty($enabled_mini_calendar)) {
-                        //Display in events
-                        $optParams = array(
-                          'orderBy' => 'starttime',
-                          'singleEvents' => true,
-                          'timeMin' => $post['start'],
-                          'timeMax' => $post['end'],
-                        );
-                        $events = $calendar->events->listEvents($cl['id'], $optParams);
-                        $bgcolor = "#38a4f8";
-                        if ($cl->backgroundColor != '') {
-                            $bgcolor = $cl->backgroundColor;
-                        }
-
-                        foreach ($events->items as $event) {
-                            $gevent = $this->event_model->getEventByGoogleEventId($event->id);
-
-                            if (empty($gevent)) {
-                                $is_with_time = false;
-
-                                if ($event->start->timeZone != '') {
-                                    $tz = new DateTimeZone($event->start->timeZone);
-                                } else {
-                                    $tz = new DateTimeZone($user_timezone);
-                                }
-
-                                if ($event->start->dateTime != '') {
-                                    $date = new DateTime($event->start->dateTime);
-                                    $date->setTimezone($tz);
-
-                                    $start_date = $date->format('Y-m-d');
-                                    $custom_html_start_date = $date->format('g:i a');
-                                    $starttime = $start_date . ' ' . $date->format('g:i a');
-                                    $is_with_time = true;
-                                } else {
-                                    $date = new DateTime($event->start->date);
-                                    $date->setTimezone($tz);
-
-                                    $start_date = $date->format('Y-m-d') . " 00:00";
-                                    $starttime  = $start_date . ' ' . date("g:i A");
-                                    $custom_html_start_date = $date->format('Y-m-d');
-                                }
-
-                                if ($event->end->dateTime != '') {
-                                    $date = new DateTime($event->end->dateTime);
-                                    $date->setTimezone($tz);
-                                    //$end_date = $event->end->dateTime;
-                                    $end_date = $date->format('Y-m-d');
-
-                                    $custom_html_end_date = $date->format('g:i a');
-                                    $start_time = $date->format('g:i a');
-                                    $is_with_time = true;
-                                } else {
-                                    $date = new DateTime($event->end->date);
-                                    $date->setTimezone($tz);
-
-                                    $end_date = $date->format('Y-m-d') . " 23:59";
-                                    $custom_html_end_date = $date->format('Y-m-d');
-                                }
-
-                                if ($googleColor) {
-                                    $bgcolor = $googleColor->color_code;
-                                }
-
-                                if ($event->summary != '') {
-                                    if ($is_with_time) {
-                                        $custom_html = $custom_html_start_date . " - " . $custom_html_end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
-                                    } else {
-                                        $custom_html = $event->summary . "<br /><small>Google Event</small><br />";
-                                    }
-                                    
-
-                                    $resources_user_events[$inc]['googleCalendarLink'] = $event->htmlLink;
-                                    $resources_user_events[$inc]['geventID'] = $event->id;
-                                    $resources_user_events[$inc]['eventType'] = 'google_events';
-                                    $resources_user_events[$inc]['resourceId'] = "user17";
-                                    $resources_user_events[$inc]['calendarID'] = $cl['id'];
-                                    $resources_user_events[$inc]['title'] = $event->summary;
-                                    $resources_user_events[$inc]['customHtml'] = $custom_html;
-                                    $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
-                                    $resources_user_events[$inc]['start'] = $start_date;
-                                    $resources_user_events[$inc]['end'] = $end_date;
-                                    $resources_user_events[$inc]['starttime'] = strtotime($starttime);
-                                    $resources_user_events[$inc]['backgroundColor'] = $bgcolor;
-
-                                    $inc++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }            
-        }
-
-        /*echo "<pre>";
-        print_r($resources_user_events);
-        exit;*/
-
         //Jobs
         $jobs = $this->Jobs_model->get_all_jobs();
         foreach ($jobs as $j) {
@@ -1207,6 +1066,11 @@ class Workcalender extends MY_Controller
                 }
 
                 $view_btn = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="job" data-id="'.$j->id.'"><i class="bx bx-window-open"></i> View</a>';
+
+                $gcalendar_btn = '';
+                if( $google_user_api ){
+                    $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="job" data-id="'.$j->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                }
 
                 if (isset($a_settings['work_order_show_customer'])) {
                     if( $j->first_name != '' ||  $j->last_name != ''){
@@ -1246,7 +1110,7 @@ class Workcalender extends MY_Controller
                 
                 $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $j->start_time . " - " . $j->end_time . "</small>";
 
-                $custom_html .= $view_btn;
+                $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
 
                 /*if (isset($a_settings['work_order_show_price'])) {
                     $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
@@ -1921,6 +1785,9 @@ class Workcalender extends MY_Controller
             $last_id = $this->Appointment_model->createAppointment($data_appointment);
             $appointment_number = $this->Appointment_model->generateAppointmentNumber($last_id, $appointmentType->name);
             $this->Appointment_model->update($last_id, ['appointment_number' => $appointment_number]);
+
+            //Google Calendar
+            createSyncToCalendar($last_id, 'appointment', $company_id);
 
             customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
 
@@ -2956,25 +2823,131 @@ class Workcalender extends MY_Controller
     public function ajax_add_to_google_calendar()
     {
         include APPPATH . 'libraries/google-calendar-api.php';
+
+        $this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Estimate_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
         $this->load->model('GoogleAccounts_model');
 
-        $event_time = [
-            'start_time' => '2022-11-25T23:21:00',
-            'end_time' => '2022-11-25T23:40:00'
-        ];
+        $company_id = logged('company_id');
+        $is_valid   = false;
+        $post = $this->input->post();
 
-        $googleAccount      = $this->GoogleAccounts_model->getByAuthUser();
-        $google_credentials = google_credentials();
+        switch ($post['tile_type']) {
+            case 'appointment':
+                $appointment = $this->Appointment_model->getByIdAndCompanyId($post['tile_id'], $company_id);
+                if( $appointment ){
+                    $tags = '---';
+                    if( $appointment->tag_ids != '' ){
+                        $a_tags = explode(",", $appointment->tag_ids);     
+                        $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+                        foreach($appointmentTags as $t){
+                            $e_tags[] = $t->name;
+                        }
 
-        $capi = new GoogleCalendarApi();
-        $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
-        if( $data['access_token'] ){
-            $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
-            $event_id      = $capi->createCalendarEvent('primary', 'Nsmart ABC', 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                        $tags = implode(",", $e_tags);
+                    }
 
-            echo "<pre>";
-            print_r($event_id);
+                    $calendar_title = $appointment->appointment_number . ' - ' . $tags . ' : ' . $appointment->customer_name;
+                    $start_time     = date("Y-m-d\TH:i:s", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time_from));
+                    $end_time     = date("Y-m-d\TH:i:s", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time_to));
+                    $event_time = [
+                        'start_time' => $start_time,
+                        'end_time' => $end_time
+                    ];
+
+                    $is_valid = true;
+
+                }
+                break;
+            case 'event':
+                $event = $this->Event_model->get_specific_event($post['tile_id']);
+                if( $event ){
+                    if( $event->event_tag != '' ){
+                        $tags = $event->event_tag;
+                    }else{
+                        $tags = '---';
+                    }
+
+                    $calendar_title = $event->event_number . ' - ' . $tags;
+                    $start_time     = date("Y-m-d\TH:i:s", strtotime($event->start_date . ' ' . $event->start_time));
+                    $end_time     = date("Y-m-d\TH:i:s", strtotime($event->end_date . ' ' . $event->end_time));
+                    $event_time = [
+                        'start_time' => $start_time,
+                        'end_time' => $end_time
+                    ];
+
+                    $is_valid = true;
+                }
+                break;
+            case 'ticket':
+                $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($post['tile_id'], $company_id);
+                if( $ticket ){
+                    if( $ticket->job_tag != '' ){
+                        $tags = $ticket->job_tag;
+                    }else{
+                        $tags = '---';
+                    }
+
+                    $customer_name  =  $ticket->first_name . ' ' . $ticket->last_name;
+                    $calendar_title = $ticket->ticket_no . ' - ' . $tags . ' : ' . $customer_name;
+                    $start_time     = date("Y-m-d\TH:i:s", strtotime($ticket->ticket_date . ' ' . $ticket->scheduled_time));
+                    $end_time     = date("Y-m-d\TH:i:s", strtotime($ticket->ticket_date . ' ' . $ticket->scheduled_time));
+                    $event_time = [
+                        'start_time' => $start_time,
+                        'end_time' => $end_time
+                    ];
+
+                    $is_valid = true;
+                }
+                break;
+            case 'job':
+                $job = $this->Jobs_model->get_specific_job($post['tile_id']);
+                if( $job ){
+                    if( $job->tags != '' ){
+                        $tags = $j->tags;
+                    }else{
+                        $tags = '---';
+                    }
+
+                    $customer_name  = $job->first_name . ' ' . $job->last_name;
+                    $calendar_title = $job->job_number.' - '.$tags.' : '.$customer_name;
+
+                    $start_time     = date("Y-m-d\TH:i:s", strtotime($job->start_date . ' ' . $job->start_time));
+                    $end_time     = date("Y-m-d\TH:i:s", strtotime($job->end_date . ' ' . $job->end_time));
+                    $event_time = [
+                        'start_time' => $start_time,
+                        'end_time' => $end_time
+                    ];
+
+                    $is_valid = true;
+                }
+                break;
+            default:
+                break;
         }
+
+        if( $is_valid ){
+            $googleAccount      = $this->GoogleAccounts_model->getByCompanyId($company_id);
+            $google_credentials = google_credentials();
+
+            $capi = new GoogleCalendarApi();
+            $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
+            if( $data['access_token'] ){
+                $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
+                //$event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+            }else{
+                $is_valid = false;
+            }  
+        }
+
+        $return = ['is_success' => $is_valid];
+        echo json_encode($return);
 
         exit;
     }
