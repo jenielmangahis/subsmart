@@ -926,7 +926,7 @@
                                                                     <span class="bx bx-plus"></span>Manage Tax Rates
                                                                 </a>
                                                             </div>
-                                                            <select id="tax_rate" name="tax_rate" class="form-control">
+                                                            <select id="tax_rate" name="tax_rate" class="form-control" data-value="<?= $jobs_data->tax_rate; ?>">
                                                                 <option value="">None</option>
                                                                 <?php 
                                                                     $SELECTED_TAX = (isset($jobs_data->tax_rate)) ? $jobs_data->tax_rate : '0.00';

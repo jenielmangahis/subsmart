@@ -491,6 +491,11 @@ function Signing(hash) {
       const topEm = `${pxToEm(top, container)}em`;
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
+
+      if (!selected) {
+        $element.css({ opacity: 0 });
+      }
+
       return $element;
     }
 

@@ -64,7 +64,7 @@ table.dataTable.no-footer {
                     </div>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/add_new_event_tag'); ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_tags_add'); ?>'">
                                 <i class='bx bx-fw bx-tag'></i> New Event Tag
                             </button>
                         </div>
@@ -107,7 +107,7 @@ table.dataTable.no-footer {
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url("events/edit_event_tags/" . $tag->id); ?>">Edit</a>
+                                                    <a class="dropdown-item" href="<?php echo base_url("events/event_tags_edit/" . $tag->id); ?>">Edit</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $tag->id; ?>">Delete</a>
@@ -145,26 +145,26 @@ EVENT_TAG_TABLE_SETTINGS = EVENT_TAG_TABLE.settings();
         $(document).on( "click", ".delete-item", function( event ) {
             var ID = $(this).data("id");
             Swal.fire({
-                title: 'Delete selected event tag?',
-                text: "",
+                title: 'Warning',
+                text: "Do you want to delete selected event tag?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'No',
             }).then((result) => {
-                if (result.value) {
+                if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Event Tag was deleted successfully!',
+                }).then((result) => {
+                    window.location.href = "/events/event_tags";
+                });
                     $.ajax({
                         type: "POST",
                         url: "<?php echo base_url(); ?>/events/delete_tag",
                         data: {tag_id : ID}, // serializes the form's elements.
-                        success: function(data)
-                        {
-                            if(data === "1"){
-                                window.location.reload();
-                            }else{
-                                alert(data);
-                            }
-                        }
+                        success: function(data) {}
                     });
                 }
             });

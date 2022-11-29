@@ -465,7 +465,7 @@
                                                         <td data-value="<?=$register['tax']?>"><?=$register['tax']?></td>
                                                         <td data-value="<?=$register['balance']?>"><?=$register['balance']?></td>
                                                     </tr>
-                                                    <tr>
+                                                    <tr data-type="<?=$register['type']?>" data-id="<?=$register['id']?>" <?=$register['child_id'] ? "data-child_id='".$register['child_id']."'" : ''?>>
                                                         <td></td>
                                                         <td data-value="<?=$register['type']?>"><?=$register['type']?></td>
                                                         <td data-value="<?=$register['account']?>" data-id="<?=$register['account_id']?>" data-disabled="<?=$register['account_disabled']?>" data-field="<?=$register['account_field']?>"><?=$register['account']?></td>
@@ -478,7 +478,45 @@
                                                         <td></td>
                                                     </tr>
                                                 <?php else : ?>
-
+                                                    <?php if($type === 'A/R') : ?>
+                                                        <tr data-type="<?=$register['type']?>" data-id="<?=$register['id']?>" <?=$register['child_id'] ? "data-child_id='".$register['child_id']."'" : ''?>>
+                                                            <td><?=$register['date']?></td>
+                                                            <td><?=$register['ref_no']?></td>
+                                                            <td><?=$register['customer']?></td>
+                                                            <td><?=$register['charge_credit']?></td>
+                                                            <td><?=$register['payment']?></td>
+                                                            <td><?=$register['open_balance']?></td>
+                                                        </tr>
+                                                        <tr data-type="<?=$register['type']?>" data-id="<?=$register['id']?>" <?=$register['child_id'] ? "data-child_id='".$register['child_id']."'" : ''?>>
+                                                            <td></td>
+                                                            <td><?=$register['type']?></td>
+                                                            <td><?=$register['memo']?></td>
+                                                            <td></td>
+                                                            <td><?=$register['due_date']?></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    <?php else : ?>
+                                                        <tr data-type="<?=$register['type']?>" data-id="<?=$register['id']?>" <?=$register['child_id'] ? "data-child_id='".$register['child_id']."'" : ''?>>
+                                                            <td><?=$register['date']?></td>
+                                                            <td><?=$register['ref_no']?></td>
+                                                            <td><?=$register['vendor']?></td>
+                                                            <td><?=$register['memo']?></td>
+                                                            <td><?=$register['due_date']?></td>
+                                                            <td><?=$register['billed']?></td>
+                                                            <td><?=$register['paid']?></td>
+                                                            <td><?=$register['open_balance']?></td>
+                                                        </tr>
+                                                        <tr data-type="<?=$register['type']?>" data-id="<?=$register['id']?>" <?=$register['child_id'] ? "data-child_id='".$register['child_id']."'" : ''?>>
+                                                            <td></td>
+                                                            <td><?=$register['type']?></td>
+                                                            <td><?=$register['account']?></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    <?php endif; ?>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endforeach; ?>

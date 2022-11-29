@@ -15,6 +15,7 @@ class Events extends MY_Controller
         $this->hasAccessModule(4);
         //$this->load->library('paypal_lib');
         $this->load->model('Event_model', 'event_model');
+        $this->load->model('EventType_model', 'event_type_model');
         //$this->load->model('Invoice_model', 'invoice_model');
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
@@ -64,7 +65,58 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/event_types', $this->page_data);
     }
 
-    public function new_event($id=null) {
+    public function event_types_add () {
+        $this->load->model('Icons_model');
+        add_css(array('assets/css/hover.css'));
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['page']->title = 'Event Types';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = 'Event Types';
+        $this->page_data['icons'] = $icons;
+        $this->load->view('v2/pages/events/action/event_types_add', $this->page_data);
+    }
+
+    public function event_types_edit ($event_type_id) {
+        $this->load->model('Icons_model');
+        add_css(array('assets/css/hover.css'));
+        $eventType = $this->event_type_model->getById($event_type_id);
+        $icons    = $this->Icons_model->getAll();
+
+        $this->page_data['eventType'] = $eventType;
+        $this->page_data['page']->title = 'Event Types';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = 'Event Types';
+        $this->page_data['icons'] = $icons;
+        $this->load->view('v2/pages/events/action/event_types_edit', $this->page_data);
+    }
+
+     public function event_tags_add () {
+        $this->load->model('Icons_model');
+        add_css(array('assets/css/hover.css'));
+        $icons = $this->Icons_model->getAll();
+        $this->page_data['page']->title = 'Event Tags';
+        $this->page_data['page']->tab   = 'Event Tags';
+        $this->page_data['icons'] = $icons;
+        $this->load->view('v2/pages/events/action/event_tags_add', $this->page_data);
+    }
+
+    public function event_tags_edit ($id) {
+        $this->load->model('Icons_model');
+        $this->load->model('EventTags_model');
+        add_css(array('assets/css/hover.css'));
+        $eventTag = $this->EventTags_model->getById($id);
+        $icons    = $this->Icons_model->getAll();
+        $this->page_data['eventTag'] = $eventTag;
+        $this->page_data['page']->title = 'Event Tags';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab   = 'Event Tags';
+        $this->page_data['icons'] = $icons;
+        $this->load->view('v2/pages/events/action/event_tags_edit', $this->page_data);
+    }
+
+
+    public function event_add($id=null) {
 		$this->page_data['page']->title = 'Event Scheduler Tool';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['page']->tab = 'Events';
@@ -201,7 +253,7 @@ class Events extends MY_Controller
 
         $this->page_data['page_action'] = $page_action;
         // $this->load->view('events/event_new', $this->page_data);
-        $this->load->view('v2/pages/events/event_new', $this->page_data);
+        $this->load->view('v2/pages/events/action/event_add', $this->page_data);
     }
 
     public function event_preview($id=null) {
@@ -914,41 +966,6 @@ class Events extends MY_Controller
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
 
-    }
-
-    public function add_new_event_tag()
-    {
-        $this->load->model('Icons_model');
-
-        add_css(array(
-            'assets/css/hover.css'
-        ));
-
-        $icons = $this->Icons_model->getAll();
-
-        $this->page_data['page']->title = 'Event Tags';
-        $this->page_data['page']->tab   = 'Event Tags';
-        $this->page_data['icons'] = $icons;
-        $this->load->view('v2/pages/events/add_new_event_tag', $this->page_data);
-    }
-
-    public function edit_event_tags($id)
-    {
-        $this->load->model('Icons_model');
-        $this->load->model('EventTags_model');
-
-        add_css(array(
-            'assets/css/hover.css'
-        ));
-
-        $eventTag = $this->EventTags_model->getById($id);
-        $icons    = $this->Icons_model->getAll();
-
-        $this->page_data['eventTag'] = $eventTag;
-        $this->page_data['page']->title = 'Event Tags';
-        $this->page_data['page']->tab   = 'Event Tags';
-        $this->page_data['icons'] = $icons;
-        $this->load->view('v2/pages/events/edit_event_tag', $this->page_data);
     }
 
     public function create_new_event_tag()

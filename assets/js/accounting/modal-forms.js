@@ -10967,7 +10967,7 @@ const initModalFields = (modalName, data = {}) => {
         }
     }
 
-    if($(`#${modalName} select`).length > 0) { //
+    if($(`#${modalName} select`).length > 0) { 
         $(`#${modalName} select`).each(function() {
             var type = $(this).attr('id');
             if (type === undefined) {
@@ -10980,7 +10980,7 @@ const initModalFields = (modalName, data = {}) => {
                 }
             }
 
-            if (dropdownFields.includes(type)) {
+            if (dropdownFields.includes(type) && $(this).find('option').length < 2) {
                 $(this).select2({
                     ajax: {
                         url: '/accounting/get-dropdown-choices',
