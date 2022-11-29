@@ -56,6 +56,25 @@ $(document).ready(function () {
 		resizeSidebar();
 	});
 
+	$(".nsm-sidebar-menu > li > ul > li > a.third-sub-menu").on("click", function (e) {
+		let _this = $(this);
+		let _menuParentList = _this.closest("li");
+		let _menuParentLi   = $('.li-third-sub-menu');
+		let _menuList = $(".nsm-sidebar-menu").find("li.third-sub-menu-item");		
+
+		//_menuParentLi.removeClass("shown");
+
+		if (!_menuParentList.hasClass("shown")) {
+			_menuList.removeClass("shown");
+			_menuParentList.addClass("shown");
+			e.preventDefault();
+		}
+		else {
+			_menuParentList.removeClass("shown");
+		}
+		resizeSidebar();
+	});
+
 	$(".nsm-sidebar-menu .dropdown-menu#new-popup").on("click", function (e) {
 		e.stopPropagation();
 	});
