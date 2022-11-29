@@ -125,7 +125,7 @@
                             $schedule_view_url = base_url('tickets/viewDetails/' . $schedule['data']->id);
                             $schedule_date = date("Y-m-d", strtotime($schedule['data']->ticket_date));
                             $schedule_start_time = date("g:i A", strtotime($schedule['data']->scheduled_time));
-                            $schedule_end_time = '';
+                            $schedule_end_time   = date("g:i A", strtotime($schedule['data']->scheduled_time_to));
                             $schedule_status = $schedule['data']->ticket_status;
                             $schedule_tags   = $schedule['data']->job_tag;
                             $schedule_number = $schedule['data']->ticket_no;
@@ -139,6 +139,11 @@
                             $schedule_description = '';
 
                             $assigned_employees = array();
+                            $emp_ids = unserialize($schedule['data']->technicians);
+                            foreach($emp_ids as $eid){
+                                $assigned_employees[] = $eid;    
+                            }
+
                             $assigned_employees[] = $schedule['data']->sales_rep;
 
                             $is_valid = 1;

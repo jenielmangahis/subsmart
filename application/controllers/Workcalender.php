@@ -967,8 +967,11 @@ class Workcalender extends MY_Controller
             $custom_html .= '<div class="calendar-tile-details ticket-tile-'.$st->id.'">';
                 $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $st->service_location . ", " . $st->acs_zip . "</small>";
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
-                $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($st->employee_id).'\'); width: 20px;display:inline-block;"></div>';
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($st->scheduled_time)) . "</small>";
+                $assigned_technician = unserialize($st->technicians);
+                foreach($assigned_technician as $eid){
+                    $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                }                
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($st->scheduled_time)) . " to " . date("g:i A", strtotime($st->scheduled_time_to)) . "</small>";
                 $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
             $custom_html .= '</div>';
 
