@@ -73,7 +73,7 @@ table.dataTable.no-footer {
                             </select>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_add') ?>'">
                             <i class='bx bx-fw bx-calendar-event'></i> New Event
                             </button>
                         </div>
@@ -139,47 +139,48 @@ var EVENT_TABLE = $("#EVENT_TABLE").DataTable({
     },
 });
 
-$("#CUSTOM_EVENT_SEARCHBAR").keyup(function() {
+$("#CUSTOM_EVENT_SEARCHBAR").keyup(function () {
     EVENT_TABLE.search($(this).val()).draw()
 });
 EVENT_TABLE_SETTINGS = EVENT_TABLE.settings();
 
-$('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
+$('#CUSTOM_FILTER_DROPDOWN').change(function (event) {
     $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
     EVENT_TABLE.columns(7).search(this.value).draw();
 });
 
-    $(document).ready(function() {
-        // $(".nsm-table").nsmPagination();
+$(document).ready(function () {
+    // $(".nsm-table").nsmPagination();
 
-        $(document).on("click", ".delete-item", function(event) {
-            var ID = $(this).data("id");
-            Swal.fire({
-                title: 'Continue to REMOVE this Event?',
-                text: "",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?php echo base_url('events/delete_event') ?>",
-                        data: {
-                            job_id: ID
-                        }, // serializes the form's elements.
-                        success: function(data) {
-                            if (data === "1") {
-                                window.location.reload();
-                            } else {
-                                alert(data);
-                            }
-                        }
-                    });
-                }
-            });
+    $(document).on("click", ".delete-item", function (event) {
+        var ID = $(this).data("id");
+        Swal.fire({
+            title: 'Continue to REMOVE this Event?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Event was deleted successfully!',
+                }).then((result) => {
+                    window.location.href = "/events";
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('events/delete_event') ?>",
+                    data: {
+                        job_id: ID
+                    }, // serializes the form's elements.
+                    success: function (data) { }
+                });
+            }
         });
     });
+});
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

@@ -33,10 +33,6 @@ async function initJobType(selector = "#job_type_option") {
       },
     },
   });
-
-  if ($select.get(0).dataset.value) {
-    $($select).val($select.dataset.value).trigger("change");
-  }
 }
 
 async function initJobTag(selector = "#job_tags") {
@@ -71,10 +67,6 @@ async function initJobTag(selector = "#job_tags") {
       },
     },
   });
-
-  if ($select.get(0).dataset.value) {
-    $($select).val($select.dataset.value).trigger("change");
-  }
 }
 
 function initTaxRates(selector = "#tax_rate") {
@@ -104,7 +96,20 @@ function initTaxRates(selector = "#tax_rate") {
   });
 
   if ($select.get(0).dataset.value) {
-    $($select).val($select.dataset.value).trigger("change");
+    const value = Number($select.get(0).dataset.value);
+    let total = $("#invoice_sub_total").text();
+    total = Number(total.replace(/[^0-9.-]+/g, ""));
+    const percentage = (value / total) * 100;
+
+    fetch("/job/apiGetJobTaxRates").then(async (response) => {
+      const { data } = await response.json();
+      const match = data.find((tax) => tax.rate === percentage.toFixed(2));
+      if (match) {
+        $($select).append(`
+          <option selected="true">${match.name} (${match.rate}%)</option>
+        `);
+      }
+    });
   }
 }
 

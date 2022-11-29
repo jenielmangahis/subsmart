@@ -64,7 +64,7 @@ table.dataTable.no-footer {
                     </div>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('event_types/add_new'); ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_types_add'); ?>'">
                             <i class='bx bx-fw bx-book'></i> New Event Type
                             </button>
                         </div>
@@ -103,7 +103,7 @@ table.dataTable.no-footer {
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="<?php echo base_url('event_types/edit/' . $type->id); ?>">Edit</a></li>
+                                        <li><a class="dropdown-item" href="<?php echo base_url('events/event_types_edit/' . $type->id); ?>">Edit</a></li>
                                         <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $type->id; ?>">Delete</a></li>
                                     </ul>
                                 </div>
@@ -125,47 +125,45 @@ var EVENT_TYPE_TABLE = $("#EVENT_TYPE_TABLE").DataTable({
     },
 });
 
-$("#CUSTOM_TYPE_SEARCHBAR").keyup(function() {
+$("#CUSTOM_TYPE_SEARCHBAR").keyup(function () {
     EVENT_TYPE_TABLE.search($(this).val()).draw()
 });
 EVENT_TYPE_TABLE_SETTINGS = EVENT_TYPE_TABLE.settings();
 
 
+$(document).ready(function () {
+    var base_url = "<?php echo base_url(); ?>";
 
-    $(document).ready(function() {
-        var base_url = "<?php echo base_url(); ?>";
-        
-        // $(".nsm-table").nsmPagination();
-
-        $(document).on('click', '.delete-item', function() {
-            var eid = $(this).data("id");
-            Swal.fire({
-                title: 'Delete selected event type?',
-                text: "",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: base_url + "/event_types/delete",
-                        data: {
-                            eid: eid
-                        }, // serializes the form's elements.
-                        success: function(data) {
-                            /*Swal.fire(
-                              'Deleted!',
-                              'Your file has been deleted.',
-                              'success'
-                            );*/
-                            window.location.reload();
-                        }
-                    });
-                }
-            });
+    // $(".nsm-table").nsmPagination();
+    $(document).on('click', '.delete-item', function () {
+        var eid = $(this).data("id");
+        Swal.fire({
+            title: 'Warning',
+            text: "Do you want to delete selected event type?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Event Type was deleted successfully!',
+                }).then((result) => {
+                    window.location.href = "/events/event_types";
+                });
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "/event_types/delete",
+                    data: {
+                        eid: eid
+                    }, // serializes the form's elements.
+                    success: function (data) { }
+                });
+            }
         });
     });
+});
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
