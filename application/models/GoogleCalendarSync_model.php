@@ -39,7 +39,7 @@ class GoogleCalendarSync_model extends MY_Model
         return $query;
     }
 
-    public function getAllToSync()
+    public function getAllToSync($limit = 0)
     {
         $id = logged('id');
 
@@ -47,6 +47,10 @@ class GoogleCalendarSync_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('is_sync', 0);
         $this->db->order_by('id', 'ASC');
+
+        if ($limit > 0) {
+            $this->db->limit($limit);
+        }
 
         $query = $this->db->get();
         return $query->result();

@@ -470,10 +470,170 @@ if ($this->session->userdata('usertimezone') == null) {
                     </ul>
                 </li>
                 <li>
-                    <a href="<?= base_url("settings/email_templates") ?>">
-                        <i class='bx bx-fw bx-cog'></i> Settings
+                    <a href="javascript:void(0);">
+                        <i class='bx bx-fw bx-cog'></i> Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
-                    <ul>
+                    <ul class="mt-3">
+                        <li>
+                            <a href="<?= base_url("settings/schedule") ?>">
+                                <i class='bx bx-fw bx-calendar-edit'></i> Calendar settings
+                            </a>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="javascript:void(0);" class="third-sub-menu">
+                                <i class='bx bxs-notification'></i> Notifications <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                            </a>
+                            <ul class="mt-3">
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("settings/auto_sms") ?>">
+                                        <i class='bx bx-fw bx-notification'></i> Auto SMS Notification
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("settings/email_templates") ?>">
+                                        <i class='bx bx-fw bx-window'></i> Email Template
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("settings/sms_templates") ?>">
+                                        <i class='bx bx-fw bx-window'></i> SMS Template
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("settings/email_branding") ?>">
+                                        <i class='bx bx-fw bx-envelope'></i> Email Branding
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("settings/notifications") ?>">
+                                        <i class='bx bx-fw bx-notification'></i> Notifications
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="javascript:void(0);" class="third-sub-menu">
+                                <i class='bx bx-fw bx-calendar-event'></i> Event Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                            </a>
+                            <ul class="mt-3">
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("events/event_types") ?>">
+                                        <i class='bx bxs-calendar-event'></i> Event Types
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("events/event_tags") ?>">
+                                        <i class='bx bx-purchase-tag'></i> Event Tags
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="javascript:void(0);" class="third-sub-menu">
+                                <i class='bx bx-fw bx-message-square-error'></i> Job Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                            </a>
+                            <ul class="mt-3">
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("job/settings") ?>">
+                                        <i class='bx bx-fw bx-message-square-error'></i> Job Settings
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("job/job_tags") ?>">
+                                        <i class='bx bx-purchase-tag'></i> Job Tags
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="<?= base_url("estimate/settings") ?>">
+                                <i class='bx bx-fw bx-chart'></i> Estimate Settings
+                            </a>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="<?= base_url("workorder/settings") ?>">
+                                <i class='bx bx-fw bx-task'></i> Workorder Settings
+                            </a>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="<?= base_url("invoice/settings") ?>">
+                                <i class='bx bx-fw bx-receipt'></i> Invoice Settings
+                            </a>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="<?= base_url("more/addon/booking/settings") ?>">
+                                <i class='bx bx-desktop'></i> Booking Settings
+                            </a>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="javascript:void(0);" class="third-sub-menu">
+                                <i class='bx bx-fw bx-user'></i> Customer Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                            </a>
+                            <ul class="mt-3">
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_sales_area") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Sales Area
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_lead_source") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Lead Source
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_lead_types") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Lead Types
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_rate_plans") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Rate Plans
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_activation_fee") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Activation Fee
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_system_package") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> System Package Type
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_headers") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Headers
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_import") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Customer Import Settings
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("customer/settings_export") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Customer Export Settings
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="javascript:void(0);" class="third-sub-menu">
+                                <i class='bx bx-user-pin'></i> Profile <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                            </a>
+                            <ul class="mt-3">
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("users/profilesetting") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Profile Settings
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("users/socialMedia") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Social Media
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li>

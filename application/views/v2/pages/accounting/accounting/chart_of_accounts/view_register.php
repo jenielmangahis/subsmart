@@ -17,7 +17,7 @@
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
-                                        <h3><?=$type?> Register</h3>
+                                        <h3><span id="account-type"><?=$type?></span> Register</h3>
                                         <div class="row">
                                             <div class="col-12 col-md-6">
                                                 <select name="account" id="account" class="form-select nsm-field">
@@ -57,7 +57,7 @@
                                                         <label for="filter-find">Find</label>
                                                         <input type="text" name="filter_find" id="filter-find" class="form-control nsm-field" placeholder="Memo, Ref no., $amt, >$amt, <$amt" value="<?=!empty($search) ? $search : ''?>" data-applied="<?=!empty($search) ? $search : ''?>">
                                                     </div>
-                                                    <?php if($type !== 'A/R') : ?>
+                                                    <?php if($type !== 'A/R' && $type !== 'A/P') : ?>
                                                     <div class="col-12 col-md-4">
                                                         <label for="filter-reconcile-status">Reconcile Status</label>
                                                         <select name="filter_reconcile_status" id="filter-reconcile-status" class="form-select nsm-field" data-applied="<?=!empty($reconcile_status) ? $reconcile_status : 'all'?>">

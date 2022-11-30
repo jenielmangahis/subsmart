@@ -9,6 +9,7 @@ class Events extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
+        $this->load->helper('google_calendar_helper');
 		$this->page_data['page']->title = 'Events';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['page']->tab = 'Events';
@@ -649,6 +650,9 @@ class Events extends MY_Controller
 
         //SMS Notification
         createCronAutoSmsNotification($comp_id, $event_id, 'event', 'Scheduled', $input['employee_id']);
+
+        //Google Calendar
+        createSyncToCalendar($event_id, 'event', $comp_id);
 
         if(isset($input['item_id'])){
             $devices = count($input['item_id']);

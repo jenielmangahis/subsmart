@@ -8,6 +8,7 @@ class Job extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
+        $this->load->helper('google_calendar_helper');
 		$this->page_data['page']->title = 'Jobs';
         $this->page_data['page']->parent = 'Sales';
         //$this->load->library('paypal_lib');
@@ -1686,6 +1687,9 @@ class Job extends MY_Controller
             $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
             
             customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
+
+            //Google Calendar
+            createSyncToCalendar($jobs_id, 'job', $comp_id);
 
             // insert data to job items table (items_id, qty, jobs_id)
             if (isset($input['item_id'])) {

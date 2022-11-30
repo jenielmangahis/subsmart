@@ -43,13 +43,13 @@ body {
 }
 
 .nsm-sidebar {
-	width: 300px;
+	width: 370px;
 	height: 100%;
 	background-color: #f1f5f9;
 	padding: 2em;
 	float: left;
 	position: absolute;
-	left: -300px;
+	left: -370px;
 	z-index: 3;
 }
 

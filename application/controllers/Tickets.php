@@ -65,6 +65,9 @@ class Tickets extends MY_Controller
             $status = $this->input->post('ticket_status');
         }
 
+        // implode(",", $this->input->post('assign_tech'));
+        $techni = serialize($this->input->post('assign_tech'));
+
         // dd($status);
 
         // dd($this->input->post());
@@ -85,7 +88,7 @@ class Tickets extends MY_Controller
             'panel_type'                => $this->input->post('panel_type'),
             'service_type'              => $this->input->post('service_type'),
             'warranty_type'             => $this->input->post('warranty_type'),
-            'technicians'               => $this->input->post('assign_tech'),
+            'technicians'               => $techni,
             'subtotal'                  => $this->input->post('subtotal'),
             'taxes'                     => $this->input->post('taxes'),
             'adjustment'                => $this->input->post('adjustment'),
@@ -376,6 +379,16 @@ class Tickets extends MY_Controller
         $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);
         $this->page_data['items'] = $this->tickets_model->get_ticket_items($id);
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
+
+        $ticketdet = $this->tickets_model->get_tickets_data_one($id);
+            // $tech = explode(",", $tick->technicians);
+            $assigned_technician = unserialize($ticketdet->technicians);
+            // var_dump($assigned_technician);
+                foreach($assigned_technician as $eid){
+                    $custom_html = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 30px;display:inline-block;">'.getUserName($eid).'</div>';
+                }
+        // $this->page_data['technicians'] = $custom_html;
+
         
         $this->load->view('tickets/view', $this->page_data);
     }
@@ -682,4 +695,3 @@ class Tickets extends MY_Controller
 /* End of file Workorder.php */
 
 /* Location: ./application/controllers/Workorder.php */
-

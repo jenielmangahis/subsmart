@@ -614,4 +614,26 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
+
+	public function get_accounts_payable_account($companyId)
+	{
+		$this->db->select('accounting_chart_of_accounts.*');
+		$this->db->where('accounting_chart_of_accounts.company_id', $companyId);
+		$this->db->where('account.account_name', 'Accounts payable (A/P)');
+		$this->db->order_by('accounting_chart_of_accounts.created_at', 'asc');
+		$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
+
+	public function get_accounts_receivable_account($companyId)
+	{
+		$this->db->select('accounting_chart_of_accounts.*');
+		$this->db->where('accounting_chart_of_accounts.company_id', $companyId);
+		$this->db->where('account.account_name', 'Accounts receivable (A/R)');
+		$this->db->order_by('accounting_chart_of_accounts.created_at', 'asc');
+		$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }

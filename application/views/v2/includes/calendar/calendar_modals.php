@@ -500,6 +500,14 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modal_label" aria-hidden="true" style="margin-top:10%;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
 <!-- Calendar Action Select -->
 <!-- <div class="modal fade nsm-modal fade" id="calendar_action_select_modal" tabindex="-1" aria-labelledby="calendar_action_select_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-sm">

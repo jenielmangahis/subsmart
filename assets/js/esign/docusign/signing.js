@@ -842,6 +842,7 @@ function Signing(hash) {
     $signaturePadClear.on("click", (event) => {
       event.preventDefault();
       signaturePad.clear();
+      $signaturePad.get(0).classList.remove("has-content");
     });
 
     $signatureApplyButton.on("click", async function () {
@@ -913,6 +914,7 @@ function Signing(hash) {
 
     $signatureModal.on("hidden.bs.modal", function () {
       $(this).removeAttr("data-field-id");
+      $signaturePad.get(0).classList.remove("has-content");
     });
 
     $finishSigning.on("click", async function () {
@@ -1058,6 +1060,9 @@ function Signing(hash) {
 
   async function init() {
     signaturePad = new SignaturePad($signaturePadCanvas.get(0));
+    signaturePad.onBegin = () => {
+      $signaturePad.get(0).classList.add("has-content");
+    };
 
     await fetchData();
 
@@ -1080,9 +1085,9 @@ function Signing(hash) {
       }
     });
 
-    const percent = (16 / canvasMaxWidth) * 100;
-    if ($(window).width() < canvasMaxWidth) {
-      $container.css({ fontSize: (containerWidth * percent) / 100 });
+    if ($(window).width() <= 991) {
+      const fontSize = (1.7823691460055098 / 100) * containerWidth;
+      $container.css({ fontSize });
     }
 
     $(".loader").addClass("d-none");

@@ -3,6 +3,30 @@
 
 <style>
     
+.select2-results__option {
+    text-align: left;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+    text-align: left;
+}
+.autocomplete-img{
+  height: 50px;
+  width: 50px;
+}
+.autocomplete-left{
+  display: inline-block;
+  width: 65px;
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 80%;
+    vertical-align: top;
+}
+.clear{
+  clear: both;
+}
+
+
 .signature_mobile
 {
     display: none;

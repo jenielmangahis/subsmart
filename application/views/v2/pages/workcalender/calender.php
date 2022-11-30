@@ -28,10 +28,11 @@
 .calendar-title-header{    
     padding: 2px;
     display: inline-flex;
-    border-bottom: 1px solid;
+    /*border-bottom: 1px solid;*/
     min-width: 100%;
 }
 .calendar-tile-details{
+    border-top: 1px solid;
     padding-top: 11px !important;
 }
 .calendar-tile-view, .calendar-tile-add-gcalendar{
@@ -1162,6 +1163,7 @@
                 $("#action_select_time").val(moment(info.startStr).format('h:mm a'));
 
                 $("#appointment-customer").empty().trigger('change');
+                $("#appointment-tags").empty().trigger('change');
                 // $("#appointment-tags").empty().trigger('change');
                 // loadCompanyUsers();
                 // loadCompanyCustomers($("#appointment-customer"));
