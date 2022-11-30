@@ -124,9 +124,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 dataType: 'json',
                 data: {tkID: tkID},
                 success: function (e) {
-                   alert('success');
+                //    alert('success');
+                // location.reload();
+                sucess("Data Deleted Successfully!");
                     
                 }
             });
         });
+
+        
+        function sucess(information,$id){
+            Swal.fire({
+                title: 'OK!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
 </script>

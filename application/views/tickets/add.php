@@ -5,6 +5,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <style>
     
+.select2-results__option {
+    text-align: left;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+    text-align: left;
+}
+.autocomplete-img{
+  height: 50px;
+  width: 50px;
+}
+.autocomplete-left{
+  display: inline-block;
+  width: 65px;
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 80%;
+    vertical-align: top;
+}
+.clear{
+  clear: both;
+}
+
 .signature_mobile
 {
     display: none;
@@ -465,7 +488,7 @@ a.btn-primary.btn-md {
                                                         onKeyup="getItems(this)" name="items[]">
                                                     <ul class="suggestions"></ul>
                                                     <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="item_id[]" id="itemid" class="item_id" value="0">
+                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
                                                     <input type="hidden" name="packageID[]" value="0">
                                                 </td>
                                                 <td width="20%">

@@ -59,6 +59,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('invoice_settings_model');
         $this->load->model('accounting_linked_transactions_model');
         $this->load->model('accounting_print_checks_settings_model');
+        $this->load->model('accounting_account_transactions_model');
         $this->load->library('form_validation');
     }
 
@@ -3756,6 +3757,18 @@ class Accounting_modals extends MY_Controller
 
                         $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
                     }
+
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                    $balance = floatval(str_replace(',', '', $apAcc->balance)) + floatval(str_replace(',', '', $data['total_amount']));
+
+                    $accTransacData = [
+                        'account_id' => $apAcc->id,
+                        'transaction_type' => 'Bill',
+                        'transaction_id' => $billId,
+                        'balance_after' => $balance
+                    ];
+
+                    $this->accounting_account_transactions_model->create($accTransacData);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
                         $currentDate = date("m/d/Y");
@@ -3935,6 +3948,15 @@ class Accounting_modals extends MY_Controller
 
                                 $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
                             }
+
+                            $accTransacData = [
+                                'account_id' => $expenseAcc->id,
+                                'transaction_type' => 'Bill',
+                                'transaction_id' => $billId,
+                                'balance_after' => $newBalance
+                            ];
+
+                            $this->accounting_account_transactions_model->create($accTransacData);
                         }
                     }
     

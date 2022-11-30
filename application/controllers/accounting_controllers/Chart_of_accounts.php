@@ -759,12 +759,42 @@ class Chart_of_accounts extends MY_Controller {
 
         $this->page_data['single_line'] = get('single-line');
 
-        $registers = $this->get_transactions($id, $filters);
+        if($type !== 'A/R' && $type !== 'A/P') {
+            $registers = $this->get_transactions($id, $filters);
+        } else {
+            if($type === 'A/R') {
+                $registers = $this->get_ar_transactions($id, $filters);
+            } else {
+                $registers = $this->get_ap_transactions($id, $filters);
+            }
+        }
 
         $this->page_data['account'] = $account;
         $this->page_data['type'] = $type;
         // $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
         $this->load->view('v2/pages/accounting/accounting/chart_of_accounts/view_register', $this->page_data);
+    }
+
+    private function get_ar_transactions($accountId, $filters = [])
+    {
+        $data = [];
+
+        // $data = $this->invoice_registers($accountId, $data);
+        // $data = $this->credit_memo_registers($accountId, $data);
+
+        return $data;
+    }
+
+    private function get_ap_transactions($accountId, $filters = [])
+    {
+        $data = [];
+
+        // $data = $this->bill_registers($accountId, $data);
+        // $data = $this->bill_payment_registers($accountId, $data);
+        // $data = $this->bill_payment_registers($accountId, $data, true);
+        // $data = $this->vendor_credit_registers($accountId, $data);
+
+        return $data;
     }
 
     private function get_transactions($accountId, $filters = [])

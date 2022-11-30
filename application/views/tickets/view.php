@@ -41,7 +41,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </tr>
                                 <tr>
                                     <td>Scheduled Time:</td>
-                                    <td><?php echo $tickets->scheduled_time; ?></td>
+                                    <td><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Purchase Order No:</td>
@@ -318,6 +318,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
                 <br><br>
+                <div class="row" style="font-size:16px;">
+                    <div class="col-md-3">
+                        <b>Assigned Technicians</b> <br>
+                        <?php //echo $technicians; 
+                        $assigned_technician = unserialize($tickets->technicians);
+                        // var_dump($assigned_technician);
+                            foreach($assigned_technician as $eid){
+                                $user = getUserName($eid);
+                                echo $custom_html = '<img src="'.userProfileImage($eid).'" style="width: 60px;">'.$user['name'].'<br>';
+                            }
+                        ?>
+                    </div>
+                </div>
+                <br>
                 <div class="row" style="font-size:16px;">
                     <div class="col-md-12">
                         <b>Service Description:</u></b> <br> <?php if(empty($tickets->service_description)){ echo 'N/A'; }else{ echo $tickets->service_description; } ?>
