@@ -34,6 +34,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
         $this->load->model('accounting_refund_receipt_model');
+        $this->load->model('accounting_account_transactions_model');
 
 		$this->page_data['page']->title = 'Chart of Accounts';
         $this->page_data['page']->parent = 'Accounting';
@@ -789,7 +790,7 @@ class Chart_of_accounts extends MY_Controller {
     {
         $data = [];
 
-        // $data = $this->bill_registers($accountId, $data);
+        $data = $this->bill_registers($accountId, $data);
         // $data = $this->bill_payment_registers($accountId, $data);
         // $data = $this->bill_payment_registers($accountId, $data, true);
         // $data = $this->vendor_credit_registers($accountId, $data);
@@ -1318,11 +1319,38 @@ class Chart_of_accounts extends MY_Controller {
             $accType = 'Asset';
         } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
             $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
         } else {
             $accType = $accountType->account_name;
         }
         $checks = $this->chart_of_accounts_model->get_checks_registers($accountId);
+        // $transactions = $this->accounting_account_transactions_model->get_account_transactions_by_type($accountId, 'Check');
 
+        // foreach($transactions as $transaction) {
+        //     $check = $this->vendors_model->get_check_by_id($transaction->transaction_id, logged('company_id'));
+        //     $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
+        //     $items = $this->expenses_model->get_transaction_items($check->id, 'Check');
+        //     $count = count($categories) + count($items);
+        //     $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
+
+        //     switch($check->payee_type) {
+        //         case 'vendor':
+        //             $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+        //             $payeeName = $payee->display_name;
+        //         break;
+        //         case 'customer':
+        //             $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+        //             $payeeName = $payee->first_name . ' ' . $payee->last_name;
+        //         break;
+        //         case 'employee':
+        //             $payee = $this->users_model->getUser($check->payee_id);
+        //             $payeeName = $payee->FName . ' ' . $payee->LName;
+        //         break;
+        //     }
+        // }
         foreach($checks as $check) {
             switch($check->payee_type) {
                 case 'vendor':
@@ -1799,133 +1827,106 @@ class Chart_of_accounts extends MY_Controller {
             $accType = 'Asset';
         } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
             $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
         } else {
             $accType = $accountType->account_name;
         }
-        $billCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Bill');
 
-        foreach($billCategories as $billCategory) {
-            $bill = $this->vendors_model->get_bill_by_id($billCategory->transaction_id, logged('company_id'));
+        $transactions = $this->accounting_account_transactions_model->get_account_transactions_by_type($accountId, 'Bill');
+
+        foreach($transactions as $transaction)
+        {
+            $bill = $this->vendors_model->get_bill_by_id($transaction->transaction_id, logged('company_id'));
             $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
             $payeeName = $payee->display_name;
+            $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
             $categories = $this->expenses_model->get_transaction_categories($bill->id, 'Bill');
             $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
             $count = count($categories) + count($items);
 
-            $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
+            // if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+            //     if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+            //         $child = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+            //         $amount = $child->amount;
+            //     } else {
+            //         $child = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+            //         $amount = $child->total;
+            //     }
+            // }
 
-            $transaction = [
-                'id' => $bill->id,
-                'child_id' => $billCategory->id,
-                'date' => date("m/d/Y", strtotime($bill->bill_date)),
-                'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
-                'ref_no_disabled' => true,
-                'type' => 'Bill',
-                'payee_type' => 'vendor',
-                'payee_id' => $bill->vendor_id,
-                'payee' => $payeeName,
-                'payee_disabled' => false,
-                'account_id' => '',
-                'account' => 'Accounts Payable',
-                'account_disabled' => true,
-                'memo' => $billCategory->description,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($billCategory->created_at))
-            ];
+            if($accType !== 'A/R' && $accType !== 'A/P') {
+                $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
 
-            switch($accType) {
-                case 'Credit Card' :
-                    $transaction['charge'] = "";
-                    $transaction['payment'] = number_format(floatval($billCategory->amount), 2, '.', ',');
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = $count > 1;
-                break;
-                case 'Asset' :
-                    $transaction['increase'] = "";
-                    $transaction['decrease'] = number_format(floatval($billCategory->amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = $count > 1;
-                break;
-                case 'Liability' :
-                    $transaction['increase'] = "";
-                    $transaction['decrease'] = number_format(floatval($billCategory->amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = $count > 1;
-                break;
-                default :
-                    $transaction['payment'] = "";
-                    $transaction['deposit'] = number_format(floatval($billCategory->amount), 2, '.', ',');
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = $count > 1;
-                break;
-            }
+                $transaction = [
+                    'id' => $bill->id,
+                    'child_id' => $billCategory->id,
+                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                    'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
+                    'ref_no_disabled' => true,
+                    'type' => 'Bill',
+                    'payee_type' => 'vendor',
+                    'payee_id' => $bill->vendor_id,
+                    'payee' => $payeeName,
+                    'payee_disabled' => false,
+                    'account_id' => $apAcc->id,
+                    'account' => $apAcc->name,
+                    'account_disabled' => true,
+                    'memo' => $billCategory->description,
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($billCategory->created_at))
+                ];
+    
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = "";
+                        $transaction['payment'] = number_format(floatval($billCategory->amount), 2, '.', ',');
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = $count > 1;
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = "";
+                        $transaction['decrease'] = number_format(floatval($billCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = "";
+                        $transaction['decrease'] = number_format(floatval($billCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    default :
+                        $transaction['payment'] = "";
+                        $transaction['deposit'] = number_format(floatval($billCategory->amount), 2, '.', ',');
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = $count > 1;
+                    break;
+                }
+            } else {
+                $account = $this->account_col($bill->id, 'Bill');
+                $billed = number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ',');
+                $billed = str_replace('$-', '-$', '$'.$billed);
 
-            $data[] = $transaction;
-        }
-
-        $billItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Bill');
-        foreach($billItems as $billItem) {
-            $bill = $this->vendors_model->get_bill_by_id($billItem->transaction_id, logged('company_id'));
-            $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
-            $payeeName = $payee->display_name;
-            $categories = $this->expenses_model->get_transaction_categories($bill->id, 'Bill');
-            $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
-            $count = count($categories) + count($items);
-
-            $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
-
-            $transaction = [
-                'id' => $bill->id,
-                'child_id' => $billItem->id,
-                'date' => date("m/d/Y", strtotime($bill->bill_date)),
-                'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
-                'ref_no_disabled' => true,
-                'type' => 'Bill',
-                'payee_type' => 'vendor',
-                'payee_id' => $bill->vendor_id,
-                'payee' => $payeeName,
-                'payee_disabled' => false,
-                'account_id' => '',
-                'account' => 'Accounts Payable',
-                'account_disabled' => true,
-                'memo' => $billItem->description,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($billItem->created_at))
-            ];
-
-            switch($accType) {
-                case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($billItem->total), 2, '.', ',');
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = $count > 1;
-                break;
-                case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($billItem->total), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
-                break;
-                case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($billItem->total), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
-                break;
-                default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($billItem->total), 2, '.', ',');
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = $count > 1;
-                break;
+                $transaction = [
+                    'id' => $bill->id,
+                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                    'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
+                    'type' => 'Bill',
+                    'vendor' => $payeeName,
+                    'account' => $account,
+                    'memo' => $bill->memo,
+                    'due_date' => date('m/d/Y', strtotime($bill->due_date)),
+                    'billed' => $billed,
+                    'paid' => '',
+                    'open_balance' => number_format(floatval(str_replace(',', '', $bill->remaining_balance)), 2, '.', ',')
+                ];
             }
 
             $data[] = $transaction;

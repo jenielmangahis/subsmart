@@ -488,7 +488,7 @@ a.btn-primary.btn-md {
                                                         onKeyup="getItems(this)" name="items[]">
                                                     <ul class="suggestions"></ul>
                                                     <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
+                                                    <input type="hidden" name="item_id[]" id="itemid" class="itemid" value="0">
                                                     <input type="hidden" name="packageID[]" value="0">
                                                 </td>
                                                 <td width="20%">

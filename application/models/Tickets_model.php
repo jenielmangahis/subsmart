@@ -243,6 +243,252 @@ class Tickets_model extends MY_Model
         $this->db->delete('tickets');
         return true;
     }
+
+    public function updateTickets($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('tickets', array(
+            'customer_id'           => $customer_id,
+            'service_location'      => $service_location,
+            'acs_city'              => $acs_city,
+            'acs_state'             => $acs_state,
+            'acs_zip'               => $acs_zip,
+            'service_description'   => $service_description,
+            'job_tag'               => $job_tag,
+            'ticket_no'             => $ticket_no,
+            'ticket_date'           => $ticket_date,
+            'scheduled_time'        => $scheduled_time,
+            'scheduled_time_to'     => $scheduled_time_to,
+            'technicians'           => $technicians,
+            'purchase_order_no'     => $purchase_order_no,
+            'ticket_status'         => $ticket_status,
+            'panel_type'            => $panel_type,
+            'service_type'          => $service_type,
+            'warranty_type'         => $warranty_type,
+            'customer_phone'        => $customer_phone,
+            'employee_id'           => $employee_id,
+            'subtotal'              => $subtotal,
+            'taxes'                 => $taxes,
+            'adjustment'            => $adjustment,
+            'adjustment_value'      => $adjustment_value, 
+            'markup'                => $markup,
+            'grandtotal'            => $grandtotal,
+            'payment_method'        => $payment_method,
+            'payment_amount'        => $payment_amount,
+            'billing_date'          => $billing_date,
+            'sales_rep'             => $sales_rep,
+            'sales_rep_no'          => $sales_rep_no,
+            'tl_mentor'             => $tl_mentor,
+            'message'               => $message,
+            'terms_conditions'      => $terms_conditions,
+            'attachments'           => $attachments,
+            'instructions'          => $instructions,
+        ));
+
+        return true;
+    }
+
+    public function update_cash($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'is_collected'          => $is_collected,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_check($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'check_number'          => $check_number,
+            'routing_number'        => $routing_number,
+            'account_number'        => $account_number,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_creditCard($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'credit_number'         => $credit_number,
+            'credit_expiry'         => $credit_expiry,
+            'credit_cvc'            => $credit_cvc,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_debitCard($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'credit_number'         => $credit_number,
+            'credit_expiry'         => $credit_expiry,
+            'credit_cvc'            => $credit_cvc,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_ACH($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'routing_number'        => $credit_number,
+            'account_number'        => $credit_expiry,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Venmo($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'confirmation'          => $confirmation,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Paypal($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'confirmation'          => $confirmation,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Square($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'confirmation'          => $confirmation,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Warranty($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Home($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Transfer($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Professor($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'credit_number'         => $credit_number,
+            'credit_expiry'         => $credit_expiry,
+            'credit_cvc'            => $credit_cvc,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Other($data)
+    {
+        extract($data);
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('tickets_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    
+    public function delete_items($id)
+    {
+        $where = array(
+            // 'type' => 'Work Order Alarm',
+            'ticket_id'   => $id
+          );
+
+        $this->db->where($where);
+        $this->db->delete('tickets_items');
+        return true;
+    }
 }
 
 ?>
