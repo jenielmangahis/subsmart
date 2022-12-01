@@ -16,6 +16,8 @@ class Tickets extends MY_Controller
 
         $this->checkLogin();
 
+        $this->load->helper('google_calendar_helper');
+
         $this->page_data['page']->title = 'Workorder Management';
 
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
@@ -114,6 +116,9 @@ class Tickets extends MY_Controller
         );
 
         $addQuery = $this->tickets_model->save_tickets($new_data);
+
+        //Google Calendar
+        createSyncToCalendar($addQuery, 'service_ticket', $company_id);
 
         if($this->input->post('payment_method') == 'Cash'){
             $payment_data = array(
