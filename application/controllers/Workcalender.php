@@ -1895,11 +1895,13 @@ class Workcalender extends MY_Controller
         if( $appointment->tag_ids != '' ){
             $a_tags = explode(",", $appointment->tag_ids);     
             $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+            $e_tags = array();
             foreach($appointmentTags as $t){
                 $e_tags[] = $t->name;
             }
-
-            $text_tags = implode(",", $e_tags);
+            if( !empty($e_tags) ){
+                $text_tags = implode(",", $e_tags);
+            }            
         }
 
         $tags = $this->Job_tags_model->getAllByCompanyId($company_id, array());  
