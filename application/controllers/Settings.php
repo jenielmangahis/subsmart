@@ -682,7 +682,7 @@ class Settings extends MY_Controller {
             'date_created' => date("Y-m-d H:i:s")
         ];
         $googleAccount = $this->GoogleAccounts_model->create($data);
-        if( $googleAccount ){
+        /*if( $googleAccount ){
             //Set Client
             $client = new Google_Client();
             $client->setClientId($google_credentials['client_id']);
@@ -726,7 +726,7 @@ class Settings extends MY_Controller {
             }
 
             $this->GoogleAccounts_model->update($googleAccount,['auto_sync_calendar_id' => $calendar_id]);
-        }
+        }*/
 
         $return = ['is_success' => 1];
 
