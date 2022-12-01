@@ -967,10 +967,13 @@ class Workcalender extends MY_Controller
             $custom_html .= '<div class="calendar-tile-details ticket-tile-'.$st->id.'">';
                 $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $st->service_location . ", " . $st->acs_zip . "</small>";
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
-                $assigned_technician = unserialize($st->technicians);
-                foreach($assigned_technician as $eid){
-                    $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
-                }                
+                if( $st->technicians != '' ){
+                    $assigned_technician = unserialize($st->technicians);
+                    foreach($assigned_technician as $eid){
+                        $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                    }                    
+                }
+                
                 $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($st->scheduled_time)) . " to " . date("g:i A", strtotime($st->scheduled_time_to)) . "</small>";
                 $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
             $custom_html .= '</div>';
@@ -2942,8 +2945,8 @@ class Workcalender extends MY_Controller
             $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
             if( $data['access_token'] ){
                 $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
-                //$event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
-                $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                //$event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
             }else{
                 $is_valid = false;
             }  
