@@ -3892,7 +3892,8 @@ class Accounting_modals extends MY_Controller
                     foreach ($data['expense_account'] as $index => $value) {
                         $linkedTransacCat = $data['category_linked'][$index] !== '' ? explode('-', $data['category_linked'][$index]) : null;
 
-                        $categoryDetails[] = [
+                        // $categoryDetails[] = [
+                        $categoryDetail = [
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
                             'expense_account_id' => $value,
@@ -3907,6 +3908,8 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => !is_null($linkedTransacCat) ? $linkedTransacCat[1] : null,
                             'linked_transaction_category_id' => !is_null($linkedTransacCat) ? $data['transac_category_id'][$index] : null
                         ];
+
+                        $categoryDetailId = $this->expenses_model->insert_vendor_transaction_category($categoryDetail);
 
                         if(!isset($data['template_name'])) {
                             $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -3953,14 +3956,16 @@ class Accounting_modals extends MY_Controller
                                 'account_id' => $expenseAcc->id,
                                 'transaction_type' => 'Bill',
                                 'transaction_id' => $billId,
-                                'balance_after' => $newBalance
+                                'balance_after' => $newBalance,
+                                'is_category' => 1,
+                                'child_id' => $categoryDetailId
                             ];
 
                             $this->accounting_account_transactions_model->create($accTransacData);
                         }
                     }
     
-                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                    // $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
                 if (isset($data['item'])) {

@@ -4,7 +4,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('v2/includes/header'); ?>
 
 <style>
-    
+.select2-results__option {
+    text-align: left;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+    text-align: left;
+}
+.autocomplete-img{
+  height: 50px;
+  width: 50px;
+}
+.autocomplete-left{
+  display: inline-block;
+  width: 65px;
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 80%;
+    vertical-align: top;
+}
+.clear{
+  clear: both;
+}
+
 .signature_mobile
 {
     display: none;
@@ -159,7 +181,9 @@ a.btn-primary.btn-md {
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
     
+    <input type="hidden" id="siteurl" value="<?=base_url();?>">
     <?php echo form_open_multipart('tickets/saveUpdateTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+    <input type="hidden" name="ticketID" value="<?php echo $tickets->id; ?>">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -249,7 +273,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Service Ticket No.</b></label>
                                         <input type="text" class="form-control" name="ticket_no" id="ticket_no"
-                                                required placeholder="Enter Ticket#" autofocus value="<?php echo $tickets->ticket_no; ?>" />
+                                                required placeholder="Enter Ticket#" autofocus value="<?php echo $tickets->ticket_no; ?>" readonly/>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Ticket Date</b></label>
@@ -263,7 +287,7 @@ a.btn-primary.btn-md {
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="expiry_date" class="required"><b>Schedule Time</b></label>
+                                        <label for="expiry_date" class="required"><b>Schedule Time From</b></label>
                                         <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <!-- <div class="input-group date" data-provide="datepicker">
                                             <input type="text" class="form-control" name="expiry_date" id="expiry_date"
@@ -272,7 +296,7 @@ a.btn-primary.btn-md {
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div> -->
-                                        <input type="time" class="form-control" name="scheduled_time" id="scheduled_time" required  value="<?php echo $tickets->scheduled_time; ?>"/>
+                                        <input type="time" class="form-control" name="scheduled_time" id="scheduled_time"  value="<?php echo $tickets->scheduled_time; ?>" />
                                         <!-- <select id="scheduled_time" name="scheduled_time" class="form-control">
                                             <option value="8-10">8-10</option>
                                             <option value="10-12">10-12</option>
@@ -280,6 +304,10 @@ a.btn-primary.btn-md {
                                             <option value="2-4">2-4</option>
                                             <option value="4-6">4-6</option>
                                         </select> -->
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="expiry_date" class="required"><b>Schedule Time To</b></label>
+                                        <input type="time" class="form-control" name="scheduled_time_to" id="scheduled_time_to"  value="<?php echo $tickets->scheduled_time_to; ?>" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -291,8 +319,19 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="zip"><b>Ticket Status</b></label>
-                                        <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
-                                            placeholder="Enter Ticket Status" value="<?php echo $tickets->ticket_status; ?>"/>
+                                        <!-- <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
+                                            placeholder="Enter Ticket Status" value="<?php //echo $tickets->ticket_status; ?>"/> -->
+                                        <select id="ticket_status" name="ticket_status" class="form-control">
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'New'){echo "selected";} } ?> value="New">New</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Draft'){echo "selected";} } ?> value="Draft">Draft</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Scheduled'){echo "selected";} } ?> value="Scheduled">Scheduled</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Arrived'){echo "selected";} } ?> value="Arrived">Arrived</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Started'){echo "selected";} } ?> value="Started">Started</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Approved'){echo "selected";} } ?> value="Approved">Approved</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Finished'){echo "selected";} } ?> value="Finished">Finished</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Invoiced'){echo "selected";} } ?> value="Invoiced">Invoiced</option>
+                                            <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Completed'){echo "selected";} } ?> value="Completed">Completed</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label for="zip"><b>Panel Type</b></label>
@@ -326,6 +365,41 @@ a.btn-primary.btn-md {
                                                 <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
                                                 <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
                                             </select>
+                                    </div>
+                                    <div class="col-md-3" id="technicianDiv">
+                                        <label for="purchase_order_number"><b>Assigned Technician</b></label>
+                                        <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
+                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" tabindex="-1" aria-hidden="true">
+                                            <?php
+                                                $assigned_technician = unserialize($tickets->technicians);
+                                                // var_dump($assigned_technician);
+                                                    foreach($assigned_technician as $eid){
+                                                        $user = getUserName($eid);
+                                                        echo $custom_html = '<option value="'.$eid.'"></option>';
+                                                    }
+                                            ?>
+                                        </select>
+                                        <span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: 438.5px;">
+                                            <span class="selection">
+                                                <span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1">
+                                                    <ul class="select2-selection__rendered">
+                                                    <?php
+                                                        $assigned_technician = unserialize($tickets->technicians);
+                                                        // var_dump($assigned_technician);
+                                                            foreach($assigned_technician as $eid){
+                                                                $user = getUserName($eid); ?>
+                                                                 <!-- echo $custom_html = '<select value="'.$eid.'"></select>'; -->
+                                                                 <li class="select2-selection__choice" title=""><span class="select2-selection__choice__remove" role="presentation">×</span><?php echo $user['name']; ?></li>
+                                                    <?php
+                                                            }
+                                                    ?>
+                                                        <!-- <li class="select2-selection__choice" title=""><span class="select2-selection__choice__remove" role="presentation">×</span>Tommy Nguyen</li> -->
+                                                        <li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li>
+                                                    </ul>
+                                                </span>
+                                            </span>
+                                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
@@ -418,7 +492,6 @@ a.btn-primary.btn-md {
                                             </tbody>
                                         </table> -->
                                         <table class="table table-hover">
-                                            <input type="hidden" name="count" value="0" id="count">
                                             <thead style="background-color:#E9E8EA;">
                                             <tr>
                                                 <th>Name</th>
@@ -434,42 +507,41 @@ a.btn-primary.btn-md {
                                             </tr>
                                             </thead>
                                             <tbody id="jobs_items_table_body">
-                                            <tr style="display:;">
-                                                <td width="30%">
-                                                    <input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="items[]">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="item_id[]" id="itemid" class="item_id" value="0">
-                                                    <input type="hidden" name="packageID[]" value="0">
-                                                </td>
-                                                <td width="20%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
-                                                </div>
-
+                                                <?php
+                                                    $i = 0;
+                                                    foreach($itemsLists as $itemL){ ?>
+                                                    <?php //print_r($itemsLists); ?>
+                                                <tr style="display:;">
+                                                    <td width="30%">
+                                                        <input type="text" class="form-control getItems" onKeyup="getItems(this)" name="items[]" value="<?php echo $itemL->title; ?>">
+                                                        <ul class="suggestions"></ul>
+                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                        <input type="hidden" name="item_id[]" id="itemid" class="itemid" value="<?php echo $itemL->items_id; ?>">
+                                                        <input type="hidden" name="packageID[]" value="0">
                                                     </td>
-                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="number" class="form-control price price hidden_mobile_view" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
-                                                        <div class="show_mobile_view">
-                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0" readonly="">
-                                                        </td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                            </tr>
+                                                    <td width="20%">
+                                                        <div class="dropdown-wrapper">
+                                                            <select name="item_type[]" id="item_typeid" class="form-control">
+                                                                <option <?php if(isset($itemsLists)){ if($itemL->item_type == "product"){ echo 'selected'; } } ?> value="product">Product</option>
+                                                                <option <?php if(isset($itemsLists)){ if($itemL->item_type == "material"){ echo 'selected'; } } ?> value="material">Material</option>
+                                                                <option <?php if(isset($itemsLists)){ if($itemL->item_type == "service"){ echo 'selected'; } } ?> value="service">Service</option>
+                                                                <option <?php if(isset($itemsLists)){ if($itemL->item_type == "fee"){ echo 'selected'; } } ?> value="fee">Fee</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]" data-counter="<?php echo $i; ?>" id="quantity_<?php echo $i; ?>" value="<?php echo $itemL->qty; ?>"></td>
+                                                    <td width="1<?php echo $i; ?>%"><input type="number" class="form-control price price hidden_mobile_view" name="price[]" data-counter="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>">
+                                                        <input type="hidden" class="priceqty" id="priceqty_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>"> 
+                                                        <div class="show_mobile_view"></div>
+                                                        <input id="priceM_qty<?php echo $i; ?>" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty">
+                                                    </td>
+                                                    <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->discount; ?>"></td>
+                                                    <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->tax; ?>" readonly=""></td>
+                                                    <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $i; ?>" id="item_total_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->total; ?>">$<span id="span_total_<?php echo $i; ?>"><?php echo $itemL->total; ?></span></td>
+                                                    <td><a href="#" class="remove btn btn-sm btn-danger" id="<?php echo $i; ?>"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
+                                                </tr>
+                                                <?php  $i++; } ?>
+                                            <input type="hidden" name="count" value="<?php echo $i; ?>" id="count">
                                             </tbody>
                                         </table>
                                         <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
@@ -974,6 +1046,58 @@ a.btn-primary.btn-md {
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
+
+
+<script>
+    $('#appointment-user').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_users',
+                dataType: 'json',
+                delay: 250,                
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                /*formatResult: function(item) {
+                    return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+                },*/
+                cache: true
+            },
+            dropdownParent: $("#technicianDiv"),
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+</script>
+
 <script>
     function validatecard() {
         var inputtxt = $('.card-number').val();
