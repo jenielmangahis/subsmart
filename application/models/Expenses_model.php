@@ -544,6 +544,18 @@ class Expenses_model extends MY_Model
 
     }
 
+    public function insert_vendor_transaction_category($data)
+    {
+        $this->db->insert('accounting_vendor_transaction_categories', $data);
+        return $this->db->insert_id();
+    }
+
+    public function insert_vendor_transaction_item($data)
+    {
+        $this->db->insert('accounting_vendor_transaction_items', $data);
+        return $this->db->insert_id();
+    }
+
     public function insert_vendor_transaction_categories($data)
     {
         $this->db->insert_batch('accounting_vendor_transaction_categories', $data);

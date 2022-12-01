@@ -364,6 +364,312 @@ class Tickets extends MY_Controller
         }
     }
 
+    
+    public function saveUpdateTicket()
+    {
+        $id = $this->input->post('ticketID');
+
+        $this->load->helper('form');
+
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        
+        $action = $this->input->post('action');
+        // if($action == 'Scheduled') 
+        // {
+        //     $status = 'Scheduled';
+        // }else{
+            $status = $this->input->post('ticket_status');
+        // }
+
+        // implode(",", $this->input->post('assign_tech'));
+        $techni = serialize($this->input->post('assign_tech'));
+
+        // dd($status);
+
+        // dd($this->input->post());
+        $update_data = array(
+            'id'                        => $this->input->post('ticketID'),
+            'customer_id'               => $this->input->post('customer_id'),
+            'service_location'          => $this->input->post('service_location'),
+            'service_description'       => $this->input->post('service_description'),
+            'acs_city'                  => $this->input->post('customer_city'),
+            'acs_state'                 => $this->input->post('customer_state'),
+            'acs_zip'                   => $this->input->post('customer_zip'),
+            'job_tag'                   => $this->input->post('job_tag'),
+            'ticket_no'                 => $this->input->post('ticket_no'),
+            'ticket_date'               => $this->input->post('ticket_date'),
+            'scheduled_time'            => $this->input->post('scheduled_time'),
+            'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
+            'purchase_order_no'         => $this->input->post('purchase_order_no'),
+            'ticket_status'             => $status,
+            'panel_type'                => $this->input->post('panel_type'),
+            'service_type'              => $this->input->post('service_type'),
+            'warranty_type'             => $this->input->post('warranty_type'),
+            'technicians'               => $techni,
+            'subtotal'                  => $this->input->post('subtotal'),
+            'taxes'                     => $this->input->post('taxes'),
+            'adjustment'                => $this->input->post('adjustment'),
+            'adjustment_value'          => $this->input->post('adjustment_value'),
+            'markup'                    => $this->input->post('markup'),
+            'grandtotal'                => $this->input->post('grandtotal'),
+            'payment_method'            => $this->input->post('payment_method'),
+            'payment_amount'            => $this->input->post('payment_amount'),
+            'billing_date'              => $this->input->post('billing_date'),
+            'sales_rep'                 => $this->input->post('sales_rep'),
+            'sales_rep_no'              => $this->input->post('sales_rep_no'),
+            'tl_mentor'                 => $this->input->post('tl_mentor'),
+            'message'                   => $this->input->post('message'),
+            'terms_conditions'          => $this->input->post('terms_conditions'),
+            'attachments'               => $this->input->post('attachments'),
+            'instructions'              => $this->input->post('instructions'),
+            'customer_phone'            => $this->input->post('customer_phone'),
+            'employee_id'               => $this->input->post('employee_id'),
+            'created_by'                => logged('id'),
+            'company_id'                => $company_id,
+            'created_at'                => date("Y-m-d H:i:s"),
+            'updated_at'                => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->tickets_model->updateTickets($update_data);
+
+        
+        if($this->input->post('payment_method') == 'Cash'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'is_collected'      => '1',
+                'ticket_id'         => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_cash($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Check'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'check_number'      => $this->input->post('check_number'),
+                'routing_number'    => $this->input->post('routing_number'),
+                'ticket_id'         => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_check($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Credit Card'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'credit_number'     => $this->input->post('credit_number'),
+                'credit_expiry'     => $this->input->post('credit_expiry'),
+                'credit_cvc'        => $this->input->post('credit_cvc'),
+                'ticket_id'         => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_creditCard($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Debit Card'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'credit_number'     => $this->input->post('debit_credit_number'),
+                'credit_expiry'     => $this->input->post('debit_credit_expiry'),
+                'credit_cvc'        => $this->input->post('debit_credit_cvc'),
+                'ticket_id'         => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_debitCard($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'ACH'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'routing_number'    => $this->input->post('ach_routing_number'),
+                'account_number'    => $this->input->post('ach_account_number'),
+                'ticket_id'         => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_ACH($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Venmo'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('account_credentials'),
+                'account_note'          => $this->input->post('account_note'),
+                'confirmation'          => $this->input->post('confirmation'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Venmo($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Paypal'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('paypal_account_credentials'),
+                'account_note'          => $this->input->post('paypal_account_note'),
+                'confirmation'          => $this->input->post('paypal_confirmation'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Paypal($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Square'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('square_account_credentials'),
+                'account_note'          => $this->input->post('square_account_note'),
+                'confirmation'          => $this->input->post('square_confirmation'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Square($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Warranty Work'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('warranty_account_credentials'),
+                'account_note'          => $this->input->post('warranty_account_note'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Warranty($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('home_account_credentials'),
+                'account_note'          => $this->input->post('home_account_note'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Home($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'e-Transfer'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('e_account_credentials'),
+                'account_note'          => $this->input->post('e_account_note'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Transfer($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'credit_number'         => $this->input->post('other_credit_number'),
+                'credit_expiry'         => $this->input->post('other_credit_expiry'),
+                'credit_cvc'            => $this->input->post('other_credit_cvc'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Professor($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Payment Type'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('other_payment_account_credentials'),
+                'account_note'          => $this->input->post('other_payment_account_note'),
+                'ticket_id'             => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->tickets_model->update_Other($payment_data);
+        }
+
+        // dd($addQuery);
+        $delete2 = $this->tickets_model->delete_items($id);
+
+        if ($addQuery > 0) {
+
+                $item_id    = $this->input->post('item_id');
+                $item_type  = $this->input->post('item_type');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $discount   = $this->input->post('discount');
+                $h          = $this->input->post('tax');
+                $gtotal     = $this->input->post('total');
+                
+        
+        // dd( $this->input->post('item_id'));
+
+                $i = 0;
+                foreach($item_id as $row){
+                    $data['items_id']   = $item_id[$i];
+                    $data['qty']        = $quantity[$i];
+                    $data['cost']       = $price[$i];
+                    $data['tax']        = $h[$i];
+                    $data['item_type']  = $item_type[$i];
+                    $data['discount']   = $discount[$i];
+                    $data['total']      = $gtotal[$i];
+                    $data['ticket_id '] = $addQuery;
+
+
+                    $addQuery2 = $this->tickets_model->add_ticket_items($data);
+                    $i++;
+                }
+
+            // // }
+            // $userid = logged('id');
+
+            // $getname = $this->tickets_model->getname($userid);
+
+            //     $notif = array(
+            
+            //         'user_id'               => $userid,
+            //         'title'                 => 'New Ticket',
+            //         'content'               => $getname->FName. ' has created new Ticket.'. $this->input->post('ticket_number'),
+            //         'date_created'          => date("Y-m-d H:i:s"),
+            //         'status'                => '1',
+            //         'company_id'            => getLoggedCompanyID()
+            //     );
+    
+            //     $notification = $this->tickets_model->save_notification($notif);
+
+
+            if( $this->input->post('redirect_calendar') == 1){
+                redirect('workcalender');
+            }else{
+                redirect('customer/ticketslist');
+            }
+            
+        } else {
+            echo json_encode(0);
+        }
+    }
+
     public function viewDetails($id)
     {
         $company_id  = getLoggedCompanyID();
@@ -474,6 +780,10 @@ class Tickets extends MY_Controller
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
         $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);
         $this->page_data['itemLists'] = $this->tickets_model->get_ticket_items($id);
+        
+        $this->page_data['itemsLists'] = $this->tickets_model->get_ticket_items($id);
+        
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/edit_ticket', $this->page_data);
