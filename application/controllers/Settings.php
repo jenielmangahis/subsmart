@@ -683,34 +683,12 @@ class Settings extends MY_Controller {
         ];
         $googleAccount = $this->GoogleAccounts_model->create($data);
         if( $googleAccount ){
-            $google_user_api = $this->GoogleAccounts_model->getByCompanyId($company_id);
-            $access_token = "";
-            $refresh_token = "";
-            $google_client_id = "";
-            $google_secrect = "";
-
-            if(isset($google_user_api->google_access_token)) {
-                $access_token = $google_user_api->google_access_token;
-            }
-
-            if(isset($google_user_api->google_refresh_token)) {
-                $refresh_token = $google_user_api->google_refresh_token;
-            }
-
-            if(isset($google_credentials['client_id'])) {
-                $google_client_id = $google_credentials['client_id'];
-            }
-
-            if(isset($google_credentials['client_secret'])) {
-                $google_secrect = $google_credentials['client_secret'];
-            }
-
             //Set Client
             $client = new Google_Client();
-            $client->setClientId($google_client_id);
-            $client->setClientSecret($google_secrect);
-            $client->setAccessToken($access_token);
-            $client->refreshToken($refresh_token);
+            $client->setClientId($google_credentials['client_id']);
+            $client->setClientSecret($google_credentials['client_secret']);
+            $client->setAccessToken($profile['access_token']);
+            //$client->refreshToken($profile['refreshToken']);
             $client->setScopes(array(
                 'email',
                 'profile',
