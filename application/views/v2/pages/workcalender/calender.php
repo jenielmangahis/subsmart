@@ -1625,7 +1625,7 @@
         }
 
         var $container = $(
-            '<div class="d-flex align-items-center"><img class="me-3" src="' + repo.img_marker + '"/> <label>' + repo.name + '</label></div>'
+            '<div class="d-flex align-items-center"><label>' + repo.name + '</label></div>'
         );
 
         return $container;
