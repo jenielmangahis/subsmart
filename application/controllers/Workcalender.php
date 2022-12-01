@@ -2945,8 +2945,11 @@ class Workcalender extends MY_Controller
             $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
             if( $data['access_token'] ){
                 $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
-                $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
-                //$event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                if( $googleAccount->auto_sync_calendar_id != ''){
+                    $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                }else{
+                    $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);    
+                }
             }else{
                 $is_valid = false;
             }  
