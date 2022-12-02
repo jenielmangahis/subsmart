@@ -4127,7 +4127,7 @@ function google_credentials(){
         'client_secret' => '-plXDxYZRwx6c1ttmNXE5L2p',
         'redirect_url' => 'https://nsmartrac.com/',
         // 'api_key' => 'AIzaSyAXhOG7zvDz1l8tOrdMnmyrhCOL4Uc-Ink',
-        'api_key' => 'AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo' // Working Google Map API Key
+        'api_key' => 'AIzaSyAGKPRMxI7Ah5ZVM2USSH0k7yhCPIT0ndI' // Working Google Map API Key
     ];
     return $credentials;
 }

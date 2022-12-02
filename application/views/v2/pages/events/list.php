@@ -83,7 +83,7 @@ table.dataTable.no-footer {
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Job Number">Job Number</td>
+                            <td data-name="Event Number">Event Number</td>
                             <td data-name="Date">Date</td>
                             <td data-name="Employee">Employee</td>
                             <td data-name="Amount">Amount</td>

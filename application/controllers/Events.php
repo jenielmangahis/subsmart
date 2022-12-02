@@ -606,76 +606,141 @@ class Events extends MY_Controller
         $this->load->view('job/job_settings/job_time_settings', $this->page_data);
     }
 
-    public function save_event() {
-        $input = $this->input->post();
-        $user_id = logged('id');
-        $comp_id = logged('company_id');
-        $get_event_settings = array(
+    public function event_save () {
+        $USER_ID = logged('id');
+        $COMPANY_ID = logged('company_id');
+
+        $GET_EVENT_SETTINGS = array(
             'where' => array(
-                'company_id' => $comp_id
+                'company_id' => $COMPANY_ID
             ),
-            'table' => 'event_settings',
+            'table' => 'EVENT_SETTINGS',
             'select' => '*',
         );
-        $event_settings = $this->general->get_data_with_param($get_event_settings);
-        $event_number = $event_settings[0]->event_prefix.' - #000000'.$event_settings[0]->event_next_num;
+        $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
+        $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
 
-        $events_data = array(
-            'event_number' => $event_number,
-            'customer_id' => $input['customer_id'],
-            'employee_id' => $input['employee_id'],
-            'event_description' => $input['event_description'],
-
-            'start_date' => $input['start_date'],
-            'start_time' => $input['start_time'],
-            'end_date' => $input['end_date'],
-            'end_time' => $input['end_time'],
-            'event_type' => $input['event_types'],
-            'event_tag' => $input['event_tags'],
-            'event_color' => $input['event_color'],
-            'customer_reminder_notification' => $input['customer_reminder_notification'],
-            'url_link' => $input['link'],
-            'event_address' => $input['event_address'],
-            'status' => 'Scheduled',//$this->input->post('job_status'),
-            'description' => $input['description'],
-            'timezone' => $input['timezone'],
-            'created_by' => $user_id,
-            'company_id' => $comp_id,
-            //'date_issued' => date('Y-m-d'),
-            'notes' => $input['message'],
-            'amount' => $input['total_event_amount'],
-            //'tax_rate' => $input['tax_rate'],
+        $DATA = array(
+            'employee_id' => $_POST['EMPLOYEE_ID'],
+            'start_date' => $_POST['FROM_DATE'],
+            'start_time' => $_POST['FROM_TIME'],
+            'end_date' => $_POST['TO_DATE'],
+            'end_time' => $_POST['TO_TIME'],
+            'event_type' => $_POST['EVENT_TYPE'],
+            'event_color' => $_POST['EVENT_COLOR'],
+            'url_link' => $_POST['URL_LINK'],
+            'customer_reminder_notification' => $_POST['CUSTOMER_REMINDER'],
+            'created_by' => $USER_ID,
+            'company_id' => $COMPANY_ID,
+            'description' => $_POST['EVENT_DESCRIPTION'],
+            'status' => "Scheduled",
+            'event_address' => $_POST['LOCATION'],
+            'event_number' => $EVENT_NUMBER,
+            'event_tag' => $_POST['EVENT_TAG'],
+            'notes' => $_POST['PRIVATE_NOTES'],
+            'amount' => 0,
+            'timezone' => $_POST['TIMEZONE'],
         );
-        $event_id = $this->general->add_return_id($events_data, 'events');
+
+        $EVENT_ID = $this->general->add_return_id($DATA, 'events');
 
         //SMS Notification
-        createCronAutoSmsNotification($comp_id, $event_id, 'event', 'Scheduled', $input['employee_id']);
+        createCronAutoSmsNotification($COMPANY_ID, $EVENT_ID, 'event', 'Scheduled', $_POST['EMPLOYEE_ID']);
 
         //Google Calendar
-        createSyncToCalendar($event_id, 'event', $comp_id);
+        createSyncToCalendar($EVENT_ID, 'event', $COMPANY_ID);
+   
+        $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
+        $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'EVENT_SETTINGS');
+        customerAuditLog(logged('id'), 0, $EVENT_ID, 'Events', 'Created an event #'.$EVENT_NUMBER);
 
-        if(isset($input['item_id'])){
-            $devices = count($input['item_id']);
-            for($xx=0;$xx<$devices;$xx++){
-                $events_items_data = array();
-                $events_items_data['event_id'] = $event_id;
-                $events_items_data['items_id'] = $input['item_id'][$xx];
-                $events_items_data['qty'] = $input['item_qty'][$xx];
-                $events_items_data['item_price'] = $input['item_price'][$xx];
-                $this->general->add_($events_items_data, 'event_items');
-                unset($events_items_data);
-            }
-        }
-        $event_settings_data = array(
-            'event_next_num' => $event_settings[0]->event_next_num + 1,
-        );
-        $this->general->update_with_key($event_settings_data,$event_settings[0]->id, 'event_settings');
-
-        //customerAuditLog(logged('id'), $input['customer_id'], $event_id, 'Events', 'Created an event #'.$event_number);
-        customerAuditLog(logged('id'), 0, $event_id, 'Events', 'Created an event #'.$event_number);
-
-        echo $event_id;
+        // if(isset($input['item_id'])){
+        //     $devices = count($input['item_id']);
+        //     for($xx=0;$xx<$devices;$xx++){
+        //         $events_items_data = array();
+        //         $events_items_data['EVENT_ID'] = $EVENT_ID;
+        //         $events_items_data['items_id'] = $input['item_id'][$xx];
+        //         $events_items_data['qty'] = $input['item_qty'][$xx];
+        //         $events_items_data['item_price'] = $input['item_price'][$xx];
+        //         $this->general->add_($events_items_data, 'event_items');
+        //         unset($events_items_data);
+        //     }
+        // }
     }
+
+
+
+
+    // public function save_event() {
+    //     $input = $this->input->post();
+    //     $user_id = logged('id');
+    //     $comp_id = logged('company_id');
+    //     $get_event_settings = array(
+    //         'where' => array(
+    //             'company_id' => $comp_id
+    //         ),
+    //         'table' => 'event_settings',
+    //         'select' => '*',
+    //     );
+    //     $event_settings = $this->general->get_data_with_param($get_event_settings);
+    //     $event_number = $event_settings[0]->event_prefix.' - #000000'.$event_settings[0]->event_next_num;
+
+    //     $events_data = array(
+    //         'event_number' => $event_number,
+    //         'customer_id' => $input['customer_id'],
+    //         'employee_id' => $input['employee_id'],
+    //         'event_description' => $input['event_description'],
+
+    //         'start_date' => $input['start_date'],
+    //         'start_time' => $input['start_time'],
+    //         'end_date' => $input['end_date'],
+    //         'end_time' => $input['end_time'],
+    //         'event_type' => $input['event_types'],
+    //         'event_tag' => $input['event_tags'],
+    //         'event_color' => $input['event_color'],
+    //         'customer_reminder_notification' => $input['customer_reminder_notification'],
+    //         'url_link' => $input['link'],
+    //         'event_address' => $input['event_address'],
+    //         'status' => 'Scheduled',//$this->input->post('job_status'),
+    //         'description' => $input['description'],
+    //         'timezone' => $input['timezone'],
+    //         'created_by' => $user_id,
+    //         'company_id' => $comp_id,
+    //         //'date_issued' => date('Y-m-d'),
+    //         'notes' => $input['message'],
+    //         'amount' => $input['total_event_amount'],
+    //         //'tax_rate' => $input['tax_rate'],
+    //     );
+    //     $event_id = $this->general->add_return_id($events_data, 'events');
+
+    //     //SMS Notification
+    //     createCronAutoSmsNotification($comp_id, $event_id, 'event', 'Scheduled', $input['employee_id']);
+
+    //     //Google Calendar
+    //     createSyncToCalendar($event_id, 'event', $comp_id);
+
+    //     if(isset($input['item_id'])){
+    //         $devices = count($input['item_id']);
+    //         for($xx=0;$xx<$devices;$xx++){
+    //             $events_items_data = array();
+    //             $events_items_data['event_id'] = $event_id;
+    //             $events_items_data['items_id'] = $input['item_id'][$xx];
+    //             $events_items_data['qty'] = $input['item_qty'][$xx];
+    //             $events_items_data['item_price'] = $input['item_price'][$xx];
+    //             $this->general->add_($events_items_data, 'event_items');
+    //             unset($events_items_data);
+    //         }
+    //     }   
+    //     $event_settings_data = array(
+    //         'event_next_num' => $event_settings[0]->event_next_num + 1,
+    //     );
+    //     $this->general->update_with_key($event_settings_data,$event_settings[0]->id, 'event_settings');
+
+    //     //customerAuditLog(logged('id'), $input['customer_id'], $event_id, 'Events', 'Created an event #'.$event_number);
+    //     customerAuditLog(logged('id'), 0, $event_id, 'Events', 'Created an event #'.$event_number);
+
+    //     echo $event_id;
+    // }
 
     public function delete () {
         $get = $this->input->get();

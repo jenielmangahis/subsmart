@@ -3038,6 +3038,15 @@ class Accounting_modals extends MY_Controller
 
                         $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
                     }
+
+                    $accTransacData = [
+                        'account_id' => $paymentAcc->id,
+                        'transaction_type' => 'Expense',
+                        'transaction_id' => $expenseId,
+                        'balance_after' => floatval(str_replace(',', '', $newBalance)),
+                    ];
+
+                    $this->accounting_account_transactions_model->create($accTransacData);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
                         $currentDate = date("m/d/Y");
@@ -3129,7 +3138,8 @@ class Accounting_modals extends MY_Controller
                     foreach ($data['expense_account'] as $index => $value) {
                         $linkedTransacCat = $data['category_linked'][$index] !== '' ? explode('-', $data['category_linked'][$index]) : null;
 
-                        $categoryDetails[] = [
+                        // $categoryDetails[] = [
+                        $categoryDetail = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
                             'expense_account_id' => $value,
@@ -3144,6 +3154,8 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => !is_null($linkedTransacCat) ? $linkedTransacCat[1] : null,
                             'linked_transaction_category_id' => !is_null($linkedTransacCat) ? $data['transac_category_id'][$index] : null
                         ];
+
+                        $categoryDetailId = $this->expenses_model->insert_vendor_transaction_category($categoryDetail);
 
                         if(!isset($data['template_name'])) {
                             $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -3185,18 +3197,31 @@ class Accounting_modals extends MY_Controller
 
                                 $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
                             }
+
+                            $accTransacData = [
+                                'account_id' => $expenseAcc->id,
+                                'transaction_type' => 'Expense',
+                                'transaction_id' => $expenseId,
+                                'balance_after' => floatval(str_replace(',', '', $newBalance)),
+                                'is_category' => 1,
+                                'child_id' => $categoryDetailId
+                            ];
+
+                            $this->accounting_account_transactions_model->create($accTransacData);
                         }
                     }
     
-                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                    // $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
                     foreach ($data['item'] as $index => $value) {
+                        $item = $this->items_model->getByID($value);
                         $linkedTransacItem = $data['item_linked'][$index] !== '' ? explode('-', $data['item_linked'][$index]) : null;
 
-                        $itemDetails[] = [
+                        // $itemDetails[] = [
+                        $itemDetail = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
                             'item_id' => $value,
@@ -3210,28 +3235,55 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => !is_null($linkedTransacItem) ? $linkedTransacItem[1] : null,
                             'linked_transaction_item_id' => !is_null($linkedTransacItem) ? $data['transac_item_id'][$index] : null
                         ];
-    
+
+                        $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
+
                         if(!isset($data['template_name'])) {
-                            $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                            if($item->type === 'Product' || $item->type === 'product') {
+                                $location = $this->items_model->getItemLocation($data['location'][$index], $value);
     
-                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
-        
-                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
-        
+                                $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+            
+                                $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                            }
+
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
-        
+
                             if ($itemAccDetails) {
-                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + floatval($data['item_amount'][$index]);
-                                $newBalance = number_format($newBalance, 2, '.', ',');
-        
-                                $invAssetAccData = [
-                                    'id' => $invAssetAcc->id,
+                                if($item->type === 'Product' || $item->type === 'product') {
+                                    $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval($data['item_total'][$index]);
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+                                } else {
+                                    $account = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+                                    $accType = $this->account_model->getById($account->account_id);
+
+                                    if ($accType->account_name === 'Credit Card') {
+                                        $newBalance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $data['item_total'][$index]));
+                                    } else {
+                                        $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
+                                    }
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+                                }
+
+                                $accountData = [
+                                    'id' => $account->id,
                                     'company_id' => logged('company_id'),
                                     'balance' => floatval(str_replace(',', '', $newBalance))
                                 ];
-        
-                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                                $this->chart_of_accounts_model->updateBalance($accountData);
+
+                                $accTransacData = [
+                                    'account_id' => $account->id,
+                                    'transaction_type' => 'Expense',
+                                    'transaction_id' => $expenseId,
+                                    'balance_after' => floatval(str_replace(',', '', $newBalance)),
+                                    'is_item_category' => 1,
+                                    'child_id' => $itemDetailId
+                                ];
+    
+                                $this->accounting_account_transactions_model->create($accTransacData);
                             }
 
                             if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '') {
@@ -3258,7 +3310,7 @@ class Accounting_modals extends MY_Controller
                         }
                     }
     
-                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                    // $this->expenses_model->insert_vendor_transaction_items($itemDetails);
                 }
             }
     
@@ -3387,6 +3439,15 @@ class Accounting_modals extends MY_Controller
 
                         $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
                     }
+
+                    $accTransacData = [
+                        'account_id' => $bankAcc->id,
+                        'transaction_type' => 'Check',
+                        'transaction_id' => $checkId,
+                        'balance_after' => floatval(str_replace(',', '', $newBalance)),
+                    ];
+
+                    $this->accounting_account_transactions_model->create($accTransacData);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
                         $currentDate = date("m/d/Y");
@@ -3510,7 +3571,8 @@ class Accounting_modals extends MY_Controller
                     foreach ($data['expense_account'] as $index => $value) {
                         $linkedTransacCat = $data['category_linked'][$index] !== '' ? explode('-', $data['category_linked'][$index]) : null;
 
-                        $categoryDetails[] = [
+                        // $categoryDetails[] = [
+                        $categoryDetail = [
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
                             'expense_account_id' => $value,
@@ -3525,6 +3587,8 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => !is_null($linkedTransacCat) ? $linkedTransacCat[1] : null,
                             'linked_transaction_category_id' => !is_null($linkedTransacCat) ? $data['transac_category_id'][$index] : null
                         ];
+
+                        $categoryDetailId = $this->expenses_model->insert_vendor_transaction_category($categoryDetail);
 
                         if(!isset($data['template_name']) && $data['save_method'] !== 'save-and-void') {
                             $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -3566,18 +3630,31 @@ class Accounting_modals extends MY_Controller
 
                                 $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
                             }
+
+                            $accTransacData = [
+                                'account_id' => $expenseAcc->id,
+                                'transaction_type' => 'Check',
+                                'transaction_id' => $checkId,
+                                'balance_after' => floatval(str_replace(',', '', $newBalance)),
+                                'is_category' => 1,
+                                'child_id' => $categoryDetailId
+                            ];
+
+                            $this->accounting_account_transactions_model->create($accTransacData);
                         }
                     }
     
-                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                    // $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
                     foreach ($data['item'] as $index => $value) {
+                        $item = $this->items_model->getByID($value);
                         $linkedTransacItem = $data['item_linked'][$index] !== '' ? explode('-', $data['item_linked'][$index]) : null;
 
-                        $itemDetails[] = [
+                        // $itemDetails[] = [
+                        $itemDetail = [
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
                             'item_id' => $value,
@@ -3592,27 +3669,54 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_item_id' => !is_null($linkedTransacItem) ? $data['transac_item_id'][$index] : null
                         ];
 
-                        if(!isset($data['template_name']) && $data['save_method'] !== 'save-and-void') {
-                            $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                        $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
 
-                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+                        if(!isset($data['template_name'])) {
+                            if($item->type === 'Product' || $item->type === 'product') {
+                                $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
-                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                                $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+
+                                $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                            }
 
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
                             if ($itemAccDetails) {
-                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + floatval($data['item_total'][$index]);
-                                $newBalance = number_format($newBalance, 2, '.', ',');
+                                if($item->type === 'Product' || $item->type === 'product') {
+                                    $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval($data['item_total'][$index]);
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+                                } else {
+                                    $account = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+                                    $accType = $this->account_model->getById($account->account_id);
 
-                                $invAssetAccData = [
-                                    'id' => $invAssetAcc->id,
+                                    if ($accType->account_name === 'Credit Card') {
+                                        $newBalance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $data['item_total'][$index]));
+                                    } else {
+                                        $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
+                                    }
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+                                }
+
+                                $accountData = [
+                                    'id' => $account->id,
                                     'company_id' => logged('company_id'),
                                     'balance' => floatval(str_replace(',', '', $newBalance))
                                 ];
 
-                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                $this->chart_of_accounts_model->updateBalance($accountData);
+
+                                $accTransacData = [
+                                    'account_id' => $account->id,
+                                    'transaction_type' => 'Check',
+                                    'transaction_id' => $checkId,
+                                    'balance_after' => floatval(str_replace(',', '', $newBalance)),
+                                    'is_item_category' => 1,
+                                    'child_id' => $itemDetailId
+                                ];
+    
+                                $this->accounting_account_transactions_model->create($accTransacData);
                             }
 
                             if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '') {
@@ -3639,7 +3743,7 @@ class Accounting_modals extends MY_Controller
                         }
                     }
     
-                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                    // $this->expenses_model->insert_vendor_transaction_items($itemDetails);
                 }
             }
 
@@ -3956,7 +4060,7 @@ class Accounting_modals extends MY_Controller
                                 'account_id' => $expenseAcc->id,
                                 'transaction_type' => 'Bill',
                                 'transaction_id' => $billId,
-                                'balance_after' => $newBalance,
+                                'balance_after' => floatval(str_replace(',', '', $newBalance)),
                                 'is_category' => 1,
                                 'child_id' => $categoryDetailId
                             ];
@@ -3971,9 +4075,11 @@ class Accounting_modals extends MY_Controller
                 if (isset($data['item'])) {
                     $itemDetails = [];
                     foreach ($data['item'] as $index => $value) {
+                        $item = $this->items_model->getByID($value);
                         $linkedTransacItem = $data['item_linked'][$index] !== '' ? explode('-', $data['item_linked'][$index]) : null;
 
-                        $itemDetails[] = [
+                        // $itemDetails[] = [
+                        $itemDetail = [
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
                             'item_id' => $value,
@@ -3988,27 +4094,54 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_item_id' => !is_null($linkedTransacItem) ? $data['transac_item_id'][$index] : null
                         ];
 
+                        $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
+
                         if(!isset($data['template_name'])) {
-                            $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                            if($item->type === 'Product' || $item->type === 'product') {
+                                $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
-                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
-
-                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                                $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+    
+                                $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                            }
 
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
                             if ($itemAccDetails) {
-                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
-                                $newBalance = number_format($newBalance, 2, '.', ',');
+                                if($item->type === 'Product' || $item->type === 'product') {
+                                    $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+                                } else {
+                                    $account = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+                                    $accType = $this->account_model->getById($account->account_id);
 
-                                $invAssetAccData = [
-                                    'id' => $invAssetAcc->id,
+                                    if ($accType->account_name === 'Credit Card') {
+                                        $newBalance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $data['item_total'][$index]));
+                                    } else {
+                                        $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
+                                    }
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+                                }
+
+                                $accountData = [
+                                    'id' => $account->id,
                                     'company_id' => logged('company_id'),
                                     'balance' => floatval(str_replace(',', '', $newBalance))
                                 ];
-        
-                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                                $this->chart_of_accounts_model->updateBalance($accountData);
+
+                                $accTransacData = [
+                                    'account_id' => $account->id,
+                                    'transaction_type' => 'Bill',
+                                    'transaction_id' => $billId,
+                                    'balance_after' => floatval(str_replace(',', '', $newBalance)),
+                                    'is_item_category' => 1,
+                                    'child_id' => $itemDetailId
+                                ];
+    
+                                $this->accounting_account_transactions_model->create($accTransacData);
                             }
 
                             if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '') {
@@ -4035,7 +4168,7 @@ class Accounting_modals extends MY_Controller
                         }
                     }
     
-                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                    // $this->expenses_model->insert_vendor_transaction_items($itemDetails);
                 }
             }
 
@@ -4597,7 +4730,7 @@ class Accounting_modals extends MY_Controller
 
     public function products_list_modal()
     {
-        $items = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'product', 'Inventory', 'Product'], 'status' => [1]]);
+        $items = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'product', 'Inventory', 'Product', 'service', 'Service', 'non-inventory', 'Non-inventory'], 'status' => [1]]);
 
         $items = array_filter($items, function ($item, $k) {
             $accDetails = $this->items_model->getItemAccountingDetails($item->id);
@@ -8895,24 +9028,44 @@ class Accounting_modals extends MY_Controller
                 $return = $this->get_account_choices($return, $search, $accountTypes, $detailTypes);
             break;
             case 'income-account' :
-                $accountTypes = [
-                    'Income'
-                ];
+                switch($this->input->get('item_type')) {
+                    case 'product' :
+                        $accountTypes = [
+                            'Income'
+                        ];
+        
+                        $detailTypes = [
+                            'Sales of Product Income'
+                        ];
+                    break;
+                    default :
+                        $accountTypes = $this->account_model->get();
+                        $accountTypes = array_column($accountTypes, 'account_name');
 
-                $detailTypes = [
-                    'Sales of Product Income'
-                ];
+                        $detailTypes = [];
+                    break;
+                }
 
                 $return = $this->get_account_choices($return, $search, $accountTypes, $detailTypes);
             break;
             case 'item-expense-account' :
-                $accountTypes = [
-                    'Cost of Goods Sold'
-                ];
+                switch($this->input->get('item_type')) {
+                    case 'product' :
+                        $accountTypes = [
+                            'Cost of Goods Sold'
+                        ];
+        
+                        $detailTypes = [
+                            'Supplies & Materials - COGS'
+                        ];
+                    break;
+                    default :
+                        $accountTypes = $this->account_model->get();
+                        $accountTypes = array_column($accountTypes, 'account_name');
 
-                $detailTypes = [
-                    'Supplies & Materials - COGS'
-                ];
+                        $detailTypes = [];
+                    break;
+                }
 
                 $return = $this->get_account_choices($return, $search, $accountTypes, $detailTypes);
             break;

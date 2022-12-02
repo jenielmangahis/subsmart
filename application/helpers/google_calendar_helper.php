@@ -11,7 +11,7 @@ function createSyncToCalendar($module_id, $module_name, $company_id)
     if( $googleAccount ){        
         $settings = $CI->Settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);
         $settings = unserialize($settings);
-        if( $settings ){
+        if( $settings && isset($settings['google_calendar']) ){
             $auto_add_modules = $settings['google_calendar'];
             $is_valid_sync_calendar = false;
             if( $module_name == 'appointment' ){                

@@ -665,7 +665,7 @@ class Settings extends MY_Controller {
 
     public function create_google_account()
     {
-        include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
+        include APPPATH . 'libraries/google-calendar-api.php';
 
         $this->load->model('GoogleAccounts_model');
 
@@ -681,73 +681,16 @@ class Settings extends MY_Controller {
             'google_refresh_token' => $profile['refreshToken'],
             'date_created' => date("Y-m-d H:i:s")
         ];
+
         $googleAccount = $this->GoogleAccounts_model->create($data);
         if( $googleAccount ){
-            $google_user_api = $this->GoogleAccounts_model->getByCompanyId($company_id);
-            $access_token = "";
-            $refresh_token = "";
-            $google_client_id = "";
-            $google_secrect = "";
-
-            if(isset($google_user_api->google_access_token)) {
-                $access_token = $google_user_api->google_access_token;
+            $calendar_name  = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
+            
+            $capi = new GoogleCalendarApi();
+            $createCalendar = $capi->createCalendar($google_credentials['api_key'], $profile['access_token'], $calendar_name);
+            if( isset($createCalendar['id']) ){
+                $this->GoogleAccounts_model->update($googleAccount,['auto_sync_calendar_id' => $createCalendar['id']]);    
             }
-
-            if(isset($google_user_api->google_refresh_token)) {
-                $refresh_token = $google_user_api->google_refresh_token;
-            }
-
-            if(isset($google_credentials['client_id'])) {
-                $google_client_id = $google_credentials['client_id'];
-            }
-
-            if(isset($google_credentials['client_secret'])) {
-                $google_secrect = $google_credentials['client_secret'];
-            }
-
-            //Set Client
-            $client = new Google_Client();
-            $client->setClientId($google_client_id);
-            $client->setClientSecret($google_secrect);
-            $client->setAccessToken($access_token);
-            $client->refreshToken($refresh_token);
-            $client->setScopes(array(
-                'email',
-                'profile',
-                'https://www.googleapis.com/auth/calendar',
-            ));
-            $client->setApprovalPrompt('force');
-            $client->setAccessType('offline');
-
-            $timezone = 'America/Chicago';
-            $calendar_name = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
-            $cal = new Google_Service_Calendar($client);
-
-            //Check if default calendar existst
-            $calendars = $cal->calendarList->listCalendarList();
-            $calendar_name = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
-            $is_exists = false;
-            $calendar_id = '';
-
-            foreach( $calendars as $c ){
-                if( $c->summary == $calendar_name ){
-                    $is_exists = true;
-                    $calendar_id = $c->id;
-                }
-            }
-
-            if( !$is_exists ){
-                $google_calendar = new Google_Service_Calendar_Calendar($client);
-                $google_calendar->setSummary($calendar_name);
-                $google_calendar->setTimeZone($timezone);
-
-                $created_calendar = $cal->calendars->insert($google_calendar);
-
-                $calendar_id = $created_calendar->getId();
-
-            }
-
-            $this->GoogleAccounts_model->update($googleAccount,['auto_sync_calendar_id' => $calendar_id]);
         }
 
         $return = ['is_success' => 1];
