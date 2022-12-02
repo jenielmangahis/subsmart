@@ -1847,22 +1847,24 @@ class Chart_of_accounts extends MY_Controller {
             $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
             $count = count($categories) + count($items);
 
-            // if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
-            //     if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
-            //         $child = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
-            //         $amount = $child->amount;
-            //     } else {
-            //         $child = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
-            //         $amount = $child->total;
-            //     }
-            // }
+            if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+                if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+                    $child = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+                    $amount = $child->amount;
+                } else {
+                    $child = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+                    $amount = $child->total;
+                }
+            } else {
+                $amount = $bill->total_amount;
+            }
 
             if($accType !== 'A/R' && $accType !== 'A/P') {
                 $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
 
                 $transaction = [
                     'id' => $bill->id,
-                    'child_id' => $billCategory->id,
+                    'child_id' => $child->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
                     'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
                     'ref_no_disabled' => true,
@@ -1874,37 +1876,37 @@ class Chart_of_accounts extends MY_Controller {
                     'account_id' => $apAcc->id,
                     'account' => $apAcc->name,
                     'account_disabled' => true,
-                    'memo' => $billCategory->description,
+                    'memo' => $transaction->is_category === '1' ? $child->description : '',
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($billCategory->created_at))
+                    'date_created' => date("m/d/Y H:i:s", strtotime($child->created_at))
                 ];
     
                 switch($accType) {
                     case 'Credit Card' :
                         $transaction['charge'] = "";
-                        $transaction['payment'] = number_format(floatval($billCategory->amount), 2, '.', ',');
+                        $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
                         $transaction['charge_disabled'] = true;
                         $transaction['payment_disabled'] = $count > 1;
                     break;
                     case 'Asset' :
-                        $transaction['increase'] = "";
-                        $transaction['decrease'] = number_format(floatval($billCategory->amount), 2, '.', ',');
-                        $transaction['increase_disabled'] = true;
-                        $transaction['decrease_disabled'] = $count > 1;
+                        $transaction['decrease'] = "";
+                        $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
+                        $transaction['decrease_disabled'] = true;
+                        $transaction['increase_disabled'] = $count > 1;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = "";
-                        $transaction['decrease'] = number_format(floatval($billCategory->amount), 2, '.', ',');
+                        $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
                         $transaction['increase_disabled'] = true;
                         $transaction['decrease_disabled'] = $count > 1;
                     break;
                     default :
                         $transaction['payment'] = "";
-                        $transaction['deposit'] = number_format(floatval($billCategory->amount), 2, '.', ',');
+                        $transaction['deposit'] = number_format(floatval($amount), 2, '.', ',');
                         $transaction['payment_disabled'] = true;
                         $transaction['deposit_disabled'] = $count > 1;
                     break;
@@ -1920,7 +1922,7 @@ class Chart_of_accounts extends MY_Controller {
                     'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
                     'type' => 'Bill',
                     'vendor' => $payeeName,
-                    'account' => $account,
+                    'account' => $account['name'],
                     'memo' => $bill->memo,
                     'due_date' => date('m/d/Y', strtotime($bill->due_date)),
                     'billed' => $billed,

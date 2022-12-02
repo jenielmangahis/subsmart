@@ -2110,7 +2110,7 @@ $(function() {
             $.get('/accounting/get-products-list-modal', function(res) {
                 $('#modal-container').append(res);
 
-                $('#modal-container #products_lsit table').nsmPagination({
+                $('#modal-container #products_list table').nsmPagination({
                     itemsPerPage: 10
                 });
 
@@ -5222,8 +5222,10 @@ $(function() {
                 $('#item-modal form').attr('id', `ajax-${type}-item-form`);
             }
 
-            $(`#item-modal .datepicker input`).datepicker({
-                uiLibrary: 'bootstrap'
+            $(`#item-modal .date`).datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
             });
     
             $('#item-modal select').each(function() {
@@ -5239,7 +5241,8 @@ $(function() {
                                     search: params.term,
                                     type: 'public',
                                     field: dropdownType,
-                                    modal: 'item-modal'
+                                    modal: 'item-modal',
+                                    item_type: type
                                 }
 
                                 // Query parameters will be ?search=[term]&type=public&field=[type]
