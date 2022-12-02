@@ -2056,11 +2056,11 @@ div.workspace-list>ul>li .nsm-badge {
 }
 
 #calendar .fc-view-harness {
-	overflow-x: scroll;
+	/*overflow-x: scroll;*/
 }
 
 .fc-view-harness .fc-timegrid {
-	width: 3000px;
+	/*width: 3000px;*/
 }
 
 .nsm-input-group .select2-container {

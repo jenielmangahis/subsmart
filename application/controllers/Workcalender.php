@@ -90,11 +90,16 @@ class Workcalender extends MY_Controller
         //$calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $default_time_to   = date("H:00 A");
         $default_time_to_interval = 0;
+        $calendar_start_day = 0;
         if( $calender_settings != '' ){
             $a_settings = unserialize($calender_settings);
             if( $a_settings['job_time_setting'] > 0 ){
                 $default_time_to = date("H:00 A", strtotime("+".$a_settings['job_time_setting'].' hours'));
                 $default_time_to_interval = $a_settings['job_time_setting'];
+            }
+
+            if( isset($a_settings['calendar_first_day']) && $a_settings['calendar_first_day'] == 'Monday' ){            
+                $calendar_start_day = 1;
             }
         } 
 
@@ -384,6 +389,13 @@ class Workcalender extends MY_Controller
         
         $this->load->model('Users_model', 'user_model');
 
+        $default_users  = $this->Users_model->getCompanyUsers($company_id, null, 5);
+        $a_default_uid  = array();
+        foreach($default_users as $u){
+            $a_default_uid[$u->id] = $u->id;
+        }
+
+        $this->page_data['a_default_uid'] = $a_default_uid;
         $this->page_data['appointmentPriorityOptions']      = $appointmentPriorityOptions;
         $this->page_data['appointmentPriorityEventOptions'] = $appointmentPriorityEventOptions;
         $this->page_data['mini_calendar_events'] = $this->mini_calendar_events();
@@ -394,6 +406,7 @@ class Workcalender extends MY_Controller
         $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
         //$this->page_data['enable_popper_tooltip'] = 1;
         $this->page_data['get_recent_users'] = $get_recent_users;
+        $this->page_data['calendar_start_day'] = $calendar_start_day;
 
         $this->page_data['resources_users'] = $resources_users;
         $this->page_data['resources_user_events'] = $resources_user_events;
@@ -2380,7 +2393,7 @@ class Workcalender extends MY_Controller
         $company_id = logged('company_id');
         $calendar_filter_eids = $this->session->userdata('calendar_filter_eids');        
         if( $calendar_filter_eids == 'multiselect-all' || $calendar_filter_eids == null ){
-            $get_users  = $this->Users_model->getCompanyUsers($company_id, null);
+            $get_users  = $this->Users_model->getCompanyUsers($company_id, null, 5);
         }else{            
             $filters['eids'] = $calendar_filter_eids;
             $get_users  = $this->Users_model->getCompanyUsers($company_id, $filters);
@@ -2840,6 +2853,7 @@ class Workcalender extends MY_Controller
         $this->load->model('EventTags_model');
         $this->load->model('Job_tags_model');
         $this->load->model('GoogleAccounts_model');
+        $this->load->model('Users_model');
 
         $company_id = logged('company_id');
         $is_valid   = false;
@@ -2853,11 +2867,14 @@ class Workcalender extends MY_Controller
                     if( $appointment->tag_ids != '' ){
                         $a_tags = explode(",", $appointment->tag_ids);     
                         $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+                        $e_tags = array();
                         foreach($appointmentTags as $t){
                             $e_tags[] = $t->name;
                         }
 
-                        $tags = implode(",", $e_tags);
+                        if( !empty($e_tags) ){
+                            $tags = implode(",", $e_tags);
+                        }                        
                     }
 
                     $calendar_title = $appointment->appointment_number . ' - ' . $tags . ' : ' . $appointment->customer_name;
@@ -2867,6 +2884,17 @@ class Workcalender extends MY_Controller
                         'start_time' => $start_time,
                         'end_time' => $end_time
                     ];
+
+                    $attendees = array();
+                    $assigned_employees = unserialize($appointment->assigned_employee_ids);
+                    if( !empty($assigned_employees) ){
+                        foreach($assigned_employees as $eid){
+                            $user = $this->Users_model->getUserByID($eid);
+                            if( $user ){
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+                    }
 
                     $is_valid = true;
 
@@ -2889,6 +2917,14 @@ class Workcalender extends MY_Controller
                         'end_time' => $end_time
                     ];
 
+                    $attendees = array();
+                    if( $event->employee_id != '' ){
+                        $user = $this->Users_model->getUserByID($event->employee_id);
+                        if( $user ){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+
                     $is_valid = true;
                 }
                 break;
@@ -2909,6 +2945,17 @@ class Workcalender extends MY_Controller
                         'start_time' => $start_time,
                         'end_time' => $end_time
                     ];
+
+                    $attendees = array();
+                    $assigned_employees = unserialize($ticket->technicians);
+                    if( !empty($assigned_employees) ){
+                        foreach($assigned_employees as $eid){
+                            $user = $this->Users_model->getUserByID($eid);
+                            if( $user ){
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+                    }
 
                     $is_valid = true;
                 }
@@ -2932,6 +2979,32 @@ class Workcalender extends MY_Controller
                         'end_time' => $end_time
                     ];
 
+                    $attendees = array();
+                    if( $job->e_employee_id != '' ){
+                        $user = $this->Users_model->getUserByID($job->e_employee_id);
+                        if( $user ){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+                    if( $job->employee2_employee_id != '' ){
+                        $user = $this->Users_model->getUserByID($job->employee2_employee_id);
+                        if( $user ){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+                    if( $job->employee3_employee_id != '' ){
+                        $user = $this->Users_model->getUserByID($job->employee3_employee_id);
+                        if( $user ){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+                    if( $job->employee4_employee_id != '' ){
+                        $user = $this->Users_model->getUserByID($job->employee4_employee_id);
+                        if( $user ){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+
                     $is_valid = true;
                 }
                 break;
@@ -2948,9 +3021,9 @@ class Workcalender extends MY_Controller
             if( $data['access_token'] ){
                 $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                 if( $googleAccount->auto_sync_calendar_id != ''){
-                    $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                    $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);
                 }else{
-                    $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);    
+                    $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);    
                 }
             }else{
                 $is_valid = false;

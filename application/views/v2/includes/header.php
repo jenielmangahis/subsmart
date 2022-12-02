@@ -619,7 +619,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                         <li class="li-third-sub-menu">
                             <a href="javascript:void(0);" class="third-sub-menu">
-                                <i class='bx bx-user-pin'></i> Profile <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                                <i class='bx bx-user-pin'></i> Business Profile <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                             </a>
                             <ul class="mt-3">
                                 <li class="third-sub-menu-item">
