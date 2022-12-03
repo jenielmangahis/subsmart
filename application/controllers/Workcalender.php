@@ -1041,6 +1041,7 @@ class Workcalender extends MY_Controller
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
                 $assigned_technician = unserialize($a->assigned_employee_ids);
                 foreach($assigned_technician as $eid){
+                    $resources_user_events[$inc]['resourceId'] = 'user' . $eid;
                     $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
                 }
                 $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("H:i A", strtotime($a->appointment_time_from)) . ' to ' . date("H:i A", strtotime($a->appointment_time_to)) . "</small>";  
@@ -1049,7 +1050,7 @@ class Workcalender extends MY_Controller
 
             $resources_user_events[$inc]['eventId'] = $a->id;
             $resources_user_events[$inc]['eventType'] = 'appointments';
-            $resources_user_events[$inc]['resourceId'] = 'user' . $a->user_id;
+            //$resources_user_events[$inc]['resourceId'] = 'user' . $a->user_id;
             $resources_user_events[$inc]['title'] = 'Appointment : ' . date('Y-m-d g:i A', strtotime($a->appointment_date . " " . $a->appointment_time));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
