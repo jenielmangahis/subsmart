@@ -116,7 +116,7 @@
                                         <div class="input-group">
                                             <select multiple="multiple" id="select-employee" class="multiple-select nsm-field form-select" placeholder="Select Employees">
                                                 <?php foreach ($users as $user) { ?>
-                                                    <option value="<?php echo $user->id ?>"><?php echo $user->FName ?> <?php echo $user->LName ?></option>
+                                                    <option <?= in_array($user->id, $a_default_uid) ? 'selected="selected"' : ''; ?> value="<?php echo $user->id ?>"><?php echo $user->FName ?> <?php echo $user->LName ?></option>
                                                 <?php } ?>
                                             </select>
                                             <button class="nsm-button primary m-0" type="button" id="print_calender">
@@ -234,7 +234,7 @@
         });
         $('#wait-list-add-customer-popover').popover();
         $('#wait-list-add-tag-popover').popover();
-        $("#select-employee").multipleSelect();
+        $("#select-employee").multipleSelect({selectAll:false});
 
         $("#print_calender").on("click", function() {
             var defaultView = calendar.view.type;
@@ -449,8 +449,7 @@
 
         $(document).on("change", "#select-employee", function(e) {
             let url = "<?php echo base_url('calendar/_update_employee_filter'); ?>";
-
-            var eids = $(this).val();
+            var eids = $(this).val();            
             $.ajax({
                 type: "POST",
                 url: url,
@@ -1033,7 +1032,8 @@
             eventDisplay: 'block',
             contentHeight: 750,
             initialView: default_calendar_tab,  
-            progressiveEventRendering: false,          
+            progressiveEventRendering: false,    
+            firstDay: '<?= $calendar_start_day; ?>',      
             views: {
                 employeeTimeline: {
                     type: 'resourceTimeGridDay',
@@ -1866,9 +1866,9 @@
         const current_date = '<?= date("Y-m-d"); ?>';      
         const position = $('[data-date="'+current_date+'"]').last().position();
         console.log(position);
-        $(".fc-view-harness-active").animate({            
+        /*$(".fc-view-harness-active").animate({            
             scrollLeft: position.top// Scroll to 01:00 pm
-        }, 1000); 
+        }, 1000);*/ 
 
         /*$('#calendar').fullCalendar('option', 'visibleRange', {
           start: '2022-11-01',
@@ -1989,6 +1989,13 @@
         //         }
 	    // });
 
+    });
+
+    $(".multiple-select").on('click', 'option', function() {
+        if ($(".multiple-select option:selected").length > 5) {
+            $(this).removeAttr("selected");
+            // alert('You can select upto 3 options only');
+        }
     });
 
     $(document).on('click', '#calendar-add-event', function(){

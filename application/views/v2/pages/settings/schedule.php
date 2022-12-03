@@ -94,10 +94,10 @@
                         <label class="content-title">Calendar Week Starts On</label>
                         <label class="content-subtitle mb-2">Select the day when a week starts.</label>
                         <select name="calendar_first_day" class="nsm-field form-select" required>
-                            <option value="0" <?php echo ($settings['calendar_first_day'] === "Sunday") ? "selected" : "" ?>>
+                            <option value="Sunday" <?php echo ($settings['calendar_first_day'] === "Sunday") ? "selected" : "" ?>>
                                 Sunday
                             </option>
-                            <option value="1" <?php echo ($settings['calendar_first_day'] === "Monday") ? "selected" : "" ?>>
+                            <option value="Monday" <?php echo ($settings['calendar_first_day'] === "Monday") ? "selected" : "" ?>>
                                 Monday
                             </option>
                         </select>

@@ -1212,11 +1212,11 @@ A VERTICAL event
   position: absolute /* top/left/right/bottom will all be set by JS */
 }
 .fc-timegrid-event-harness > .fc-timegrid-event {
-    position: absolute; /* absolute WITHIN the harness */
-    top: 0; /* for when not yet positioned */
-    bottom: 0; /* " */
-    left: 0;
-    right: 0;
+    /*position: absolute;*/ /* absolute WITHIN the harness */
+    /*top: 0;*/ /* for when not yet positioned */
+    /*bottom: 0;*/ /* " */
+    /*left: 0;
+    right: 0;*/
   }
 .fc-timegrid-event-harness-inset .fc-timegrid-event,
 .fc-timegrid-event.fc-event-mirror,

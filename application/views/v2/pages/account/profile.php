@@ -1,6 +1,15 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/profile/profile_modals'); ?>
-
+<style>
+.custom-prof-btn{
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+.nsm-profile-info{
+    padding: 24px;
+}
+</style>
 <?php
 if ($user->profile_img != '') {
     $data_img = $user->profile_img;
@@ -23,19 +32,19 @@ if ($user->profile_img != '') {
             <div class="nsm-fab-icon">
                 <i class="bx bx-pen"></i>
             </div>
-            <span class="nsm-fab-label">Create Signature</span>
+            <span class="nsm-fab-label">Digital Signature</span>
         </li>
         <li class="btn-change-pw" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>">
             <div class="nsm-fab-icon">
                 <i class="bx bx-key"></i>
             </div>
-            <span class="nsm-fab-label">Change Password</span>
+            <span class="nsm-fab-label">Password and Security</span>
         </li>
         <li data-bs-toggle="modal" data-bs-target="#change_photo_modal" data-id="<?= $user->id; ?>" data-img="<?= $data_img; ?>">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-circle"></i>
             </div>
-            <span class="nsm-fab-label">Change Profile Picture</span>
+            <span class="nsm-fab-label">Profile Picture</span>
         </li>
     </ul>
 </div>
@@ -43,106 +52,68 @@ if ($user->profile_img != '') {
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
-            <div class="nsm-page-content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nsm-callout primary">
-                            <!-- <button><i class='bx bx-x'></i></button> -->
-                            Edit Profile
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button name="btn_edit" type="button" class="nsm-button btn-edit-profile" data-id="<?= $user->id; ?>">
-                                <i class='bx bx-fw bx-edit'></i> Edit Profile
-                            </button>
-                            <button name="btn_create_signature" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
-                                <i class='bx bx-fw bx-pen'></i> Create Signature
-                            </button>
-                            <button name="btn_change_password" type="button" class="nsm-button btn-change-pw" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>">
-                                <i class='bx bx-fw bx-key'></i> Change Password
-                            </button>
-                            <button name="btn_change_profile_picture" type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#change_photo_modal" data-id="<?= $user->id; ?>" data-img="<?= $data_img; ?>">
-                                <i class='bx bx-fw bx-user-circle'></i> Change Profile Picture
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="nsm-page-content">                
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
                         <div class="nsm-card p-5">
                             <div class="nsm-card-content">
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <div class="nsm-profile m-auto" style="background-image: url('<?php echo userProfile($user->id) ?>'); height: 200px; aspect-ratio: 1;"></div>
-                                    </div>
-                                    <div class="col-12 text-center">
-                                        <h4 class="m-0"><?= $user->FName . ' ' . $user->LName; ?></h4>
-                                        <label class="content-subtitle">
-                                            <?php echo getUserType($user->user_type); ?>
-                                        </label>
+                                        <div class="row">
+                                            <div class="nsm-profile col-5" style="background-image: url('<?php echo userProfile($user->id) ?>'); height: 147px; aspect-ratio: 1; width: 28%;margin-top: 29px;"></div>
+                                            <div class="col-7 nsm-profile-info">
+                                                <h4 class="m-0" style="font-size: 22px; font-weight: bold;"><?= $user->FName . ' ' . $user->LName; ?></h4>
+                                                <label class="content-subtitle" style="display: block;margin-top: 5px;">
+                                                    <i class='bx bx-fw bx-envelope'></i><?php echo $user->email ?></label>
+                                                <label class="content-subtitle" style="display: block;margin-top: 9px;">
+                                                    <i class='bx bx-fw bx-buildings'></i><?php echo getUserType($user->user_type); ?>
+                                                </label>
+                                                 <label class="content-subtitle" style="display: block;margin-top: 9px;">
+                                                    <i class='bx bx-fw bx-food-menu' ></i> Current Plan : 
+                                                    <?php if( in_array($client->id, exempted_company_ids()) ){ ?>
+                                                        Free
+                                                    <?php }else{ ?>
+                                                        <?php if ($client->is_trial == 1) : ?>
+                                                            (Trial) <?= $plan->plan_name; ?> ($<?= number_format($plan->price, 2); ?>)
+                                                        <?php else : ?>
+                                                            <?= $plan->plan_name; ?> ($<?= number_format($plan->price, 2); ?>)
+                                                        <?php endif; ?>
+                                                    <?php } ?>
+                                                </label>                                                
+                                                <hr />
+                                                <label class="content-subtitle" style="display: block;margin-top: 9px;">
+                                                    <i class='bx bx-fw bx-time-five'></i> Last Login : <?php echo ($user->last_login != '0000-00-00 00:00:00') ? date(setting('datetime_format'), strtotime($user->last_login)) : 'No Record' ?>
+                                                </label>
+                                                <label class="content-subtitle" style="display: block;margin-top: 9px;">
+                                                    <i class='bx bx-fw bx-food-menu' ></i> Member Since : <?php echo ($user->created_at != '0000-00-00 00:00:00') ? date(setting('datetime_format'), strtotime($user->created_at)) : 'No Record' ?>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="w-100 m-auto" style="max-width: 400px;">
-                                            <div class="row g-3">
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Name</label>
+                                        <div class="w-100" style="">
+                                            <div class="row g-3">                                                
+                                                <div class="col-12 col-md-12">
+                                                    <button name="btn_edit" type="button" class="nsm-button custom-prof-btn btn-edit-profile primary" data-id="<?= $user->id; ?>">
+                                                        <i class='bx bx-fw bx-edit'></i> Name, Phone Numbers, Address
+                                                    </button>
+                                                    <button name="btn_create_signature" type="button" class="nsm-button custom-prof-btn primary" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
+                                                        <i class='bx bx-fw bx-pen'></i> Digital Signature
+                                                    </button>
+                                                    <button name="btn_change_password" type="button" class="nsm-button custom-prof-btn btn-change-pw primary" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>">
+                                                        <i class='bx bx-fw bx-key'></i> Password and Security
+                                                    </button>
+                                                    <button name="btn_change_profile_picture" type="button" class="nsm-button custom-prof-btn primary" data-bs-toggle="modal" data-bs-target="#change_photo_modal" data-id="<?= $user->id; ?>" data-img="<?= $data_img; ?>">
+                                                        <i class='bx bx-fw bx-user-circle'></i> Profile Picture
+                                                    </button>
+                                                    <button name="btn_subscriptions" type="button" class="nsm-button custom-prof-btn primary btn-subscriptions">
+                                                        <i class='bx bx-fw bx-list-check'></i> Subscriptions
+                                                    </button>
+                                                    <button name="btn_subscriptions" type="button" class="nsm-button custom-prof-btn primary btn-credit-card">
+                                                        <i class='bx bxs-credit-card' ></i> Credit Card Payment
+                                                    </button>
                                                 </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo $user->FName ?> <?php echo $user->LName ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Username</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo $user->username ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Email</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo $user->email ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Role</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo $user->role->title ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Phone Number</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo $user->phone ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Mobile Number</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo $user->mobile ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Address</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo nl2br($user->address) ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Last Login</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo ($user->last_login != '0000-00-00 00:00:00') ? date(setting('datetime_format'), strtotime($user->last_login)) : 'No Record' ?></label>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <label class="content-subtitle fw-bold">Member Since</label>
-                                                </div>
-                                                <div class="col-12 col-md-6 text-end">
-                                                    <label class="content-subtitle"><?php echo ($user->created_at != '0000-00-00 00:00:00') ? date(setting('datetime_format'), strtotime($user->created_at)) : 'No Record' ?></label>
-                                                </div>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -185,6 +156,14 @@ if ($user->profile_img != '') {
                     _container.html(result);
                 }
             });
+        });
+
+        $(".btn-credit-card").click(function(){
+            location.href = base_url + 'cards_file/list';
+        });
+
+        $(".btn-subscriptions").click(function(){
+            location.href = base_url + 'mycrm/membership';
         });
 
         $("#edit_profile_form").on("submit", function(e) {

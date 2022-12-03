@@ -60,16 +60,22 @@ $(document).ready(function () {
 		let _this = $(this);
 		let _menuParentList = _this.closest("li");
 		let _menuParentLi   = $('.li-third-sub-menu');
-		let _menuList = $(".nsm-sidebar-menu").find("li.third-sub-menu-item");		
+		let _menuList = $(".nsm-sidebar-menu").find("li.third-sub-menu-item");	
+		let _menuThirdLevel = $('.nsm-sidebar-menu > li > ul > li > a.third-sub-menu');	
 
-		//_menuParentLi.removeClass("shown");
+		_menuParentLi.removeClass("shown");
+		_menuThirdLevel.find('i.list-dropdown-icon').addClass('bx-chevron-down');
+		_menuThirdLevel.find('i.list-dropdown-icon').removeClass('bx-chevron-up');	
 
 		if (!_menuParentList.hasClass("shown")) {
 			_menuList.removeClass("shown");
 			_menuParentList.addClass("shown");
+			_this.find('i.list-dropdown-icon').removeClass('bx-chevron-down');
+			_this.find('i.list-dropdown-icon').addClass('bx-chevron-up');			
+			
 			e.preventDefault();
 		}
-		else {
+		else {			
 			_menuParentList.removeClass("shown");
 		}
 		resizeSidebar();
