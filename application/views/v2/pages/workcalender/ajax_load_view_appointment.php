@@ -110,7 +110,7 @@
             <?= $appointment->appointment_type_id == 4 ? 'Attendees' : 'Technician'; ?>            
         </label>
         <div class="d-flex align-items-center">
-            <?php $assigned_technician = unserialize($appointment->assigned_employee_ids); ?>
+            <?php $assigned_technician = json_decode($appointment->assigned_employee_ids); ?>
             <?php foreach($assigned_technician as $aid){ ?>
                 <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($aid); ?>'); width: 40px;"></div>
             <?php } ?>            

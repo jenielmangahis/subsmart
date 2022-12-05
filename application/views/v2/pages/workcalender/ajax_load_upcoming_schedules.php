@@ -168,7 +168,7 @@
                             $schedule_description = '';
 
                             $assigned_employees = array();
-                            $emp_ids = unserialize($schedule['data']->assigned_employee_ids);
+                            $emp_ids = json_decode($schedule['data']->assigned_employee_ids);
                             foreach($emp_ids as $eid){
                                 $assigned_employees[] = $eid;    
                             }

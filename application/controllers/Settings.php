@@ -29,6 +29,7 @@ class Settings extends MY_Controller {
 
     public function schedule()
     {
+        $this->load->model('CalendarSettings_model');
         $this->load->model('ColorSettings_model');
 
 		$this->page_data['page']->title = 'Calendar Settings';
@@ -40,15 +41,17 @@ class Settings extends MY_Controller {
         $get        = $this->input->get();
         $company_id = logged('company_id');
 
-        $settings = $this->settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);
-        $this->page_data['settings'] = unserialize($settings);
+        $settings = $this->CalendarSettings_model->getByCompanyId($company_id);        
+        $this->page_data['settings'] = $settings;
+
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
         ));
 
         add_footer_js(array(
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             'assets/frontend/js/settings/main.js',
         ));
 
@@ -58,7 +61,47 @@ class Settings extends MY_Controller {
         }
 
         if (!empty($post)) {
-            $this->load->model('Settings_model', 'setting_model');
+            //Calendar Settings
+            if( $settings ){
+                $calendar_settings = [
+                    'timezone' => $post['calendar_timezone'],
+                    'time_interval' => $post['calendar_time_interval'],
+                    'default_view' => $post['calendar_default_view'],
+                    'week_starts_on' => $post['calendar_week_starts_on'],
+                    'day_starts_on' => $post['calendar_day_starts_on'],
+                    'day_ends_on' => $post['calendar_day_ends_on'],
+                    'display_customer_name' => $post['calendar_display_customer_name'] ? $post['calendar_display_customer_name'] : 0,
+                    'display_job_details' => $post['calendar_display_job_details'] ? $post['calendar_display_job_details'] : 0,
+                    'display_price' => $post['calendar_display_price'] ? $post['calendar_display_price'] : 0,
+                    'display_url_link' => $post['calendar_display_url_link'] ? $post['calendar_display_url_link'] : 0,
+                    'auto_add_appointment' => $post['calendar_auto_add_appointment'] ? $post['calendar_auto_add_appointment'] : 0,
+                    'auto_add_job' => $post['calendar_auto_add_job'] ? $post['calendar_auto_add_job'] : 0,
+                    'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
+                    'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0                    
+                ];
+
+                $this->CalendarSettings_model->update($settings->id, $calendar_settings);
+            }else{      
+                $calendar_settings = [
+                    'company_id' => $company_id,
+                    'timezone' => $post['calendar_timezone'],
+                    'time_interval' => $post['calendar_time_interval'],
+                    'default_view' => $post['calendar_default_view'],
+                    'week_starts_on' => $post['calendar_week_starts_on'],
+                    'day_starts_on' => $post['calendar_day_starts_on'],
+                    'day_ends_on' => $post['calendar_day_ends_on'],
+                    'display_customer_name' => $post['calendar_display_customer_name'] ? $post['calendar_display_customer_name'] : 0,
+                    'display_job_details' => $post['calendar_display_job_details'] ? $post['calendar_display_job_details'] : 0,
+                    'display_price' => $post['calendar_display_price'] ? $post['calendar_display_price'] : 0,
+                    'display_url_link' => $post['calendar_display_url_link'] ? $post['calendar_display_url_link'] : 0,
+                    'auto_add_appointment' => $post['calendar_auto_add_appointment'] ? $post['calendar_auto_add_appointment'] : 0,
+                    'auto_add_job' => $post['calendar_auto_add_job'] ? $post['calendar_auto_add_job'] : 0,
+                    'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
+                    'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0                    
+                ];
+
+                $this->CalendarSettings_model->create($calendar_settings);
+            }            
 
             //Color Settings
             $this->ColorSettings_model->deleteAllByCompanyId($company_id);
@@ -72,31 +115,7 @@ class Settings extends MY_Controller {
                 $colorSetting = $this->ColorSettings_model->create($data);
             }
 
-            if (!empty($settings)) {
-                $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);                
-                if (!empty($settings)) {
-
-                    // as where return multiple result as an array
-                    // we need only first result
-                    $setting = current($settings);
-
-                    $this->setting_model->update($setting->id, [
-                        'key' => DB_SETTINGS_TABLE_KEY_SCHEDULE,
-                        'value' => serialize($post)
-                    ]);
-                }
-
-                $this->session->set_flashdata('alert', 'Schedule Settings Updated Successfully');
-            } else {                
-                $this->setting_model->create([
-                    'company_id' => $company_id,
-                    'key'   => DB_SETTINGS_TABLE_KEY_SCHEDULE,
-                    'value' => serialize($post)
-                ]);
-
-                $this->session->set_flashdata('alert', 'Schedule Settings Created Successfully');
-            }
-
+            $this->session->set_flashdata('alert', 'Calendar Settings Updated Successfully');
             $this->session->set_flashdata('alert-type', 'success');
 
             redirect('settings/Schedule');

@@ -180,7 +180,7 @@
                             $schedule_description = '';
 
                             $assigned_employees = array();
-                            $emp_ids = unserialize($schedule['data']->assigned_employee_ids);
+                            $emp_ids = json_decode($schedule['data']->assigned_employee_ids);
                             foreach($emp_ids as $eid){
                                 $assigned_employees[] = $eid;    
                             }
@@ -216,7 +216,7 @@
                                 </div>                    
                             </td>
                             <td style="vertical-align: text-top;padding-top: 16px;">
-                                <label class="content-title purple-block" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
+                                <label class="content-title purple-block" style="cursor: pointer;margin-bottom: 11px;font-size: 16px;">
                                     <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
                                 </label>
                                 <?php if( $schedule_customer_name != '' ){ ?>

@@ -17,11 +17,34 @@ class Profile extends MY_Controller {
 
 	public function index($tab = 'profile')
 	{
+		$this->load->model('NsmartPlan_model');
+		$this->load->model('Clients_model');
+
         $this->page_data['page']->title = 'Profile';
         $this->page_data['page']->parent = 'Profile';
 
-		$user = $this->users_model->getById(logged('id'));
+        $company_id = logged('company_id');
+		$user   = $this->users_model->getById(logged('id'));
+		$client = $this->Clients_model->getById($company_id);
+		$plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+		$default_plan_feature = plan_default_features();
+        if( $plan->plan_name == 'Simple Start' ){
+            $default_plan_feature = $default_plan_feature['simple-start'];
+        }elseif( $plan->plan_name == 'Essential' ){
+            $default_plan_feature = $default_plan_feature['essential'];
+        }elseif( $plan->plan_name == 'Plus' ){
+            $default_plan_feature = $default_plan_feature['plus'];
+        }elseif( $plan->plan_name == 'PremierPro' ){
+            $default_plan_feature = $default_plan_feature['premier-pro'];
+        }elseif( $plan->plan_name == 'Industry Specific' ){
+            $default_plan_feature = $default_plan_feature['industry-specific'];
+        }elseif( $plan->plan_name == 'Enterprise' ){
+            $default_plan_feature = $default_plan_feature['enterprise'];
+        }
+
 		$this->page_data['user'] = $user;
+		$this->page_data['default_plan_feature'] = $default_plan_feature;
+		$this->page_data['client'] = $client;
 		$this->page_data['user']->role = $this->roles_model->getById( logged('role') );
 		$this->page_data['activeTab'] = $tab;
 		

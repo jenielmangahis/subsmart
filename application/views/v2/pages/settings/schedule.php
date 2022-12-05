@@ -15,6 +15,9 @@
         margin: 5px;
         width: 100%;
     }
+    .timepicker-icon{
+        font-size: 30px;
+    }
     .event-colors .e-color{
         display: inline-block;
         width: 30px;
@@ -58,7 +61,7 @@
                         <label class="content-subtitle mb-2">Select the timezone that will be used to display all calendar dates.</label>
                         <select name="calendar_timezone" class="nsm-field form-select" required>
                             <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
-                                <option value="<?php echo $key ?>" <?php echo ($settings['calendar_timezone'] === $key) ? "selected" : "" ?>>
+                                <option value="<?php echo $key ?>" <?= $settings && $settings->timezone == $key ? 'selected="selected"' : ''; ?>>
                                     <?php echo $zone ?>
                                 </option>
                             <?php } ?>
@@ -67,14 +70,14 @@
                     <div class="col-12 col-md-4">
                         <label class="content-title">Job Time Settings</label>
                         <label class="content-subtitle mb-2">Time Interval Settings</label>
-                        <select name="job_time_setting" id="library_template" class="nsm-field form-select" required>
+                        <select name="calendar_time_interval" id="calendar_time_interval" class="nsm-field form-select" required>
                             <option value="" selected disabled>Select</option>
-                            <option <?= $settings['job_time_setting'] == 1 ? 'selected="selected"' : ''; ?> value="1">1 hour</option>
-                            <option <?= $settings['job_time_setting'] == 2 ? 'selected="selected"' : ''; ?> value="2">2 hours</option>
-                            <option <?= $settings['job_time_setting'] == 3 ? 'selected="selected"' : ''; ?> value="3">3 hours</option>
-                            <option <?= $settings['job_time_setting'] == 4 ? 'selected="selected"' : ''; ?> value="4">4 hours</option>
-                            <option <?= $settings['job_time_setting'] == 5 ? 'selected="selected"' : ''; ?> value="5">5 hours</option>
-                            <option <?= $settings['job_time_setting'] == 6 ? 'selected="selected"' : ''; ?> value="6">6 hours</option>
+                            <option <?= $settings && $settings->time_interval == '1 hour' ? 'selected="selected"' : ''; ?> value="1 hour">1 hour</option>
+                            <option <?= $settings && $settings->time_interval == '2 hours' ? 'selected="selected"' : ''; ?> value="2 hours">2 hours</option>
+                            <option <?= $settings && $settings->time_interval == '3 hours' ? 'selected="selected"' : ''; ?> value="3 hours">3 hours</option>
+                            <option <?= $settings && $settings->time_interval == '4 hours' ? 'selected="selected"' : ''; ?> value="4 hours">4 hours</option>
+                            <option <?= $settings && $settings->time_interval == '5 hours' ? 'selected="selected"' : ''; ?> value="5 hours">5 hours</option>
+                            <option <?= $settings && $settings->time_interval == '6 hours' ? 'selected="selected"' : ''; ?> value="6 hours">6 hours</option>
                         </select>
                     </div>
                 </div>
@@ -83,9 +86,9 @@
                         <label class="content-title">Calendar Default View</label>
                         <label class="content-subtitle mb-2">Set the caledar default view.</label>
                         <select name="calendar_default_view" class="nsm-field form-select" required>
-                            <?php foreach (config_item('calender_views') as $key => $zone) { ?>
-                                <option value="<?php echo $zone ?>" <?php echo ($settings['calendar_default_view'] === $key) ? "selected" : "" ?>>
-                                    <?php echo $zone ?>
+                            <?php foreach (config_item('calender_views') as $key => $view) { ?>
+                                <option value="<?php echo $view ?>" <?= $settings && $settings->default_view == $view ? 'selected="selected"' : ''; ?>>
+                                    <?php echo $view ?>
                                 </option>
                             <?php } ?>
                         </select>
@@ -93,11 +96,11 @@
                     <div class="col-12 col-md-4">
                         <label class="content-title">Calendar Week Starts On</label>
                         <label class="content-subtitle mb-2">Select the day when a week starts.</label>
-                        <select name="calendar_first_day" class="nsm-field form-select" required>
-                            <option value="Sunday" <?php echo ($settings['calendar_first_day'] === "Sunday") ? "selected" : "" ?>>
+                        <select name="calendar_week_starts_on" class="nsm-field form-select" required>
+                            <option value="Sunday" <?= $settings && $settings->week_starts_on == "Sunday" ? 'selected="selected"' : ''; ?>>
                                 Sunday
                             </option>
-                            <option value="Monday" <?php echo ($settings['calendar_first_day'] === "Monday") ? "selected" : "" ?>>
+                            <option value="Monday" <?= $settings && $settings->week_starts_on == "Monday" ? 'selected="selected"' : ''; ?>>
                                 Monday
                             </option>
                         </select>
@@ -106,11 +109,11 @@
                 <div class="row g-3 mb-4">
                     <div class="col-12 col-md-4">
                         <label class="content-title mb-2">Calendar Day Starts On</label>
-                        <input type="text" name="calender_day_starts_on" class="nsm-field form-control timepicker" value="<?php echo (!empty($settings['calender_day_starts_on'])) ? $settings['calender_day_starts_on'] : '' ?>" required />
+                        <input type="text" name="calendar_day_starts_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_starts_on != '' ? $settings->day_starts_on : ''; ?>" required />
                     </div>
                     <div class="col-12 col-md-4">
                         <label class="content-title mb-2">Calendar Day Ends On</label>
-                        <input type="text" name="calender_day_ends_on" class="nsm-field form-control timepicker" value="<?php echo (!empty($settings['calender_day_ends_on'])) ? $settings['calender_day_ends_on'] : '' ?>" required />
+                        <input type="text" name="calendar_day_ends_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_ends_on != '' ? $settings->day_ends_on : ''; ?>" required />
                     </div>
                 </div>                
                 <div class="row g-3 mb-2">
@@ -205,20 +208,20 @@
                         <div class="nsm-card h-auto">
                             <div class="nsm-card-content">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="work_order_show_customer" id="work_order_show_customer" value="1" <?= !empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1 ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_customer">Customer name</label>
+                                    <input class="form-check-input" type="checkbox" name="calendar_display_customer_name" id="calendar_display_customer_name" value="1" <?= $settings && $settings->display_customer_name == 1 ? 'checked="checked"' : ''; ?>>
+                                    <label class="form-check-label" for="calendar_display_customer_name">Customer name</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="work_order_show_details" id="work_order_show_details" value="1" <?= !empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1 ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_details">Job address and description</label>
+                                    <input class="form-check-input" type="checkbox" name="calendar_display_job_details" id="calendar_display_job_details" value="1" <?= $settings && $settings->display_job_details == 1 ? 'checked="checked"' : ''; ?>>
+                                    <label class="form-check-label" for="calendar_display_job_details">Job address and description</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="work_order_show_price" id="work_order_show_price" value="1" <?= !empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1 ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_price">Price</label>
+                                    <input class="form-check-input" type="checkbox" name="calendar_display_price" id="calendar_display_price" value="1" <?= $settings && $settings->display_price == 1 ? 'checked="checked"' : ''; ?>>
+                                    <label class="form-check-label" for="calendar_display_price">Price</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="work_order_show_link" id="work_order_show_link" value="1" <?= !empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1 ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_link">Url Links</label>
+                                    <input class="form-check-input" type="checkbox" name="calendar_display_url_link" id="calendar_display_url_link" value="1" <?= $settings && $settings->display_url_link == 1 ? 'checked="checked"' : ''; ?>>
+                                    <label class="form-check-label" for="calendar_display_url_link">Url Links</label>
                                 </div>
                                 <hr>
                                 <a href="<?php echo base_url('settings') . '/notifications' ?>" class="nsm-link">Manage schedule notifications</a>
@@ -226,60 +229,26 @@
                         </div>
 
                         <div class="mt-3">
-                        <label class="content-title">Auto add to Google Calendar</label>
-                        <label class="content-subtitle mb-2">Select which module will auto add to your google calendar.</label>
-
-                        <div class="nsm-card h-auto">
-                            <div class="nsm-card-content">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Appointment" <?= !empty($settings['google_calendar']) && in_array('Appointment', $settings['google_calendar']) ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_customer">Appointment</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Job" <?= !empty($settings['google_calendar']) && in_array('Job', $settings['google_calendar']) ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_details">Job</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Event" <?= !empty($settings['google_calendar']) && in_array('Event', $settings['google_calendar']) ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_price">Events</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="google_calendar[]" id="" value="Service Ticket" <?= !empty($settings['google_calendar']) && in_array('Service Ticket', $settings['google_calendar']) ? "checked=checked" : "" ?>>
-                                    <label class="form-check-label" for="work_order_show_link">Service Tickets</label>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-
-                        <div class="mt-3">
-                            <label class="content-title">Calendar Default Tab</label>
-                            <label class="content-subtitle mb-2">Set the calendar default view.</label>
+                            <label class="content-title">Auto add to Google Calendar</label>
+                            <label class="content-subtitle mb-2">Select which module will auto add to your google calendar.</label>
 
                             <div class="nsm-card h-auto">
                                 <div class="nsm-card-content">
                                     <div class="form-check">
-                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_employee" value="employee" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'employee' ? "checked=checked" : "" ?>>
-                                        <label class="form-check-label" for="default_tab_employee">Employee</label>
+                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_appointment" id="calendar_auto_add_appointment" <?= $settings && $settings->auto_add_appointment == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                        <label class="form-check-label" for="calendar_auto_add_appointment">Appointment</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_month" value="month" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'month' ? "checked=checked" : "" ?>>
-                                        <label class="form-check-label" for="default_tab_month">Month</label>
+                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_job" id="calendar_auto_add_job" <?= $settings && $settings->auto_add_job == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                        <label class="form-check-label" for="calendar_auto_add_job">Job</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_day" value="day" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'day' ? "checked=checked" : "" ?>>
-                                        <label class="form-check-label" for="default_tab_day">Day</label>
+                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_event" id="calendar_auto_add_event" <?= $settings && $settings->auto_add_event == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                        <label class="form-check-label" for="calendar_auto_add_event">Events</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_3d" value="3d" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == '3d' ? "checked=checked" : "" ?>>
-                                        <label class="form-check-label" for="default_tab_3d">3 Days</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_week" value="week" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'week' ? "checked=checked" : "" ?>>
-                                        <label class="form-check-label" for="default_tab_week">Week</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input chk-default-calendar-tab" type="checkbox" name="calendar_default_tab" id="default_tab_list" value="list" <?= !empty($settings['calendar_default_tab']) && $settings['calendar_default_tab'] == 'list' ? "checked=checked" : "" ?>>
-                                        <label class="form-check-label" for="default_tab_list">List</label>
+                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_ticket" id="calendar_auto_add_ticket" <?= $settings && $settings->auto_add_ticket == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                        <label class="form-check-label" for="calendar_auto_add_ticket">Service Tickets</label>
                                     </div>
                                 </div>
                             </div>
@@ -492,9 +461,9 @@
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
+                        /*if (result.value) {
                             location.reload();
-                        }
+                        }*/
                     });
 
                     _this.find("button[type=submit]").html("Save Changes");
@@ -502,11 +471,6 @@
                 },
             });
         });
-    });
-
-    $(document).on('change', '.chk-default-calendar-tab', function(){
-        $(".chk-default-calendar-tab").prop( "checked", false );
-        $(this).prop( "checked", true );
     });
 
     function checkAuth() {

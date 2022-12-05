@@ -167,6 +167,17 @@ class Cron_Api extends MYF_Controller {
                             'end_time' => $end_time
                         ];
 
+                        $attendees = array();
+                        $assigned_employees = json_decode($appointment->assigned_employee_ids);
+                        if( !empty($assigned_employees) ){
+                            foreach($assigned_employees as $eid){
+                                $user = $this->Users_model->getUserByID($eid);
+                                if( $user ){
+                                    $attendees[] = ['email' => $user->email];
+                                }
+                            }
+                        }
+
                         $is_valid = true;
 
                     }
@@ -188,6 +199,14 @@ class Cron_Api extends MYF_Controller {
                             'end_time' => $end_time
                         ];
 
+                        $attendees = array();
+                        if( $event->employee_id != '' ){
+                            $user = $this->Users_model->getUserByID($event->employee_id);
+                            if( $user ){
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+
                         $is_valid = true;
                     }
                     break;
@@ -208,6 +227,17 @@ class Cron_Api extends MYF_Controller {
                             'start_time' => $start_time,
                             'end_time' => $end_time
                         ];
+
+                        $attendees = array();
+                        $assigned_employees = unserialize($ticket->technicians);
+                        if( !empty($assigned_employees) ){
+                            foreach($assigned_employees as $eid){
+                                $user = $this->Users_model->getUserByID($eid);
+                                if( $user ){
+                                    $attendees[] = ['email' => $user->email];
+                                }
+                            }
+                        }
 
                         $is_valid = true;
                     }
@@ -231,6 +261,32 @@ class Cron_Api extends MYF_Controller {
                             'end_time' => $end_time
                         ];
 
+                        $attendees = array();
+                        if( $job->e_employee_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->e_employee_id);
+                            if( $user ){
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+                        if( $job->employee2_employee_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->employee2_employee_id);
+                            if( $user ){
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+                        if( $job->employee3_employee_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->employee3_employee_id);
+                            if( $user ){
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+                        if( $job->employee4_employee_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->employee4_employee_id);
+                            if( $user ){
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+
                         $is_valid = true;
                     }
                     break;
@@ -248,9 +304,9 @@ class Cron_Api extends MYF_Controller {
                     $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                                         
                     if( $googleAccount->auto_sync_calendar_id != ''){
-                        $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);
+                        $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);
                     }else{
-                        $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $data['access_token']);    
+                        $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);    
                     }
 
                     $googleSyncData = [
@@ -269,6 +325,11 @@ class Cron_Api extends MYF_Controller {
                 $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
             }
         }
+    }
+
+    public function unserializeData()
+    {
+
     }
 }
 

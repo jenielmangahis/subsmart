@@ -80,26 +80,17 @@
                 </div>
                 <form id="frm_calender_filter_events" method="post">
                     <div class="row">
-                        <div class="col-12 col-md-4">
-                            <?php
-                            $aTimezone  = config_item('calendar_timezone');
-                            $a_settings = unserialize($settings[0]->value);
-                            if ($a_settings) {
-                                if (isset($aTimezone[$a_settings['calendar_timezone']])) {
-                                    $timezone = $aTimezone[$a_settings['calendar_timezone']];
-                                }
-                                //$timezone = $a_settings['calendar_timezone'];
-                            } else {
-                                $timezone = 'Central Time (UTC -5)';
-                            }
-                            ?>
-                            <input type="hidden" id="time-zone-selector" value="<?= $timezone; ?>">
-                            <label class="content-title mt-1 d-inline-block"><?= $timezone; ?> </label> <a href="<?= base_url('settings/schedule') ?>" class="nsm-link ms-3">Change</a>
+                        <div class="col-12 col-md-4">                            
+                            <input type="hidden" id="time-zone-selector" value="<?= $default_timezone; ?>">
+                            <label class="content-title mt-1 d-inline-block"><?= $default_timezone; ?> </label> <a href="<?= base_url('settings/schedule') ?>" class="nsm-link ms-3">Change</a>
                         </div>
                         <div class="col-12 col-md-8 grid-mb text-end">
                             <div class="nsm-page-buttons page-button-container">
-                                <button type="button" class="nsm-button" id="btn_add_calendar">
+                                <!-- <button type="button" class="nsm-button" id="btn_add_calendar">
                                     <i class='bx bx-fw bx-calendar-plus'></i> Add Calendar
+                                </button> -->
+                                <button type="button" class="nsm-button" onclick="location.href='<?= base_url('tickets/addnewTicketApmt') ?>'">
+                                    <i class='bx bx-fw bx-calendar-event'></i> New Service Ticket
                                 </button>
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('events/new_event') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Event
@@ -176,10 +167,11 @@
 <script type="text/javascript">
 
     var calendar;
+    var selected_calendar_view = '';
 
     $(document).ready(function() {
         // loadTags();
-        reloadCalendar();
+        reloadCalendar('');
         loadMiniCalendar();
         loadWaitList();
         loadUpcomingSchedules();
@@ -380,7 +372,7 @@
                             confirmButtonText: 'Okay'
                         }).then((result) => {
                             //if (result.value) {
-                                reloadCalendar();
+                                reloadCalendar(selected_calendar_view);
                             //}
                         });
 
@@ -389,7 +381,7 @@
                     } else {
                         Swal.fire({
                             title: 'Error',
-                            text: result.message,
+                            text: result.msg,
                             icon: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -458,7 +450,7 @@
                 },
                 dataType: 'json',
                 success: function(o) {
-                    reloadCalendar();
+                    reloadCalendar('employeeTimeline');
                 }
             });
         });
@@ -979,48 +971,52 @@
         });
     });
 
-    function reloadCalendar() {
+    function reloadCalendar(default_view) {
         let _calendar = document.getElementById('calendar');
         let _timezone = document.getElementById('time-zone-selector');
         let events = <?php echo json_encode($events) ?>;
         let customer_events = <?php echo json_encode($resources_user_events) ?>;
 
-        renderCalendar(_calendar, _timezone, events);
+        renderCalendar(_calendar, _timezone, events, default_view);
 
         /*window.setTimeout( function(){
             $('.calendar-tile-details').hide();
         }, 1500 );*/
     }
 
-    function renderCalendar(_calendar, _timezone, events) {
+    function renderCalendar(_calendar, _timezone, events, default_view) {
         let bc_events_url = "<?= base_url('calendar/_get_main_calendar_events') ?>";
         let bc_resources_url = "<?= base_url('calendar/_get_main_calendar_resources') ?>";
         let bc_resource_users_url = "<?= base_url('calendar/_get_main_calendar_resource_users') ?>";
         let scrollTime = moment().format("HH") + ":00:00";
         let default_calendar_tab = '<?= $default_calendar_view; ?>';
         
-        if( default_calendar_tab == 'employee' ){
+        if( default_calendar_tab == 'Employee' ){
             default_calendar_tab = 'employeeTimeline';
         }
 
-        if( default_calendar_tab == 'month' ){
+        if( default_calendar_tab == 'Month' ){
             default_calendar_tab = 'monthView';   
         }
 
-        if( default_calendar_tab == 'day' ){
+        if( default_calendar_tab == 'Day' ){
             default_calendar_tab = 'dayView';   
         }
 
-        if( default_calendar_tab == '3d' ){
+        if( default_calendar_tab == '3 days' ){
             default_calendar_tab = 'threeDaysView';   
         }
 
-        if( default_calendar_tab == 'week' ){
+        if( default_calendar_tab == 'Week' ){
             default_calendar_tab = 'weekView';   
         }
 
-        if( default_calendar_tab == 'list' ){
+        if( default_calendar_tab == 'List' ){
             default_calendar_tab = 'listView';   
+        }
+
+        if( default_view != '' ){
+            default_calendar_tab = default_view;      
         }
 
         calendar = new FullCalendar.Calendar(_calendar, {
@@ -1125,8 +1121,7 @@
             selectable: true,
             slotEventOverlap: true,
             eventOverlap: true,
-            select: function(info) {
-                //console.log(info);
+            select: function(info) {                
                 //alert('selected ' + info.startStr + ' to ' + info.endStr);
                 let result = info.hasOwnProperty('resource');
                 if (result) {
@@ -1139,12 +1134,12 @@
                 }
 
 
+                $("#appointment-user").empty().trigger('change');
                 if (user_id > 0) {
                     var $newOption = $("<option selected='selected'></option>").val(user_id).text(user_name)
                     $("#appointment-user").append($newOption).trigger('change');
                     $("#action_select_user").val(user_id);
-                } else {
-                    $("#appointment-user").empty().trigger('change');
+                } else {                    
                     $("#action_select_user").val(0);
                 }
 
@@ -1162,7 +1157,7 @@
                 $("#action_select_date").val(moment(info.startStr).format('YYYY-MM-DD'));
                 $("#action_select_time").val(moment(info.startStr).format('h:mm a'));
 
-                $("#appointment-customer").empty().trigger('change');
+                $("#appointment-customer").empty().trigger('change');                
                 $("#appointment-tags").empty().trigger('change');
                 // $("#appointment-tags").empty().trigger('change');
                 // loadCompanyUsers();
@@ -2099,6 +2094,10 @@
         }else if( tile_type == 'event' ){
             location.href = base_url + 'events/event_preview/' + tile_id;
         }
+    });
+
+    $(document).on('click', '.fc-threeDaysView-button', function(){
+        selected_calendar_view = 'threeDaysView';
     });
 
     $(document).on('click', '.calendar-tile-add-gcalendar', function(){
