@@ -81,6 +81,11 @@
     color: black !important;
     cursor: pointer; 
     }
+    .SHORTCUT_LINK { 
+        text-decoration: none;
+        float: right;
+        margin-top: -25px;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
@@ -186,7 +191,7 @@
                                     <div class="form-group">
                                         <h6>Employee</h6>
                                         <select required id="employee_id" name="employee_id" class="form-control">
-                                            <option selected>Select Employee</option>
+                                            <option value selected disabled>- Select Employee -</option>
                                             <?php if(!empty($employees)): ?>
                                             <?php foreach ($employees as $employee): ?>
                                             <option <?php echo isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?php echo $employee->id; ?>"><?php echo $employee->LName.','.$employee->FName; ?></option>
@@ -283,24 +288,24 @@
                         <hr>
                         <div class="nsm-card-content">
                             <div class="row mb-3">
-                                <div class="col-lg-6">
-                                    <h6>Event Type</h6>
+                                <div class="col-lg-6 mb-3">
+                                    <h6>Event Type</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_types'); ?>">+ Manage Event Type</a>
                                     <select required id="event_type_option" name="event_types" class="form-control">
                                         <option selected hidden disabled value>- Select Event Type -</option>
                                         <?php if(!empty($job_types)): ?>
                                         <?php foreach ($job_types as $type): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?php echo $type->title; ?>"><?php echo $type->title; ?></option>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?php echo $type->title; ?>" data-image="<?php echo $type->icon_marker ?>"><?php echo $type->title; ?></option>
                                         <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
                                 </div>
-                                <div class="col-lg-6">
-                                    <h6>Event Tag</h6>
+                                <div class="col-lg-6 mb-3">
+                                    <h6>Event Tag</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_tags'); ?>">+ Manage Event Tag</a>
                                     <select required id="event_tags_option" name="tags" class="form-control">
                                         <option selected hidden disabled value>- Select Event Tag -</option>
-                                        <?php if(!empty($tags)): ?>
-                                        <?php foreach ($tags as $tag): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->event_tag == $tag->name) {echo 'selected'; } ?> value="<?php echo $tag->name; ?>"><?php echo $tag->name; ?></option>
+                                        <?php if(!empty($job_tags)): ?>
+                                        <?php foreach ($job_tags as $tag): ?>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->event_tag == $tag->name) {echo 'selected'; } ?> value="<?php echo $tag->name; ?>" data-image="<?php echo $tag->marker_icon ?>"><?php echo $tag->name; ?></option>
                                         <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
@@ -321,20 +326,12 @@
                                             <tr>
                                                 <td style="width: 0% !important;"></td>
                                                 <td>Item Name</td>
-                                                <td>Qty</td>
+                                                <td style="width: 0% !important;">Qty</td>
                                                 <td>Unit Price</td>
                                                 <td>Total Amount</td>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td style="width: 0% !important;"></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                        </tbody>
+                                        <tbody id="EVENT_ITEMS_LISTING_TBODY"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -411,6 +408,48 @@
 <!-- END: MODALS -->
 
 <script type="text/javascript">
+
+var TOTAL_ITEM_AMOUNT = 0;
+$(".select_item").click(function (event) {
+    var ROW_ITEM_AMOUNT = 0;
+    const ITEM_ID = $(this).attr("id");
+    const ITEM_NAME = $(this).attr("data-itemname");
+    const ITEM_QUANTITY = parseInt($(this).attr("data-quantity"));
+    const ITEM_PRICE = parseInt($(this).attr("data-price"));
+
+    // START: CREATE DATA AND APPEND
+    var TBODY_DATA = "<tr class='ROW_" + ITEM_ID + "'>" +
+        "<td><button class='btn btn-sm btn-light ITEM_ROW_DELETE' type='button'><i class='bx bxs-trash' ></i></button></td>" +
+        "<td>" + ITEM_NAME + "</td>" +
+        "<td><input style='width: 100px;' class='form-control form-control-sm QTY_INPUT' type='number' min='0'></td>" +
+        "<td>" + ITEM_PRICE.toFixed(2) + "</td>" +
+        "<td class='SUM_ALL_ITEMS'>0</td>" +
+        "</tr>";
+    $("#EVENT_ITEMS_LISTING_TBODY").append(TBODY_DATA);
+    // END: CREATE DATA AND APPEND
+
+    $('.ITEM_ROW_DELETE').click(function (event) {
+        $(this).parent().parent().remove();
+    });
+
+    var ROW_LENGTH = $('#EVENT_ITEMS_LISTING_TBODY > tr').length;
+
+    $('.QTY_INPUT').change(function (event) {
+        var QUANTITY = $(this).val();
+        var PRICE = $(this).closest('td').next().html();
+        ROW_ITEM_AMOUNT = parseInt(QUANTITY * PRICE);
+        $(this).closest('td').next().next().html(ROW_ITEM_AMOUNT.toFixed(2));
+
+        var SUM_ALL_ITEMS = $('.SUM_ALL_ITEMS');
+        var SUM = 0;
+        for (var i = 0; i < ROW_LENGTH; i++) {
+            SUM += parseInt(SUM_ALL_ITEMS[i].textContent);
+            $(".TOTAL_ITEM_AMOUNT").text(SUM.toFixed(2));
+        }
+
+    });
+});
+
 // START: ADD EVENT SCRIPT
 $('#ADD_EVENT_FORM').submit(function (event) {
     event.preventDefault();
@@ -428,8 +467,8 @@ $('#ADD_EVENT_FORM').submit(function (event) {
     var EVENT_TYPE = $("#event_type_option").val();
     var EVENT_TAG = $("#event_tags_option").val();
     var EVENT_DESCRIPTION = $(".EVENT_DESCRIPTION").val();
-    var TOTAL_ITEM_AMOUNT = $(".TOTAL_ITEM_AMOUNT").val();
-    $.post("<?php echo base_url()."/events/event_save "; ?>", {
+    var TOTAL_ITEM_AMOUNT = $(".TOTAL_ITEM_AMOUNT").text();
+    $.post("<?php echo base_url('events/event_save'); ?>", {
         FROM_DATE: FROM_DATE,
         FROM_TIME: FROM_TIME,
         TO_DATE: TO_DATE,
@@ -463,7 +502,28 @@ $("#start_date").change(function (event) {
 
 
 $(function () {
-    $("#start_time, #end_time, #employee_id, #customer_reminder, #inputState, #event_type_option, #event_tags_option").select2();
+    $("#start_time, #end_time, #employee_id, #customer_reminder, #inputState").select2();
+
+$("#event_type_option, #event_tags_option").select2({
+    templateResult: formatState,
+    templateSelection: formatState
+});
+
+function formatState (opt) {
+    if (!opt.id) {
+        return opt.text;
+    } 
+    var optimage = $(opt.element).attr('data-image'); 
+    if(!optimage){
+       return opt.text;
+    } else {                    
+        var $opt = $(
+           '<span><img src="<?php echo base_url('uploads/icons/'); ?>' + optimage + '" style="width: 20px; margin-top: -4px;" /> ' + opt.text + '</span>'
+        );
+        return $opt;
+    }
+};
+
 });
 
 var ITEMS_TABLE = $("#ITEMS_TABLE").DataTable({

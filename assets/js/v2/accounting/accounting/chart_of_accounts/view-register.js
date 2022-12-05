@@ -106,9 +106,9 @@ $('#apply-button').on('click', function() {
     var url = `${base_url}accounting/chart-of-accounts/view-register/${$('#account').val()}?`;
 
     url += $('#filter-find').val() !== '' ? `search=${$('#filter-find').val()}&` : '';
-    url += $('#filter-reconcile-status').val() !== 'all' ? `reconcile-status=${$('#filter-reconcile-status').val()}&` : '';
-    url += $('#filter-transaction-type').val() !== 'all' ? `transaction-type=${$('#filter-transaction-type').val()}&` : '';
-    url += $('#filter-payee').val() !== 'all' ? `payee=${$('#filter-payee').val()}&` : '';
+    url += $('#filter-reconcile-status').length > 1 && $('#filter-reconcile-status').attr('data-applied') !== 'all' ? `reconcile-status=${$('#filter-reconcile-status').attr('data-applied')}&` : '';
+    url += $('#filter-transaction-type').length > 1 && $('#filter-transaction-type').attr('data-applied') !== 'all' ? `transaction-type=${$('#filter-transaction-type').attr('data-applied')}&` : '';
+    url += $('#filter-payee').length > 1 && $('#filter-payee').attr('data-applied') !== 'all' ? `payee=${$('#filter-payee').attr('data-applied')}&` : '';
     url += $('#filter-date').val() !== 'all' ? `date=${$('#filter-date').val()}&` : '';
     url += $('#filter-from').val() !== '' ? `from=${$('#filter-from').val()}&` : '';
     url += $('#filter-to').val() !== '' ? `to=${$('#filter-to').val()}&` : '';
@@ -399,7 +399,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Ref No.' :
                             $(this).html(`<input type="text" name="ref_no" class="form-control nsm-field" value="${current}" placeholder="Ref No.">`);
     
-                            if(colData.disabled === 'true') {
+                            if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).find('input').prop('disabled', true);
                             }
                         break;
@@ -417,7 +417,7 @@ $('#registers-table tbody tr').on('click', function() {
                                 }
                             }
     
-                            if(colData.disabled === 'true') {
+                            if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).find('select').prop('disabled', true);
                                 $(this).find('select').select2({
                                     placeholder: 'Payee'
@@ -514,7 +514,7 @@ $('#registers-table tbody tr').on('click', function() {
     
                             $(this).html(`<select class="form-select nsm-field" name="${fieldName !== undefined ? fieldName.replaceAll('-', '_') : 'account'}" ${current === '-Split-' ? 'disabled' : ''}><option value="${colData.id}">${current}</option></select>`);
     
-                            if(colData.disabled === 'true') {
+                            if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).find('select').prop('disabled', true);
                                 $(this).find('select').select2({
                                     placeholder: 'Account'
@@ -552,7 +552,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Payment' :
                             if(current === '' && type !== 'Journal') {
                                 $(this).html(`<input type="number" name="payment" class="form-control nsm-field font-italic" value="" placeholder="Payment" disabled>`);
-                            } else if(colData.disabled === 'true') {
+                            } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).html(`<input type="number" name="payment" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment" disabled>`);
                             } else {
                                 $(this).html(`<input type="number" name="payment" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
@@ -565,7 +565,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Charge' :
                             if(current === '' && type !== 'Journal') {
                                 $(this).html(`<input type="number" name="charge" class="form-control nsm-field font-italic" value="" placeholder="Charge" disabled>`);
-                            } else if(colData.disabled === 'true') {
+                            } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).html(`<input type="number" name="charge" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge" disabled>`);
                             } else {
                                 $(this).html(`<input type="number" name="charge" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
@@ -578,7 +578,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Deposit' :
                             if(current === '' && type !== 'Journal') {
                                 $(this).html(`<input type="number" name="deposit" class="form-control nsm-field font-italic" value="" placeholder="Deposit" disabled>`);
-                            } else if(colData.disabled === 'true') {
+                            } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).html(`<input type="number" name="deposit" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit" disabled>`);
                             } else {
                                 $(this).html(`<input type="number" name="deposit" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit">`);
@@ -591,7 +591,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Increase' :
                             if(current === '' && type !== 'Journal') {
                                 $(this).html(`<input type="number" name="increase" class="form-control nsm-field font-italic" value="" placeholder="Increase" disabled>`);
-                            } else if(colData.disabled === 'true') {
+                            } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).html(`<input type="number" name="increase" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase" disabled>`);
                             } else {
                                 $(this).html(`<input type="number" name="increase" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase">`);
@@ -604,7 +604,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Decrease' :
                             if(current === '' && type !== 'Journal') {
                                 $(this).html(`<input type="number" name="decrease" class="form-control nsm-field font-italic" value="" placeholder="Decrease" disabled>`);
-                            } else if(colData.disabled === 'true') {
+                            } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                 $(this).html(`<input type="number" name="decrease" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease" disabled>`);
                             } else {
                                 $(this).html(`<input type="number" name="decrease" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease">`);
@@ -646,6 +646,10 @@ $('#registers-table tbody tr').on('click', function() {
     
                 var type = $($(rows[typeHeaderRowIndex]).find('td')[typeHeader.index()]).text().trim();
     
+                if($('#registers-table tbody tr.editting').length > 0) {
+                    $('#registers-table tbody tr.editting').next().find('#cancel-edit').trigger('click');
+                }
+                $(this).addClass('editting');
                 var colCount = cols.length;
     
                 var actionRow = '<tr class="action-row">';
@@ -711,7 +715,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Ref No.' :
                                 $(this).html(`<input type="text" name="ref_no" class="form-control nsm-field" value="${current}" placeholder="Ref No.">`);
     
-                                if(colData.disabled === 'true') {
+                                if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).find('input').prop('disabled', true);
                                 }
                             break;
@@ -729,7 +733,7 @@ $('#registers-table tbody tr').on('click', function() {
                                     }
                                 }
     
-                                if(colData.disabled === 'true') {
+                                if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).find('select').prop('disabled', true);
                                     $(this).find('select').select2({
                                         placeholder: 'Payee'
@@ -826,7 +830,7 @@ $('#registers-table tbody tr').on('click', function() {
     
                                 $(this).html(`<select class="form-select nsm-field" name="${fieldName !== undefined ? fieldName.replaceAll('-', '_') : 'account'}" ${current === '-Split-' ? 'disabled' : ''}><option value="${colData.id}">${current}</option></select>`);
     
-                                if(colData.disabled === 'true') {
+                                if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).find('select').prop('disabled', true);
                                     $(this).find('select').select2({
                                         placeholder: 'Account'
@@ -864,7 +868,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Payment' :
                                 if(current === '' && type !== 'Journal') {
                                     $(this).html(`<input type="number" name="payment" class="form-control nsm-field font-italic" value="" placeholder="Payment" disabled>`);
-                                } else if(colData.disabled === 'true') {
+                                } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).html(`<input type="number" name="payment" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment" disabled>`);
                                 } else {
                                     $(this).html(`<input type="number" name="payment" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
@@ -877,7 +881,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Charge' :
                                 if(current === '' && type !== 'Journal') {
                                     $(this).html(`<input type="number" name="charge" class="form-control nsm-field font-italic" value="" placeholder="Charge" disabled>`);
-                                } else if(colData.disabled === 'true') {
+                                } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).html(`<input type="number" name="charge" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge" disabled>`);
                                 } else {
                                     $(this).html(`<input type="number" name="charge" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
@@ -890,7 +894,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Deposit' :
                                 if(current === '' && type !== 'Journal') {
                                     $(this).html(`<input type="number" name="deposit" class="form-control nsm-field font-italic" value="" placeholder="Deposit" disabled>`);
-                                } else if(colData.disabled === 'true') {
+                                } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).html(`<input type="number" name="deposit" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit" disabled>`);
                                 } else {
                                     $(this).html(`<input type="number" name="deposit" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit">`);
@@ -903,7 +907,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Increase' :
                                 if(current === '' && type !== 'Journal') {
                                     $(this).html(`<input type="number" name="increase" class="form-control nsm-field font-italic" value="" placeholder="Increase" disabled>`);
-                                } else if(colData.disabled === 'true') {
+                                } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).html(`<input type="number" name="increase" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase" disabled>`);
                                 } else {
                                     $(this).html(`<input type="number" name="increase" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase">`);
@@ -916,7 +920,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Decrease' :
                                 if(current === '' && type !== 'Journal') {
                                     $(this).html(`<input type="number" name="decrease" class="form-control nsm-field font-italic" value="" placeholder="Decrease" disabled>`);
-                                } else if(colData.disabled === 'true') {
+                                } else if(colData.disabled === 'true' || colData.disabled === 1) {
                                     $(this).html(`<input type="number" name="decrease" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease" disabled>`);
                                 } else {
                                     $(this).html(`<input type="number" name="decrease" class="form-control nsm-field text-end" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease">`);
@@ -1371,9 +1375,9 @@ $('#chk_show_in_one_line').on('change', function() {
     var url = `${base_url}accounting/chart-of-accounts/view-register/${$('#account').val()}?`;
 
     url += $('#filter-find').attr('data-applied') !== '' ? `search=${$('#filter-find').attr('data-applied')}&` : '';
-    url += $('#filter-reconcile-status').attr('data-applied') !== 'all' ? `reconcile-status=${$('#filter-reconcile-status').attr('data-applied')}&` : '';
-    url += $('#filter-transaction-type').attr('data-applied') !== 'all' ? `transaction-type=${$('#filter-transaction-type').attr('data-applied')}&` : '';
-    url += $('#filter-payee').attr('data-applied') !== 'all' ? `payee=${$('#filter-payee').attr('data-applied')}&` : '';
+    url += $('#filter-reconcile-status').length > 1 && $('#filter-reconcile-status').attr('data-applied') !== 'all' ? `reconcile-status=${$('#filter-reconcile-status').attr('data-applied')}&` : '';
+    url += $('#filter-transaction-type').length > 1 && $('#filter-transaction-type').attr('data-applied') !== 'all' ? `transaction-type=${$('#filter-transaction-type').attr('data-applied')}&` : '';
+    url += $('#filter-payee').length > 1 && $('#filter-payee').attr('data-applied') !== 'all' ? `payee=${$('#filter-payee').attr('data-applied')}&` : '';
     url += $('#filter-date').attr('data-applied') !== 'all' ? `date=${$('#filter-date').attr('data-applied')}&` : '';
     url += $('#filter-from').attr('data-applied') !== '' ? `from=${$('#filter-from').attr('data-applied')}&` : '';
     url += $('#filter-to').attr('data-applied') !== '' ? `to=${$('#filter-to').attr('data-applied')}&` : '';

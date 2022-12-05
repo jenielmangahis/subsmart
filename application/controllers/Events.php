@@ -116,6 +116,21 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/action/event_tags_edit', $this->page_data);
     }
 
+    public function test_get_icon () {
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'event_types',
+            'select' => 'id,title,icon_marker',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $test = $this->general->get_data_with_param($get_job_types);
+        echo json_encode($test);
+    } 
 
     public function event_add($id=null) {
 		$this->page_data['page']->title = 'Event Scheduler Tool';
@@ -168,9 +183,9 @@ class Events extends MY_Controller
         // get all job tags
         $get_job_tags = array(
             'table' => 'event_tags',
-            'select' => 'id,name',
+            'select' => 'id,name,marker_icon',
         );
-        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
+        $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_tags);
         //echo logged('company_id');
 
         // get color settings
@@ -188,7 +203,7 @@ class Events extends MY_Controller
                 'company_id' => logged('company_id')
             ),
             'table' => 'event_types',
-            'select' => 'id,title',
+            'select' => 'id,title,icon_marker',
             'order' => array(
                 'order_by' => 'id',
                 'ordering' => 'DESC',
@@ -611,9 +626,7 @@ class Events extends MY_Controller
         $COMPANY_ID = logged('company_id');
 
         $GET_EVENT_SETTINGS = array(
-            'where' => array(
-                'company_id' => $COMPANY_ID
-            ),
+            'where' => array( 'company_id' => $COMPANY_ID ),
             'table' => 'EVENT_SETTINGS',
             'select' => '*',
         );
