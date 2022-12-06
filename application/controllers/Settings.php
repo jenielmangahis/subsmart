@@ -687,6 +687,7 @@ class Settings extends MY_Controller {
         include APPPATH . 'libraries/google-calendar-api.php';
 
         $this->load->model('GoogleAccounts_model');
+        $this->load->model('Business_model');
 
         $company_id = logged('company_id');
         $google_credentials = google_credentials();
@@ -703,7 +704,12 @@ class Settings extends MY_Controller {
 
         $googleAccount = $this->GoogleAccounts_model->create($data);
         if( $googleAccount ){
-            $calendar_name  = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
+            $company = $this->Business_model->getByCompanyId($company_id);
+            if( $company ){
+                $calendar_name = $company->business_name;
+            }else{
+                $calendar_name  = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
+            } 
             
             $capi = new GoogleCalendarApi();
             $createCalendar = $capi->createCalendar($google_credentials['api_key'], $profile['access_token'], $calendar_name);

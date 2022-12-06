@@ -7,6 +7,8 @@ function createSyncToCalendar($module_id, $module_name, $company_id)
     $CI->load->model('GoogleCalendarSync_model');
     $CI->load->model('Settings_model');
 
+    $is_valid = 0;
+
     $googleAccount = $CI->GoogleAccounts_model->getByCompanyId($company_id);
     if( $googleAccount ){        
         $settings = $CI->Settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);
@@ -48,7 +50,11 @@ function createSyncToCalendar($module_id, $module_name, $company_id)
                 ];
 
                 $CI->GoogleCalendarSync_model->create($data);
+
+                $is_valid = 1;
             }            
         }        
     }    
+
+    return ['is_valid' => $is_valid];
 }

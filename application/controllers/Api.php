@@ -388,4 +388,40 @@ class Api extends MYF_Controller
         $result = ['hash_id' => $hash_id];
         echo json_encode($result);
     }
+
+    public function unserializeData()
+    {
+        $data  = $this->input->post();
+        $unserialize = '';
+
+        if( $data['serialize_data'] != '' ){
+            $unserialize = unserialize($data['serialize_data'])
+        }
+
+        $result = ['unserialize' => $unserialize];
+        echo json_encode($result);
+    }
+
+    public function createGoogleCalendarEvent()
+    {
+        $this->load->helper('google_calendar_helper');
+        
+        $is_success = 0;
+        $msg = 'Empty POST data';
+
+        $data  = $this->input->post();
+        if( $data['object_id'] > 0 ){
+            $result = createSyncToCalendar($data['object_id'], $data['module'], $data['company_id']);
+            if( $result['is_valid'] == 1 ){
+                $msg = 'Success';
+                $is_success = 1;
+            }else{
+                $msg = 'API Error';
+            }
+        }
+        
+        $result = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($result);
+        exit;   
+    }
 }
