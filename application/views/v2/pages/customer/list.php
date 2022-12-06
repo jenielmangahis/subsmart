@@ -52,6 +52,20 @@
     .customerTbl .table-icon {
 	width: 1%;
 }
+    table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -80,7 +94,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                     <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOMER_SEARCHBAR" placeholder="Search Customer...">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button" onclick="location.href='<?= url('customer/import_customer') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> Import
@@ -309,18 +329,18 @@
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.css">
-<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"> -->
- 
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css">
+
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#customer-list').DataTable({
+        var CUSTOMER_LIST_TABLE = $('#customer-list').DataTable({
+            "ordering": false,
             "processing": true,
             "serverSide": true,
-            "order": [],
+            // "order": [],
             "responsive" : true,
             "ajax": {
                 "url": "<?= base_url('customer/getCustomerLists'); ?>",
@@ -348,6 +368,10 @@
                 //     "searchable": false,
                 // }
             ]
+        });
+
+        $("#CUSTOMER_SEARCHBAR").keyup(function() {
+            CUSTOMER_LIST_TABLE.search($(this).val()).draw()
         });
 
         $(document).on("click", ".call-item", function() {
