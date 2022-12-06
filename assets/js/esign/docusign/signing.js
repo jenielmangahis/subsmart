@@ -583,7 +583,7 @@ function Signing(hash) {
         const $spinner = $input.next(".spinner-border");
 
         $input.attr("readonly", true);
-        $spinner.removeClass("d-none");
+        // $spinner.removeClass("d-none");
 
         const value = $input.val().trim();
         await storeFieldValue({ value, id: fieldId });

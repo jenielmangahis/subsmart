@@ -1204,6 +1204,26 @@ class Inventory extends MY_Controller
 
         redirect($_SERVER['HTTP_REFERER']);
     }
+
+    // public function TEST_SERVERSIDE() {
+    //     $comp_id                            = logged('company_id');
+    //     $role_id                            = logged('role');
+    //     if ($role_id == 1 || $role_id == 2) {
+    //         $this->page_data['SERVERSIDE_QUERY'] = "SELECT * FROM items WHERE is_active = '1'";
+    //         // $arg = array(
+    //         //     'type' => ucfirst($type),
+    //         //     'is_active' => 1
+    //         // );
+    //     } else {
+    //         $this->page_data['SERVERSIDE_QUERY'] = "SELECT * FROM items WHERE is_active = '1' AND company_id = '$comp_id'";
+    //         // $arg = array(
+    //         //     'company_id' => $comp_id,
+    //         //     'type' => ucfirst($type),
+    //         //     'is_active' => 1
+    //         // );
+    //     }
+    //     $this->load->view('v2/pages/inventory/TABLE_SERVERSIDE/INVENTORY_TABLE', $this->page_data);
+    // }
 }
 /* End of file items.php */
 

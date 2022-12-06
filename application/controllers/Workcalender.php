@@ -56,7 +56,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
-        $this->load->model('Settings_model');
+        $this->load->model('CalendarSettings_model');
 
         add_css(array(
             'assets/css/bootstrap-multiselect.min.css',
@@ -73,40 +73,49 @@ class Workcalender extends MY_Controller
         $role = logged('role');
         $company_id = logged('company_id');
         $events = $this->event_model->getAllByCompany($company_id);
-        /*if ($role == 2 || $role == 3) {           
-            $events = $this->event_model->getAllByCompany($company_id);
-        }
-        if ($role == 4) {
-            $events = $this->event_model->getAllByUserId();
-        }*/
 
         $this->page_data['events'] = array();
         $this->session->set_userdata('calendar_filter_eids', 'multiselect-all');
 
-
-
-        // setting of the calender
-        $calender_settings = $this->Settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);        
-        //$calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
-        $default_time_to   = date("H:00 A");
-        $default_time_to_interval = 0;
+        // Setting of the calender
+        $calender_settings  = $this->CalendarSettings_model->getByCompanyId($company_id); 
+        $default_time_to    = date("H:00 A");
         $calendar_start_day = 0;
-        if( $calender_settings != '' ){
-            $a_settings = unserialize($calender_settings);
-            if( $a_settings['job_time_setting'] > 0 ){
-                $default_time_to = date("H:00 A", strtotime("+".$a_settings['job_time_setting'].' hours'));
-                $default_time_to_interval = $a_settings['job_time_setting'];
+        $default_timezone   = 'Central Time (UTC -5)';
+        $default_time_to_interval = 0;
+        $default_calendar_view    = 'month';  
+
+        if( $calender_settings ){
+            if( $calender_settings->time_interval != '' ){
+                $timeInterval = explode(" ", $calender_settings->time_interval);
+                if( $timeInterval[0] ){
+                    $default_time_to = date("H:00 A", strtotime("+".trim($timeInterval[0]).' hours'));
+                    $default_time_to_interval = trim($timeInterval[0]);
+                }
+                
             }
 
-            if( isset($a_settings['calendar_first_day']) && $a_settings['calendar_first_day'] == 'Monday' ){            
+            if( $calender_settings->week_starts_on == 'Monday' ){
                 $calendar_start_day = 1;
+            }
+
+            if( $calender_settings->default_view != '' ){
+                $default_calendar_view = $calender_settings->default_view;
+            }
+
+            if( $calender_settings->timezone != '' ){
+                $default_timezone = $calender_settings->timezone;
             }
         } 
 
+        $this->page_data['calendar_start_day'] = $calendar_start_day;
         $this->page_data['default_time_to'] = $default_time_to;
         $this->page_data['default_time_to_interval'] = $default_time_to_interval;
+        $this->page_data['default_calendar_view'] = $default_calendar_view;
+        $this->page_data['default_timezone'] = $default_timezone;
         
         if (!empty($events)) {
+            $inc = 0;
             foreach ($events as $key => $event) {
                 $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
 
@@ -122,163 +131,6 @@ class Workcalender extends MY_Controller
                     }
                 }
 
-                $this->page_data['events'][$key]['eventId'] = $event->id;
-                $this->page_data['events'][$key]['status'] = $event->status;
-                $this->page_data['events'][$key]['title'] = (!empty($customer)) ? $title : '';
-                $this->page_data['events'][$key]['start'] = date('Y-m-d', strtotime($event->start_date));
-                $this->page_data['events'][$key]['end'] = date('Y-m-d', strtotime($event->end_date));
-                $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
-            }
-        }
-
-
-        /*// workorders
-        if ($role == 2 || $role == 3) {
-            $company_id = logged('company_id');
-            $company_id = 15;
-            $workorders = $this->workorder_model->getAllOrderByCompany($company_id);
-        }
-        if ($role == 4) {
-
-            $workorders = $this->workorder_model->getAllByUserId();
-        }
-
-        // perform serialize decode operation
-        foreach ($workorders as $key => $workorder) {
-
-            $workorder->$key = serialize_to_array($workorder);
-        }
-
-        //echo '<pre>'; print_r($workorders); die;
-
-        if (!empty($workorders)) {
-
-            $workorder_events = array();
-
-            foreach ($workorders as $k => $workorder) {
-
-                $user = get_user_by_id($workorder->user_id);
-
-                // label of the event
-                if (!empty($workorder->customer)) {
-
-                    if (!empty($calender_settings)) {
-
-                        $title = make_calender_wordorder_label($calender_settings, $workorder);
-
-                    } else {
-
-                        $date = date('a', strtotime($workorder->date_issued));
-                        $date = substr($date, -2, 1);
-                        $title = date('g', strtotime($workorder->date_issued)) . $date;
-                        $title .= ' ' . $workorder->customer['first_name'] . ' ' . $workorder->customer['last_name'] . ', ';
-                        $title .= $workorder->customer['contact_mobile'];
-                        $title .= ', $' . $workorder->total['eqpt_cost'];
-                    }
-                }
-
-                $workorder_events[$k]['wordOrderId'] = $workorder->id;
-                $workorder_events[$k]['workorder_status'] = $workorder->account_type;
-                $workorder_events[$k]['title'] = $title;
-                $workorder_events[$k]['start'] = date('Y-m-d', strtotime($workorder->date_issued));
-                $workorder_events[$k]['end'] = date('Y-m-d', strtotime($workorder->date_issued));
-                $workorder_events[$k]['userName'] = ($user) ? $user->name : '';
-                $workorder_events[$k]['backgroundColor']    = get_event_color($workorder->status_id);
-            }
-
-            $this->page_data['events'] = array_merge($this->page_data['events'], $workorder_events);
-        }*/
-
-        $this->page_data['wordorders'] = array();
-
-        // workorders
-        // $workorders = $this->workorder_model->getAllByUserId('', '', 0, logged('id'), array());
-        $workorders = array();
-
-        // perform serialize decode operation
-        foreach ($workorders as $key => $workorder) {
-            $workorder->$key = serialize_to_array($workorder);
-        }
-
-        //echo '<pre>'; print_r($workorders); die;
-
-        if (!empty($workorders)) {
-            $workorder_events = array();
-
-            foreach ($workorders as $k => $workorder) {
-                $user = get_user_by_id($workorder->user_id);
-
-                // label of the event
-                if (!empty($workorder->customer)) {
-                    if (!empty($calender_settings)) {
-                        $title = make_calender_wordorder_label($calender_settings, $workorder);
-                    } else {
-                        $date = date('a', strtotime($workorder->date_issued));
-                        $date = substr($date, -2, 1);
-                        $title = date('g', strtotime($workorder->date_issued)) . $date;
-                        $title .= ' ' . $workorder->customer['first_name'] . ' ' . $workorder->customer['last_name'] . ', ';
-                        $title .= $workorder->customer['contact_mobile'];
-                        $title .= ', $' . $workorder->total['eqpt_cost'];
-                    }
-                }
-
-                $workorder_events[$k]['wordOrderId'] = $workorder->id;
-                $workorder_events[$k]['workorder_status'] = $workorder->account_type;
-                $workorder_events[$k]['title'] = $title;
-                $workorder_events[$k]['start'] = date('Y-m-d', strtotime($workorder->date_issued));
-                $workorder_events[$k]['end'] = date('Y-m-d', strtotime($workorder->date_issued));
-                $workorder_events[$k]['userName'] = ($user) ? $user->name : '';
-                $workorder_events[$k]['backgroundColor']    = get_event_color($workorder->status_id);
-            }
-
-            $this->page_data['wordorders'] = array_merge($this->page_data['wordorders'], $workorder_events);
-        }
-
-        //echo '<pre>'; print_r($this->page_data['events']); die;
-
-        // load all user for calender toolbar
-        $this->load->library('user_agent');
-        if ($this->agent->is_mobile()) {
-            $is_mobile = 1;
-        } else {
-            $is_mobile = 0;
-        }
-
-        $company_id = logged('company_id');
-        if ($role == 2 || $role == 3) {
-            $get_users  = $this->Users_model->getAllUsers();
-            $get_recent_users = $this->Users_model->getAllRecentUsers();
-        } else {
-            $get_users  = $this->Users_model->getUsers();
-            $get_recent_users = $this->Users_model->getAllUsersByCompany($company_id);
-        }
-
-        $resources_users = array();
-        $resources_user_events = array();
-
-        if (!empty($get_users)) {
-            $inc = 0;
-            $default_imp_img = base_url('uploads/users/default.png');
-            foreach ($get_users as $get_user) {
-                $default_imp_img = userProfileImage($get_user->id);
-
-                /*if( $get_user->profile_img != null ) {
-                        $default_imp_img = base_url('uploads/users/'.$get_user->profile_img ."." . $get_user->img_type );
-                } else {
-                    $default_imp_img = base_url('uploads/users/default.png');
-                }*/
-
-                $resources_users[$inc]['id'] = "user" . $get_user->id;
-                $resources_users[$inc]['building'] = 'Employee';
-                $resources_users[$inc]['title'] = "#" . $get_user->id . " " . $get_user->FName . " " . $get_user->LName;
-                $resources_users[$inc]['imageurl'] = $default_imp_img;
-                $inc++;
-            }
-        }
-
-        if (!empty($events)) {
-            $inc = 0;
-            foreach ($events as $event) {
                 if ($event->employee_id > 0) {
                     $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
                     $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
@@ -300,70 +152,21 @@ class Workcalender extends MY_Controller
                         $inc++;
                     }
                 }
+
+                $this->page_data['events'][$key]['eventId'] = $event->id;
+                $this->page_data['events'][$key]['status'] = $event->status;
+                $this->page_data['events'][$key]['title'] = (!empty($customer)) ? $title : '';
+                $this->page_data['events'][$key]['start'] = date('Y-m-d', strtotime($event->start_date));
+                $this->page_data['events'][$key]['end'] = date('Y-m-d', strtotime($event->end_date));
+                $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
             }
         }
 
-        $enabled_calendar = array();
-        $enabled_mini_calendar = array();
-        $calendar_list    = array();
-        $google_user_api  = $this->GoogleAccounts_model->getByCompanyId($company_id);
-        if ($google_user_api) {
-            $google_credentials = google_credentials();
-
-            $access_token = "";
-            $refresh_token = "";
-            $google_client_id = "";
-            $google_secrect = "";
-            $calendar_list = array();
-
-            if (isset($google_user_api->google_access_token)) {
-                $access_token = $google_user_api->google_access_token;
-            }
-
-            if (isset($google_user_api->google_refresh_token)) {
-                $refresh_token = $google_user_api->google_refresh_token;
-            }
-
-            if (isset($google_credentials['client_id'])) {
-                $google_client_id = $google_credentials['client_id'];
-            }
-
-            if (isset($google_credentials['client_secret'])) {
-                $google_secrect = $google_credentials['client_secret'];
-            }
-
-            if( $refresh_token ){
-                //Set Client
-                try {
-                    $client = new Google_Client();
-                    $client->setClientId($google_client_id);
-                    $client->setClientSecret($google_secrect);
-                    $client->setAccessToken($access_token);
-                    //$client->refreshToken($refresh_token);
-                    $client->setScopes(array(
-                        'email',
-                        'profile',
-                        'https://www.googleapis.com/auth/calendar',
-                    ));
-                    $client->setApprovalPrompt('force');
-                    $client->setAccessType('offline');
-
-                    //Request
-                    $access_token = $client->getAccessToken();
-                    if(!$client->isAccessTokenExpired()) {
-                        $calendar     = new Google_Service_Calendar($client);
-                        $data = $calendar->calendarList->listCalendarList();
-
-                        $calendar_list = $data->getItems();
-                        $email = $google_user_api->google_email;
-                        $enabled_calendar = unserialize($google_user_api->enabled_calendars);
-                        $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);  
-                    }       
-                } catch (Exception $e) {
-                    $err = $e->getMessage();
-                }
-                           
-            }
+        $this->load->library('user_agent');
+        if ($this->agent->is_mobile()) {
+            $is_mobile = 1;
+        } else {
+            $is_mobile = 0;
         }
 
         //Default created by
@@ -371,17 +174,6 @@ class Workcalender extends MY_Controller
         $userLogged = $this->Users_model->getUser($user_id);
         $this->page_data['userLogged'] = $userLogged; 
 
-        //Settings
-        $default_calendar_view = '3d';
-        $settings = $this->settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id); 
-        if( $settings ){
-            $settings = unserialize($settings);
-            if( $settings['calendar_default_tab'] != '' ){
-                $default_calendar_view = $settings['calendar_default_tab'];
-            }
-        }
-
-        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
         $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         $appointmentPriorityOptions = $this->Appointment_model->priorityOptions();
@@ -401,21 +193,11 @@ class Workcalender extends MY_Controller
         $this->page_data['mini_calendar_events'] = $this->mini_calendar_events();
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['appointmentTypes'] = $this->AppointmentType_model->getAllByCompany($company_id, true);
-        $this->page_data['settings'] = $settings;
-        $this->page_data['enabled_calendar'] = $enabled_calendar;
-        $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
-        //$this->page_data['enable_popper_tooltip'] = 1;
-        $this->page_data['get_recent_users'] = $get_recent_users;
-        $this->page_data['calendar_start_day'] = $calendar_start_day;
-
+        $this->page_data['get_recent_users'] = $get_recent_users;        
         $this->page_data['resources_users'] = $resources_users;
         $this->page_data['resources_user_events'] = $resources_user_events;
         $this->page_data['is_mobile'] = $is_mobile;
-        $this->page_data['users'] = $this->user_model->getUsers();
-
-        $this->page_data['calendar_list'] = $calendar_list;
-        $this->page_data['default_calendar_view'] = $default_calendar_view;
-
+        $this->page_data['users'] = $this->user_model->getUsers();        
         // $this->load->view('workcalender/calender', $this->page_data);
         $this->load->view('v2/pages/workcalender/calender', $this->page_data);
     }
@@ -900,54 +682,55 @@ class Workcalender extends MY_Controller
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
-        if (!empty($events)) {
-            foreach ($events as $event) {
-                if ($event->event_description != '') {
-                    if ($event->employee_id > 0) {
-                        $starttime = $event->start_date . " " . $event->start_time;
-                        $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                        $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-                        $title = $event->start_time . " - " . $event->end_time;
+        foreach ($events as $event) {
+            if ($event->event_description != '') {
+                if ($event->employee_id > 0) {
+                    $starttime = $event->start_date . " " . $event->start_time;
+                    $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
+                    $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
+                    $title = $event->start_time . " - " . $event->end_time;
 
-                        $custom_html = '<div class="calendar-title-header">';
-                            if( $event->event_tag != '' ){
-                                $tags = $event->event_tag;
-                            }else{
-                                $tags = '---';
-                            }
-
-                            if (isset($a_settings['work_order_show_customer'])) {
-                                $custom_html  .= '<a class="calendar-tile-minmax event-min-max-'.$event->id.'" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $event->event_number . ' - ' . $tags . '</span></a>';
-                            }
-                        $custom_html .= '</div>';
-
-                        $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
-
-                        $gcalendar_btn = '';
-                        if( $google_user_api ){
-                            $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                    $custom_html = '<div class="calendar-title-header">';
+                        if( $event->event_tag != '' ){
+                            $tags = $event->event_tag;
+                        }else{
+                            $tags = '---';
                         }
 
-                        $custom_html .= '<div class="calendar-tile-details event-tile-'.$event->id.'">';
-                            $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $event->event_address . "</small>";
-                            $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
-                            $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($event->employee_id).'\'); width: 20px;display:inline-block;"></div>';
-                            $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $event->start_time . " - " . $event->end_time . "</small>";
-                            $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
-                        $custom_html .= '</div>';
+                        if (isset($a_settings['work_order_show_customer'])) {
+                            $custom_html  .= '<a class="calendar-tile-minmax event-min-max-'.$event->id.'" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $event->event_number . ' - ' . $tags . '</span></a>';
+                        }
+                    $custom_html .= '</div>';
 
-                        $resources_user_events[$inc]['eventId'] = $event->id;
-                        $resources_user_events[$inc]['eventType'] = 'events';
-                        $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
-                        $resources_user_events[$inc]['title'] = $title;
-                        $resources_user_events[$inc]['customHtml'] = $custom_html;
-                        $resources_user_events[$inc]['start'] = $start_date_time;
-                        $resources_user_events[$inc]['end'] = $start_date_end;
-                        $resources_user_events[$inc]['starttime'] = strtotime($starttime);
-                        $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+                    $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
 
-                        $inc++;
+                    $gcalendar_btn = '';
+                    if( $google_user_api ){
+                        $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
                     }
+
+                    $custom_html .= '<div class="calendar-tile-details event-tile-'.$event->id.'">';
+                        $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $event->event_address . "</small>";
+                        $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                        $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($event->employee_id).'\'); width: 20px;display:inline-block;"></div>';
+                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $event->start_time . " - " . $event->end_time . "</small>";
+                        $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
+                    $custom_html .= '</div>';
+
+                    $resourceIds = array();
+                    $resourceIds[] = 'user' . $event->employee_id;
+
+                    $resources_user_events[$inc]['eventId'] = $event->id;
+                    $resources_user_events[$inc]['eventType'] = 'events';
+                    $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+                    $resources_user_events[$inc]['title'] = $title;
+                    $resources_user_events[$inc]['customHtml'] = $custom_html;
+                    $resources_user_events[$inc]['start'] = $start_date_time;
+                    $resources_user_events[$inc]['end'] = $start_date_end;
+                    $resources_user_events[$inc]['starttime'] = strtotime($starttime);
+                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+
+                    $inc++;
                 }
             }
         }
@@ -980,9 +763,11 @@ class Workcalender extends MY_Controller
             $custom_html .= '<div class="calendar-tile-details ticket-tile-'.$st->id.'">';
                 $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $st->service_location . ", " . $st->acs_zip . "</small>";
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                $resourceIds = array();
                 if( $st->technicians != '' ){
                     $assigned_technician = unserialize($st->technicians);
                     foreach($assigned_technician as $eid){
+                        $resourceIds[] = 'user' . $st->sales_rep;
                         $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
                     }                    
                 }
@@ -993,7 +778,7 @@ class Workcalender extends MY_Controller
 
             $resources_user_events[$inc]['eventId'] = $st->id;
             $resources_user_events[$inc]['eventType'] = 'service_tickets';
-            $resources_user_events[$inc]['resourceId'] = 'user' . $st->sales_rep;
+            $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['title'] = 'Service Ticket : ' . date('Y-m-d g:i A', strtotime($st->ticket_date));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
@@ -1008,7 +793,7 @@ class Workcalender extends MY_Controller
         $appointments = $this->Appointment_model->getAllNotWaitListByCompany($company_id);
         foreach ($appointments as $a) {
             $starttime = $a->appointment_date . " " . $a->appointment_time;
-            $start_date_time = date('Y-m-d\TH:i:s', strtotime($a->appointment_date . " " . $a->appointment_time));
+            $start_date_time = date('Y-m-d\TH:i:s', strtotime($a->appointment_date . " " . $a->appointment_time_from));
             $start_date_end  = $start_date_time;
             $backgroundColor = "#38a4f8";
 
@@ -1039,18 +824,19 @@ class Workcalender extends MY_Controller
             $custom_html .= '<div class="calendar-tile-details appointment-tile-'.$a->id.'">';
                 $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
-                $assigned_technician = unserialize($a->assigned_employee_ids);
-                foreach($assigned_technician as $eid){
-                    $resources_user_events[$inc]['resourceId'] = 'user' . $eid;
+                $assigned_technician = json_decode($a->assigned_employee_ids);
+                $resourceIds = array();
+                foreach($assigned_technician as $key => $eid){    
+                    $resourceIds[] = "user" . $eid;                                    
                     $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
                 }
                 $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("H:i A", strtotime($a->appointment_time_from)) . ' to ' . date("H:i A", strtotime($a->appointment_time_to)) . "</small>";  
                 $custom_html .= '<br/><br/>'. $view_btn . $gcalendar_btn;              
             $custom_html .= '</div>';
 
+            $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['eventId'] = $a->id;
             $resources_user_events[$inc]['eventType'] = 'appointments';
-            //$resources_user_events[$inc]['resourceId'] = 'user' . $a->user_id;
             $resources_user_events[$inc]['title'] = 'Appointment : ' . date('Y-m-d g:i A', strtotime($a->appointment_date . " " . $a->appointment_time));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
@@ -1058,7 +844,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['starttime'] = $start_date_time;
             $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
 
-            $inc++;
+            $inc++; 
         }
 
         //Jobs
@@ -1124,7 +910,9 @@ class Workcalender extends MY_Controller
                     $assigned_employees[] = $j->employee4_id;
                 }
 
+                $resourceIds = array();
                 foreach($assigned_employees as $eid){
+                    $resourceIds[] = 'user' . $eid;
                     $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
                 }
                 
@@ -1151,7 +939,7 @@ class Workcalender extends MY_Controller
                 
                 $resources_user_events[$inc]['eventId'] = $j->id;
                 $resources_user_events[$inc]['eventType'] = 'jobs';
-                $resources_user_events[$inc]['resourceId'] = 'job' . $j->employee_id;
+                $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                 $resources_user_events[$inc]['title'] = $j->job_description;
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
@@ -1794,7 +1582,7 @@ class Workcalender extends MY_Controller
                 'is_paid' => 0,
                 'priority' => $appointment_priority,
                 'is_wait_list' => 0,
-                'assigned_employee_ids' => serialize($post['appointment_user_id']),
+                'assigned_employee_ids' => json_encode($post['appointment_user_id']),
                 'notes' => $post['appointment_notes'],
                 'cost' => $price,
                 'sales_agent_id' => $sales_agent_id,
@@ -2887,7 +2675,7 @@ class Workcalender extends MY_Controller
                     ];
 
                     $attendees = array();
-                    $assigned_employees = unserialize($appointment->assigned_employee_ids);
+                    $assigned_employees = json_decode($appointment->assigned_employee_ids);
                     if( !empty($assigned_employees) ){
                         foreach($assigned_employees as $eid){
                             $user = $this->Users_model->getUserByID($eid);

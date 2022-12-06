@@ -507,7 +507,6 @@ class DocuSign extends MYF_Controller
             $this->db->where('docfile_id', $documentId);
             $this->db->order_by('id', 'asc');
             $allRecipients = $this->db->get('user_docfile_recipients')->result_array();
-            $envelope['subject'] = 'Your document has been completed';
             $this->sendCompletedNotice($envelope, $allRecipients);
         }
 
@@ -520,9 +519,13 @@ class DocuSign extends MYF_Controller
 
     private function sendCompletedNotice(array $envelope, array $recipients)
     {
-        $mail = email__getInstance(['subject' => $envelope['subject']]);
+        $mail = email__getInstance(['subject' => 'Your document has been completed']);
         $templatePath = VIEWPATH . 'esign/docusign/email/completed.html';
         $template = file_get_contents($templatePath);
+
+        $attachmentName = preg_replace('/\s+/', '_', $envelope['subject']);
+        $attachment = $this->generatePDF($envelope['id']);
+        $mail->addStringAttachment($attachment, $attachmentName . '.pdf');
 
         $errors = [];
         foreach ($recipients as $recipient) {
@@ -1613,7 +1616,8 @@ SQL;
             $result = $this->db->get('user_docfile_templates_documents')->row();
 
             if (!$result) { // used on another template
-                unlink(FCPATH . 'uploads/docusigntemplates/' . $document['name']);
+                // TODO: delete if not used.
+                // unlink(FCPATH . 'uploads/docusigntemplates/' . $document['name']);
             }
         }
 
@@ -1927,6 +1931,194 @@ SQL;
         echo json_encode([
             'data' => $url
         ]);
+    }
+
+    public function generatePDF($documentId)
+    {
+
+        $this->db->where('id', $documentId);
+        $document = $this->db->get('user_docfile')->row();
+
+        if (is_null($document)) {
+            return;
+        }
+
+        if ($document->status !== 'Completed') {
+            return;
+        }
+
+        $this->db->where('docfile_id', $document->id);
+        $this->db->order_by('id', 'ASC');
+        $files = $this->db->get('user_docfile_documents')->result();
+
+        require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
+        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+
+        $this->db->where('docfile_id', $document->id);
+        $fields = $this->db->get('user_docfile_fields')->result();
+
+        $this->db->where('docfile_id', $document->id);
+        $recipients = $this->db->get('user_docfile_recipients')->result();
+
+        foreach ($fields as $field) {
+            if ($field->field_name === 'Name') {
+                $recipientMatch = null;
+
+                foreach ($recipients as $recipient) {
+                    if ($recipient->id === $field->user_docfile_recipients_id) {
+                        $recipientMatch = $recipient;
+                        break;
+                    }
+                }
+
+                if (!is_null($recipientMatch)) {
+                    $field->value = $recipientMatch;
+                    continue;
+                }
+            }
+
+
+            $this->db->where('recipient_id', $field->user_docfile_recipients_id);
+            $this->db->where('field_id', $field->id);
+            $field->value = $this->db->get('user_docfile_recipient_field_values')->row();
+        }
+
+        $pdf = new FPDI('P', 'px');
+
+        foreach ($files as $file) {
+            $filepath = FCPATH . ltrim($file->path, '/');
+            $pageCount = $pdf->setSourceFile($filepath);
+
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $pageIndex = $pdf->importPage($pageNo);
+                $pdf->AddPage();
+                $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+
+
+                foreach ($fields as $field) {
+                    if ((int) $field->doc_page !== $pageIndex) {
+                        continue;
+                    }
+
+                    if ($field->docfile_document_id !== $file->id) {
+                        continue;
+                    }
+
+                    if (!$field->value) {
+                        continue;
+                    }
+
+                    $value = $field->value;
+                    $coordinates = json_decode($field->coordinates);
+
+                    if ($field->field_name === 'Name') {
+                        $top = (int) $coordinates->top;
+                        $left = (int) $coordinates->left;
+
+                        $topAdjusted = (29 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (32.666666666666664 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+
+                        $pdf->SetFont('Courier', '', 10);
+                        $pdf->Write(0, $value->name);
+                    }
+
+                    if (in_array($field->field_name, ['Checkbox', 'Radio'])) {
+                        $value = json_decode($value->value);
+
+                        $top = (int) $coordinates->top;
+                        $left = (int) $coordinates->left;
+
+                        $topAdjusted = (31.3 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (31.5 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
+
+                        if (is_array($value->subCheckbox)) {
+                            foreach ($value->subCheckbox as $subItem) {
+                                if ($subItem->isChecked) {
+
+                                    $myTopAdjusted = ((int) $subItem->top) + $topAdjusted;
+                                    $myLeftAdjusted = ((int) $subItem->left) + $leftAdjusted;
+
+                                    $pdf->setY($myTopAdjusted);
+                                    $pdf->setX($myLeftAdjusted);
+
+                                    $pdf->SetFont('Courier', '', 10);
+                                    $pdf->Write(0, 'x');
+                                }
+                            }
+                        }
+
+                        if ($value->isChecked) {
+                            $pdf->setY($topAdjusted);
+                            $pdf->setX($leftAdjusted);
+
+                            $pdf->SetFont('Courier', '', 10);
+                            $pdf->Write(0, 'x');
+                        }
+                    }
+
+                    if ($field->field_name === 'Signature') {
+                        $dataURI = $value->value;
+                        $dataPieces = explode(',', $dataURI);
+                        $encodedImg = $dataPieces[1];
+                        $decodedImg = base64_decode($encodedImg);
+
+                        if ($decodedImg !== false) {
+                            $temporaryPath = FCPATH . ltrim($field->unique_key, '/');
+
+                            if (file_put_contents($temporaryPath, $decodedImg) !== false) {
+                                $top = (int) $coordinates->top;
+                                $left = (int) $coordinates->left;
+
+                                $topAdjusted = (32.5 / 100) * $top;
+                                $topAdjusted = $top - $topAdjusted;
+
+                                $leftAdjusted = (38 / 100) * $left;
+                                $leftAdjusted = $left - $leftAdjusted;
+
+                                $pdf->setY($topAdjusted);
+                                $pdf->setX($leftAdjusted);
+
+                                $pdf->Image($temporaryPath, null, null, null, 30);
+                                unlink($temporaryPath);
+                            }
+                        }
+                    }
+
+                    if ($field->field_name === 'Text') {
+                        $top = (int) $coordinates->top;
+                        $left = (int) $coordinates->left;
+
+                        $topAdjusted = (31.5 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (32 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+
+                        $pdf->SetFont('Courier', '', 10);
+                        $pdf->Write(0, $value->value);
+                    }
+                }
+            }
+        }
+
+        // echo '<pre>';
+        // print_r($fields);
+        // echo '</pre>';
+
+        $result = $pdf->Output(null, 'S');
+        return $result;
     }
 }
 
