@@ -175,7 +175,7 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
-    public function getCompanyUsers($company_id, $filters=array())
+    public function getCompanyUsers($company_id, $filters=array(), $limit = 0)
     {
         $this->db->select('users.*, clients.business_name');
         $this->db->from($this->table);
@@ -196,6 +196,9 @@ class Users_model extends MY_Model
             if( $filters['eids'] != '' ){
                 $this->db->where_in('users.id', $filters['eids']);                
             }
+        }
+        if( $limit > 0 ){
+            $this->db->limit($limit);
         }
         $query = $this->db->get();
         return $query->result();
@@ -913,7 +916,15 @@ class Users_model extends MY_Model
         return $query->row();
     }
 
-    
+    public function getEmployeeName($id){
+		$this->db->select('FName, LName');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+		
+	}
 }
 
 
