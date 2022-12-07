@@ -766,9 +766,11 @@ class Workcalender extends MY_Controller
                 $resourceIds = array();
                 if( $st->technicians != '' ){
                     $assigned_technician = unserialize($st->technicians);
-                    foreach($assigned_technician as $eid){
-                        $resourceIds[] = 'user' . $eid;
-                        $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                    if( is_array($assigned_technician) ){
+                        foreach($assigned_technician as $eid){
+                            $resourceIds[] = 'user' . $eid;
+                            $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                        }                    
                     }                    
                 }
                 
