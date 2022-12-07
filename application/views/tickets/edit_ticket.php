@@ -296,7 +296,7 @@ a.btn-primary.btn-md {
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div> -->
-                                        <input type="time" class="form-control" name="scheduled_time" id="scheduled_time"  value="<?php echo $tickets->scheduled_time; ?>" />
+                                        <input type="text" class="form-control" name="scheduled_time" id="scheduled_time"  value="<?php echo $tickets->scheduled_time; ?>" />
                                         <!-- <select id="scheduled_time" name="scheduled_time" class="form-control">
                                             <option value="8-10">8-10</option>
                                             <option value="10-12">10-12</option>
@@ -307,7 +307,7 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="expiry_date" class="required"><b>Schedule Time To</b></label>
-                                        <input type="time" class="form-control" name="scheduled_time_to" id="scheduled_time_to"  value="<?php echo $tickets->scheduled_time_to; ?>" />
+                                        <input type="text" class="form-control" name="scheduled_time_to" id="scheduled_time_to"  value="<?php echo $tickets->scheduled_time_to; ?>" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -1450,6 +1450,39 @@ $(document).ready(function(){
      });
 });
 });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" rel="stylesheet" />
+<script>
+$('#scheduled_time').timepicker({
+  timeFormat: 'hh:mm a',
+  interval: 30,
+  minTime: '8',
+  maxTime: '11:00 PM',
+  startTime: '08:00 AM',
+  dynamic: false,
+  dropdown: true,
+  scrollbar: true
+});
+
+$('#scheduled_time')
+  .timepicker('option', 'change', function(time) {
+    var later = new Date(time.getTime() + (2 * 60 * 60 * 1000));
+    $('#scheduled_time_to').timepicker('option', 'minTime', time);
+    $('#scheduled_time_to').timepicker('setTime', later);
+  });
+
+$('#scheduled_time_to').timepicker({
+  timeFormat: 'hh:mm a',
+  interval: 30,
+  maxTime: '11:00 PM',
+  startTime: '08:00 AM',
+  dynamic: false,
+  dropdown: true,
+  scrollbar: true
+});
+
 </script>
 <script>
     
