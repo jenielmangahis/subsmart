@@ -92,7 +92,7 @@
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('tickets/addnewTicketApmt') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Service Ticket
                                 </button>
-                                <button type="button" class="nsm-button" onclick="location.href='<?= base_url('events/new_event') ?>'">
+                                <button type="button" class="nsm-button" onclick="location.href='<?= base_url('events/event_add') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Event
                                 </button>
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('job/new_job1') ?>'">
