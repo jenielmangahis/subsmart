@@ -2031,7 +2031,7 @@ SQL;
         $recipients = $this->db->get('user_docfile_recipients')->result();
 
         foreach ($fields as $field) {
-            if ($field->field_name === 'Name') {
+            if (in_array($field->field_name, ['Email', 'Name'])) {
                 $recipientMatch = null;
 
                 foreach ($recipients as $recipient) {
@@ -2096,6 +2096,23 @@ SQL;
 
                         $pdf->SetFont('Courier', '', 10);
                         $pdf->Write(0, $value->name);
+                    }
+
+                    if ($field->field_name === 'Email') {
+                        $top = (int) $coordinates->top;
+                        $left = (int) $coordinates->left;
+
+                        $topAdjusted = (31.6 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (32.666666666666664 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+
+                        $pdf->SetFont('Courier', '', 10);
+                        $pdf->Write(0, $value->email);
                     }
 
                     if (in_array($field->field_name, ['Checkbox', 'Radio'])) {
@@ -2171,6 +2188,40 @@ SQL;
                         $topAdjusted = $top - $topAdjusted;
 
                         $leftAdjusted = (32 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+
+                        $pdf->SetFont('Courier', '', 10);
+                        $pdf->Write(0, $value->value);
+                    }
+
+                    if ($field->field_name === 'Date Signed') {
+                        $top = (int) $coordinates->top;
+                        $left = (int) $coordinates->left;
+
+                        $topAdjusted = (31.9 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (32.3 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+
+                        $pdf->SetFont('Courier', '', 10);
+                        $pdf->Write(0, $value->value);
+                    }
+
+                    if ($field->field_name === 'Formula') {
+                        $top = (int) $coordinates->top;
+                        $left = (int) $coordinates->left;
+
+                        $topAdjusted = (31.9 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (32.3 / 100) * $left;
                         $leftAdjusted = $left - $leftAdjusted;
 
                         $pdf->setY($topAdjusted);

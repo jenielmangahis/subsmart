@@ -50,6 +50,10 @@
         .signing__signaturePad.has-content .canvas-placeholder {
             opacity: 0;
         }
+
+        .max-width-unset {
+            max-width: unset !important;
+        }
     </style>
 </head>
 
