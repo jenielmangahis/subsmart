@@ -1411,3 +1411,8 @@ $route['user/_loggedin_adt_sales_portal'] = 'Users/ajax_loggedin_adt_sales_porta
 //Customer Sync Setting
 $route['customer/_update_adt_sales_sync_setting'] = 'Customer/ajax_update_adt_sales_sync_setting';
 $route['customer/_adt_sales_sync_setting'] = 'Customer/ajax_adt_sales_sync_setting';
+
+//API
+$route['api/create_auto_sms_notification'] = 'Api/create_auto_sms_notification';
+$route['api/create_hash_id'] = 'Api/create_hash_id';
+$route['api/create_google_calendar_event'] = 'Api/createGoogleCalendarEvent';

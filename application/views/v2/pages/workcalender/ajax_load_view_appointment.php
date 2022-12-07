@@ -88,10 +88,12 @@
                 ---
             <?php } ?>
         </label>
+        <?php if( $appointment->appointment_type_id != 4 ){ ?>
         <label class="content-subtitle d-block mb-2 font-15">
             <span class="fw-bold"><i class='bx bx-barcode' ></i> </span> 
             <?= $appointment->invoice_number . ' - $' . number_format($appointment->cost,2); ?>
         </label>
+        <?php } ?>
     </div>
     <div class="col-12 col-md-5">
         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">Created By</label>

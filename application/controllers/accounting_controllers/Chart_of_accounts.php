@@ -1112,7 +1112,7 @@ class Chart_of_accounts extends MY_Controller {
                 }
 
                 if($accType !== 'A/R' && $accType !== 'A/P') {
-                    $transaction = [
+                    $register = [
                         'id' => $expense->id,
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
@@ -1147,60 +1147,60 @@ class Chart_of_accounts extends MY_Controller {
                     if(!isset($child)) {
                         switch($accType) {
                             case 'Credit Card' :
-                                $transaction['charge'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['payment'] = '';
-                                $transaction['charge_disabled'] = $count > 1;
-                                $transaction['payment_disabled'] = true;
+                                $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['payment'] = '';
+                                $register['charge_disabled'] = $count > 1;
+                                $register['payment_disabled'] = true;
                             break;
                             case 'Asset' :
-                                $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['decrease'] = '';
-                                $transaction['increase_disabled'] = $count > 1;
-                                $transaction['decrease_disabled'] = true;
+                                $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['decrease'] = '';
+                                $register['increase_disabled'] = $count > 1;
+                                $register['decrease_disabled'] = true;
                             break;
                             case 'Liability' :
-                                $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['decrease'] = '';
-                                $transaction['increase_disabled'] = $count > 1;
-                                $transaction['decrease_disabled'] = true;
+                                $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['decrease'] = '';
+                                $register['increase_disabled'] = $count > 1;
+                                $register['decrease_disabled'] = true;
                             break;
                             default :
-                                $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['deposit'] = '';
-                                $transaction['payment_disabled'] = $count > 1;
-                                $transaction['deposit_disabled'] = true;
+                                $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['deposit'] = '';
+                                $register['payment_disabled'] = $count > 1;
+                                $register['deposit_disabled'] = true;
                             break;
                         }
                     } else {
                         switch($accType) {
                             case 'Credit Card' :
-                                $transaction['charge'] = '';
-                                $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['charge_disabled'] = true;
-                                $transaction['payment_disabled'] = $count > 1;
+                                $register['charge'] = '';
+                                $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['charge_disabled'] = true;
+                                $register['payment_disabled'] = $count > 1;
                             break;
                             case 'Asset' :
-                                $transaction['increase'] = '';
-                                $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['increase_disabled'] = true;
-                                $transaction['decrease_disabled'] = $count > 1;
+                                $register['increase'] = '';
+                                $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['increase_disabled'] = true;
+                                $register['decrease_disabled'] = $count > 1;
                             break;
                             case 'Liability' :
-                                $transaction['increase'] = '';
-                                $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['increase_disabled'] = true;
-                                $transaction['decrease_disabled'] = $count > 1;
+                                $register['increase'] = '';
+                                $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['increase_disabled'] = true;
+                                $register['decrease_disabled'] = $count > 1;
                             break;
                             default :
-                                $transaction['payment'] = '';
-                                $transaction['deposit'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['payment_disabled'] = true;
-                                $transaction['deposit_disabled'] = $count > 1;
+                                $register['payment'] = '';
+                                $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['payment_disabled'] = true;
+                                $register['deposit_disabled'] = $count > 1;
                             break;
                         }
                     }
                 } else {
-                    $transaction = [
+                    $register = [
                         'id' => $expense->id,
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
@@ -1213,7 +1213,7 @@ class Chart_of_accounts extends MY_Controller {
                         $transaction['customer'] = $payeeName;
                         $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                         $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['payment'] = '';
+                        $register['payment'] = '';
                     } else {
                         $transaction['vendor'] = $payeeName;
                         $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
@@ -1223,7 +1223,7 @@ class Chart_of_accounts extends MY_Controller {
                     }
                 }
 
-                $data[] = $transaction;
+                $data[] = $register;
             }
         }
 
@@ -1285,7 +1285,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             if($accType !== 'A/R' && $accType !== 'A/P') {
-                $transaction = [
+                $register = [
                     'id' => $check->id,
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
@@ -1320,60 +1320,60 @@ class Chart_of_accounts extends MY_Controller {
                 if(!isset($child)) {
                     switch($accType) {
                         case 'Credit Card' :
-                            $transaction['charge'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['payment'] = '';
-                            $transaction['charge_disabled'] = $count > 1;
-                            $transaction['payment_disabled'] = true;
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = '';
+                            $register['charge_disabled'] = $count > 1;
+                            $register['payment_disabled'] = true;
                         break;
                         case 'Asset' :
-                            $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['decrease'] = '';
-                            $transaction['increase_disabled'] = $count > 1;
-                            $transaction['decrease_disabled'] = true;
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = '';
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
                         break;
                         case 'Liability' :
-                            $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['decrease'] = '';
-                            $transaction['increase_disabled'] = $count > 1;
-                            $transaction['decrease_disabled'] = true;
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = '';
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
                         break;
                         default :
-                            $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['deposit'] = '';
-                            $transaction['payment_disabled'] = $count > 1;
-                            $transaction['deposit_disabled'] = true;
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit'] = '';
+                            $register['payment_disabled'] = $count > 1;
+                            $register['deposit_disabled'] = true;
                         break;
                     }
                 } else {
                     switch($accType) {
                         case 'Credit Card' :
-                            $transaction['charge'] = '';
-                            $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['charge_disabled'] = true;
-                            $transaction['payment_disabled'] = $count > 1;
+                            $register['charge'] = '';
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['charge_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
                         break;
                         case 'Asset' :
-                            $transaction['increase'] = '';
-                            $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['increase_disabled'] = true;
-                            $transaction['decrease_disabled'] = $count > 1;
+                            $register['increase'] = '';
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
                         break;
                         case 'Liability' :
-                            $transaction['increase'] = '';
-                            $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['increase_disabled'] = true;
-                            $transaction['decrease_disabled'] = $count > 1;
+                            $register['increase'] = '';
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
                         break;
                         default :
-                            $transaction['payment'] = '';
-                            $transaction['deposit'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['payment_disabled'] = true;
-                            $transaction['deposit_disabled'] = $count > 1;
+                            $register['payment'] = '';
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment_disabled'] = true;
+                            $register['deposit_disabled'] = $count > 1;
                         break;
                     }
                 }
             } else {
-                $transaction = [
+                $register = [
                     'id' => $check->id,
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
@@ -1386,7 +1386,7 @@ class Chart_of_accounts extends MY_Controller {
                     $transaction['customer'] = $payeeName;
                     $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                     $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['payment'] = '';
+                    $register['payment'] = '';
                 } else {
                     $transaction['vendor'] = $payeeName;
                     $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
@@ -1396,7 +1396,7 @@ class Chart_of_accounts extends MY_Controller {
                 }
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -1424,7 +1424,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $invoice->id);
 
-            $transaction = [
+            $register = [
                 'id' => $invoice->id,
                 'child_id' => $item->id,
                 'date' => date("m/d/Y", strtotime($invoice->date_issued)),
@@ -1450,32 +1450,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['payment'] = '';
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['payment'] = '';
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['deposit'] = '';
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['deposit'] = '';
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -1501,7 +1501,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Receive Payment', $payment->id);
 
-            $transaction = [
+            $register = [
                 'id' => $payment->id,
                 'date' => date("m/d/Y", strtotime($payment->payment_date)),
                 'ref_no' => $payment->ref_no,
@@ -1526,32 +1526,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($payment->amount_received), 2, '.', ',');
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = '';
+                    $register['payment'] = number_format(floatval($payment->amount_received), 2, '.', ',');
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($payment->amount_received), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($payment->amount_received), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($payment->amount_received), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($payment->amount_received), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($payment->amount_received), 2, '.', ',');
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = '';
+                    $register['deposit'] = number_format(floatval($payment->amount_received), 2, '.', ',');
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -1592,7 +1592,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Journal', $journalEntry->id);
 
-            $transaction = [
+            $register = [
                 'id' => $journalEntry->id,
                 'child_id' => $journalEntryItem->id,
                 'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
@@ -1616,32 +1616,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $transaction['payment'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $transaction['charge_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $transaction['payment_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
+                    $register['charge'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $register['payment'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $register['charge_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $register['payment_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $transaction['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $transaction['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $transaction['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
+                    $register['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $register['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $register['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $register['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $transaction['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $transaction['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $transaction['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
+                    $register['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $register['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $register['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $register['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
                 default :
-                    $transaction['payment'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $transaction['deposit'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $transaction['payment_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $transaction['deposit_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
+                    $register['payment'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $register['deposit'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $register['payment_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $register['deposit_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -1691,7 +1691,7 @@ class Chart_of_accounts extends MY_Controller {
             if($accType !== 'A/R' && $accType !== 'A/P') {
                 $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
 
-                $transaction = [
+                $register = [
                     'id' => $bill->id,
                     'child_id' => $child->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
@@ -1716,28 +1716,28 @@ class Chart_of_accounts extends MY_Controller {
     
                 switch($accType) {
                     case 'Credit Card' :
-                        $transaction['charge'] = "";
-                        $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                        $transaction['charge_disabled'] = true;
-                        $transaction['payment_disabled'] = $count > 1;
+                        $register['charge'] = "";
+                        $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['charge_disabled'] = true;
+                        $register['payment_disabled'] = $count > 1;
                     break;
                     case 'Asset' :
-                        $transaction['decrease'] = "";
-                        $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                        $transaction['decrease_disabled'] = true;
-                        $transaction['increase_disabled'] = $count > 1;
+                        $register['decrease'] = "";
+                        $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['decrease_disabled'] = true;
+                        $register['increase_disabled'] = $count > 1;
                     break;
                     case 'Liability' :
-                        $transaction['increase'] = "";
-                        $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                        $transaction['increase_disabled'] = true;
-                        $transaction['decrease_disabled'] = $count > 1;
+                        $register['increase'] = "";
+                        $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = $count > 1;
                     break;
                     default :
-                        $transaction['payment'] = "";
-                        $transaction['deposit'] = number_format(floatval($amount), 2, '.', ',');
-                        $transaction['payment_disabled'] = true;
-                        $transaction['deposit_disabled'] = $count > 1;
+                        $register['payment'] = "";
+                        $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['payment_disabled'] = true;
+                        $register['deposit_disabled'] = $count > 1;
                     break;
                 }
             } else {
@@ -1745,7 +1745,7 @@ class Chart_of_accounts extends MY_Controller {
                 $billed = number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ',');
                 $billed = str_replace('$-', '-$', '$'.$billed);
 
-                $transaction = [
+                $register = [
                     'id' => $bill->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
                     'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
@@ -1760,7 +1760,7 @@ class Chart_of_accounts extends MY_Controller {
                 ];
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -1775,91 +1775,27 @@ class Chart_of_accounts extends MY_Controller {
             $accType = 'Asset';
         } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
             $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
         } else {
             $accType = $accountType->account_name;
         }
-        $ccCredits = $this->chart_of_accounts_model->get_credit_card_credit_registers($accountId);
 
-        foreach($ccCredits as $ccCredit) {
-            switch($ccCredit->payee_type) {
-                case 'vendor':
-                    $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
-                    $payeeName = $payee->display_name;
-                break;
-                case 'customer':
-                    $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
-                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
-                break;
-                case 'employee':
-                    $payee = $this->users_model->getUser($ccCredit->payee_id);
-                    $payeeName = $payee->FName . ' ' . $payee->LName;
-                break;
-            }
+        $transactions = $this->accounting_account_transactions_model->get_account_transactions_by_type($accountId, 'CC Credit');
 
+        foreach($transactions as $transaction)
+        {
+            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transaction->transaction_id, logged('company_id'));
+            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
+            $categories = $this->expenses_model->get_transaction_categories($ccCredit->id, 'Credit Card Credit');
+            $items = $this->expenses_model->get_transaction_items($ccCredit->id, 'Credit Card Credit');
+            $count = count($categories) + count($items);
+
+            $ccAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
             $account = $this->account_col($ccCredit->id, 'Credit Card Credit');
 
-            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
-
-            $transaction = [
-                'id' => $ccCredit->id,
-                'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
-                'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
-                'ref_no_disabled' => false,
-                'type' => 'CC-Credit',
-                'payee_type' => $ccCredit->payee_type,
-                'payee_id' => $ccCredit->payee_id,
-                'payee' => $payeeName,
-                'payee_disabled' => false,
-                'account_id' => $account['id'],
-                'account' => $account['name'],
-                'account_disabled' => $account['disabled'],
-                'memo' => $ccCredit->memo,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($ccCredit->created_at))
-            ];
-
-            switch($accType) {
-                case 'Credit Card' :
-                    $transaction['charge'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['payment'] = '';
-                    $transaction['charge_disabled'] = $count > 1;
-                    $transaction['payment_disabled'] = true;
-                break;
-                case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
-                break;
-                case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
-                break;
-                default :
-                    $transaction['payment'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['deposit'] = '';
-                    $transaction['payment_disabled'] = $count > 1;
-                    $transaction['deposit_disabled'] = true;
-                break;
-            }
-
-            $data[] = $transaction;
-        }
-
-        $ccCreditCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Credit Card Credit');
-
-        foreach($ccCreditCategories as $ccCreditCategory) {
-            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditCategory->transaction_id, logged('company_id'));
-            $categories = $this->expenses_model->get_transaction_categories($ccCredit->id, 'Credit Card Credit');
-            $items = $this->expenses_model->get_transaction_items($ccCredit->id, 'Credit Card Credit');
-            $count = count($categories) + count($items);
-
             switch($ccCredit->payee_type) {
                 case 'vendor':
                     $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
@@ -1875,136 +1811,133 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
-
-            $transaction = [
-                'id' => $ccCredit->id,
-                'child_id' => $ccCreditCategory->id,
-                'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
-                'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
-                'ref_no_disabled' => true,
-                'type' => 'CC-Credit',
-                'payee_type' => $ccCredit->payee_type,
-                'payee_id' => $ccCredit->payee_id,
-                'payee' => $payeeName,
-                'payee_disabled' => false,
-                'account_id' => $ccCredit->bank_credit_account_id,
-                'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
-                'account_disabled' => true,
-                'memo' => $ccCreditCategory->description,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditCategory->created_at))
-            ];
-
-            switch($accType) {
-                case 'Credit Card' :
-                    $transaction['charge'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['payment'] = '';
-                    $transaction['charge_disabled'] = $count > 1;
-                    $transaction['payment_disabled'] = true;
-                break;
-                case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
-                break;
-                case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
-                break;
-                default :
-                    $transaction['payment'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
-                    $transaction['deposit'] = '';
-                    $transaction['payment_disabled'] = $count > 1;
-                    $transaction['deposit_disabled'] = true;
-                break;
+            if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+                if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+                    $child = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+                } else {
+                    $child = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+                }
+                $amount = $transaction->amount;
+            } else {
+                $amount = $ccCredit->total_amount;
             }
 
-            $data[] = $transaction;
-        }
+            if($accType !== 'A/R' && $accType !== 'A/P') {
+                $register = [
+                    'id' => $ccCredit->id,
+                    'child_id' => $child->id,
+                    'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                    'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
+                    'ref_no_disabled' => true,
+                    'type' => 'CC-Credit',
+                    'payee_type' => $ccCredit->payee_type,
+                    'payee_id' => $ccCredit->payee_id,
+                    'payee' => $payeeName,
+                    'payee_disabled' => false,
+                    'account_id' => $apAcc->id,
+                    'account' => $apAcc->name,
+                    'account_disabled' => true,
+                    'memo' => $transaction->is_category === '1' ? $child->description : '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($child->created_at))
+                ];
 
-        $ccCreditItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Credit Card Credit');
-        foreach($ccCreditItems as $ccCreditItem) {
-            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditItem->transaction_id, logged('company_id'));
-            $categories = $this->expenses_model->get_transaction_categories($ccCredit->id, 'Credit Card Credit');
-            $items = $this->expenses_model->get_transaction_items($ccCredit->id, 'Credit Card Credit');
-            $count = count($categories) + count($items);
+                if(isset($child)) {
+                    $register['child_id'] = $child->id;
+                    $register['account_id'] = $ccAcc->id;
+                    $register['account'] = $ccAcc->name;
+                    $register['account_disabled'] = true;
+                    $register['account_field'] = '';
+                } else {
+                    $register['account_id'] = $account['id'];
+                    $register['account'] = $account['name'];
+                    $register['account_disabled'] = $account['disabled'];
+                    $register['account_field'] = $account['field_name'];
+                }
+    
+                switch($accType) {
+                    case 'Credit Card' :
+                        if($transaction->type === 'increase') {
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['charge'] = "";
+                            $register['payment_disabled'] = $count > 1;
+                            $register['charge_disabled'] = true;
+                        } else {
+                            $register['payment'] = "";
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = $count > 1;
+                        }
+                    break;
+                    case 'Asset' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
+                    break;
+                    case 'Liability' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
+                    break;
+                    default :
+                        if($transaction->type === 'increase') {
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = "";
+                            $register['deposit_disabled'] = $count > 1;
+                            $register['payment_disabled'] = true;
+                        } else {
+                            $register['deposit'] = "";
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
+                        }
+                    break;
+                }
+            } else {
+                $register = [
+                    'id' => $ccCredit->id,
+                    'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                    'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
+                    'type' => 'CC-Credit',
+                    'memo' => $ccCredit->memo,
+                    'due_date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                ];
 
-            switch($ccCredit->payee_type) {
-                case 'vendor':
-                    $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
-                    $payeeName = $payee->display_name;
-                break;
-                case 'customer':
-                    $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
-                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
-                break;
-                case 'employee':
-                    $payee = $this->users_model->getUser($ccCredit->payee_id);
-                    $payeeName = $payee->FName . ' ' . $payee->LName;
-                break;
+                if($accType === 'A/R') {
+                    $transaction['customer'] = $payeeName;
+                    $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $transaction['charge_credit'] = '';
+                    $register['payment'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                } else {
+                    $transaction['vendor'] = $payeeName;
+                    $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $transaction['billed'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $transaction['paid'] = '';
+                    $transaction['account'] = $ccAcc->name;
+                }
             }
 
-            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
-
-            $transaction = [
-                'id' => $ccCredit->id,
-                'child_id' => $ccCreditItem->id,
-                'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
-                'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
-                'ref_no_disabled' => true,
-                'type' => 'CC-Credit',
-                'payee_type' => $ccCredit->payee_type,
-                'payee_id' => $ccCredit->payee_id,
-                'payee' => $payeeName,
-                'payee_disabled' => false,
-                'account_id' => $ccCredit->bank_credit_account_id,
-                'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
-                'account_disabled' => true,
-                'memo' => $ccCreditItem->description,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditItem->created_at))
-            ];
-
-            switch($accType) {
-                case 'Credit Card' :
-                    $transaction['charge'] = number_format(floatval($ccCreditItem->total), 2, '.', ',');
-                    $transaction['payment'] = '';
-                    $transaction['charge_disabled'] = $count > 1;
-                    $transaction['payment_disabled'] = true;
-                break;
-                case 'Asset' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($ccCreditItem->total), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = $count > 1;
-                break;
-                case 'Liability' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($ccCreditItem->total), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = $count > 1;
-                break;
-                default :
-                    $transaction['payment'] = number_format(floatval($ccCreditItem->total), 2, '.', ',');
-                    $transaction['deposit'] = '';
-                    $transaction['payment_disabled'] = $count > 1;
-                    $transaction['deposit_disabled'] = true;
-                break;
-            }
-
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -2053,7 +1986,7 @@ class Chart_of_accounts extends MY_Controller {
             if($accType !== 'A/R' && $accType !== 'A/P') {
                 $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
 
-                $transaction = [
+                $register = [
                     'id' => $vCredit->id,
                     'child_id' => $child->id,
                     'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
@@ -2079,54 +2012,54 @@ class Chart_of_accounts extends MY_Controller {
                 switch($accType) {
                     case 'Credit Card' :
                         if($transaction->type === 'increase') {
-                            $transaction['payment'] = "";
-                            $transaction['charge'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['payment_disabled'] = true;
-                            $transaction['charge_disabled'] = $count > 1;
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['charge'] = "";
+                            $register['payment_disabled'] = $count > 1;
+                            $register['charge_disabled'] = true;
                         } else {
-                            $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['charge'] = "";
-                            $transaction['payment_disabled'] = $count > 1;
-                            $transaction['charge_disabled'] = true;
+                            $register['payment'] = "";
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = $count > 1;
                         }
                     break;
                     case 'Asset' :
                         if($transaction->type === 'increase') {
-                            $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['decrease'] = "";
-                            $transaction['increase_disabled'] = $count > 1;
-                            $transaction['decrease_disabled'] = true;
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
                         } else {
-                            $transaction['increase'] = "";
-                            $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['increase_disabled'] = true;
-                            $transaction['decrease_disabled'] = $count > 1;
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
                         }
                     break;
                     case 'Liability' :
                         if($transaction->type === 'increase') {
-                            $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['decrease'] = "";
-                            $transaction['increase_disabled'] = $count > 1;
-                            $transaction['decrease_disabled'] = true;
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
                         } else {
-                            $transaction['increase'] = "";
-                            $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['increase_disabled'] = true;
-                            $transaction['decrease_disabled'] = $count > 1;
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
                         }
                     break;
                     default :
                         if($transaction->type === 'increase') {
-                            $transaction['deposit'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['payment'] = "";
-                            $transaction['deposit_disabled'] = $count > 1;
-                            $transaction['payment_disabled'] = true;
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = "";
+                            $register['deposit_disabled'] = $count > 1;
+                            $register['payment_disabled'] = true;
                         } else {
-                            $transaction['deposit'] = "";
-                            $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['deposit_disabled'] = true;
-                            $transaction['payment_disabled'] = $count > 1;
+                            $register['deposit'] = "";
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
                         }
                     break;
                 }
@@ -2135,7 +2068,7 @@ class Chart_of_accounts extends MY_Controller {
                 $billed = number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ',');
                 $billed = str_replace('$-', '-$', '$'.$billed);
 
-                $transaction = [
+                $register = [
                     'id' => $vCredit->id,
                     'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                     'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
@@ -2143,151 +2076,15 @@ class Chart_of_accounts extends MY_Controller {
                     'vendor' => $payeeName,
                     'account' => $account['name'],
                     'memo' => $vCredit->memo,
-                    'due_date' => date('m/d/Y', strtotime($bill->due_date)),
+                    'due_date' => date('m/d/Y', strtotime($vCredit->payment_date)),
                     'billed' => '',
                     'paid' => $billed,
                     'open_balance' => number_format(floatval(str_replace(',', '', $vCredit->remaining_balance)), 2, '.', ',')
                 ];
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
-
-        // if(stripos($accountType->account_name, 'Asset') !== false) {
-        //     $accType = 'Asset';
-        // } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
-        //     $accType = 'Liability';
-        // } else {
-        //     $accType = $accountType->account_name;
-        // }
-        // $vCreditCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Vendor Credit');
-
-        // foreach($vCreditCategories as $vCreditCategory) {
-        //     $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditCategory->transaction_id, logged('company_id'));
-        //     $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
-        //     $payeeName = $payee->display_name;
-        //     $categories = $this->expenses_model->get_transaction_categories($vCredit->id, 'Vendor Credit');
-        //     $items = $this->expenses_model->get_transaction_items($vCredit->id, 'Vendor Credit');
-        //     $count = count($categories) + count($items);
-
-        //     $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCredit->id);
-
-        //     $transaction = [
-        //         'id' => $vCredit->id,
-        //         'child_id' => $vCreditCategory->id,
-        //         'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
-        //         'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
-        //         'ref_no_disabled' => true,
-        //         'type' => 'Vendor Credit',
-        //         'payee_type' => 'vendor',
-        //         'payee_id' => $vCredit->vendor_id,
-        //         'payee' => $payeeName,
-        //         'payee_disabled' => false,
-        //         'account_id' => '',
-        //         'account' => 'Accounts Payable',
-        //         'account_disabled' => true,
-        //         'memo' => $vCreditCategory->description,
-        //         'reconcile_status' => '',
-        //         'banking_status' => '',
-        //         'attachments' => count($attachments) > 0 ? count($attachments) : '',
-        //         'tax' => '',
-        //         'balance' => '',
-        //         'date_created' => date("m/d/Y H:i:s", strtotime($vCreditCategory->created_at))
-        //     ];
-
-        //     switch($accType) {
-        //         case 'Credit Card' :
-        //             $transaction['charge'] = number_format(floatval($vCreditCategory->amount), 2, '.', ',');
-        //             $transaction['payment'] = '';
-        //             $transaction['charge_disabled'] = $count > 1;
-        //             $transaction['payment_disabled'] = true;
-        //         break;
-        //         case 'Asset' :
-        //             $transaction['increase'] = number_format(floatval($vCreditCategory->amount), 2, '.', ',');
-        //             $transaction['decrease'] = '';
-        //             $transaction['increase_disabled'] = $count > 1;
-        //             $transaction['decrease_disabled'] = true;
-        //         break;
-        //         case 'Liability' :
-        //             $transaction['increase'] = number_format(floatval($vCreditCategory->amount), 2, '.', ',');
-        //             $transaction['decrease'] = '';
-        //             $transaction['increase_disabled'] = $count > 1;
-        //             $transaction['decrease_disabled'] = true;
-        //         break;
-        //         default :
-        //             $transaction['payment'] = number_format(floatval($vCreditCategory->amount), 2, '.', ',');
-        //             $transaction['deposit'] = '';
-        //             $transaction['payment_disabled'] = $count > 1;
-        //             $transaction['deposit_disabled'] = true;
-        //         break;
-        //     }
-
-        //     $data[] = $transaction;
-        // }
-
-        // $vCreditItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Vendor Credit');
-        // foreach($vCreditItems as $vCreditItem) {
-        //     $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditItem->transaction_id, logged('company_id'));
-        //     $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
-        //     $payeeName = $payee->display_name;
-        //     $categories = $this->expenses_model->get_transaction_categories($vCredit->id, 'Vendor Credit');
-        //     $items = $this->expenses_model->get_transaction_items($vCredit->id, 'Vendor Credit');
-        //     $count = count($categories) + count($items);
-
-        //     $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCredit->id);
-
-        //     $transaction = [
-        //         'id' => $vCredit->id,
-        //         'child_id' => $vCreditItem->id,
-        //         'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
-        //         'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
-        //         'ref_no_disabled' => true,
-        //         'type' => 'Vendor Credit',
-        //         'payee_type' => 'vendor',
-        //         'payee_id' => $vCredit->vendor_id,
-        //         'payee' => $payeeName,
-        //         'payee_disabled' => false,
-        //         'account_id' => '',
-        //         'account' => 'Accounts Payable',
-        //         'account_disabled' => true,
-        //         'memo' => $vCreditItem->description,
-        //         'reconcile_status' => '',
-        //         'banking_status' => '',
-        //         'attachments' => count($attachments) > 0 ? count($attachments) : '',
-        //         'tax' => '',
-        //         'balance' => '',
-        //         'date_created' => date("m/d/Y H:i:s", strtotime($vCreditItem->created_at))
-        //     ];
-
-        //     switch($accType) {
-        //         case 'Credit Card' :
-        //             $transaction['charge'] = number_format(floatval($vCreditItem->total), 2, '.', ',');
-        //             $transaction['payment'] = '';
-        //             $transaction['charge_disabled'] = $count > 1;
-        //             $transaction['payment_disabled'] = true;
-        //         break;
-        //         case 'Asset' :
-        //             $transaction['increase'] = '';
-        //             $transaction['decrease'] = number_format(floatval($vCreditItem->total), 2, '.', ',');
-        //             $transaction['increase_disabled'] = true;
-        //             $transaction['decrease_disabled'] = $count > 1;
-        //         break;
-        //         case 'Liability' :
-        //             $transaction['increase'] = '';
-        //             $transaction['decrease'] = number_format(floatval($vCreditItem->total), 2, '.', ',');
-        //             $transaction['increase_disabled'] = true;
-        //             $transaction['decrease_disabled'] = $count > 1;
-        //         break;
-        //         default :
-        //             $transaction['payment'] = number_format(floatval($vCreditItem->total), 2, '.', ',');
-        //             $transaction['deposit'] = '';
-        //             $transaction['payment_disabled'] = $count > 1;
-        //             $transaction['deposit_disabled'] = true;
-        //         break;
-        //     }
-
-        //     $data[] = $transaction;
-        // }
 
         return $data;
     }
@@ -2317,7 +2114,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transfer->id);
 
-            $transaction = [
+            $register = [
                 'id' => $transfer->id,
                 'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
                 'ref_no' => '',
@@ -2341,24 +2138,24 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $transaction['payment'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['charge'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['payment'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $transaction['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $transaction['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
                 break;
                 default :
-                    $transaction['payment'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $transaction['deposit'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['payment'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $register['deposit'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -2399,7 +2196,7 @@ class Chart_of_accounts extends MY_Controller {
             }
             $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $deposit->id);
 
-            $transaction = [
+            $register = [
                 'id' => $deposit->id,
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'ref_no' => '',
@@ -2424,40 +2221,40 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                    $register['charge'] = '';
+                    $register['payment'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
 
                     if($accountId === $deposit->cash_back_account_id) {
-                        $transaction['payment'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                        $register['payment'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
                     }
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
 
                     if($accountId === $deposit->cash_back_account_id) {
-                        $transaction['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                        $register['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
                     }
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
 
                     if($accountId === $deposit->cash_back_account_id) {
-                        $transaction['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                        $register['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
                     }
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                    $register['payment'] = '';
+                    $register['deposit'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
 
                     if($accountId === $deposit->cash_back_account_id) {
-                        $transaction['deposit'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                        $register['deposit'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
                     }
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         $depositFunds = $this->chart_of_accounts_model->get_deposit_payment_registers($accountId);
@@ -2468,7 +2265,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $dep->id);
 
-            $transaction = [
+            $register = [
                 'id' => $dep->id,
                 'child_id' => $depFund->id,
                 'date' => date("m/d/Y", strtotime($dep->date)),
@@ -2494,32 +2291,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $transaction['payment'] = '';
-                    $transaction['charge_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $register['payment'] = '';
+                    $register['charge_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $transaction['deposit'] = '';
-                    $transaction['payment_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $register['deposit'] = '';
+                    $register['payment_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -2583,7 +2380,7 @@ class Chart_of_accounts extends MY_Controller {
                 }
 
                 if($accType !== 'A/R' && $accType !== 'A/P') {
-                    $transaction = [
+                    $register = [
                         'id' => $expense->id,
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
@@ -2608,70 +2405,68 @@ class Chart_of_accounts extends MY_Controller {
                         $transaction['account'] = $paymentAcc->name;
                         $transaction['account_disabled'] = true;
                         $transaction['account_field'] = '';
+
+                        switch($accType) {
+                            case 'Credit Card' :
+                                $register['charge'] = '';
+                                $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['charge_disabled'] = true;
+                                $register['payment_disabled'] = $count > 1;
+                            break;
+                            case 'Asset' :
+                                $register['increase'] = '';
+                                $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['increase_disabled'] = true;
+                                $register['decrease_disabled'] = $count > 1;
+                            break;
+                            case 'Liability' :
+                                $register['increase'] = '';
+                                $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['increase_disabled'] = true;
+                                $register['decrease_disabled'] = $count > 1;
+                            break;
+                            default :
+                                $register['payment'] = '';
+                                $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['payment_disabled'] = true;
+                                $register['deposit_disabled'] = $count > 1;
+                            break;
+                        }
                     } else {
                         $transaction['account_id'] = $account['id'];
                         $transaction['account'] = $account['name'];
                         $transaction['account_disabled'] = $account['disabled'];
                         $transaction['account_field'] = $account['field_name'];
-                    }
 
-                    if(!isset($child)) {
                         switch($accType) {
                             case 'Credit Card' :
-                                $transaction['charge'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['payment'] = '';
-                                $transaction['charge_disabled'] = $count > 1;
-                                $transaction['payment_disabled'] = true;
+                                $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['payment'] = '';
+                                $register['charge_disabled'] = $count > 1;
+                                $register['payment_disabled'] = true;
                             break;
                             case 'Asset' :
-                                $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['decrease'] = '';
-                                $transaction['increase_disabled'] = $count > 1;
-                                $transaction['decrease_disabled'] = true;
+                                $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['decrease'] = '';
+                                $register['increase_disabled'] = $count > 1;
+                                $register['decrease_disabled'] = true;
                             break;
                             case 'Liability' :
-                                $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['decrease'] = '';
-                                $transaction['increase_disabled'] = $count > 1;
-                                $transaction['decrease_disabled'] = true;
+                                $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['decrease'] = '';
+                                $register['increase_disabled'] = $count > 1;
+                                $register['decrease_disabled'] = true;
                             break;
                             default :
-                                $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['deposit'] = '';
-                                $transaction['payment_disabled'] = $count > 1;
-                                $transaction['deposit_disabled'] = true;
-                            break;
-                        }
-                    } else {
-                        switch($accType) {
-                            case 'Credit Card' :
-                                $transaction['charge'] = '';
-                                $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['charge_disabled'] = true;
-                                $transaction['payment_disabled'] = $count > 1;
-                            break;
-                            case 'Asset' :
-                                $transaction['increase'] = '';
-                                $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['increase_disabled'] = true;
-                                $transaction['decrease_disabled'] = $count > 1;
-                            break;
-                            case 'Liability' :
-                                $transaction['increase'] = '';
-                                $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['increase_disabled'] = true;
-                                $transaction['decrease_disabled'] = $count > 1;
-                            break;
-                            default :
-                                $transaction['payment'] = '';
-                                $transaction['deposit'] = number_format(floatval($amount), 2, '.', ',');
-                                $transaction['payment_disabled'] = true;
-                                $transaction['deposit_disabled'] = $count > 1;
+                                $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                                $register['deposit'] = '';
+                                $register['payment_disabled'] = $count > 1;
+                                $register['deposit_disabled'] = true;
                             break;
                         }
                     }
                 } else {
-                    $transaction = [
+                    $register = [
                         'id' => $expense->id,
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
@@ -2684,7 +2479,7 @@ class Chart_of_accounts extends MY_Controller {
                         $transaction['customer'] = $payeeName;
                         $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                         $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['payment'] = '';
+                        $register['payment'] = '';
                     } else {
                         $transaction['vendor'] = $payeeName;
                         $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
@@ -2694,7 +2489,7 @@ class Chart_of_accounts extends MY_Controller {
                     }
                 }
 
-                $data[] = $transaction;
+                $data[] = $register;
             }
         }
 
@@ -2722,7 +2517,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Sales Receipt', $salesReceipt->id);
 
-            $transaction = [
+            $register = [
                 'id' => $salesReceipt->id,
                 'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
                 'ref_no' => $salesReceipt->ref_number,
@@ -2747,32 +2542,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = '';
+                    $register['payment'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = '';
+                    $register['deposit'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -2800,7 +2595,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Credit Memo', $creditMemo->id);
 
-            $transaction = [
+            $register = [
                 'id' => $creditMemo->id,
                 'child_id' => $item->id,
                 'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
@@ -2826,32 +2621,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = '';
+                    $register['payment'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = '';
+                    $register['deposit'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -2878,7 +2673,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Refund Receipt', $refundReceipt->id);
 
-            $transaction = [
+            $register = [
                 'id' => $refundReceipt->id,
                 'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
                 'ref_no' => '',
@@ -2902,32 +2697,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
-                    $transaction['payment'] = '';
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $register['payment'] = '';
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
-                    $transaction['deposit'] = '';
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $register['deposit'] = '';
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         $refundReceiptItems = $this->chart_of_accounts_model->get_refund_item_registers($accountId);
@@ -2939,7 +2734,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Refund Receipt', $refundReceipt->id);
 
-            $transaction = [
+            $register = [
                 'id' => $refundReceipt->id,
                 'child_id' => $item->id,
                 'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
@@ -2965,32 +2760,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = $count > 1;
+                    $register['charge'] = '';
+                    $register['payment'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = $count > 1;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = $count > 1;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['decrease'] = '';
+                    $register['increase_disabled'] = $count > 1;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($item->total), 2, '.', ',');
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = $count > 1;
+                    $register['payment'] = '';
+                    $register['deposit'] = number_format(floatval($item->total), 2, '.', ',');
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = $count > 1;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -3025,7 +2820,7 @@ class Chart_of_accounts extends MY_Controller {
                 }
             }
 
-            $transaction = [
+            $register = [
                 'id' => $invQtyAdj->id,
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
@@ -3049,24 +2844,24 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = number_format($payment, 2, '.', ',');
-                    $transaction['payment'] = '';
+                    $register['charge'] = number_format($payment, 2, '.', ',');
+                    $register['payment'] = '';
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format($payment, 2, '.', ',');
-                    $transaction['decrease'] = '';
+                    $register['increase'] = number_format($payment, 2, '.', ',');
+                    $register['decrease'] = '';
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format($payment, 2, '.', ',');
-                    $transaction['decrease'] = '';
+                    $register['increase'] = number_format($payment, 2, '.', ',');
+                    $register['decrease'] = '';
                 break;
                 default :
-                    $transaction['payment'] = number_format($payment, 2, '.', ',');
-                    $transaction['deposit'] = '';
+                    $register['payment'] = number_format($payment, 2, '.', ',');
+                    $register['deposit'] = '';
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         $invQtyAdjItems = $this->chart_of_accounts_model->get_qty_adjustment_item_registers($accountId);
@@ -3083,7 +2878,7 @@ class Chart_of_accounts extends MY_Controller {
                 $payment = floatval($invQtyAdjItem->change_in_quantity) *  floatval($item->cost);
             }
 
-            $transaction = [
+            $register = [
                 'id' => $invQtyAdj->id,
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
@@ -3104,24 +2899,24 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = number_format($payment, 2, '.', ',');
-                    $transaction['payment'] = '';
+                    $register['charge'] = number_format($payment, 2, '.', ',');
+                    $register['payment'] = '';
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format($payment, 2, '.', ',');
-                    $transaction['decrease'] = '';
+                    $register['increase'] = number_format($payment, 2, '.', ',');
+                    $register['decrease'] = '';
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format($payment, 2, '.', ',');
-                    $transaction['decrease'] = '';
+                    $register['increase'] = number_format($payment, 2, '.', ',');
+                    $register['decrease'] = '';
                 break;
                 default :
-                    $transaction['payment'] = number_format($payment, 2, '.', ',');
-                    $transaction['deposit'] = '';
+                    $register['payment'] = number_format($payment, 2, '.', ',');
+                    $register['deposit'] = '';
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -3183,7 +2978,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             if($accType !== 'A/R' && $accType !== 'A/P') {
-                $transaction = [
+                $register = [
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
@@ -3218,60 +3013,60 @@ class Chart_of_accounts extends MY_Controller {
                 if(!isset($child)) {
                     switch($accType) {
                         case 'Credit Card' :
-                            $transaction['charge'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['payment'] = '';
-                            $transaction['charge_disabled'] = $count > 1;
-                            $transaction['payment_disabled'] = true;
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = '';
+                            $register['charge_disabled'] = $count > 1;
+                            $register['payment_disabled'] = true;
                         break;
                         case 'Asset' :
-                            $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['decrease'] = '';
-                            $transaction['increase_disabled'] = $count > 1;
-                            $transaction['decrease_disabled'] = true;
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = '';
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
                         break;
                         case 'Liability' :
-                            $transaction['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['decrease'] = '';
-                            $transaction['increase_disabled'] = $count > 1;
-                            $transaction['decrease_disabled'] = true;
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = '';
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
                         break;
                         default :
-                            $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['deposit'] = '';
-                            $transaction['payment_disabled'] = $count > 1;
-                            $transaction['deposit_disabled'] = true;
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit'] = '';
+                            $register['payment_disabled'] = $count > 1;
+                            $register['deposit_disabled'] = true;
                         break;
                     }
                 } else {
                     switch($accType) {
                         case 'Credit Card' :
-                            $transaction['charge'] = '';
-                            $transaction['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['charge_disabled'] = true;
-                            $transaction['payment_disabled'] = $count > 1;
+                            $register['charge'] = '';
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['charge_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
                         break;
                         case 'Asset' :
-                            $transaction['increase'] = '';
-                            $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['increase_disabled'] = true;
-                            $transaction['decrease_disabled'] = $count > 1;
+                            $register['increase'] = '';
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
                         break;
                         case 'Liability' :
-                            $transaction['increase'] = '';
-                            $transaction['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['increase_disabled'] = true;
-                            $transaction['decrease_disabled'] = $count > 1;
+                            $register['increase'] = '';
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
                         break;
                         default :
-                            $transaction['payment'] = '';
-                            $transaction['deposit'] = number_format(floatval($amount), 2, '.', ',');
-                            $transaction['payment_disabled'] = true;
-                            $transaction['deposit_disabled'] = $count > 1;
+                            $register['payment'] = '';
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment_disabled'] = true;
+                            $register['deposit_disabled'] = $count > 1;
                         break;
                     }
                 }
             } else {
-                $transaction = [
+                $register = [
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
@@ -3284,7 +3079,7 @@ class Chart_of_accounts extends MY_Controller {
                     $transaction['customer'] = $payeeName;
                     $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                     $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['payment'] = '';
+                    $register['payment'] = '';
                 } else {
                     $transaction['vendor'] = $payeeName;
                     $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
@@ -3294,7 +3089,7 @@ class Chart_of_accounts extends MY_Controller {
                 }
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -3315,7 +3110,7 @@ class Chart_of_accounts extends MY_Controller {
         $adjustments = $this->chart_of_accounts_model->get_adjustment_acc_starting_value_registers($accountId);
 
         foreach($adjustments as $adjustment) {
-            $transaction = [
+            $register = [
                 'id' => $adjustment->id,
                 'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
                 'ref_no' => $adjustment->ref_no === null ? '' : $adjustment->ref_no,
@@ -3340,38 +3135,38 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
-                    $transaction['payment'] = '';
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
+                    $register['payment'] = '';
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
-                    $transaction['deposit'] = '';
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = number_format(floatval($adjustment->total_amount), 2, '.', ',');
+                    $register['deposit'] = '';
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         $adjustedItems = $this->chart_of_accounts_model->get_adjusted_starting_value_registers($accountId);
 
         foreach($adjustedItems as $adjusted) {
-            $transaction = [
+            $register = [
                 'id' => $adjusted->id,
                 'date' => date("m/d/Y", strtotime($adjusted->as_of_date)),
                 'ref_no' => $adjusted->ref_no === null ? '' : $adjusted->ref_no,
@@ -3396,32 +3191,32 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
-                    $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = true;
+                    $register['charge'] = '';
+                    $register['payment'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
+                    $register['charge_disabled'] = true;
+                    $register['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = '';
-                    $transaction['decrease'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
-                    $transaction['increase_disabled'] = true;
-                    $transaction['decrease_disabled'] = true;
+                    $register['increase'] = '';
+                    $register['decrease'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
+                    $register['increase_disabled'] = true;
+                    $register['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
-                    $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = true;
+                    $register['payment'] = '';
+                    $register['deposit'] = number_format(floatval($adjusted->total_amount), 2, '.', ',');
+                    $register['payment_disabled'] = true;
+                    $register['deposit_disabled'] = true;
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -3451,7 +3246,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $ccPayment->id);
 
-            $transaction = [
+            $register = [
                 'id' => $ccPayment->id,
                 'date' => date("m/d/Y", strtotime($ccPayment->date)),
                 'ref_no' => '',
@@ -3476,24 +3271,24 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $transaction['payment'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['charge'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['payment'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $transaction['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $transaction['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
                 break;
                 default :
-                    $transaction['payment'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $transaction['deposit'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['payment'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $register['deposit'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
                 break;
             }
 
-            $data[] = $transaction;
+            $data[] = $register;
         }
 
         return $data;
@@ -3521,7 +3316,7 @@ class Chart_of_accounts extends MY_Controller {
             $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $billPayment->id);
 
             if($creditCard === true && $accountType->account_name === 'Credit Card' || $creditCard === false) {
-                $transaction = [
+                $register = [
                     'id' => $billPayment->id,
                     'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
                     'ref_no' => $billPayment->to_print_check_no === "1" ? "To print" : ($billPayment->check_no === null ? '' : $billPayment->check_no),
@@ -3547,32 +3342,32 @@ class Chart_of_accounts extends MY_Controller {
 
                 switch($accType) {
                     case 'Credit Card' :
-                        $transaction['charge'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
-                        $transaction['payment'] = '';
-                        $transaction['charge_disabled'] = true;
-                        $transaction['payment_disabled'] = true;
+                        $register['charge'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $register['payment'] = '';
+                        $register['charge_disabled'] = true;
+                        $register['payment_disabled'] = true;
                     break;
                     case 'Asset' :
-                        $transaction['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
-                        $transaction['decrease'] = '';
-                        $transaction['increase_disabled'] = true;
-                        $transaction['decrease_disabled'] = true;
+                        $register['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $register['decrease'] = '';
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
                     break;
                     case 'Liability' :
-                        $transaction['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
-                        $transaction['decrease'] = '';
-                        $transaction['increase_disabled'] = true;
-                        $transaction['decrease_disabled'] = true;
+                        $register['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $register['decrease'] = '';
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
                     break;
                     default :
-                        $transaction['payment'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
-                        $transaction['deposit'] = '';
-                        $transaction['payment_disabled'] = true;
-                        $transaction['deposit_disabled'] = true;
+                        $register['payment'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $register['deposit'] = '';
+                        $register['payment_disabled'] = true;
+                        $register['deposit_disabled'] = true;
                     break;
                 }
     
-                $data[] = $transaction;
+                $data[] = $register;
             }
         }
 
@@ -3597,7 +3392,7 @@ class Chart_of_accounts extends MY_Controller {
             if ($totalCount === 1) {
                 $category = [];
                 if (count($categories) === 1 && count($items) === 0) {
-                    $expenseAcc = $categories[0]->expense_account_id;
+                    $accountId = $categories[0]->expense_account_id;
                     $category['id'] = $categories[0]->expense_account_id;
                     $category['disabled'] = false;
                     $category['field_name'] = 'expense-account';
@@ -3615,7 +3410,7 @@ class Chart_of_accounts extends MY_Controller {
                     $category['field_name'] = '';
                 }
 
-                $category['name'] = $this->chart_of_accounts_model->getName($expenseAcc);
+                $category['name'] = $this->chart_of_accounts_model->getName($accountId);
             }
         }
 

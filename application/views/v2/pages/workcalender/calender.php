@@ -1180,7 +1180,7 @@
                 }
             },
             defaultDate: "<?php echo date('Y-m-d'); ?>",
-            /*editable: true,
+            editable: true,
             droppable: true, // this allows things to be dropped onto the calendar
             drop: function(arg) {
                 //console.log(arg);
@@ -1304,7 +1304,7 @@
                         }
                     });
                 }
-            },*/
+            },
             navLinks: true, // can click day/week names to navigate views
             eventLimit: true, // allow "more" link when too many events
             events: events,

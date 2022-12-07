@@ -3,6 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('v2/includes/header'); ?>
 
+<!-- <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap.min.css") ?>"  type="text/css" media="print"> -->
+
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
         <i class="bx bx-note"></i>
@@ -14,26 +16,70 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
     <div class="col-12">
-        <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;">
+        <div style="float:right;padding-right:10%;">
+            <a href="#" class="btn btn-success">Download as PDF</a> <a href="#" class="btn btn-primary" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
+        </div>
+        <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;" id="printArea">
+<style>
+@media print {
+    .mustRight 
+    { 
+        float: right !important; 
+        margin-top:-80px !important;
+        font-size: 12px !important;
+    }
+    .descriptionTags
+    {
+        width:25% !important;
+    }
+    .salesRepArea
+    {
+        width:25% !important;
+        float: right !important; 
+    }
+    .serviceLocDiv
+    {
+        width:75% !important;
+    }
+    .paymentArea
+    {
+        width:60% !important;
+    }
+    .spaceDiv
+    {
+        width:5% !important;
+    }
+    .summaryArea
+    {
+        width:35% !important;
+    }
+    .compLogo
+    {
+        width: 80px; 
+        height: 80px;
+    }
+} 
+</style>
             <div class="nsm-page-content" style="padding:2%;">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class=""/> 
+                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class="compLogo"/> 
                         <?php //echo $tickets->id; ?>
                     </div>
                     <div class="col-md-6">
-                        <div style="float:right;">
+                        <div class="" style="float:right;">
                             <!-- <div style="text-align: center;border:solid gray 1px;">
                                 <h5>Ticket no</h5><hr>
                                 <h5><?php //echo $tickets->ticket_no; ?></h5>
                             </div> -->
                             <div style="font-size:16px;">
-                            <table class="table-bordered">
+                            <table class="table-borderless mustRight">
                                 <tr>
-                                    <td colspan="2" style="text-align: center;"><h5>Ticket no</h5></td>
+                                    <td colspan="2" style="text-align: center;"><h1><b>Service Ticket</b></h1></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" style="text-align: center;"><h5><?php echo $tickets->ticket_no; ?></h5></td>
+                                    <td>Ticket no:</td>
+                                    <td><?php echo $tickets->ticket_no; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Scheduled Date:</td>
@@ -61,7 +107,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-4">
                         <!-- <h4>From</h4> -->
                         <div style="font-size:16px;">
-                            <?php echo $ticketsCompany->business_name; ?></span> <br>
+                            <b><?php echo $ticketsCompany->business_name; ?></span></b> <br>
                             <?php echo $ticketsCompany->first_name .' '. $ticketsCompany->last_name; ?><br>
                             <?php echo $ticketsCompany->business_address; ?><br>
                             <?php echo $ticketsCompany->email_address; ?><br>
@@ -69,25 +115,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                     <!-- </div>
                 </div> -->
-                <br><br>
+                <br>
                 <!-- <div class="row">
                     <div class="col-md-4"> -->
                         <!-- <h4>To</h4> -->
                         <div style="font-size:16px;">
-                            <span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span><br>
+                            <b><span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span></b><br>
                             <span><?php echo $tickets->mail_add .' '. $tickets->city .' '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
                             <span><?php echo $tickets->email; ?></span><br>
                             <span><?php echo $tickets->phone_h; ?></span>
                         </div>
                     </div>
                 </div>
-                <br><br>
+                <br>
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-9 serviceLocDiv">
                         <b>Service Location: </b> <br>
                         <?php echo $tickets->service_location; ?>
                     </div>
-                    <div class="col-md-3" style="text-align:center;border:solid gray 1px;">
+                    <div class="col-md-3 salesRepArea" style="text-align:center;border:solid gray 1px;">
                         <b>Sales Representative</b> <br>
                         <?php echo $reps->FName.' '.$reps->LName; ?><br>
                         <?php echo $tickets->sales_rep_no; ?><br>
@@ -97,19 +143,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
                 <br>
                 <div class="row" style="font-size:16px;">
-                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                    <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Job Tag </b> <br>
                         <?php echo $tickets->job_tag; ?>
                     </div>
-                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                    <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Panel Type </b> <br>
                         <?php echo $tickets->panel_type; ?>
                     </div>
-                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                    <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Service Type </b> <br>
                         <?php echo $tickets->service_type; ?>
                     </div>
-                    <div class="col-md-3" style="border:solid gray 1px;text-align:center;">
+                    <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Warranty Type</b> <br>
                         <?php echo $tickets->warranty_type; ?>
                     </div>
@@ -148,7 +194,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 paymentArea">
                         <table class="table table-borderless" style="width:50%;">
                             <tr>
                                 <td><b>Payment Method: </b></td>
@@ -289,9 +335,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </table>
                         
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 spaceDiv">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 summaryArea">
                         <table class="table table-bordered">
                             <tr style="font-weight:bold;">
                                 <td>Subtotal</td>
@@ -380,3 +426,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
+
+<script>
+function printDiv(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+}
+</script>
