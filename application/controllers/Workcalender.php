@@ -2685,6 +2685,14 @@ class Workcalender extends MY_Controller
                         }
                     }
 
+                    $location = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
+
+                    $description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
+                    $description .= "<span style='font-weight:bold;'>Phone Number : ".$appointment->cust_phone."</span><br />";   
+                    $description .= "<span style='font-weight:bold;'>URL : ".$appointment->url_link."</span><br />";                    
+                    $description .= "<span style='color:red;'>" . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
+                    $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+
                     $is_valid = true;
 
                 }
@@ -2808,11 +2816,18 @@ class Workcalender extends MY_Controller
             $capi = new GoogleCalendarApi();
             $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
             if( $data['access_token'] ){
+                $reminders = [
+                    'useDefault' => "FALSE",
+                    'overrides' => [
+                        ['method' => 'email', 'minutes' => 24 * 60],
+                        ['method' => 'popup', 'minutes' => 5]
+                    ]
+                ];
                 $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                 if( $googleAccount->auto_sync_calendar_id != ''){
-                    $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);
+                    $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
                 }else{
-                    $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);    
+                    $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);    
                 }
             }else{
                 $is_valid = false;

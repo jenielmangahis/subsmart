@@ -75,12 +75,24 @@ class GoogleCalendarApi
 		return $data['items'];
 	}
 
-	public function createCalendarEvent($calendar_id, $summary, $all_day, $event_time, $event_timezone, $attendees, $access_token) {
+	public function createCalendarEvent($calendar_id, $summary, $all_day, $event_time, $event_timezone, $attendees, $location, $reminders, $description, $access_token) {
 		$url_events = 'https://www.googleapis.com/calendar/v3/calendars/' . $calendar_id . '/events';
 
 		$curlPost = array('summary' => $summary);
 		if( !empty($attendees) ){
 			$curlPost['attendees'] = $attendees;				
+		}
+
+		if( $location != '' ){
+			$curlPost['location'] = $location;
+		}
+
+		if( $description != '' ){
+			$curlPost['description'] = $description;	
+		}
+
+		if( !empty($reminders) ){
+			$curlPost['reminders'] = $reminders;
 		}
 
 		if($all_day == 1) {
