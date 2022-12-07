@@ -1038,6 +1038,8 @@
                     nowIndicator: true,
                     slotDuration: '00:15',
                     slotLabelInterval: '01:00',
+                    editable: false,
+                    droppable: false,
                     scrollTime: scrollTime
                 },
                 dayView: {
@@ -1046,11 +1048,15 @@
                     allDaySlot: false,
                     buttonText: 'Day',
                     slotDuration: '00:15',
+                    editable: true,
+                    droppable: true,
                     slotLabelInterval: '01:00'
                 },
                 monthView: {
                     type: 'dayGridMonth',
-                    buttonText: 'Month'
+                    buttonText: 'Month',
+                    editable: true,
+                    droppable: true
                 },
                 weekView: {
                     //type: 'dayGridWeek',
@@ -1059,6 +1065,8 @@
                     buttonText: 'Week',
                     allDaySlot: false, 
                     expandRows: true,
+                    editable: true,
+                    droppable: true,
                     scrollTime: scrollTime,
                     /*nowIndicator: true,
                     expandRows: true,
@@ -1073,13 +1081,17 @@
                 },
                 listView: {
                     type: 'listWeek',
-                    buttonText: 'List'
+                    buttonText: 'List',
+                    editable: false,
+                    droppable: false
                 },
                 threeDaysView: {
                     type: 'resourceTimeGrid',
                     //type: 'timeGrid',
                     datesAboveResources: true,
                     allDaySlot: false,
+                    editable: false,
+                    droppable: false,
                     slotLabelFormat: [{
                         hour: 'numeric',
                         minute: 'numeric',

@@ -767,7 +767,7 @@ class Workcalender extends MY_Controller
                 if( $st->technicians != '' ){
                     $assigned_technician = unserialize($st->technicians);
                     foreach($assigned_technician as $eid){
-                        $resourceIds[] = 'user' . $st->sales_rep;
+                        $resourceIds[] = 'user' . $eid;
                         $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
                     }                    
                 }
@@ -1420,16 +1420,31 @@ class Workcalender extends MY_Controller
             if( $post['user_id'] > 0 ){
                 $appointment_data = [
                     'appointment_date' => $new_start_date,
-                    'appointment_time' => $new_appointment_time,
+                    'appointment_time_from' => $new_appointment_time,
                     'user_id' => $post['user_id']
                 ];
             }else{
                 $appointment_data = [
                     'appointment_date' => $new_start_date,
-                    'appointment_time' => $new_appointment_time
+                    'appointment_time_from' => $new_appointment_time
                 ];
             }
             $this->general->update_with_key_field($appointment_data, $post['event_id'], 'appointments', 'id');
+        }elseif( $post['event_type'] == 'service_tickets' ){
+            $new_appointment_time = date("H:i:s",strtotime($post['start_date']));
+            if( $post['user_id'] > 0 ){
+                $appointment_data = [
+                    'ticket_date' => date("m/d/Y", strtotime($new_start_date)),
+                    'scheduled_time_to' => $new_appointment_time,
+                    'user_id' => $post['user_id']
+                ];
+            }else{
+                $appointment_data = [
+                    'ticket_date' => date("m/d/Y", strtotime($new_start_date)),
+                    'scheduled_time_to' => $new_appointment_time,
+                ];
+            }
+            $this->general->update_with_key_field($appointment_data, $post['event_id'], 'tickets', 'id');
         }else{
             if( $post['user_id'] > 0 ){
                 $events_data = [
@@ -2287,7 +2302,7 @@ class Workcalender extends MY_Controller
 
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['start_date'])),
-                    'appointment_time' => date("H:i:s", strtotime($post['start_date'])),
+                    'appointment_time_from' => date("H:i:s", strtotime($post['start_date'])),
                     'user_id' => $user_id,
                     'is_wait_list' => 0
                 ];
@@ -2303,7 +2318,7 @@ class Workcalender extends MY_Controller
                 if( $post['user_id'] > 0 ){
                     $data_appointment = [
                         'appointment_date' => date("Y-m-d",strtotime($post['start_date'])),
-                        'appointment_time' => date("H:i:s", strtotime($post['start_date'])),
+                        'appointment_time_from' => date("H:i:s", strtotime($post['start_date'])),
                         'user_id' => $post['user_id'],
                         'is_wait_list' => 0
                     ];
