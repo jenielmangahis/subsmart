@@ -140,9 +140,11 @@
 
                             $assigned_employees = array();
                             $emp_ids = unserialize($schedule['data']->technicians);
-                            foreach($emp_ids as $eid){
-                                $assigned_employees[] = $eid;    
-                            }
+                            if( is_array($emp_ids) ){
+                                foreach($emp_ids as $eid){
+                                    $assigned_employees[] = $eid;    
+                                }
+                            }                            
 
                             $assigned_employees[] = $schedule['data']->sales_rep;
 

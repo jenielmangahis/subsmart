@@ -1,7 +1,25 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+<!-- <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script> -->
+<!-- <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.colVis.min.js"></script> -->
 <style>
-
+table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length, .dataTables_info{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
 /*Customize Modal*/
 	.modal.right .modal-dialog {
 		position: fixed;
@@ -132,7 +150,180 @@
 }
 </style>
 
-<div class="row page-content g-0" id="container">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-12">
+                    <span class="float-end">
+                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                        <span>Filter <i class='bx bx-fw bx-chevron-down'></i></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                            <p class="m-0">Rows/columns</p>
+                            <div class="row grid-mb">
+                                <div class="col-12">
+                                    <label for="filter-group-by">Group by</label>
+                                    <select class="nsm-field form-select" name="filter_group_by" id="filter-group-by">
+                                        <option value="none" selected>None</option>
+                                        <option value="shipping-city">Shipping City</option>
+                                        <option value="shipping-state">Shipping State</option>
+                                        <option value="shipping-zip">Shipping ZIP</option>
+                                        <option value="city">Billing City</option>
+                                        <option value="state">Billing State</option>
+                                        <option value="zip">Billing ZIP</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-center">
+                                    <button type="submit" class="nsm-button primary">
+                                    Run Report
+                                    </button>
+                                </div>
+                            </div>
+                        </ul>
+                        <a type="button" class="nsm-button demo" data-bs-toggle="modal" data-bs-target="#customizeModal">
+                        <i class='bx bx-fw bx-customize'></i> Customize
+                        </a>
+                        <button type="button" class="nsm-button primary">
+                        <i class='bx bx-fw bx-save'></i> Save customization
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="nsm-card primary">
+                        <div class="nsm-card-header">
+                            <div class="col-lg-12">
+                                <span class="float-start">
+                                   <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                            </button>
+                                            <ul class="dropdown-menu p-3">
+                                                <p class="m-0">Sort by</p>
+                                                <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                    <option value="default" selected>Default</option>
+                                                    <option value="billing-city">Billing City</option>
+                                                    <option value="billing-country">Billing Country</option>
+                                                    <option value="billing-state">Billing State</option>
+                                                    <option value="billing-street">Billing Street</option>
+                                                    <option value="billing-zip">Billing ZIP</option>
+                                                    <option value="cc-expires">CC Expires</option>
+                                                    <option value="company-name">Company Name</option>
+                                                    <option value="create-date">Create Date</option>
+                                                    <option value="created-by">Created By</option>
+                                                    <option value="credit-card-num">Credit Card #</option>
+                                                    <option value="customer-type">Customer Type</option>
+                                                    <option value="delivery-method">Delivery Method</option>
+                                                    <option value="email">Email</option>
+                                                    <option value="first-name">First Name</option>
+                                                    <option value="full-name">Full Name</option>
+                                                    <option value="last-modified">Last Modified</option>
+                                                    <option value="last-modified-by">Last Modified By</option>
+                                                    <option value="last-name">Last Name</option>
+                                                    <option value="note">Note</option>
+                                                    <option value="other">Other</option>
+                                                    <option value="payment-method">Payment Method</option>
+                                                    <option value="phone">Phone</option>
+                                                    <option value="resale-num">Resale #</option>
+                                                    <option value="shipping-city">Shipping City</option>
+                                                    <option value="shipping-country">Shipping Country</option>
+                                                    <option value="shipping-state">Shipping State</option>
+                                                    <option value="shipping-street">Shipping Street</option>
+                                                    <option value="shipping-zip">Shipping ZIP</option>
+                                                    <option value="tax-rate">Tax Rate</option>
+                                                    <option value="taxable">Taxable</option>
+                                                    <option value="terms">Terms</option>
+                                                    <option value="website">Website</option>
+                                                </select>
+                                                <p class="m-0">Sort in</p>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" checked>
+                                                    <label for="sort-asc" class="form-check-label">Ascending order</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input">
+                                                    <label for="sort-desc" class="form-check-label">Descending order</label>
+                                                </div>
+                                            </ul>
+                                            <button class="nsm-button">Add Notes</button>
+                                </span>
+                                <span class="float-end">
+                                    <!-- <div class="input-group input-group"> -->
+                                        <button class="btn btn-outline-secondary border-0 btn-lg"><i class="bx bx-fw bx-envelope"></i></button>
+                                        <button class="btn btn-outline-secondary border-0 btn-lg"><i class="bx bx-fw bx-printer"></i></button>
+                                        <button class="btn btn-outline-secondary border-0 btn-lg"><i class="bx bx-fw bx-export"></i></button>
+                                        <button class="btn btn-outline-primary border-0 btn-lg"><i class="bx bx-fw bx-cog"></i></button>
+                                    <!-- </div> -->
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="nsm-card-content">
+                            <div class="row mt-4 mb-2">
+                                <div class="col-lg-12">
+                                    <center><h3><?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?></h3></center>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-12">
+                                    <center><h5><strong>Customer Contact List</strong></h5></center>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-12">
+                                    <?php $DATA = $this->session->userdata('REPORTS_GETCUSTOMERCONTACTLIST'); ?>
+                                    <table id="CUSTOMER_CONTACT_LIST" class="nsm-table w-100">
+                                        <thead>
+                                            <tr>
+                                                <td>Customer</td>
+                                                <td>Phone Number</td>
+                                                <td>Email</td>
+                                                <td>Billing Address</td>
+                                                <td>Shipping Address</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                foreach ($DATA as $DATA) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $DATA->CUSTOMER; ?></td>
+                                                <td><?php echo $DATA->PHONE_NUMBER; ?></td>
+                                                <td><?php echo $DATA->EMAIL; ?></td>
+                                                <td><?php echo $DATA->BILLING_ADDRESS; ?></td>
+                                                <td><?php echo $DATA->SHIPPING_ADDRESS; ?></td>
+                                            </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <hr>
+                            <center>
+                                test
+                            </center>
+                        </div>
+                        <div class="nsm-card-footer text-center">
+                                <?php  if($foot){?>
+                                <!-- <p class="m-0"><?= $date_prepared ?> <?= $time_prepared ?></p> -->
+                                <?php }else{?>
+                                <p><?= date("l, F j, Y h:i A eP") ?></p>
+                                <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+</div>
+
+
+<div class="row page-content g-0 d-none" id="container">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -185,13 +376,18 @@
                 <?php include viewPath('accounting/reports/reports_modals/customer_contact_list_modal'); ?>
 
                 <!-- end-customize-modal -->
-                <div class="row g-3">
-                    <div class="col-12 col-md-10 offset-md-1">
+                <div class="row">
+                    <div class="col-12 col-md-10">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <input class="form-control" type="text" placeholder="Search Customer...">
+                                                </div>
+                                            </div>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
                                                 <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
                                             </button>
@@ -517,23 +713,6 @@
                                 </div>
                             </div>
                             <div class="col-12 nsm-card-content h-auto grid-mb" id="tbl_print_accounts_modal">
-                               
-                            <table class="nsm-table w-100" id="defaultTbl">
-                                    <thead id="def_head">
-                                    </thead>
-                                    <tbody id="def_body">
-                                        <tr>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <table class="nsm-table" id="filtered_tbl">
-                                    <thead>
-                                        <tr id="head_tbl"></tr>
-                                    </thead>
-                                    <tbody id="body_tbl"></tbody>
-                                </table>
-                            </div>
                             <div class="nsm-card-footer text-center">
                                 <?php  if($foot){?>
                                 <p class="m-0"><?= $date_prepared ?> <?= $time_prepared ?></p>
@@ -550,8 +729,25 @@
 </div>
 <?php include viewPath('v2/includes/reports/reports_modals'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
-
 <script type="text/javascript">
+$(function() {
+   var CUSTOMER_CONTACT_LIST_TABLE = $('#CUSTOMER_CONTACT_LIST').DataTable({
+        "ordering" : false,
+        paging: false,
+        language: {
+            processing: '<span>Fetching data...</span>'
+        },
+    });
+     $("#CUSTOMER_SEARCH_BAR").keyup(function() {
+        CUSTOMER_CONTACT_LIST_TABLE.search($(this).val()).draw()
+    });
+    CUSTOMER_CONTACT_LIST_TABLE_SETTINGS = CUSTOMER_CONTACT_LIST_TABLE.settings(); 
+});
+    
+
+
+
+
 var expanded = false;
 
 // var selectedHeader = [];

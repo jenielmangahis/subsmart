@@ -395,7 +395,7 @@ class Api extends MYF_Controller
         $unserialize = '';
 
         if( $data['serialize_data'] != '' ){
-            $unserialize = unserialize($data['serialize_data'])
+            $unserialize = unserialize($data['serialize_data']);
         }
 
         $result = ['unserialize' => $unserialize];

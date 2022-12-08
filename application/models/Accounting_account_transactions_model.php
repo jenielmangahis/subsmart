@@ -14,7 +14,7 @@ class Accounting_account_transactions_model extends MY_Model {
 	{
 		$this->db->where('account_id', $accountId);
 		$this->db->where('transaction_type', $transactionType);
-		$this->db->order_by('created_at', 'desc');
+		$this->db->order_by('transaction_date', 'desc');
 		$this->db->order_by('id', 'desc');
 		$query = $this->db->get($this->table);
 		return $query->result();

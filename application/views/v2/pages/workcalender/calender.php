@@ -92,7 +92,7 @@
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('tickets/addnewTicketApmt') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Service Ticket
                                 </button>
-                                <button type="button" class="nsm-button" onclick="location.href='<?= base_url('events/new_event') ?>'">
+                                <button type="button" class="nsm-button" onclick="location.href='<?= base_url('events/event_add') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Event
                                 </button>
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('job/new_job1') ?>'">
@@ -1038,6 +1038,8 @@
                     nowIndicator: true,
                     slotDuration: '00:15',
                     slotLabelInterval: '01:00',
+                    editable: false,
+                    droppable: false,
                     scrollTime: scrollTime
                 },
                 dayView: {
@@ -1046,11 +1048,15 @@
                     allDaySlot: false,
                     buttonText: 'Day',
                     slotDuration: '00:15',
+                    editable: true,
+                    droppable: true,
                     slotLabelInterval: '01:00'
                 },
                 monthView: {
                     type: 'dayGridMonth',
-                    buttonText: 'Month'
+                    buttonText: 'Month',
+                    editable: true,
+                    droppable: true
                 },
                 weekView: {
                     //type: 'dayGridWeek',
@@ -1059,6 +1065,8 @@
                     buttonText: 'Week',
                     allDaySlot: false, 
                     expandRows: true,
+                    editable: true,
+                    droppable: true,
                     scrollTime: scrollTime,
                     /*nowIndicator: true,
                     expandRows: true,
@@ -1073,13 +1081,17 @@
                 },
                 listView: {
                     type: 'listWeek',
-                    buttonText: 'List'
+                    buttonText: 'List',
+                    editable: false,
+                    droppable: false
                 },
                 threeDaysView: {
                     type: 'resourceTimeGrid',
                     //type: 'timeGrid',
                     datesAboveResources: true,
                     allDaySlot: false,
+                    editable: false,
+                    droppable: false,
                     slotLabelFormat: [{
                         hour: 'numeric',
                         minute: 'numeric',

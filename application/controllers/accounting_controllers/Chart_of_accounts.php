@@ -760,15 +760,16 @@ class Chart_of_accounts extends MY_Controller {
 
         $this->page_data['single_line'] = get('single-line');
 
-        if($type !== 'A/R' && $type !== 'A/P') {
-            $registers = $this->get_transactions($id, $filters);
-        } else {
-            if($type === 'A/R') {
-                $registers = $this->get_ar_transactions($id, $filters);
-            } else {
-                $registers = $this->get_ap_transactions($id, $filters);
-            }
-        }
+        // if($type !== 'A/R' && $type !== 'A/P') {
+        //     $registers = $this->get_transactions($id, $filters);
+        // } else {
+        //     if($type === 'A/R') {
+        //         $registers = $this->get_ar_transactions($id, $filters);
+        //     } else {
+        //         $registers = $this->get_ap_transactions($id, $filters);
+        //     }
+        // }
+        $registers = $this->get_transactions($id, $filters);
 
         $this->page_data['account'] = $account;
         $this->page_data['type'] = $type;
@@ -892,18 +893,18 @@ class Chart_of_accounts extends MY_Controller {
         }
 
         if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
-            $depKey = 'increase';
-            $paymentKey = 'decrease';
+            $increaseKey = 'increase';
+            $decreaseKey = 'decrease';
         } else if($accountType->account_name === 'Credit Card') {
-            $depKey = 'charge';
-            $paymentKey = 'payment';
+            $increaseKey = 'charge';
+            $decreaseKey = 'payment';
         } else {
-            $depKey = 'deposit';
-            $paymentKey = 'payment';
+            $increaseKey = 'deposit';
+            $decreaseKey = 'payment';
         }
 
         // Filter
-        $data = array_filter($data, function($reg, $key) use ($filters, $paymentKey, $depKey) {
+        $data = array_filter($data, function($reg, $key) use ($filters, $increaseKey, $decreaeseKey) {
             $flag = true;
 
             if(!empty($filters['from_date']) && strtotime($reg['date']) < strtotime($filters['from_date'])) {
@@ -930,17 +931,17 @@ class Chart_of_accounts extends MY_Controller {
                     $searchFloat = floatval($searchString);
 
                     if(stripos($filters['search'], '<') !== false) {
-                        $flag = floatval($reg[$paymentKey]) < $searchFloat || floatval($reg[$depKey]) < $searchFloat;
+                        $flag = floatval($reg[$increaseKey]) < $searchFloat || floatval($reg[$decreaeseKey]) < $searchFloat;
                     } else {
-                        $flag = floatval($reg[$paymentKey]) > $searchFloat || floatval($reg[$depKey]) > $searchFloat;
+                        $flag = floatval($reg[$increaseKey]) > $searchFloat || floatval($reg[$decreaeseKey]) > $searchFloat;
                     }
                 } else {
                     if(is_numeric($filters['search'])) {
-                        if($reg[$paymentKey] !== '' && floatval($filters['search']) !== floatval($reg[$paymentKey])) {
+                        if($reg[$increaseKey] !== '' && floatval($filters['search']) !== floatval($reg[$increaseKey])) {
                             $flag = false;
                         }
 
-                        if($reg[$depKey] !== '' && floatval($filters['search']) !== floatval($reg[$depKey])) {
+                        if($reg[$decreaeseKey] !== '' && floatval($filters['search']) !== floatval($reg[$decreaeseKey])) {
                             $flag = false;
                         }
                     } else {
@@ -954,33 +955,34 @@ class Chart_of_accounts extends MY_Controller {
             return $flag;
         }, ARRAY_FILTER_USE_BOTH);
 
-        $registers = $data;
+        // $registers = $data;
 
-        usort($registers, function($a, $b) {
+        usort($data, function($a, $b) {
             if(strtotime($a['date']) === strtotime($b['date'])) {
-                return strtotime($a['date_created']) < strtotime($b['date_created']);
+                return floatval($a['acc_transac_id']) < floatval($b['acc_transac_id']);
+                // return strtotime($a['date_created']) < strtotime($b['date_created']);
             }
             return strtotime($a['date']) < strtotime($b['date']);
         });
 
         $accBalance = floatval($account->balance);
-        foreach($registers as $key => $reg) {
+        foreach($data as $key => $reg) {
             $balance = number_format($accBalance, 2, '.', ',');
             $balance = '$'.$balance;
-            $registers[$key]['balance'] = str_replace('$-', '-$', $balance);
+            $data[$key]['balance'] = str_replace('$-', '-$', $balance);
 
-            $accBalance -= floatval($reg[$depKey]);
-            $accBalance += floatval($reg[$paymentKey]);
+            $accBalance -= floatval($reg[$increaseKey]);
+            $accBalance += floatval($reg[$decreaseKey]);
         }
 
-        $data = $registers;
+        // $data = $registers;
 
-        usort($data, function($a, $b) {
-            if(strtotime($a['date']) === strtotime($b['date'])) {
-                return strtotime($a['date_created']) > strtotime($b['date_created']);
-            }
-            return strtotime($a['date']) > strtotime($b['date']);
-        });
+        // usort($data, function($a, $b) {
+        //     if(strtotime($a['date']) === strtotime($b['date'])) {
+        //         return strtotime($a['date_created']) > strtotime($b['date_created']);
+        //     }
+        //     return strtotime($a['date']) > strtotime($b['date']);
+        // });
 
         if($filters['single_line'] === 0) {
             $registers = $data;
@@ -1114,6 +1116,7 @@ class Chart_of_accounts extends MY_Controller {
                 if($accType !== 'A/R' && $accType !== 'A/P') {
                     $register = [
                         'id' => $expense->id,
+                        'acc_transac_id' => $transaction->id,
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                         'ref_no_disabled' => false,
@@ -1132,16 +1135,16 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     if(isset($child)) {
-                        $transaction['child_id'] = $child->id;
-                        $transaction['account_id'] = $paymentAcc->id;
-                        $transaction['account'] = $paymentAcc->name;
-                        $transaction['account_disabled'] = true;
-                        $transaction['account_field'] = '';
+                        $register['child_id'] = $child->id;
+                        $register['account_id'] = $paymentAcc->id;
+                        $register['account'] = $paymentAcc->name;
+                        $register['account_disabled'] = true;
+                        $register['account_field'] = '';
                     } else {
-                        $transaction['account_id'] = $account['id'];
-                        $transaction['account'] = $account['name'];
-                        $transaction['account_disabled'] = $account['disabled'];
-                        $transaction['account_field'] = $account['field_name'];
+                        $register['account_id'] = $account['id'];
+                        $register['account'] = $account['name'];
+                        $register['account_disabled'] = $account['disabled'];
+                        $register['account_field'] = $account['field_name'];
                     }
 
                     if(!isset($child)) {
@@ -1210,16 +1213,16 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     if($accType === 'A/R') {
-                        $transaction['customer'] = $payeeName;
-                        $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['customer'] = $payeeName;
+                        $register['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                         $register['payment'] = '';
                     } else {
-                        $transaction['vendor'] = $payeeName;
-                        $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['billed'] = '';
-                        $transaction['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['account'] = $paymentAcc->name;
+                        $register['vendor'] = $payeeName;
+                        $register['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['billed'] = '';
+                        $register['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['account'] = $paymentAcc->name;
                     }
                 }
 
@@ -1287,6 +1290,7 @@ class Chart_of_accounts extends MY_Controller {
             if($accType !== 'A/R' && $accType !== 'A/P') {
                 $register = [
                     'id' => $check->id,
+                    'acc_transac_id' => $transaction->id,
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
                     'ref_no_disabled' => $check->to_print === "1" || isset($child),
@@ -1305,16 +1309,16 @@ class Chart_of_accounts extends MY_Controller {
                 ];
 
                 if(isset($child)) {
-                    $transaction['child_id'] = $child->id;
-                    $transaction['account_id'] = $bankAcc->id;
-                    $transaction['account'] = $bankAcc->name;
-                    $transaction['account_disabled'] = true;
-                    $transaction['account_field'] = '';
+                    $register['child_id'] = $child->id;
+                    $register['account_id'] = $bankAcc->id;
+                    $register['account'] = $bankAcc->name;
+                    $register['account_disabled'] = true;
+                    $register['account_field'] = '';
                 } else {
-                    $transaction['account_id'] = $account['id'];
-                    $transaction['account'] = $account['name'];
-                    $transaction['account_disabled'] = $account['disabled'];
-                    $transaction['account_field'] = $account['field_name'];
+                    $register['account_id'] = $account['id'];
+                    $register['account'] = $account['name'];
+                    $register['account_disabled'] = $account['disabled'];
+                    $register['account_field'] = $account['field_name'];
                 }
 
                 if(!isset($child)) {
@@ -1383,16 +1387,16 @@ class Chart_of_accounts extends MY_Controller {
                 ];
 
                 if($accType === 'A/R') {
-                    $transaction['customer'] = $payeeName;
-                    $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['customer'] = $payeeName;
+                    $register['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                     $register['payment'] = '';
                 } else {
-                    $transaction['vendor'] = $payeeName;
-                    $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['billed'] = '';
-                    $transaction['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['account'] = $bankAcc->name;
+                    $register['vendor'] = $payeeName;
+                    $register['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['billed'] = '';
+                    $register['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['account'] = $bankAcc->name;
                 }
             }
 
@@ -1693,6 +1697,7 @@ class Chart_of_accounts extends MY_Controller {
 
                 $register = [
                     'id' => $bill->id,
+                    'acc_transac_id' => $transaction->id,
                     'child_id' => $child->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
                     'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
@@ -1825,7 +1830,7 @@ class Chart_of_accounts extends MY_Controller {
             if($accType !== 'A/R' && $accType !== 'A/P') {
                 $register = [
                     'id' => $ccCredit->id,
-                    'child_id' => $child->id,
+                    'acc_transac_id' => $transaction->id,
                     'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                     'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
                     'ref_no_disabled' => true,
@@ -1924,16 +1929,16 @@ class Chart_of_accounts extends MY_Controller {
                 ];
 
                 if($accType === 'A/R') {
-                    $transaction['customer'] = $payeeName;
-                    $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['charge_credit'] = '';
+                    $register['customer'] = $payeeName;
+                    $register['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['charge_credit'] = '';
                     $register['payment'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                 } else {
-                    $transaction['vendor'] = $payeeName;
-                    $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['billed'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['paid'] = '';
-                    $transaction['account'] = $ccAcc->name;
+                    $register['vendor'] = $payeeName;
+                    $register['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['billed'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['paid'] = '';
+                    $register['account'] = $ccAcc->name;
                 }
             }
 
@@ -1989,6 +1994,7 @@ class Chart_of_accounts extends MY_Controller {
                 $register = [
                     'id' => $vCredit->id,
                     'child_id' => $child->id,
+                    'acc_transac_id' => $transaction->id,
                     'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                     'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
                     'ref_no_disabled' => true,
@@ -2382,6 +2388,7 @@ class Chart_of_accounts extends MY_Controller {
                 if($accType !== 'A/R' && $accType !== 'A/P') {
                     $register = [
                         'id' => $expense->id,
+                        'acc_transac_id' => $transaction->id,
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                         'ref_no_disabled' => false,
@@ -2400,11 +2407,11 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     if(isset($child)) {
-                        $transaction['child_id'] = $child->id;
-                        $transaction['account_id'] = $paymentAcc->id;
-                        $transaction['account'] = $paymentAcc->name;
-                        $transaction['account_disabled'] = true;
-                        $transaction['account_field'] = '';
+                        $register['child_id'] = $child->id;
+                        $register['account_id'] = $paymentAcc->id;
+                        $register['account'] = $paymentAcc->name;
+                        $register['account_disabled'] = true;
+                        $register['account_field'] = '';
 
                         switch($accType) {
                             case 'Credit Card' :
@@ -2433,10 +2440,10 @@ class Chart_of_accounts extends MY_Controller {
                             break;
                         }
                     } else {
-                        $transaction['account_id'] = $account['id'];
-                        $transaction['account'] = $account['name'];
-                        $transaction['account_disabled'] = $account['disabled'];
-                        $transaction['account_field'] = $account['field_name'];
+                        $register['account_id'] = $account['id'];
+                        $register['account'] = $account['name'];
+                        $register['account_disabled'] = $account['disabled'];
+                        $register['account_field'] = $account['field_name'];
 
                         switch($accType) {
                             case 'Credit Card' :
@@ -2476,16 +2483,16 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     if($accType === 'A/R') {
-                        $transaction['customer'] = $payeeName;
-                        $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['customer'] = $payeeName;
+                        $register['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                         $register['payment'] = '';
                     } else {
-                        $transaction['vendor'] = $payeeName;
-                        $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['billed'] = '';
-                        $transaction['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                        $transaction['account'] = $paymentAcc->name;
+                        $register['vendor'] = $payeeName;
+                        $register['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['billed'] = '';
+                        $register['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                        $register['account'] = $paymentAcc->name;
                     }
                 }
 
@@ -2980,6 +2987,7 @@ class Chart_of_accounts extends MY_Controller {
             if($accType !== 'A/R' && $accType !== 'A/P') {
                 $register = [
                     'id' => $expense->id,
+                    'acc_transac_id' => $transaction->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'ref_no_disabled' => false,
@@ -2998,16 +3006,16 @@ class Chart_of_accounts extends MY_Controller {
                 ];
 
                 if(isset($child)) {
-                    $transaction['child_id'] = $child->id;
-                    $transaction['account_id'] = $paymentAcc->id;
-                    $transaction['account'] = $paymentAcc->name;
-                    $transaction['account_disabled'] = true;
-                    $transaction['account_field'] = '';
+                    $register['child_id'] = $child->id;
+                    $register['account_id'] = $paymentAcc->id;
+                    $register['account'] = $paymentAcc->name;
+                    $register['account_disabled'] = true;
+                    $register['account_field'] = '';
                 } else {
-                    $transaction['account_id'] = $account['id'];
-                    $transaction['account'] = $account['name'];
-                    $transaction['account_disabled'] = $account['disabled'];
-                    $transaction['account_field'] = $account['field_name'];
+                    $register['account_id'] = $account['id'];
+                    $register['account'] = $account['name'];
+                    $register['account_disabled'] = $account['disabled'];
+                    $register['account_field'] = $account['field_name'];
                 }
 
                 if(!isset($child)) {
@@ -3076,16 +3084,16 @@ class Chart_of_accounts extends MY_Controller {
                 ];
 
                 if($accType === 'A/R') {
-                    $transaction['customer'] = $payeeName;
-                    $transaction['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['customer'] = $payeeName;
+                    $register['open_balance'] = '-'.number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['charge_credit'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
                     $register['payment'] = '';
                 } else {
-                    $transaction['vendor'] = $payeeName;
-                    $transaction['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['billed'] = '';
-                    $transaction['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
-                    $transaction['account'] = $paymentAcc->name;
+                    $register['vendor'] = $payeeName;
+                    $register['open_balance'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['billed'] = '';
+                    $register['paid'] = number_format(floatval(str_replace(',', '', $amount)), 2, '.', ',');
+                    $register['account'] = $paymentAcc->name;
                 }
             }
 

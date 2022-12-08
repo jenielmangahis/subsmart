@@ -571,6 +571,11 @@ echo put_header_assets();
                 </div>
 
                 <div>
+                    <label for="textFieldPlaceholder">Add Placeholder</label>
+                    <input type="text"  class="w-100" id="textFieldPlaceholder" />
+                </div>
+
+                <div>
                     <label for="textFieldValue">Add Text</label>
                     <textarea  class="w-100" id="textFieldValue"></textarea>
                 </div>
