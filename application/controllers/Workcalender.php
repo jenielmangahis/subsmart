@@ -121,14 +121,19 @@ class Workcalender extends MY_Controller
 
                 // label of the event
                 if (!empty($customer)) {
-                    if (!empty($calender_settings)) {
+                    /*if (!empty($calender_settings)) {
                         $title = acs_prof_make_calender_event_label($calender_settings, $event, $customer);
                     } else {
                         $date = date('a', strtotime($event->start_time));
                         $date = substr($date, -2, 1);
                         $title = date('g', strtotime($event->start_time)) . $date;
                         $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
-                    }
+                    }*/
+
+                    $date = date('a', strtotime($event->start_time));
+                    $date = substr($date, -2, 1);
+                    $title = date('g', strtotime($event->start_time)) . $date;
+                    $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
                 }
 
                 if ($event->employee_id > 0) {
@@ -682,6 +687,7 @@ class Workcalender extends MY_Controller
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
+        //Events
         foreach ($events as $event) {
             if ($event->event_description != '') {
                 if ($event->employee_id > 0) {
@@ -719,14 +725,14 @@ class Workcalender extends MY_Controller
 
                     $resourceIds = array();
                     $resourceIds[] = 'user' . $event->employee_id;
-
                     $resources_user_events[$inc]['eventId'] = $event->id;
                     $resources_user_events[$inc]['eventType'] = 'events';
                     $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                     $resources_user_events[$inc]['title'] = $title;
                     $resources_user_events[$inc]['customHtml'] = $custom_html;
                     $resources_user_events[$inc]['start'] = $start_date_time;
-                    $resources_user_events[$inc]['end'] = $start_date_end;
+                    $resources_user_events[$inc]['end'] = $start_date_end;                    
+                    $resources_user_events[$inc]['allDay'] = false;
                     $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                     $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
 
@@ -795,8 +801,8 @@ class Workcalender extends MY_Controller
         $appointments = $this->Appointment_model->getAllNotWaitListByCompany($company_id);
         foreach ($appointments as $a) {
             $starttime = $a->appointment_date . " " . $a->appointment_time;
-            $start_date_time = date('Y-m-d\TH:i:s', strtotime($a->appointment_date . " " . $a->appointment_time_from));
-            $start_date_end  = $start_date_time;
+            $start_date_time = date('Y-m-d H:i:s', strtotime($a->appointment_date . " " . $a->appointment_time_from));
+            $start_date_end  = date('Y-m-d H:i:s', strtotime($a->appointment_date . " " . $a->appointment_time_to));
             $backgroundColor = "#38a4f8";
 
             //$appointment_number = strtoupper(str_replace("APPT", $a->appointment_type, $a->appointment_number));
@@ -843,7 +849,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
             $resources_user_events[$inc]['end'] = $start_date_end;
-            $resources_user_events[$inc]['starttime'] = $start_date_time;
+            $resources_user_events[$inc]['starttime'] = strtotime($start_date_time);
             $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
 
             $inc++; 
@@ -2705,9 +2711,9 @@ class Workcalender extends MY_Controller
                     $location = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
 
                     $description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
-                    $description .= "<span style='font-weight:bold;'>Phone Number : ".$appointment->cust_phone."</span><br />";   
-                    $description .= "<span style='font-weight:bold;'>URL : ".$appointment->url_link."</span><br />";                    
-                    $description .= "<span style='color:red;'>" . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
+                    $description .= "<span>Phone Number : ".$appointment->cust_phone."</span><br />";   
+                    $description .= "<span>URL : ".$appointment->url_link."</span><br />";                    
+                    $description .= "<span>Location : " . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
                     $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
 
                     $is_valid = true;
@@ -2738,6 +2744,12 @@ class Workcalender extends MY_Controller
                             $attendees[] = ['email' => $user->email];
                         }
                     }
+
+                    $location = $event->event_address;    
+
+                    $description  = "<span><b>Event Type : ".$event->event_type."</b></span><br />";
+                    $description .= "<span>" . $event->event_address . "</span><br />";
+                    $description  = "<span>Event Description : ".$event->event_description."</span><br />";
 
                     $is_valid = true;
                 }
@@ -2770,6 +2782,13 @@ class Workcalender extends MY_Controller
                             }
                         }
                     }
+
+                    $location = $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
+
+                    $description  = "<span><b>Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."</b></span><br />";
+                    $description .= "<span>Phone Number : ".$ticket->phone_m."</span><br />";                  
+                    $description .= "<span>Service Location : " . $ticket->service_location . "</span><br />";
+                    $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
 
                     $is_valid = true;
                 }
@@ -2818,6 +2837,13 @@ class Workcalender extends MY_Controller
                             $attendees[] = ['email' => $user->email];
                         }
                     }
+
+                    $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
+
+                    $description  = "<span><b>Customer Name : ".$job->first_name . ' ' . $job->last_name."</b></span><br />";
+                    $description .= "<span>Job Type : ".$job->job_type."</span><br />";                
+                    $description .= "<span>Phone Number : ".$job->cust_phone."</span><br />";                
+                    $description .= "<span>Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "</span><br />";
 
                     $is_valid = true;
                 }
