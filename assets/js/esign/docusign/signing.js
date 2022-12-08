@@ -555,7 +555,7 @@ function Signing(hash) {
         value = specs.value;
       }
 
-      const placeholder = specs.name || field_name;
+      const placeholder = specs.placeholder || specs.name || field_name;
 
       const html = `
             <div class="docusignField" style="position: relative; display: flex; align-items: center;">

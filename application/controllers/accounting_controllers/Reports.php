@@ -13,7 +13,7 @@ class Reports extends MY_Controller {
         //helper
         $this->load->helper('accounting/reports_helper');
         $this->load->helper('functions_helper');
-
+        $this->load->model('general_model');
         $this->load->model('accounting_favorite_reports_model');
         $this->load->model('accounting_report_groups_model');
         $this->load->model('accounting_report_types_model');
@@ -525,50 +525,68 @@ class Reports extends MY_Controller {
         $data_arr = array("success" => true, "data" => $estimate_data, "header" => $header, "column" => $column, "select" => $selected_col);
         die(json_encode($data_arr));
     }
+
     public function getCustomerContactList()
     {
-        $input = $this->input->post();
-        if(empty($input)){
-            $data = array(
-                'table' => 'acs_profile',
-                'select' => 'first_name, last_name, phone_h, email, mail_add, city, state, zip_code',
-                'where' => array(
-                    'fk_user_id' => logged('id'),
-                    'company_id' => logged('company_id')
-                )
-            );
-            $acs_profile = $this->AcsProfile_model->getProfileWithParam($data);
-            $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
-        }else{
-            $customerCol = json_decode($input['customerCol']);
-            $billingCol = json_decode($input['billingCol']);
-            if($customerCol != 'null' && $billingCol != 'null'){
-                $selected_col = array_merge($customerCol,$billingCol);
-            }else{
-                if($customerCol != 'null'){
-                    $selected_col = $customerCol;
-                }elseif($billingCol != 'null'){
-                    $selected_col = $billingCol;
-                }else{
-                    $selected_col = array('acs_profile.first_name, acs_profile.last_name, acs_profile.phone_h, acs_profile.email, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code');
-                }
-            }
-            if(!empty($selected_col)){
-                $param['select'] = $selected_col;
-            }   
-            //get table param
-            $param['table'] = 'acs_profile';
-            //get join param
-            $param['join'] = array('acs_billing' => 'acs_profile.prof_id = acs_billing.fk_prof_id');
-            $param['where'] = array('acs_profile.fk_user_id' => logged('id'), 'acs_profile.company_id' => logged('company_id'));
-            $acs_profile = $this->AcsProfile_model->getProfileWithParam($param);
-            $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
-        }
+        // $input = $this->input->post();
         
-        die(json_encode($data_arr));
+        // if(empty($input)){
+        //     $data = array(
+        //         'table' => 'acs_profile',
+        //         'select' => 'acs_profile.first_name, acs_profile.last_name, acs_profile.phone_h, acs_profile.email, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code',
+        //         'join' => array('acs_billing' => 'acs_profile.prof_id = acs_billing.fk_prof_id'),
+        //         'where' => array(
+        //             'fk_user_id' => logged('id'),
+        //             'company_id' => logged('company_id')
+        //         ),
+        //     );
+        //     $acs_profile = $this->AcsProfile_model->getProfileWithParam($data);
+        //     $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
+        // }
+
+        // else{
+        //     $customerCol = json_decode($input['customerCol']);
+        //     $billingCol = json_decode($input['billingCol']);
+        //     if($customerCol != 'null' && $billingCol != 'null'){
+        //         $selected_col = array_merge($customerCol,$billingCol);
+        //     }else{
+        //         if($customerCol != 'null'){
+        //             $selected_col = $customerCol;
+        //         }elseif($billingCol != 'null'){
+        //             $selected_col = $billingCol;
+        //         }else{
+        //             $selected_col = array('acs_profile.first_name, acs_profile.last_name, acs_profile.phone_h, acs_profile.email, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code');
+        //         }
+        //     }
+        //     if(!empty($selected_col)){
+        //         $param['select'] = $selected_col;
+        //     }   
+        //     //get table param
+        //     $param['table'] = 'acs_profile';
+        //     //get join param
+        //     $param['join'] = array('acs_billing' => 'acs_profile.prof_id = acs_billing.fk_prof_id');
+        //     $param['where'] = array('acs_profile.fk_user_id' => logged('id'), 'acs_profile.company_id' => logged('company_id'));
+        //     $acs_profile = $this->AcsProfile_model->getProfileWithParam($param);
+        //     $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
+        // }
+        // die(json_encode($data_arr));
+
+        $DATA = array(
+            'table' => 'acs_profile',
+            'select' => 'CONCAT(first_name  , " ", last_name) AS CUSTOMER, phone_h AS PHONE_NUMBER, email AS EMAIL, mail_add AS BILLING_ADDRESS, CONCAT(city, " ", state, " ", zip_code) AS SHIPPING_ADDRESS',
+            'where' => array(
+                'fk_user_id' => logged('id'),
+                'company_id' => logged('company_id')
+            )
+        );
+
+        $REQUEST_DATA = $this->general_model->get_data_with_param($DATA);
+
+        // STORE REQUESTED DATA INTO PHP SESSION (FOR EFFICIENT PASSING OF DATA INTO ANOTHER FILE)
+        $this->session->set_userdata('REPORTS_GETCUSTOMERCONTACTLIST', $REQUEST_DATA);
     }
 
-    public function EstimatesInvoiceByCustomer(){
+    public function EstimatesInvoiceByCustomer(){   
         $input = $this->input->post();
         $header = json_decode($input['header']);
         $company_name = $input['company_name'];
