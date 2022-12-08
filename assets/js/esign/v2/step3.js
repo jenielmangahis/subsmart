@@ -228,6 +228,7 @@ function Step3() {
     const $optionInputs = $optionsSidebar.find(".esignBuilder__optionInput");
     const $fieldNameInput = $optionsSidebar.find("#textFieldName");
     const $fieldValueInput = $optionsSidebar.find("#textFieldValue");
+    const $fieldValueLabel = $optionsSidebar.find("#textFieldPlaceholder");
 
     $fieldId.html("");
     if (event && $(event.target).hasClass("subData--isSubCheckbox")) {
@@ -243,6 +244,7 @@ function Step3() {
     $optionInputs.remove();
     $fieldNameInput.val("");
     $fieldValueInput.val("");
+    $fieldValueLabel.val("");
 
     const fieldTypeWithOptions = ["Checkbox", "Radio"];
     let fieldType = "field";
@@ -336,6 +338,9 @@ function Step3() {
       $(".text #readOnlyText").prop("checked", specs.is_read_only);
       $(".text #textFieldName").val(specs.name ? specs.name : "");
       $(".text #textFieldValue").val(specs.value ? specs.value : "");
+      $(".text #textFieldPlaceholder").val(
+        specs.placeholder ? specs.placeholder : ""
+      );
     } else if (field_name === "Dropdown") {
       fieldType = "dropdown";
 
@@ -882,12 +887,14 @@ function Step3() {
       } else if (fieldType === "text") {
         const fieldName = $(".text #textFieldName").val().trim();
         const fieldValue = $(".text #textFieldValue").val().trim();
+        const fieldPlaceholder = $(".text #textFieldPlaceholder").val().trim();
 
         specs = {
           is_required: $("#requiredText").is(":checked"),
           is_read_only: $("#readOnlyText").is(":checked"),
           name: !isEmpty(fieldName) ? fieldName : null,
           value: fieldValue,
+          placeholder: fieldPlaceholder,
         };
       } else if (fieldType === "dropdown") {
         const $options = $(".dropdown .options__valuesItem input");

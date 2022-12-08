@@ -2057,7 +2057,16 @@ SQL;
 
         foreach ($files as $file) {
             $filepath = FCPATH . ltrim($file->path, '/');
-            $pageCount = $pdf->setSourceFile($filepath);
+            $pageCount = 0;
+
+            try {
+                // version not supported
+                // https://www.setasign.com/support/faq/fpdi/error-document-compression-technique-not-supported/
+                // Manual fix. Make sure all PDF are version 1.4.
+                $pageCount = $pdf->setSourceFile($filepath);
+            } catch (\Throwable $th) {
+                continue;
+            }
 
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 $pageIndex = $pdf->importPage($pageNo);
@@ -2066,7 +2075,7 @@ SQL;
 
 
                 foreach ($fields as $field) {
-                    if ((int) $field->doc_page !== $pageIndex) {
+                    if ((int) $field->doc_page !== $pageNo) {
                         continue;
                     }
 
@@ -2082,7 +2091,7 @@ SQL;
                     $coordinates = json_decode($field->coordinates);
 
                     if ($field->field_name === 'Name') {
-                        $top = (int) $coordinates->top;
+                        $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
                         $topAdjusted = (29 / 100) * $top;
@@ -2099,7 +2108,7 @@ SQL;
                     }
 
                     if ($field->field_name === 'Email') {
-                        $top = (int) $coordinates->top;
+                        $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
                         $topAdjusted = (31.6 / 100) * $top;
@@ -2118,7 +2127,7 @@ SQL;
                     if (in_array($field->field_name, ['Checkbox', 'Radio'])) {
                         $value = json_decode($value->value);
 
-                        $top = (int) $coordinates->top;
+                        $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
                         $topAdjusted = (31.3 / 100) * $top;
@@ -2130,9 +2139,16 @@ SQL;
                         if (is_array($value->subCheckbox)) {
                             foreach ($value->subCheckbox as $subItem) {
                                 if ($subItem->isChecked) {
+                                    $myTop = (int) $subItem->top;
+                                    $myLeft = (int) $subItem->left;
 
-                                    $myTopAdjusted = ((int) $subItem->top) + $topAdjusted;
-                                    $myLeftAdjusted = ((int) $subItem->left) + $leftAdjusted;
+                                    $myTopAdjusted = (39.5 / 100) * $myTop;
+                                    $myTopAdjusted = $myTop - $myTopAdjusted;
+                                    $myTopAdjusted = $topAdjusted + $myTopAdjusted;
+
+                                    $myLeftAdjusted = (-35 / 100) * $myLeft;
+                                    $myLeftAdjusted = $myLeft + $myLeftAdjusted;
+                                    $myLeftAdjusted = $leftAdjusted + $myLeftAdjusted;
 
                                     $pdf->setY($myTopAdjusted);
                                     $pdf->setX($myLeftAdjusted);
@@ -2162,7 +2178,7 @@ SQL;
                             $temporaryPath = FCPATH . ltrim($field->unique_key, '/');
 
                             if (file_put_contents($temporaryPath, $decodedImg) !== false) {
-                                $top = (int) $coordinates->top;
+                                $top = (int) $coordinates->pageTop;
                                 $left = (int) $coordinates->left;
 
                                 $topAdjusted = (32.5 / 100) * $top;
@@ -2181,7 +2197,7 @@ SQL;
                     }
 
                     if ($field->field_name === 'Text') {
-                        $top = (int) $coordinates->top;
+                        $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
                         $topAdjusted = (31.5 / 100) * $top;
@@ -2198,7 +2214,7 @@ SQL;
                     }
 
                     if ($field->field_name === 'Date Signed') {
-                        $top = (int) $coordinates->top;
+                        $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
                         $topAdjusted = (31.9 / 100) * $top;
@@ -2215,7 +2231,7 @@ SQL;
                     }
 
                     if ($field->field_name === 'Formula') {
-                        $top = (int) $coordinates->top;
+                        $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
                         $topAdjusted = (31.9 / 100) * $top;

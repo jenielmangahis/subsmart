@@ -325,7 +325,7 @@ if ($this->session->userdata('usertimezone') == null) {
                 </li>
             </ul>
 
-            <div class="nsm-back-to-main-dashboard">
+            <div class="nsm-back-to-main-dashboard" style="padding: 2em; margin-top: 10px; position: unset;">
                 <a href="<?=base_url("dashboard")?>">
                     <i class='bx bx-fw bx-arrow-back'></i> Go to main Dashboard
                 </a>
