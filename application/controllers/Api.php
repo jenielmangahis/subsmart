@@ -8,7 +8,7 @@ class Api extends MYF_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('stripe');
+        //$this->load->library('stripe');
         $this->load->model('general_model');
     }
 
@@ -410,13 +410,19 @@ class Api extends MYF_Controller
         $msg = 'Empty POST data';
 
         $data  = $this->input->post();
+        $data  = [
+            'object_id' => 1,
+            'module' => 'appointment',
+            'company_id' => 1
+        ];
+
         if( $data['object_id'] > 0 ){
             $result = createSyncToCalendar($data['object_id'], $data['module'], $data['company_id']);
             if( $result['is_valid'] == 1 ){
                 $msg = 'Success';
                 $is_success = 1;
             }else{
-                $msg = 'API Error';
+                $msg = $result['msg'];
             }
         }
         

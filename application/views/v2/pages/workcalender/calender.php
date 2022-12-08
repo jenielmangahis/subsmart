@@ -23,6 +23,7 @@
 }
 .calendar-tile-details{
     display: none;
+    padding: 5px;
     /*margin-top: 11px;*/
 }
 .calendar-title-header{    
@@ -1059,7 +1060,7 @@
                     droppable: true
                 },
                 weekView: {
-                    //type: 'dayGridWeek',
+                    
                     nowIndicator: true,
                     type: 'timeGridWeek',
                     buttonText: 'Week',
@@ -1068,16 +1069,6 @@
                     editable: true,
                     droppable: true,
                     scrollTime: scrollTime,
-                    /*nowIndicator: true,
-                    expandRows: true,
-                    nowIndicator: true,
-                    type: 'timeGrid',
-                    duration: {
-                        days: 7
-                    },
-                    buttonText: 'Week',
-                    allDaySlot: false,
-                    scrollTime: scrollTime*/
                 },
                 listView: {
                     type: 'listWeek',
