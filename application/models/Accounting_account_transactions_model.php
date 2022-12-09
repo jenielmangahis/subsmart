@@ -19,4 +19,13 @@ class Accounting_account_transactions_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
+
+	public function get_account_transactions($accountId)
+	{
+		$this->db->where('account_id', $accountId);
+		$this->db->order_by('transaction_date', 'desc');
+		$this->db->order_by('id', 'desc');
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }

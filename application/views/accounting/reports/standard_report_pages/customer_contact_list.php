@@ -1,10 +1,12 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
-<!-- <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script> -->
-<!-- <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.colVis.min.js"></script> -->
+
+<!-- START: LIBRARY AND FRAMEWORKS IMPORTS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-colvis-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.css"/>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-colvis-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.js"></script>
+<!-- END: LIBRARY AND FRAMEWORKS IMPORTS -->
+
 <style>
 table {
         width: 100% !important;
@@ -51,8 +53,8 @@ table.dataTable.no-footer {
 	}
 
 	.modal-content {
-		border-radius: 0;
-		border: none;
+		/*border-radius: 0;*/
+		/*border: none;*/
 	}
 
 	.modal-header {
@@ -249,15 +251,13 @@ table.dataTable.no-footer {
                                                     <label for="sort-desc" class="form-check-label">Descending order</label>
                                                 </div>
                                             </ul>
-                                            <button class="nsm-button">Add Notes</button>
+                                            <button data-bs-toggle="modal" data-bs-target="#ADD_NOTES_MODAL" class="nsm-button">Add Notes</button>
                                 </span>
                                 <span class="float-end">
-                                    <!-- <div class="input-group input-group"> -->
-                                        <button class="btn btn-outline-secondary border-0 btn-lg"><i class="bx bx-fw bx-envelope"></i></button>
-                                        <button class="btn btn-outline-secondary border-0 btn-lg"><i class="bx bx-fw bx-printer"></i></button>
-                                        <button class="btn btn-outline-secondary border-0 btn-lg"><i class="bx bx-fw bx-export"></i></button>
-                                        <button class="btn btn-outline-primary border-0 btn-lg"><i class="bx bx-fw bx-cog"></i></button>
-                                    <!-- </div> -->
+                                        <button data-bs-toggle="modal" data-bs-target="#EMAIL_REPORT_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
+                                        <button data-bs-toggle="modal" data-bs-target="#PRINT_SAVE_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
+                                        <button class="nsm-button border-0"><i class="bx bx-fw bx-export"></i></button>
+                                        <button class="nsm-button border-0 primary"><i class="bx bx-fw bx-cog"></i></button>
                                 </span>
                             </div>
                         </div>
@@ -275,7 +275,6 @@ table.dataTable.no-footer {
                             </div>
                             <div class="row mb-2">
                                 <div class="col-lg-12">
-                                    <?php $DATA = $this->session->userdata('REPORTS_GETCUSTOMERCONTACTLIST'); ?>
                                     <table id="CUSTOMER_CONTACT_LIST" class="nsm-table w-100">
                                         <thead>
                                             <tr>
@@ -286,10 +285,7 @@ table.dataTable.no-footer {
                                                 <td>Shipping Address</td>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <?php
-                                                foreach ($DATA as $DATA) {
-                                            ?>
+                                        <!-- <tbody>
                                             <tr>
                                                 <td><?php echo $DATA->CUSTOMER; ?></td>
                                                 <td><?php echo $DATA->PHONE_NUMBER; ?></td>
@@ -297,22 +293,16 @@ table.dataTable.no-footer {
                                                 <td><?php echo $DATA->BILLING_ADDRESS; ?></td>
                                                 <td><?php echo $DATA->SHIPPING_ADDRESS; ?></td>
                                             </tr>
-                                            <?php } ?>
-                                        </tbody>
+                                        </tbody> -->
                                     </table>
                                 </div>
                             </div>
-                            <hr>
-                            <center>
-                                test
-                            </center>
-                        </div>
-                        <div class="nsm-card-footer text-center">
-                                <?php  if($foot){?>
-                                <!-- <p class="m-0"><?= $date_prepared ?> <?= $time_prepared ?></p> -->
-                                <?php }else{?>
-                                <p><?= date("l, F j, Y h:i A eP") ?></p>
-                                <?php } ?>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span class="text-muted">[NOTES_HERE]</span>
+                                </div>
+                            </div>
+                            <center class="mt-4 mb-4"><?php echo date("l, F j, Y h:i A eP") ?></center>
                         </div>
                     </div>
                 </div>
@@ -323,429 +313,201 @@ table.dataTable.no-footer {
 </div>
 
 
-<div class="row page-content g-0 d-none" id="container">
-    <div class="col-12">
-        <div class="nsm-page">
-            <div class="nsm-page-content">
-                <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
-                        <!-- <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
-                        </div> -->
-                    </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
-                                <p class="m-0">Rows/columns</p>
-                                <div class="row grid-mb">
-                                    <div class="col-12">
-                                        <label for="filter-group-by">Group by</label>
-                                        <select class="nsm-field form-select" name="filter_group_by" id="filter-group-by">
-                                            <option value="none" selected>None</option>
-                                            <option value="shipping-city">Shipping City</option>
-                                            <option value="shipping-state">Shipping State</option>
-                                            <option value="shipping-zip">Shipping ZIP</option>
-                                            <option value="city">Billing City</option>
-                                            <option value="state">Billing State</option>
-                                            <option value="zip">Billing ZIP</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <button type="submit" class="nsm-button primary">
-                                            Run Report
-                                        </button>
-                                    </div>
-                                </div>
-                            </ul>
-                            <a type="button" class="nsm-button demo" data-bs-toggle="modal" data-bs-target="#customizeModal">
-                                <i class='bx bx-fw bx-customize'></i> Customize
-                            </a>
-                            <button type="button" class="nsm-button primary">
-                                <i class='bx bx-fw bx-save'></i> Save customization
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<!-- START: MODALS -->
 
-                <!-- customize-modal -->
-                <?php include viewPath('accounting/reports/reports_modals/customer_contact_list_modal'); ?>
-
-                <!-- end-customize-modal -->
-                <div class="row">
-                    <div class="col-12 col-md-10">
-                        <div class="nsm-card primary">
-                            <div class="nsm-card-header d-block">
-                                <div class="row">
-                                    <div class="col-12 col-md-6 grid-mb">
-                                        <div class="nsm-page-buttons page-button-container">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <input class="form-control" type="text" placeholder="Search Customer...">
-                                                </div>
-                                            </div>
-                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
-                                            </button>
-                                            <ul class="dropdown-menu p-3">
-                                                <p class="m-0">Sort by</p>
-                                                <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                    <option value="default" selected>Default</option>
-                                                    <option value="billing-city">Billing City</option>
-                                                    <option value="billing-country">Billing Country</option>
-                                                    <option value="billing-state">Billing State</option>
-                                                    <option value="billing-street">Billing Street</option>
-                                                    <option value="billing-zip">Billing ZIP</option>
-                                                    <option value="cc-expires">CC Expires</option>
-                                                    <option value="company-name">Company Name</option>
-                                                    <option value="create-date">Create Date</option>
-                                                    <option value="created-by">Created By</option>
-                                                    <option value="credit-card-num">Credit Card #</option>
-                                                    <option value="customer-type">Customer Type</option>
-                                                    <option value="delivery-method">Delivery Method</option>
-                                                    <option value="email">Email</option>
-                                                    <option value="first-name">First Name</option>
-                                                    <option value="full-name">Full Name</option>
-                                                    <option value="last-modified">Last Modified</option>
-                                                    <option value="last-modified-by">Last Modified By</option>
-                                                    <option value="last-name">Last Name</option>
-                                                    <option value="note">Note</option>
-                                                    <option value="other">Other</option>
-                                                    <option value="payment-method">Payment Method</option>
-                                                    <option value="phone">Phone</option>
-                                                    <option value="resale-num">Resale #</option>
-                                                    <option value="shipping-city">Shipping City</option>
-                                                    <option value="shipping-country">Shipping Country</option>
-                                                    <option value="shipping-state">Shipping State</option>
-                                                    <option value="shipping-street">Shipping Street</option>
-                                                    <option value="shipping-zip">Shipping ZIP</option>
-                                                    <option value="tax-rate">Tax Rate</option>
-                                                    <option value="taxable">Taxable</option>
-                                                    <option value="terms">Terms</option>
-                                                    <option value="website">Website</option>
-                                                </select>
-                                                <p class="m-0">Sort in</p>
-                                                <div class="form-check">
-                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" checked>
-                                                    <label for="sort-asc" class="form-check-label">Ascending order</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input">
-                                                    <label for="sort-desc" class="form-check-label">Descending order</label>
-                                                </div>
-                                            </ul>
-                                            <button type="button" class="nsm-button">
-                                                <span>Add notes</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6 grid-mb text-end">
-                                        <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
-                                                <i class='bx bx-fw bx-envelope'></i>
-                                            </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
-                                                <i class='bx bx-fw bx-printer'></i>
-                                            </button>
-                                            <button type="button" class="nsm-button" id="exportReport" name="exportReport">
-                                                <i class="bx bx-fw bx-export"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
-                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
-                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
-                                            </ul>
-                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-25">
-                                                <p class="m-0">Display density</p>
-                                                <div class="form-check">
-                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
-                                                    <label for="compact-display" class="form-check-label">Compact</label>
-                                                </div>
-                                                <p class="m-0">Change columns</p>
-                                                <div class="row">
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-customer" class="form-check-input" checked>
-                                                            <label for="col-customer" class="form-check-label">Customer</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-create-date" class="form-check-input">
-                                                            <label for="col-create-date" class="form-check-label">Create Date</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-created-by" class="form-check-input">
-                                                            <label for="col-created-by" class="form-check-label">Created By</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-last-modified" class="form-check-input">
-                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-last-modified-by" class="form-check-input">
-                                                            <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-phone" class="form-check-input">
-                                                            <label for="col-phone" class="form-check-label">Phone</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-phone-numbers" class="form-check-input" checked>
-                                                            <label for="col-phone-numbers" class="form-check-label">Phone Numbers</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-email" class="form-check-input" checked>
-                                                            <label for="col-email" class="form-check-label">Email</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-full-name" class="form-check-input" checked>
-                                                            <label for="col-full-name" class="form-check-label">Full Name</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-billing-address" class="form-check-input" checked>
-                                                            <label for="col-billing-address" class="form-check-label">Billing Address</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-shipping-address" class="form-check-input" checked>
-                                                            <label for="col-shipping-address" class="form-check-label">Shipping Address</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-company-name" class="form-check-input">
-                                                            <label for="col-company-name" class="form-check-label">Company Name</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-website" class="form-check-input">
-                                                            <label for="col-website" class="form-check-label">Website</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-delivery-method" class="form-check-input">
-                                                            <label for="col-delivery-method" class="form-check-label">Delivery Method</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-other" class="form-check-input">
-                                                            <label for="col-other" class="form-check-label">Other</label>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-taxable" class="form-check-input">
-                                                            <label for="col-taxable" class="form-check-label">Taxable</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-tax-rate" class="form-check-input">
-                                                            <label for="col-tax-rate" class="form-check-label">Tax Rate</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-resale-no" class="form-check-input">
-                                                            <label for="col-resale-no" class="form-check-label">Resale #</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-credit-card-no" class="form-check-input">
-                                                            <label for="col-credit-card-no" class="form-check-label">Credit Card #</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-cc-expires" class="form-check-input">
-                                                            <label for="col-cc-expires" class="form-check-label">CC Expires</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-payment-method" class="form-check-input">
-                                                            <label for="col-payment-method" class="form-check-label">Payment Method</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-terms" class="form-check-input">
-                                                            <label for="col-terms" class="form-check-label">Terms</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-customer-type" class="form-check-input">
-                                                            <label for="col-customer-type" class="form-check-label">Customer Type</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-note" class="form-check-input">
-                                                            <label for="col-note" class="form-check-label">Note</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-billing-street" class="form-check-input">
-                                                            <label for="col-billing-street" class="form-check-label">Billing Street</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-billing-city" class="form-check-input">
-                                                            <label for="col-billing-city" class="form-check-label">Billing City</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-billing-state" class="form-check-input">
-                                                            <label for="col-billing-state" class="form-check-label">Billing State</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-billing-zip" class="form-check-input">
-                                                            <label for="col-billing-zip" class="form-check-label">Billing ZIP</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-billing-country" class="form-check-input">
-                                                            <label for="col-billing-country" class="form-check-label">Billing Country</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-shipping-street" class="form-check-input">
-                                                            <label for="col-shipping-street" class="form-check-label">Shipping Street</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-shipping-city" class="form-check-input">
-                                                            <label for="col-shipping-city" class="form-check-label">Shipping City</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-shipping-state" class="form-check-input">
-                                                            <label for="col-shipping-state" class="form-check-label">Shipping State</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-shipping-zip" class="form-check-input">
-                                                            <label for="col-shipping-zip" class="form-check-label">Shipping ZIP</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-shipping-country" class="form-check-input">
-                                                            <label for="col-shipping-country" class="form-check-label">Shipping Country</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-last-name" class="form-check-input">
-                                                            <label for="col-last-name" class="form-check-label">Last Name</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-first-name" class="form-check-input">
-                                                            <label for="col-first-name" class="form-check-label">First Name</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?= ($head) ? $company_title : $clients->business_name; ?></span></h4>
-                                    </div>
-                                    <div class="col-12 grid-mb text-center">
-                                        <p class="fw-bold"><?= ($head) ? $report_title : $page->title; ?></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 nsm-card-content h-auto grid-mb" id="tbl_print_accounts_modal">
-                            <div class="nsm-card-footer text-center">
-                                <?php  if($foot){?>
-                                <p class="m-0"><?= $date_prepared ?> <?= $time_prepared ?></p>
-                                <?php }else{?>
-                                <p><?= date("l, F j, Y h:i A eP") ?></p>
-                                <?php } ?>
+<!-- START: ADD NOTES MODAL -->
+<div class="modal" id="ADD_NOTES_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Add Notes</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <div class="form-group">
+                                <h6>Notes</h6>
+                                <textarea class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
-                </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-end">
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="nsm-button primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
 </div>
+<!-- END: ADD NOTES MODAL -->
+
+<!-- START: PRINT/SAVE MODAL -->
+<div class="modal" id="PRINT_SAVE_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg" style="max-width: 1120px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-3 mt-1 mb-3">
+                            <h6>Report print settings</h6>
+                            <div class="form-group mb-3">
+                                <label>Orientation</label>
+                                <select class="form-control">
+                                    <option value="Portrait" selected>Portrait</option>
+                                    <option value="Landscape">Landscape</option>
+                                </select>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                              <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <iframe src="https://www.africau.edu/images/default/sample.pdf" width="100%" height="300px"></iframe>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="button" class="nsm-button">Save as PDF</button>
+                                <button onclick="PRINT_TABLE();" type="button" class="nsm-button success">Print</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: PRINT/SAVE MODAL -->
+<!-- START: EMAIL REPORT MODAL -->
+<div class="modal" id="EMAIL_REPORT_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <div class="form-group">
+                                <h6>To</h6>
+                                <input class="form-control" type="email" placeholder="Send to (email)">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <div class="form-group">
+                                <h6>CC</h6>
+                                <input class="form-control" type="email" placeholder="Carbon Copy (email)">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <div class="form-group">
+                                <h6>Subject</h6>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <div class="form-group">
+                                <h6>Body</h6>
+                                <textarea class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <div class="form-group">
+                                <h6>Report <small class="text-muted">(ReportFileName.pdf)</small></h6>
+                                <div class="input-group">
+                                    <input class="form-control" type="text" value="Customer Contact List Report">
+                                    <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="button" class="nsm-button success">Send</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: EMAIL REPORT MODAL -->
+<!-- END: MODALS -->
+
+
 <?php include viewPath('v2/includes/reports/reports_modals'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
-$(function() {
    var CUSTOMER_CONTACT_LIST_TABLE = $('#CUSTOMER_CONTACT_LIST').DataTable({
         "ordering" : false,
-        paging: false,
-        language: {
-            processing: '<span>Fetching data...</span>'
-        },
+        // paging: false,
+        "ajax": "<?php echo base_url('accounting_controllers/reports/getCustomerContactList'); ?>",
+        "columns": [
+            { "data": "CUSTOMER" },
+            { "data": "PHONE_NUMBER" },
+            { "data": "EMAIL" },
+            { "data": "BILLING_ADDRESS" },
+            { "data": "SHIPPING_ADDRESS" },
+        ], 
+        // language: {
+        //     processing: '<span>Fetching data...</span>'
+        // },
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ],
     });
-     $("#CUSTOMER_SEARCH_BAR").keyup(function() {
-        CUSTOMER_CONTACT_LIST_TABLE.search($(this).val()).draw()
-    });
-    CUSTOMER_CONTACT_LIST_TABLE_SETTINGS = CUSTOMER_CONTACT_LIST_TABLE.settings(); 
-});
+    TABLE_SETTINGS = CUSTOMER_CONTACT_LIST_TABLE.settings(); 
     
-
-
+function PRINT_TABLE() {
+    TABLE_SETTINGS[0]._iDisplayLength = 9999999999;
+    CUSTOMER_CONTACT_LIST_TABLE.draw();
+    var filename = "[<?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?>] Customer Contact List";
+    var tab = document.getElementById('CUSTOMER_CONTACT_LIST');
+    var style = "<style>";
+    style = style + "table {width: 100%;}";
+    style = style + "* {font-family: arial;}";
+    style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse; padding: 3px 5px;text-align: left;}";
+    style = style + "</style>";
+    var win = window.open('', '', 'height=650,width=1000');
+    // win.document.write("<img style='position: absolute; top: 6px; right: 5px; width: 28%;' src='../files/image/IMAGE_FILE_HERE.png'>");
+    win.document.write("<h2><strong><?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?></strong></h2>");
+    win.document.write("<h4 style='margin: -20px 0px 15px 0px; font-weight: normal;'>Customer Contact List</h4>");
+    win.document.write(tab.outerHTML);
+    win.document.write(style);
+    win.document.write("<style>#CUSTOMER_CONTACT_LIST>tbody>tr>td{font-size: 12px;} #CUSTOMER_CONTACT_LIST>thead>tr>th{font-size: 10px;}table{width: 100% !important}.avatar {width: 34px;min-width: 34px;height: 34px;}</style>");
+    win.document.title = filename;
+    setTimeout(function() {
+        win.print();
+        win.close();
+    }, 1000);
+    TABLE_SETTINGS[0]._iDisplayLength = 10;
+    CUSTOMER_CONTACT_LIST_TABLE.draw();
+}
+    
 
 
 var expanded = false;
@@ -770,24 +532,24 @@ var expanded = false;
 // })
 
 $(document).ready(function () {  
-    fetch('<?= base_url('accounting_controllers/reports/getCustomerContactList') ?>', {
+    // fetch('<?php echo base_url('accounting_controllers/reports/getCustomerContactList') ?>', {
 
-    }).then(response => response.json()).then(response => {
-        console.log(response);
-        var {success, acs_profile} = response;
-        if(success){
-            $('#def_head').append(
-                '<tr><td>Customer</td><td>Phone Numbers</td><td>Email</td><td>Billing Address</td><td>Shipping Address</td></tr>'
-            )
-            for(var x=0; x<acs_profile.length; x++){
-                $('#def_body').append(
-                    '<tr><td>'+acs_profile[x].first_name+' '+acs_profile[x].last_name+'</td><td>'+acs_profile[x].phone_h+'</td><td>'+acs_profile[x].email+'</td><td>'+acs_profile[x].city+', '+acs_profile[x].state+', '+acs_profile[x].zip_code+'</td><td>'+acs_profile[x].mail_add+'</td></tr>'
-                )
-            }
-        }
-    }).catch((error) => {
-        console.log(error);
-    })
+    // }).then(response => response.json()).then(response => {
+    //     console.log(response);
+    //     var {success, acs_profile} = response;
+    //     if(success){
+    //         $('#def_head').append(
+    //             '<tr><td>Customer</td><td>Phone Numbers</td><td>Email</td><td>Billing Address</td><td>Shipping Address</td></tr>'
+    //         )
+    //         for(var x=0; x<acs_profile.length; x++){
+    //             $('#def_body').append(
+    //                 '<tr><td>'+acs_profile[x].first_name+' '+acs_profile[x].last_name+'</td><td>'+acs_profile[x].phone_h+'</td><td>'+acs_profile[x].email+'</td><td>'+acs_profile[x].city+', '+acs_profile[x].state+', '+acs_profile[x].zip_code+'</td><td>'+acs_profile[x].mail_add+'</td></tr>'
+    //             )
+    //         }
+    //     }
+    // }).catch((error) => {
+    //     console.log(error);
+    // })
 
     $('#runReport').submit(function(e){
         e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -829,7 +591,7 @@ $(document).ready(function () {
         formData.append('billingColText', JSON.stringify(billingColText));
         formData.append('customerColText', JSON.stringify(customerColText));
 
-        fetch('<?= base_url('accounting_controllers/reports/getCustomerContactList') ?>',{
+        fetch('<?php echo base_url('accounting_controllers/reports/getCustomerContactList') ?>',{
             method: 'POST',
             body: formData
         }).then(response => response.json()).then(response => {
@@ -910,7 +672,7 @@ $(document).ready(function () {
         const formData = new FormData();
         formData.append('headers', JSON.stringify(header));
         formData.append('customerDatas', JSON.stringify(customerData));
-        fetch('<?= base_url('accounting_controllers/reports/export_report') ?>', {
+        fetch('<?php echo base_url('accounting_controllers/reports/export_report') ?>', {
                 method: 'POST',
                 body: formData,
             }) .then(response => response.json() ).then(response => {
