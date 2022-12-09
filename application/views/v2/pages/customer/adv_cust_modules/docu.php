@@ -166,6 +166,36 @@
                     </template>
                 </div>
 
+                <?php if (!empty($esign_documents)): ?>
+                    <div class="upload-wrapper">
+                    <h6>Generated eSigns</h6>
+
+                    <?php foreach ($esign_documents as $esign_document): ?>
+                        <div class="col-12" data-document-type="esign">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-12 col-md-6 position-relative">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input" type="checkbox" id="esign<?= $esign_document['id']; ?>">
+                                        <label class="form-check-label" for="esign<?= $esign_document['id']; ?>">
+                                            <?= $esign_document['label']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 text-end buttons has-document">
+                                    <button type="button" class="nsm-button btn-sm" data-action="download">
+                                        Download
+                                    </button>
+
+                                    <button type="button" class="nsm-button btn-sm" data-action="view_esign" data-id="<?= $esign_document['docfile_id']; ?>">
+                                        View details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
                 <div class="col-12 col-md-4">
                     <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
                         <i class='bx bx-fw bx-list-minus'></i> Customize List
@@ -338,6 +368,46 @@
                 </div>
             </div>
         </template>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="viewesigndocumentdetails">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-center esign-loader" style="padding: 4rem 0;">
+            <div class="spinner-border" role="status"></div>
+        </div>
+
+        <div class="esign-content">
+            <div>
+                <div class="content-title">Recipients</div>
+                <div class="esign-recipients"></div>
+            </div>
+
+            <br/>
+
+            <div>
+                <div class="content-title">Created at</div>
+                <div class="esign-created-at"></div>
+            </div>
+
+            <br/>
+
+            <div>
+                <div class="content-title">Signing link</div>
+                <a class="esign-link" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;" target="_blank"></a>
+            </div>
+        </div>
       </div>
     </div>
   </div>

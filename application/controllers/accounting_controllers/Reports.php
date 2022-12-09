@@ -579,11 +579,8 @@ class Reports extends MY_Controller {
                 'company_id' => logged('company_id')
             )
         );
-
         $REQUEST_DATA = $this->general_model->get_data_with_param($DATA);
-
-        // STORE REQUESTED DATA INTO PHP SESSION (FOR EFFICIENT PASSING OF DATA INTO ANOTHER FILE)
-        $this->session->set_userdata('REPORTS_GETCUSTOMERCONTACTLIST', $REQUEST_DATA);
+        echo '{ "data":'.json_encode($REQUEST_DATA).'}';
     }
 
     public function EstimatesInvoiceByCustomer(){   

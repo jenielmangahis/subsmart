@@ -1320,60 +1320,59 @@ class Chart_of_accounts extends MY_Controller {
                     $register['account_field'] = $account['field_name'];
                 }
 
-                if(!isset($child)) {
-                    switch($accType) {
-                        case 'Credit Card' :
-                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['payment'] = '';
-                            $register['charge_disabled'] = $count > 1;
-                            $register['payment_disabled'] = true;
-                        break;
-                        case 'Asset' :
-                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['decrease'] = '';
-                            $register['increase_disabled'] = $count > 1;
-                            $register['decrease_disabled'] = true;
-                        break;
-                        case 'Liability' :
-                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['decrease'] = '';
-                            $register['increase_disabled'] = $count > 1;
-                            $register['decrease_disabled'] = true;
-                        break;
-                        default :
+                switch($accType) {
+                    case 'Credit Card' :
+                        if($transaction->type === 'increase') {
                             $register['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['deposit'] = '';
+                            $register['charge'] = "";
                             $register['payment_disabled'] = $count > 1;
-                            $register['deposit_disabled'] = true;
-                        break;
-                    }
-                } else {
-                    switch($accType) {
-                        case 'Credit Card' :
-                            $register['charge'] = '';
-                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
                             $register['charge_disabled'] = true;
-                            $register['payment_disabled'] = $count > 1;
-                        break;
-                        case 'Asset' :
-                            $register['increase'] = '';
-                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['increase_disabled'] = true;
-                            $register['decrease_disabled'] = $count > 1;
-                        break;
-                        case 'Liability' :
-                            $register['increase'] = '';
-                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['increase_disabled'] = true;
-                            $register['decrease_disabled'] = $count > 1;
-                        break;
-                        default :
-                            $register['payment'] = '';
-                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                        } else {
+                            $register['payment'] = "";
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
                             $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = $count > 1;
+                        }
+                    break;
+                    case 'Asset' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
+                    break;
+                    case 'Liability' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
+                    break;
+                    default :
+                        if($transaction->type === 'increase') {
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = "";
                             $register['deposit_disabled'] = $count > 1;
-                        break;
-                    }
+                            $register['payment_disabled'] = true;
+                        } else {
+                            $register['deposit'] = "";
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
+                        }
+                    break;
                 }
             } else {
                 $register = [
@@ -1720,28 +1719,56 @@ class Chart_of_accounts extends MY_Controller {
     
                 switch($accType) {
                     case 'Credit Card' :
-                        $register['charge'] = "";
-                        $register['payment'] = number_format(floatval($amount), 2, '.', ',');
-                        $register['charge_disabled'] = true;
-                        $register['payment_disabled'] = $count > 1;
+                        if($transaction->type === 'increase') {
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['charge'] = "";
+                            $register['payment_disabled'] = $count > 1;
+                            $register['charge_disabled'] = true;
+                        } else {
+                            $register['payment'] = "";
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = $count > 1;
+                        }
                     break;
                     case 'Asset' :
-                        $register['decrease'] = "";
-                        $register['increase'] = number_format(floatval($amount), 2, '.', ',');
-                        $register['decrease_disabled'] = true;
-                        $register['increase_disabled'] = $count > 1;
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
                     break;
                     case 'Liability' :
-                        $register['increase'] = "";
-                        $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                        $register['increase_disabled'] = true;
-                        $register['decrease_disabled'] = $count > 1;
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
                     break;
                     default :
-                        $register['payment'] = "";
-                        $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
-                        $register['payment_disabled'] = true;
-                        $register['deposit_disabled'] = $count > 1;
+                        if($transaction->type === 'increase') {
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = "";
+                            $register['deposit_disabled'] = $count > 1;
+                            $register['payment_disabled'] = true;
+                        } else {
+                            $register['deposit'] = "";
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
+                        }
                     break;
                 }
             } else {
@@ -3017,60 +3044,59 @@ class Chart_of_accounts extends MY_Controller {
                     $register['account_field'] = $account['field_name'];
                 }
 
-                if(!isset($child)) {
-                    switch($accType) {
-                        case 'Credit Card' :
-                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['payment'] = '';
-                            $register['charge_disabled'] = $count > 1;
-                            $register['payment_disabled'] = true;
-                        break;
-                        case 'Asset' :
-                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['decrease'] = '';
-                            $register['increase_disabled'] = $count > 1;
-                            $register['decrease_disabled'] = true;
-                        break;
-                        case 'Liability' :
-                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['decrease'] = '';
-                            $register['increase_disabled'] = $count > 1;
-                            $register['decrease_disabled'] = true;
-                        break;
-                        default :
+                switch($accType) {
+                    case 'Credit Card' :
+                        if($transaction->type === 'increase') {
                             $register['payment'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['deposit'] = '';
+                            $register['charge'] = "";
                             $register['payment_disabled'] = $count > 1;
-                            $register['deposit_disabled'] = true;
-                        break;
-                    }
-                } else {
-                    switch($accType) {
-                        case 'Credit Card' :
-                            $register['charge'] = '';
-                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
                             $register['charge_disabled'] = true;
-                            $register['payment_disabled'] = $count > 1;
-                        break;
-                        case 'Asset' :
-                            $register['increase'] = '';
-                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['increase_disabled'] = true;
-                            $register['decrease_disabled'] = $count > 1;
-                        break;
-                        case 'Liability' :
-                            $register['increase'] = '';
-                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
-                            $register['increase_disabled'] = true;
-                            $register['decrease_disabled'] = $count > 1;
-                        break;
-                        default :
-                            $register['payment'] = '';
-                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                        } else {
+                            $register['payment'] = "";
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
                             $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = $count > 1;
+                        }
+                    break;
+                    case 'Asset' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
+                    break;
+                    case 'Liability' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = $count > 1;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = $count > 1;
+                        }
+                    break;
+                    default :
+                        if($transaction->type === 'increase') {
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = "";
                             $register['deposit_disabled'] = $count > 1;
-                        break;
-                    }
+                            $register['payment_disabled'] = true;
+                        } else {
+                            $register['deposit'] = "";
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
+                        }
+                    break;
                 }
             } else {
                 $register = [

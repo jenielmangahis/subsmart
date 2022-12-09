@@ -9,6 +9,7 @@ const actions = {
   upload: onClickUpload,
   download: onClickDownload,
   delete: onClickDelete,
+  view_esign: onClickViewEsign,
 };
 
 $buttons.forEach(($button) => {
@@ -55,6 +56,61 @@ async function onClickDelete() {
     $deleteBtn.textContent = prevText;
     $deleteBtn.removeAttribute("disabled");
   }
+}
+
+async function onClickViewEsign() {
+  const DATE_FORMAT = "MM/DD/YYYY hh:mm A";
+
+  const $modal = document.getElementById("viewesigndocumentdetails");
+  const $title = $modal.querySelector(".modal-title");
+  const $loader = $modal.querySelector(".esign-loader");
+  const $content = $modal.querySelector(".esign-content");
+
+  $title.textContent = "";
+  $loader.classList.remove("d-none");
+  $content.classList.add("d-none");
+  $($modal).modal("show");
+
+  const esignId = this.dataset.id;
+  const { data } = await api.getEsignDetails(esignId);
+
+  $title.textContent = data.name;
+
+  const $recipients = $modal.querySelector(".esign-recipients");
+  $recipients.innerHTML = "";
+  data.recipients.forEach((recipient) => {
+    const $item = document.createElement("div");
+    $item.classList.add("d-flex");
+    $item.classList.add("justify-content-between");
+    $item.classList.add("mb-1");
+
+    const $name = document.createElement("div");
+    $name.textContent = `${recipient.name} (${recipient.email})`;
+
+    const $completedAt = document.createElement("div");
+    $completedAt.classList.add("nsm-badge");
+    $completedAt.classList.add("success");
+    $completedAt.classList.add("d-flex");
+    $completedAt.classList.add("align-items-center");
+    $completedAt.textContent = moment(recipient.completed_at).format(
+      DATE_FORMAT
+    );
+
+    $item.appendChild($name);
+    $item.appendChild($completedAt);
+
+    $recipients.appendChild($item);
+  });
+
+  const $createdAt = $modal.querySelector(".esign-created-at");
+  $createdAt.textContent = moment(data.created_at).format(DATE_FORMAT);
+
+  const $link = $modal.querySelector(".esign-link");
+  $link.textContent = data.signing_url;
+  $link.setAttribute("href", data.signing_url);
+
+  $loader.classList.add("d-none");
+  $content.classList.remove("d-none");
 }
 
 $fileInput.addEventListener("change", async function () {

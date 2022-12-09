@@ -1115,7 +1115,7 @@ class Customer extends MY_Controller
 
             $this->db->where('customer_id', $id);
             $this->page_data['customer_documents'] = $this->db->get('acs_customer_documents')->result_array();
-
+            $this->page_data['esign_documents'] = $this->db->get('user_docfile_generated_pdfs')->result_array();
         }else{
             redirect(base_url('customer/'));
         }
