@@ -139,6 +139,7 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('Job_tags_model');
         $this->load->model('GoogleAccounts_model');
         $this->load->model('Users_model');
+        $this->load->model('CalendarSettings_model');
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
 
@@ -224,7 +225,7 @@ class Cron_Api extends MYF_Controller {
                         $is_valid = true;
                     }
                     break;
-                case 'ticket':
+                case 'service_ticket':
                     $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->object_id, $gs->company_id);
                     if( $ticket ){
                         if( $ticket->job_tag != '' ){
@@ -326,38 +327,75 @@ class Cron_Api extends MYF_Controller {
                 $googleAccount      = $this->GoogleAccounts_model->getByCompanyId($gs->company_id);
                 $google_credentials = google_credentials();
 
-                $capi = new GoogleCalendarApi();
-                $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
-                if( $data['access_token'] ){
-                    $reminders = [
-                        'useDefault' => "FALSE",
-                        'overrides' => [
-                            ['method' => 'email', 'minutes' => 24 * 60],
-                            ['method' => 'popup', 'minutes' => 5]
-                        ]
-                    ];
-                    $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
-                                        
-                    if( $googleAccount->auto_sync_calendar_id != ''){
-                        $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
-                    }else{
-                        $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);    
-                    }
+                if( $googleAccount ){
+                    $capi = new GoogleCalendarApi();
+                    $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
+                    if( $data['access_token'] ){
+                        $settings = $this->CalendarSettings_model->getByCompanyId($company_id); 
+                        if( $settings ){
+                            $email_minutes = 1440;//1day
+                            if( $settings->google_calendar_email_notification != '' ){
+                                $eNotif = explode(" " , $settings->google_calendar_email_notification);
+                                if( isset($eNotif[0]) ){
+                                    $email_minutes = $eNotif[0];
+                                }
+                            }
 
-                    $googleSyncData = [
-                        'is_sync' => 1,
-                        'error_msg' => '',
-                        'date_sync' => date("Y-m-d H:i:s")
-                    ];
+                            $popup_minutes = 5;
+                            if( $settings->google_calendar_popup_notification != '' ){
+                                $pNotif = explode(" " , $settings->google_calendar_popup_notification);
+                                if( isset($pNotif[0]) ){
+                                    $popup_minutes = $pNotif[0];
+                                }
+                            }
+                            $reminders = [
+                                'useDefault' => "FALSE",
+                                'overrides' => [
+                                    ['method' => 'email', 'minutes' => $email_minutes],
+                                    ['method' => 'popup', 'minutes' => $popup_minutes]
+                                ]
+                            ];
+                        }else{
+                            $reminders = [
+                                'useDefault' => "FALSE",
+                                'overrides' => [
+                                    ['method' => 'email', 'minutes' => 24 * 60],
+                                    ['method' => 'popup', 'minutes' => 5]
+                                ]
+                            ];    
+                        }
+
+                        $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
+                                            
+                        if( $googleAccount->auto_sync_calendar_id != ''){
+                            $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
+                        }else{
+                            $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);    
+                        }
+
+                        $googleSyncData = [
+                            'is_sync' => 1,
+                            'error_msg' => '',
+                            'date_sync' => date("Y-m-d H:i:s")
+                        ];
+                    }else{
+                        $googleSyncData = [
+                            'is_sync' => 0,
+                            'error_msg' => 'Cannot find valid google account',
+                            'date_sync' => date("Y-m-d H:i:s")
+                        ];
+                    }  
+
+                    $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
                 }else{
                     $googleSyncData = [
                         'is_sync' => 0,
                         'error_msg' => 'Cannot find valid google account',
                         'date_sync' => date("Y-m-d H:i:s")
                     ];
-                }  
 
-                $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
+                    $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
+                }                
             }
         }
     }
