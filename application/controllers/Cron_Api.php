@@ -4,10 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_Api extends MYF_Controller {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
     public function createAdtSalesPortalProjects()
     {
@@ -142,12 +142,12 @@ class Cron_Api extends MYF_Controller {
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
 
-        foreach($googleSync as $gs){
+        foreach($googleSync as $gs){            
             $is_valid   = false;
             switch ($gs->module_name) {
-                case 'appointment':
-                    $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->module_id, $gs->company_id);
-                    if( $appointment ){
+                case 'appointment':                
+                    $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->object_id, $gs->company_id);
+                    if( $appointment ){               
                         $tags = '---';
                         if( $appointment->tag_ids != '' ){
                             $a_tags = explode(",", $appointment->tag_ids);     
@@ -178,12 +178,20 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
+
+                        $description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
+                        $description .= "<span>Phone Number : ".$appointment->cust_phone."</span><br />";   
+                        $description .= "<span>URL : ".$appointment->url_link."</span><br />";                    
+                        $description .= "<span>Location : " . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
+                        $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+
                         $is_valid = true;
 
                     }
                     break;
                 case 'event':
-                    $event = $this->Event_model->get_specific_event($gs->module_id);
+                    $event = $this->Event_model->get_specific_event($gs->object_id);
                     if( $event ){
                         if( $event->event_tag != '' ){
                             $tags = $event->event_tag;
@@ -207,11 +215,17 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $event->event_address;    
+
+                        $description  = "<span><b>Event Type : ".$event->event_type."</b></span><br />";
+                        $description .= "<span>" . $event->event_address . "</span><br />";
+                        $description  = "<span>Event Description : ".$event->event_description."</span><br />";
+
                         $is_valid = true;
                     }
                     break;
                 case 'ticket':
-                    $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->module_id, $gs->company_id);
+                    $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->object_id, $gs->company_id);
                     if( $ticket ){
                         if( $ticket->job_tag != '' ){
                             $tags = $ticket->job_tag;
@@ -239,11 +253,18 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
+
+                        $description  = "<span><b>Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."</b></span><br />";
+                        $description .= "<span>Phone Number : ".$ticket->phone_m."</span><br />";                  
+                        $description .= "<span>Service Location : " . $ticket->service_location . "</span><br />";
+                        $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+
                         $is_valid = true;
                     }
                     break;
                 case 'job':
-                    $job = $this->Jobs_model->get_specific_job($gs->module_id);
+                    $job = $this->Jobs_model->get_specific_job($gs->object_id);
                     if( $job ){
                         if( $job->tags != '' ){
                             $tags = $j->tags;
@@ -287,6 +308,13 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
+
+                        $description  = "<span><b>Customer Name : ".$job->first_name . ' ' . $job->last_name."</b></span><br />";
+                        $description .= "<span>Job Type : ".$job->job_type."</span><br />";                
+                        $description .= "<span>Phone Number : ".$job->cust_phone."</span><br />";                
+                        $description .= "<span>Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "</span><br />";
+
                         $is_valid = true;
                     }
                     break;
@@ -301,12 +329,19 @@ class Cron_Api extends MYF_Controller {
                 $capi = new GoogleCalendarApi();
                 $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
                 if( $data['access_token'] ){
+                    $reminders = [
+                        'useDefault' => "FALSE",
+                        'overrides' => [
+                            ['method' => 'email', 'minutes' => 24 * 60],
+                            ['method' => 'popup', 'minutes' => 5]
+                        ]
+                    ];
                     $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                                         
                     if( $googleAccount->auto_sync_calendar_id != ''){
-                        $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);
+                        $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
                     }else{
-                        $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);    
+                        $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);    
                     }
 
                     $googleSyncData = [
@@ -326,9 +361,6 @@ class Cron_Api extends MYF_Controller {
             }
         }
     }
-
-    public function unserializeData()
-    {
-
-    }
+        
 }
+
