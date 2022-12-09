@@ -4,10 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_Api extends MYF_Controller {
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function createAdtSalesPortalProjects()
     {
@@ -138,7 +138,7 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('EventTags_model');
         $this->load->model('Job_tags_model');
         $this->load->model('GoogleAccounts_model');
-
+        $this->load->model('Users_model');
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
 
@@ -332,4 +332,3 @@ class Cron_Api extends MYF_Controller {
 
     }
 }
-
