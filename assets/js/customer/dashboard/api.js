@@ -99,6 +99,10 @@ export function sendWelcomeEmail(payload) {
   return http.post(`${prefixURL}/customer/send_welcome_email`, payload);
 }
 
+export function getEsignDetails(id) {
+  return http.get(`${prefixURL}/DocuSign/apiGetEsignDetails/${id}`);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

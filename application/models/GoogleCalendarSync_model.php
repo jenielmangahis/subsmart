@@ -31,9 +31,21 @@ class GoogleCalendarSync_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-
-        $this->db->where('user_id', $user_id);
         $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByModuleIdAndModuleName($module_id, $module_name)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('module_id', $module_id);
+        $this->db->where('module_name', $module_name);
 
         $query = $this->db->get()->row();
         return $query;

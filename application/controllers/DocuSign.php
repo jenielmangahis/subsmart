@@ -1933,6 +1933,16 @@ SQL;
         ]);
     }
 
+    private function getGeneratedPDFUploadPath()
+    {
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'docusigngeneratedpdfs']) . DIRECTORY_SEPARATOR);
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+
+        return $filePath;
+    }
+
     public function generatePDF($documentId)
     {
 
@@ -1947,12 +1957,35 @@ SQL;
             return;
         }
 
+        require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
+        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+
+        $this->db->where('docfile_id', $document->id);
+        $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
+
+        if ($generatedPDF) {
+            $generatedPDFPath = FCPATH . ltrim($generatedPDF->path, '/');
+
+            if (file_exists($generatedPDFPath)) {
+                $pdf = new FPDI('P', 'px');
+                $pageCount = $pdf->setSourceFile($generatedPDFPath);
+
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    $pageIndex = $pdf->importPage($pageNo);
+                    $pdf->AddPage();
+                    $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+                }
+
+                return $pdf->Output(null, 'S');
+            } else {
+                $this->db->where('id', $generatedPDF->id);
+                $this->db->delete('user_docfile_generated_pdfs');
+            }
+        }
+
         $this->db->where('docfile_id', $document->id);
         $this->db->order_by('id', 'ASC');
         $files = $this->db->get('user_docfile_documents')->result();
-
-        require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
-        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
 
         $this->db->where('docfile_id', $document->id);
         $fields = $this->db->get('user_docfile_fields')->result();
@@ -2180,12 +2213,44 @@ SQL;
             }
         }
 
-        // echo '<pre>';
-        // print_r($fields);
-        // echo '</pre>';
+        $uploadPath = $this->getGeneratedPDFUploadPath();
+        $fileName = uniqid($document->id . rand(1, 9999999)) . '.pdf';
+        $uploadFilePath = $uploadPath . $fileName;
 
-        $result = $pdf->Output(null, 'S');
-        return $result;
+        $this->db->insert('user_docfile_generated_pdfs', [
+            'path' => str_replace(FCPATH, '/', $uploadFilePath),
+            'docfile_id' => $document->id,
+            'label' => $document->name
+        ]);
+
+        $pdf->Output($uploadFilePath, 'F');
+        return $pdf->Output(null, 'S');
+    }
+
+    public function apiGetEsignDetails($documentId)
+    {
+        $this->db->where('id', $documentId);
+        $document = $this->db->get('user_docfile')->row();
+
+        if (is_null($document)) {
+            header('content-type: application/json');
+            exit(json_encode(['data' => null]));
+        }
+
+        $this->db->where('docfile_id', $document->id);
+        $document->recipients = $this->db->get('user_docfile_recipients')->result();
+
+
+        $lastRecipient = end(array_values($document->recipients));
+        $message = json_encode([
+            'recipient_id' => $lastRecipient->id,
+            'document_id' => $document->id,
+        ]);
+
+        $hash = encrypt($message, $this->password);
+        $document->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
+
+        exit(json_encode(['data' => $document]));
     }
 }
 
