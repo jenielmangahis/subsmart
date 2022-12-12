@@ -174,15 +174,15 @@
                         <div class="col-12" data-document-type="esign">
                             <div class="row g-2 align-items-center">
                                 <div class="col-12 col-md-6 position-relative">
-                                    <div class="form-check d-inline-block">
-                                        <input class="form-check-input" type="checkbox" id="esign<?= $esign_document['id']; ?>">
+                                    <div class="form-check d-inline-block" style="padding: 0;">
+                                        <input class="form-check-input d-none" type="checkbox" id="esign<?= $esign_document['id']; ?>">
                                         <label class="form-check-label" for="esign<?= $esign_document['id']; ?>">
                                             <?= $esign_document['label']; ?>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 text-end buttons has-document">
-                                    <button type="button" class="nsm-button btn-sm" data-action="download">
+                                    <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $esign_document['docfile_id']; ?>">
                                         Download
                                     </button>
 
@@ -407,6 +407,13 @@
                 <div class="content-title">Signing link</div>
                 <a class="esign-link" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;" target="_blank"></a>
             </div>
+
+            <br/>
+
+            <a target="_blank" class="nsm-button primary esign-download" style="margin: 0; display:inline-flex; align-items:center; cursor: pointer;">
+                <i class="bx bxs-download" style="margin-right: 3px;"></i>
+                Download PDF
+            </a>
         </div>
       </div>
     </div>
