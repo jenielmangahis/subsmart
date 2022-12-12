@@ -173,7 +173,8 @@ class CustomerDashboardQuickActions extends MY_Controller
         return $this->db->get('acs_dashboard_quick_actions')->result();
     }
 
-    function list() {
+    function list()
+    {
         $this->respond(['data' => $this->getSavedActions()]);
     }
 
@@ -351,62 +352,77 @@ class CustomerDashboardQuickActions extends MY_Controller
         $customerId = $this->input->get('customer_id', true);
         $documentTypes = explode(',', $this->input->get('document_type', true));
 
-        $this->db->where('customer_id', $customerId);
-        $this->db->where('file_name IS NOT NULL', null, false);
-        $this->db->where('file_name <>', "''", false);
-        $this->db->where_in('document_type', $documentTypes);
-        $documents = $this->db->get('acs_customer_documents')->result();
+        if (in_array('esign', $documentTypes)) {
+            $id = $this->input->get('generated_esign_id', true);
+            $this->db->where('docfile_id', $id);
+            $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
+            $generatedPDFPath = FCPATH . ltrim($generatedPDF->path, '/');
 
-        $file = null;
-        $fileName = null;
-        $isZipArchive = false;
-
-        if (count($documents) === 1) {
-            $document = $documents[0];
-            if (!$document->file_name || !file_exists($filePath . $document->file_name)) {
+            if (!file_exists($generatedPDFPath)) {
                 show_404();
             }
 
-            $file = $filePath . $document->file_name;
-            $fileName = $document->document_type . '_' . $document->file_name;
-
+            $file = $generatedPDFPath;
+            $fileName = explode('/', $generatedPDF->path);
+            $fileName = 'esign_' . end(array_values($fileName));
         } else {
-            $fileName = uniqid() . '.zip';
-            $file = $fileName;
-            $isZipArchive = true;
-            $isEmpty = true;
+            $this->db->where('customer_id', $customerId);
+            $this->db->where('file_name IS NOT NULL', null, false);
+            $this->db->where('file_name <>', "''", false);
+            $this->db->where_in('document_type', $documentTypes);
+            $documents = $this->db->get('acs_customer_documents')->result();
 
-            $zip = new ZipArchive;
-            $zip->open($fileName, ZipArchive::CREATE);
+            $file = null;
+            $fileName = null;
+            $isZipArchive = false;
 
-            foreach ($documents as $document) {
-                $path = $filePath . $document->file_name;
-                $name = $document->document_type . '_' . $document->file_name;
-
-                if ($document->file_name && file_exists($path)) {
-                    $isEmpty = false;
-                    $zip->addFile($path, $name);
+            if (count($documents) === 1) {
+                $document = $documents[0];
+                if (!$document->file_name || !file_exists($filePath . $document->file_name)) {
+                    show_404();
                 }
-            }
 
-            $zip->close();
+                $file = $filePath . $document->file_name;
+                $fileName = $document->document_type . '_' . $document->file_name;
+            } else {
+                $fileName = uniqid() . '.zip';
+                $file = $fileName;
+                $isZipArchive = true;
+                $isEmpty = true;
 
-            if ($isEmpty) {
-                show_404();
+                $zip = new ZipArchive;
+                $zip->open($fileName, ZipArchive::CREATE);
+
+                foreach ($documents as $document) {
+                    $path = $filePath . $document->file_name;
+                    $name = $document->document_type . '_' . $document->file_name;
+
+                    if ($document->file_name && file_exists($path)) {
+                        $isEmpty = false;
+                        $zip->addFile($path, $name);
+                    }
+                }
+
+                $zip->close();
+
+                if ($isEmpty) {
+                    show_404();
+                }
             }
         }
 
         if ($isZipArchive) {
             header('Content-Type: application/zip');
             header('Content-Length: ' . filesize($file));
-
         } else {
             header('Content-type: application/octet-stream');
             header('Content-Type: ' . mime_content_type($file));
         }
 
         header('Content-Disposition: attachment; filename=' . $fileName);
-        while (ob_get_level()) {ob_end_clean();}
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
         readfile($file);
 
         if ($isZipArchive && file_exists($fileName)) {

@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item" style="display:none;">
                 <h2 class="accordion-header">
                     <button class="accordion-button content-title collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#calendars" aria-expanded="false" aria-controls="calendars">
                         <i class='bx bxs-calendar drawer-icon'></i> Calendar Events

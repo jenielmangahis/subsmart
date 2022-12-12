@@ -138,16 +138,17 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('EventTags_model');
         $this->load->model('Job_tags_model');
         $this->load->model('GoogleAccounts_model');
-
+        $this->load->model('Users_model');
+        $this->load->model('CalendarSettings_model');
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
 
-        foreach($googleSync as $gs){
+        foreach($googleSync as $gs){            
             $is_valid   = false;
             switch ($gs->module_name) {
-                case 'appointment':
-                    $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->module_id, $gs->company_id);
-                    if( $appointment ){
+                case 'appointment':                
+                    $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->object_id, $gs->company_id);
+                    if( $appointment ){               
                         $tags = '---';
                         if( $appointment->tag_ids != '' ){
                             $a_tags = explode(",", $appointment->tag_ids);     
@@ -178,12 +179,20 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
+
+                        $description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
+                        $description .= "<span>Phone Number : ".$appointment->cust_phone."</span><br />";   
+                        $description .= "<span>URL : ".$appointment->url_link."</span><br />";                    
+                        $description .= "<span>Location : " . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
+                        $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+
                         $is_valid = true;
 
                     }
                     break;
                 case 'event':
-                    $event = $this->Event_model->get_specific_event($gs->module_id);
+                    $event = $this->Event_model->get_specific_event($gs->object_id);
                     if( $event ){
                         if( $event->event_tag != '' ){
                             $tags = $event->event_tag;
@@ -207,11 +216,17 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $event->event_address;    
+
+                        $description  = "<span><b>Event Type : ".$event->event_type."</b></span><br />";
+                        $description .= "<span>" . $event->event_address . "</span><br />";
+                        $description  = "<span>Event Description : ".$event->event_description."</span><br />";
+
                         $is_valid = true;
                     }
                     break;
-                case 'ticket':
-                    $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->module_id, $gs->company_id);
+                case 'service_ticket':
+                    $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->object_id, $gs->company_id);
                     if( $ticket ){
                         if( $ticket->job_tag != '' ){
                             $tags = $ticket->job_tag;
@@ -239,11 +254,18 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
+
+                        $description  = "<span><b>Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."</b></span><br />";
+                        $description .= "<span>Phone Number : ".$ticket->phone_m."</span><br />";                  
+                        $description .= "<span>Service Location : " . $ticket->service_location . "</span><br />";
+                        $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+
                         $is_valid = true;
                     }
                     break;
                 case 'job':
-                    $job = $this->Jobs_model->get_specific_job($gs->module_id);
+                    $job = $this->Jobs_model->get_specific_job($gs->object_id);
                     if( $job ){
                         if( $job->tags != '' ){
                             $tags = $j->tags;
@@ -287,6 +309,13 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
+                        $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
+
+                        $description  = "<span><b>Customer Name : ".$job->first_name . ' ' . $job->last_name."</b></span><br />";
+                        $description .= "<span>Job Type : ".$job->job_type."</span><br />";                
+                        $description .= "<span>Phone Number : ".$job->cust_phone."</span><br />";                
+                        $description .= "<span>Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "</span><br />";
+
                         $is_valid = true;
                     }
                     break;
@@ -298,38 +327,78 @@ class Cron_Api extends MYF_Controller {
                 $googleAccount      = $this->GoogleAccounts_model->getByCompanyId($gs->company_id);
                 $google_credentials = google_credentials();
 
-                $capi = new GoogleCalendarApi();
-                $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
-                if( $data['access_token'] ){
-                    $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
-                                        
-                    if( $googleAccount->auto_sync_calendar_id != ''){
-                        $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);
-                    }else{
-                        $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $data['access_token']);    
-                    }
+                if( $googleAccount ){
+                    $capi = new GoogleCalendarApi();
+                    $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
+                    if( $data['access_token'] ){
+                        $settings = $this->CalendarSettings_model->getByCompanyId($company_id); 
+                        if( $settings ){
+                            $email_minutes = 1440;//1day
+                            if( $settings->google_calendar_email_notification != '' ){
+                                $eNotif = explode(" " , $settings->google_calendar_email_notification);
+                                if( isset($eNotif[0]) ){
+                                    $email_minutes = $eNotif[0];
+                                }
+                            }
 
-                    $googleSyncData = [
-                        'is_sync' => 1,
-                        'error_msg' => '',
-                        'date_sync' => date("Y-m-d H:i:s")
-                    ];
+                            $popup_minutes = 5;
+                            if( $settings->google_calendar_popup_notification != '' ){
+                                $pNotif = explode(" " , $settings->google_calendar_popup_notification);
+                                if( isset($pNotif[0]) ){
+                                    $popup_minutes = $pNotif[0];
+                                }
+                            }
+                            $reminders = [
+                                'useDefault' => "FALSE",
+                                'overrides' => [
+                                    ['method' => 'email', 'minutes' => $email_minutes],
+                                    ['method' => 'popup', 'minutes' => $popup_minutes]
+                                ]
+                            ];
+                        }else{
+                            $reminders = [
+                                'useDefault' => "FALSE",
+                                'overrides' => [
+                                    ['method' => 'email', 'minutes' => 24 * 60],
+                                    ['method' => 'popup', 'minutes' => 5]
+                                ]
+                            ];    
+                        }
+
+                        $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
+                                            
+                        if( $googleAccount->auto_sync_calendar_id != ''){
+                            $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
+                        }else{
+                            $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);    
+                        }
+
+                        $googleSyncData = [
+                            'is_sync' => 1,
+                            'error_msg' => '',
+                            'date_sync' => date("Y-m-d H:i:s")
+                        ];
+                    }else{
+                        $googleSyncData = [
+                            'is_sync' => 0,
+                            'error_msg' => 'Cannot find valid google account',
+                            'date_sync' => date("Y-m-d H:i:s")
+                        ];
+                    }  
+
+                    $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
                 }else{
                     $googleSyncData = [
                         'is_sync' => 0,
                         'error_msg' => 'Cannot find valid google account',
                         'date_sync' => date("Y-m-d H:i:s")
                     ];
-                }  
 
-                $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
+                    $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
+                }                
             }
         }
     }
-
-    public function unserializeData()
-    {
-
-    }
+        
 }
 
