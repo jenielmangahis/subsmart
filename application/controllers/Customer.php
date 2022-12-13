@@ -1115,7 +1115,7 @@ class Customer extends MY_Controller
 
             $this->db->where('customer_id', $id);
             $this->page_data['customer_documents'] = $this->db->get('acs_customer_documents')->result_array();
-            $this->page_data['esign_documents'] = $this->db->get('user_docfile_generated_pdfs')->result_array();
+            $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
         }else{
             redirect(base_url('customer/'));
         }
@@ -4537,6 +4537,7 @@ class Customer extends MY_Controller
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
@@ -6245,5 +6246,38 @@ class Customer extends MY_Controller
 
         $json_data = ['is_success' => $is_success];
         echo json_encode($json_data);
+    }
+
+    private function getCustomerGeneratedEsigns($customerId)
+    {
+        $this->db->select(['id']);
+        $this->db->where('customer_id', $customerId);
+        $customerJobs = $this->db->get('jobs')->result();
+        $jobIds = array_map(function ($item) { return $item->id; }, $customerJobs);
+
+        if (empty($jobIds)) {
+            return [];
+        }
+
+        $this->db->select(['user_docfile_recipient_id']);
+        $this->db->where_in('job_id', $jobIds);
+        $docfileRecipients = $this->db->get('user_docfile_job_recipients')->result();
+        $recipientIds = array_map(function ($item) { return $item->user_docfile_recipient_id; }, $docfileRecipients);
+
+        if (empty($recipientIds)) {
+            return [];
+        }
+
+        $this->db->select(['docfile_id']);
+        $this->db->where_in('id', $recipientIds);
+        $docfiles = $this->db->get('user_docfile_recipients')->result();
+        $docfileIds = array_map(function ($item) { return $item->docfile_id; }, $docfiles);
+
+        if (empty($docfileIds)) {
+            return [];
+        }
+
+        $this->db->where_in('docfile_id', $docfileIds);
+        return $this->db->get('user_docfile_generated_pdfs')->result_array();
     }
 }

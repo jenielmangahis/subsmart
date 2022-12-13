@@ -636,4 +636,16 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->row();
 	}
+
+	public function get_sales_of_product_income($companyId)
+	{
+		$this->db->select('accounting_chart_of_accounts.*');
+		$this->db->where('accounting_chart_of_accounts.company_id', $companyId);
+		$this->db->where('account.account_name', 'Income');
+		$this->db->where('account_detail.acc_detail_name', 'Sales of Product Income');
+		$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
+		$this->db->join('account_detail', 'account_detail.acc_detail_id = accounting_chart_of_accounts.acc_detail_id');
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }

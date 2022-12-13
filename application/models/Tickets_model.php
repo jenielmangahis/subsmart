@@ -29,6 +29,21 @@ class Tickets_model extends MY_Model
         return $query->result();
     }
 
+    public function getHeaders()
+    {
+        $company_id = logged('company_id');
+        
+        $where = array(
+            'company_id' => $company_id,
+        );
+
+        $this->db->select('*');
+        $this->db->from('tickets_headers');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     
     public function add_ticket_items($data)
     {
@@ -42,6 +57,25 @@ class Tickets_model extends MY_Model
         $data = $this->db->insert('service_type', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
+    }
+
+    public function saveHeader($data)
+    {
+
+        $data = $this->db->insert('tickets_headers', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function updateHeader($data)
+    {
+        extract($data);
+        $this->db->where('company_id', $company_id);
+        $this->db->update('tickets_headers', array(
+            'content'   => $content,
+        ));
+
+        return true;
     }
     
     public function save_payment($data)
@@ -65,6 +99,47 @@ class Tickets_model extends MY_Model
 		$this->db->where($where);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function get_tickets_header($company_id)
+    {
+        $where = array(
+            'company_id' => $company_id,
+        );
+
+        $this->db->select('*');
+        $this->db->from('tickets_headers');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function get_tickets_clients($company_id)
+    {
+        $where = array(
+            'company_id' => $company_id,
+        );
+
+        $this->db->select('*');
+        $this->db->from('business_profile');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function get_tickets_items($id)
+    {
+        
+        // $where = array(
+        //     'id' => $id,
+        // );
+
+        // $this->db->select('*');
+        // $this->db->from($this->table);
+        // $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id');
+		// $this->db->where($where);
+        // $query = $this->db->get();
+        // return $query->result();
     }
 
     public function  getServiceType($company_id)

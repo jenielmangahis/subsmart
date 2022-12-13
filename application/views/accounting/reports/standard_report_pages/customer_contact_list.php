@@ -194,16 +194,14 @@ table.dataTable.no-footer {
                         </button>
                     </span>
                 </div>
-            </div>
+            </div>            
             <div class="row">
                 <div class="col-lg-12">
                     <div class="nsm-card primary">
                         <div class="nsm-card-header">
                             <div class="col-lg-12">
                                 <span class="float-start">
-                                   <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
-                                            </button>
+                                   <button type="button" class="nsm-button" data-bs-toggle="dropdown"><span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i></button>
                                             <ul class="dropdown-menu p-3">
                                                 <p class="m-0">Sort by</p>
                                                 <select name="sort_by" id="sort-by" class="nsm-field form-select">
@@ -258,6 +256,8 @@ table.dataTable.no-footer {
                                         <button data-bs-toggle="modal" data-bs-target="#PRINT_SAVE_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
                                         <button class="nsm-button border-0"><i class="bx bx-fw bx-export"></i></button>
                                         <button class="nsm-button border-0 primary"><i class="bx bx-fw bx-cog"></i></button>
+
+                                        <!-- Example single danger button -->
                                 </span>
                             </div>
                         </div>
@@ -311,10 +311,7 @@ table.dataTable.no-footer {
         <div class="col-lg-1"></div>
     </div>
 </div>
-
-
 <!-- START: MODALS -->
-
 <!-- START: ADD NOTES MODAL -->
 <div class="modal" id="ADD_NOTES_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
@@ -327,7 +324,6 @@ table.dataTable.no-footer {
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
-                                <h6>Notes</h6>
                                 <textarea class="form-control"></textarea>
                             </div>
                         </div>
@@ -372,7 +368,7 @@ table.dataTable.no-footer {
                             </div>
                         </div>
                         <div class="col-sm-9">
-                            <iframe src="https://www.africau.edu/images/default/sample.pdf" width="100%" height="300px"></iframe>
+                            <iframe src="<?php echo base_url('TCPDFReport'); ?>" width="100%" height="300px"></iframe>
                         </div>
                     </div>
                     <hr>
@@ -401,36 +397,37 @@ table.dataTable.no-footer {
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
+                <form id="SEND_EMAIL_FORM">
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>To</h6>
-                                <input class="form-control" type="email" placeholder="Send to (email)">
+                                <input id="EMAIL_TO" class="form-control" type="email" placeholder="Send to (email)">
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>CC</h6>
-                                <input class="form-control" type="email" placeholder="Carbon Copy (email)">
+                                <input id="EMAIL_CC" class="form-control" type="email" placeholder="Carbon Copy (email)">
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input class="form-control" type="text">
+                                <input id="EMAIL_SUBJECT" class="form-control" type="text">
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <textarea class="form-control"></textarea>
+                                <textarea id="EMAIL_BODY" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>Report <small class="text-muted">(ReportFileName.pdf)</small></h6>
                                 <div class="input-group">
-                                    <input class="form-control" type="text" value="Customer Contact List Report">
+                                    <input id="EMAIL_REPORT_FILENAME" class="form-control" type="text" value="Customer Contact List Report">
                                     <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
                                 </div>
                             </div>
@@ -440,13 +437,14 @@ table.dataTable.no-footer {
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">
-                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" id="EMAIL_CLOSE_MODAL" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                             </div>
                             <div class="float-end">
-                                <button type="button" class="nsm-button success">Send</button>
+                                <button type="submit" class="nsm-button success">Send</button>
                             </div>
                         </div>
                     </div>
+                </form>
             </div>
         </div>
     </div>
@@ -458,6 +456,42 @@ table.dataTable.no-footer {
 <?php include viewPath('v2/includes/reports/reports_modals'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
+// START: ADD EVENT SCRIPT
+$('#SEND_EMAIL_FORM').submit(function (event) {
+    event.preventDefault();
+    var EMAIL_TO = $("#EMAIL_TO").val();
+    var EMAIL_CC = $("#EMAIL_CC").val();
+    var EMAIL_SUBJECT = $("#EMAIL_SUBJECT").val();
+    var EMAIL_BODY = $("#EMAIL_BODY").val();
+    var EMAIL_REPORT_FILENAME = $("#EMAIL_REPORT_FILENAME").val();
+    $.post("<?php echo base_url('PHPMailer'); ?>", {
+        EMAIL_TO: EMAIL_TO,
+        EMAIL_CC: EMAIL_CC,
+        EMAIL_SUBJECT: EMAIL_SUBJECT,
+        EMAIL_BODY: EMAIL_BODY,
+        EMAIL_REPORT_FILENAME: EMAIL_REPORT_FILENAME,
+    }).done(function (data) {
+        if (data == "true"){
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Email was sended successfully!',
+            }).then((result) => {
+                $("#EMAIL_CLOSE_MODAL").click();
+                // window.location.reload();
+            }); 
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to send email!',
+            });
+        }
+    });
+});
+// END: ADD EVENT SCRIPT
+
+
    var CUSTOMER_CONTACT_LIST_TABLE = $('#CUSTOMER_CONTACT_LIST').DataTable({
         "ordering" : false,
         // paging: false,

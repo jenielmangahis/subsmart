@@ -1280,7 +1280,7 @@ SQL;
                 ]);
             }
 
-            if (!is_null($jobId)) {
+            if (!is_null($jobId) && in_array(strtoupper($recipient['role_name']), ['CUSTOMER', 'CLIENT'])) {
                 $this->db->insert('user_docfile_job_recipients', [
                     'user_docfile_recipient_id' => $recipientId,
                     'job_id' => $jobId,

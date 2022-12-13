@@ -27,8 +27,19 @@ function onClickUpload() {
 function onClickDownload() {
   const customerId = getCustomerId();
   const documentType = getButtonDocumentType(this);
+
+  const params = {
+    customer_id: customerId,
+    document_type: documentType,
+  };
+
+  if (documentType === "esign") {
+    params.generated_esign_id = this.dataset.id;
+  }
+
+  const queryString = new URLSearchParams(params).toString();
   window.open(
-    `${api.prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?customer_id=${customerId}&document_type=${documentType}`,
+    `${api.prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?${queryString}`,
     "_blank"
   );
 }
@@ -108,6 +119,19 @@ async function onClickViewEsign() {
   const $link = $modal.querySelector(".esign-link");
   $link.textContent = data.signing_url;
   $link.setAttribute("href", data.signing_url);
+
+  const $download = $modal.querySelector(".esign-download");
+  const documentType = getButtonDocumentType(this);
+  const downloadQuery = {
+    customer_id: getCustomerId(),
+    document_type: documentType,
+    generated_esign_id: esignId,
+  };
+  const downloadParams = new URLSearchParams(downloadQuery).toString();
+  $download.setAttribute(
+    "href",
+    `${api.prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?${downloadParams}`
+  );
 
   $loader.classList.add("d-none");
   $content.classList.remove("d-none");

@@ -55,6 +55,12 @@ class Accounting_credit_memo_model extends MY_Model {
         return $query->result();
 	}
 
+	public function insert_transaction_item($item)
+	{
+		$this->db->insert('accounting_customer_transaction_items', $item);
+		return $this->db->insert_id();
+	}
+
 	public function insert_transaction_items($items)
 	{
 		$this->db->insert_batch('accounting_customer_transaction_items', $items);

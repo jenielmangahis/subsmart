@@ -15,11 +15,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
-    <div class="col-12">
-        <div style="float:right;padding-right:10%;">            
-            <a href="#" class="btn btn-success">Download as PDF</a> 
-            <a href="#" class="btn btn-primary" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
+    <div class="col-12">        
+        <div style="float:right;padding-right:10%;">
             <a href="<?= base_url('tickets/editDetails/'.$tickets->id); ?>" class="btn btn-primary">Edit</a>
+            <a href="<?php echo base_url('share_Link/ticketsPDF/' . $tickets->id) ?>" class="btn btn-success">Download as PDF</a> <a href="#" class="btn btn-primary" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
         </div>
         <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;" id="printArea">
 <style>
@@ -109,11 +108,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-4">
                         <!-- <h4>From</h4> -->
                         <div style="font-size:16px;">
-                            <b><?php echo $ticketsCompany->business_name; ?></span></b> <br>
-                            <?php echo $ticketsCompany->first_name .' '. $ticketsCompany->last_name; ?><br>
-                            <?php echo $ticketsCompany->business_address; ?><br>
-                            <?php echo $ticketsCompany->email_address; ?><br>
-                            <?php echo $ticketsCompany->phone_number; ?>
+                            <b><?php echo $clients->business_name; ?></span></b> <br>
+                            <span><?php echo $clients->street .' <br>'. $clients->city .', '. $clients->state .' '. $clients->postal_code; ?></span><br>
+                            <?php echo $clients->email_address; ?><br>
+                            <?php echo $clients->phone_number; ?>
                         </div>
                     <!-- </div>
                 </div> -->
@@ -123,7 +121,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <!-- <h4>To</h4> -->
                         <div style="font-size:16px;">
                             <b><span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span></b><br>
-                            <span><?php echo $tickets->mail_add .' '. $tickets->city .' '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
+                            <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .', '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
                             <span><?php echo $tickets->email; ?></span><br>
                             <span><?php echo $tickets->phone_h; ?></span>
                         </div>

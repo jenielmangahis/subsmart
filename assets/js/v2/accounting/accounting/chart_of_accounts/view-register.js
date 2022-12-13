@@ -386,7 +386,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Date' :
                             $(this).html(`<div class="nsm-field-group calendar"><input type="text" name="date" class="form-control nsm-field date" value="${current}"></div>`);
     
-                            if(type === 'Inventory Qty Adjust' || type === 'Bill') {
+                            if(type === 'Inventory Qty Adjust' || type === 'Bill' || type === 'Invoice') {
                                 $(this).find('input').prop('disabled', true);
                             }
     
@@ -545,7 +545,7 @@ $('#registers-table tbody tr').on('click', function() {
                         case 'Memo' :
                             $(this).html(`<input type="text" name="memo" class="form-control nsm-field" value="${current}" placeholder="Memo">`);
     
-                            if(type === 'Inventory Qty Adjust') {
+                            if(type === 'Inventory Qty Adjust' || type === 'Invoice' || type === 'Credit Memo') {
                                 $(this).find('input').prop('disabled', true);
                             }
                         break;
@@ -702,7 +702,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Date' :
                                 $(this).html(`<div class="nsm-field-group calendar"><input type="text" name="date" class="form-control nsm-field date" value="${current}"></div>`);
     
-                                if(type === 'Inventory Qty Adjust' || type === 'Bill') {
+                                if(type === 'Inventory Qty Adjust' || type === 'Bill' || type === 'Invoice') {
                                     $(this).find('input').prop('disabled', true);
                                 }
     
@@ -861,7 +861,7 @@ $('#registers-table tbody tr').on('click', function() {
                             case 'Memo' :
                                 $(this).html(`<input type="text" name="memo" class="form-control nsm-field" value="${current}" placeholder="Memo">`);
     
-                                if(type === 'Inventory Qty Adjust') {
+                                if(type === 'Inventory Qty Adjust' || type === 'Invoice' || type === 'Credit Memo') {
                                     $(this).find('input').prop('disabled', true);
                                 }
                             break;
