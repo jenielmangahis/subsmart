@@ -69,6 +69,7 @@ class Tickets extends MY_Controller
 
         // implode(",", $this->input->post('assign_tech'));
         $techni = serialize($this->input->post('assign_tech'));
+        $tDate = date("Y-m-d",strtotime($this->input->post('ticket_date')));
 
         // dd($status);
 
@@ -82,7 +83,7 @@ class Tickets extends MY_Controller
             'acs_zip'                   => $this->input->post('customer_zip'),
             'job_tag'                   => $this->input->post('job_tag'),
             'ticket_no'                 => $this->input->post('ticket_no'),
-            'ticket_date'               => $this->input->post('ticket_date'),
+            'ticket_date'               => $tDate,
             'scheduled_time'            => $this->input->post('scheduled_time'),
             'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
             'purchase_order_no'         => $this->input->post('purchase_order_no'),
@@ -690,6 +691,7 @@ class Tickets extends MY_Controller
         $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);
         $this->page_data['items'] = $this->tickets_model->get_ticket_items($id);
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
+        $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
 
         $ticketdet = $this->tickets_model->get_tickets_data_one($id);
             // $tech = explode(",", $tick->technicians);
@@ -1001,6 +1003,152 @@ class Tickets extends MY_Controller
         $ticketID = $this->input->post('tkID');
         $is_success =  $this->tickets_model->delete_tickets($ticketID);
         echo json_encode($is_success);
+    }
+
+    public function saveTickets()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $data = array(
+            
+            'content'  => $this->input->post('content'),
+            'company_id'    => $company_id,
+        );
+
+        $query = $this->tickets_model->saveHeader($data);
+
+        $is_success = 1;
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function updateHeader()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $data = array(
+            'company_id'    => $company_id,
+            'content'       => $this->input->post('content'),
+        );
+
+        $query = $this->tickets_model->updateHeader($data);
+
+        $is_success = 1;
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function custom_service_tickets()
+    {
+        
+        $this->hasAccessModule(39);
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Job_tags_model');
+        $this->page_data['page']->title = 'Services';
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        /*if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        }*/
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $this->page_data['custIndividual'] = $this->AcsProfile_model->getCustByProfId($id);
+
+        // dd($this->AcsProfile_model->getCustByProfId($id));
+
+        $default_customer_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_customer_id = $this->input->get('cus_id');
+        }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+
+        $userID = $_GET['appointment_user_id'];
+
+        //Settings
+            $prefix = 'TK-';
+            $lastInserted = $this->tickets_model->getlastInsert($company_id);
+            if( $lastInserted ){
+                $next = $lastInserted->ticket_no;
+                $arr = explode("-", $next);
+                $val = $arr[1];
+
+                $next_num = $val + 1;
+                // dd($next_num);
+            }else{
+                $next_num = 1;
+            }
+
+        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        // dd($next_num);
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
+
+
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $type = $this->input->get('type');
+        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+
+        $this->page_data['appointment_date'] = $this->input->post('appointment_date');
+        $this->page_data['appointment_time'] = $this->input->post('appointment_time');
+        $this->page_data['appointment_user_id'] = $this->input->post('appointment_user_id');
+        $this->page_data['appointment_customer_id'] = $this->input->post('appointment_customer_id');
+        $this->page_data['appointment_type_id'] = $this->input->post('appointment_type_id');
+        
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+
+        $this->page_data['user'] = $this->tickets_model->getUserDetails($userID);
+
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->load->view('tickets/custom_add', $this->page_data);
+    }
+
+    public function settings()
+    {
+        
+        $user_id = logged('id');
+        $company_id = logged('company_id');
+        $role = logged('role');
+
+        $this->page_data['tickets'] = $this->tickets_model->get_tickets_data();
+
+        $this->load->view('tickets/settings', $this->page_data);
     }
 
 }

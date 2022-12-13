@@ -25,6 +25,7 @@ class Share_Link extends CI_Controller
         $this->load->model('accounting_invoices_model');
         $this->load->model('Users_model', 'users_model');
         $this->load->model('General_model', 'general');
+        $this->load->model('Tickets_model', 'tickets_model');
         
         $user_id = getLoggedUserID();
 
@@ -1457,6 +1458,96 @@ class Share_Link extends CI_Controller
         $json_data = ['is_success' => 1];
         echo json_encode($json_data);
       }
+
+      public function ticketsPDF($tkID)
+    {
+        
+        // $id = $this->input->post('id');
+        // $wo_id = $this->input->post('wo_id');
+
+        $tickets = $this->tickets_model->get_tickets_data_one($tkID);
+        // $customer = $this->tickets_model->get_tickets_data_one($tickets->customer_id);
+        $header = $this->tickets_model->get_tickets_header($tickets->company_id);
+        $clients = $this->tickets_model->get_tickets_clients($tickets->company_id);
+        $items = $this->tickets_model->get_ticket_items($tickets->id);
+        $rep = $this->tickets_model->getUserDetails($tickets->sales_rep);
+
+        $payment = $this->tickets_model->get_ticket_payments($tickets->id);
+        
+
+        // dd($wo_id);
+
+        $data = array(
+            //customer details
+            'workorder'         => $workorderNo,
+            'name'              => $tickets->first_name.' '.$tickets->middle_name.' '.$tickets->last_name,
+            'mail_add'          => $tickets->mail_add,
+            'city'              => $tickets->city,
+            'state'             => $tickets->state,
+            'zip_code'          => $tickets->zip_code,
+            'email'             => $tickets->email,
+            'phone_h'           => $tickets->phone_h,
+
+            //clients details
+            'bname'                 => $clients->business_name,
+            'baddress'              => $clients->street,
+            'bcity'                 => $clients->city,
+            'bstate'                => $clients->state,
+            'bzip_code'             => $clients->postal_code,
+            'bemail'                => $clients->business_email,
+            'bphone_h'              => $clients->business_phone,
+
+            //tickets details
+            'service_location'              => $tickets->service_location,
+            'service_description'           => $tickets->service_description,
+            'job_tag'                       => $tickets->job_tag,
+            'ticket_no'                     => $tickets->ticket_no,
+            'ticket_date'                   => $tickets->ticket_date,
+            'scheduled_time'                => $tickets->scheduled_time,
+            'scheduled_time_to'             => $tickets->scheduled_time_to,
+            'technicians'                   => $tickets->technicians,
+            'purchase_order_no'             => $tickets->purchase_order_no,
+            'ticket_status'                 => $tickets->ticket_status,
+            'panel_type'                    => $tickets->panel_type,
+            'service_type'                  => $tickets->service_type,
+            'warranty_type'                 => $tickets->warranty_type,
+            'customer_phone'                => $tickets->customer_phone,
+            // 'employee_id'                => $tickets->employee_id,
+            'subtotal'                      => $tickets->subtotal,
+            'taxes'                         => $tickets->taxes,
+            'adjustment'                    => $tickets->adjustment,
+            'adjustment_value'              => $tickets->adjustment_value,
+            'markup'                        => $tickets->markup,
+            'grandtotal'                    => $tickets->grandtotal,
+            'payment_method'                => $tickets->payment_method,
+            'billing_date'                  => $tickets->billing_date,
+            'sales_rep'                     => $tickets->sales_rep,
+            'sales_rep_no'                  => $tickets->sales_rep_no,
+            'tl_mentor'                     => $tickets->tl_mentor,
+            'message'                       => $tickets->message,
+            'terms_conditions'              => $tickets->terms_conditions,
+            'attachments'                   => $tickets->attachments,
+            'instructions'                  => $tickets->instructions,
+            'header'                        => $header->content,
+            'items'                         => $items,
+            'repsName'                      => $rep->FName.' '.$rep->LName,
+            'payment'                       => $payment,
+        );
+
+        // dd($agreements);
+            
+        $filename = "nSmarTrac_Service_Ticket_".$tkID."000";
+        // $this->load->library('pdf');
+        // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
+        $this->load->library('pdf');
+
+
+        $this->pdf->load_view('tickets/tickets_pdf', $data, $filename, "portrait");
+        // $this->pdf->render();
+
+
+        // $this->pdf->stream("welcome.pdf");
+    }
 }
 
 

@@ -2180,24 +2180,30 @@ class Chart_of_accounts extends MY_Controller {
             $accType = 'Asset';
         } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
             $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
         } else {
             $accType = $accountType->account_name;
         }
-        $transfers = $this->chart_of_accounts_model->get_transfer_registers($accountId);
+        $transactions = $this->accounting_account_transactions_model->get_account_transactions_by_type($accountId, 'Transfer');
 
-        foreach($transfers as $transfer) {
-            if($transfer->transfer_from_account_id === $accountId) {
-                $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_to_account_id);
-                $account_id = $transfer->transfer_to_account_id;
+        foreach($transactions as $transaction) {
+            $transfer = $this->accounting_transfer_funds_model->getById($transaction->transaction_id, logged('company_id'));
+            if($accountId === $transfer->transfer_from_account_id) {
+                $account = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
             } else {
-                $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_from_account_id);
-                $account_id = $transfer->transfer_from_account_id;
+                $account = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
             }
 
             $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transfer->id);
 
+            $amount = $transaction->amount;
+
             $register = [
                 'id' => $transfer->id,
+                'acc_transac_id' => $transaction->id,
                 'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
                 'ref_no' => '',
                 'ref_no_disabled' => true,
@@ -2206,8 +2212,8 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => '',
                 'payee' => '',
                 'payee_disabled' => true,
-                'account_id' => $account_id,
-                'account' => $transferAcc,
+                'account_id' => $account->id,
+                'account' => $account->name,
                 'account_disabled' => false,
                 'memo' => $transfer->transfer_memo,
                 'reconcile_status' => '',
@@ -2220,20 +2226,56 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $register['charge'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $register['payment'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['charge'] = "";
+                        $register['payment_disabled'] = true;
+                        $register['charge_disabled'] = true;
+                    } else {
+                        $register['payment'] = "";
+                        $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['payment_disabled'] = true;
+                        $register['charge_disabled'] = true;
+                    }
                 break;
                 case 'Asset' :
-                    $register['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $register['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['decrease'] = "";
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    } else {
+                        $register['increase'] = "";
+                        $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    }
                 break;
                 case 'Liability' :
-                    $register['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $register['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['decrease'] = "";
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    } else {
+                        $register['increase'] = "";
+                        $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    }
                 break;
                 default :
-                    $register['payment'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
-                    $register['deposit'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['payment'] = "";
+                        $register['deposit_disabled'] = true;
+                        $register['payment_disabled'] = true;
+                    } else {
+                        $register['deposit'] = "";
+                        $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['deposit_disabled'] = true;
+                        $register['payment_disabled'] = true;
+                    }
                 break;
             }
 
@@ -2252,150 +2294,165 @@ class Chart_of_accounts extends MY_Controller {
             $accType = 'Asset';
         } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
             $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
         } else {
             $accType = $accountType->account_name;
         }
-        $deposits = $this->chart_of_accounts_model->get_deposit_registers($accountId);
+        $transactions = $this->accounting_account_transactions_model->get_account_transactions_by_type($accountId, 'Deposit');
 
-        foreach($deposits as $deposit) {
+        foreach($transactions as $transaction) {
+            $deposit = $this->accounting_bank_deposit_model->getById($transaction->transaction_id, logged('company_id'));
+            $account = $this->chart_of_accounts_model->getById($deposit->account_id);
             $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
 
-            if($accountId === $deposit->cash_back_account_id) {
-                $account = $this->chart_of_accounts_model->getName($deposit->account_id);
-                $accountDisabled = true;
-                $accountFieldName = '';
-                $account_id = $deposit->account_id;
-            } else if(count($funds) > 1 || $deposit->cash_back_amount !== "" && $deposit->cash_back_account_id !== "" && !is_null($deposit->cash_back_amount) && !is_null($deposit->cash_back_account_id)) { 
-                $account = '-Split-';
-                $accountFieldName = '';
-                $accountDisabled = true;
-                $account_id = null;
-            } else {
-                $account = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
-                $account_id = $funds[0]->received_from_account_id;
-                $accountFieldName = 'funds-account';
-                $accountDisabled = false;
-            }
             $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $deposit->id);
 
-            $register = [
-                'id' => $deposit->id,
-                'date' => date("m/d/Y", strtotime($deposit->date)),
-                'ref_no' => '',
-                'ref_no_disabled' => true,
-                'type' => 'Deposit',
-                'payee_type' => '',
-                'payee_id' => '',
-                'payee' => '',
-                'payee_disabled' => true,
-                'account_id' => $account_id,
-                'account' => $account,
-                'account_field' => $accountFieldName,
-                'account_disabled' => $accountDisabled,
-                'memo' => $deposit->memo,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($deposit->created_at))
-            ];
+            $amount = $transaction->amount;
 
-            switch($accType) {
-                case 'Credit Card' :
-                    $register['charge'] = '';
-                    $register['payment'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+            if($transaction->is_category === '1') {
+                $fund = $this->accounting_bank_deposit_model->get_fund($transaction->child_id);
 
-                    if($accountId === $deposit->cash_back_account_id) {
-                        $register['payment'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
-                    }
-                break;
-                case 'Asset' :
-                    $register['increase'] = '';
-                    $register['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
-
-                    if($accountId === $deposit->cash_back_account_id) {
-                        $register['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
-                    }
-                break;
-                case 'Liability' :
-                    $register['increase'] = '';
-                    $register['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
-
-                    if($accountId === $deposit->cash_back_account_id) {
-                        $register['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
-                    }
-                break;
-                default :
-                    $register['payment'] = '';
-                    $register['deposit'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
-
-                    if($accountId === $deposit->cash_back_account_id) {
-                        $register['deposit'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
-                    }
-                break;
+                switch($fund->received_from_key) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_by_id($fund->received_from_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($fund->received_from_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
             }
 
-            $data[] = $register;
-        }
+            if($accType !== 'A/R' && $accType !== 'A/P') {
+                $register = [
+                    'id' => $deposit->id,
+                    'acc_transac_id' => $transaction->id,
+                    'date' => date("m/d/Y", strtotime($deposit->date)),
+                    'ref_no_disabled' => true,
+                    'type' => 'Deposit',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($refundReceipt->created_at))
+                ];
 
-        $depositFunds = $this->chart_of_accounts_model->get_deposit_payment_registers($accountId);
+                if($transaction->is_category === '1') {
+                    $register['ref_no'] = $fund->ref_no;
+                    $register['memo'] = $fund->description;
+                    $register['account_id'] = $deposit->account_id;
+                    $register['account'] = $this->chart_of_accounts_model->getName($deposit->account_id);
+                    $register['account_disabled'] = true;
 
-        foreach($depositFunds as $depFund) {
-            $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id, logged('company_id'));
-            $depFunds = $this->accounting_bank_deposit_model->getFunds($dep->id);
+                    $register['payee_type'] = $fund->received_from_key;
+                    $register['payee_id'] = $fund->received_from_id;
+                    $register['payee'] = $payeeName;
+                    $register['payee_disabled'] = true;
+                } else {
+                    $register['ref_no'] = '';
+                    $register['memo'] = $deposit->memo;
 
-            $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $dep->id);
+                    if(count($funds) > 1) {
+                        $register['account_id'] = null;
+                        $register['account'] = '-Split-';
+                        $register['account_disabled'] = true;
+                    } else {
+                        $register['account_id'] = $funds[0]->received_from_account_id;
+                        $register['account'] = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+                        $register['account_disabled'] = true;
+                    }
 
-            $register = [
-                'id' => $dep->id,
-                'child_id' => $depFund->id,
-                'date' => date("m/d/Y", strtotime($dep->date)),
-                'ref_no' => $depFund->ref_no,
-                'ref_no_disabled' => false,
-                'type' => 'Deposit',
-                'payee_type' => '',
-                'payee_id' => '',
-                'payee' => '',
-                'payee_disabled' => true,
-                'account_id' => $dep->account_id,
-                'account' => $this->chart_of_accounts_model->getName($dep->account_id),
-                'account_field' => '',
-                'account_disabled' => true,
-                'memo' => $dep->memo,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($depFund->created_at))
-            ];
+                    $register['payee_type'] = '';
+                    $register['payee_id'] = '';
+                    $register['payee'] = '';
+                    $register['payee_disabled'] = true;
+                }
 
-            switch($accType) {
-                case 'Credit Card' :
-                    $register['charge'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $register['payment'] = '';
-                    $register['charge_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $register['payment_disabled'] = true;
-                break;
-                case 'Asset' :
-                    $register['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $register['decrease'] = '';
-                    $register['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $register['decrease_disabled'] = true;
-                break;
-                case 'Liability' :
-                    $register['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $register['decrease'] = '';
-                    $register['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $register['decrease_disabled'] = true;
-                break;
-                default :
-                    $register['payment'] = number_format(floatval($depFund->amount), 2, '.', ',');
-                    $register['deposit'] = '';
-                    $register['payment_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
-                    $register['deposit_disabled'] = true;
-                break;
+                switch($accType) {
+                    case 'Credit Card' :
+                        if($transaction->type === 'increase') {
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['charge'] = "";
+                            $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = true;
+                        } else {
+                            $register['payment'] = "";
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = true;
+                        }
+                    break;
+                    case 'Asset' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        }
+                    break;
+                    case 'Liability' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        }
+                    break;
+                    default :
+                        if($transaction->type === 'increase') {
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = "";
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = true;
+                        } else {
+                            $register['deposit'] = "";
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = true;
+                        }
+                    break;
+                }
+            } else {
+                $register = [
+                    'id' => $deposit->id,
+                    'date' => date("m/d/Y", strtotime($deposit->date)),
+                    'ref_no' => $fund->ref_no,
+                    'type' => 'Deposit',
+                    'memo' => $fund->description,
+                    'due_date' => date("m/d/Y", strtotime($deposit->date)),
+                ];
+
+                if($accType === 'A/R') {
+                    $register['customer'] = $payeeName;
+                    $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                    $register['charge_credit'] = '';
+                    $register['open_balance'] = number_format(floatval($amount), 2, '.', ',');
+                } else {
+                    $register['vendor'] = $payeeName;
+                    $register['account'] = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+                    $register['billed'] = number_format(floatval($amount), 2, '.', ',');
+                    $register['paid'] = '';
+                    $register['open_balance'] = '-'.number_format(floatval($amount), 2, '.', ',');
+                }
             }
 
             $data[] = $register;
