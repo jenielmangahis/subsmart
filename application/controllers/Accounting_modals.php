@@ -1664,12 +1664,34 @@ class Accounting_modals extends MY_Controller
 
                 $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => floatval(str_replace(',', '', $newBalance))]);
 
+                $accTransacData = [
+                    'account_id' => $creditAcc->id,
+                    'transaction_type' => 'CC Payment',
+                    'transaction_id' => $payDownId,
+                    'amount' => floatval(str_replace(',', '', $data['amount'])),
+                    'transaction_date' => date('Y-m-d', strtotime($data['payment_date'])),
+                    'type' => 'increase'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
+
                 $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
 
                 $newBalance = floatval(str_replace(',', '', $bankAcc->balance)) - floatval(str_replace(',', '', $data['amount']));
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => floatval(str_replace(',', '', $newBalance))]);
+
+                $accTransacData = [
+                    'account_id' => $bankAcc->id,
+                    'transaction_type' => 'CC Payment',
+                    'transaction_id' => $payDownId,
+                    'amount' => floatval(str_replace(',', '', $data['amount'])),
+                    'transaction_date' => date('Y-m-d', strtotime($data['payment_date'])),
+                    'type' => 'decrease'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
             }
 
             $return['data'] = $payDownId;
@@ -2179,6 +2201,17 @@ class Accounting_modals extends MY_Controller
                     ];
                     $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
 
+                    $accTransacData = [
+                        'account_id' => $depositToAcc->id,
+                        'transaction_type' => 'Deposit',
+                        'transaction_id' => $depositId,
+                        'amount' => floatval(str_replace(',', '', $totalAmount)),
+                        'transaction_date' => date('Y-m-d', strtotime($data['date'])),
+                        'type' => 'increase'
+                    ];
+    
+                    $this->accounting_account_transactions_model->create($accTransacData);
+
                     if ($data['cash_back_amount'] !== "") {
                         $cashBackAccount = $this->chart_of_accounts_model->getById($data['cash_back_account']);
                         $cashBackData = [
@@ -2188,6 +2221,17 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
+
+                        $accTransacData = [
+                            'account_id' => $cashBackAccount->id,
+                            'transaction_type' => 'Deposit',
+                            'transaction_id' => $depositId,
+                            'amount' => floatval(str_replace(',', '', $data['cash_back_amount'])),
+                            'transaction_date' => date('Y-m-d', strtotime($data['date'])),
+                            'type' => 'increase'
+                        ];
+        
+                        $this->accounting_account_transactions_model->create($accTransacData);
                     }
                 }
 
@@ -2227,7 +2271,8 @@ class Accounting_modals extends MY_Controller
                 foreach ($data['funds_account'] as $key => $value) {
                     $receivedFrom = explode('-', $data['received_from'][$key]);
 
-                    $fundsData[] =[
+                    // $fundsData[] =[
+                    $fundData = [
                         'bank_deposit_id' => $depositId,
                         'received_from_key' => $receivedFrom[0],
                         'received_from_id' => $receivedFrom[1],
@@ -2238,10 +2283,12 @@ class Accounting_modals extends MY_Controller
                         'amount' => $data['amount'][$key]
                     ];
 
+                    $fundId = $this->accounting_bank_deposit_model->insert_fund($fundData);
+
                     if (!isset($data['template_name'])) {
                         $account = $this->chart_of_accounts_model->getById($value);
 
-                        $accountBalance = $account->account_id !== "7" ? floatval($account->balance) - floatval($data['amount'][$key]) : floatval($account->balance) + floatval($data['amount'][$key]);
+                        $accountBalance = !in_array($account->account_id, ['6', '7']) ? floatval($account->balance) - floatval($data['amount'][$key]) : floatval($account->balance) + floatval($data['amount'][$key]);
                         $accountBalance = number_format($accountBalance, 2, '.', ',');
                         $accountData = [
                             'id' => $value,
@@ -2249,10 +2296,23 @@ class Accounting_modals extends MY_Controller
                             'balance' => $accountBalance
                         ];
                         $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
+
+                        $accTransacData = [
+                            'account_id' => $account->id,
+                            'transaction_type' => 'Deposit',
+                            'transaction_id' => $depositId,
+                            'amount' => floatval(str_replace(',', '', $data['amount'][$key])),
+                            'transaction_date' => date('Y-m-d', strtotime($data['date'])),
+                            'type' => 'decrease',
+                            'is_category' => 1,
+                            'child_id' => $fundId
+                        ];
+        
+                        $this->accounting_account_transactions_model->create($accTransacData);
                     }
                 }
 
-                $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
+                // $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
             }
 
             $return['data'] = $depositId;
@@ -2410,6 +2470,18 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                    $accTransacData = [
+                        'account_id' => $invAssetAcc->id,
+                        'transaction_type' => 'Inventory Qty Adjust',
+                        'transaction_id' => $adjustmentId,
+                        'amount' => $amount,
+                        'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                        'type' => 'increase',
+                        'is_item_category' => 1
+                    ];
+    
+                    $this->accounting_account_transactions_model->create($accTransacData);
                 }
 
                 $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
@@ -2426,6 +2498,17 @@ class Accounting_modals extends MY_Controller
                 ];
 
                 $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
+                $accTransacData = [
+                    'account_id' => $adjustmentAcc->id,
+                    'transaction_type' => 'Inventory Qty Adjust',
+                    'transaction_id' => $adjustmentId,
+                    'amount' => $total,
+                    'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                    'type' => 'decrease'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
             }
 
             $return['data'] = $adjustmentId;
@@ -2595,6 +2678,17 @@ class Accounting_modals extends MY_Controller
                 $balance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $totalNetPay));
 
                 $update = $this->chart_of_accounts_model->updateBalance(['id' => $data['pay_from_account'], 'company_id' => $company_id, 'balance' => $balance]);
+
+                $accTransacData = [
+                    'account_id' => $account->id,
+                    'transaction_type' => 'Paycheck',
+                    'transaction_id' => $payrollId,
+                    'amount' => floatval(str_replace(',', '', $totalNetPay)),
+                    'transaction_date' => date('Y-m-d', strtotime($data['pay_date'])),
+                    'type' => 'decrease'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
 
                 $return['data'] = $payrollId;
                 $return['success'] = $payrollId && $payrollEmpId ? true : false;
@@ -9417,6 +9511,7 @@ class Accounting_modals extends MY_Controller
                     'Income',
                     'Other Income',
                     'Bank',
+                    'Accounts receivable (A/R)',
                     'Other Current Assets',
                     'Fixed Assets',
                     'Accounts payable (A/P)',

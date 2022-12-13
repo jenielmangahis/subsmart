@@ -337,7 +337,7 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Panel Type</b></label>
+                                        <label for="zip"><b>Panel Type</b></label> <i class="bx bx-fw bx-edit" style="float:right;"></i>
                                             <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
@@ -377,7 +377,7 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Service Type</b></label>
+                                        <label for="zip"><b>Service Type</b></label> <i class="bx bx-fw bx-edit" style="float:right;"></i>
                                         <div class="input-group">
                                             <!-- <select class="form-control" name="service_type" id="service_type">
                                                 <?php //foreach($serviceType as $sType){ ?>
@@ -396,7 +396,7 @@ a.btn-primary.btn-md {
                                         </div><!-- /input-group -->
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Warranty Type</b></label>
+                                        <label for="zip"><b>Warranty Type</b></label> <i class="bx bx-fw bx-edit" style="float:right;"></i>
                                         <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>

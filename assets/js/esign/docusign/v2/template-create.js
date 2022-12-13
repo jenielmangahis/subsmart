@@ -589,7 +589,7 @@ function TemplateCreate() {
       let { role_name: role } = recipient;
       role = role.toUpperCase();
 
-      if (role === "ESA Rep".toUpperCase()) {
+      if (role === "ESA REP") {
         if (job.employee) {
           if (job.employee.email) {
             recipient.email = job.employee.email;
@@ -601,7 +601,7 @@ function TemplateCreate() {
         }
       }
 
-      if (role === "Client".toUpperCase()) {
+      if (role === "CLIENT" || role === "CUSTOMER") {
         if (job.email) {
           recipient.email = job.email;
         }
@@ -611,7 +611,7 @@ function TemplateCreate() {
         }
       }
 
-      if (role === "Admin".toUpperCase()) {
+      if (role === "ADMIN") {
         if (job.admin) {
           if (job.admin.email) {
             recipient.email = job.admin.email;

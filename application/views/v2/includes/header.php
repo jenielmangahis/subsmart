@@ -449,12 +449,12 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-building-house'></i> My Business
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == 'Email Templates' || $page->title == 'SMS Templates' || $page->title == 'Email Branding' || $page->title == 'Notifications') : echo 'selected';
+                        <!-- <li class="<?php if ($page->title == 'Email Templates' || $page->title == 'SMS Templates' || $page->title == 'Email Branding' || $page->title == 'Notifications') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("settings/email_templates") ?>">
                                 <i class='bx bx-fw bx-cog'></i> Settings
                             </a>
-                        </li>
+                        </li> -->
                         <li class="<?php if ($page->title == 'Employees' || $page->title == 'Timesheet' || $page->title == 'Track Location' || $page->title == 'Payscale') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("users") ?>">
@@ -553,6 +553,11 @@ if ($this->session->userdata('usertimezone') == null) {
                         <li class="li-third-sub-menu">
                             <a href="<?= base_url("workorder/settings") ?>">
                                 <i class='bx bx-fw bx-task'></i> Workorder Settings
+                            </a>
+                        </li>
+                        <li class="li-third-sub-menu">
+                            <a href="<?= base_url("tickets/settings") ?>">
+                                <i class='bx bx-fw bx-task'></i> Service Tickets Settings
                             </a>
                         </li>
                         <li class="li-third-sub-menu">

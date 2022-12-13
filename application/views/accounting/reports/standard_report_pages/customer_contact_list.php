@@ -194,16 +194,14 @@ table.dataTable.no-footer {
                         </button>
                     </span>
                 </div>
-            </div>
+            </div>            
             <div class="row">
                 <div class="col-lg-12">
                     <div class="nsm-card primary">
                         <div class="nsm-card-header">
                             <div class="col-lg-12">
                                 <span class="float-start">
-                                   <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
-                                            </button>
+                                   <button type="button" class="nsm-button" data-bs-toggle="dropdown"><span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i></button>
                                             <ul class="dropdown-menu p-3">
                                                 <p class="m-0">Sort by</p>
                                                 <select name="sort_by" id="sort-by" class="nsm-field form-select">
@@ -258,6 +256,8 @@ table.dataTable.no-footer {
                                         <button data-bs-toggle="modal" data-bs-target="#PRINT_SAVE_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
                                         <button class="nsm-button border-0"><i class="bx bx-fw bx-export"></i></button>
                                         <button class="nsm-button border-0 primary"><i class="bx bx-fw bx-cog"></i></button>
+
+                                        <!-- Example single danger button -->
                                 </span>
                             </div>
                         </div>
@@ -311,10 +311,7 @@ table.dataTable.no-footer {
         <div class="col-lg-1"></div>
     </div>
 </div>
-
-
 <!-- START: MODALS -->
-
 <!-- START: ADD NOTES MODAL -->
 <div class="modal" id="ADD_NOTES_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
@@ -327,7 +324,6 @@ table.dataTable.no-footer {
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
-                                <h6>Notes</h6>
                                 <textarea class="form-control"></textarea>
                             </div>
                         </div>
@@ -372,7 +368,7 @@ table.dataTable.no-footer {
                             </div>
                         </div>
                         <div class="col-sm-9">
-                            <iframe src="https://www.africau.edu/images/default/sample.pdf" width="100%" height="300px"></iframe>
+                            <iframe src="<?php echo base_url('TCPDFReport'); ?>" width="100%" height="300px"></iframe>
                         </div>
                     </div>
                     <hr>

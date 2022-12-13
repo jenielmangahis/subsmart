@@ -1,33 +1,22 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
-<?php include viewPath('v2/includes/header'); ?>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Service Tickets</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
+    
+    <link href="<?php echo base_url() ?>assets/dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <style>
+        /* body
+        {
+            margin:5px;
+        } */
+table {
+ border-collapse: collapse;
+}
 
-<!-- <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap.min.css") ?>"  type="text/css" media="print"> -->
-
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
-        <i class="bx bx-note"></i>
-    </div>
-</div>
-
-<div class="row page-content g-0">
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
-    </div>
-    <div class="col-12">
-        <div style="float:right;padding-right:10%;">
-            <a href="<?php echo base_url('share_Link/ticketsPDF/' . $tickets->id) ?>" class="btn btn-success">Download as PDF</a> <a href="#" class="btn btn-primary" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
-        </div>
-        <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;" id="printArea">
-<style>
-@media print {
-    .mustRight 
-    { 
-        float: right !important; 
-        margin-top:-80px !important;
-        font-size: 12px !important;
-    }
     .descriptionTags
     {
         width:25% !important;
@@ -58,112 +47,106 @@ defined('BASEPATH') or exit('No direct script access allowed');
         width: 80px; 
         height: 80px;
     }
-} 
-</style>
-            <div class="nsm-page-content" style="padding:2%;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class="compLogo"/> 
-                        <?php //echo $tickets->id; ?>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="" style="float:right;">
-                            <!-- <div style="text-align: center;border:solid gray 1px;">
-                                <h5>Ticket no</h5><hr>
-                                <h5><?php //echo $tickets->ticket_no; ?></h5>
-                            </div> -->
-                            <div style="font-size:16px;">
+    </style>
+</head>
+<body style="font-family: Gill Sans, sans-serif; font-size: 11px;" >
+    <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;margin: 0 auto; padding:1%;">
+        <div style="text-align: justify; text-justify: inter-word;">
+            <!-- This workorder agreement (the "agreement") is made as of 05-07-2021, by and between ADI Smart Home, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service") -->
+            <?php echo $header; ?>
+        </div>
+        <br>
+        <div style="float:left;">
+            <img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>" class="company-logo2" style="width:100px;"/> 
+
+        </div>  
+        <div class="" style="float: right;">
                             <table class="table-borderless mustRight">
                                 <tr>
-                                    <td colspan="2" style="text-align: center;"><h1><b>Service Ticket</b></h1></td>
+                                    <td colspan="2" style="text-align: center;"><h4><b>Service Ticket</b></h4></td>
                                 </tr>
                                 <tr>
                                     <td>Ticket no:</td>
-                                    <td><?php echo $tickets->ticket_no; ?></td>
+                                    <td><?php echo $ticket_no; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Scheduled Date:</td>
-                                    <td><?php echo $tickets->ticket_date; ?></td>
+                                    <td><?php echo $ticket_date; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Scheduled Time:</td>
-                                    <td><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
+                                    <td><?php echo $scheduled_time.' to '.$scheduled_time_to; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Purchase Order No:</td>
-                                    <td><?php echo $tickets->purchase_order_no; ?></td>
+                                    <td><?php echo $purchase_order_no; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Status:</td>
-                                    <td><?php echo $tickets->ticket_status; ?></td>
+                                    <td><?php echo $ticket_status; ?></td>
                                 </tr>
                             </table>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+        <br><br><br><br><br><br><br>
+        <div>
+            <h6><?php echo $name; ?></h6>
+            <span><?php echo $mail_add; ?></span> <br>
+            <span><?php echo $city; ?></span>, <span><?php echo $state; ?></span>, <span><?php echo $zip_code; ?></span> <br>
+            <span><?php echo $email; ?></span> <br>
+            <span><?php echo $phone_h; ?></span> <br>
+        </div>
+        <br>
+        <div>
+            <h6><?php echo $bname; ?></h6>
+            <span><?php echo $baddress; ?></span> <br>
+            <span><?php echo $bcity; ?></span>, <span><?php echo $bstate; ?></span>, <span><?php echo $bzip_code; ?></span> <br>
+            <span><?php echo $bemail; ?></span> <br>
+            <span><?php echo $bphone_h; ?></span> <br>
+        </div>
+                <div style="float:right;text-align:center;border:solid gray 1px;padding:2px;width:200px;">
+                    <b>Sales Representative</b> <br>
+                    <?php echo $repsName; ?><br>
+                    <?php echo $sales_rep_no; ?><br>
+                    <span>Team Lead/Mentor</span>: 
+                    <?php echo $tl_mentor; ?>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <!-- <h4>From</h4> -->
-                        <div style="font-size:16px;">
-                            <b><?php echo $clients->business_name; ?></span></b> <br>
-                            <span><?php echo $clients->street .' <br>'. $clients->city .', '. $clients->state .' '. $clients->postal_code; ?></span><br>
-                            <?php echo $clients->email_address; ?><br>
-                            <?php echo $clients->phone_number; ?>
-                        </div>
-                    <!-- </div>
-                </div> -->
+        <br>
+        <div>
+            <h6>Service Location:</h6>
+            <span><?php echo $service_location; ?></span> <br>
+        </div>
                 <br>
-                <!-- <div class="row">
-                    <div class="col-md-4"> -->
-                        <!-- <h4>To</h4> -->
-                        <div style="font-size:16px;">
-                            <b><span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span></b><br>
-                            <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .', '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
-                            <span><?php echo $tickets->email; ?></span><br>
-                            <span><?php echo $tickets->phone_h; ?></span>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-9 serviceLocDiv">
-                        <b>Service Location: </b> <br>
-                        <?php echo $tickets->service_location; ?>
-                    </div>
-                    <div class="col-md-3 salesRepArea" style="text-align:center;border:solid gray 1px;">
-                        <b>Sales Representative</b> <br>
-                        <?php echo $reps->FName.' '.$reps->LName; ?><br>
-                        <?php echo $tickets->sales_rep_no; ?><br>
-                        <span>Team Lead/Mentor</span>: 
-                        <?php echo $tickets->tl_mentor; ?>
-                    </div>
-                </div>
-                <br>
-                <div class="row" style="font-size:16px;">
+                <table style="width:100%;">
+                    <tr>
+                        <td style="border:solid gray 1px;text-align:center;padding:3px;"><b>Job Tag </b> <br> <?php echo $job_tag; ?></td>
+                        <td style="border:solid gray 1px;text-align:center;padding:3px;"><b>Panel Type </b> <br> <?php echo $panel_type; ?></td>
+                        <td style="border:solid gray 1px;text-align:center;padding:3px;"><b>Service Type </b> <br> <?php echo $service_type; ?></td>
+                        <td style="border:solid gray 1px;text-align:center;padding:3px;"><b>Warranty Type</b> <br> <?php echo $warranty_type; ?></td>
+                    </tr>
+                </table>
+                <!-- <div class="row" style="font-size:16px;">
                     <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Job Tag </b> <br>
-                        <?php echo $tickets->job_tag; ?>
+                        <?php //echo $job_tag; ?>
                     </div>
                     <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Panel Type </b> <br>
-                        <?php echo $tickets->panel_type; ?>
+                        <?php //echo $panel_type; ?>
                     </div>
                     <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Service Type </b> <br>
-                        <?php echo $tickets->service_type; ?>
+                        <?php //echo $service_type; ?>
                     </div>
                     <div class="col-md-3 descriptionTags" style="border:solid gray 1px;text-align:center;">
                         <b>Warranty Type</b> <br>
-                        <?php echo $tickets->warranty_type; ?>
+                        <?php //echo $warranty_type; ?>
                     </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-12">
+                </div> -->
+        <br>
+        <div>
+            
                         <table class="table table-bordered">
-                            <thead style="background-color: #F3F3F3;">
+                            <tr style="background-color: #F3F3F3;">
                                 <th>#</th>
                                 <th>Items</th>
                                 <th>Item Type</th>
@@ -171,8 +154,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <th style="text-align:center;">Qty</th>
                                 <th style="text-align:center;">Discount</th>
                                 <th style="text-align:center;">Total</th>
-                            </thead>
-                            <tbody>
+                            </tr>
+                            <!-- <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr> -->
                                 <?php
                                 $i = 1;
                                  foreach($items as $item){ ?>
@@ -188,29 +180,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <?php 
                                     $i++;
                                 } ?>
-                            </tbody>
+                            <!-- </tbody> -->
+                        </table>
+        </div>
+
+                    <div style="float:right;">
+                        <table class="" style="width:40%;">
+                            <tr style="font-weight:bold;">
+                                <td>Subtotal</td>
+                                <td style="text-align:right;">$<?php echo number_format($subtotal,2); ?></td>
+                            </tr>
+                            <tr style="font-weight:bold;">
+                                <td>Taxes</td>
+                                <td style="text-align:right;">$<?php echo number_format($taxes,2); ?></td>
+                            </tr>
+                            <tr style="font-weight:bold;">
+                                <td>Adjustment: <?php echo $adjustment; ?></td>
+                                <td style="text-align:right;">$<?php echo number_format($adjustment_value,2); ?></td>
+                            </tr>
+                            <tr style="font-weight:bold;">
+                                <td>Markup</td>
+                                <td style="text-align:right;">$<?php echo number_format($markup,2); ?></td>
+                            </tr>
+                            <tr style="font-weight:bold;">
+                                <td>Grand Total</td>
+                                <td style="text-align:right;">$<?php echo number_format($grandtotal,2); ?></td>
+                            </tr>
                         </table>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 paymentArea">
-                        <table class="table table-borderless" style="width:50%;">
+        <div id="paymentAreaDet">
+                        <table class="table-borderless" style="width:30%;">
                             <tr>
                                 <td><b>Payment Method: </b></td>
-                                <td style="text-align:;"><?php echo $tickets->payment_method; ?></td>
+                                <td style="text-align:;"><?php echo $payment_method; ?></td>
                             </tr>
                             <tr>
                                 <td><b>Payment Amount: </b></td>
-                                <td style="text-align:;">$<?php echo number_format($tickets->payment_amount,2); ?></td>
+                                <td style="text-align:;">$<?php echo number_format($payment_amount,2); ?></td>
                             </tr>
                             <tr>
                                 <td><b>Billing Date: </b></td>
-                                <td style="text-align:;"><?php echo $tickets->billing_date; ?></td>
+                                <td style="text-align:;"><?php echo $billing_date; ?></td>
                             </tr>
                             <tr>
                                 <td colspan="2">
                                 <?php 
-                                $payment_method                 = $tickets->payment_method;
+                                // $payment_method                 = $tickets->payment_method;
                                 $check_number                   = $payment->check_number;
                                 $routing_number                 = $payment->routing_number;
                                 $account_number                 = $payment->account_number;
@@ -332,106 +347,62 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </td>
                             </tr>
                         </table>
+        </div>
+        <!-- <br>
+        <div style="float:right;">
                         
-                    </div>
-                    <div class="col-md-4 spaceDiv">
-                    </div>
-                    <div class="col-md-4 summaryArea">
-                        <table class="table table-bordered">
-                            <tr style="font-weight:bold;">
-                                <td>Subtotal</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Taxes</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Markup</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
-                            </tr>
-                            <tr style="font-weight:bold;">
-                                <td>Grand Total</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
-                            </tr>
-                        </table>
-                        
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-3">
-                        <b>Assigned Technicians</b> <br>
+        </div> -->
+        <br><br>
+        <div id="techArea">
+                    <b>Assigned Technicians</b> <br><br>
                         <?php //echo $technicians; 
-                        $assigned_technician = unserialize($tickets->technicians);
+                        $assigned_technician = unserialize($technicians);
                         // var_dump($assigned_technician);
                             foreach($assigned_technician as $eid){
                                 $user = getUserName($eid);
                                 echo $custom_html = '<img src="'.userProfileImage($eid).'" style="width: 60px;">'.$user['name'].'<br>';
                             }
                         ?>
-                    </div>
-                </div>
-                <br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-12">
-                        <b>Service Description:</u></b> <br> <?php if(empty($tickets->service_description)){ echo 'N/A'; }else{ echo $tickets->service_description; } ?>
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-12">
-                        <b>Message:</u></b> <br><?php if(empty($tickets->message)){ echo 'N/A'; }else{ echo $tickets->message; } ?>
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-12">
-                        <b>Terms and Conditions:</u></b> <br> <?php echo $tickets->terms_conditions; ?>
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-12">
-                        <b>Attachments:</u></b> <br> <?php if(empty($tickets->attachments)){ echo 'N/A'; }else{ echo $tickets->attachments; } ?>
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-12">
-                        <b>Instructions:</u></b> <br> <?php if(empty($tickets->instructions)){ echo 'N/A'; }else{ echo $tickets->instructions; } ?> 
-                    </div>
-                </div>
-                <br><br>
-                <div class="row" style="font-size:16px;">
-                    <div class="col-md-12">
-                        <span><b>Warranty Repair Service.</b> During the term of your agreement, we will repair or service any defective part of the System as follows: (A) What is covered. If you to renewal your Premium warranty Service, then we will, so long as you are providing services contract. If you decline the Premium Service, however, then you agree to pay to <?php echo $ticketsCompany->business_name; ?> or its assignee the Grand Total Value of the service. So as long as we are providing service pursuant to your agreement, you will agree to a visit charge for each service call, and you agree to pay the same. We can use new or used parts of the same functionality and keep all replaced parts. (B) What is not covered: Act of God and any non-normal conditions. </span>
-                    </div>
-                </div>
-
-            </div>
         </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    $(document).ready(function() {
         
-    });
-</script>
-<?php include viewPath('v2/includes/footer'); ?>
-<?php //include viewPath('includes/footer'); ?>
+        <br>
+                <div class="row" style="font-size:;">
+                    <div class="col-md-12">
+                        <b>Service Description:</u></b> <br> <?php if(empty($service_description)){ echo 'N/A'; }else{ echo $ervice_description; } ?>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row" style="font-size:;">
+                    <div class="col-md-12">
+                        <b>Message:</u></b> <br><?php if(empty($message)){ echo 'N/A'; }else{ echo $message; } ?>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row" style="font-size:;">
+                    <div class="col-md-12">
+                        <b>Terms and Conditions:</u></b> <br> <?php echo $terms_conditions; ?>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row" style="font-size:;">
+                    <div class="col-md-12">
+                        <b>Attachments:</u></b> <br> <?php if(empty($attachments)){ echo 'N/A'; }else{ echo $attachments; } ?>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row" style="font-size:;">
+                    <div class="col-md-12">
+                        <b>Instructions:</u></b> <br> <?php if(empty($instructions)){ echo 'N/A'; }else{ echo $instructions; } ?> 
+                    </div>
+                </div>
+                <br><br>
+                <div class="row" style="font-size:;">
+                    <div class="col-md-12">
+                        <span><b>Warranty Repair Service.</b> During the term of your agreement, we will repair or service any defective part of the System as follows: (A) What is covered. If you to renewal your Premium warranty Service, then we will, so long as you are providing services contract. If you decline the Premium Service, however, then you agree to pay to <?php echo $bname; ?> or its assignee the Grand Total Value of the service. So as long as we are providing service pursuant to your agreement, you will agree to a visit charge for each service call, and you agree to pay the same. We can use new or used parts of the same functionality and keep all replaced parts. (B) What is not covered: Act of God and any non-normal conditions. </span>
+                    </div>
+                </div>
 
-<script>
-function printDiv(divName) {
-    var printContents = document.getElementById(divName).innerHTML;
-    var originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-}
-</script>
+
+    </div>
+</body>
+</html>
