@@ -273,7 +273,8 @@ class Tickets_model extends MY_Model
 
     public function get_upcoming_tickets_by_company_id($company_id = 0)
     {
-        $start_date = date('m/d/Y');
+        //$start_date = date('m/d/Y');
+        $start_date = date("Y-m-d");
 
         $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name,acs_profile.phone_m');
         $this->db->from($this->table);
