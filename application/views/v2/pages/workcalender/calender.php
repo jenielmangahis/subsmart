@@ -1895,7 +1895,14 @@
         var appointment_type_id = $("input[name=appointment_type_id]").val();
         var appointment_time_to = $('#appointment_time_to').val();
 
-        location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id+'&appointment_time_to='+appointment_time_to;
+        // address 
+        var customer_address = $('#m-customer-address').val();
+        var customer_city = $('#m-customer-city').val();
+        var customer_state = $('#m-customer-state').val();
+        var customer_zip = $('#m-customer-zip').val();
+        var customer_phone = $('#m-customer-mobile').val();
+
+        location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id+'&appointment_time_to='+appointment_time_to+'&customer_address='+customer_address+'&customer_city='+customer_city+'&customer_state='+customer_state+'&customer_zip='+customer_zip+'&customer_phone='+customer_phone;
 
         // $.ajax({
         //     url:"<?php echo base_url(); ?>tickets/addnewTicketApmt",
