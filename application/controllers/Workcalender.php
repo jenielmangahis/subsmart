@@ -83,7 +83,7 @@ class Workcalender extends MY_Controller
         $calendar_start_day = 0;
         $default_timezone   = 'Central Time (UTC -5)';
         $default_time_to_interval = 0;
-        $default_calendar_view    = 'month';  
+        $default_calendar_view    = 'Month';  
 
         if( $calender_settings ){
             if( $calender_settings->time_interval != '' ){
@@ -1752,6 +1752,7 @@ class Workcalender extends MY_Controller
         $this->load->model('AppointmentType_model');
         $this->load->model('EventTags_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('Users_model');
 
         $post = $this->input->post();
         $cid  = logged('company_id');
@@ -1768,9 +1769,30 @@ class Workcalender extends MY_Controller
             }
         }
 
+        $assigned_employee_ids = json_decode($appointment->assigned_employee_ids);
+        $attendees = array();
+        foreach($assigned_employee_ids as $uid){
+            $user = $this->Users_model->getUser($uid);
+            if( $user ){
+                $attendees[] = [
+                    'id' => $user->id,
+                    'name' => $user->FName . ' ' . $user->LName
+                ];
+            }
+        }
+
+        $salesAgent = $this->Users_model->getUser($appointment->sales_agent_id);
+
+        $appointmentPriorityOptions = $this->Appointment_model->priorityOptions();
+        $appointmentPriorityEventOptions = $this->Appointment_model->priorityEventOptions();
+
         $this->page_data['a_selected_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
+        $this->page_data['attendees'] = $attendees;
+        $this->page_data['salesAgent'] = $salesAgent;
         $this->page_data['appointmentTypes'] = $appointmentTypes;
+        $this->page_data['appointmentPriorityOptions'] = $appointmentPriorityOptions;
+        $this->page_data['appointmentPriorityEventOptions'] = $appointmentPriorityEventOptions;
         // $this->load->view('workcalender/ajax_edit_appointment', $this->page_data);
         $this->load->view('v2/pages/workcalender/ajax_edit_appointment', $this->page_data);
     }
@@ -1778,6 +1800,7 @@ class Workcalender extends MY_Controller
     public function ajax_update_appointment()
     {
         $this->load->model('Appointment_model');
+        $this->load->model('AppointmentType_model');
 
         $is_success = false;
         $message    = 'Cannot find appointment';
@@ -1787,6 +1810,7 @@ class Workcalender extends MY_Controller
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['aid'], $cid);
 
         if( $appointment ){
+            $old_appointment_type_id = $appointment->appointment_type_id;
             if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] > 0) {
 
                 if( $post['appointment_tags'] != '' ){
@@ -1795,18 +1819,53 @@ class Workcalender extends MY_Controller
                     $tags = '';
                 }
 
+                $sales_agent_id = 0;
+                $price = 0;
+                $invoice_number = '';
+                if( $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 1 ){
+                    $sales_agent_id = $post['appointment_sales_agent_id'];
+                    $price = $post['appointment_price'];
+                    $invoice_number = $post['appointment_invoice_number'];
+                }
+
+                if( $post['appointment_type_id'] == 2 ){
+                    $price = $post['appointment_price'];
+                    $invoice_number = $post['appointment_invoice_number'];   
+                } 
+
+                $appointment_priority = $post['appointment_priority'];
+                if( $post['appointment_priority'] == 'Others' ){
+                    $appointment_priority = $post['appointment_priority_others'];
+                }
+
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
-                    'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
                     'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
-                    'user_id' => $post['appointment_user_id'],
+                    'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
                     'prof_id' => $post['appointment_customer_id'],
                     'tag_ids' => $tags,
+                    'url_link' => $post['url_link'],
+                    'total_item_price' => 0,
+                    'total_item_discount' => 0,
+                    'total_amount' => 0,
                     'appointment_type_id' => $post['appointment_type_id'],
-                    'url_link' => $post['url_link']
+                    'is_paid' => 0,
+                    'priority' => $appointment_priority,
+                    'is_wait_list' => 0,
+                    'assigned_employee_ids' => json_encode($post['appointment_user_id']),
+                    'notes' => $post['appointment_notes'],
+                    'cost' => $price,
+                    'sales_agent_id' => $sales_agent_id,
+                    'invoice_number' => $invoice_number,
                 ];
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                if( $old_appointment_type_id != $post['appointment_type_id'] ){
+                    $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);  
+                    $appointment_number = $this->Appointment_model->generateAppointmentNumber($appointment->id, $appointmentType->name);
+                    $this->Appointment_model->update($appointment->id, ['appointment_number' => $appointment_number]);
+                }
 
                 customerAuditLog(logged('id'), $post['appointment_customer_id'], $appointment->id, 'Appointment', 'Updated appointment id '.$appointment->id);
 
@@ -2666,6 +2725,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Job_tags_model');
         $this->load->model('GoogleAccounts_model');
         $this->load->model('Users_model');
+        $this->load->model('CalendarSettings_model');
 
         $company_id = logged('company_id');
         $is_valid   = false;
@@ -2859,13 +2919,40 @@ class Workcalender extends MY_Controller
             $capi = new GoogleCalendarApi();
             $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
             if( $data['access_token'] ){
-                $reminders = [
-                    'useDefault' => "FALSE",
-                    'overrides' => [
-                        ['method' => 'email', 'minutes' => 24 * 60],
-                        ['method' => 'popup', 'minutes' => 5]
-                    ]
-                ];
+                $settings = $this->CalendarSettings_model->getByCompanyId($company_id); 
+                if( $settings ){
+                    $email_minutes = 1440;//1day
+                    if( $settings->google_calendar_email_notification != '' ){
+                        $eNotif = explode(" " , $settings->google_calendar_email_notification);
+                        if( isset($eNotif[0]) ){
+                            $email_minutes = $eNotif[0];
+                        }
+                    }
+
+                    $popup_minutes = 5;
+                    if( $settings->google_calendar_popup_notification != '' ){
+                        $pNotif = explode(" " , $settings->google_calendar_popup_notification);
+                        if( isset($pNotif[0]) ){
+                            $popup_minutes = $pNotif[0];
+                        }
+                    }
+                    $reminders = [
+                        'useDefault' => "FALSE",
+                        'overrides' => [
+                            ['method' => 'email', 'minutes' => $email_minutes],
+                            ['method' => 'popup', 'minutes' => $popup_minutes]
+                        ]
+                    ];
+                }else{
+                    $reminders = [
+                        'useDefault' => "FALSE",
+                        'overrides' => [
+                            ['method' => 'email', 'minutes' => 24 * 60],
+                            ['method' => 'popup', 'minutes' => 5]
+                        ]
+                    ];    
+                }
+                
                 $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                 if( $googleAccount->auto_sync_calendar_id != ''){
                     $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);

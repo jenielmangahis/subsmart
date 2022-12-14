@@ -63,6 +63,28 @@
 .multiple-date{
     z-index: 999 !important;
 }
+.select2-results__option {
+    text-align: left;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+    text-align: left;
+}
+.autocomplete-img{
+  height: 50px;
+  width: 50px;
+}
+.autocomplete-left{
+  display: inline-block;
+  width: 65px;
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 80%;
+    vertical-align: top;
+}
+.clear{
+  clear: both;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -194,7 +216,7 @@
             title: 'Tags', 
             content: "Pick a tags that will describe this appointment",
             trigger: 'hover'
-        });
+        });        
         $('#wait-list-add-employee-popover').popover({    
             content:'Who will attend the event',
             title:'Attendees',        
@@ -474,9 +496,6 @@
                         results: data,
                     };
                 },
-                /*formatResult: function(item) {
-                    return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
-                },*/
                 cache: true
             },
             dropdownParent: $("#create_appointment_modal"),
@@ -782,7 +801,6 @@
                 },
                 success: function(result) {
                     $('#edit_appointment_container').html(result);
-                    initializeEditAppointment();
                 }
             });
         });
@@ -1737,100 +1755,6 @@
                 next: 'bx bx-chevron-right',
                 previous: 'bx bx-chevron-left'
             },
-        });
-    }
-
-    function initializeEditAppointment() {
-        $('#edit-appointment-user').select2({
-            ajax: {
-                url: "<?= base_url('autocomplete/_company_users') ?>",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-
-                    return {
-                        results: data,
-                    };
-                },
-                formatResult: function(item) {
-                    //console.log(item);
-                    return '<div>' + item.FName + ' ' + item.LName + '<br /><small>' + item.email + '</small></div>';
-                },
-                cache: true
-            },
-            placeholder: 'Select User',
-            minimumInputLength: 0,
-            templateResult: formatRepoUser,
-            templateSelection: formatRepoSelectionUser
-        });
-
-        $('#edit-appointment-customer').select2({
-            ajax: {
-                url: "<?= base_url('autocomplete/_company_customer') ?>",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-
-                    return {
-                        results: data,
-                    };
-                },
-                cache: true
-            },
-            placeholder: 'Select Customer',
-            minimumInputLength: 0,
-            templateResult: formatRepoCustomer,
-            templateSelection: formatRepoCustomerSelection
-        });
-
-        $('#edit-appointment-tags').select2({
-            ajax: {
-                url: "<?= base_url('autocomplete/_company_job_tags') ?>",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-
-                    return {
-                        results: data,
-                    };
-                },
-                cache: true
-            },
-            placeholder: 'Select Tags',
-            minimumInputLength: 0,
-            templateResult: formatRepoTag,
-            templateSelection: formatRepoTagSelection
-        });
-
-        $('.datepicker').datepicker({
-            //format: 'yyyy-mm-dd',
-            format: 'DD, MM dd, yyyy',
-            autoclose: true,
-        });
-
-        $(".timepicker").datetimepicker({
-            format: 'hh:mm A'
         });
     }
 
