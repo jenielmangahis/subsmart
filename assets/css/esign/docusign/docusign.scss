@@ -248,7 +248,7 @@ body {
 
   &__fieldSignature,
   &__fieldAttachment {
-    --size: #{em(60)};
+    --size: #{em(120)};
     --size-svg: #{em(30)};
 
     height: var(--size);
@@ -257,6 +257,7 @@ body {
     align-items: center;
     justify-content: center;
     border: #{em(2)} solid #bf1e2e;
+    border-color: transparent;
     cursor: pointer;
 
     svg {

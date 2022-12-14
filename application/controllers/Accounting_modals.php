@@ -1976,7 +1976,8 @@ class Accounting_modals extends MY_Controller
                 foreach ($data['journal_entry_accounts'] as $key => $value) {
                     $name = explode('-', $data['names'][$key]);
     
-                    $entryItems[] = [
+                    // $entryItems[] = [
+                    $entryItem = [
                         'journal_entry_id' => $entryId,
                         'account_id' => $value,
                         'debit' => $data['debits'][$key],
@@ -1986,14 +1987,19 @@ class Accounting_modals extends MY_Controller
                         'name_id' => $name[1]
                     ];
 
+                    $entryItemId = $this->accounting_journal_entries_model->insertEntryItem($entryItem);
+
                     if(!isset($data['template_name'])) {
                         $account = $this->chart_of_accounts_model->getById($value);
-                        if($account->account_id !== "7") {
+                        if($account->account_id !== "7" && $account->account_id !== "6") {
                             $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
                             $newBalance = $newBalance + floatval($data['debits'][$key]);
+                            $type = floatval($data['debits'][$key]) > 0 && floatval($data['credits'][$key]) < 1 ? 'increase' : 'decrease';
                         } else {
                             $newBalance = floatval($account->balance) + floatval($data['credits'][$key]);
                             $newBalance = $newBalance - floatval($data['debits'][$key]);
+
+                            $type = 'decrease';
                         }
 
                         $newBalance = number_format($newBalance, 2, '.', ',');
@@ -2010,21 +2016,22 @@ class Accounting_modals extends MY_Controller
                             'account_id' => $account->id,
                             'transaction_type' => 'Journal',
                             'transaction_id' => $entryId,
-                            'amount' => floatval($totalAmount),
-                            'transaction_date' => date("Y-m-d", strtotime($data['sales_receipt_date'])),
-                            'type' => floatval($data['debits'][$key]) > 0 && floatval($data['credits'][$key]) < 1 ? 'increase' : 'decrease'
+                            'amount' => floatval($data['debits'][$key]) + floatval($data['credits'][$key]),
+                            'transaction_date' => date("Y-m-d", strtotime($data['journal_date'])),
+                            'type' => $type,
+                            'child_id' => $entryItemId
                         ];
     
                         $this->accounting_account_transactions_model->create($accTransacData);
                     }
                 }
 
-                $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
+                // $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
             }
 
             $return['data'] = $entryId;
-            $return['success'] = $entryId && $entryItemsId ? true : false;
-            $return['message'] = $entryId && $entryItemsId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['success'] = $entryId && $entryItemId ? true : false;
+            $return['message'] = $entryId && $entryItemId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -2316,8 +2323,8 @@ class Accounting_modals extends MY_Controller
             }
 
             $return['data'] = $depositId;
-            $return['success'] = $depositId && $fundsId ? true : false;
-            $return['message'] = $depositId && $fundsId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['success'] = $depositId && $fundId ? true : false;
+            $return['message'] = $depositId && $fundId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;

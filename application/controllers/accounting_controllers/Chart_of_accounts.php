@@ -1619,15 +1619,28 @@ class Chart_of_accounts extends MY_Controller {
             $accType = 'Asset';
         } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
             $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
         } else {
             $accType = $accountType->account_name;
         }
-        $journalEntries = $this->chart_of_accounts_model->get_journal_entry_registers($accountId);
 
-        foreach($journalEntries as $journalEntryItem) {
-            $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id, logged('company_id'));
+        $transactions = $this->accounting_account_transactions_model->get_account_transactions_by_type($accountId, 'Journal');
+
+        foreach($transactions as $transaction)
+        {
+            $journalEntry = $this->accounting_journal_entries_model->getById($transaction->transaction_id, logged('company_id'));
             $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
 
+            foreach($entries as $entry) {
+                if($entry->id === $transaction->child_id) {
+                    $journalEntryItem = $entry;
+                }
+            }
+
+            $payeeName = '';
             switch($journalEntryItem->name_key) {
                 case 'vendor':
                     $payee = $this->vendors_model->get_vendor_by_id($journalEntryItem->name_id);
@@ -1645,53 +1658,116 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('Journal', $journalEntry->id);
 
-            $register = [
-                'id' => $journalEntry->id,
-                'child_id' => $journalEntryItem->id,
-                'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
-                'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
-                'ref_no_disabled' => false,
-                'type' => 'Journal',
-                'payee_type' => $journalEntryItem->name_key,
-                'payee_id' => $journalEntryItem->name_id,
-                'payee' => $payeeName,
-                'payee_disabled' => false,
-                'account' => '-Split-',
-                'account_disabled' => true,
-                'memo' => $journalEntryItem->description,
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => count($attachments) > 0 ? count($attachments) : '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($journalEntry->created_at))
-            ];
+            $amount = $transaction->amount;
 
-            switch($accType) {
-                case 'Credit Card' :
-                    $register['charge'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $register['payment'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $register['charge_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $register['payment_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
-                break;
-                case 'Asset' :
-                    $register['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $register['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $register['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $register['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
-                break;
-                case 'Liability' :
-                    $register['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $register['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $register['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $register['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
-                break;
-                default :
-                    $register['payment'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
-                    $register['deposit'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
-                    $register['payment_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
-                    $register['deposit_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
-                break;
+            if($accType !== 'A/R' && $accType !== 'A/P') {
+                $register = [
+                    'id' => $journalEntry->id,
+                    'acc_transac_id' => $transaction->id,
+                    'child_id' => $entry->id,
+                    'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
+                    'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
+                    'ref_no_disabled' => false,
+                    'type' => 'Journal',
+                    'payee_type' => $journalEntryItem->name_key,
+                    'payee_id' => $journalEntryItem->name_id,
+                    'payee' => $payeeName,
+                    'payee_disabled' => false,
+                    'account' => '-Split-',
+                    'account_disabled' => true,
+                    'memo' => $journalEntryItem->description,
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($journalEntry->created_at))
+                ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        if($transaction->type === 'increase') {
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['charge'] = "";
+                            $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = true;
+                        } else {
+                            $register['payment'] = "";
+                            $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment_disabled'] = true;
+                            $register['charge_disabled'] = true;
+                        }
+                    break;
+                    case 'Asset' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        }
+                    break;
+                    case 'Liability' :
+                        if($transaction->type === 'increase') {
+                            $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['decrease'] = "";
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        } else {
+                            $register['increase'] = "";
+                            $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['increase_disabled'] = true;
+                            $register['decrease_disabled'] = true;
+                        }
+                    break;
+                    default :
+                        if($transaction->type === 'increase') {
+                            $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['payment'] = "";
+                            $register['deposit_disabled'] = $count > 1;
+                            $register['payment_disabled'] = true;
+                        } else {
+                            $register['deposit'] = "";
+                            $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                            $register['deposit_disabled'] = true;
+                            $register['payment_disabled'] = $count > 1;
+                        }
+                    break;
+                }
+            } else {
+                $register = [
+                    'id' => $journalEntry->id,
+                    'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
+                    'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
+                    'type' => 'Journal',
+                    'vendor' => $payeeName,
+                    'account' => '-Split-',
+                    'memo' => $journalEntryItem->description,
+                    'due_date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
+                    'open_balance' => number_format(floatval($amount), 2, '.', ',')
+                ];
+
+                if($accType === 'A/R') {
+                    if($transaction->type === 'increase') {
+                        $register['charge_credit'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['payment'] = '';
+                    } else {
+                        $register['charge_credit'] = '';
+                        $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                    }
+                } else {
+                    if($transaction->type === 'increase') {
+                        $register['billed'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['paid'] = '';
+                    } else {
+                        $register['billed'] = '';
+                        $register['paid'] = number_format(floatval($amount), 2, '.', ',');
+                    }
+                }
             }
 
             $data[] = $register;
@@ -3509,12 +3585,17 @@ class Chart_of_accounts extends MY_Controller {
             $accType = 'Asset';
         } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
             $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
         } else {
             $accType = $accountType->account_name;
         }
-        $ccPayments = $this->chart_of_accounts_model->get_credit_card_payment_registers($accountId);
+        $transactions = $this->accounting_account_transactions_model->get_account_transactions_by_type($accountId, 'CC Payment');
 
-        foreach($ccPayments as $ccPayment) {
+        foreach($transactions as $transaction) {
+            $ccPayment = $this->accounting_pay_down_credit_card_model->get_by_id($transaction->transaction_id);
             $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
             $payeeName = !is_null($payee) ? $payee->display_name : "";
 
@@ -3524,8 +3605,11 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $ccPayment->id);
 
+            $amount = $transaction->amount;
+
             $register = [
                 'id' => $ccPayment->id,
+                'acc_transac_id' => $transaction->id,
                 'date' => date("m/d/Y", strtotime($ccPayment->date)),
                 'ref_no' => '',
                 'ref_no_disabled' => true,
@@ -3549,20 +3633,56 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $register['charge'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $register['payment'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['charge'] = "";
+                        $register['payment_disabled'] = true;
+                        $register['charge_disabled'] = true;
+                    } else {
+                        $register['payment'] = "";
+                        $register['charge'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['payment_disabled'] = true;
+                        $register['charge_disabled'] = true;
+                    }
                 break;
                 case 'Asset' :
-                    $register['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $register['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['decrease'] = "";
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    } else {
+                        $register['increase'] = "";
+                        $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    }
                 break;
                 case 'Liability' :
-                    $register['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $register['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['increase'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['decrease'] = "";
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    } else {
+                        $register['increase'] = "";
+                        $register['decrease'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['increase_disabled'] = true;
+                        $register['decrease_disabled'] = true;
+                    }
                 break;
                 default :
-                    $register['payment'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
-                    $register['deposit'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    if($transaction->type === 'increase') {
+                        $register['deposit'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['payment'] = "";
+                        $register['deposit_disabled'] = true;
+                        $register['payment_disabled'] = true;
+                    } else {
+                        $register['deposit'] = "";
+                        $register['payment'] = number_format(floatval($amount), 2, '.', ',');
+                        $register['deposit_disabled'] = true;
+                        $register['payment_disabled'] = true;
+                    }
                 break;
             }
 

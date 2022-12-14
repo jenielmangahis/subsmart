@@ -211,7 +211,7 @@ body {
   position: relative;
 }
 .signing__fieldSignature, .signing__fieldAttachment {
-  --size: 3.75em;
+  --size: 7.5em;
   --size-svg: 1.875em;
   height: var(--size);
   width: var(--size);
@@ -219,6 +219,7 @@ body {
   align-items: center;
   justify-content: center;
   border: 0.125em solid #bf1e2e;
+  border-color: transparent;
   cursor: pointer;
 }
 .signing__fieldSignature svg, .signing__fieldAttachment svg {

@@ -89,19 +89,19 @@ table {
         </div>
         <br><br><br><br><br><br><br>
         <div>
-            <h6><?php echo $name; ?></h6>
-            <span><?php echo $mail_add; ?></span> <br>
-            <span><?php echo $city; ?></span>, <span><?php echo $state; ?></span>, <span><?php echo $zip_code; ?></span> <br>
-            <span><?php echo $email; ?></span> <br>
-            <span><?php echo $phone_h; ?></span> <br>
-        </div>
-        <br>
-        <div>
             <h6><?php echo $bname; ?></h6>
             <span><?php echo $baddress; ?></span> <br>
             <span><?php echo $bcity; ?></span>, <span><?php echo $bstate; ?></span>, <span><?php echo $bzip_code; ?></span> <br>
             <span><?php echo $bemail; ?></span> <br>
             <span><?php echo $bphone_h; ?></span> <br>
+        </div>
+        <br>
+        <div>
+            <h6><?php echo $name; ?></h6>
+            <span><?php echo $mail_add; ?></span> <br>
+            <span><?php echo $city; ?></span>, <span><?php echo $state; ?></span>, <span><?php echo $zip_code; ?></span> <br>
+            <span><?php echo $email; ?></span> <br>
+            <span><?php echo $phone_h; ?></span> <br>
         </div>
                 <div style="float:right;text-align:center;border:solid gray 1px;padding:2px;width:200px;">
                     <b>Sales Representative</b> <br>

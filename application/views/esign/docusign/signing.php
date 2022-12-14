@@ -172,6 +172,8 @@
     <script src="<?= base_url('assets/js/esign/libs/pdf.js'); ?>"></script>
     <script src="<?= base_url('assets/js/esign/libs/pdf.worker.js'); ?>"></script>
     <script src="<?= base_url('assets/js/esign/docusign/input.autoresize.js'); ?>"></script>
+
+    <script src="<?= base_url('assets/js/esign/docusign/o9n.js'); ?>"></script>
     <script src="<?= base_url('assets/js/esign/docusign/signing.js'); ?>"></script>
 
     <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js"></script>

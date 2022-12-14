@@ -15,8 +15,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
-    <div class="col-12">
+    <div class="col-12">        
         <div style="float:right;padding-right:10%;">
+            <a href="<?= base_url('tickets/editDetails/'.$tickets->id); ?>" class="btn btn-primary">Edit</a>
             <a href="<?php echo base_url('share_Link/ticketsPDF/' . $tickets->id) ?>" class="btn btn-success">Download as PDF</a> <a href="#" class="btn btn-primary" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
         </div>
         <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;" id="printArea">

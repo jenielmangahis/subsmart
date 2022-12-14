@@ -115,7 +115,34 @@
                         <label class="content-title mb-2">Calendar Day Ends On</label>
                         <input type="text" name="calendar_day_ends_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_ends_on != '' ? $settings->day_ends_on : ''; ?>" required />
                     </div>
-                </div>                
+                </div> 
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                        <label class="content-title">Google Event Email Notification</label>
+                        <label class="content-subtitle mb-2">Time interval email notification will be sent before the event time</label>
+                        <select name="google_calendar_email_notification" id="google_calendar_email_notification" class="nsm-field form-select" required>
+                            <option <?= $settings && $settings->google_calendar_email_notification == '5 minutes' ? 'selected="selected"' : ''; ?> value="5 Minutes">5 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_email_notification == '10 minutes' ? 'selected="selected"' : ''; ?> value="10 minutes">10 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_email_notification == '15 minutes' ? 'selected="selected"' : ''; ?> value="15 minutes">15 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_email_notification == '20 minutes' ? 'selected="selected"' : ''; ?> value="20 minutes">20 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_email_notification == '25 minutes' ? 'selected="selected"' : ''; ?> value="25 minutes">25 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_email_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="content-title">Google Event Popup Notification</label>
+                        <label class="content-subtitle mb-2">Time interval popup notification will show before the event time</label>
+                        <select name="google_calendar_popup_notification" id="google_calendar_popup_notification" class="nsm-field form-select" required>
+                            <option <?= $settings && $settings->google_calendar_popup_notification == '5 minutes' ? 'selected="selected"' : ''; ?> value="5 Minutes">5 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_popup_notification == '10 minutes' ? 'selected="selected"' : ''; ?> value="10 minutes">10 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_popup_notification == '15 minutes' ? 'selected="selected"' : ''; ?> value="15 minutes">15 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_popup_notification == '20 minutes' ? 'selected="selected"' : ''; ?> value="20 minutes">20 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_popup_notification == '25 minutes' ? 'selected="selected"' : ''; ?> value="25 minutes">25 minutes</option>
+                            <option <?= $settings && $settings->google_calendar_popup_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
+                        </select>
+                    </div>
+                </div>               
                 <div class="row g-3 mb-2">
                     <div class="col-12 col-md-4 calendar-account">
                         <label class="content-title">Calendar Account</label>
@@ -253,6 +280,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>                    
                 </div>
                 <div class="row g-3">

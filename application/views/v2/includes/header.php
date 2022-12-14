@@ -170,30 +170,30 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-show-alt'></i> Bird's Eye View
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == '') : echo 'selected';
+                        <!-- <li class="<?php if ($page->title == '') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("event_types/index") ?>">
                                 <i class='bx bx-fw bx-calendar-minus'></i> Event Types
                             </a>
-                        </li>
-                        <li class="<?php if ($page->title == '') : echo 'selected';
+                        </li> -->
+                        <!-- <li class="<?php if ($page->title == '') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("appointment_types/index") ?>">
                                 <i class='bx bx-fw bx-book-add'></i> Appointment Types
                             </a>
-                        </li>
-                        <li class="<?php if ($page->title == 'Color Settings') : echo 'selected';
+                        </li> -->
+                        <!-- <li class="<?php if ($page->title == 'Color Settings') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("color_settings/index") ?>">
                                 <i class='bx bx-fw bx-brush'></i> Color Settings
                             </a>
-                        </li>
-                        <li class="<?php if ($page->title == 'Calendar Settings') : echo 'selected';
+                        </li> -->
+                        <!-- <li class="<?php if ($page->title == 'Calendar Settings') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("settings/schedule") ?>">
                                 <i class='bx bx-fw bx-calendar-edit'></i> Calendar Settings
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </li>
                 <li class="<?php if ($page->parent == 'Sales') : echo 'active';
@@ -449,12 +449,12 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-building-house'></i> My Business
                             </a>
                         </li>
-                        <!-- <li class="<?php if ($page->title == 'Email Templates' || $page->title == 'SMS Templates' || $page->title == 'Email Branding' || $page->title == 'Notifications') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Email Templates' || $page->title == 'SMS Templates' || $page->title == 'Email Branding' || $page->title == 'Notifications') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("settings/email_templates") ?>">
                                 <i class='bx bx-fw bx-cog'></i> Settings
                             </a>
-                        </li> -->
+                        </li>
                         <li class="<?php if ($page->title == 'Employees' || $page->title == 'Timesheet' || $page->title == 'Track Location' || $page->title == 'Payscale') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("users") ?>">
@@ -474,10 +474,22 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-cog'></i> Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li>
-                            <a href="<?= base_url("settings/schedule") ?>">
-                                <i class='bx bx-fw bx-calendar-edit'></i> Calendar settings
+                        <li class="li-third-sub-menu">
+                            <a href="javascript:void(0);" class="third-sub-menu">
+                                <i class='bx bx-fw bx-calendar-edit'></i> Calendar settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                             </a>
+                            <ul class="mt-3">
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("appointment_types/index") ?>">
+                                        <i class='bx bx-fw bx-calendar-week'></i> Appointment Types
+                                    </a>
+                                </li>
+                                <li class="third-sub-menu-item">
+                                    <a href="<?= base_url("settings/schedule") ?>">
+                                        <i class='bx bx-fw bx-cog'></i> Settings
+                                    </a>
+                                </li>                                
+                            </ul>
                         </li>
                         <li class="li-third-sub-menu">
                             <a href="javascript:void(0);" class="third-sub-menu">
@@ -553,11 +565,6 @@ if ($this->session->userdata('usertimezone') == null) {
                         <li class="li-third-sub-menu">
                             <a href="<?= base_url("workorder/settings") ?>">
                                 <i class='bx bx-fw bx-task'></i> Workorder Settings
-                            </a>
-                        </li>
-                        <li class="li-third-sub-menu">
-                            <a href="<?= base_url("tickets/settings") ?>">
-                                <i class='bx bx-fw bx-task'></i> Service Tickets Settings
                             </a>
                         </li>
                         <li class="li-third-sub-menu">
