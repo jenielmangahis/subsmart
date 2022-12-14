@@ -194,7 +194,7 @@ a.btn-primary.btn-md {
                             <?php if($headers){ echo $headers->content; }else{ ?>
                             Creating and Copying Customer Service Tickets in the  Customer Service module (CRM) are used to track customer service issues.  Service Tickets can be created from any Service Ticket Workbench or via the Service folder under Sales Category.  User can simply create on the Customer Account or directly from the calendar.  To save time Service Tickets can now also be created via a copy or from the Customer Items Owned screen. 
                             <?php } ?>
-                        </span>
+                            </span>
                             <i class="bx bx-fw bx-edit"></i>
                         </div>
                     </div>
@@ -1429,8 +1429,8 @@ $(document).ready(function(){
          var mobile = response['customer'].phone_m;
              // mobile = normalize(mobile);
 
-         var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-         var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+        //  var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+        //  var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
          
          $("#service_location").val(response['customer'].mail_add);
          $("#customer_city").val(response['customer'].city);

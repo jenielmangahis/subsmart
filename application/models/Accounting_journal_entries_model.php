@@ -25,6 +25,12 @@ class Accounting_journal_entries_model extends MY_Model {
 	    return $this->db->insert_id();
 	}
 
+	public function insertEntryItem($data)
+	{
+		$this->db->insert('accounting_journal_entry_items', $data);
+		return $this->db->insert_id();
+	}
+
 	function insertEntryItems($data)
 	{
 		$this->db->insert_batch('accounting_journal_entry_items', $data);

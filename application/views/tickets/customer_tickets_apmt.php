@@ -182,9 +182,14 @@ a.btn-primary.btn-md {
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
+                        <div class="nsm-callout primary" id="updateHeaderDiv">
+                            <!-- <button><i class='bx bx-fw bx:edit'></i></button> -->
+                           <span class="updateHeader">
+                            <?php if($headers){ echo $headers->content; }else{ ?>
                             Creating and Copying Customer Service Tickets in the  Customer Service module (CRM) are used to track customer service issues.  Service Tickets can be created from any Service Ticket Workbench or via the Service folder under Sales Category.  User can simply create on the Customer Account or directly from the calendar.  To save time Service Tickets can now also be created via a copy or from the Customer Items Owned screen. 
+                            <?php } ?>
+                            </span>
+                            <i class="bx bx-fw bx-edit"></i>
                         </div>
                     </div>
                 </div>
@@ -195,6 +200,12 @@ a.btn-primary.btn-md {
                     $appointment_customer_id    = $_GET['appointment_customer_id'];
                     $appointment_type_id        = $_GET['appointment_type_id'];
                     $appointment_time_to        = $_GET['appointment_time_to'];
+                    // address 
+                    $customer_address           = $_GET['customer_address'];
+                    $customer_city              = $_GET['customer_city'];
+                    $customer_state             = $_GET['customer_state'];
+                    $customer_zip               = $_GET['customer_zip'];
+                    $customer_phone             = $_GET['customer_phone'];
                 ?>
                 <div class="row">
                     <div class="col-md-6">
@@ -215,13 +226,13 @@ a.btn-primary.btn-md {
                         <label for="job_location"><b>Service Location</b></label>
                         <input type="text" class="form-control" name="service_location" id="service_location"
                                 required placeholder="Enter address"
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $customer_address ?>" />
                     </div>
                     <div class="col-md-2">
                         <label for="job_location"><b>City</b></label>
                         <input type="text" class="form-control" name="customer_city" id="customer_city"
                                 required placeholder="Enter address" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $customer_city ?>" />
                     </div>
                 </div>
                 <div class="row">
@@ -229,17 +240,17 @@ a.btn-primary.btn-md {
                         <label for="job_location"><b>State</b></label>
                         <input type="text" class="form-control" name="customer_state" id="customer_state"
                                 required placeholder="Enter address" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $customer_state ?>" />
                     </div>
                     <div class="col-md-2">
                         <label for="job_location"><b>Zip Code</b></label>
                         <input type="text" class="form-control" name="customer_zip" id="customer_zip"
                                 required placeholder="Enter address" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $customer_zip ?>" />
                     </div>
                     <div class="col-md-2" style="display: ;">
                         <label for="job_location"><b>Customer Phone #</b></label>
-                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter address" />
+                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter address"  value="<?php echo $customer_phone ?>" />
                     </div>
                 </div>
                 <div class="row">
@@ -959,6 +970,36 @@ a.btn-primary.btn-md {
                                         </div>
                                     </div>
                                 </div>
+
+                                
+                                <!-- Modal add/update header -->
+                                <div class="modal fade" id="updateHeaderModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Update Header</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Content <br>
+                                                <textarea class="form-control headereditor" id="" rows="10"><?php if($headers){ echo $headers->content; ?><?php }else{ ?>Creating and Copying Customer Service Tickets in the Customer Service module (CRM) are used to track customer service issues. Service Tickets can be created from any Service Ticket Workbench or via the Service folder under Sales Category. User can simply create on the Customer Account or directly from the calendar. To save time Service Tickets can now also be created via a copy or from the Customer Items Owned screen.<?php } ?></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <?php if($headers){ ?>
+                                                    <button type="button" class="btn btn-danger updateHeaderSave">Update changes</button>
+                                                <?php }else{ ?>
+                                                    <button type="button" class="btn btn-success saveHeader">Save changes</button>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -1393,8 +1434,8 @@ $(document).ready(function(){
          var mobile = response['customer'].phone_m;
              // mobile = normalize(mobile);
 
-         var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-         var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+        //  var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+        //  var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
          
         //  $("#service_location").val(response['customer'].mail_add + ',' + response['customer'].city + ',' + response['customer'].state + ',' + response['customer'].zip_code);
         //  $("#customer_phone").val(response['customer'].phone_h);
@@ -1469,5 +1510,56 @@ $('#modal_items_list').DataTable({
     { width: 100, targets: 0 }
     ],
     "ordering": false,
+});
+</script>
+
+<script>
+
+$(".updateHeader").on("click", function(e) {
+    // alert('test');
+    $('#updateHeaderModal').modal('show');
+});
+
+
+$(".saveHeader").on("click", function(e) {
+    // alert('test');
+    var content = $('.headereditor').val();
+    // alert(content);
+    
+    $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>tickets/saveTickets",
+         data: {content : content },
+         dataType: 'json',
+         success: function(response){
+            $('#updateHeaderModal').modal('hide');
+            $("#updateHeaderDiv").load(location.href + " #updateHeaderDiv");
+         },
+             error: function(response){
+             //alert('Error'+response);
+    
+             }
+     });
+});
+
+$(".updateHeaderSave").on("click", function(e) {
+    // alert('test');
+    var content = $(".headereditor").val();
+    // alert(content);
+    
+    $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>tickets/updateHeader",
+         data: {content : content },
+         dataType: 'json',
+         success: function(response){
+            $('#updateHeaderModal').modal('hide');
+            $("#updateHeaderDiv").load(location.href + " #updateHeaderDiv");
+         },
+             error: function(response){
+             //alert('Error'+response);
+    
+             }
+     });
 });
 </script>
