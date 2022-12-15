@@ -2727,6 +2727,8 @@ class Workcalender extends MY_Controller
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
 
+        $this->load->helper(array('hashids_helper'));
+
         $company_id = logged('company_id');
         $is_valid   = false;
         $post = $this->input->post();
@@ -2770,11 +2772,15 @@ class Workcalender extends MY_Controller
 
                     $location = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
 
-                    $description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
-                    $description .= "<span>Phone Number : ".$appointment->cust_phone."</span><br />";   
-                    $description .= "<span>URL : ".$appointment->url_link."</span><br />";                    
-                    $description .= "<span>Location : " . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
-                    $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+                    $appointment_eid = hashids_encrypt($appointment->id, '', 15);
+                    $view_link       = base_url('appointment/'.$appointment_eid);
+
+                    $description  = "<b>Customer Name : ".$appointment->customer_name."</b><br />";
+                    $description .= "Phone Number : ".$appointment->cust_phone."<br />";                       
+                    //$description .= "URL Link : <a href='".$appointment->url_link."'>".$appointment->url_link."</a><br />";                              
+                    $description .= "Location : " . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "<br />";
+                    $description .= "Notes : ". $appointment->notes ."<br />";
+                    $description .= "View : <a href='".$view_link."'>".$view_link."</a><br />"; 
 
                     $is_valid = true;
 
@@ -2807,9 +2813,9 @@ class Workcalender extends MY_Controller
 
                     $location = $event->event_address;    
 
-                    $description  = "<span><b>Event Type : ".$event->event_type."</b></span><br />";
-                    $description .= "<span>" . $event->event_address . "</span><br />";
-                    $description  = "<span>Event Description : ".$event->event_description."</span><br />";
+                    $description  = "<b>Event Type : ".$event->event_type."</b><br />";
+                    $description .= $event->event_address . "<br />";
+                    $description .= "Event Description : ".$event->event_description."<br />";
 
                     $is_valid = true;
                 }
@@ -2845,10 +2851,10 @@ class Workcalender extends MY_Controller
 
                     $location = $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
 
-                    $description  = "<span><b>Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."</b></span><br />";
-                    $description .= "<span>Phone Number : ".$ticket->phone_m."</span><br />";                  
-                    $description .= "<span>Service Location : " . $ticket->service_location . "</span><br />";
-                    $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+                    $description  = "<b>Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."</b><br />";
+                    $description .= "Phone Number : ".$ticket->phone_m."<br />";                  
+                    $description .= "Service Location : " . $ticket->service_location . "<br />";
+                    $description .= "Notes : ". $appointment->notes ."<br />";
 
                     $is_valid = true;
                 }
@@ -2900,10 +2906,10 @@ class Workcalender extends MY_Controller
 
                     $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
 
-                    $description  = "<span><b>Customer Name : ".$job->first_name . ' ' . $job->last_name."</b></span><br />";
-                    $description .= "<span>Job Type : ".$job->job_type."</span><br />";                
-                    $description .= "<span>Phone Number : ".$job->cust_phone."</span><br />";                
-                    $description .= "<span>Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "</span><br />";
+                    $description  = "<b>Customer Name : ".$job->first_name . ' ' . $job->last_name."</b><br />";
+                    $description .= "Job Type : ".$job->job_type."<br />";                
+                    $description .= "Phone Number : ".$job->cust_phone."<br />";                
+                    $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "<br />";
 
                     $is_valid = true;
                 }

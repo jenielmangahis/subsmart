@@ -131,7 +131,7 @@
                                     </span>
                                 </div>
                                 <div class="col-6">
-                                    <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
+                                    <label class="content-subtitle fw-bold d-block mb-2">URL Link <small style="color:#ff4d4d;">(Must be public url)</small></label>
                                     <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
                                 </div>
                             </div>
@@ -314,7 +314,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="edit_appointment_modal" tabindex="-1" aria-labelledby="edit_appointment_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form id="frm-update-appointment" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
