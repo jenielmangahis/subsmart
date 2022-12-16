@@ -92,7 +92,7 @@
                             <div class="row">
                                 <div class="col-12 col-md-2 offset-md-10">
                                     <label for="amount">Amount</label>
-                                    <input type="number" name="total_amount" class="form-control nsm-field" value="<?=number_format(floatval($bill->remaining_balance), 2, '.', ',')?>" onchange="convertToDecimal(this)">
+                                    <input type="number" name="payment_amount" class="form-control nsm-field" value="<?=number_format(floatval($bill->remaining_balance), 2, '.', ',')?>" onchange="convertToDecimal(this)">
                                 </div>
                             </div>
 
