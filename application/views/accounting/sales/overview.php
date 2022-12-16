@@ -73,17 +73,13 @@
                                     </div>
                             </div>
                         </div>
-
-                       
-
-
-                        <div class="nsm-card primary" style="margin-top:10px;">
+                        <!-- <div class="nsm-card primary" style="margin-top:10px;">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">  </div>
                             </div>
                             <div class="nsm-card-content">
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md-5">
                         <div class="nsm-card primary">
@@ -177,20 +173,19 @@
                             </div>
                         </div>
 
-                        <div class="nsm-card primary" style="margin-top:10px;">
+                        <!-- <div class="nsm-card primary" style="margin-top:10px;">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title"> DISCOVER MORE </div>
                             </div>
                             <div class="nsm-card-content">
                             </div>
-                        </div>
+                        </div>  -->                       
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 	var chart;

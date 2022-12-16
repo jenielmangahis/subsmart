@@ -181,11 +181,15 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
 
+                        $appointment_eid = hashids_encrypt($appointment->id, '', 15);
+                        $view_link       = base_url('appointment/'.$appointment_eid);
+
                         $description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
                         $description .= "<span>Phone Number : ".$appointment->cust_phone."</span><br />";   
-                        $description .= "<span>URL : ".$appointment->url_link."</span><br />";                    
+                        //$description .= "<span>URL : ".$appointment->url_link."</span><br />";                    
                         $description .= "<span>Location : " . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
                         $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+                        $description .= "View : <a href='".$view_link."'>".$view_link."</a><br />"; 
 
                         $is_valid = true;
 
@@ -220,7 +224,7 @@ class Cron_Api extends MYF_Controller {
 
                         $description  = "<span><b>Event Type : ".$event->event_type."</b></span><br />";
                         $description .= "<span>" . $event->event_address . "</span><br />";
-                        $description  = "<span>Event Description : ".$event->event_description."</span><br />";
+                        $description .= "<span>Event Description : ".$event->event_description."</span><br />";
 
                         $is_valid = true;
                     }

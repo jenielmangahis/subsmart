@@ -287,4 +287,16 @@ class Accounting_customers_model extends MY_Model
         echo "<br>";
         var_dump("INSERT INTO customers ($columns ) VALUES  $values ");
     }
+
+    public function addNotes($table, $input, $id) {
+        $this->db->where('id', $id);
+        $this->db->update($table, $input);
+    }
+
+
 }
+
+
+
+
+

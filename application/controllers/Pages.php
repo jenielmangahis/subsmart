@@ -1208,6 +1208,48 @@ class Pages extends MYF_Controller {
 
   	$json_data = ['jump_id' => $jump_question_id, 'next_question_id' => $next_question_id];
   	echo json_encode($json_data);
-
   }
+
+  	public function front_appointment_view($eid)
+    {
+    	$this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
+
+        $this->load->helper(array('hashids_helper'));
+
+        $appointment_id = hashids_decrypt($eid, '', 15);
+        $appointment    = $this->Appointment_model->getById($appointment_id);
+        if( $appointment ){
+        	$text_tags = '';
+	        if( $appointment->tag_ids != '' ){
+	            $a_tags = explode(",", $appointment->tag_ids);     
+	            $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+	            $e_tags = array();
+	            foreach($appointmentTags as $t){
+	                $e_tags[] = $t->name;
+	            }
+	            if( !empty($e_tags) ){
+	                $text_tags = implode(",", $e_tags);
+	            }            
+	        }
+
+	        $tags = $this->Job_tags_model->getAllByCompanyId($company_id, array());  
+
+	        $a_tags = array();
+	        $selected_tags = explode(",", $appointment->tag_ids);
+	        foreach($tags as $t){
+	            if( in_array($t->id, $selected_tags) ){
+	                $a_tags[$t->id] = ['name' => $t->name, 'icon' => $t->marker_icon, 'is_marker_icon_default_list' => $t->is_marker_icon_default_list, 'cid' => $t->company_id];
+	            }
+	        }
+
+	        $this->page_data['a_tags'] = $a_tags;
+	        $this->page_data['text_tags'] = $text_tags;
+	        $this->page_data['appointment'] = $appointment;
+	        $this->load->view('pages/appointment_view', $this->page_data);
+        }else{
+        	redirect('home');
+        }
+	}
 }

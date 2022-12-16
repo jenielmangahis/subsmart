@@ -23,12 +23,20 @@ class Autocomplete extends MY_Controller
             $filter = ['mobile' => 1];
         }
 
-        $users  = $this->Users_model->getCompanyUsers($cid, $filter);  
+        $users  = $this->Users_model->getCompanyUsers($cid, $filter); 
+
+        $result = array(); 
         foreach($users as $u){
             $default_imp_img = userProfileImage($u->id);
-            $u->user_image   = $default_imp_img;
+            $result[] = [
+                'id' => $u->id,
+                'FName' => $u->FName,
+                'LName' => $u->LName,
+                'email' => $u->email,
+                'user_image' => $default_imp_img
+            ];            
         }
-        die(json_encode($users));   
+        die(json_encode($result));   
     }
 
     public function company_customers()
@@ -40,11 +48,19 @@ class Autocomplete extends MY_Controller
         $cid    = logged('company_id');
         $customers = $this->AcsProfile_model->getAllByCompanyId($cid, array(), $filter);  
         
+        $result = array(); 
         foreach($customers as $c){            
             $c->id   = $c->prof_id;
+            $result[] = [
+                'id' => $c->prof_id,
+                'first_name' => $c->first_name,
+                'last_name' => $c->last_name,
+                'phone_m' => $c->phone_m,
+                'email' => $c->email
+            ]; 
         }
 
-        die(json_encode($customers));   
+        die(json_encode($result));   
     }
 
     public function company_event_tags()

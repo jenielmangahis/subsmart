@@ -3969,7 +3969,7 @@ class Accounting_modals extends MY_Controller
                 'term_id' => $data['term'],
                 'bill_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['bill_date'])) : null,
                 'due_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['due_date'])) : null,
-                'bill_no' => !isset($data['template_name']) || $data['bill_no'] !== "" ? $data['bill_no'] : null,
+                'bill_no' => !isset($data['template_name']) && $data['bill_no'] !== "" ? $data['bill_no'] : null,
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'memo' => $data['memo'],
                 'remaining_balance' => floatval($data['total_amount']) < 0 ? 0.00 : $data['total_amount'],
@@ -3983,16 +3983,16 @@ class Accounting_modals extends MY_Controller
 
             if ($billId) {
                 if(!isset($data['template_name'])) {
-                    if(floatval($data['total_amount']) < 0) {
-                        $vendor = $this->vendors_model->get_vendor_by_id($data['vendor']);
+                    // if(floatval($data['total_amount']) < 0) {
+                    //     $vendor = $this->vendors_model->get_vendor_by_id($data['vendor']);
         
-                        $vendorCredits = floatval(str_replace(',', '', $vendor->vendor_credits)) - floatval(str_replace(',', '', $data['total_amount']));
-                        $vendorData = [
-                            'vendor_credits' => floatval(str_replace(',', '', $vendorCredits))
-                        ];
+                    //     $vendorCredits = floatval(str_replace(',', '', $vendor->vendor_credits)) - floatval(str_replace(',', '', $data['total_amount']));
+                    //     $vendorData = [
+                    //         'vendor_credits' => floatval(str_replace(',', '', $vendorCredits))
+                    //     ];
         
-                        $this->vendors_model->updateVendor($data['vendor'], $vendorData);
-                    }
+                    //     $this->vendors_model->updateVendor($data['vendor'], $vendorData);
+                    // }
 
                     if(!is_null($data['linked_transaction'])) {
                         $linkedTransacsData = [];
@@ -4510,6 +4510,39 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+                    $accTransacData = [
+                        'account_id' => $paymentAcc->id,
+                        'transaction_type' => 'Bill Payment',
+                        'transaction_id' => $billPaymentId,
+                        'amount' => floatval($paymentTotal),
+                        'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                        'type' => 'decrease'
+                    ];
+
+                    $this->accounting_account_transactions_model->create($accTransacData);
+
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                    $newBalance = floatval(str_replace(',', '', $apAcc->balance)) - floatval($paymentTotal);
+
+                    $apAccData = [
+                        'id' => $apAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval(str_replace(',', '', $newBalance))
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($apAccData);
+
+                    $accTransacData = [
+                        'account_id' => $apAcc->id,
+                        'transaction_type' => 'Bill Payment',
+                        'transaction_id' => $billPaymentId,
+                        'amount' => floatval($paymentTotal),
+                        'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                        'type' => 'decrease'
+                    ];
+
+                    $this->accounting_account_transactions_model->create($accTransacData);
 
                     $paymentItems = [];
                     $startingTime = date("m/d/Y H:i:s");
@@ -5733,7 +5766,7 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
         $this->form_validation->set_rules('bills[]', 'Bill', 'required');
-        $this->form_validation->set_rules('payment_amount[]', 'Payment amount', 'required');
+        $this->form_validation->set_rules('payment_amount', 'Payment amount', 'required');
 
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
@@ -5794,6 +5827,39 @@ class Accounting_modals extends MY_Controller
 
                 $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
+                $accTransacData = [
+                    'account_id' => $paymentAcc->id,
+                    'transaction_type' => 'Bill Payment',
+                    'transaction_id' => $billPaymentId,
+                    'amount' => floatval(str_replace(',', '', $paymentTotal)),
+                    'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                    'type' => 'decrease'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
+
+                $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                $newBalance = floatval(str_replace(',', '', $apAcc->balance)) - floatval(str_replace(',', '', $paymentTotal));
+
+                $apAccData = [
+                    'id' => $apAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($apAccData);
+
+                $accTransacData = [
+                    'account_id' => $apAcc->id,
+                    'transaction_type' => 'Bill Payment',
+                    'transaction_id' => $billPaymentId,
+                    'amount' => floatval(str_replace(',', '', $paymentTotal)),
+                    'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                    'type' => 'decrease'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
+
                 $paymentItems = [];
                 foreach ($data['bills'] as $index => $bill) {
                     $paymentItems[] = [
@@ -5802,8 +5868,6 @@ class Accounting_modals extends MY_Controller
                         'credit_applied_amount' => null,
                         'payment_amount' => null,
                         'total_amount' => floatval(str_replace(',', '', $data['bill_payment'][$index])),
-                        'created_at' => date('Y-m-d H:i:s', strtotime($startingTime)),
-                        'updated_at' => date('Y-m-d H:i:s', strtotime($startingTime))
                     ];
 
                     $bill = $this->expenses_model->get_bill_data($bill);
@@ -5811,14 +5875,12 @@ class Accounting_modals extends MY_Controller
                     if (floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
                         $billData = [
                             'remaining_balance' => 0.00,
-                            'status' => 2,
-                            'updated_at' => date("Y-m-d H:i:s")
+                            'status' => 2
                         ];
                     } else {
                         $remainingBal = floatval(str_replace(',', '', $bill->remaining_balance)) - floatval(str_replace(',', '', $data['bill_payment'][$index]));
                         $billData = [
-                            'remaining_balance' => floatval(str_replace(',', '', $remainingBal)),
-                            'updated_at' => date("Y-m-d H:i:s")
+                            'remaining_balance' => floatval(str_replace(',', '', $remainingBal))
                         ];
                     }
 

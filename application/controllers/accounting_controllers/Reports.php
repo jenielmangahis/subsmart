@@ -580,7 +580,37 @@ class Reports extends MY_Controller {
             )
         );
         $REQUEST_DATA = $this->general_model->get_data_with_param($DATA);
+
         echo '{ "data":'.json_encode($REQUEST_DATA).'}';
+    }
+
+    public function saveNotes() {
+        $TABLE = "accounting_report_types";
+        $ID = $this->input->post('REPORT_ID');
+        $NOTES = $this->input->post('REPORT_NOTES');
+
+        $DATA = array(
+            'notes' => $NOTES,
+        );
+
+        $INSERT = $this->accounting_customers_model->addNotes($TABLE, $DATA, $ID);
+        echo "true";
+    }
+
+    public function getNotes() {
+       $TABLE = "accounting_report_types";
+       $ID = $this->input->post('REPORT_ID');
+       
+       $DATA = array(
+            'table' => $TABLE,
+            'select' => 'notes',
+            'where' => array(
+                'id' => $ID,
+            )
+        );
+        $REQUEST_DATA = $this->general_model->get_data_with_param($DATA);
+
+        echo $REQUEST_DATA[0]->notes;
     }
 
     public function EstimatesInvoiceByCustomer(){   
