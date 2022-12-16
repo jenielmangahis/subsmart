@@ -2386,12 +2386,12 @@ $(function() {
 
     $(document).on('change', '#payBillsModal #bills-table .payment-amount, #payBillsModal #bills-table .credit-applied', function() {
         if ($(this).hasClass('payment-amount')) {
-            var row = $(this).parent().parent();
+            var row = $(this).closest('tr');
             var payment = $(this).val();
             var creditApplied = row.find('input.credit-applied');
             creditApplied = creditApplied.length > 0 && creditApplied.val() !== '' ? parseFloat(creditApplied.val()) : 0.00;
         } else {
-            var row = $(this).parent().parent().parent().parent();
+            var row = $(this).closest('tr');
             var rowData = row.data();
             var balance = parseFloat(row.find('td:nth-child(5)').html());
             var paymentAmount = row.find('input.payment-amount');
@@ -2416,7 +2416,7 @@ $(function() {
 
         row.find('td:last-child span').html(formatter.format(parseFloat(total)));
 
-        if (row.find('input[type="checkbox"]').prop('checked') === false && parseFloat(total) > 0) {
+        if (parseFloat(total) > 0) {
             row.find('input[type="checkbox"]').prop('checked', true);
             if($('#payBillsModal #bills-table tbody tr:visible input.select-one:checked').length === $('#payBillsModal #bills-table tbody tr:visible').length) {
                 $('#payBillsModal #bills-table thead input.select-all').prop('checked', true);
@@ -2919,6 +2919,22 @@ $(function() {
         }
     });
 
+    $(document).on('change', '#billPaymentModal #print_later', function() {
+        if ($(this).prop('checked')) {
+            $('#billPaymentModal #ref_no').val('To print').prop('disabled', true).trigger('change');
+        } else {
+            $('#billPaymentModal #ref_no').val('').prop('disabled', false).trigger('change');
+        }
+    });
+
+    $(document).on('change', '#billPaymentModal #ref_no', function() {
+        if ($(this).val() !== "") {
+            $('#billPaymentModal .modal-title').html(' Bill Payment #' + $(this).val());
+        } else {
+            $('#billPaymentModal .modal-title').html(' Bill Payment');
+        }
+    });
+
     $(document).on('click', '#modal-container .modal .transactions-container a.add-transaction', function(e) {
         e.preventDefault();
         var data = e.currentTarget.dataset;
@@ -3226,7 +3242,7 @@ $(function() {
                         row.find('input[name="bill_payment[]"]').val(row.find('td:nth-child(5)').html().trim()).trigger('change');
                     }
 
-                    $(this).parent().parent().parent().parent().parent().remove();
+                    $(this).closest('.card').parent().remove();
 
                     if ($('#billPaymentModal .transactions-container .row div.col-12').length === 1) {
                         $('#billPaymentModal .transactions-container').parent().remove();
@@ -3237,16 +3253,15 @@ $(function() {
             break;
             case 'vendor-credit':
                 if ($('#modal-container form .modal').attr('id') === 'billPaymentModal') {
-                    $('#billPaymentModal .modal-body .row .col').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
+                    $('#billPaymentModal .modal-body').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
 
-                    if ($(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).length > 0) {
-                        $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).prop('checked', true);
-                        var row = $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).parent().parent().parent();
-                        // var rowData = $('#billPaymentModal #vendor-credits-table').DataTable().row(row).data();
-                        // row.find('input[name="credit_payment[]"]').val(rowData.payment).trigger('change');
+                    if ($(`#billPaymentModal #vendor-credits-table input.select-one[value="${data.id}"]`).length > 0) {
+                        $(`#billPaymentModal #vendor-credits-table input.select-one[value="${data.id}"]`).prop('checked', true);
+                        var row = $(`#billPaymentModal #vendor-credits-table input.select-one[value="${data.id}"]`).closest('tr');
+                        row.find('input[name="credit_payment[]"]').val(row.find('td:nth-child(4)').html().trim()).trigger('change');
                     }
 
-                    $(this).parent().parent().parent().parent().parent().remove();
+                    $(this).closest('.card').parent().remove();
 
                     if ($('#billPaymentModal .transactions-container .row div.col-12').length === 1) {
                         $('#billPaymentModal .transactions-container').parent().remove();
@@ -4376,30 +4391,52 @@ $(function() {
         });
     });
 
-    $(document).on('change', '#billPaymentModal input[name="credit_payment[]"], #billPaymentModal input[name="bill_payment[]"]', function() {
-        var billPayment = 0.00;
-        $('#billPaymentModal #bills-table tbody tr').each(function() {
-            if ($(this).find('input[type="checkbox"]').prop('checked')) {
-                billPayment += $(this).find('input[name="bill_payment[]"]').val() !== "" ? parseFloat($(this).find('input[name="bill_payment[]"]').val()) : 0.00;
-            }
-        });
+    $(document).on('change', '#billPaymentModal input[name="payment_amount"]', function() {
+        $(this).attr('data-fixed', true);
 
-        var amountToApply = parseFloat(billPayment) + parseFloat($('#billPaymentModal input[name="total_amount"]').val());
-        $('#billPaymentModal span.amount-to-apply').html(formatter.format(parseFloat(amountToApply)));
+        var billPayment = 0.00;
+        $('#billPaymentModal #bills-table tbody tr input.select-one:checked').each(function() {
+            var row = $(this).closest('tr');
+            billPayment += row.find('input[name="bill_payment[]"]').val() !== "" ? parseFloat(row.find('input[name="bill_payment[]"]').val()) : 0.00;
+        });
 
         var creditPayment = 0.00;
-        $('#billPaymentModal #vendor-credits-table tbody tr').each(function() {
-            if ($(this).find('input[type="checkbox"]').prop('checked')) {
-                creditPayment += $(this).find('input[name="credit_payment[]"]').val() !== "" ? parseFloat($(this).find('input[name="credit_payment[]"]').val()) : 0.00;
-            }
+        $('#billPaymentModal #vendor-credits-table tbody tr input.select-one:checked').each(function() {
+            var row = $(this).closest('tr');
+            creditPayment += row.find('input[name="credit_payment[]"]').val() !== "" ? parseFloat(row.find('input[name="credit_payment[]"]').val()) : 0.00;
         });
 
-        $('#billPaymentModal span.amount-to-credit').html(formatter.format(parseFloat(creditPayment)));
+        // var paymentAmount = parseFloat($(this).val());
+        // var amountToCredit = paymentAmount - billPayment;
+        // $('#billPaymentModal span.amount-to-apply').html(formatter.format(parseFloat(paymentAmount)));
+        // $('#billPaymentModal span.payment-total-amount').html(formatter.format(parseFloat(paymentAmount)));
+        // $('#billPaymentModal span.amount-to-credit').html(formatter.format(parseFloat(amountToCredit)));
+    });
 
-        var amountPaid = parseFloat(billPayment - creditPayment).toFixed(2);
+    $(document).on('change', '#billPaymentModal input[name="bill_payment[]"], #billPaymentModal input[name="credit_payment[]"]', function() {
+        var billPayment = 0.00;
+        $('#billPaymentModal #bills-table tbody tr input.select-one:checked').each(function() {
+            var row = $(this).closest('tr');
+            billPayment += row.find('input[name="bill_payment[]"]').val() !== "" ? parseFloat(row.find('input[name="bill_payment[]"]').val()) : 0.00;
+        });
 
-        $('#billPaymentModal #bill-payment-amount').val(amountPaid);
-        $('#billPaymentModal .payment-total-amount').html(formatter.format(parseFloat(amountPaid)));
+        var creditPayment = 0.00;
+        $('#billPaymentModal #vendor-credits-table tbody tr input.select-one:checked').each(function() {
+            var row = $(this).closest('tr');
+            creditPayment += row.find('input[name="credit_payment[]"]').val() !== "" ? parseFloat(row.find('input[name="credit_payment[]"]').val()) : 0.00;
+        });
+
+        if($('#billPaymentModal input[name="payment_amount"]').data('fixed') === undefined) {
+            $('#billPaymentModal input[name="payment_amount"]').val(formatter.format(parseFloat(billPayment) - parseFloat(creditPayment)).replace('$', ''));
+            // var paymentAmount = billPayment;
+        } else {
+            // var paymentAmount = parseFloat($('#billPaymentModal input[name="payment_amount"]').val());
+        }
+
+        // var amountToCredit = paymentAmount - billPayment;
+        // $('#billPaymentModal span.amount-to-apply').html(formatter.format(parseFloat(paymentAmount)));
+        // $('#billPaymentModal span.amount-to-credit').html(formatter.format(parseFloat(amountToCredit)));
+        // $('#billPaymentModal span.payment-total-amount').html(formatter.format(parseFloat($('#billPaymentModal input[name="payment_amount"]').val())));
     });
 
     $(document).on('click', '#billPaymentModal #clear-payment', function(e) {
@@ -11814,7 +11851,7 @@ const saveAndCloseForm = (e) => {
 
     submitType = 'save-and-close';
 
-    $(modalName).parent().submit();
+    $('#modal-form').submit();
 }
 
 const saveAndNewForm = (e) => {
@@ -11822,7 +11859,7 @@ const saveAndNewForm = (e) => {
 
     submitType = 'save-and-new';
 
-    $(modalName).parent().submit();
+    $('#modal-form').submit();
 }
 
 const saveAndVoid = (e) => {

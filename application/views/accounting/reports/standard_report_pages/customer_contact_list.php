@@ -1,17 +1,11 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-
-<!-- START: LIBRARY AND FRAMEWORKS IMPORTS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-colvis-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.css"/>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-colvis-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.js"></script>
-<!-- END: LIBRARY AND FRAMEWORKS IMPORTS -->
+<?php include viewPath('v2/includes/reports/reports_modals'); ?>
 
 <style>
 table {
         width: 100% !important;
     }
-    .dataTables_filter, .dataTables_length, .dataTables_info{
+    .dataTables_filter, .dataTables_length, .dataTables_info, .dt-buttons{
         display: none;
     }
     table.dataTable thead th, table.dataTable thead td {
@@ -160,7 +154,7 @@ table.dataTable.no-footer {
                 <div class="col-lg-12">
                     <span class="float-end">
                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                        <span>Filter <i class='bx bx-fw bx-chevron-down'></i></span>
+                            <span>Filter <i class='bx bx-fw bx-chevron-down'></i></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                             <p class="m-0">Rows/columns</p>
@@ -254,9 +248,12 @@ table.dataTable.no-footer {
                                 <span class="float-end">
                                         <button data-bs-toggle="modal" data-bs-target="#EMAIL_REPORT_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
                                         <button data-bs-toggle="modal" data-bs-target="#PRINT_SAVE_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
-                                        <button class="nsm-button border-0"><i class="bx bx-fw bx-export"></i></button>
+                                        <button class="nsm-button border-0" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="EXPORT_TO_EXCEL" onclick="$('.buttons-excel').click();">Export to Excel</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="EXPORT_TO_PDF" onclick="$('.buttons-pdf').click();">Export to PDF</a></li>
+                                        </ul>
                                         <button class="nsm-button border-0 primary"><i class="bx bx-fw bx-cog"></i></button>
-
                                         <!-- Example single danger button -->
                                 </span>
                             </div>
@@ -275,7 +272,7 @@ table.dataTable.no-footer {
                             </div>
                             <div class="row mb-2">
                                 <div class="col-lg-12">
-                                    <table id="CUSTOMER_CONTACT_LIST" class="nsm-table w-100">
+                                    <table id="CUSTOMER_CONTACT_LIST" class="nsm-table w-100 display" data-tableName="Test Table 1">
                                         <thead>
                                             <tr>
                                                 <td>Customer</td>
@@ -285,21 +282,12 @@ table.dataTable.no-footer {
                                                 <td>Shipping Address</td>
                                             </tr>
                                         </thead>
-                                        <!-- <tbody>
-                                            <tr>
-                                                <td><?php echo $DATA->CUSTOMER; ?></td>
-                                                <td><?php echo $DATA->PHONE_NUMBER; ?></td>
-                                                <td><?php echo $DATA->EMAIL; ?></td>
-                                                <td><?php echo $DATA->BILLING_ADDRESS; ?></td>
-                                                <td><?php echo $DATA->SHIPPING_ADDRESS; ?></td>
-                                            </tr>
-                                        </tbody> -->
                                     </table>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <span class="text-muted">[NOTES_HERE]</span>
+                                    <span id="NOTES_CONTENT" class="text-muted">[NOTES_HERE]</span>
                                 </div>
                             </div>
                             <center class="mt-4 mb-4"><?php echo date("l, F j, Y h:i A eP") ?></center>
@@ -321,10 +309,11 @@ table.dataTable.no-footer {
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
+                <form id="ADD_NOTES_FORM" method="POST">
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
-                                <textarea class="form-control"></textarea>
+                                    <textarea id="NOTES" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
@@ -332,11 +321,12 @@ table.dataTable.no-footer {
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-end">
-                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="nsm-button primary">Save</button>
+                                <button type="button" id="NOTE_CLOSE_MODAL" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="nsm-button primary">Save</button>
                             </div>
                         </div>
                     </div>
+                </form>
             </div>
         </div>
     </div>
@@ -357,19 +347,19 @@ table.dataTable.no-footer {
                             <h6>Report print settings</h6>
                             <div class="form-group mb-3">
                                 <label>Orientation</label>
-                                <select class="form-control">
-                                    <option value="Portrait" selected>Portrait</option>
-                                    <option value="Landscape">Landscape</option>
+                                <select id="PAGE_ORIENTATION" name="PAGE_ORIENTATION" class="form-control">
+                                    <option value="PORTRAIT" selected>Portrait</option>
+                                    <option value="LANDSCAPE">Landscape</option>
                                 </select>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                              <input id="PAGE_HEADER_REPEAT" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                               <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
                             </div>
                         </div>
                         <div class="col-sm-9">
-                            <iframe src="<?php echo base_url('TCPDFReport'); ?>" width="100%" height="300px"></iframe>
-                        </div>
+                            <iframe id="PDF_PREVIEW" class="border-0" width="100%" height="450px"></iframe>
+                        </div>     
                     </div>
                     <hr>
                     <div class="row">
@@ -452,10 +442,102 @@ table.dataTable.no-footer {
 <!-- END: EMAIL REPORT MODAL -->
 <!-- END: MODALS -->
 
+<!-- START: LIBRARY AND FRAMEWORKS IMPORTS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.js"></script>
+ <!-- END: LIBRARY AND FRAMEWORKS IMPORTS -->   
 
-<?php include viewPath('v2/includes/reports/reports_modals'); ?>
-<?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
+ var CUSTOMER_CONTACT_LIST_TABLE = $('#CUSTOMER_CONTACT_LIST').DataTable({
+        "ordering" : false,
+        // paging: false,
+        "ajax": "<?php echo base_url('accounting_controllers/reports/getCustomerContactList'); ?>",
+        "columns": [
+            { "data": "CUSTOMER" },
+            { "data": "PHONE_NUMBER" },
+            { "data": "EMAIL" },
+            { "data": "BILLING_ADDRESS" },
+            { "data": "SHIPPING_ADDRESS" },
+        ], 
+        language: {
+            processing: '<span>Fetching data...</span>'
+        },
+        dom: 'Blfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                title: '<?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?> Customer Contact List'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: '<?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?> Customer Contact List'
+            },
+        ]
+    });
+    var TABLE_SETTINGS = CUSTOMER_CONTACT_LIST_TABLE.settings(); 
+
+// START: PDF SETTINGS SCRIPT
+var PDF_CONTENT = $("#CUSTOMER_CONTACT_LIST").html();
+var PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=false";
+var PDF_ORIENTATION = "PAGE_ORIENTATION=PORTRAIT";
+
+// INITIATE SETTINGS
+$('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+
+$('#PAGE_ORIENTATION').change(function(event) {
+    PDF_ORIENTATION = "PAGE_ORIENTATION="+$(this).val();
+    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+});
+
+$('#PAGE_HEADER_REPEAT').change(function() {
+  if ($(this).is(':checked')) {
+    PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=true";
+    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+    } else {
+    PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=false";
+    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+  }
+});
+
+// END: PDF SETTINGS SCRIPT
+var REPORT_ID = "29";
+$.post("<?php echo base_url('accounting_controllers/reports/getNotes'); ?>", {
+    REPORT_ID: REPORT_ID,
+}).done(function(data) {
+    $('#NOTES_CONTENT').html(data);
+    $("#NOTES").val(data);
+});
+
+// START: ADD NOTES SCRIPT
+$('#ADD_NOTES_FORM').submit(function(event) {
+    event.preventDefault();
+    var REPORT_ID = "29";
+    var REPORT_NOTES = $("#NOTES").val();
+    $.post("<?php echo base_url('accounting_controllers/reports/saveNotes'); ?>", {
+        REPORT_ID: REPORT_ID,
+        REPORT_NOTES: REPORT_NOTES,
+    }).done(function(data) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Note added successfully!',
+        }).then((result) => {
+            var REPORT_ID = "29";
+            $.post("<?php echo base_url('accounting_controllers/reports/getNotes'); ?>", {
+                REPORT_ID: REPORT_ID,
+            }).done(function(data) {
+                $('#NOTES_CONTENT').html(data);
+                $("#NOTES").val(data);
+                $("#NOTES_CLOSE_MODAL").click();
+            });
+        });
+    });
+});
+// END: ADD NOTES SCRIPT
+
 // START: ADD EVENT SCRIPT
 $('#SEND_EMAIL_FORM').submit(function (event) {
     event.preventDefault();
@@ -490,31 +572,6 @@ $('#SEND_EMAIL_FORM').submit(function (event) {
     });
 });
 // END: ADD EVENT SCRIPT
-
-
-   var CUSTOMER_CONTACT_LIST_TABLE = $('#CUSTOMER_CONTACT_LIST').DataTable({
-        "ordering" : false,
-        // paging: false,
-        "ajax": "<?php echo base_url('accounting_controllers/reports/getCustomerContactList'); ?>",
-        "columns": [
-            { "data": "CUSTOMER" },
-            { "data": "PHONE_NUMBER" },
-            { "data": "EMAIL" },
-            { "data": "BILLING_ADDRESS" },
-            { "data": "SHIPPING_ADDRESS" },
-        ], 
-        // language: {
-        //     processing: '<span>Fetching data...</span>'
-        // },
-        dom: 'Bfrtip',
-        buttons: [
-            'copyHtml5',
-            'excelHtml5',
-            'csvHtml5',
-            'pdfHtml5'
-        ],
-    });
-    TABLE_SETTINGS = CUSTOMER_CONTACT_LIST_TABLE.settings(); 
     
 function PRINT_TABLE() {
     TABLE_SETTINGS[0]._iDisplayLength = 9999999999;
@@ -891,3 +948,4 @@ function showCheckboxes1() {
         document.getElementById("changeReport1").checked = true;    
     }
 </script>
+<?php include viewPath('v2/includes/footer'); ?>

@@ -60,8 +60,6 @@ if ($this->session->userdata('usertimezone') == null) {
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>
-        
-
     <style>
         .nsm-nav-items #clockOut i{
             color: "green";
@@ -72,7 +70,7 @@ if ($this->session->userdata('usertimezone') == null) {
 
 <body>
     <div class="nsm-container">
-        <div class="nsm-sidebar-bg general-transition"></div>
+        <div class="nsm-sidebar-bg general-transition" style="min-height: 100%;"></div>
         <div class="nsm-sidebar general-transition">
             <div class="nsm-sidebar-logo">
                 <a href="javascript:void(0);" class="sidebar-toggler">
@@ -743,7 +741,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                             <?php
                                         }
                                             ?>
-                                            </div>
+                                    </div>
                                 </a>
                                 <div class="dropdown-menu dropdown-list">
                                     <div class="list-header">
