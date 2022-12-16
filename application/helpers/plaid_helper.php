@@ -195,14 +195,14 @@ function identityGet($client_id, $client_secret, $access_token){
 }
 
 /*Get transactions*/
-function transactionGet($client_id, $client_secret, $access_token, $start_date, $end_date, $account_id){
+function transactionGet($client_id, $client_secret, $access_token, $start_date, $end_date, $account_id, $count = 10){    
     $post = [
         'client_id' => $client_id,
         'secret' => $client_secret,
         'access_token' => $access_token,
         'start_date' => $start_date,
         'end_date' => $end_date,
-        'options' => ['account_ids' => [$account_id],'count' => 50, 'offset' => 0]    
+        'options' => ['account_ids' => [$account_id],'count' => $count, 'offset' => 0]    
     ];
 
     $url = PLAID_API_URL . '/transactions/get';
