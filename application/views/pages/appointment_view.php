@@ -103,14 +103,16 @@ h1{
                         <br />
                         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">Details</label>
                         <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
-                            When : <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
+                            <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
                         <?php if( $appointment->appointment_type_id != 4 ) { ?> 
                             <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
-                                Priority : <?= $appointment->priority; ?>
+                                <?= $appointment->priority; ?>
                             </label>
                         <?php } ?>        
                         <!-- <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-list-ul'></i> Appointment Type:</span> <?= $appointment->appointment_type; ?></label> -->
-                        <label class="content-subtitle d-block font-15" style="margin-bottom:5px;"><span class="fw-bold"></span>Notes : <?= $appointment->notes; ?></label> 
+                        <label class="content-subtitle d-block font-15" style="margin-bottom:5px;">
+                            <?= $appointment->notes; ?>                                
+                        </label> 
                         <?php if( $appointment->url_link != ''){ ?>
                         <label class="content-subtitle d-block mb-2 font-15">
                                 <a href="<?= $appointment->url_link; ?>" target="_new"><?= $appointment->url_link; ?></a>
