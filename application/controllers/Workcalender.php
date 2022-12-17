@@ -2822,7 +2822,7 @@ class Workcalender extends MY_Controller
                     /*$description  = "<b>Event Type : ".$event->event_type."</b><br />";
                     $description .= $event->event_address . "<br />";
                     $description .= "Event Description : ".$event->event_description."<br />";*/
-                    $description = $event->event_description ."\\n";                    
+                    $description = $event->event_description ."\n";                    
 
                     $is_valid = true;
                 }
@@ -2863,7 +2863,7 @@ class Workcalender extends MY_Controller
                     $description .= "Service Location : " . $ticket->service_location . "<br />";
                     $description .= "Notes : ". $appointment->notes ."<br />";*/
 
-                    $description = $ticket->service_location ."\\n";
+                    $description = $ticket->service_location ."\n";
 
                     $is_valid = true;
                 }
@@ -2915,10 +2915,10 @@ class Workcalender extends MY_Controller
 
                     $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
 
-                    $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\\n";
+                    $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                     $description .= "Job Type : ".$job->job_type."\\n";                
-                    $description .= "Phone Number : ".$job->cust_phone."\\n";                
-                    $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\\n";
+                    $description .= "Phone Number : ".$job->cust_phone."\n";                
+                    $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
 
                     $is_valid = true;
                 }
