@@ -51,12 +51,24 @@ class Autocomplete extends MY_Controller
         $result = array(); 
         foreach($customers as $c){            
             $c->id   = $c->prof_id;
+            if( $c->phone_m == '' ){
+                $phone_m = 'Not Specified';
+            }else{
+                $phone_m = $c->phone_m;
+            }
+
+            if( $c->email == '' ){
+                $email = 'Not Specified';
+            }else{
+                $email = $c->email;
+            }
+
             $result[] = [
                 'id' => $c->prof_id,
                 'first_name' => $c->first_name,
                 'last_name' => $c->last_name,
-                'phone_m' => $c->phone_m,
-                'email' => $c->email
+                'phone_m' => $phone_m,
+                'email' => $email
             ]; 
         }
 
