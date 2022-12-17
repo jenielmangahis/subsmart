@@ -89,7 +89,9 @@ h1{
                                     ?>
                                     </span>
                                 </li>
-                            </ul>    
+                            </ul>
+                        </label>
+                        <label class="content-subtitle d-block font-15" style="margin-bottom:5px;"><span class="fw-bold"><i class="bx bxs-phone"></i> </span> <?= $appointment->notes; ?></label>    
                         <br />
                         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">Details</label>
                         <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
