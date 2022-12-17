@@ -106,22 +106,18 @@ h1{
                             When : <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
                         <?php if( $appointment->appointment_type_id != 4 ) { ?> 
                             <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
-                                <span class="fw-bold"><i class='bx bx-phone-call'></i></span>
-                                <?= $appointment->priority; ?>
+                                Priority : <?= $appointment->priority; ?>
                             </label>
                         <?php } ?>        
                         <!-- <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-list-ul'></i> Appointment Type:</span> <?= $appointment->appointment_type; ?></label> -->
                         <label class="content-subtitle d-block font-15" style="margin-bottom:5px;"><span class="fw-bold"></span>Notes : <?= $appointment->notes; ?></label> 
-                        <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-link'></i> </span> 
-                            <?php if( $appointment->url_link != ''){ ?>
+                        <?php if( $appointment->url_link != ''){ ?>
+                        <label class="content-subtitle d-block mb-2 font-15">
                                 <a href="<?= $appointment->url_link; ?>" target="_new"><?= $appointment->url_link; ?></a>
-                            <?php }else{ ?>
-                                ---
-                            <?php } ?>
                         </label>
+                        <?php } ?>
                         <?php if( $appointment->appointment_type_id != 4 ){ ?>
                         <label class="content-subtitle d-block mb-2 font-15">
-                            <span class="fw-bold"><i class='bx bx-barcode' ></i> </span> 
                             <?= $appointment->invoice_number . ' - $' . number_format($appointment->cost,2); ?>
                         </label>
                         <?php } ?>
