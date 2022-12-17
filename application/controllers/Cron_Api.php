@@ -140,6 +140,7 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('GoogleAccounts_model');
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
+        $this->load->helper(array('hashids_helper'));
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
 
