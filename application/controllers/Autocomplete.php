@@ -64,11 +64,18 @@ class Autocomplete extends MY_Controller
             }
 
             
-            if( $c->mail_add != '' ){
+            /*if( $c->mail_add != '' ){
+                $address = $c->mail_add . " " . $c->city . ' ' . $c->state . ', ' . $c->zip_code;
+            }else{
+                $address = 'Not Specified';    
+            }*/
+
+            if( $c->city != '' || $c->state != '' || $c->zip_code != '' ){
                 $address = $c->mail_add . " " . $c->city . ' ' . $c->state . ', ' . $c->zip_code;
             }else{
                 $address = 'Not Specified';    
             }
+
 
             $result[] = [
                 'id' => $c->prof_id,
