@@ -63,11 +63,19 @@ class Autocomplete extends MY_Controller
                 $email = $c->email;
             }
 
+            
+            if( $c->mail_add != '' ){
+                $address = $c->mail_add . " " . $c->city . ' ' . $c->state . ', ' . $c->zip_code;
+            }else{
+                $address = 'Not Specified';    
+            }
+
             $result[] = [
                 'id' => $c->prof_id,
                 'first_name' => $c->first_name,
                 'last_name' => $c->last_name,
                 'phone_m' => $phone_m,
+                'address' => $address,
                 'email' => $email
             ]; 
         }

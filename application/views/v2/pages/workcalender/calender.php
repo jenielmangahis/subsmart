@@ -1609,7 +1609,7 @@
         }
 
         var $container = $(
-            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_m + ' / ' + repo.email + '</small></div>'
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
         );
 
         return $container;
