@@ -312,6 +312,7 @@ class Estimate_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('view_flag', '0');
+        $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }

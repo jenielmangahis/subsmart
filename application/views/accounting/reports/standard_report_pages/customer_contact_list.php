@@ -262,12 +262,13 @@ table.dataTable.no-footer {
                         <div class="nsm-card-content">
                             <div class="row mt-4 mb-2">
                                 <div class="col-lg-12">
-                                    <center><h3><?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?></h3></center>
+                                    <?php echo $testing; ?>
+                                    <center><h3 id="BUSINESS_NAME"><?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?></h3></center>
                                 </div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-lg-12">
-                                    <center><h5><strong>Customer Contact List</strong></h5></center>
+                                    <center><h5><strong id="REPORT_NAME">Customer Contact List</strong></h5></center>
                                 </div>
                             </div>
                             <div class="row mb-2">
@@ -480,25 +481,26 @@ table.dataTable.no-footer {
     var TABLE_SETTINGS = CUSTOMER_CONTACT_LIST_TABLE.settings(); 
 
 // START: PDF SETTINGS SCRIPT
-var PDF_CONTENT = $("#CUSTOMER_CONTACT_LIST").html();
+var BUSINESS_NAME = "BUSINESS_NAME="+$("#BUSINESS_NAME").html();
+var REPORT_NAME = "REPORT_NAME="+$("#REPORT_NAME").html();
 var PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=false";
 var PDF_ORIENTATION = "PAGE_ORIENTATION=PORTRAIT";
 
 // INITIATE SETTINGS
-$('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+$('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+BUSINESS_NAME+"&"+REPORT_NAME+"&"+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
 
 $('#PAGE_ORIENTATION').change(function(event) {
     PDF_ORIENTATION = "PAGE_ORIENTATION="+$(this).val();
-    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+BUSINESS_NAME+"&"+REPORT_NAME+"&"+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
 });
 
 $('#PAGE_HEADER_REPEAT').change(function() {
   if ($(this).is(':checked')) {
     PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=true";
-    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+BUSINESS_NAME+"&"+REPORT_NAME+"&"+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
     } else {
     PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=false";
-    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
+    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>'+BUSINESS_NAME+"&"+REPORT_NAME+"&"+PDF_ORIENTATION+"&"+PDF_HEADER_REPEAT);
   }
 });
 

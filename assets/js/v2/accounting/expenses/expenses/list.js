@@ -338,8 +338,6 @@ $(document).on('click', '#expenses-table .view-edit-bill-payment', function() {
             `);
         }
 
-        // $('#billPaymentModal #vendor').trigger('change');
-
         modalName = '#billPaymentModal';
         initModalFields('billPaymentModal', data);
 

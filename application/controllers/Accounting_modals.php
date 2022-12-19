@@ -8626,7 +8626,7 @@ class Accounting_modals extends MY_Controller
         $filters = [
             'from' => $post['from'] !== "" ? date("Y-m-d", strtotime($post['from'])) : null,
             'to' => $post['to'] !== "" ? date("Y-m-d", strtotime($post['to'])) : null,
-            'overdue' => $post['overdue'],
+            'overdue' => $post['overdue'] === 'false' ? false : true,
             'search' => $post['search'],
             'vendor' => $post['vendor']
         ];

@@ -161,7 +161,7 @@ class Dashboard_v2 extends Widgets {
 
         // fetch open estimates
         $open_estimate_query = array(
-            'where' => array('company_id' => logged('company_id'), 'status' => 'Submitted','view_flag' => '0'),
+            'where' => array('company_id' => logged('company_id'),'view_flag' => '0'),
             'table' => 'estimates',
             'select' => '*',
         );
@@ -239,6 +239,8 @@ class Dashboard_v2 extends Widgets {
             'select' => '*',
         );
         $this->page_data['news'] = $this->general->get_data_with_param($news_query);
+
+        $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
 
         $this->load->view('dashboard', $this->page_data);
         // $this->load->view('dashboard_v2', $this->page_data);

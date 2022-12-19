@@ -563,6 +563,11 @@ if ($this->session->userdata('usertimezone') == null) {
                             </a>
                         </li>
                         <li class="li-third-sub-menu">
+                            <a href="<?= base_url("tickets/settings") ?>">
+                                <i class='bx bx-fw bx-chart'></i> Service Tickets Settings
+                            </a>
+                        </li>
+                        <li class="li-third-sub-menu">
                             <a href="<?= base_url("workorder/settings") ?>">
                                 <i class='bx bx-fw bx-task'></i> Workorder Settings
                             </a>
