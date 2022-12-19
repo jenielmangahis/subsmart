@@ -158,7 +158,8 @@ class Appointment_model extends MY_Model
 
         $where = array(
             'appointments.company_id'    => $company_id,
-            'appointments.appointment_date >=' => $start_date            
+            'appointments.appointment_date >=' => $start_date,
+            'appointments.is_wait_list' => 0         
           );
 
         $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, acs_profile.mail_add,acs_profile.city AS cust_city, acs_profile.state AS cust_state,acs_profile.zip_code AS cust_zip_code, acs_profile.phone_m AS cust_phone, appointment_types.name AS appointment_type');

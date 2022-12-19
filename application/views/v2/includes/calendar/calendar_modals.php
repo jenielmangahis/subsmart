@@ -57,6 +57,12 @@
                                 <input type="text" value="<?= $userLogged->FName . ' ' . $userLogged->LName; ?>" class="nsm-field form-select" readonly="readonly" disabled="disabled">
                             </span>                                                        
                         </div>
+                        <div class="col-12 event-description-container" style="<?= $default_appointment_type_id != 4 ? 'display: none;' : ''; ?>">
+                            <label class="content-subtitle fw-bold d-block mb-2">Event Name</label>
+                            <span id="wait-list-created-by">
+                                <input type="text" value="" name="event_name" class="nsm-field form-control" />
+                            </span>                                                        
+                        </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Attendees</label>
                             <span id="wait-list-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
@@ -69,7 +75,7 @@
                                 <select class="nsm-field form-select" name="appointment_sales_agent_id" id="appointment-sales-agent-id"></select>
                             </span>                                                        
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 customer-container" style="<?= $default_appointment_type_id == 4 ? 'display: none;' : ''; ?>">
                             <div class="row g-3">
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
@@ -90,9 +96,8 @@
                                     <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required style="display: inline-block;width: 60%;">
                                         <?php $start = 0; ?>
                                         <?php foreach ($appointmentTypes as $a) { ?>
-                                            <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
-                                        <?php $start++;
-                                        } ?>
+                                            <option <?= $default_appointment_type_id == $a->id ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
+                                        <?php $start++; } ?>
                                     </select>
                                     <a class="nsm-button" href="<?= base_url('appointment_types/index'); ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
                                         <i class='bx bx-fw bx-plus'></i> Manage Type
@@ -126,9 +131,19 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
-                                    <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
+                                    <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body" style="display: inline-block;width: 60% !important;">
                                         <select class="nsm-field form-select" name="appointment_tags[]" id="appointment-tags" multiple="multiple"></select>
-                                    </span>
+                                    </span> 
+                                    <?php 
+                                        if( $default_appointment_type_id == 4 ){ //Events
+                                            $manage_tags_url = base_url('events/event_tags');
+                                        }else{
+                                            $manage_tags_url = base_url('job/job_tags');
+                                        }
+                                    ?>
+                                    <a class="nsm-button btn-manage-tags" href="<?= $manage_tags_url; ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
+                                        <i class='bx bx-fw bx-plus'></i> Manage Tags
+                                    </a>
                                 </div>
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">URL Link <small style="color:#ff4d4d;">(Must be public url)</small></label>
@@ -161,7 +176,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="create_waitlist_modal" tabindex="-1" aria-labelledby="create_waitlist_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md">
         <form id="frm-create-appointment-wait-list" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
@@ -175,13 +190,16 @@
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
                                     <span id="waitlist-date-popover" data-toggle="popover" data-placement="right"data-container="body">
-                                    <input type="text" name="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;">
+                                    <input type="text" name="appointment_date" id="waitlist-date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;">
                                     </span>
                                 </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-3">
                                     <span id="waitlist-time-popover" data-toggle="popover" data-placement="right"data-container="body">
-                                        <input type="text" name="appointment_time" class="nsm-field form-control timepicker" placeholder="Time" required />
+                                        <input type="text" name="appointment_time_from" id="waitlist-time-from" class="nsm-field form-control timepicker" placeholder="Time From" required />
                                     </span>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <input type="text" name="appointment_time_to" id="waitlist-time-to" class="nsm-field form-control timepicker" placeholder="Time To" value="" required />
                                 </div>
                             </div>
                         </div>
