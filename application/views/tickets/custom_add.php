@@ -337,7 +337,55 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Panel Type</b></label> <i class="bx bx-fw bx-edit" style="float:right;"></i>
+                                        <label for="zip"><b>Created By</b></label>
+                                        <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
+                                        <select class="form-control mb-3" name="employee_id">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3" id="technicianDiv">
+                                        <label for="purchase_order_number"><b>Assigned Technician</b></label>
+                                        <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
+                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple"></select>
+                                    </div>
+                                </div>
+                                <div class="row" style="background-color:white;">
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Service Type</b></label> <i class="bx bx-fw bx-edit custom1" style="float:right;"></i>
+                                        <div class="input-group">
+                                            <!-- <select class="form-control" name="service_type" id="service_type">
+                                                <?php //foreach($serviceType as $sType){ ?>
+                                                    <option value="<?php //echo $sType->service_name; ?>"><?php //echo $sType->service_name; ?></option> -->
+                                                <?php //} ?>
+                                            <!-- </select> -->
+                                            <select id="service_type" name="service_type" class="form-control">
+                                                <option value="Services">Services</option>
+                                                <option value="Event">Event</option>
+                                                <option value="Estimate">Estimate</option>
+                                                <option value="Job">Job</option>
+                                            </select>
+                                            <!-- <span class="input-group-btn">
+                                                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addServiceType">Add New</a>
+                                            </span> -->
+                                        </div><!-- /input-group -->
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Warranty Type</b></label> <i class="bx bx-fw bx-edit custom2" style="float:right;"></i>
+                                        <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Panel Type</b></label> <i class="bx bx-fw bx-edit custom3" style="float:right;"></i>
                                             <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
@@ -368,54 +416,6 @@ a.btn-primary.btn-md {
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
                                             </select>
-                                    </div>
-                                    <div class="col-md-3" id="technicianDiv">
-                                        <label for="purchase_order_number"><b>Assigned Technician</b></label>
-                                        <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
-                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple"></select>
-                                    </div>
-                                </div>
-                                <div class="row" style="background-color:white;">
-                                    <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Service Type</b></label> <i class="bx bx-fw bx-edit" style="float:right;"></i>
-                                        <div class="input-group">
-                                            <!-- <select class="form-control" name="service_type" id="service_type">
-                                                <?php //foreach($serviceType as $sType){ ?>
-                                                    <option value="<?php //echo $sType->service_name; ?>"><?php //echo $sType->service_name; ?></option> -->
-                                                <?php //} ?>
-                                            <!-- </select> -->
-                                            <select id="service_type" name="service_type" class="form-control">
-                                                <option value="Services">Services</option>
-                                                <option value="Event">Event</option>
-                                                <option value="Estimate">Estimate</option>
-                                                <option value="Job">Job</option>
-                                            </select>
-                                            <!-- <span class="input-group-btn">
-                                                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addServiceType">Add New</a>
-                                            </span> -->
-                                        </div><!-- /input-group -->
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Warranty Type</b></label> <i class="bx bx-fw bx-edit" style="float:right;"></i>
-                                        <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Created By</b></label>
-                                        <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
-                                        <select class="form-control mb-3" name="employee_id">
-                                            <option value="0">Select Name</option>
-                                            <?php foreach($users_lists as $ulist){ ?>
-                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php } ?>
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;font-size:16px;">
@@ -995,6 +995,84 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
 
+                                <!-- Modal add/update header -->
+                                <div class="modal fade" id="addcustomfield" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Custom Field</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h4>Field Type</h4>
+                                                <ul>
+                                                    <li> <input type="radio" name="inputField"> Text Field</li>
+                                                    <li> <input type="radio" name="inputField"> Dropdown</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-warning addCustom1">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal add/update header -->
+                                <div class="modal fade" id="addcustomfield2" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Custom Field</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h4>Field Type</h4>
+                                                <ul>
+                                                    <li> <input type="radio" name="inputField2"> Text Field</li>
+                                                    <li> <input type="radio" name="inputField2"> Dropdown</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-warning addCustom2">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal add/update header -->
+                                <div class="modal fade" id="addcustomfield3" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Custom Field</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h4>Field Type</h4>
+                                                <ul>
+                                                    <li> <input type="radio" name="inputField3"> Text Field</li>
+                                                    <li> <input type="radio" name="inputField3"> Dropdown</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-warning addCustom3">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                             </div>
                         </div>
@@ -1557,5 +1635,20 @@ $(".updateHeaderSave").on("click", function(e) {
     
              }
      });
+});
+
+$(".custom1").on("click", function(e) {
+    // alert('test');
+    $('#addcustomfield').modal('show');
+});
+
+$(".custom2").on("click", function(e) {
+    // alert('test');
+    $('#addcustomfield2').modal('show');
+});
+
+$(".custom3").on("click", function(e) {
+    // alert('test');
+    $('#addcustomfield3').modal('show');
 });
 </script>

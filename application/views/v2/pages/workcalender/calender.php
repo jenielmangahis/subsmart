@@ -291,6 +291,7 @@
                 cache: true
             },
             placeholder: 'Select Customer',
+            dropdownParent: $("#create_waitlist_modal"),
             minimumInputLength: 0,
             templateResult: formatRepoCustomer,
             templateSelection: formatRepoCustomerSelection
@@ -432,6 +433,11 @@
                 data: _this.serialize(),
                 success: function(result) {
                     if (result.is_success) {
+                        $('#waitlist-date').val('');
+                        $('#waitlist-time-from').val('');
+                        $('#waitlist-time-to').val('');
+                        $("#wait-list-appointment-customer").empty().trigger('change');
+                        $("#create_waitlist_modal").modal('hide');
                         Swal.fire({
                             title: 'Save Successful!',
                             text: "Appointment wait list was successfully created.",
@@ -453,8 +459,6 @@
                             confirmButtonText: 'Okay'
                         });
                     }
-                    $("#create_waitlist_modal").modal('hide');
-                    _this.trigger("reset");
 
                     _this.find("button[type=submit]").html("Schedule");
                     _this.find("button[type=submit]").prop("disabled", false);
@@ -570,7 +574,7 @@
         });
 
         $('#appointment-customer').on("select2:select", function(e) { 
-            let prof_id = e.params.data.prof_id;
+            let prof_id = e.params.data.id;
             let url = "<?= base_url('customer/_load_customer_address') ?>";
 
             $.ajax({
@@ -1605,7 +1609,7 @@
         }
 
         var $container = $(
-            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_m + ' / ' + repo.email + '</small></div>'
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
         );
 
         return $container;

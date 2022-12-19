@@ -1416,3 +1416,6 @@ $route['customer/_adt_sales_sync_setting'] = 'Customer/ajax_adt_sales_sync_setti
 $route['api/create_auto_sms_notification'] = 'Api/create_auto_sms_notification';
 $route['api/create_hash_id'] = 'Api/create_hash_id';
 $route['api/create_google_calendar_event'] = 'Api/createGoogleCalendarEvent';
+
+//Front View Appointment
+$route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';

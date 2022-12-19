@@ -50,6 +50,16 @@ h1{
     color: #ffffff;
     font-size: 18px;
 }
+.small-label {
+    text-align: center;
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    background-color: #DAD1E0;
+    padding: 5px;
+    margin-top: 9px;
+    font-size: 13px;
+}
 </style>
 <?php
     $c_phone = "---";
@@ -79,39 +89,37 @@ h1{
                     <div class="col-8 col-md-8">
                         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">Customer</label>
                         <label class="content-subtitle fw-bold" style="font-size: 21px;margin-bottom: 23px;"><?= $appointment->customer_name; ?></label>
-                        <label class="content-subtitle d-block font-15" style="margin-bottom:5px;"><span class="fw-bold"><i class="bx bxs-phone"></i> </span> <?= $c_phone; ?></label>
+                        <label class="content-subtitle d-block font-15" style="margin-bottom:5px;"><span class="fw-bold"></span> <?= $c_phone; ?></label>
                         <label class="content-subtitle d-block font-15">
                             <ul class="location-list">
-                                <li><span class="fw-bold"><i class='bx bxs-map-pin'></i></span></li>
                                 <li>
                                     <span><?= $appointment->mail_add; ?></span>
                                     <span style="margin-top:7px;display: block;"><?= $appointment->cust_city . ', ' . $appointment->cust_state . ', '. $appointment->cust_zip_code; 
                                     ?>
                                     </span>
                                 </li>
-                            </ul>    
+                            </ul>
+                        </label>                           
                         <br />
                         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">Details</label>
                         <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
-                            <span class="fw-bold"><i class='bx bxs-calendar'></i></span> 
                             <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
                         <?php if( $appointment->appointment_type_id != 4 ) { ?> 
                             <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
-                                <span class="fw-bold"><i class='bx bx-phone-call'></i></span>
                                 <?= $appointment->priority; ?>
                             </label>
                         <?php } ?>        
                         <!-- <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-list-ul'></i> Appointment Type:</span> <?= $appointment->appointment_type; ?></label> -->
-                        <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-link'></i> </span> 
-                            <?php if( $appointment->url_link != ''){ ?>
+                        <label class="content-subtitle d-block font-15" style="margin-bottom:5px;">
+                            <?= $appointment->notes; ?>                                
+                        </label> 
+                        <?php if( $appointment->url_link != ''){ ?>
+                        <label class="content-subtitle d-block mb-2 font-15">
                                 <a href="<?= $appointment->url_link; ?>" target="_new"><?= $appointment->url_link; ?></a>
-                            <?php }else{ ?>
-                                ---
-                            <?php } ?>
                         </label>
+                        <?php } ?>
                         <?php if( $appointment->appointment_type_id != 4 ){ ?>
                         <label class="content-subtitle d-block mb-2 font-15">
-                            <span class="fw-bold"><i class='bx bx-barcode' ></i> </span> 
                             <?= $appointment->invoice_number . ' - $' . number_format($appointment->cost,2); ?>
                         </label>
                         <?php } ?>
@@ -134,7 +142,7 @@ h1{
                             <?php } ?>            
                         </div>
                         <?php if( $appointment->appointment_type_id == 4 ) { ?>        
-                            <small class="small-label"><i class='bx bxs-calendar-event'></i> <?= $appointment->priority; ?></small>
+                            <small class="small-label"><?= $appointment->priority; ?></small>
                         <?php } ?>
                     </div>
                 </div>

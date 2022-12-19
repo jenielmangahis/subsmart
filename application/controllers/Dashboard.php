@@ -184,7 +184,7 @@ class Dashboard extends Widgets {
 
         // fetch open estimates
         $open_estimate_query = array(
-            'where' => array('company_id' => logged('company_id'), 'status' => 'Submitted','view_flag' => '0'),
+            'where' => array('company_id' => logged('company_id'), 'view_flag' => '0'),
             'table' => 'estimates',
             'select' => '*',
         );
@@ -284,6 +284,7 @@ class Dashboard extends Widgets {
         $this->page_data['plaid_token'] = $plaid_token;
         $this->page_data['plaid_handler_open'] = $plaid_handler_open;
 
+        $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }

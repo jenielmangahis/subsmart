@@ -222,11 +222,15 @@ class PlaidAccount extends MY_Controller {
 
         $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
         $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
-
+        $recentTransactions = array();
         if( $plaidAccount ){
             foreach($plaidBankAccounts as $pc){            
                 try{
-                    $balance  = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);  
+                    $start_date = date('Y-m-d', strtotime("-1 week"));
+                    $end_date   = date("Y-m-d");
+
+                    $balance = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
+                    $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $start_date, $end_date, $pc->account_id, 5);  
                     if( isset($balance->error_code) && $balance->error_code != '' ){
                         $pc->balance_available = 'Cannot fetch bank account balance';
                         $pc->balance_current   = 'Cannot fetch bank account balance';
@@ -244,6 +248,10 @@ class PlaidAccount extends MY_Controller {
                             $pc->balance_current   = $balance->accounts[0]->balances->current;
                         }
                     }
+
+                    if( $plaidTransactions && $plaidTransactions->transactions ){
+                        $recentTransactions[] = $plaidTransactions->transactions;
+                    }
                 }catch(Exception $e){
                     $err = $e->getMessage();
 
@@ -260,9 +268,9 @@ class PlaidAccount extends MY_Controller {
             $is_valid = 0;
         }
         
-
         $this->page_data['is_valid'] = $is_valid;
-        $this->page_data['plaidBankAccounts'] = $plaidBankAccounts;
+        $this->page_data['plaidBankAccounts']  = $plaidBankAccounts;
+        $this->page_data['recentTransactions'] = $recentTransactions;
         $this->load->view('v2/pages/plaid_account/ajax_load_connected_bank_accounts', $this->page_data);
     }
 

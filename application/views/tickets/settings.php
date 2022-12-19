@@ -292,7 +292,7 @@ ul {
                                                         <h2>Custom</h2>
                                                     </li>
                                                     <li class="footer">
-                                                        <a class="btn btn-dark border btn-sm" href="#">Use Template</a>
+                                                        <a class="btn btn-dark border btn-sm" onclick="location.href='<?php echo base_url('tickets/custom_service_tickets') ?>'" href="#">Use Template</a>
                                                     </li>
                                                 </ul>
                                             </div>

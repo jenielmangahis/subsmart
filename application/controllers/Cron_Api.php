@@ -140,6 +140,7 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('GoogleAccounts_model');
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
+        $this->load->helper(array('hashids_helper'));
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
 
@@ -184,12 +185,14 @@ class Cron_Api extends MYF_Controller {
                         $appointment_eid = hashids_encrypt($appointment->id, '', 15);
                         $view_link       = base_url('appointment/'.$appointment_eid);
 
-                        $description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
+                        /*$description  = "<span><b>Customer Name : ".$appointment->customer_name."</b></span><br />";
                         $description .= "<span>Phone Number : ".$appointment->cust_phone."</span><br />";   
                         //$description .= "<span>URL : ".$appointment->url_link."</span><br />";                    
                         $description .= "<span>Location : " . $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code . "</span><br />";
                         $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
-                        $description .= "View : <a href='".$view_link."'>".$view_link."</a><br />"; 
+                        $description .= "View : <a href='".$view_link."'>".$view_link."</a><br />"; */
+                        $description = $appointment->notes ."\n";
+                        $description .= $view_link . "\n"; 
 
                         $is_valid = true;
 
@@ -222,9 +225,9 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $event->event_address;    
 
-                        $description  = "<span><b>Event Type : ".$event->event_type."</b></span><br />";
-                        $description .= "<span>" . $event->event_address . "</span><br />";
-                        $description .= "<span>Event Description : ".$event->event_description."</span><br />";
+                        $description  = "Event Type : ".$event->event_type."\n";
+                        $description .= $event->event_address . "\n";
+                        $description .= "Event Description : ".$event->event_description."\n";
 
                         $is_valid = true;
                     }
@@ -260,10 +263,10 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
 
-                        $description  = "<span><b>Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."</b></span><br />";
-                        $description .= "<span>Phone Number : ".$ticket->phone_m."</span><br />";                  
-                        $description .= "<span>Service Location : " . $ticket->service_location . "</span><br />";
-                        $description .= "<span>Notes : ". $appointment->notes ."</span><br />";
+                        $description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
+                        $description .= "Phone Number : ".$ticket->phone_m."\n";                  
+                        $description .= "Service Location : " . $ticket->service_location . "\n";
+                        $description .= "Notes : ". $appointment->notes ."\n";
 
                         $is_valid = true;
                     }
@@ -315,10 +318,10 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
 
-                        $description  = "<span><b>Customer Name : ".$job->first_name . ' ' . $job->last_name."</b></span><br />";
-                        $description .= "<span>Job Type : ".$job->job_type."</span><br />";                
-                        $description .= "<span>Phone Number : ".$job->cust_phone."</span><br />";                
-                        $description .= "<span>Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "</span><br />";
+                        $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
+                        $description .= "Job Type : ".$job->job_type."\n";                
+                        $description .= "Phone Number : ".$job->cust_phone."\n";                
+                        $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
 
                         $is_valid = true;
                     }

@@ -7,10 +7,25 @@ class TCPDFReport extends CI_Controller
     {
         parent::__construct();
         $this->load->library("tcpdf_lib");
+        $this->load->model('general_model');
+
     }
 
     public function index()
     {   
+
+        $DATA = array(
+            'table' => 'acs_profile',
+            'select' => 'CONCAT(first_name  , " ", last_name) AS CUSTOMER, phone_h AS PHONE_NUMBER, email AS EMAIL, mail_add AS BILLING_ADDRESS, CONCAT(city, " ", state, " ", zip_code) AS SHIPPING_ADDRESS',
+            'where' => array(
+                'fk_user_id' => logged('id'),
+                'company_id' => logged('company_id')
+            )
+        );
+        $REQUEST_DATA = $this->general_model->get_data_with_param($DATA);
+
+        $BUSINESS_NAME = $this->input->get('BUSINESS_NAME');
+        $REPORT_NAME = $this->input->get('REPORT_NAME');
         $PAGE_ORIENTATION = $this->input->get('PAGE_ORIENTATION');
         $PAGE_HEADER_REPEAT = $this->input->get('PAGE_HEADER_REPEAT');
 
@@ -93,9 +108,7 @@ class TCPDFReport extends CI_Controller
         ]);
 
         // Set some content to print
-        $html = <<<EOD
-        {$PAGE_CONTENT}
-        EOD;
+        $html = "TEST ONLY!<br>BUSINESS NAME: $BUSINESS_NAME<br>REPORT NAME: $REPORT_NAME";
 
         // Print text using writeHTMLCell()
         $pdf->writeHTMLCell(0, 0, "", "", $html, 0, 1, 0, true, "", true);

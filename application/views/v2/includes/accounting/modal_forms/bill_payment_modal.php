@@ -28,6 +28,7 @@
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" name="bills[]" value="<?=$bill->id?>" data-amount="<?=$bill->remaining_balance?>">
                     <div class="row" style="min-height: 100%">
                         <div class="col">
                             <div class="row">
@@ -222,13 +223,13 @@
                                             <div class="col-12 col-md-6">
                                                 <label for="vcredit-from">Vendor Credit from</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" name="vcredit_from" id="vcredit-from" class="form-control nsm-field mb-2 date">
+                                                    <input type="text" name="vcredit_from" id="vcredit-from" class="form-control nsm-field mb-2 date" data-applied="">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label for="vcredit-to">To</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" name="vcredit_to" id="vcredit-to" class="form-control nsm-field mb-2 date">
+                                                    <input type="text" name="vcredit_to" id="vcredit-to" class="form-control nsm-field mb-2 date" data-applied="">
                                                 </div>
                                             </div>
                                             <div class="col-12">
