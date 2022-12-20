@@ -40,7 +40,7 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="payee">Payee</label>
-                                            <select name="payee_id" id="vendor" class="form-control nsm-field" required>
+                                            <select name="vendor" id="vendor" class="form-control nsm-field" required>
                                                 <option value="<?=$bill->vendor_id?>"><?=$this->vendors_model->get_vendor_by_id($bill->vendor_id)->display_name?></option>
                                             </select>
                                         </div>

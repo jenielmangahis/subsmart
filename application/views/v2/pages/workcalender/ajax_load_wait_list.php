@@ -2,19 +2,29 @@
     .list-wait-list .waitlist-draggable {
         cursor: move;
     }
+    .waitlist-details{
+        display: inline-block;
+        width: 70%;
+        line-height: 1px !important;
+        overflow: hidden;
+    }
+    .btn-edit-waitlist{
+        display: inline-block;
+    }
 </style>
 
 <ul class="list-wait-list" id="external-events-list">
     <?php foreach ($waitList as $w) { ?>
         <li>
             <div class="waitlist-draggable default-popover nsm-button m-0" data-event='<?= $w->id; ?>' data-content="Drag and drop to calendar to create an appointment">
-                <div class="fc-event-main">
-                    <?= $w->customer_name . " - " . $w->appointment_type; ?>
+                <a class="nsm-button btn-sm primary pull-right btn-edit-waitlist default-popover" data-id="<?= $w->id; ?>" href="javascript:void(0);" data-content="Update Waitlist" style="border: unset;">
+                    <i class='bx bx-calendar-edit'></i>
+                </a>
+                <div class="fc-event-main waitlist-details">
+                    <?= $w->appointment_number . " - " . $w->customer_name; ?>
                 </div>
             </div>
-            <a class="nsm-button btn-sm primary pull-right btn-edit-waitlist default-popover" data-id="<?= $w->id; ?>" href="javascript:void(0);" data-content="Update Waitlist" style="position: relative;top: -51px; border: unset;">
-                <i class='bx bx-calendar-edit'></i>
-            </a>
+           
         </li>
     <?php } ?>
 </ul>

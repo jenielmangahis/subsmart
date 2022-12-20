@@ -1959,6 +1959,70 @@
             $('.invoice-price-container').fadeOut(500);
         }
 
+        if( appointment_type == 4 ){ //Event
+            $('.customer-container').fadeOut(500);
+            $('.event-description-container').fadeIn(500);
+            $("a.btn-manage-tags").attr("href", base_url + 'events/event_tags');
+            $("#appointment-tags").empty().trigger('change');
+            $('#appointment-tags').select2({
+                ajax: {
+                    url: base_url + 'autocomplete/_company_event_tags',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+
+                        return {
+                            results: data,
+                        };
+                    },
+                    cache: true
+                },
+                dropdownParent: $("#create_appointment_modal"),
+                placeholder: 'Select Tags',
+                minimumInputLength: 0,
+                templateResult: formatRepoTag,
+                templateSelection: formatRepoTagSelection
+            });
+        }else{
+            $('.customer-container').fadeIn(500);
+            $('.event-description-container').fadeOut(500);
+            $("a.btn-manage-tags").attr("href", base_url + 'job/job_tags');
+            $("#appointment-tags").empty().trigger('change');
+            $('#appointment-tags').select2({
+                ajax: {
+                    url: base_url + 'autocomplete/_company_job_tags',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+
+                        return {
+                            results: data,
+                        };
+                    },
+                    cache: true
+                },
+                dropdownParent: $("#create_appointment_modal"),
+                placeholder: 'Select Tags',
+                minimumInputLength: 0,
+                templateResult: formatRepoTag,
+                templateSelection: formatRepoTagSelection
+            });
+        }
+
         if( appointment_type == 4 ){
             $('.create-tech-attendees').text('Attendees');
             $('#wait-list-add-employee-popover').popover('dispose');

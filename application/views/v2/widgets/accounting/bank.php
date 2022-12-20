@@ -3,7 +3,6 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '<div class="col-12 col-lg-4">';
 endif;
 ?>
-
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -24,7 +23,7 @@ endif;
             </div>
         </div>
     </div>
-    <div class="nsm-card-content">
+    <div class="nsm-card-content">        
         <div class="nsm-widget-table">
             <?php foreach($accounts as $account) : ?>
                 <div class="widget-item">
@@ -86,7 +85,7 @@ endif;
 <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 <script>
 <?php if( $plaid_handler_open == 1 ){ ?>
-$(function(){
+$(function(){    
     var linkHandler = Plaid.create({
         env: '<?= PLAID_API_ENV ?>',
         clientName: '<?= $client_name; ?>',
