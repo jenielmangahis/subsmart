@@ -162,9 +162,9 @@ endif;
     }
 </style>
 <style>
-    .nsm-table {
+    /*.nsm-table {
         display: none;
-    }
+    }*/
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
     }
