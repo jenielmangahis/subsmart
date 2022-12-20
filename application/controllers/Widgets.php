@@ -70,11 +70,12 @@ class Widgets extends MY_Controller
     public function getLeadSource()
     {
         $this->load->model('widgets_model');
+        $this->load->model('Event_model');
         $comp_id = logged('company_id');
 
         
         //$leadSource = $this->widgets_model->getLeadSource($comp_id);
-        $leadSource =$this->event_model->getLeadSourceWithCount();
+        $leadSource =$this->Event_model->getLeadSourceWithCount();
 
 
         foreach ($leadSource as $ld) :
