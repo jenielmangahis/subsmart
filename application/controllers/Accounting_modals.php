@@ -5763,6 +5763,7 @@ class Accounting_modals extends MY_Controller
 
     private function bill_payment($data)
     {
+        $this->form_validation->set_rules('vendor', 'Vendor', 'required');
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
         $this->form_validation->set_rules('bills[]', 'Bill', 'required');
@@ -5795,7 +5796,7 @@ class Accounting_modals extends MY_Controller
 
             $billPayment = [
                 'company_id' => logged('company_id'),
-                'payee_id' => $data['payee_id'],
+                'payee_id' => $data['vendor'],
                 'payment_account_id' => $data['payment_account'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'check_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
@@ -10765,7 +10766,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['field'] = $this->input->get('field');
             break;
         }
-        // $this->load->view("accounting/modals/$modal", $this->page_data);
         $this->load->view("v2/includes/accounting/modal_forms/$modal", $this->page_data);
     }
 

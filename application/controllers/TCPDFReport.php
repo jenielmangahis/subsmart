@@ -34,21 +34,21 @@ class TCPDFReport extends CI_Controller
 
         // set document information
         $pdf->setCreator(PDF_CREATOR);
-        $pdf->setAuthor("Nicola Asuni");
-        $pdf->setTitle("TCPDF Example 001");
-        $pdf->setSubject("TCPDF Tutorial");
-        $pdf->setKeywords("TCPDF, PDF, example, test, guide");
+        $pdf->setAuthor($BUSINESS_NAME);
+        $pdf->setTitle($REPORT_NAME);
+        $pdf->setSubject("Report");
+        // $pdf->setKeywords("TCPDF, PDF, example, test, guide");
 
         // set default header data
         $pdf->setHeaderData(
             PDF_HEADER_LOGO,
             PDF_HEADER_LOGO_WIDTH,
-            PDF_HEADER_TITLE . " 001",
-            PDF_HEADER_STRING,
-            [0, 64, 255],
-            [0, 64, 128]
+            $BUSINESS_NAME,
+            $REPORT_NAME."\nnSmarTrac",
+            // [0, 64, 255],
+            [0, 64, 100]
         );
-        $pdf->setFooterData([0, 64, 0], [0, 64, 128]);
+        // $pdf->setFooterData([0, 64, 0], [0, 64, 128]);
 
         // set header and footer fonts
         $pdf->setHeaderFont([PDF_FONT_NAME_MAIN, "", PDF_FONT_SIZE_MAIN]);
@@ -83,7 +83,7 @@ class TCPDFReport extends CI_Controller
         // dejavusans is a UTF-8 Unicode font, if you only need to
         // print standard ASCII chars, you can use core fonts like
         // helvetica or times to reduce file size.
-        // $pdf->setFont('dejavusans', '', 14, '', true);
+        // $pdf->setFont('helve', '', 14, '', true);
 
         // Add a page
         // This method has several options, check the source code documentation for more information.
@@ -108,14 +108,51 @@ class TCPDFReport extends CI_Controller
         ]);
 
         // Set some content to print
-        $html = "TEST ONLY!<br>BUSINESS NAME: $BUSINESS_NAME<br>REPORT NAME: $REPORT_NAME";
+        $html .= "
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Billing Address</th>
+                    <th>Shipping Address</th>
+                </tr>
+            </thead>
+            <tbody>";
+        foreach ($REQUEST_DATA as $DATA) {
+           $html .= "
+           <tr>
+                    <td>$DATA->CUSTOMER</td>
+                    <td>$DATA->PHONE_NUMBER</td>
+                    <td>$DATA->EMAIL</td>
+                    <td>$DATA->BILLING_ADDRESS</td>
+                    <td>$DATA->SHIPPING_ADDRESS</td>
+           </tr>";
+        }
+        $html .= "
+            </tbody>
+        </table>";
 
+
+$html .= "
+        <style>
+            table {
+                width: 100%;
+            }
+            table, th, td {
+                border: solid 1px #DDD; 
+                border-collapse: collapse; 
+                padding: 3px 5px;
+                text-align: left; 
+            }
+        </style>";
         // Print text using writeHTMLCell()
         $pdf->writeHTMLCell(0, 0, "", "", $html, 0, 1, 0, true, "", true);
         // ---------------------------------------------------------
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output("example_001.pdf", "I");
+        $pdf->Output("$BUSINESS_NAME $REPORT_NAME.pdf", "I");
         //============================================================+
         // END OF FILE
         //============================================================+
