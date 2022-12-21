@@ -97,7 +97,7 @@ add_css(array(
                                                 <td class="pl-3">
                                                     <a href="<?= base_url('events/new_event/').$event->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
                                                         <span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                    <a href="javascript:void(0)" id="<?= $event->id; ?>"  class="delete_event btn btn-default btn-sm">
+                                                    <a href="javascript:void(0)" id="<?= base_url('events/delete_event/').$event->id; ?>"  class="delete_event btn btn-default btn-sm">
                                                         <span class="fa fa-trash"></span> Delete
                                                     </a>
                                                     <a href="<?= base_url('events/event_preview/').$event->id; ?>"  class=" btn btn-default btn-sm">

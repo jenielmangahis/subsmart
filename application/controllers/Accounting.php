@@ -7958,15 +7958,143 @@ class Accounting extends MY_Controller
     public function workorder()
     {
         $is_allowed = $this->isAllowedModuleAccess(24); 
-        if (!$is_allowed) {
-            $this->page_data['module'] = 'workorder';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        // if (!$is_allowed) {
+        //     $this->page_data['module'] = 'workorder';
+        //     echo $this->load->view('no_access_module', $this->page_data, true);
+        //     die();
+        // }
+        
+        // $role = logged('role');
+        
+		// $this->page_data['page']->title = 'Work Order';
+		// $this->page_data['page']->parent = 'Sales';
+        
+        // $company_id = logged('company_id');        
+
+        // $query = $this->input->get();        
+        // $workorder_status = 'all';
+        // if( isset($query['status']) ){
+        //     $workorder_status = $query['status'];
+        // }
+
+        // $this->page_data['workorderStatusFilters'] = array ();
+        // $this->page_data['workorders'] = array ();
+        // $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
+        // if ($role == 2 || $role == 3) {
+        //     if (!empty($tab_index)) {
+        //         $this->page_data['tab_index'] = $tab_index;
+        //         // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
+        //     } else {
+
+        //         // search
+        //         if (!empty(get('search'))) {
+
+        //             $this->page_data['search'] = get('search');
+        //             // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+        //         } elseif (!empty(get('order'))) {
+
+        //             $this->page_data['search'] = get('search');
+        //             // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+
+        //         } else {
+
+        //             // $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
+        //         }
+        //     }
+
+        //     // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
+        // }
+        // if ($role == 4) {
+
+        //     if (!empty($tab_index)) {
+
+        //         $this->page_data['tab_index'] = $tab_index;
+        //         // $this->page_data['workorders'] = $this->workorder_model->filterBy();
+
+        //     } elseif (!empty(get('order'))) {
+
+        //         $this->page_data['order'] = get('order');
+        //         // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+
+        //     } else {
+
+        //         if (!empty(get('search'))) {
+
+        //             $this->page_data['search'] = get('search');
+        //             // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+        //         } else {
+        //             // $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
+        //         }
+        //     }
+
+        //     // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
+        // }
+
+        // $order = $this->input->get();
+        // $sort  = ['field' => 'id', 'order' => 'desc'];
+        // if( isset($order['order']) ){
+        //     switch ($order['order']) {
+        //         case 'date-issued-asc':
+        //             $sort = ['field' => 'date_created', 'order' => 'asc'];
+        //             break;
+        //         case 'date-issued-desc':
+        //             $sort = ['field' => 'date_created', 'order' => 'desc'];
+        //             break;
+        //         case 'number-asc':
+        //             $sort = ['field' => 'work_order_number', 'order' => 'asc'];
+        //             break;
+        //         case 'number-desc':
+        //             $sort = ['field' => 'work_order_number', 'order' => 'desc'];
+        //             break;
+        //         case 'event-date-asc':
+        //             $sort = ['field' => 'start_date', 'order' => 'asc'];
+        //             break;
+        //         case 'event-date-desc':
+        //             $sort = ['field' => 'start_date', 'order' => 'desc'];
+        //             break;
+        //         case 'priority-asc':
+        //             $sort = ['field' => 'priority', 'order' => 'asc'];
+        //             break;
+        //         case 'priority-desc':
+        //             $sort = ['field' => 'priority', 'order' => 'desc'];
+        //             break;
+        //         default:
+        //             $sort = ['field' => 'id', 'order' => 'desc'];
+        //             break;
+        //     }
+        // }
+
+        // if (!empty(get('search'))) {
+        //     $filter['status'] = $workorder_status;
+        //     $filter['search'] = get('search');
+        //     $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
+        // }else{
+        //     $filter['status'] = $workorder_status;
+        //     $workorder = $this->workorder_model->getworkorderList($filter, $sort);    
+        // }
+
+        
+        // $this->page_data['workorders'] = $workorder;
+        // $company_id = logged('company_id');
+        // $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
+
+        // // unserialized the value
+
+        // $statusFilter = array();        
+        // foreach ($this->page_data['workorders'] as $workorder) {
+
+        //     if (is_serialized($workorder)) {
+
+        //         $workorder = unserialize($workorder);
+        //     }
+        // }
+
+        // $this->page_data['tab_status'] = $workorder_status;
+
         
         $role = logged('role');
         
-		$this->page_data['page']->title = 'Work Order';
+		$this->page_data['page']->title = 'Workorder';
 		$this->page_data['page']->parent = 'Sales';
         
         $company_id = logged('company_id');        
@@ -8047,10 +8175,10 @@ class Accounting extends MY_Controller
                     $sort = ['field' => 'work_order_number', 'order' => 'desc'];
                     break;
                 case 'event-date-asc':
-                    $sort = ['field' => 'start_date', 'order' => 'asc'];
+                    $sort = ['field' => 'date_issued', 'order' => 'asc'];
                     break;
                 case 'event-date-desc':
-                    $sort = ['field' => 'start_date', 'order' => 'desc'];
+                    $sort = ['field' => 'date_issued', 'order' => 'desc'];
                     break;
                 case 'priority-asc':
                     $sort = ['field' => 'priority', 'order' => 'asc'];
@@ -8063,18 +8191,44 @@ class Accounting extends MY_Controller
                     break;
             }
         }
+        
 
         if (!empty(get('search'))) {
             $filter['status'] = $workorder_status;
             $filter['search'] = get('search');
-            $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
+            
+            $org_id = array('58','31');
+            if($company_id == 58 || $company_id == 31)
+            {
+                $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
+            }else{
+                $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
+            }
         }else{
             $filter['status'] = $workorder_status;
-            $workorder = $this->workorder_model->getworkorderList($filter, $sort);    
+            // $workorder = $this->workorder_model->getworkorderList($filter, $sort);    
+            $org_id = array('58','31');
+            if($company_id == 58 || $company_id == 31)
+            {
+                $workorder = $this->workorder_model->getworkorderListMultiple($org_id, $filter, $sort); 
+            }else{
+                $workorder = $this->workorder_model->getworkorderList($filter, $sort);  
+            }
         }
+
+        // $org_id = array('58','31');
+        // if($company_id == 58 || $company_id == 31)
+        // {
+        //     $this->page_data['workorder'] = $this->workorder_model->getByIdArray($org_id);
+        //     $work =  $this->workorder_model->getById($id);
+        // }else{
+        //     $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        //     $work =  $this->workorder_model->getById($id);
+        // }
 
         
         $this->page_data['workorders'] = $workorder;
+
         $company_id = logged('company_id');
         $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
 
@@ -8089,8 +8243,11 @@ class Accounting extends MY_Controller
             }
         }
 
+//        print_r($this->page_data['workorders']); die;
+
         $this->page_data['tab_status'] = $workorder_status;
-        $this->load->view('accounting/work_order_list', $this->page_data);
+        // dd('test');
+        $this->load->view('accounting/work_order_list', $this->page_data); 
     }
 
     public function newEstimateList($tab = '')

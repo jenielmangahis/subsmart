@@ -281,7 +281,7 @@
                                         <tbody>
                                             <?php if(count($credits) > 0) : ?>
                                             <?php foreach($credits as $credit) : ?>
-                                            <tr>
+                                            <tr data-type="<?=$credit['data_type']?>">
                                                 <td>
                                                     <div class="table-row-icon table-checkbox">
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?=$credit['id']?>" <?=$credit['selected'] ? 'checked' : ''?>>

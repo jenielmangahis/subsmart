@@ -4638,6 +4638,7 @@ if(!function_exists('set_expense_graph_data')) {
             return '"' . addcslashes($value, "\0..\37\"\\") . '"';
         }, $accountExpenses);
 
+        $data['total_expenses'] = array_sum($accountExpenses);
         $data['account_names'] = '[' . implode(',', $tempNames) . ']';
         $data['account_expenses'] = '[' . implode(',', $tempExpenses) . ']';
 

@@ -354,7 +354,9 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Service Type</b></label> <i class="bx bx-fw bx-edit custom1" style="float:right;"></i>
+                                        <label for="serviceTypeLabel" id="serviceTypeLabel"><b>Service Type</b></label> <i class="bx bx-fw bx-edit custom1" style="float:right;"></i>
+                                        <input type="text" name="label_custom_1" class="form-control label_custom_1" style="display:none;">
+                                        <input type="text" name="value_custom_1" class="form-control value_custom_1" style="display:none;">
                                         <div class="input-group">
                                             <!-- <select class="form-control" name="service_type" id="service_type">
                                                 <?php //foreach($serviceType as $sType){ ?>
@@ -373,7 +375,9 @@ a.btn-primary.btn-md {
                                         </div><!-- /input-group -->
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Warranty Type</b></label> <i class="bx bx-fw bx-edit custom2" style="float:right;"></i>
+                                        <label for="warrantyTypeLabel" id="warrantyTypeLabel"><b>Warranty Type</b></label> <i class="bx bx-fw bx-edit custom2" style="float:right;"></i>
+                                        <input type="text" name="label_custom_2" class="form-control label_custom_2" style="display:none;">
+                                        <input type="text" name="value_custom_2" class="form-control value_custom_2" style="display:none;">
                                         <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
@@ -385,7 +389,9 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Panel Type</b></label> <i class="bx bx-fw bx-edit custom3" style="float:right;"></i>
+                                        <label for="panelTypeLabel" id="panelTypeLabel"><b>Panel Type</b></label> <i class="bx bx-fw bx-edit custom3" style="float:right;"></i>
+                                        <input type="text" name="label_custom_3" class="form-control label_custom_3" style="display:none;">
+                                        <input type="text" name="value_custom_3" class="form-control value_custom_3" style="display:none;">
                                             <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
@@ -995,7 +1001,7 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
 
-                                <!-- Modal add/update header -->
+                                <!-- Modal add/update field -->
                                 <div class="modal fade" id="addcustomfield" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -1007,11 +1013,12 @@ a.btn-primary.btn-md {
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <h4>Field Type</h4>
-                                                <ul>
-                                                    <li> <input type="radio" name="inputField"> Text Field</li>
-                                                    <li> <input type="radio" name="inputField"> Dropdown</li>
-                                                </ul>
+                                                Name 
+                                                <input type="text" class="form-control" id="inputFieldName" value="Service Type">
+                                                <br>
+                                                Field Type <br>
+                                                <input type="radio" name="inputField" value="1"> Text Field <br>
+                                                <input type="radio" name="inputField" value="0"> Dropdown
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1021,7 +1028,7 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
 
-                                <!-- Modal add/update header -->
+                                <!-- Modal add/update field -->
                                 <div class="modal fade" id="addcustomfield2" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -1033,11 +1040,12 @@ a.btn-primary.btn-md {
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <h4>Field Type</h4>
-                                                <ul>
-                                                    <li> <input type="radio" name="inputField2"> Text Field</li>
-                                                    <li> <input type="radio" name="inputField2"> Dropdown</li>
-                                                </ul>
+                                                Name 
+                                                <input type="text" class="form-control" id="inputFieldName2" value="Warranty Type">
+                                                <br>
+                                                Field Type <br>
+                                                <input type="radio" name="inputField2" value="1"> Text Field <br>
+                                                <input type="radio" name="inputField2" value="0"> Dropdown
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1047,7 +1055,7 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
 
-                                <!-- Modal add/update header -->
+                                <!-- Modal add/update field -->
                                 <div class="modal fade" id="addcustomfield3" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -1059,11 +1067,12 @@ a.btn-primary.btn-md {
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <h4>Field Type</h4>
-                                                <ul>
-                                                    <li> <input type="radio" name="inputField3"> Text Field</li>
-                                                    <li> <input type="radio" name="inputField3"> Dropdown</li>
-                                                </ul>
+                                                Name 
+                                                <input type="text" class="form-control" id="inputFieldName3" value="Panel Type">
+                                                <br>
+                                                Field Type <br>
+                                                <input type="radio" name="inputField3" value="1"> Text Field <br>
+                                                <input type="radio" name="inputField3" value="0"> Dropdown
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1651,4 +1660,68 @@ $(".custom3").on("click", function(e) {
     // alert('test');
     $('#addcustomfield3').modal('show');
 });
+
+$(".addCustom1").on("click", function(e) {
+    // alert('test');
+    // $('#addcustomfield').modal('show');
+    var inputField = $("input[name=inputField]:checked").val();
+    var inputFieldName = $('#inputFieldName').val();
+    if(inputField == 1)
+    {
+        $('#serviceTypeLabel').html(inputFieldName);
+        $('.label_custom_1').val(inputFieldName);
+        $('.value_custom_1').show();
+        $('#service_type').hide();
+        $('#addcustomfield').modal('hide');
+    }else{
+        $('#serviceTypeLabel').html(inputFieldName);
+        $('.value_custom_1').hide();
+        $('#service_type').show();
+        $('#addcustomfield').modal('hide');
+    }
+});
+
+$(".addCustom2").on("click", function(e) {
+    // alert('test');
+    // $('#addcustomfield2').modal('show');
+    var inputField = $("input[name=inputField2]:checked").val();
+    var inputFieldName = $('#inputFieldName2').val();
+    if(inputField == 1)
+    {
+        // alert('test');
+        $('#warrantyTypeLabel').html(inputFieldName);
+        $('.label_custom_2').val(inputFieldName);
+        $('.value_custom_2').show();
+        $('#warranty_type').hide();
+        $('#addcustomfield2').modal('hide');
+    }else{
+        $('#warrantyTypeLabel').html(inputFieldName);
+        $('.value_custom_2').hide();
+        $('#warranty_type').show();
+        $('#addcustomfield2').modal('hide');
+    }
+});
+
+$(".addCustom3").on("click", function(e) {
+    // alert('test');
+    // $('#addcustomfield3').modal('show');
+    var inputField = $("input[name=inputField3]:checked").val();
+    var inputFieldName = $('#inputFieldName3').val();
+    if(inputField == 1)
+    {
+        // alert('test');
+        $('#panelTypeLabel').html(inputFieldName);
+        $('.label_custom_3').val(inputFieldName);
+        $('.value_custom_3').show();
+        $('#panel_type').hide();
+        $('#addcustomfield3').modal('hide');
+    }else{
+        $('#warrantyTypeLabel').html(inputFieldName);
+        $('.value_custom_3').hide();
+        $('#panel_type').show();
+        $('#addcustomfield3').modal('hide');
+    }
+});
+
+
 </script>

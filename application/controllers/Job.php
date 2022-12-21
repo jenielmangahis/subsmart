@@ -1435,11 +1435,10 @@ class Job extends MY_Controller
     {
         $remove_job = array(
             'where' => array(
-                'id' => $_POST['job_id']
+                'id' => $_POST['job_id'],
             ),
             'table' => 'jobs'
         );
-
         //Get Job
         $job = $this->jobs_model->get_specific_job($_POST['job_id']);
         if( $job ){

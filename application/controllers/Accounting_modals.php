@@ -4432,7 +4432,9 @@ class Accounting_modals extends MY_Controller
                     ];
                 }
 
+                $paymentCredit = 0.00;
                 foreach ($itemKeys as $key) {
+                    $bill = $this->vendors_model->get_bill_by_id($data['bills'][$key], logged('company_id'));
                     $paymentTotal += floatval(str_replace(',', '', $data['payment_amount'][$key]));
 
                     if (!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
@@ -4448,6 +4450,8 @@ class Accounting_modals extends MY_Controller
                             }
                         }
                     }
+
+                    $paymentCredit += floatval(str_replace(',', '', $data['total_amount'][$key])) - floatval($bill->remaining_balance);
                 }
 
                 $mailingAddress = $vendor->title !== "" ? $vendor->title." " : "";
@@ -4470,6 +4474,8 @@ class Accounting_modals extends MY_Controller
                     'to_print_check_no' => $data['print_later'],
                     'total_amount' => $paymentTotal,
                     'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
+                    'total_credits_amount' => $paymentCredit,
+                    'available_credits_amount' => $paymentCredit,
                     'status' => 1
                 ];
 
@@ -4547,6 +4553,7 @@ class Accounting_modals extends MY_Controller
                     $paymentItems = [];
                     $startingTime = date("m/d/Y H:i:s");
                     foreach ($itemKeys as $key) {
+                        $bill = $this->vendors_model->get_bill_by_id($data['bills'][$key], logged('company_id'));
                         if (!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
                             $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
                             $vCreditPercentage = number_format(floatval($data['credit_applied'][$key]) / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
@@ -4591,15 +4598,15 @@ class Accounting_modals extends MY_Controller
                             'bill_id' => $data['bills'][$key],
                             'credit_applied_amount' => floatval(str_replace(',', '', $data['credit_applied'][$key])),
                             'payment_amount' => floatval(str_replace(',', '', $data['payment_amount'][$key])),
-                            'total_amount' => floatval(str_replace(',', '', $data['total_amount'][$key]))
+                            'total_amount' => floatval(str_replace(',', '', $data['total_amount'][$key])) > floatval($bill->remaining_balance) ? floatval($bill->remaining_balance) : floatval(str_replace(',', '', $data['total_amount'][$key]))
                         ];
 
                         $bill = $this->expenses_model->get_bill_data($data['bills'][$key]);
                         $remainingBal = floatval(str_replace(',', '', $bill->remaining_balance)) - floatval(str_replace(',', '', $data['total_amount'][$key]));
 
                         $billData = [
-                            'remaining_balance' => floatval(str_replace(',', '', $remainingBal)),
-                            'status' => $remainingBal === 0.00 ? 2 : 1
+                            'remaining_balance' => floatval(str_replace(',', '', $remainingBal)) <= 0.00 ? 0.00 : floatval(str_replace(',', '', $remainingBal)),
+                            'status' => $remainingBal <= 0.00 ? 2 : 1
                         ];
     
                         $this->expenses_model->update_bill_data($bill->id, $billData);
@@ -5803,6 +5810,8 @@ class Accounting_modals extends MY_Controller
                 'to_print_check_no' => null,
                 'total_amount' => floatval(str_replace(',', '', $paymentTotal)),
                 'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
+                'total_credits_amount' => $data['amount_to_credit'],
+                'available_credits_amount' => $data['amount_to_credit'],
                 'status' => 1
             ];
 
@@ -8643,7 +8652,7 @@ class Accounting_modals extends MY_Controller
 
         $data = [];
         foreach ($credits as $credit) {
-            $description = '<a href="#" class="text-decoration-none" data-id="'.$credit->id.'">Vendor Credit ';
+            $description = '<a href="#" class="text-decoration-none" data-id="'.$credit->id.'" data-type="vendor-credit">Vendor Credit ';
             $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
@@ -8652,8 +8661,8 @@ class Accounting_modals extends MY_Controller
                 if (stripos($credit->ref_no, $filters['search']) !== false) {
                     $data[] = [
                         'id' => $credit->id,
+                        'type' => 'vendor-credit',
                         'description' => $description,
-                        'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                         'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                         'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
                         'payment' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
@@ -8662,11 +8671,43 @@ class Accounting_modals extends MY_Controller
             } else {
                 $data[] = [
                     'id' => $credit->id,
+                    'type' => 'vendor-credit',
                     'description' => $description,
-                    'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                     'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                     'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
                     'payment' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
+                ];
+            }
+        }
+
+        $paymentCredits = $this->expenses_model->get_payment_with_credits_by_vendor($filters['vendor'], $filters);
+
+        foreach($paymentCredits as $paymentCredit)
+        {
+            $description = '<a href="#" class="text-decoration-none" data-id="'.$paymentCredit->id.'" data-type="bill-payment">Unapplied Payment ';
+            $description .= $paymentCredit->check_no !== "" && !is_null($paymentCredit->check_no) ? '# '.$paymentCredit->check_no.' ' : '';
+            $description .= '</a>';
+            $description .= '('.date("m/d/Y", strtotime($paymentCredit->payment_date)).')';
+
+            if ($filters['search'] !== "") {
+                if (stripos($paymentCredit->ref_no, $filters['search']) !== false) {
+                    $data[] = [
+                        'id' => $paymentCredit->id,
+                        'type' => 'bill-payment',
+                        'description' => $description,
+                        'original_amount' => number_format(floatval(str_replace(',', '', $paymentCredit->total_credits_amount)), 2, '.', ','),
+                        'open_balance' => number_format(floatval(str_replace(',', '', $paymentCredit->available_credits_amount)), 2, '.', ','),
+                        'payment' => number_format(floatval(str_replace(',', '', $paymentCredit->available_credits_amount)), 2, '.', ','),
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $paymentCredit->id,
+                    'type' => 'bill-payment',
+                    'description' => $description,
+                    'original_amount' => number_format(floatval(str_replace(',', '', $paymentCredit->total_credits_amount)), 2, '.', ','),
+                    'open_balance' => number_format(floatval(str_replace(',', '', $paymentCredit->available_credits_amount)), 2, '.', ','),
+                    'payment' => number_format(floatval(str_replace(',', '', $paymentCredit->available_credits_amount)), 2, '.', ','),
                 ];
             }
         }
@@ -12338,8 +12379,8 @@ class Accounting_modals extends MY_Controller
                             $data[] = [
                                 'id' => $credit->id,
                                 'description' => $description,
+                                'type' => 'vendor-credit',
                                 'date' => date("m/d/Y", strtotime($credit->payment_date)),
-                                'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                                 'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                                 'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
                                 'payment' => '',
@@ -12350,8 +12391,8 @@ class Accounting_modals extends MY_Controller
                         $data[] = [
                             'id' => $credit->id,
                             'description' => $description,
+                            'type' => 'vendor-credit',
                             'date' => date("m/d/Y", strtotime($credit->payment_date)),
-                            'due_date' => date("m/d/Y", strtotime($credit->due_date)),
                             'original_amount' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
                             'open_balance' => number_format(floatval(str_replace(',', '', $credit->remaining_balance)), 2, '.', ','),
                             'payment' => '',

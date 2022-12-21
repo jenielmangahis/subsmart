@@ -22,7 +22,14 @@
         </div>
     </div>
     <div class="nsm-card-content d-flex justify-content-center align-items-center">
+        <?php if($total_expenses > 0) : ?>
         <canvas id="expenses_chart" class="nsm-chart" data-chart-type="expenses"></canvas>
+        <?php else : ?>
+        <div class="nsm-empty">
+          <i class="bx bx-meh-blank"></i>
+          <span>There is currently no expenses recorded.</span>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 

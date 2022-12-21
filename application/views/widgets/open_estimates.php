@@ -1,6 +1,6 @@
 <div class="<?= $class ?>"   data-id="<?= $id ?>" id="widget_<?= $id ?>">
     <div class="wid_header">
-        <i class="fa fa-calculator" aria-hidden="true"></i> Estimates
+        <i class="fa fa-calculator" aria-hidden="true"></i> Estimatessss
         
         <div class="float-right">
             <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
