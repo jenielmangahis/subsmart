@@ -130,9 +130,9 @@ class Appointment_model extends MY_Model
     public function generateAppointmentNumber( $id, $service_type )
     {
         if( $service_type != '' ){
-            $appointment_number = strtoupper($service_type) . '-' . str_pad($id, 5,"0",STR_PAD_LEFT);
+            $appointment_number = strtoupper($service_type) . '-' . str_pad($id, 3,"0",STR_PAD_LEFT);
         }else{
-            $appointment_number = 'APPT-' . str_pad($id, 5,"0",STR_PAD_LEFT);
+            $appointment_number = 'APPT-' . str_pad($id, 3,"0",STR_PAD_LEFT);
         }
         
         return $appointment_number; 
