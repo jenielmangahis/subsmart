@@ -811,6 +811,7 @@ class Workcalender extends MY_Controller
                 $tags = '';
                 if( $a->tag_ids != '' ){
                     $a_tags = explode(",", $a->tag_ids);    
+                    $e_tags = array();
                     if( $a->appointment_type_id == 4 ){ //Events
                         $appointmentTags   = $this->EventTags_model->getAllByIds($a_tags);
                         foreach($appointmentTags as $t){
@@ -851,7 +852,9 @@ class Workcalender extends MY_Controller
             $custom_html .= '</div>';
 
             $custom_html .= '<div class="calendar-tile-details appointment-tile-'.$a->id.'">';
-                $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
+                if( $a->appointment_type_id <> 4 ){
+                    $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
+                }
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
                 $assigned_technician = json_decode($a->assigned_employee_ids);
                 $resourceIds = array();
