@@ -1658,7 +1658,6 @@ class Workcalender extends MY_Controller
                 $is_success = true;
                 $message    = '';
             }
-
         } else {
 
             $message = 'Required fields cannot be empty';
