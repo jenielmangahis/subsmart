@@ -75,6 +75,7 @@
                                 <select class="nsm-field form-select" name="appointment_sales_agent_id" id="appointment-sales-agent-id"></select>
                             </span>                                                        
                         </div>
+                        
                         <div class="col-12 customer-container" style="<?= $default_appointment_type_id == 4 ? 'display: none;' : ''; ?>">
                             <div class="row g-3">
                                 <div class="col-6">
