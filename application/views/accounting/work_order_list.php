@@ -30,16 +30,16 @@
                                 <span>Sort by Date Issued: Newest</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-issued-desc">Date Issued: Newest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-issued-asc">Date Issued: Oldest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=event-date-desc">Scheduled Date: Newest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=event-date-asc">Scheduled Date: Oldest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-completed-desc">Completed Date: Newest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=date-completed-asc">Completed Date: Oldest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=number-asc">Work Order #: A to Z</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=number-desc">Work Order #: Z to A</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=priority-asc">Priority: A to Z</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>?order=priority-desc">Priority: Z to A</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-issued-desc">Date Issued: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-issued-asc">Date Issued: Oldest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=event-date-desc">Scheduled Date: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=event-date-asc">Scheduled Date: Oldest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-completed-desc">Completed Date: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-completed-asc">Completed Date: Oldest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=number-asc">Work Order #: A to Z</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=number-desc">Work Order #: Z to A</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=priority-asc">Priority: A to Z</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=priority-desc">Priority: Z to A</a></li>
                             </ul>
                         </div>
                         <div class="dropdown d-inline-block">
@@ -49,14 +49,14 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder') ?>">All</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=new') ?>">New</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=scheduled') ?>">Scheduled</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=started') ?>">Started</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=paused') ?>">Paused</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=invoiced') ?>">Invoiced</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=withdrawn') ?>">Withdrawn</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('accounting/workorder?status=closed') ?>">Closed</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">All</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=new') ?>">New</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=scheduled') ?>">Scheduled</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=started') ?>">Started</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=paused') ?>">Paused</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=invoiced') ?>">Invoiced</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=withdrawn') ?>">Withdrawn</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=closed') ?>">Closed</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
@@ -79,7 +79,7 @@
                                 <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                             </td>
                             <td data-name="Work Order Number">Work Order Number</td>
-                            <td data-name="Date Issued">Date Issued</td>
+                            <td data-name="Date Issued">Date Created</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Employees">Employees</td>
                             <td data-name="Priority">Priority</td>
@@ -159,7 +159,15 @@
                                         ?></a>
                                         <label class="d-block">Issued on: 
                                             <?php //echo date_format($workorder->first_name, 'd M Y H:i:s') 
-                                                echo date("d M Y H:i:s", strtotime($workorder->date_issued));
+                                                if($workorder->work_order_type_id == '4'){
+                                                    echo date("M d Y", strtotime($workorder->date_created));
+                                                }else if($workorder->work_order_type_id == '3')
+                                                {
+                                                    echo date("M d Y", strtotime($workorder->date_created));
+                                                }
+                                                else{
+                                                    echo date("M d Y", strtotime($workorder->date_issued));
+                                                }
                                             ?>
                                         </label>
                                     </td>

@@ -248,3 +248,8 @@
         <?php } ?>
     </tbody>
 </table>
+<script>
+$(function(){
+    $("#upcoming_schedules_table").nsmPagination({itemsPerPage:3});
+});
+</script>

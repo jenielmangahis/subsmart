@@ -140,7 +140,7 @@ if ($this->session->userdata('usertimezone') == null) {
                 </li>
                 <li class="<?=$page->title === 'Dashboard' ? 'selected' : ''?>">
                     <a href="/accounting/banking">
-                        <i class='bx bx-fw bx-tachometer'></i> Dashboard
+                        <i class='bx bx-fw bx-tachometer'></i> Dashboard 
                     </a>
                 </li>
                 <li class="<?=$page->parent === 'Banking' ? 'selected active' : ''?>">

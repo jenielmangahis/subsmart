@@ -979,6 +979,25 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
+    public function get_payment_with_credits_by_vendor($vendor, $filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('payee_id', $vendor);
+        $this->db->where('status', 1);
+        $this->db->where('available_credits_amount >', 0);
+
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('payment_date >=', $filters['from']);
+        }
+
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('payment_date <=', $filters['to']);
+        }
+
+        $query = $this->db->get('accounting_bill_payments');
+        return $query->result();
+    }
+
     public function get_checks_to_print($filters = [])
     {
         $this->db->where('company_id', logged('company_id'));
