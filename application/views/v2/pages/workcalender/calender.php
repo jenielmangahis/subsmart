@@ -2098,6 +2098,21 @@
         }
     });
 
+    $(document).on('click', '.upcoming-tile-view', function(){
+        var tile_id   = $(this).data('id');
+        var tile_type = $(this).data('type');
+
+        if( tile_type == 'appointment' ){
+            viewAppointment(tile_id);
+        }else if( tile_type == 'job' ){
+            location.href = base_url + 'job/job_preview/' + tile_id;
+        }else if( tile_type == 'ticket' ){
+            location.href = base_url + 'tickets/viewDetails/' + tile_id;
+        }else if( tile_type == 'event' ){
+            location.href = base_url + 'events/event_preview/' + tile_id;
+        }
+    });
+
     $(document).on('click', '.fc-threeDaysView-button', function(){
         selected_calendar_view = 'threeDaysView';
     });

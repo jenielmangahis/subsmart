@@ -198,7 +198,7 @@
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
                         <?php if( $schedule['type'] == 'appointment' ){ ?>
-                            <tr class="schedule-jobs" style="cursor: pointer">
+                            <tr class="schedule-jobs upcoming-tile-view" data-type="appointment" data-id="<?= $schedule['data']->id; ?>" style="cursor: pointer">
                         <?php }else{ ?>
                             <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?= $schedule_view_url; ?>'">
                         <?php } ?>
