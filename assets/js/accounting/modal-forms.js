@@ -2397,19 +2397,27 @@ $(function() {
             var paymentAmount = row.find('input.payment-amount');
             var totalVCredit = parseFloat(rowData.vcredits);
             var creditApplied = parseFloat($(this).val());
+            var availableCredit = parseFloat(row.find('.available-credit').html().trim());
 
-            var payment = parseFloat(balance - creditApplied).toFixed(2);
-            paymentAmount.val(payment);
-            paymentAmount = payment;
+            if(creditApplied > availableCredit) {
+                row.find('input.payment-amount').val(balance.toFixed(2));
+                $(this).val('');
+                var payment = balance;
+                var creditApplied = 0.00;
+            } else {
+                var payment = parseFloat(balance - creditApplied).toFixed(2);
+                paymentAmount.val(payment);
+                paymentAmount = payment;
 
-            var totalCreditApplied = 0.00;
-            $(`#payBillsModal #bills-table tr[data-payeeid="${rowData.payeeid}"]`).each(function() {
-                var rowCreditApplied = $(this).find('.credit-applied').val() === '' ? 0.00 : parseFloat($(this).find('.credit-applied').val());
-                totalCreditApplied += rowCreditApplied;
-            });
-            var remaining_vcredit = totalVCredit - totalCreditApplied;
+                var totalCreditApplied = 0.00;
+                $(`#payBillsModal #bills-table tr[data-payeeid="${rowData.payeeid}"]`).each(function() {
+                    var rowCreditApplied = $(this).find('.credit-applied').val() === '' ? 0.00 : parseFloat($(this).find('.credit-applied').val());
+                    totalCreditApplied += rowCreditApplied;
+                });
+                var remaining_vcredit = totalVCredit - totalCreditApplied;
 
-            $(`#payBillsModal #bills-table tr[data-payeeid="${rowData.payeeid}"] .available-credit`).html(parseFloat(remaining_vcredit).toFixed(2));
+                $(`#payBillsModal #bills-table tr[data-payeeid="${rowData.payeeid}"] .available-credit`).html(parseFloat(remaining_vcredit).toFixed(2));
+            }
         }
 
         var total = parseFloat(payment) + parseFloat(creditApplied);
@@ -9461,7 +9469,7 @@ const submitModalForm = (event, el) => {
             });
         break;
         case '#payBillsModal' :
-            var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
+            // var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '').trim();;
     
             $(`${modalId} #bills-table tbody tr`).each(function() {
                 var rowData = this.dataset;
@@ -9508,13 +9516,17 @@ const submitModalForm = (event, el) => {
                 if($(this).find('input[type="checkbox"]').prop('checked')) {
                     if(data.has('credits[]') === false) {
                         data.set('credits[]', $(this).find('input[type="checkbox"]').val());
+                        data.set('credit_type[]', $(this).data().type);
                         data.set('credit_payment[]', $(this).find('input[name="credit_payment[]"]').val());
                     } else {
                         data.append('credits[]', $(this).find('input[type="checkbox"]').val());
+                        data.append('credit_type[]', $(this).data().type);
                         data.append('credit_payment[]', $(this).find('input[name="credit_payment[]"]').val());
                     }
                 }
             });
+
+            data.set('amount_to_credit', $(`${modalId} span.amount-to-credit`).html().replace('$', '').replaceAll(',', '').trim());
         break;
         case '#journalEntryModal' :
             data.delete('names[]');
@@ -10927,7 +10939,7 @@ const computeBillsPaymentTotal = () => {
     var total = 0.00;
     $('#payBillsModal #bills-table tbody tr').each(function() {
         if($(this).find('input.select-one').prop('checked')) {
-            total += parseFloat($(this).find('td:last-child span').html().replace('$', ''))
+            total += parseFloat($(this).find('.payment-amount').val());
         }
     });
 

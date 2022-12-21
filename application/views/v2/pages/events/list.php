@@ -116,7 +116,7 @@ table.dataTable.no-footer {
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" href="<?php echo base_url('events/event_preview/') . $event->id; ?>">Preview</a></li>
-                                        <li><a class="dropdown-item" href="<?php echo base_url('events/new_event/') . $event->id; ?>">Edit</a></li>
+                                        <li><a class="dropdown-item" href="<?php echo base_url('events/event_add/') . $event->id; ?>">Edit</a></li>
                                         <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $event->id; ?>">Delete</a></li>
                                     </ul>
                                 </div>

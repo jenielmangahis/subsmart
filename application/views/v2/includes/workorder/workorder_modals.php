@@ -1,4 +1,4 @@
-<div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
+    ``<div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -17,7 +17,7 @@
                         <?php elseif ($company_work_order_used->work_order_template_id == '0') : ?>
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/NewworkOrder') ?>'">New Work Order</button>
                         <?php elseif ($company_work_order_used->work_order_template_id == '1') : ?>
-                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/NewworkOrderAlarm') ?>'">New Work Order</button>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Work Order</button>
                         <?php elseif ($company_work_order_used->work_order_template_id == '2') : ?>
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addsolarworkorder') ?>'">New Work Order</button>
                         <?php else : ?>
