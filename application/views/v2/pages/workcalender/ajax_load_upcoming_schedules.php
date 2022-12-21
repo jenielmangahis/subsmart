@@ -155,7 +155,7 @@
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'appointment' ){
-                            $schedule_view_url = base_url('tickets/viewDetails/' . $schedule['data']->id);
+                            $schedule_view_url = 'javascript:void(0);';
                             $schedule_date = date("Y-m-d", strtotime($schedule['data']->appointment_date));
                             $schedule_start_time = date("g:i A", strtotime($schedule['data']->appointment_time_from));
                             $schedule_end_time   = date("g:i A", strtotime($schedule['data']->appointment_time_to));
@@ -197,7 +197,11 @@
                         }
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
-                        <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?= $schedule_view_url; ?>'">
+                        <?php if( $schedule['type'] == 'appointment' ){ ?>
+                            <tr class="schedule-jobs" style="cursor: pointer">
+                        <?php }else{ ?>
+                            <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?= $schedule_view_url; ?>'">
+                        <?php } ?>
                             <td>
                                 <?php 
                                     $event_month = date("F", strtotime($schedule_date));
