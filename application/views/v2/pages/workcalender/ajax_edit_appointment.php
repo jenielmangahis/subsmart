@@ -46,7 +46,7 @@
             <option value="<?= $appointment->prof_id; ?>" selected><?= $appointment->customer_name; ?></option>
         </select>
     </span>
-    <div class="customer-address"></div>
+    <div class="edit-customer-address"></div>
 </div>
 <div class="col-12">
     <div class="row">
@@ -276,9 +276,23 @@ $(function(){
             url: url,
             data: {prof_id: prof_id},
             success: function(result) {
-                $('.customer-address').html(result);
+                $('.edit-customer-address').html(result);
             }
         });
     }
+
+    $('#edit-appointment-customer').on("select2:select", function(e) { 
+        let prof_id = e.params.data.id;
+        let url = "<?= base_url('customer/_load_customer_address') ?>";
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {prof_id: prof_id},
+            success: function(result) {
+                $('.edit-customer-address').html(result);
+            }
+        });
+    });
 });
 </script>
