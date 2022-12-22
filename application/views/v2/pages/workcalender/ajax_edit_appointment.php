@@ -12,8 +12,14 @@
         </div>
     </div>
 </div>
+<div class="col-12 edit-event-description-container" style="<?= $appointment->appointment_type_id != 4 ? 'display: none;' : ''; ?>">
+    <label class="content-subtitle fw-bold d-block mb-2">Event Name</label>
+    <span id="wait-list-created-by">
+        <input type="text" value="<?= $appointment->event_name; ?>" name="event_name" class="nsm-field form-control" />
+    </span>                                                        
+</div>
 <div class="col-12">
-    <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Attendees</label>
+    <label class="content-subtitle fw-bold d-block mb-2 edit-tech-attendees">Attendees</label>
     <span id="edit-wait-list-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
         <select class="nsm-field form-select" name="appointment_user_id[]" id="edit-appointment-user" multiple="multiple">
             <?php foreach($attendees as $key => $user){ ?>
@@ -22,7 +28,7 @@
         </select>
     </span>                                                        
 </div>
-<div class="col-12 appointment-add-sales-agent" <?= ( $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 1 ) ? '' : 'style="display:none;"'; ?>>
+<div class="col-12 appointment-edit-sales-agent" <?= ( $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 1 ) ? '' : 'style="display:none;"'; ?>>
     <label class="content-subtitle fw-bold d-block mb-2">Sales Agent</label>
     <span id="wait-list-add-sales-agent-popover" data-toggle="popover" data-placement="right"data-container="body">
         <select class="nsm-field form-select" name="appointment_sales_agent_id" id="edit-appointment-sales-agent-id">
@@ -32,7 +38,7 @@
         </select>
     </span>                                                        
 </div>
-<div class="col-12">
+<div class="col-12 edit-customer-container" style="<?= $appointment->appointment_type_id == 4 ? 'display: none;' : ''; ?>">
     <div class="row g-3">
         <div class="col-6">
             <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
@@ -52,7 +58,7 @@
     <div class="row">
         <div class="col-6">
             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-            <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required style="display: inline-block;width: 60%;">
+            <select name="appointment_type_id" class="nsm-field form-select edit-appointment-type" required style="display: inline-block;width: 60%;">
                 <?php foreach ($appointmentTypes as $a) { ?>
                     <option <?= $appointment->appointment_type_id == $a->id ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
                 <?php } ?>
@@ -63,7 +69,7 @@
         </div>
         <div class="col-6">
             <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
-            <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
+            <select name="appointment_priority" class="nsm-field form-select edit-appointment-priority" required>
                 <?php if( $appointment->appointment_type_id == 4 ){ ?>
                     <?php foreach($appointmentPriorityEventOptions as $priority){ ?>
                         <option value="<?= $priority; ?>"><?= $priority; ?></option>
@@ -79,7 +85,7 @@
     </div>
     
 </div>
-<div class="col-12 invoice-price-container" <?= ( $appointment->appointment_type_id != 4 ) ? '' : 'style="display:none;"'; ?>>
+<div class="col-12 edit-invoice-price-container" <?= ( $appointment->appointment_type_id != 4 ) ? '' : 'style="display:none;"'; ?>>
     <div class="row">
         <div class="col-6">
             <label class="content-subtitle fw-bold d-block mb-2">Invoice Number</label>
@@ -95,13 +101,23 @@
     <div class="row">
         <div class="col-6">
             <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
-            <span id="edit-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
+            <span id="edit-tag-popover" data-toggle="popover" data-placement="right"data-container="body" style="display: inline-block;width: 60% !important;">
                 <select class="nsm-field form-select" name="appointment_tags[]" id="edit-appointment-tags" multiple="multiple">
                     <?php foreach ($a_selected_tags as $key => $value) { ?>
                         <option value="<?= $key; ?>" selected><?= $value; ?></option>
                     <?php } ?>
                 </select>
             </span>
+            <?php 
+                if( $appointment->appointment_type_id == 4 ){ //Events
+                    $manage_tags_url = base_url('events/event_tags');
+                }else{
+                    $manage_tags_url = base_url('job/job_tags');
+                }
+            ?>
+            <a class="nsm-button edit-btn-manage-tags" href="<?= $manage_tags_url; ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
+                <i class='bx bx-fw bx-plus'></i> Manage Tags
+            </a>
         </div>
         <div class="col-6">
             <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
@@ -160,6 +176,119 @@ $(function(){
 
     $(".edit-timepicker-to").datetimepicker({
         format: 'hh:mm A'
+    });
+
+    $(".edit-appointment-type").click(function(){
+        var appointmentEventPriorityOptions = <?= json_encode($appointmentPriorityEventOptions); ?>;
+        var appointmentPriorityOptions      = <?= json_encode($appointmentPriorityOptions); ?>;
+        var appointment_type = $(this).val();
+        if( appointment_type ==  3 || appointment_type == 1 ){
+            $('.appointment-edit-sales-agent').fadeIn(500);
+            $('.edit-invoice-price-container').fadeIn(500);
+        }else if( appointment_type ==  2 ){
+            $('.appointment-edit-sales-agent').fadeOut(500);
+            $('.edit-invoice-price-container').fadeIn(500);
+        }else{
+            $('.appointment-edit-sales-agent').fadeOut(500);
+            $('.edit-invoice-price-container').fadeOut(500);
+        }
+
+        if( appointment_type == 4 ){ //Event
+            $('.edit-customer-container').fadeOut(500);
+            $('.edit-event-description-container').fadeIn(500);
+            $("a.edit-btn-manage-tags").attr("href", base_url + 'events/event_tags');
+            $("#edit-appointment-tags").empty().trigger('change');
+            $('#edit-appointment-tags').select2({
+                ajax: {
+                    url: base_url + 'autocomplete/_company_event_tags',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+
+                        return {
+                            results: data,
+                        };
+                    },
+                    cache: true
+                },
+                dropdownParent: $("#edit_appointment_modal"),
+                placeholder: 'Select Tags',
+                minimumInputLength: 0,
+                templateResult: formatRepoTag,
+                templateSelection: formatRepoTagSelection
+            });
+        }else{
+            $('.edit-customer-container').fadeIn(500);
+            $('.edit-event-description-container').fadeOut(500);
+            $("a.edit-btn-manage-tags").attr("href", base_url + 'job/job_tags');
+            $("#edit-appointment-tags").empty().trigger('change');
+            $('#edit-appointment-tags').select2({
+                ajax: {
+                    url: base_url + 'autocomplete/_company_job_tags',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+
+                        return {
+                            results: data,
+                        };
+                    },
+                    cache: true
+                },
+                dropdownParent: $("#edit_appointment_modal"),
+                placeholder: 'Select Tags',
+                minimumInputLength: 0,
+                templateResult: formatRepoTag,
+                templateSelection: formatRepoTagSelection
+            });
+        }
+
+        if( appointment_type == 4 ){
+            $('.edit-tech-attendees').text('Attendees');
+            $('#edit-wait-list-add-employee-popover').popover('dispose');
+            $('#edit-wait-list-add-employee-popover').popover({    
+                content:'Who will attend the event',
+                title:'Attendees',        
+                trigger: 'hover'
+            });
+
+            var $el = $(".edit-appointment-priority");
+            $el.empty(); // remove old options
+            $.each(appointmentEventPriorityOptions, function(key,value) {
+              $el.append($("<option></option>")
+                 .attr("value", value).text(value));
+            });
+
+        }else{
+            $('.edit-tech-attendees').text('Assigned Techincian');
+            $('#edit-wait-list-add-employee-popover').popover('dispose');
+            $('#edit-wait-list-add-employee-popover').popover({    
+                content:'Assign employee that will handle the appointment',
+                title:'Which Employee',        
+                trigger: 'hover'
+            }); 
+
+            var $el = $(".edit-appointment-priority");
+            $el.empty(); // remove old options
+            $.each(appointmentPriorityOptions, function(key,value) {
+              $el.append($("<option></option>")
+                 .attr("value", value).text(value));
+            });           
+        }
     });
 
     $('#edit-appointment-customer').select2({

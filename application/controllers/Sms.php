@@ -258,4 +258,19 @@ class Sms extends Widgets {
         $this->load->view('v2/pages/dashboard/ajax_use_sms_template.php', $this->page_data);
 
     }
+
+    public function ajax_sms_list()
+    {
+        $this->load->helper('sms_helper');
+        $this->load->model('RingCentralAccounts_model');
+
+        $cid = logged('company_id');
+        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
+
+        $date_from = '2022-04-03';
+        $smsMessages  = ringCentralAllMessages($ringCentral, $date_from);
+
+        $this->page_data['smsMessages'] = $smsMessages;
+        $this->load->view('v2/pages/dashboard/ajax_sms_list.php', $this->page_data);
+    }
 }

@@ -6280,4 +6280,24 @@ class Customer extends MY_Controller
         $this->db->where_in('docfile_id', $docfileIds);
         return $this->db->get('user_docfile_generated_pdfs')->result_array();
     }
+
+    public function ajax_get_phone_number()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $customer_name  = '';
+        $customer_phone = '';
+
+        $post = $this->input->post();
+        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['profid'],'acs_profile');
+        if( $customer ){
+            $customer_name  = $customer->first_name . ' ' . $customer->last_name;
+            if( $customer->phone_m != '' ){
+                $customer_phone = $customer->phone_m; 
+            }            
+        }
+
+        $return = ['name' => $customer_name, 'phone' => $customer_phone];
+        echo json_encode($return);
+    }
 }
