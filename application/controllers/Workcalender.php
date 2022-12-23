@@ -1880,6 +1880,12 @@ class Workcalender extends MY_Controller
                     $appointment_priority = $post['appointment_priority_others'];
                 }
 
+                $event_name = '';
+                if( $post['appointment_type_id'] == 4 ){
+                    $event_name = $post['event_name'];
+                    $post['appointment_customer_id'] = 0;
+                }
+
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
                     'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
@@ -1899,6 +1905,7 @@ class Workcalender extends MY_Controller
                     'cost' => $price,
                     'sales_agent_id' => $sales_agent_id,
                     'invoice_number' => $invoice_number,
+                    'event_name' => $event_name
                 ];
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);

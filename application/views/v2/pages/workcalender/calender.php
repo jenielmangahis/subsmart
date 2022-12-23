@@ -1505,7 +1505,7 @@
             data: {},
             success: function(result) {
                 _container.html(result);
-                $("#upcoming_schedules_table").nsmPagination();
+                $("#upcoming_schedules_table").nsmPagination({itemsPerPage:5});
             },
         });
     }
