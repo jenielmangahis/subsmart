@@ -54,6 +54,14 @@ class Customer_advance_model extends MY_Model {
         }
     }
 
+    public function getLeadSourceData()
+    {
+        $this->db->select('ls_name');
+        $this->db->distinct('ls_name');
+        $query = $this->db->get('ac_leadsource');
+        return $query->result();
+    }
+
     public function get_data_by_id($fieldname,$fieldvalue,$tablename)
     {
         $this->db->select('*');

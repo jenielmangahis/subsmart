@@ -505,7 +505,7 @@ function Signing(hash) {
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       if (!selected) {
-        $element.css({ opacity: 0 });
+        // $element.css({ opacity: 0 });
       }
 
       return $element;

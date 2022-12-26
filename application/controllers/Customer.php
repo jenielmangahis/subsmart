@@ -178,7 +178,8 @@ class Customer extends MY_Controller
                 }
                 
                 if (in_array('source', $enabled_table_headers)){
-                    $lead =  $customer->lead_source != "" ? $customer->lead_source : 'n/a';
+                    // $lead =  $customer->lead_source != "" ? $customer->lead_source : Door';
+                    $lead = "Door";
                     array_push($data_arr, $lead);
                 }
                 if (in_array('added', $enabled_table_headers)){
@@ -189,7 +190,7 @@ class Customer extends MY_Controller
                     array_push($data_arr, $sales_rep);
                 }
                 if (in_array('tech', $enabled_table_headers)) {
-                    $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned';
+                    $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
                     array_push($data_arr, $techician);
                 }
                 if (in_array('plan_type', $enabled_table_headers)){
@@ -237,7 +238,7 @@ class Customer extends MY_Controller
                 //state
                 array_push($data_arr, $customer->state);
                 //source
-                $lead =  $customer->lead_source != "" ? $customer->lead_source : 'n/a';
+                $lead =  $customer->lead_source != "" ? $customer->lead_source : 'Door';
                 array_push($data_arr, $lead);
                 //added
                 array_push($data_arr, $customer->entered_by);
@@ -245,7 +246,7 @@ class Customer extends MY_Controller
                 $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
                 array_push($data_arr, $sales_rep);
                 //tech
-                $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned';
+                $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
                 array_push($data_arr, $techician);
                 //plan type
                 array_push($data_arr, $customer->system_type);
@@ -305,7 +306,6 @@ class Customer extends MY_Controller
 
             $start++;
         }
-
         $output = array(
             "draw" => $draw,
             "recordsTotal" => count($allCustomers),
@@ -1820,7 +1820,7 @@ class Customer extends MY_Controller
 
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll(); 
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
-
+        $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getLeadSourceData();
         $this->load->view('v2/pages/customer/add', $this->page_data);
     }
 
@@ -6279,5 +6279,25 @@ class Customer extends MY_Controller
 
         $this->db->where_in('docfile_id', $docfileIds);
         return $this->db->get('user_docfile_generated_pdfs')->result_array();
+    }
+
+    public function ajax_get_phone_number()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $customer_name  = '';
+        $customer_phone = '';
+
+        $post = $this->input->post();
+        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['profid'],'acs_profile');
+        if( $customer ){
+            $customer_name  = $customer->first_name . ' ' . $customer->last_name;
+            if( $customer->phone_m != '' ){
+                $customer_phone = $customer->phone_m; 
+            }            
+        }
+
+        $return = ['name' => $customer_name, 'phone' => $customer_phone];
+        echo json_encode($return);
     }
 }

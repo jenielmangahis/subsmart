@@ -192,6 +192,7 @@ class Workcalender extends MY_Controller
             $a_default_uid[$u->id] = $u->id;
         }
 
+        $this->page_data['default_appointment_type_id'] = 11;
         $this->page_data['a_default_uid'] = $a_default_uid;
         $this->page_data['appointmentPriorityOptions']      = $appointmentPriorityOptions;
         $this->page_data['appointmentPriorityEventOptions'] = $appointmentPriorityEventOptions;
@@ -807,30 +808,53 @@ class Workcalender extends MY_Controller
 
             //$appointment_number = strtoupper(str_replace("APPT", $a->appointment_type, $a->appointment_number));
             $custom_html = '<div class="calendar-title-header">';
-                $tags = '---';
+                $tags = '';
                 if( $a->tag_ids != '' ){
-                    $a_tags = explode(",", $a->tag_ids);     
-                    $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
-                    foreach($appointmentTags as $t){
-                        $e_tags[] = $t->name;
-                    }
+                    $a_tags = explode(",", $a->tag_ids);    
+                    $e_tags = array();
+                    if( $a->appointment_type_id == 4 ){ //Events
+                        $appointmentTags   = $this->EventTags_model->getAllByIds($a_tags);
+                        foreach($appointmentTags as $t){
+                            $e_tags[] = $t->name;
+                        }
 
-                    $tags = implode(",", $e_tags);
+                        $tags = implode(",", $e_tags);
+                    }else{
+                        $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+                        foreach($appointmentTags as $t){
+                            $e_tags[] = $t->name;
+                        }
+
+                        $tags = implode(",", $e_tags);    
+                    }  
+
+                    if( $tags ){
+                        $tags = ' - ' . $tags;
+                    }
+                    
                 }
 
-                $customer_name = $j->first_name . ' ' . $j->last_name;
+                $customer_name = '';
                 $view_btn      = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="appointment" data-id="'.$a->id.'"><i class="bx bx-window-open"></i> View</a>';
 
                 $gcalendar_btn = '';
                 if( $google_user_api ){
                     $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="appointment" data-id="'.$a->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
                 }
-                $custom_html  .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . ' - ' . $tags . ' : ' . $a->customer_name . '</span></a>';
+
+                if( $a->appointment_type_id == 4 ){ //Events                    
+                    $custom_html  .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . $tags . ' : ' . $a->event_name . '</span></a>';
+                }else{  
+                    $customer_name = $j->first_name . ' ' . $j->last_name;
+                    $custom_html  .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . $tags . ' : ' . $a->customer_name . '</span></a>';
+                }                
                 //$custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'"><i class="bx bx-chevron-down"></i></a>';
             $custom_html .= '</div>';
 
             $custom_html .= '<div class="calendar-tile-details appointment-tile-'.$a->id.'">';
-                $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
+                if( $a->appointment_type_id <> 4 ){
+                    $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
+                }
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
                 $assigned_technician = json_decode($a->assigned_employee_ids);
                 $resourceIds = array();
@@ -1561,70 +1585,82 @@ class Workcalender extends MY_Controller
         $is_success = false;
         $message    = 'Cannot create appointment';
 
-        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && !empty($post['appointment_user_id']) && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
+        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && !empty($post['appointment_user_id']) && $post['appointment_type_id'] != '') {
 
-            if( $post['appointment_tags'] != '' ){
-                $tags = implode(",", $post['appointment_tags']);
+            if( $post['appointment_type_id'] != 4 && $post['appointment_customer_id'] == '' ){
+                $message = 'Please select customer to assign to this appointment';
+            }elseif( $post['appointment_type_id'] == 4 && $post['event_name'] == '' ){
+                $message = 'Please specify event name';
             }else{
-                $tags = '';
+                if( $post['appointment_tags'] != '' ){
+                    $tags = implode(",", $post['appointment_tags']);
+                }else{
+                    $tags = '';
+                }
+
+                $sales_agent_id = 0;
+                $price = 0;
+                $invoice_number = '';
+                if( $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 1 ){
+                    $sales_agent_id = $post['appointment_sales_agent_id'];
+                    $price = $post['appointment_price'];
+                    $invoice_number = $post['appointment_invoice_number'];
+                }
+
+                if( $post['appointment_type_id'] == 2 ){
+                    $price = $post['appointment_price'];
+                    $invoice_number = $post['appointment_invoice_number'];   
+                } 
+
+                $appointment_priority = $post['appointment_priority'];
+                if( $post['appointment_priority'] == 'Others' ){
+                    $appointment_priority = $post['appointment_priority_others'];
+                }
+
+                $event_name = '';
+                if( $post['appointment_type_id'] == 4 ){
+                    $event_name = $post['event_name'];
+                    $post['appointment_customer_id'] = 0;
+                }
+
+                $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);            
+                $data_appointment = [
+                    'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
+                    'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
+                    'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
+                    'user_id' => $user_id,
+                    'prof_id' => $post['appointment_customer_id'],
+                    'company_id' => $company_id,
+                    'tag_ids' => $tags,
+                    'url_link' => $post['url_link'],
+                    'total_item_price' => 0,
+                    'total_item_discount' => 0,
+                    'total_amount' => 0,
+                    'appointment_type_id' => $post['appointment_type_id'],
+                    'is_paid' => 0,
+                    'priority' => $appointment_priority,
+                    'is_wait_list' => 0,
+                    'assigned_employee_ids' => json_encode($post['appointment_user_id']),
+                    'notes' => $post['appointment_notes'],
+                    'cost' => $price,
+                    'sales_agent_id' => $sales_agent_id,
+                    'invoice_number' => $invoice_number,
+                    'event_name' => $event_name,
+                    'created' => date("Y-m-d H:i:s")
+                ];
+
+                $last_id = $this->Appointment_model->createAppointment($data_appointment);
+                $appointment_number = $this->Appointment_model->generateAppointmentNumber($last_id, $appointmentType->name);
+                $this->Appointment_model->update($last_id, ['appointment_number' => $appointment_number]);
+
+                //Google Calendar
+                createSyncToCalendar($last_id, 'appointment', $company_id);
+
+                customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
+
+                $is_success = true;
+                $message    = '';
             }
-
-            $sales_agent_id = 0;
-            $price = 0;
-            $invoice_number = '';
-            if( $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 1 ){
-                $sales_agent_id = $post['appointment_sales_agent_id'];
-                $price = $post['appointment_price'];
-                $invoice_number = $post['appointment_invoice_number'];
-            }
-
-            if( $post['appointment_type_id'] == 2 ){
-                $price = $post['appointment_price'];
-                $invoice_number = $post['appointment_invoice_number'];   
-            } 
-
-            $appointment_priority = $post['appointment_priority'];
-            if( $post['appointment_priority'] == 'Others' ){
-                $appointment_priority = $post['appointment_priority_others'];
-            }
-
-            $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);            
-            $data_appointment = [
-                'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
-                'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
-                'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
-                'user_id' => $user_id,
-                'prof_id' => $post['appointment_customer_id'],
-                'company_id' => $company_id,
-                'tag_ids' => $tags,
-                'url_link' => $post['url_link'],
-                'total_item_price' => 0,
-                'total_item_discount' => 0,
-                'total_amount' => 0,
-                'appointment_type_id' => $post['appointment_type_id'],
-                'is_paid' => 0,
-                'priority' => $appointment_priority,
-                'is_wait_list' => 0,
-                'assigned_employee_ids' => json_encode($post['appointment_user_id']),
-                'notes' => $post['appointment_notes'],
-                'cost' => $price,
-                'sales_agent_id' => $sales_agent_id,
-                'invoice_number' => $invoice_number,
-                'created' => date("Y-m-d H:i:s")
-            ];
-
-            $last_id = $this->Appointment_model->createAppointment($data_appointment);
-            $appointment_number = $this->Appointment_model->generateAppointmentNumber($last_id, $appointmentType->name);
-            $this->Appointment_model->update($last_id, ['appointment_number' => $appointment_number]);
-
-            //Google Calendar
-            createSyncToCalendar($last_id, 'appointment', $company_id);
-
-            customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
-
-            $is_success = true;
-            $message    = '';
-
         } else {
 
             $message = 'Required fields cannot be empty';
@@ -1844,6 +1880,12 @@ class Workcalender extends MY_Controller
                     $appointment_priority = $post['appointment_priority_others'];
                 }
 
+                $event_name = '';
+                if( $post['appointment_type_id'] == 4 ){
+                    $event_name = $post['event_name'];
+                    $post['appointment_customer_id'] = 0;
+                }
+
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
                     'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
@@ -1863,6 +1905,7 @@ class Workcalender extends MY_Controller
                     'cost' => $price,
                     'sales_agent_id' => $sales_agent_id,
                     'invoice_number' => $invoice_number,
+                    'event_name' => $event_name
                 ];
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);
@@ -2916,7 +2959,7 @@ class Workcalender extends MY_Controller
                     $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
 
                     $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
-                    $description .= "Job Type : ".$job->job_type."\\n";                
+                    $description .= "Job Type : ".$job->job_type."\n";                
                     $description .= "Phone Number : ".$job->cust_phone."\n";                
                     $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
 

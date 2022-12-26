@@ -1362,6 +1362,9 @@ $route['messages/_company_resend_form'] = 'Sms/ajax_company_resend_form';
 $route['customer/_update_customer_mobile_number'] = 'Customer/ajax_update_customer_mobile_number';
 $route['messages/_load_customer_sent_messages'] = 'Sms/ajax_customer_sent_messages';
 $route['sms/_use_sms_template'] = 'Sms/ajax_use_sms_template';
+$route['customer/_get_phone_number'] = 'Customer/ajax_get_phone_number';
+$route['messages/_sms_list'] = 'Sms/ajax_sms_list';
+
 
 //Calls
 $route['calls/_log_start_call'] = 'Calls/ajax_log_start_call';

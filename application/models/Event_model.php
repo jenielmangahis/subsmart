@@ -309,6 +309,20 @@ class Event_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function getJobCountPerId($id)
+    {
+        $this->db->select('count(jobs.id) as totalCount');
+        $this->db->from('job_payments');
+        $this->db->join('jobs', ' job_payments.job_id = jobs.id', 'left');
+        $this->db->join('invoices', ' invoices.job_id = jobs.id');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_office.technician', $id);
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
+        // $this->db->group_by('jobs.customer_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getSalesLeaderboards()
     {
@@ -332,12 +346,12 @@ class Event_model extends MY_Model
     public function getLeadSourceWithCount()
     {
         $cid=logged('company_id');
-        $this->db->select('lead_source, count(lead_source) as leadSourceCount');
+        $this->db->select('acs_office.lead_source, count(acs_office.lead_source) as leadSourceCount');
         $this->db->from('acs_profile');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('lead_source !=', "");
+        $this->db->where('acs_office.lead_source !=', "");
         $this->db->where('company_id =', $cid);
-        $this->db->group_by('lead_source');
+        $this->db->group_by('acs_office.lead_source');
         $query = $this->db->get();
         return $query->result();
     }
@@ -347,17 +361,103 @@ class Event_model extends MY_Model
      * 
      * @return object List of JOB STATUS with number of count
     */
-    public function getJobStatusWithCount()
+    // public function getJobStatusWithCount()
+    // {
+    //     $cid=logged('company_id');
+    //     $this->db->select('status, count(status) as statusCount');
+    //     $this->db->from('jobs');
+    //     $this->db->group_by('status');
+    //     $this->db->order_by('statusCount');
+    //     $this->db->where('company_id', $cid);
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
+
+
+ public function getStatusCount($DATE)
     {
-        $cid=logged('company_id');
-        $this->db->select('status, count(status) as statusCount');
-        $this->db->from('jobs');
-        $this->db->group_by('status');
-        $this->db->order_by('statusCount', 'desc');
-        $this->db->where('company_id', $cid);
-        $query = $this->db->get();
-        return $query->result();
+        $CURRENT_MONTH_COUNT = array();
+        $CURRENT_YEAR_COUNT = array();
+        $COMPANY_ID = logged('company_id');
+
+        // GET SCHEDULED COUNT BASED ON CURRENT MONTH
+        $this->db->select('"Scheduled" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Scheduled%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Scheduled%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(appointments.appointment_number) FROM appointments WHERE appointments.appointment_number LIKE "%JOB%" AND DATE_FORMAT(appointments.appointment_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") OR appointments.appointment_number LIKE "%EVENT%" AND DATE_FORMAT(appointments.appointment_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") OR appointments.appointment_number LIKE "%SERVICES%" AND DATE_FORMAT(appointments.appointment_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m"))) AS TOTAL');
+        $scheduledQueryMonth = $this->db->get();
+        array_push($CURRENT_MONTH_COUNT, $scheduledQueryMonth->row());
+
+        // GET ARRIVAL COUNT BASED ON CURRENT MONTH
+        $this->db->select('"Arrival" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Arrival%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Arrival%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $arrivalQueryMonth = $this->db->get();
+        array_push($CURRENT_MONTH_COUNT, $arrivalQueryMonth->row());
+
+        // GET STARTED COUNT BASED ON CURRENT MONTH
+        $this->db->select('"Started" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Started%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Started%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $startedQueryMonth = $this->db->get();
+        array_push($CURRENT_MONTH_COUNT, $startedQueryMonth->row());
+
+        // GET APPROVED COUNT BASED ON CURRENT MONTH
+        $this->db->select('"Approved" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Approved%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Approved%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $approvedQueryMonth = $this->db->get();
+        array_push($CURRENT_MONTH_COUNT, $approvedQueryMonth->row());
+
+        // GET FINISH COUNT BASED ON CURRENT MONTH
+        $this->db->select('"Finish" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Finish%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Finish%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $finishQueryMonth = $this->db->get();
+        array_push($CURRENT_MONTH_COUNT, $finishQueryMonth->row());
+
+        // GET INVOICED COUNT BASED ON CURRENT MONTH
+        $this->db->select('"Invoiced" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Invoiced%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Invoiced%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $invoicedQueryMonth = $this->db->get();
+        array_push($CURRENT_MONTH_COUNT, $invoicedQueryMonth->row());
+
+        // GET COMPLETED COUNT BASED ON CURRENT MONTH
+        $this->db->select('"Completed" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Completed%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Completed%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Finished%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Finished%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $completedQueryMonth = $this->db->get();
+        array_push($CURRENT_MONTH_COUNT, $completedQueryMonth->row());
+
+        // GET SCHEDULED COUNT BASED ON CURRENT YEAR
+        $this->db->select('"Scheduled" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Scheduled%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Scheduled%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(appointments.appointment_number) FROM appointments WHERE appointments.appointment_number LIKE "%JOB%" AND DATE_FORMAT(appointments.appointment_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") OR appointments.appointment_number LIKE "%EVENT%" AND DATE_FORMAT(appointments.appointment_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") OR appointments.appointment_number LIKE "%SERVICES%" AND DATE_FORMAT(appointments.appointment_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y"))) AS TOTAL');
+        $scheduledQueryYear = $this->db->get();
+        array_push($CURRENT_YEAR_COUNT, $scheduledQueryYear->row());
+
+        // GET ARRIVAL COUNT BASED ON CURRENT YEAR
+        $this->db->select('"Arrival" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Arrival%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Arrival%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $arrivalQueryYear = $this->db->get();
+        array_push($CURRENT_YEAR_COUNT, $arrivalQueryYear->row());
+
+        // GET STARTED COUNT BASED ON CURRENT YEAR
+        $this->db->select('"Started" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Started%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Started%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $startedQueryYear = $this->db->get();
+        array_push($CURRENT_YEAR_COUNT, $startedQueryYear->row());
+
+        // GET APPROVED COUNT BASED ON CURRENT YEAR
+        $this->db->select('"Approved" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Approved%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Approved%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $approvedQueryYear = $this->db->get();
+        array_push($CURRENT_YEAR_COUNT, $approvedQueryYear->row());
+
+        // GET FINISH COUNT BASED ON CURRENT YEAR
+        $this->db->select('"Finish" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Finish%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Finish%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $finishQueryYear = $this->db->get();
+        array_push($CURRENT_YEAR_COUNT, $finishQueryYear->row());
+
+        // GET INVOICED COUNT BASED ON CURRENT YEAR
+        $this->db->select('"Invoiced" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Invoiced%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Invoiced%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $invoicedQueryYear = $this->db->get();
+        array_push($CURRENT_YEAR_COUNT, $invoicedQueryYear->row());
+
+        // GET COMPLETED COUNT BASED ON CURRENT YEAR
+        $this->db->select('"Completed" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Completed%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Completed%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Finished%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Finished%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.date_created, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
+        $completedQueryYear = $this->db->get();
+        array_push($CURRENT_YEAR_COUNT, $completedQueryYear->row());
+
+        if ($DATE == "YEAR") {
+            return $CURRENT_YEAR_COUNT;
+        }
+        if ($DATE == "MONTH") {
+            return $CURRENT_MONTH_COUNT;
+        }
     }
+
 
       /**
      * This function will fetch latest jobs of each company
@@ -446,10 +546,12 @@ class Event_model extends MY_Model
         $this->db->select('SUM(job_payments.amount) as techRev');
         $this->db->from('job_payments');
         $this->db->join('jobs', ' job_payments.job_id = jobs.id', 'left');
+        $this->db->join('invoices', ' invoices.job_id = jobs.id');
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_office.technician', $techId);
-        $this->db->group_by('jobs.customer_id');
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
+        // $this->db->group_by('jobs.customer_id');
         $query = $this->db->get();
         return $query->result();
     }
@@ -611,7 +713,11 @@ class Event_model extends MY_Model
     public function getAllJobs()
     {
         $company_id = logged('company_id');
-        $query = $this->db->get_where('jobs', array('company_id' => $company_id));
+        $this->db->select('jobs.*, job_payments.amount');
+        $this->db->from('jobs');
+        $this->db->join('job_payments', 'jobs.id = job_payments.job_id');
+        $this->db->where('jobs.company_id', $company_id);
+        $query = $this->db->get();
 
         if ($query) {
             return $query->result();
@@ -647,8 +753,12 @@ class Event_model extends MY_Model
         $this->db->select('SUM(acs_billing.mmr) AS TOTAL_MMR');
         $this->db->from('acs_billing');
         $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id');
-        $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE"');
-        $this->db->or_where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE"');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id');
+        // $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE"');
+        // $this->db->or_where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE"');
+        // $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_profile.status = "Installed"');
+        $this->db->where('acs_profile.status', "Installed");
+
         $query = $this->db->get();
         return $query->row();
         // SELECT SUM(acs_billing.mmr) TOTAL_MMR FROM acs_billing JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE" OR MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE";

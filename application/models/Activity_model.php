@@ -11,9 +11,9 @@ class Activity_model extends MY_Model {
 		parent::__construct();
 	}
         
-        public function getActivityLogs($user_id, $limit=10)
+        public function getActivityLogs($company_id, $limit)
         {
-            $this->db->where('user_id', $user_id);
+            $this->db->where('company_id', $company_id);
             $this->db->limit($limit);
             $this->db->order_by('createdAt', 'DESC');
             return $this->db->get('esign_activity')->result();
@@ -31,6 +31,7 @@ class Activity_model extends MY_Model {
 	}
 	
 	public function addEsignActivity($data){
+		$data['company_id'] = logged('company_id');
 		return $this->db->insert($this->esign_table, $data); 	
 	}
 

@@ -1381,6 +1381,74 @@ class Debug extends MY_Controller {
         exit;
     }
 
+    public function testGoogleCalendarHelper()
+    {
+        $this->load->helper('google_calendar_helper');
+
+        $company_id = logged('company_id');
+        $gCalendar  = createSyncToCalendar(1, 'appointment', $company_id);
+    }
+
+    public function testGoogleCalendarList()
+    {
+        include APPPATH . 'libraries/google-calendar-api.php';
+
+        $this->load->model('GoogleAccounts_model');
+
+        $company_id = logged('company_id');
+        $googleAccount      = $this->GoogleAccounts_model->getByCompanyId($company_id);
+        $google_credentials = google_credentials();
+
+        $capi = new GoogleCalendarApi();
+        $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
+
+        //$calendar = $capi->getCalendarsList($data['access_token']);
+        $createCalendar = $capi->createCalendar($google_credentials['api_key'], $data['access_token'], 'Nsmart Sample');
+
+        echo "<pre>";
+        print_r($data);
+        //print_r($calendar);
+        print_r($createCalendar);
+        exit;
+    }
+
+    public function plaidGetTransactions()
+    {
+        $this->load->helper(array('plaid_helper'));
+
+        $post = $this->input->post();
+
+        $client_id = '630c41bbbc22bd0014dea7b4';
+        $client_secret = 'f0b47cf4bcff50491e2f34924bd30c';
+        $client_name = 'NsmarTrac';
+        $client_user_id = 'user_good';
+        $access_token = 'access-development-5ce37cf9-1695-4dd1-932d-fa6d56cca00e';
+        $account_id   = 'VepJM45qjqT6QZXbmx9AuDpgEr1ewPUn3wvB3';
+
+        $start_date = date('Y-m-d', strtotime("-1 week"));
+        $end_date   = date("Y-m-d");
+        //$balance      = balanceGet($client_id, $client_secret, $access_token, $account_id);
+        $plaidTransactions = transactionGet($client_id, $client_secret, $access_token, $start_date, $end_date, $account_id, 5);
+        echo "<pre>";
+        print_r($plaidTransactions);
+        exit;
+    }
+
+    public function rcReadAllReplies()
+    {
+        $this->load->helper('sms_helper');
+        $this->load->model('RingCentralAccounts_model');
+
+        $cid = logged('company_id');
+        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
+
+        $date_from = '2022-04-03';
+        $messages  = ringCentralAllMessages($ringCentral, $date_from);
+
+        echo "<pre>";
+        print_r($messages);
+        exit;
+    }
 }
 /* End of file Debug.php */
 

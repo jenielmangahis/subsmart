@@ -2209,6 +2209,23 @@ SQL;
                         $pdf->SetFont('Courier', '', 10);
                         $pdf->Write(0, $value->value);
                     }
+
+                    if ($field->field_name === 'Dropdown') {
+                        $top = (int) $coordinates->pageTop;
+                        $left = (int) $coordinates->left;
+
+                        $topAdjusted = (31.9 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (32.3 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+
+                        $pdf->SetFont('Courier', '', 10);
+                        $pdf->Write(0, $value->value);
+                    }
                 }
             }
         }
