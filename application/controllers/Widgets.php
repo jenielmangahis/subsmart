@@ -73,22 +73,13 @@ class Widgets extends MY_Controller
         $this->load->model('Event_model');
         $comp_id = logged('company_id');
 
-        
-        //$leadSource = $this->widgets_model->getLeadSource($comp_id);
         $leadSource =$this->Event_model->getLeadSourceWithCount();
-
 
         foreach ($leadSource as $ld) :
             $leadNames[] = $ld->lead_name;
             $leadSrc[] = $ld->leadSource;
         endforeach;
-
-        if($leadSource){
-        echo json_encode(array('leadNames' => $leadNames, 'leadSource' => $leadSrc));
-        }else{
-        echo json_encode(array('leadNames' => "", 'leadSource' => ""));
-
-        }
+        echo json_encode($leadSource);
     }
 
     /**

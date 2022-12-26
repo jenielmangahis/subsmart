@@ -166,7 +166,7 @@ class Dashboard extends Widgets {
         $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
         $this->page_data['subs']=$this->event_model->getAllsubs();
         
-        //$this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
+        $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
         $this->page_data['latestJobs']=$this->event_model->getLatestJobs(); // fetch Sales Rep and customer they are assigned to
         $this->page_data['company_id'] = $companyId; // Company ID of the logged in USER
@@ -544,25 +544,39 @@ class Dashboard extends Widgets {
         $revenue = [];
         $customerCount = [];
         foreach($techLeaderboards as $tl){
+            $technician = $tl->FName.' '.$tl->LName;
             if(logged('company_id') == 58){
                 array_push($revenue, $this->event_model->getTechRevenueSolar($tl->id));
-                array_push($customerCount, $this->event_model->getCustomerCountPerId($tl->id, 'technician'));
+                array_push($customerCount, $this->event_model->getJobCountPerId($tl->id));
             }else{
                 array_push($revenue, $this->event_model->getTechRevenue($tl->id));
-                array_push($customerCount, $this->event_model->getCustomerCountPerId($tl->id, 'technician'));
+                array_push($customerCount, $this->event_model->getJobCountPerId($tl->id));
             }
         }
         $data_arr = array("success" => true, "techLeaderboard" => $techLeaderboards, "revenue" => $revenue, "customerCount" => $customerCount);
         die(json_encode($data_arr));
     }
 
-    public function jobs_status()
-    {
-        //$jobsStatus=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
-        $jobsStatus=$this->event_model->getJobStatusWithCount(); // fetch Sales Rep and customer they are assigned to\
+    // public function jobs_status()
+    // {
+    //     //$jobsStatus=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
+    //     $jobsStatus=$this->event_model->getJobStatusWithCount(); // fetch Sales Rep and customer they are assigned to\
 
-        $data_arr = array("success" => true, "jobsStatus" => $jobsStatus);
-        die(json_encode($data_arr));
+    //     $data_arr = array("success" => true, "jobsStatus" => $jobsStatus);
+    //     die(json_encode($data_arr));
+    // }
+
+    public function statusCount()
+    {   
+        $DATE = $this->input->post('DATE');
+        $CURRENT_MONTH_COUNT = $this->event_model->getStatusCount("MONTH");
+        $CURRENT_YEAR_COUNT = $this->event_model->getStatusCount("YEAR");
+        if ($DATE == "MONTH") {
+            echo json_encode($CURRENT_MONTH_COUNT);
+        }
+        if ($DATE == "YEAR") {
+            echo json_encode($CURRENT_YEAR_COUNT);
+        }
     }
 
     public function accounting_sales()
