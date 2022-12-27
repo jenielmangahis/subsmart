@@ -86,6 +86,9 @@ class DocuSign extends MYF_Controller
             }
         }
 
+        $this->db->where('docfile_id', $documentId);
+        $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
+
         header('content-type: application/json');
         echo json_encode([
             'document' => $document,
@@ -96,6 +99,7 @@ class DocuSign extends MYF_Controller
             'job_recipient' => $jobRecipient,
             'co_recipients' => $coRecipientFields,
             'decrypted' => $decrypted,
+            'generated_pdf' => $generatedPDF
         ]);
     }
 

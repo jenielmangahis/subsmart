@@ -166,8 +166,11 @@
                                     <table class="nsm-table" id="bills-table">
                                         <thead>
                                             <tr>
+                                                <?php $selected = array_filter($bills, function($paymentBill, $key) {
+                                                    return $paymentBill['selected'];
+                                                }, ARRAY_FILTER_USE_BOTH);?>
                                                 <td class="table-icon text-center">
-                                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                                    <input class="form-check-input select-all table-select" type="checkbox" <?=count($selected) === count($bills) ? 'checked' : ''?>>
                                                 </td>
                                                 <td data-name="Description">DESCRIPTION</td>
                                                 <td data-name="Due Date">DUE DATE</td>
@@ -270,8 +273,11 @@
                                     <table class="nsm-table" id="vendor-credits-table">
                                         <thead>
                                             <tr>
+                                                <?php $selected = array_filter($credits, function($credit, $key) {
+                                                    return $credit['selected'];
+                                                }, ARRAY_FILTER_USE_BOTH);?>
                                                 <td class="table-icon text-center">
-                                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                                    <input class="form-check-input select-all table-select" type="checkbox" <?=count($selected) === count($credits) ? 'checked' : ''?>>
                                                 </td>
                                                 <td data-name="Description">DESCRIPTION</td>
                                                 <td data-name="Original Amount">ORIGINAL AMOUNT</td>
@@ -282,7 +288,7 @@
                                         <tbody>
                                             <?php if(count($credits) > 0) : ?>
                                             <?php foreach($credits as $credit) : ?>
-                                            <tr>
+                                            <tr data-type="<?=$credit['type']?>">
                                                 <td>
                                                     <div class="table-row-icon table-checkbox">
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?=$credit['id']?>" <?=$credit['selected'] ? 'checked' : ''?>>
@@ -405,11 +411,7 @@
                                                 <h5 class="card-title"><?=$title?></h5>
                                                 <p class="card-subtitle"><?=$linkableTransac['formatted_date']?></p>
                                                 <p class="card-text">
-                                                    <strong>Total</strong>&emsp;<?=$linkableTransac['total']?>
-                                                    <?php if($linkableTransac['type'] === 'Purchase Order') : ?>
-                                                    <br>
-                                                    <strong>Balance</strong>&emsp;<?=$linkableTransac['balance']?>
-                                                    <?php endif; ?>
+                                                    <?=$linkableTransac['balance']?>
                                                 </p>
                                                 <ul class="d-flex justify-content-around list-unstyled">
                                                     <li><a href="#" class="add-transaction text-decoration-none" data-id="<?=$linkableTransac['id']?>" data-type="<?=$linkableTransac['data_type']?>"><strong>Add</strong></a></li>

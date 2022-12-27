@@ -504,8 +504,8 @@ function Signing(hash) {
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
-      if (!selected) {
-        // $element.css({ opacity: 0 });
+      if (!selected && recipient.id !== data.recipient.id) {
+        $element.css({ opacity: 0 });
       }
 
       return $element;
@@ -1179,6 +1179,21 @@ function Signing(hash) {
 
     $(".loader").addClass("d-none");
     if (data.recipient.completed_at) markAsFinished();
+
+    if (data.generated_pdf) {
+      // download link
+      $("[data-action=download]").on("click", function () {
+        const queryString = new URLSearchParams({
+          document_type: "esign",
+          generated_esign_id: data.generated_pdf.docfile_id,
+        }).toString();
+
+        window.open(
+          `${prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?${queryString}`,
+          "_blank"
+        );
+      });
+    }
   }
 
   return { init };

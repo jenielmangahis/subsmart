@@ -28,7 +28,7 @@
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="bills[]" value="<?=$bill->id?>" data-amount="<?=$bill->remaining_balance?>">
+                    <!-- <input type="hidden" name="bills[]" value="<?=$bill->id?>" data-amount="<?=$bill->remaining_balance?>"> -->
                     <div class="row" style="min-height: 100%">
                         <div class="col">
                             <div class="row">
@@ -167,7 +167,7 @@
                                         <thead>
                                             <tr>
                                                 <td class="table-icon text-center">
-                                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                                    <input class="form-check-input select-all table-select" type="checkbox" <?=count($bills) === 1 ? 'checked' : ''?>>
                                                 </td>
                                                 <td data-name="Description">DESCRIPTION</td>
                                                 <td data-name="Due Date">DUE DATE</td>
@@ -281,7 +281,7 @@
                                         <tbody>
                                             <?php if(count($credits) > 0) : ?>
                                             <?php foreach($credits as $credit) : ?>
-                                            <tr data-type="<?=$credit['data_type']?>">
+                                            <tr data-type="<?=$credit['type']?>">
                                                 <td>
                                                     <div class="table-row-icon table-checkbox">
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?=$credit['id']?>" <?=$credit['selected'] ? 'checked' : ''?>>

@@ -133,12 +133,12 @@ $(document).ready(function() {
         console.log(response);
         if(success){
             for(var x=0; x<techLeaderboard.length; x++){
-                var rev = parseFloat(revenue[x][0]['techRev']).toFixed(2);
-                var techRev = rev ? rev : 0;
+                var techRev = revenue[x][0]['techRev'] ? parseFloat(revenue[x][0]['techRev']).toFixed(2) : '0.00';
+                // var techRev = rev ? rev : 0.00;
 
                 var count = parseFloat(customerCount[x][0].totalCount) != 0 ? parseFloat(customerCount[x][0].totalCount) : '0';
                 $('#tech_leaderboard').append(
-                    '<div class="widget-item"><div class="nsm-profile"><span>'+techLeaderboard[x].FName[0] + ''+ techLeaderboard[x].LName[0]+'</span></div><div class="content"><div class="details"><span class="content-title">'+techLeaderboard[x].FName + ' '+ techLeaderboard[x].LName+'</span><span class="content-subtitle d-block">Technician</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+techRev+'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ count +'</span><span class="content-subtitle d-block">customers</span></div></div></div>'
+                    '<div class="widget-item"><div class="nsm-profile"><span>'+techLeaderboard[x].FName[0] + ''+ techLeaderboard[x].LName[0]+'</span></div><div class="content"><div class="details"><span class="content-title">'+techLeaderboard[x].FName + ' '+ techLeaderboard[x].LName+'</span><span class="content-subtitle d-block">Technician</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+techRev+'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ count +'</span><span class="content-subtitle d-block">jobs</span></div></div></div>'
                 )
             }
         }
@@ -146,40 +146,63 @@ $(document).ready(function() {
         console.log(error);
     })
 
-    fetch('<?= base_url('Dashboard/jobs_status')?>',{
-    }).then(response => response.json()).then(response => {
-        var { success, jobsStatus} = response;
+    var MONTH_DATE = "MONTH";
+    $.post("<?php echo base_url('Dashboard/statusCount'); ?>", {
+        DATE: MONTH_DATE,
+    }).done(function(data) {
+        var MONTH_DATA = JSON.parse(data);
+       $('#MONTH_COUNT').append(
+            '<div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ MONTH_DATA[0].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+MONTH_DATA[0].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ MONTH_DATA[1].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+MONTH_DATA[1].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ MONTH_DATA[2].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+MONTH_DATA[2].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ MONTH_DATA[3].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+MONTH_DATA[3].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ MONTH_DATA[4].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+MONTH_DATA[4].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ MONTH_DATA[5].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+MONTH_DATA[5].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ MONTH_DATA[6].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+MONTH_DATA[6].TOTAL+'</span></div></div></div></div></div></div>'
+        )        
+    });
 
-        if(success){
-            for(var x=0; x<jobsStatus.length; x++){
-                $('#jobs_status').append(
-                    '<div class="row js-row-dash"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ jobsStatus[x].status+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+jobsStatus[x].statusCount+'</span></div></div></div></div></div></div>'
-                )
-            }
-        }
-    }).catch((error) => {
+    var YEAR_DATE = "YEAR";
+    $.post("<?php echo base_url('Dashboard/statusCount'); ?>", {
+        DATE: YEAR_DATE,
+    }).done(function(data) {
+        var YEAR_DATA = JSON.parse(data);
+       $('#YEAR_COUNT').append(
+            '<div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ YEAR_DATA[0].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+YEAR_DATA[0].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ YEAR_DATA[1].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+YEAR_DATA[1].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ YEAR_DATA[2].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+YEAR_DATA[2].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ YEAR_DATA[3].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+YEAR_DATA[3].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ YEAR_DATA[4].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+YEAR_DATA[4].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ YEAR_DATA[5].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+YEAR_DATA[5].TOTAL+'</span></div></div></div></div></div></div><div class="row js-row-dash mb-2"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ YEAR_DATA[6].STATUS+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+YEAR_DATA[6].TOTAL+'</span></div></div></div></div></div></div>'
+        )        
+    });
+
+    // fetch('<?= base_url('Dashboard/jobs_status')?>',{
+    // }).then(response => response.json()).then(response => {
+    //     var { success, jobsStatus} = response;
+
+    //     if(success){
+    //         for(var x=0; x<jobsStatus.length; x++){
+    //             $('#jobs_status').append(
+    //                 '<div class="row js-row-dash"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">'+ jobsStatus[x].status+'</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">'+jobsStatus[x].statusCount+'</span></div></div></div></div></div></div>'
+    //             )
+    //         }
+    //     }
+    // }).catch((error) => {
         
-    })
+    // })
 
 
 fetch('<?= base_url('Dashboard/jobs') ?>',{
 
 }).then(response => response.json()).then(response=>{
-    var date = new Date();
-    var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"];
-    var currentMonth = month[date.getMonth()];
-    var secMonth = month[date.getMonth()-1];
-    var firstMonth = month[date.getMonth()-2];
-    
+    var date1 = new Date();
+    var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var currentMonth = month[date1.getMonth()];
+    var secMonth = month[date1.getMonth()-1];
+    var firstMonth = month[date1.getMonth()-2];
     var curJob = 0;
     var prevJob = 0;
     var previousJob = 0;
     var {success, jobsDone} = response;
+    var date = new Date();
     var monthNow = date.getMonth()+1;
     var yearNow = date.getFullYear();
     var prev = new Date(date.setMonth(date.getMonth() - 1));
     var previous = new Date(date.setMonth(date.getMonth() - 1));
-    
+    var curAmount = 0;
+    var prevAmount = 0;
+    var previousAmount = 0;
+
     var prevMonthNow = prev.getMonth()+1;
     var previousMonthNow = previous.getMonth()+1;
     if(jobsDone){
@@ -189,14 +212,19 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
             var year_created = date_created.getFullYear();
             if(monthNow == month_created  && yearNow == year_created){
                 curJob++;
+                curAmount += parseFloat(jobsDone[x].amount);
             }else if(prevMonthNow == (month_created) && yearNow == year_created){
                 prevJob++;
+                prevAmount += parseFloat(jobsDone[x].amount);
             }else if(previousMonthNow == (month_created) && yearNow == year_created){
                 previousJob++;
+                previousAmount += parseFloat(jobsDone[x].amount);
             }
 
 
         }
+        console.log(previousMonthNow);
+        
     }
     var jobs = $("#jobs_chart");
     new Chart(jobs, {
@@ -229,7 +257,7 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
                 },
                 {
                     label: 'Job Value',
-                    data: [previousJob, prevJob, curJob],
+                    data: [previousAmount, prevAmount, curAmount],
                     backgroundColor: [
                         'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
