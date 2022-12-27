@@ -412,7 +412,7 @@ class Api extends MYF_Controller
         $data  = $this->input->post();
         $data  = [
             'object_id' => 1,
-            'module' => 'appointment',
+            'module' => $data['module'],
             'company_id' => 1
         ];
 
