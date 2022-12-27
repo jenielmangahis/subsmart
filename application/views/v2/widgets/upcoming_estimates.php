@@ -52,7 +52,7 @@ endif;
                             <div class="content">
                                 <div class="details">
                                     <span class="content-title"><?php echo strtoupper($estimate->estimate_number); ?> </span>
-                                    <span class="content-subtitle d-block"><?php if($estimate->estimate_value == NULL || $estimate->estimate_value == 0){ echo '$0.00';}else{ echo currency($estimate->estimate_value);  } ?></span>
+                                    <span class="content-subtitle d-block"><?php if($estimate->grand_total == NULL || $estimate->grand_total == 0){ echo '$0.00';}else{ echo currency($estimate->grand_total);  } ?></span>
                                 </div>
 
                                 <div class="controls">

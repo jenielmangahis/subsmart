@@ -1505,7 +1505,7 @@
             data: {},
             success: function(result) {
                 _container.html(result);
-                $("#upcoming_schedules_table").nsmPagination();
+                $("#upcoming_schedules_table").nsmPagination({itemsPerPage:5});
             },
         });
     }
@@ -2084,6 +2084,21 @@
     });
 
     $(document).on('click', '.calendar-tile-view', function(){
+        var tile_id   = $(this).data('id');
+        var tile_type = $(this).data('type');
+
+        if( tile_type == 'appointment' ){
+            viewAppointment(tile_id);
+        }else if( tile_type == 'job' ){
+            location.href = base_url + 'job/job_preview/' + tile_id;
+        }else if( tile_type == 'ticket' ){
+            location.href = base_url + 'tickets/viewDetails/' + tile_id;
+        }else if( tile_type == 'event' ){
+            location.href = base_url + 'events/event_preview/' + tile_id;
+        }
+    });
+
+    $(document).on('click', '.upcoming-tile-view', function(){
         var tile_id   = $(this).data('id');
         var tile_type = $(this).data('type');
 

@@ -42,6 +42,7 @@
             <td></td>
             <td data-name="Job Details"></td>
             <td data-name="Status"></td>
+            <td data-name="Tech"></td>
         </tr>
     </thead>
     <tbody>

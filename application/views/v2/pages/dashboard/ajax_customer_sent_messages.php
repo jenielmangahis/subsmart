@@ -68,5 +68,5 @@
 <?php } ?>
 
 <div class="modal-footer">
-<a class="nsm-button primary send-message" data-customer-name="<?= ucwords($customer->first_name) . ' ' . ucwords($customer->last_name) ?>" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $customer->phone_m; ?>" href="javascript:void(0);">Send Message</a>
+<a class="nsm-button primary send-message" data-id="<?= $customer->prof_id; ?>" href="javascript:void(0);">Send Message</a>
 </div>

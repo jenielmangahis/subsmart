@@ -65,7 +65,6 @@
                             <tr>
                                 <td class="table-icon"></td>
                                 <td data-name="Name">Name</td>
-                                <td data-name="Phone" style="width:10%;">Phone</td>
                                 <td data-name="Date" style="width:10%;">Date Last Message</td>            
                                 <td data-name="Manage" style="width:5%;"></td>
                             </tr>
@@ -97,8 +96,7 @@
                                                 <?php endif; ?>
                                             </label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
-                                        </td>                              
-                                        <td><?php echo $customer->phone_m; ?></td>
+                                        </td> 
                                         <td>
                                             <?php 
                                                 if( $customer->phone_m != '' ){
@@ -127,7 +125,7 @@
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a class="dropdown-item send-message" name="dropdown_send_sms" data-customer-name="<?= ucwords($customer->first_name) . ' ' . ucwords($customer->last_name) ?>" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $customer->phone_m; ?>" href="javascript:void(0);">Send SMS</a>
+                                                        <a class="dropdown-item send-message" name="dropdown_send_sms" data-id="<?= $customer->prof_id; ?>" href="javascript:void(0);">Send SMS</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item sent-messages" name="dropdown_view_messages" data-cid="<?= $customer->prof_id; ?>" href="javascript:void(0);">View Messages</a>
@@ -179,8 +177,9 @@
                                             <input type="text" name="customer_name" id="customer-name" readonly="" disabled="" class="form-control" required="">
                                         </div>
                                         <div class="col-md-12 mt-3">
-                                            <label for="">Phone Number</label>
-                                            <input type="text" name="customer_phone" id="customer-phone" readonly="" disabled="" class="form-control" required="">
+                                            <label for="">Phone Number</label><br />
+                                            <input type="text" name="customer_phone" id="customer-phone" class="form-control" required="" style="display:inline-block; width: 60%;">
+                                            <a href="javascript:void(0);" class="nsm-button nsm-default update-phone-number">Update Phone Number</a>
                                         </div>
                                         <!-- <div class="form-check grp-send-sms-notification">
                                           <input class="form-check-input" name="send_sms_notification" type="checkbox" value="" id="flexCheckDefault">
@@ -304,6 +303,38 @@
             $(".nsm-table").nsmPagination();
             $("#to-number").inputmask({"mask": "(999) 999-9999"});
             $("#sms-customer-number").inputmask({"mask": "(999) 999-9999"});
+        });        
+
+        $(document).on('click', '.update-phone-number', function(){
+            var customer_phone = $('#customer-phone').val();
+            if( customer_phone != '' ){
+                var cid = $('#cid').val();
+                var customer_phone = $('#customer-phone').val();
+                var url = base_url + 'customer/_update_customer_mobile_number';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {cid:cid,customer_phone:customer_phone},
+                    success: function(o)
+                    {          
+                        Swal.fire({
+                            text: "Customer phone number was successfully updated",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: 'Please specify phone number',
+                    showConfirmButton: false
+                });
+            }
         });
 
         $(document).on('click', '.sent-messages', function(){
@@ -341,26 +372,34 @@
         });
 
         $(document).on('click', '.send-message', function(){
-            var customer_name = $(this).attr('data-customer-name');
             var profid = $(this).attr('data-id');
-            var customer_phone = $(this).attr('data-phone');
+            var url    = base_url + 'customer/_get_phone_number';
 
-            if( customer_phone != '' ){
-                $('#cid').val(profid);
-                $('#customer-name').val(customer_name);
-                $('#customer-phone').val(customer_phone);
-                $('#modalSendMessage').modal('show');
-                $('#modalMessagesSent').modal('hide');
-                $('#sms-txt').val("");
-            }else{
-                var msg = 'Phone number is needed to send sms. <br /><a href="javascript:void(0);" name="btn_set_mobile" data-customer-name="'+customer_name+'" data-id="'+profid+'" class="nsm-button primary btn-set-customer-mobile">Set Mobile Number</a>'
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    html: msg,
-                    showConfirmButton: false
-                });
-            }        
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {profid:profid},
+                dataType:'json',
+                success: function(o)
+                {     
+                    if( o.phone != '' ){
+                        $('#cid').val(profid);
+                        $('#customer-name').val(o.name);
+                        $('#customer-phone').val(o.phone);
+                        $('#modalSendMessage').modal('show');
+                        $('#modalMessagesSent').modal('hide');
+                        $('#sms-txt').val("");
+                    }else{
+                        var msg = 'Phone number is needed to send sms. <br /><a href="javascript:void(0);" name="btn_set_mobile" data-customer-name="'+o.name+'" data-id="'+profid+'" class="nsm-button primary btn-set-customer-mobile">Set Mobile Number</a>'
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: msg,
+                            showConfirmButton: false
+                        });
+                    }  
+                }
+            });  
         });
 
         function smsCharCounter(){

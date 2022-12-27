@@ -24,69 +24,123 @@
 
     
     <div class="nsm-card-content ">
-    <div style=" float: left; position: relative;">
-        <div style="width: 100%; height: 40px; position: absolute; top: 50%; left: 0; margin-top: -20px; line-height:19px; text-align: center; z-index: 999999999999999">
-            Sources
-        </div>
+    <!-- <div style=" float: left; position: relative;">
+        <div style="width: 100%; height: 40px; position: absolute; top: 50%; left: 0; margin-top: -20px; line-height:19px; text-align: center; z-index: 999999999999999">Sources</div>
         <canvas id="lead_source_chart" class="nsm-chart" data-chart-type="expenses"></canvas>
-    </div>    
+    </div>    --> 
         <br>
         <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                 <center>    
+                    <canvas id="myChart" width="335" height="335"></canvas>
+                </center>
+            </div>
+            <div class="col-lg-1"></div>
         </div>
     </div>
-    
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function(){
-        populateLeadSourceChart();
-    });
 
-    //function initializeLeadSourceChart(){
-        // $.ajax({
-        //     url: '<?= base_url('widgets/getLeadSource') ?>',
-        //     method: 'get',
-        //     data: {},
-        //     dataType:'json',
-        //     success: function (response) {
-        //         populateLeadSourceChart(response.leadSource, response.leadNames);
-        //     }
-        // });
-
-        fetch('<?= base_url('widgets/getLeadSource') ?>',{
-
-        }).then(response => response.json()).then(response =>{
-            var {leadSource, leadNames} = response;
-            populateLeadSourceChart(leadSource, leadNames);
-            console.log(response);
-        })
-    //}
-
-    function populateLeadSourceChart(){
-        var lead_source = $("#lead_source_chart");
-        
-        new Chart(lead_source, {
-          type: 'doughnut',
-          data: {
-            labels: "sa",
-            datasets: [{
-              data: "hh",
-              backgroundColor: [
-                "dd",
-              ],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: false,
-            },
-            aspectRatio: 1.5,
-            
-          }
-        });
+$.post('<?php echo base_url("widgets/getLeadSource") ?>', function(data) {
+    var response = jQuery.parseJSON(data); 
+    var LEAD_SOURCE = "["; var LEAD_SOURCE_COUNT = "[";
+    for (var i = 0; i < response.length; i++) {
+        LEAD_SOURCE += "'"+response[i].lead_source+"',";
+        LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";
     }
+    LEAD_SOURCE += "]"; LEAD_SOURCE_COUNT += "]";
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: eval(LEAD_SOURCE),
+        datasets: eval(LEAD_SOURCE_COUNT),
+        datasets: [{
+          data: eval(LEAD_SOURCE_COUNT),
+          backgroundColor: [
+            '#FFA630',
+            '#D7E8BA',
+            '#4DA1A9',
+            '#2E5077',
+            '#611C35',
+            '#B5FED9',
+          ],
+          borderColor: [
+            '#FFA630',
+            '#D7E8BA',
+            '#4DA1A9',
+            '#2E5077',
+            '#611C35',
+            '#B5FED9',
+          ],
+          borderWidth: 0.5
+
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: "bottom",
+            }
+        }
+      }
+    });
+});
+
+ //    function initializeLeadSourceChart(){
+ //        $.ajax({
+ //            url: '<?= base_url('widgets/getLeadSource') ?>',
+ //            method: 'get',
+ //            data: {},
+ //            dataType:'json',
+ //            success: function (response) {
+ //                populateLeadSourceChart(response.leadSource, response.leadNames);
+ //            }
+ //        });
+
+ //        fetch('<?= base_url('widgets/getLeadSource') ?>',{
+
+ //        }).then(response => response.json()).then(response =>{
+ //            var {leadSource, leadNames} = response;
+ //            populateLeadSourceChart(leadSource, leadNames);
+ //            console.log(response);
+ //        })
+ //    //}
+
+ //    function populateLeadSourceChart(){
+ //        var lead_source = $("#lead_source_chart");
+        
+ //        new Chart(lead_source, {
+ //          type: 'doughnut',
+ //          data: {
+ //            labels: "sa",
+ //            datasets: [{
+ //              data: "hh",
+ //              backgroundColor: [
+ //                "dd",
+ //              ],
+ //              borderWidth: 1
+ //            }]
+ //          },
+ //          options: {
+ //            responsive: true,
+ //            plugins: {
+ //              legend: false,
+ //            },
+ //            aspectRatio: 1.5,
+            
+ //          }
+ //        });
+ //    }
+
+ // $(document).ready(function(){
+ //        populateLeadSourceChart();
+ //    });
+    
 </script>
 
 <?php

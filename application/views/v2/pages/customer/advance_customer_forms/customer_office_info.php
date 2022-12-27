@@ -120,8 +120,15 @@
             </div>
             <div class="col-md-6">
                 <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select"> 
+                    <option value selected hidden disabled>Select Lead Source</option>
 
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == ""){ echo 'selected'; } } ?> value="">Select</option>
+                    <?php foreach ($LEAD_SOURCE_OPTION AS $LEAD_SOURCE) { if ($office_info->lead_source == $LEAD_SOURCE->ls_name) { ?>
+                        <option selected value="<?php echo $LEAD_SOURCE->ls_name ?>"><?php echo $LEAD_SOURCE->ls_name ?></option>
+                    <?php } else { ?>
+                        <option value="<?php echo $LEAD_SOURCE->ls_name ?>"><?php echo $LEAD_SOURCE->ls_name ?></option>
+                    <?php } } ?>
+
+                    <!-- <option <?php if(isset($office_info)){ if($office_info->lead_source == ""){ echo 'selected'; } } ?> value="">Select</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Customer Referral"){ echo 'selected'; } } ?> value="Customer Referral">Customer Referral</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Door"){ echo 'selected'; } } ?> value="Door">Door</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Door Hanger"){ echo 'selected'; } } ?> value="Door Hanger">Door Hanger</option>
@@ -138,7 +145,7 @@
                     <?php if($company_id == 58): ?>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Lender Loan"){ echo 'selected'; } } ?> value="Lender Loan">Lender Loan</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Security Client"){ echo 'selected'; } } ?> value="Security Client">Security Client</option>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
                 </select>
             </div>
         </div>

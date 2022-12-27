@@ -189,7 +189,23 @@ endif;
         <div class="nsm-widget-table">
             <div class="stat_content">
                 <div class="row row-pad">
-                    <div class="col">
+                    <ul class="nav nav-tabs" id="STATUS_COUNT_TAB" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="MONTH-tab" data-bs-toggle="tab" data-bs-target="#MONTH" type="button" role="tab" aria-controls="MONTH" aria-selected="true">Month</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="YEAR-tab" data-bs-toggle="tab" data-bs-target="#YEAR" type="button" role="tab" aria-controls="YEAR" aria-selected="false">Year</button>
+                      </li>
+                    </ul>
+                    <div class="tab-content" id="STATUS_COUNT_TABCONTENT">
+                      <div class="tab-pane fade show active" id="MONTH" role="tabpanel" aria-labelledby="MONTH-tab">
+                        <div id="MONTH_COUNT" class="mt-3"></div>
+                      </div>
+                      <div class="tab-pane fade" id="YEAR" role="tabpanel" aria-labelledby="YEAR-tab">
+                        <div id="YEAR_COUNT" class="mt-3"></div>
+                      </div>
+                    </div>
+                    <!-- <div class="col">
                         <div class="row">
                             <div class="col-9">
                                 <h6>Status</h6>
@@ -198,10 +214,7 @@ endif;
                                 <h6>Count</h6>
                             </div>
                         </div>
-                    </div>
-                    <div id="jobs_status">
-
-                    </div>
+                    </div> -->  
                 </div>
             </div>
         </div>

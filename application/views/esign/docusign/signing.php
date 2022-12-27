@@ -54,6 +54,22 @@
         .max-width-unset {
             max-width: unset !important;
         }
+
+        #signatureModal .modal-dialog {
+            overflow: hidden;
+        }
+
+        [data-action=download] {
+            display: none;
+        }
+
+        .signing--finished {
+            pointer-events: unset;
+        }
+
+        .signing--finished [data-action=download] {
+            display: block;
+        }
     </style>
 </head>
 
@@ -61,6 +77,7 @@
     <div class="container signing">
         <div class="signing__header">
             <span class="signing__readonly">This document is now complete.</span>
+            <button data-action="download" class="btn btn-primary" style="position: absolute;right:1rem;">Download PDF</button>
 
             <div>
                 <button class="btn btn-primary d-flex align-items-center mt-3" data-action="finish">

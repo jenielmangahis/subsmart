@@ -10,7 +10,7 @@ endif;
             <span>Messages</span>
         </div>
         <div class="nsm-card-controls">
-            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url() ?>">
+            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url('messages') ?>">
                 See More
             </a>
             <div class="dropdown">
@@ -25,26 +25,7 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <!-- <div class="nsm-widget-table">
-            <div class="widget-item">
-                <div class="nsm-profile">
-                    <span>JD</span>
-                </div>
-                <div class="content nsm-messages">
-                    <div class="details">
-                        <span class="content-title">John Doe</span>
-                        <span class="content-subtitle d-block">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                    </div>
-                    <div class="controls">
-                        <span class="content-subtitle d-block">09/21/2021 7:00 PM</span>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <div class="nsm-empty">
-            <i class='bx bx-meh-blank'></i>
-            <span>Message list is empty.</span>
-        </div>
+        <div class="messages-list"></div>
     </div>
 </div>
 
@@ -53,3 +34,19 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '</div>';
 endif;
 ?>
+<script>
+$(function(){
+    load_sms_messages();
+    function load_sms_messages(){
+        var url = base_url + 'messages/_sms_list';
+
+        $('.messages-list').html('<span class="bx bx-loader bx-spin"></span>');
+        $.ajax({
+            url: url,
+            success: function(result) {
+                $('.messages-list').html(result);
+            }
+        });
+    }
+});
+</script>
