@@ -5914,10 +5914,12 @@ class Accounting_modals extends MY_Controller
                 'payee_id' => $data['vendor'],
                 'payment_account_id' => $data['payment_account'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'check_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
-                'to_print_check_no' => null,
+                'check_no' => is_null($data['print_later']) ? $data['ref_no'] : null,
+                'to_print_check_no' => $data['print_later'],
                 'total_amount' => floatval(str_replace(',', '', $paymentTotal)),
+                'fixed_total' => $data['fixed_total'],
                 'vendor_credits_applied' => count($appliedCredits) > 0 ? json_encode($appliedCredits) : null,
+                'amount_to_apply' => $data['amount_to_apply'],
                 'total_credits_amount' => $data['amount_to_credit'],
                 'available_credits_amount' => $data['amount_to_credit'],
                 'status' => 1
@@ -6012,11 +6014,12 @@ class Accounting_modals extends MY_Controller
                     $linkedTransacsData[] = [
                         'linked_to_type' => 'bill-payment',
                         'linked_to_id' => $billPaymentId,
-                        'linked_transaction_id' => $bill,
+                        'linked_transaction_id' => $bill->id,
                         'linked_transaction_type' => 'bill'
                     ];
                 }
 
+                $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
                 $this->expenses_model->insert_bill_payment_items($paymentItems);
             }
 
@@ -11910,6 +11913,7 @@ class Accounting_modals extends MY_Controller
         $linkableBills = $this->expenses_model->get_vendor_open_bills($billPayment->payee_id);
         $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($billPayment->payee_id);
 
+        $transactions = [];
         if (isset($linkableBills) && count($linkableBills) > 0) {
             foreach ($linkableBills as $bill) {
                 $selected = array_filter($bills, function($paymentBill, $key) use ($bill) {
@@ -13692,24 +13696,37 @@ class Accounting_modals extends MY_Controller
         $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
 
         if(!is_null($appliedCredits)) {
-            foreach ($appliedCredits as $creditId => $amount) {
-                $amount = floatval(str_replace(',', '', $amount));
-    
-                $vCredit = $this->vendors_model->get_vendor_credit_by_id($creditId, logged('company_id'));
-                $balance = floatval(str_replace(',', '', $vCredit->remaining_balance));
-                $remainingBal = $balance + $amount;
-    
-                $vCreditData = [
-                    'status' => 1,
-                    'remaining_balance' => floatval(str_replace(',', '', $remainingBal))
-                ];
+            foreach ($appliedCredits as $index => $creditData) {
+                $amount = floatval(str_replace(',', '', $creditData['amount']));
     
                 $vendorData = [
                     'vendor_credits' => floatval(str_replace(',', '', $payee->vendor_credits)) + $amount
                 ];
     
-                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
                 $this->vendors_model->updateVendor($payee->id, $vendorData);
+
+                if($creditdata['credit-type'] === 'vendor-credit') {
+                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($creditData['id'], logged('company_id'));
+                    $balance = floatval(str_replace(',', '', $vCredit->remaining_balance));
+                    $remainingBal = $balance + $amount;
+
+                    $vCreditData = [
+                        'status' => 1,
+                        'remaining_balance' => floatval(str_replace(',', '', $remainingBal))
+                    ];
+
+                    $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                } else {
+                    $payment = $this->vendors_model->get_bill_payment_by_id($creditData['id'], logged('company_id'));
+                    $balance = floatval(str_replace(',', '', $payment->available_credits_amount));
+                    $remainingBal = $balance + $amount;
+
+                    $creditData = [
+                        'available_credits_amount' => floatval(str_replace(',', '', $remainingBal))
+                    ];
+
+                    $this->vendors_model->update_bill_payment($payment->id, $creditData);
+                }
             }
         }
 
@@ -13727,6 +13744,8 @@ class Accounting_modals extends MY_Controller
             $this->expenses_model->update_bill_data($bill->id, $billData);
         }
 
+        $this->vendors_model->delete_bill_payment_items($billPaymentId);
+
         $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
         $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
@@ -13743,44 +13762,84 @@ class Accounting_modals extends MY_Controller
         ];
 
         $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+        $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Bill Payment', $billPaymentId);
     }
 
     public function update_bill_payment($billPaymentId, $data)
     {
         $this->revert_bill_payment($billPaymentId);
         $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
-        if(!is_null($data['credits'])) {
-            foreach ($data['credits'] as $key => $id) {
-                $vCredit = $this->vendors_model->get_vendor_credit_by_id($id, logged('company_id'));
-                $balance = floatval(str_replace(',', '', $vCredit->remaining_balance));
-                $subtracted = floatval(str_replace(',', '', $data['credit_payment'][$key]));
-                $remainingBal = $balance - $subtracted;
-    
-                $vCreditData = [
-                    'status' => $remainingBal === 0.00 ? 2 : 1,
-                    'remaining_balance' => floatval(str_replace(',', '', $remainingBal))
-                ];
-    
-                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
-            }
 
-            $appliedVCredits = [];
-            foreach ($data['credit_payment'] as $key => $amount) {
-                $appliedVCredits[$data['credits'][$key]] = floatval(str_replace(',', '', $amount));
+        $paymentTotal = floatval(str_replace(',', '', $data['payment_amount']));
+
+        if(!is_null($data['credits'])) {
+            $appliedCredits = [];
+            $linkedTransacsData = [];
+            if(isset($data['credits']) && count($data['credits']) > 0) {
+                foreach ($data['credits'] as $index => $credit) {
+                    if($data['credit_type'][$index] === 'vendor-credit') {
+                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($credit, logged('company_id'));
+                        $balance = floatval(str_replace(',', '', $vCredit->remaining_balance));
+                        $subtracted = floatval(str_replace(',', '', $data['credit_payment'][$index]));
+                        $remainingBal = $balance - $subtracted;
+
+                        $vCreditData = [
+                            'status' => $remainingBal === 0.00 ? 2 : 1,
+                            'remaining_balance' => floatval(str_replace(',', '', $remainingBal))
+                        ];
+
+                        $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+
+                        $appliedCredits[] = [
+                            'credit-type' => 'vendor-credit',
+                            'id' => $credit,
+                            'amount' => $subtracted
+                        ];
+
+                        $linkedTransacsData[] = [
+                            'linked_transaction_type' => 'vendor-credit',
+                            'linked_transaction_id' => $vCredit->id
+                        ];
+                    } else {
+                        $payment = $this->vendors_model->get_bill_payment_by_id($credit, logged('company_id'));
+                        $balance = floatval(str_replace(',', '', $payment->available_credits_amount));
+                        $subtracted = floatval(str_replace(',', '', $data['credit_payment'][$index]));
+                        $remainingBal = $balance - $subtracted;
+        
+                        $creditData = [
+                            'available_credits_amount' => floatval(str_replace(',', '', $remainingBal))
+                        ];
+
+                        $this->vendors_model->update_bill_payment($payment->id, $creditData);
+
+                        $appliedCredits[] = [
+                            'credit-type' => 'bill-payment',
+                            'id' => $credit,
+                            'amount' => $subtracted
+                        ];
+
+                        $linkedTransacsData[] = [
+                            'linked_transaction_type' => 'bill-payment',
+                            'linked_transaction_id' => $payment->id
+                        ];
+                    }
+                }
             }
         }
 
-        $this->vendors_model->delete_bill_payment_items($billPaymentId);
-
         $billPaymentData = [
+            'payee_id' => $data['vendor'],
             'payment_account_id' => $data['payment_account'],
-            'mailing_address' => nl2br($data['mailing_address']),
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'check_no' => is_null($data['print_later']) ? $data['ref_no'] : null,
             'to_print_check_no' => $data['print_later'],
-            'total_amount' => floatval(str_replace(',', '', $data['total_amount'])),
-            'memo' => $data['memo'],
-            'vendor_credits_applied' => isset($appliedVCredits) && count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
+            'total_amount' => floatval(str_replace(',', '', $paymentTotal)),
+            'fixed_total' => $data['fixed_total'],
+            'vendor_credits_applied' => count($appliedCredits) > 0 ? json_encode($appliedCredits) : null,
+            'amount_to_apply' => $data['amount_to_apply'],
+            'total_credits_amount' => $data['amount_to_credit'],
+            'available_credits_amount' => $data['amount_to_credit'],
             'status' => 1
         ];
 
@@ -13848,13 +13907,51 @@ class Accounting_modals extends MY_Controller
 
             $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
+            $accTransacData = [
+                'account_id' => $paymentAcc->id,
+                'transaction_type' => 'Bill Payment',
+                'transaction_id' => $billPaymentId,
+                'amount' => floatval(str_replace(',', '', $paymentTotal)),
+                'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'type' => 'decrease'
+            ];
+
+            $this->accounting_account_transactions_model->create($accTransacData);
+
+            $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+            $newBalance = floatval(str_replace(',', '', $apAcc->balance)) - floatval(str_replace(',', '', $paymentTotal));
+
+            $apAccData = [
+                'id' => $apAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval(str_replace(',', '', $newBalance))
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($apAccData);
+
+            $accTransacData = [
+                'account_id' => $apAcc->id,
+                'transaction_type' => 'Bill Payment',
+                'transaction_id' => $billPaymentId,
+                'amount' => floatval(str_replace(',', '', $paymentTotal)),
+                'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'type' => 'decrease'
+            ];
+
+            $this->accounting_account_transactions_model->create($accTransacData);
+
+            foreach($linkedTransacsData as $index => $linkedData) {
+                $linkedTransacsData[$index]['linked_to_type'] = 'bill-payment';
+                $linkedTransacsData[$index]['linked_to_id'] = $billPaymentId;
+            }
+
             $paymentItems = [];
             foreach ($data['bills'] as $index => $bill) {
                 $paymentItems[] = [
                     'bill_payment_id' => $billPaymentId,
                     'bill_id' => $bill,
                     'credit_applied_amount' => null,
-                    'payment_amount' => null,
+                    'payment_amount' => floatval(str_replace(',', '', $data['bill_payment'][$index])),
                     'total_amount' => floatval(str_replace(',', '', $data['bill_payment'][$index]))
                 ];
 
@@ -13873,8 +13970,16 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $this->expenses_model->update_bill_data($bill->id, $billData);
+
+                $linkedTransacsData[] = [
+                    'linked_to_type' => 'bill-payment',
+                    'linked_to_id' => $billPaymentId,
+                    'linked_transaction_id' => $bill->id,
+                    'linked_transaction_type' => 'bill'
+                ];
             }
 
+            $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
             $this->expenses_model->insert_bill_payment_items($paymentItems);
         }
 

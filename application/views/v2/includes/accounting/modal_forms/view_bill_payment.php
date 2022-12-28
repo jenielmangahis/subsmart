@@ -46,7 +46,7 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="vendor">Payee</label>
-                                            <select name="payee_id" id="vendor" class="form-control nsm-field" required>
+                                            <select name="vendor" id="vendor" class="form-control nsm-field" required>
                                                 <option value="<?=$vendor->id?>"><?=$vendor->display_name?></option>
                                             </select>
                                         </div>
@@ -81,7 +81,7 @@
                                 <div class="col-12 col-md-2 offset-md-2">
                                     <div class="mb-2">
                                         <label for="ref_no">Ref no.</label>
-                                        <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field" value="<?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->starting_check_no?>" <?=$billPayment->to_print_check_no === "1" ? "disabled" : ""?>>
+                                        <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field" value="<?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->check_no?>" <?=$billPayment->to_print_check_no === "1" ? "disabled" : ""?>>
                                     </div>
                                     <div class="form-check">
                                         <input type="checkbox" name="print_later" id="print_later" value="1" class="form-check-input" <?=$billPayment->to_print_check_no === "1" ? "checked" : ""?>>
@@ -93,7 +93,7 @@
                             <div class="row">
                                 <div class="col-12 col-md-2 offset-md-10">
                                     <label for="amount">Amount</label>
-                                    <input type="number" name="total_amount" class="form-control nsm-field" value="<?=number_format(floatval($billPayment->total_amount), 2, '.', ',')?>" onchange="convertToDecimal(this)">
+                                    <input type="number" name="payment_amount" class="form-control nsm-field" value="<?=number_format(floatval($billPayment->total_amount), 2, '.', ',')?>" onchange="convertToDecimal(this)" <?=intval($billPayment->fixed_total) === 1 ? 'data-fixed="true"' : '' ?>>
                                 </div>
                             </div>
 
@@ -341,7 +341,7 @@
                                                     <span class="amount-to-credit">
                                                         <?php if(isset($billPayment)) : ?>
                                                         <?php
-                                                        $amount = '$'.number_format(floatval($billPayment->amount_to_credit), 2, '.', ',');
+                                                        $amount = '$'.number_format(floatval($billPayment->total_credits_amount), 2, '.', ',');
                                                         $amount = str_replace('$-', '-$', $amount);
                                                         echo $amount;
                                                         ?>
@@ -355,8 +355,8 @@
                                                 <td></td>
                                                 <td><button type="button" class="nsm-button" id="clear-payment">Clear payment</button></td>
                                             </tr>
-                                            <tr class="d-none">
-                                                <td colspan="2"><span id="credit-message"></span></td>
+                                            <tr <?=floatval($billPayment->total_credits_amount) > 0 ? '' : 'class="d-none"'?>>
+                                                <td colspan="2"><span id="credit-message"><?=floatval($billPayment->total_credits_amount) > 0 ? 'This transaction will create an additional credit in the amount of '.$amount : ''?></span></td>
                                             </tr>
                                         </tfoot>
                                     </table>

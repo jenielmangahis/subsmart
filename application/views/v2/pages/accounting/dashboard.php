@@ -4,8 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 include viewPath('v2/includes/accounting_header'); 
 
 ?>
-<!-- <link rel="stylesheet" href="<?= base_url("assets/frontend/css/accounting_dashboard.css") ?>"> -->
-
+<link rel="stylesheet" href="<?= base_url("assets/frontend/css/accounting_dashboard.css") ?>">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
 <?php
 add_css(array(
@@ -46,6 +46,33 @@ add_css(array(
       color: #333;
       font-weight: 600;
   }
+
+  .alert{
+  width:60%;
+  /* margin:20px auto; */
+  padding:20px;
+  position:relative;
+  border-radius:5px;
+  box-shadow:0 0 15px 5px #ccc;
+  background-color: #FBF5FF;
+  border-left:5px solid #7A08C8;
+}
+.close{
+  position:absolute;
+  width:30px;
+  height:30px;
+  opacity:0.5;
+  border-width:1px;
+  border-style:solid;
+  border-radius:50%;
+  right:15px;
+  top:25px;
+  text-align:center;
+  font-size:1.5em;
+  cursor:pointer;
+  border-color: #7A08C8;
+  color:#7A08C8;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -79,7 +106,7 @@ add_css(array(
                                 <div class="col-md-12">
                                     <div class="tab-content" id="nav-tabContent">
                                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                            <br>
+                                            <!-- <br>
                                             <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                 <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                 <p>Some QuickBooks Payments deposits weren't automatically recorded. After you receive the funds in your account, record them manually as a Bank Deposit. <a href="#"  style="color:#0077C5;">Take Action </a> </p>
@@ -121,6 +148,26 @@ add_css(array(
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true" style="font-size:20px;">X</span>
                                                 </button>
+                                            </div> -->
+                                            <br>
+                                            <div class="alert simple-alert">
+                                                <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
+                                                <a class="close">&times;</a>
+                                            </div>
+
+                                            <div class="alert success-alert">
+                                                <p>Some nSmarTrac Payments deposits weren't automatically recorded. After you receive the funds in your account, record them manually as a Bank Deposit. <br> <a href="#"  style="color:#0077C5;">Take Action </a> </p>
+                                                <a class="close">&times;</a>
+                                            </div>
+
+                                            <div class="alert danger-alert">
+                                                <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
+                                                <a class="close">&times;</a>
+                                            </div>
+
+                                            <div class="alert warning-alert">
+                                                <p>A bank transfer from your customer received as payment for Invoice 13053 has been canceled due to a problem with their account. To keep your <br>books accurate, you should follow the steps to <a href="#"  style="color:#0077C5;">handle a canceled bank transfer.</a></p>
+                                                <a class="close">&times;</a>
                                             </div>
 
                                             <br><br>
@@ -148,7 +195,10 @@ add_css(array(
                                                         <div align="center" style="display: inline-block;">
                                                             <a href="<?php echo base_url('accounting/customers') ?>">
                                                                 <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <center>
+                                                                        <!-- <img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /> -->
+                                                                        <i class="fa fa-users" aria-hidden="true" style="font-size:30px;"></i>
+                                                                    </center>
                                                                 </div>
                                                             </a>
                                                             <p>Manage customers</p>
@@ -162,7 +212,10 @@ add_css(array(
                                                         <div align="center" style="display: inline-block;">
                                                             <a href="#" class="ajax-" data-toggle="modal" data-target="#newJobModal">
                                                                 <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <center>
+                                                                        <!-- <img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /> -->
+                                                                        <i class="fa fa-file" aria-hidden="true" style="font-size:30px;"></i>
+                                                                    </center>
                                                                 </div>
                                                             </a>
                                                             <p>Create estimates</p>
@@ -176,7 +229,10 @@ add_css(array(
                                                         <div align="center" style="display: inline-block;">
                                                             <a href="<?php echo base_url('accounting/addnewInvoice') ?>" class="notification">
                                                                 <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <center>
+                                                                        <!-- <img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /> -->
+                                                                        <i class="fa fa-file-text-o" aria-hidden="true" style="font-size:30px;"></i>
+                                                                    </center>
                                                                     <span class="badge"><b>99+</b></span>
                                                                 </div>
                                                             </a>
@@ -191,7 +247,10 @@ add_css(array(
                                                         <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <center>
+                                                                        <!-- <img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /> -->
+                                                                        <i class="fa fa-money" aria-hidden="true" style="font-size:30px;"></i>
+                                                                    </center>
                                                                 </div>
                                                             </a>
                                                             <p>Receive payments</p>
@@ -223,7 +282,10 @@ add_css(array(
                                                         <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <center>
+                                                                        <!-- <img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /> -->
+                                                                        <i class="fa fa-money" aria-hidden="true" style="font-size:30px;"></i>
+                                                                    </center>
                                                                 </div>
                                                             </a>
                                                             <p>Pay bills</p>
@@ -234,44 +296,13 @@ add_css(array(
                                                                 <div class="point"></div> -->
                                                             </div>
                                                         </div>
-                                                        <div align="center" style="display: inline-block;width:125px;">
-                                                            <!-- <a href="#">
-                                                                <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
-                                                                </div>
-                                                            </a>
-                                                            <p>Manage customers</p> -->
-                                                        </div>
-                                                        <div align="center" style="padding:3% 0;display: inline-block;">
-                                                            <div class="arrow">
-                                                                <!-- <div class="line"></div>
-                                                                <div class="point"></div> -->
-                                                            </div>
-                                                        </div>
-                                                        <div align="center" style="display: inline-block;width:125px;">
-                                                            <!-- <a href="#">
-                                                                <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
-                                                                </div>
-                                                            </a>
-                                                            <p>Manage customers</p> -->
-                                                        </div>
-                                                        <div align="center" style="padding:3% 0;display: inline-block;">
-                                                            <div class="arrow">
-                                                                <!-- <div class="line"></div>
-                                                                <div class="point"></div> -->
-                                                            </div>
-                                                        </div>
-                                                        <div align="center" style="padding:3% 0;display: inline-block;">
-                                                            <div class="arrow">
-                                                                <!-- <div class="line"></div>
-                                                                <div class="point"></div> -->
-                                                            </div>
-                                                        </div>
                                                         <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <center>
+                                                                        <!-- <img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /> -->
+                                                                        <i class="fa fa-clock-o" aria-hidden="true" style="font-size:30px;"></i>
+                                                                    </center>
                                                                 </div>
                                                             </a>
                                                             <p>Track time</p>
@@ -285,7 +316,10 @@ add_css(array(
                                                         <div align="center" style="display: inline-block;">
                                                             <a href="#">
                                                                 <div id="circle" style="padding:20px 0 ;">
-                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <center>
+                                                                        <!-- <img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /> -->
+                                                                        <i class="fa fa-credit-card-alt" aria-hidden="true" style="font-size:30px;"></i>
+                                                                    </center>
                                                                 </div>
                                                             </a>
                                                             <p>Manage payroll</p>
@@ -885,4 +919,12 @@ add_css(array(
         </div>
     </div>
 </div>
+<script>
+    $(".close").click(function() {
+    $(this)
+        .parent(".alert")
+        .fadeOut();
+    });
+
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

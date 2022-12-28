@@ -28,13 +28,14 @@
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
-                    <!-- <input type="hidden" name="bills[]" value="<?=$bill->id?>" data-amount="<?=$bill->remaining_balance?>"> -->
                     <div class="row" style="min-height: 100%">
                         <div class="col">
                             <div class="row">
+                                <?php if(count($linkableTransactions) > 0) : ?>
                                 <div class="col-12">
                                     <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                                 </div>
+                                <?php endif; ?>
 
                                 <div class="col-12 col-md-8 grid-mb">
                                     <div class="row">
@@ -372,6 +373,7 @@
                             </div>
                         </div>
 
+                        <?php if(count($linkableTransactions) > 0) : ?>
                         <div class="w-auto nsm-callout primary" style="max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
@@ -408,6 +410,7 @@
                                 </div>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
