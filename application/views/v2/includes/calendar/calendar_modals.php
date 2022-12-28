@@ -60,7 +60,13 @@
                         <div class="col-12 event-description-container" style="<?= $default_appointment_type_id != 4 ? 'display: none;' : ''; ?>">
                             <label class="content-subtitle fw-bold d-block mb-2">Event Name</label>
                             <span id="wait-list-created-by">
-                                <input type="text" value="" name="event_name" class="nsm-field form-control" />
+                                <input type="text" value="" name="appointment_event_name" class="nsm-field form-control" />
+                            </span>                                                        
+                        </div>
+                        <div class="col-12 event-location-container" style="<?= $default_appointment_type_id != 4 ? 'display: none;' : ''; ?>">
+                            <label class="content-subtitle fw-bold d-block mb-2">Event Location</label>
+                            <span id="wait-list-created-by">
+                                <textarea id="appointment-event-location" name="appointment_event_location" class="nsm-field form-control"></textarea>
                             </span>                                                        
                         </div>
                         <div class="col-12">

@@ -79,7 +79,8 @@ class Settings extends MY_Controller {
                     'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
                     'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0,
                     'google_calendar_email_notification' =>  $post['google_calendar_email_notification'],
-                    'google_calendar_popup_notification' => $post['google_calendar_popup_notification']                     
+                    'google_calendar_popup_notification' => $post['google_calendar_popup_notification'],
+                    'calendar_auto_sms_notification' => $post['calendar_auto_sms_notification']                     
                 ];
 
                 $this->CalendarSettings_model->update($settings->id, $calendar_settings);
@@ -101,7 +102,8 @@ class Settings extends MY_Controller {
                     'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
                     'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0,
                     'google_calendar_email_notification' =>  $post['google_calendar_email_notification'],
-                    'google_calendar_popup_notification' => $post['google_calendar_popup_notification']                            
+                    'google_calendar_popup_notification' => $post['google_calendar_popup_notification'],
+                    'calendar_auto_sms_notification' => $post['calendar_auto_sms_notification']                                       
                 ];
 
                 $this->CalendarSettings_model->create($calendar_settings);

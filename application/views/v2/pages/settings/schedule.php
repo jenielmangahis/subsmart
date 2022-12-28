@@ -37,6 +37,12 @@
         margin: 5px;
         font-size: 11px;
     }
+    .setting-header {
+        background-color: #6A4A86;
+        padding: 10px;
+        color: #ffffff;
+        font-size: 14px;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -55,97 +61,11 @@
                     </div>
                 </div>
                 <?php echo form_open('settings/schedule', ['class' => 'form-validate require-validation', 'id' => 'schedule_settings_form', 'autocomplete' => 'off']); ?>
-                <div class="row g-3 mb-4">
+                
+                <div class="row">
                     <div class="col-12 col-md-4">
-                        <label class="content-title">Calendar Timezone</label>
-                        <label class="content-subtitle mb-2">Select the timezone that will be used to display all calendar dates.</label>
-                        <select name="calendar_timezone" class="nsm-field form-select" required>
-                            <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
-                                <option value="<?php echo $key ?>" <?= $settings && $settings->timezone == $key ? 'selected="selected"' : ''; ?>>
-                                    <?php echo $zone ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label class="content-title">Job Time Settings</label>
-                        <label class="content-subtitle mb-2">Time Interval Settings</label>
-                        <select name="calendar_time_interval" id="calendar_time_interval" class="nsm-field form-select" required>
-                            <option value="" selected disabled>Select</option>
-                            <option <?= $settings && $settings->time_interval == '1 hour' ? 'selected="selected"' : ''; ?> value="1 hour">1 hour</option>
-                            <option <?= $settings && $settings->time_interval == '2 hours' ? 'selected="selected"' : ''; ?> value="2 hours">2 hours</option>
-                            <option <?= $settings && $settings->time_interval == '3 hours' ? 'selected="selected"' : ''; ?> value="3 hours">3 hours</option>
-                            <option <?= $settings && $settings->time_interval == '4 hours' ? 'selected="selected"' : ''; ?> value="4 hours">4 hours</option>
-                            <option <?= $settings && $settings->time_interval == '5 hours' ? 'selected="selected"' : ''; ?> value="5 hours">5 hours</option>
-                            <option <?= $settings && $settings->time_interval == '6 hours' ? 'selected="selected"' : ''; ?> value="6 hours">6 hours</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row g-3 mb-4">
-                    <div class="col-12 col-md-4">
-                        <label class="content-title">Calendar Default View</label>
-                        <label class="content-subtitle mb-2">Set the caledar default view.</label>
-                        <select name="calendar_default_view" class="nsm-field form-select" required>
-                            <?php foreach (config_item('calender_views') as $key => $view) { ?>
-                                <option value="<?php echo $view ?>" <?= $settings && $settings->default_view == $view ? 'selected="selected"' : ''; ?>>
-                                    <?php echo $view ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label class="content-title">Calendar Week Starts On</label>
-                        <label class="content-subtitle mb-2">Select the day when a week starts.</label>
-                        <select name="calendar_week_starts_on" class="nsm-field form-select" required>
-                            <option value="Sunday" <?= $settings && $settings->week_starts_on == "Sunday" ? 'selected="selected"' : ''; ?>>
-                                Sunday
-                            </option>
-                            <option value="Monday" <?= $settings && $settings->week_starts_on == "Monday" ? 'selected="selected"' : ''; ?>>
-                                Monday
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row g-3 mb-4">
-                    <div class="col-12 col-md-4">
-                        <label class="content-title mb-2">Calendar Day Starts On</label>
-                        <input type="text" name="calendar_day_starts_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_starts_on != '' ? $settings->day_starts_on : ''; ?>" required />
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label class="content-title mb-2">Calendar Day Ends On</label>
-                        <input type="text" name="calendar_day_ends_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_ends_on != '' ? $settings->day_ends_on : ''; ?>" required />
-                    </div>
-                </div> 
-                <div class="row g-3 mb-4">
-                    <div class="col-12 col-md-4">
-                        <label class="content-title">Google Event Email Notification</label>
-                        <label class="content-subtitle mb-2">Time interval email notification will be sent before the event time</label>
-                        <select name="google_calendar_email_notification" id="google_calendar_email_notification" class="nsm-field form-select" required>
-                            <option <?= $settings && $settings->google_calendar_email_notification == '5 minutes' ? 'selected="selected"' : ''; ?> value="5 Minutes">5 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_email_notification == '10 minutes' ? 'selected="selected"' : ''; ?> value="10 minutes">10 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_email_notification == '15 minutes' ? 'selected="selected"' : ''; ?> value="15 minutes">15 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_email_notification == '20 minutes' ? 'selected="selected"' : ''; ?> value="20 minutes">20 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_email_notification == '25 minutes' ? 'selected="selected"' : ''; ?> value="25 minutes">25 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_email_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
-                        </select>
-                    </div>
 
-                    <div class="col-12 col-md-4">
-                        <label class="content-title">Google Event Popup Notification</label>
-                        <label class="content-subtitle mb-2">Time interval popup notification will show before the event time</label>
-                        <select name="google_calendar_popup_notification" id="google_calendar_popup_notification" class="nsm-field form-select" required>
-                            <option <?= $settings && $settings->google_calendar_popup_notification == '5 minutes' ? 'selected="selected"' : ''; ?> value="5 Minutes">5 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_popup_notification == '10 minutes' ? 'selected="selected"' : ''; ?> value="10 minutes">10 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_popup_notification == '15 minutes' ? 'selected="selected"' : ''; ?> value="15 minutes">15 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_popup_notification == '20 minutes' ? 'selected="selected"' : ''; ?> value="20 minutes">20 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_popup_notification == '25 minutes' ? 'selected="selected"' : ''; ?> value="25 minutes">25 minutes</option>
-                            <option <?= $settings && $settings->google_calendar_popup_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
-                        </select>
-                    </div>
-                </div>               
-                <div class="row g-3 mb-2">
-                    <div class="col-12 col-md-4 calendar-account">
-                        <label class="content-title">Calendar Account</label>
+                        <label class="content-title setting-header">Calendar Account</label>
                         <label class="content-subtitle mb-2">&nbsp;</label>
                         <ul style="list-style: none; margin: unset; padding: unset">
                             <?php if ($is_glink) { ?>
@@ -219,73 +139,195 @@
                                         <span class="e-color" style="background-color: <?= $c->color_code; ?>;"></span> 
                                         <span class="e-color-name"><?= $c->color_name; ?></span>
                                         <span class="e-color-actions">
-                                            <a class="nsm-button primary btn-edit-event-color" data-id="<?= $rowid; ?>" data-cname="<?= $c->color_name; ?>" data-ccode="<?= $c->color_code; ?>"><i class='bx bx-calendar-edit'></i></a>
-                                            <a class="nsm-button primary btn-delete-event-color" href="javascript:void(0);"><i class='bx bx-trash' ></i></a>
+                                            <a class="nsm-button default btn-edit-event-color" data-id="<?= $rowid; ?>" data-cname="<?= $c->color_name; ?>" data-ccode="<?= $c->color_code; ?>"><i class='bx bx-calendar-edit'></i></a>
+                                            <a class="nsm-button default btn-delete-event-color" href="javascript:void(0);"><i class='bx bx-trash' ></i></a>
                                         </span>
                                     </li>
                                     <?php $row_count++; ?>
                                 <?php } ?>
                             </ul>
                         </div>
+
                     </div>
-                    <div class="col-12 col-md-4">
-                        <label class="content-title">Calendar Job/Event Display Options</label>
-                        <label class="content-subtitle mb-2">Set the calendar information.</label>
 
-                        <div class="nsm-card h-auto">
-                            <div class="nsm-card-content">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="calendar_display_customer_name" id="calendar_display_customer_name" value="1" <?= $settings && $settings->display_customer_name == 1 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="calendar_display_customer_name">Customer name</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="calendar_display_job_details" id="calendar_display_job_details" value="1" <?= $settings && $settings->display_job_details == 1 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="calendar_display_job_details">Job address and description</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="calendar_display_price" id="calendar_display_price" value="1" <?= $settings && $settings->display_price == 1 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="calendar_display_price">Price</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="calendar_display_url_link" id="calendar_display_url_link" value="1" <?= $settings && $settings->display_url_link == 1 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="calendar_display_url_link">Url Links</label>
-                                </div>
-                                <hr>
-                                <a href="<?php echo base_url('settings') . '/notifications' ?>" class="nsm-link">Manage schedule notifications</a>
+                    <div class="col-12 col-md-8">
+                        <div class="row">
+                            <div class="col-12 col-md-12">
+                                <label class="content-title setting-header">Calendar Schedule</label>
                             </div>
                         </div>
-
-                        <div class="mt-3">
-                            <label class="content-title">Auto add to Google Calendar</label>
-                            <label class="content-subtitle mb-2">Select which module will auto add to your google calendar.</label>
-
-                            <div class="nsm-card h-auto">
-                                <div class="nsm-card-content">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_appointment" id="calendar_auto_add_appointment" <?= $settings && $settings->auto_add_appointment == 1 ? 'checked="checked"' : ''; ?> value="1">
-                                        <label class="form-check-label" for="calendar_auto_add_appointment">Appointment</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_job" id="calendar_auto_add_job" <?= $settings && $settings->auto_add_job == 1 ? 'checked="checked"' : ''; ?> value="1">
-                                        <label class="form-check-label" for="calendar_auto_add_job">Job</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_event" id="calendar_auto_add_event" <?= $settings && $settings->auto_add_event == 1 ? 'checked="checked"' : ''; ?> value="1">
-                                        <label class="form-check-label" for="calendar_auto_add_event">Events</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="calendar_auto_add_ticket" id="calendar_auto_add_ticket" <?= $settings && $settings->auto_add_ticket == 1 ? 'checked="checked"' : ''; ?> value="1">
-                                        <label class="form-check-label" for="calendar_auto_add_ticket">Service Tickets</label>
+                        <div class="row mt-4">
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Calendar Timezone</label>
+                                <label class="content-subtitle mb-2">Select the timezone that will be used to display all calendar dates.</label>
+                                <select name="calendar_timezone" class="nsm-field form-select" required>
+                                    <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
+                                        <option value="<?php echo $key ?>" <?= $settings && $settings->timezone == $key ? 'selected="selected"' : ''; ?>>
+                                            <?php echo $zone ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Calendar Default View</label>
+                                <label class="content-subtitle mb-2">Set the caledar default view.</label>
+                                <select name="calendar_default_view" class="nsm-field form-select" required>
+                                    <?php foreach (config_item('calender_views') as $key => $view) { ?>
+                                        <option value="<?php echo $view ?>" <?= $settings && $settings->default_view == $view ? 'selected="selected"' : ''; ?>>
+                                            <?php echo $view ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>  
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Calendar Week Starts On</label>
+                                <label class="content-subtitle mb-2">Select the day when a week starts.</label>
+                                <select name="calendar_week_starts_on" class="nsm-field form-select" required>
+                                    <option value="Sunday" <?= $settings && $settings->week_starts_on == "Sunday" ? 'selected="selected"' : ''; ?>>
+                                        Sunday
+                                    </option>
+                                    <option value="Monday" <?= $settings && $settings->week_starts_on == "Monday" ? 'selected="selected"' : ''; ?>>
+                                        Monday
+                                    </option>
+                                </select>
+                            </div>                          
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Job Time Settings</label>
+                                <label class="content-subtitle mb-2">Time Interval Settings</label>
+                                <select name="calendar_time_interval" id="calendar_time_interval" class="nsm-field form-select" required>
+                                    <option value="" selected disabled>Select</option>
+                                    <option <?= $settings && $settings->time_interval == '1 hour' ? 'selected="selected"' : ''; ?> value="1 hour">1 hour</option>
+                                    <option <?= $settings && $settings->time_interval == '2 hours' ? 'selected="selected"' : ''; ?> value="2 hours">2 hours</option>
+                                    <option <?= $settings && $settings->time_interval == '3 hours' ? 'selected="selected"' : ''; ?> value="3 hours">3 hours</option>
+                                    <option <?= $settings && $settings->time_interval == '4 hours' ? 'selected="selected"' : ''; ?> value="4 hours">4 hours</option>
+                                    <option <?= $settings && $settings->time_interval == '5 hours' ? 'selected="selected"' : ''; ?> value="5 hours">5 hours</option>
+                                    <option <?= $settings && $settings->time_interval == '6 hours' ? 'selected="selected"' : ''; ?> value="6 hours">6 hours</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Calendar Day Starts On</label>
+                                <label class="content-subtitle mb-2"></label>
+                                <input type="text" name="calendar_day_starts_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_starts_on != '' ? $settings->day_starts_on : ''; ?>" required />
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Calendar Day Ends On</label>
+                                <label class="content-subtitle mb-2"></label>
+                                <input type="text" name="calendar_day_ends_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_ends_on != '' ? $settings->day_ends_on : ''; ?>" required />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Calendar Job/Event Display Options</label>
+                                <label class="content-subtitle mb-2">Set the calendar information.</label>
+                                <div class="nsm-card h-auto">
+                                    <div class="nsm-card-content">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_display_customer_name" id="calendar_display_customer_name" value="1" <?= $settings && $settings->display_customer_name == 1 ? 'checked="checked"' : ''; ?>>
+                                            <label class="form-check-label" for="calendar_display_customer_name">Customer name</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_display_job_details" id="calendar_display_job_details" value="1" <?= $settings && $settings->display_job_details == 1 ? 'checked="checked"' : ''; ?>>
+                                            <label class="form-check-label" for="calendar_display_job_details">Job address and description</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_display_price" id="calendar_display_price" value="1" <?= $settings && $settings->display_price == 1 ? 'checked="checked"' : ''; ?>>
+                                            <label class="form-check-label" for="calendar_display_price">Price</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_display_url_link" id="calendar_display_url_link" value="1" <?= $settings && $settings->display_url_link == 1 ? 'checked="checked"' : ''; ?>>
+                                            <label class="form-check-label" for="calendar_display_url_link">Url Links</label>
+                                        </div>
+                                        <hr>
+                                        <a href="<?php echo base_url('settings') . '/notifications' ?>" class="nsm-link">Manage schedule notifications</a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-12 col-md-4">
+                                <label class="content-title">Auto add to Google Calendar</label>
+                                <label class="content-subtitle mb-2">Select which module will auto add to your google calendar.</label>
+                                <div class="nsm-card h-auto">
+                                    <div class="nsm-card-content">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_auto_add_appointment" id="calendar_auto_add_appointment" <?= $settings && $settings->auto_add_appointment == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                            <label class="form-check-label" for="calendar_auto_add_appointment">Appointment</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_auto_add_job" id="calendar_auto_add_job" <?= $settings && $settings->auto_add_job == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                            <label class="form-check-label" for="calendar_auto_add_job">Job</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_auto_add_event" id="calendar_auto_add_event" <?= $settings && $settings->auto_add_event == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                            <label class="form-check-label" for="calendar_auto_add_event">Events</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_auto_add_ticket" id="calendar_auto_add_ticket" <?= $settings && $settings->auto_add_ticket == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                            <label class="form-check-label" for="calendar_auto_add_ticket">Service Tickets</label>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    </div>                    
-                </div>
-                <div class="row g-3">
-                    <div class="col-12">
-                        <button type="submit" class="nsm-button primary">Save Changes</button>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 col-md-12">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                        <label class="content-title setting-header">Calendar Notification</label>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12 col-md-4">
+                                        <label class="content-title">Google Event Email Notification</label>
+                                        <label class="content-subtitle mb-2">Time interval email notification will be sent before the event time</label>
+                                        <select name="google_calendar_email_notification" id="google_calendar_email_notification" class="nsm-field form-select" required>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == 'disabled' ? 'selected="selected"' : ''; ?> value="disabled">Turn Off Notification</option>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == '5 minutes' ? 'selected="selected"' : ''; ?> value="5 Minutes">5 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == '10 minutes' ? 'selected="selected"' : ''; ?> value="10 minutes">10 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == '15 minutes' ? 'selected="selected"' : ''; ?> value="15 minutes">15 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == '20 minutes' ? 'selected="selected"' : ''; ?> value="20 minutes">20 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == '25 minutes' ? 'selected="selected"' : ''; ?> value="25 minutes">25 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == '60 minutes' ? 'selected="selected"' : ''; ?> value="60 minutes">60 minutes</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="content-title">Google Event Popup Notification</label>
+                                        <label class="content-subtitle mb-2">Time interval popup notification will show before the event time</label>
+                                        <select name="google_calendar_popup_notification" id="google_calendar_popup_notification" class="nsm-field form-select" required>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == 'disabled' ? 'selected="selected"' : ''; ?> value="disabled">Turn Off Notification</option>
+                                            <option <?= $settings && $settings->google_calendar_popup_notification == '5 minutes' ? 'selected="selected"' : ''; ?> value="5 Minutes">5 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_popup_notification == '10 minutes' ? 'selected="selected"' : ''; ?> value="10 minutes">10 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_popup_notification == '15 minutes' ? 'selected="selected"' : ''; ?> value="15 minutes">15 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_popup_notification == '20 minutes' ? 'selected="selected"' : ''; ?> value="20 minutes">20 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_popup_notification == '25 minutes' ? 'selected="selected"' : ''; ?> value="25 minutes">25 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_popup_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
+                                            <option <?= $settings && $settings->google_calendar_popup_notification == '60 minutes' ? 'selected="selected"' : ''; ?> value="60 minutes">60 minutes</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="content-title">Auto SMS Notification</label>
+                                        <label class="content-subtitle mb-2">Time interval sms notification will be sent before the event time</label>
+                                        <select name="calendar_auto_sms_notification" id="calendar_auto_sms_notification" class="nsm-field form-select" required>
+                                            <option <?= $settings && $settings->google_calendar_email_notification == 'disabled' ? 'selected="selected"' : ''; ?> value="disabled">Turn Off Notification</option>
+                                            <option <?= $settings && $settings->calendar_auto_sms_notification == '5 minutes' ? 'selected="selected"' : ''; ?> value="5 Minutes">5 minutes</option>
+                                            <option <?= $settings && $settings->calendar_auto_sms_notification == '10 minutes' ? 'selected="selected"' : ''; ?> value="10 minutes">10 minutes</option>
+                                            <option <?= $settings && $settings->calendar_auto_sms_notification == '15 minutes' ? 'selected="selected"' : ''; ?> value="15 minutes">15 minutes</option>
+                                            <option <?= $settings && $settings->calendar_auto_sms_notification == '20 minutes' ? 'selected="selected"' : ''; ?> value="20 minutes">20 minutes</option>
+                                            <option <?= $settings && $settings->calendar_auto_sms_notification == '25 minutes' ? 'selected="selected"' : ''; ?> value="25 minutes">25 minutes</option>
+                                            <option <?= $settings && $settings->calendar_auto_sms_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
+                                            <option <?= $settings && $settings->calendar_auto_sms_notification == '60 minutes' ? 'selected="selected"' : ''; ?> value="60 minutes">60 minutes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-5">
+                                    <div class="col-12">
+                                        <button type="submit" class="nsm-button primary" style="float: right;">Save Changes</button>
+                                    </div>                    
+                                </div>
+                            </div>
+                        </div>
                     </div>                    
                 </div>
                 <?php echo form_close(); ?>
@@ -401,7 +443,7 @@
             var color_name = $('#add-color-name').val();
             var color_code = $('#add-color-code').val();
             var color_id   = generateRowId(5);
-            var append_color = '<li id="c-row-'+color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button primary btn-edit-event-color" data-id="'+color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button primary btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
+            var append_color = '<li id="c-row-'+color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button btn-edit-event-color" data-id="'+color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
             $('.event-colors').append(append_color);
 
             $('#modalAddEventColor').modal('hide');
@@ -415,7 +457,7 @@
             var color_id   = $('#edit-color-id').val();
             var new_color_id = generateRowId(5);
 
-            var update_append_color = '<li id="c-row-'+new_color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button primary btn-edit-event-color" data-id="'+new_color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button primary btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
+            var update_append_color = '<li id="c-row-'+new_color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button primary btn-edit-event-color" data-id="'+new_color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
 
             $('#c-row-'+color_id).fadeOut(300, function(){ 
                 $('#c-row-'+color_id).remove();               

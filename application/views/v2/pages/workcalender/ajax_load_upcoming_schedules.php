@@ -171,14 +171,17 @@
                                 $schedule_customer_name  = '';
                                 $schedule_customer_phone = '';
                                 $schedule_event_name = $schedule['data']->event_name;
+                                $schedule_location   = $schedule['data']->event_location;
+                                $schedule_location_b = '';
                             }else{
                                 $schedule_customer_name  = $schedule['data']->customer_name;
                                 $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';   
                                 $schedule_event_name     = ''; 
+                                $schedule_location   = $schedule['data']->mail_add;
+                                $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
                             }
                             
-                            $schedule_location   = $schedule['data']->mail_add;
-                            $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
@@ -253,6 +256,14 @@
                                         <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
                                             <i class='bx bxs-calendar-event'></i> <?= $schedule_event_name; ?>
                                         </label>
+                                        <?php if( $schedule_location != '' ){ ?>
+                                            <label class="content-title" style="cursor: pointer">
+                                                <ul class="location-list">
+                                                    <li><i class='bx bxs-map-pin'></i></li>
+                                                    <li><?= $schedule_location; ?></li>
+                                                </ul>                                    
+                                            </label>
+                                        <?php } ?>
                                 <?php } ?>                                
                                 <?php if( $schedule_description != '' ){ ?>
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
