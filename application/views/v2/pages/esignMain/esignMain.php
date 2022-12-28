@@ -1,4 +1,4 @@
-<?php include viewPath('v2/includes/header');?>
+<?php include viewPath('v2/includes/header'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12">
@@ -166,6 +166,76 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-card primary p-5" role="button" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <img class="nsm-card-img" src="<?php echo base_url('uploads/image/esign/search.png') ?>">
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <div class="nsm-card-title mt-4">
+                                            <span>Search eSign</span>
+                                        </div>
+                                        <label class="nsm-subtitle d-block">Search eSign by key, name, subject, etc.</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal" id="searchesignmodal" tabindex="-1" aria-labelledby="searchesignmodal_label" aria-modal="true" role="dialog">
+    <style>
+        #searchesignmodal .widget-form {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #searchesignmodal .widget-form input {
+            border-radius: .25rem !important;
+        }
+
+        #searchesignmodal .widget-form button {
+            border-radius: 5px !important;
+            margin-bottom: 0 !important;
+        }
+
+        #searchesignmodal .nsm-empty {
+            padding: 1rem 0;
+        }
+    </style>
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="searchesignmodal_label">Search eSign</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="mb-3">
+                    <div class="col-12 col-md">
+                        <div class="input-group widget-form">
+                            <input placeholder="Search eSign by key, name, subject, etc." class="form-control nsm-field" maxlength="50">
+                            <button name="button" type="button" class="nsm-button primary">
+                                <i class="bx bx-fw bx-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div>
+                    <div class="nsm-empty">
+                        <i class="bx bx-meh-blank"></i>
+                        <span>No matching eSigns.</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -175,4 +245,4 @@
 <script type="text/javascript">
     $(document).ready(function() {});
 </script>
-<?php include viewPath('v2/includes/footer');?>
+<?php include viewPath('v2/includes/footer'); ?>

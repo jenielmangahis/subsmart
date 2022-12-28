@@ -9188,6 +9188,8 @@ const submitModalForm = (event, el) => {
                 }
             });
 
+            data.set('fixed_total', $(`${modalId} input[name="payment_amount"]`).attr('data-fixed') !== undefined ? 1 : 0);
+            data.set('amount_to_apply', $(`${modalId} span.amount-to-apply`).html().replace('$', '').replaceAll(',', '').trim());
             data.set('amount_to_credit', $(`${modalId} span.amount-to-credit`).html().replace('$', '').replaceAll(',', '').trim());
         break;
         case '#journalEntryModal' :
@@ -10703,6 +10705,10 @@ const updateTransaction = (event, el) => {
                     }
                 }
             });
+
+            data.set('fixed_total', $(`${modalId} input[name="payment_amount"]`).attr('data-fixed') !== undefined ? 1 : 0);
+            data.set('amount_to_apply', $(`${modalId} span.amount-to-apply`).html().replace('$', '').replaceAll(',', '').trim());
+            data.set('amount_to_credit', $(`${modalId} span.amount-to-credit`).html().replace('$', '').replaceAll(',', '').trim());
         break;
         case '#journalEntryModal' :
             data.delete('names[]');

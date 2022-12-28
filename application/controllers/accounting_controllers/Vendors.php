@@ -1051,7 +1051,7 @@ class Vendors extends MY_Controller
                     'category' => '',
                     'memo' => '',
                     'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
-                    'balance' => '$0.00',
+                    'balance' => '$'.number_format(floatval($payment->available_credits_amount), 2, '.', ','),
                     'total' => '-$'.number_format(floatval($payment->total_amount), 2, '.', ','),
                     'status' => $payment->status === "4" ? 'Voided' : 'Applied',
                     'attachments' => $for === 'table' ? $attachments : count($attachments),

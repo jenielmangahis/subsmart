@@ -410,11 +410,11 @@ class Api extends MYF_Controller
         $msg = 'Empty POST data';
 
         $data  = $this->input->post();
-        $data  = [
+        /*$testData  = [
             'object_id' => 1,
             'module' => 'appointment',
             'company_id' => 1
-        ];
+        ];*/
 
         if( $data['object_id'] > 0 ){
             $result = createSyncToCalendar($data['object_id'], $data['module'], $data['company_id']);
