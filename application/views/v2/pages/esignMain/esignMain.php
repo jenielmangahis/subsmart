@@ -223,25 +223,40 @@
                 <form class="mb-3">
                     <div class="col-12 col-md">
                         <div class="input-group widget-form">
-                            <input placeholder="Search eSign by key, name, subject, etc." class="form-control nsm-field" maxlength="50">
-                            <button name="button" type="button" class="nsm-button primary">
-                                <i class="bx bx-fw bx-search"></i>
-                            </button>
+                            <input id="esignsearch" placeholder="Search eSign by key, name, subject, etc." class="form-control nsm-field" maxlength="50" type="search">
                         </div>
                     </div>
                 </form>
 
-                <div>
+                <div style="min-height: 250px;">
+                    <div id="esignsearchloader" class="d-flex align-items-center justify-content-center esign-loader d-none" style="padding: 4rem 0;">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+
+                    <ul id="esignsearchresults" class="list-group d-none">
+                    </ul>
+
                     <div class="nsm-empty">
                         <i class="bx bx-meh-blank"></i>
                         <span>No matching eSigns.</span>
                     </div>
                 </div>
+
+                <template id="esignsearchresulttemplate">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="name"></span>
+                        <div>
+                            <a href="#" data-action="download" class="nsm-button primary" style="margin-bottom: 0; display: inline-block;">Download</a>
+                            <a href="#" target="_blank" data-action="view" class="nsm-button" style="margin-bottom: 0; display: inline-block;">View</a>
+                        </div>
+                    </li>
+                </template>
             </div>
         </div>
     </div>
 </div>
 
+<script src="<?= base_url("assets/js/esign/docusign/v2/search.js") ?>"></script>
 <script type="text/javascript">
     $(document).ready(function() {});
 </script>

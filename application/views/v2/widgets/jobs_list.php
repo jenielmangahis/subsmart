@@ -192,74 +192,67 @@ endif;
             </div>
         </div>
     </div>
-    <div class="nsm-card-content jobs_stat">
-        <div class="nsm-widget-table">
-            <table class="table responsive">
-                <thead>
-                    <th>Updated</th>
-                    <th>Name</th>
-                    <th>Job Number</th>
-                    <th>Status</th>
-                    <th> <?= $company_id == 58 ? 'Proposed' : 'Amount' ?></th>
-                </thead>
-                <tbody>
-                <?php foreach($latestJobs as $job): 
-                    switch($job->status):
-                        case "New":
-                            $badgeCount = 1;
-                            break;
-                        case "Scheduled":
-                            $badgeCount = 2;
-                            break;
-                        case "Arrival":
-                            $badgeCount = 3;
-                            break;          
-                        case "Started":
-                            $badgeCount = 4;
-                            break;
-                        case "Approved":
-                            $badgeCount = 5;
-                            break;
-                        case "Closed":
-                            $badgeCount = 6;
-                            break;
-                        case "Invoiced":
-                            $badgeCount = 7;
-                            break;
-                        case "Completed":
-                            $badgeCount = 8;
-                            break;
-                    endswitch;
+    <div class="nsm-card-content">
+        <table class="nsm-table" id="jobs_list">
+            <thead>
+                <th>Updated</th>
+                <th>Name</th>
+                <th>Job Number</th>
+                <th> <?= $company_id == 58 ? 'Proposed' : 'Amount' ?></th>
+            </thead>
+            <tbody>
+            <?php foreach($latestJobs as $job): 
+                switch($job->status):
+                    case "New":
+                        $badgeCount = 1;
+                        break;
+                    case "Scheduled":
+                        $badgeCount = 2;
+                        break;
+                    case "Arrival":
+                        $badgeCount = 3;
+                        break;          
+                    case "Started":
+                        $badgeCount = 4;
+                        break;
+                    case "Approved":
+                        $badgeCount = 5;
+                        break;
+                    case "Closed":
+                        $badgeCount = 6;
+                        break;
+                    case "Invoiced":
+                        $badgeCount = 7;
+                        break;
+                    case "Completed":
+                        $badgeCount = 8;
+                        break;
+                endswitch;
+                ?>
+                <tr onclick="location.href='<?= base_url('job/job_preview/').$job->id ?>'">
+                    <?php
+                        $updated_date = date_create($job->date_updated);
                     ?>
-                    <tr onclick="location.href='<?= base_url('job/job_preview/').$job->id ?>'">
-                        <td >May 28</td>
-                        <td >
-                            <b><?= $job->first_name . ', '  .  $job->last_name ; ?></b><br>
-                            <small><?= $job->city. ',<br>'. $job->state ; ?></small>
-                        </td>
-                        <td ><?= $job->job_number; ?></td>
-                        <td ><?php
-                            for($x=1;$x<=$badgeCount;$x++){
-                                ?>
-                                    <span class="nsm-badge primary-enhanced"></span>
-                                <?php
-                            }
-                            for($y=1;$y < 8 - $badgeCount;$y++){
-                                ?>
-                                    <span class="nsm-badge primary"></span>
-                                <?php
-                            }
-                        ?></td>
-                        <td >$<?= $job->amount; ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>      
+                    <td ><?php echo date_format($updated_date, 'F'). ' '. date_format($updated_date, 'd')?></td>
+                    <td >
+                        <b><?= $job->first_name . ', '  .  $job->last_name ; ?></b><br>
+                        <small><?= $job->city. ',<br>'. $job->state ; ?></small>
+                    </td>
+                    <td ><?= $job->job_number; ?></td>
+                    <td >$<?= $job->amount; ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>   
+    </div>   
 </div>
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '</div>';
 endif;
 ?>
+<script>
+$(function(){
+    $("#jobs_list").nsmPagination({itemsPerPage:5});
+});
+</script>

@@ -3,7 +3,7 @@ $(document).ready(function() {
     fetch('<?= base_url('Dashboard/todays_stats') ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
-        var {success, data, paymentInvoice, jobsCompleted, lostAccount, collectedAccounts } = response;
+        var {success, data, paymentInvoice, jobsCompleted, onlineBooking, lostAccount, collectedAccounts } = response;
 
         if(success){
             var totalPayments = 0;
@@ -12,6 +12,7 @@ $(document).ready(function() {
             var totalJobsAdded = 0;
             var lostAcc = lostAccount == '' ? '0' : lostAccount[0]['total'];
             var collectedAcc = collectedAccounts == '' ? '0' : collectedAccounts[0]['total'];
+            var onlineBookingCount = onlineBooking == '' ? '0' : onlineBooking[0]['total'];
 
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -45,7 +46,7 @@ $(document).ready(function() {
             }
             $("#earned").text('$'+totalPayments); // total earned
             $("#jobs_completed").text(totalJobsCompleted); // total jobs completed
-            $("#jobs_added").text(totalJobsAdded); // total jobs added
+            $("#jobs_added").text(onlineBookingCount); // total jobs added
             $("#lost_accounts").text(lostAcc); // total lost account
             $("#collections").text(collectedAcc); // total collected account
             $("#collected").text('$'+totalCollected); // total earned
@@ -110,9 +111,11 @@ $(document).ready(function() {
             for(var x=0; x<salesLeaderboard.length; x++){
                 var name = salesLeaderboard[x].FName + ' '+ salesLeaderboard[x].LName;
                 var salesRev = 0;
-                if(revenue[x][0]['salesRepRev']){
-                    salesRev = parseFloat(revenue[x][0]['salesRepRev']).toFixed(2);
-                }
+                var salesRev = revenue[x].length != 0 ? parseFloat(revenue[x][0]['salesRepRev']).toFixed(2) : '0.00';
+
+                // if(revenue[x][0]['salesRepRev']){
+                //     salesRev = parseFloat(revenue[x][0]['salesRepRev']).toFixed(2);
+                // }
                 var prof = salesLeaderboard[x].FName[0] + ''+ salesLeaderboard[x].LName[0];
 
                 
