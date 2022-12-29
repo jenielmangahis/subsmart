@@ -397,6 +397,7 @@
                         }).then((result) => {
                             //if (result.value) {
                                 reloadCalendar(selected_calendar_view);
+                                loadUpcomingSchedules();
                             //}
                         });
 
@@ -833,6 +834,7 @@
                         }).then((result) => {
                             //if (result.value) {
                                 reloadCalendar();
+                                loadUpcomingSchedules();
                             //}
                         });
                     } else {
@@ -1962,6 +1964,7 @@
         if( appointment_type == 4 ){ //Event
             $('.customer-container').fadeOut(500);
             $('.event-description-container').fadeIn(500);
+            $('.event-location-container').fadeIn(500);
             $("a.btn-manage-tags").attr("href", base_url + 'events/event_tags');
             $("#appointment-tags").empty().trigger('change');
             $('#appointment-tags').select2({
@@ -1993,6 +1996,7 @@
         }else{
             $('.customer-container').fadeIn(500);
             $('.event-description-container').fadeOut(500);
+            $('.event-location-container').fadeOut(500);
             $("a.btn-manage-tags").attr("href", base_url + 'job/job_tags');
             $("#appointment-tags").empty().trigger('change');
             $('#appointment-tags').select2({

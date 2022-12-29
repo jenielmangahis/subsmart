@@ -60,6 +60,11 @@
         <div class="col-12 col-md-7">
             <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">Event</label>
             <label class="content-subtitle fw-bold" style="font-size: 21px;margin-bottom: 23px;"><?= $appointment->event_name; ?></label>
+            <?php if( $appointment->event_location != '' ){ ?>
+                <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bxs-map-pin'></i> </span> 
+                    <?= $appointment->event_location; ?>
+                </label>
+            <?php } ?>
             <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
                 <span class="fw-bold"><i class='bx bxs-calendar'></i></span> 
                 <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
@@ -69,7 +74,7 @@
                 <?php }else{ ?>
                     ---
                 <?php } ?>
-            </label>
+            </label>            
             <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header mt-5">Notes</label>
                 <div class="d-flex">
                 <span class="appointment-notes"><?= $appointment->notes; ?></span>

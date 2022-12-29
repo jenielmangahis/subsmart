@@ -265,18 +265,39 @@ class Event_model extends MY_Model
             return false;
         }
     }
-
-    public function getAccountSituation($toCheck = 'collect_date')
-    {
-        $company_id = logged('company_id');
+    public function getLeadSource($source) {
         $this->db->select('COUNT(*) as total');
         $this->db->from('acs_office');
-        $this->db->join('acs_profile', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where("acs_profile.company_id", $company_id);
-        $this->db->where("acs_office.".$toCheck, date('m/d/Y'));
-        $this->db->group_by('acs_profile.prof_id');
+        $this->db->where('lead_source', $source);
         $query = $this->db->get();
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+    public function getAccountSituation($status)
+    {
+        // $company_id = logged('company_id');
+        // $this->db->select('COUNT(*) as total');
+        // $this->db->from('acs_office');
+        // $this->db->join('acs_profile', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        // $this->db->where("acs_profile.company_id", $company_id);
+        // $this->db->where("acs_office.".$toCheck, date('m/d/Y'));
+        // $this->db->group_by('acs_profile.prof_id');
+        // $query = $this->db->get();
         //dd($this->db->last_query());
+
+        $this->db->select('COUNT(*) as total');
+        $this->db->from('acs_profile');
+        $this->db->where('status', $status);
+        if($status === 'Cancelled') {
+            $this->db->join('acs_office', 'acs_profile.prof_id = acs_office.fk_prof_id', 'left');
+            $this->db->where("acs_office.cancel_date", date('m/d/Y'));
+        }
+        $query = $this->db->get();
+
+
 
         if ($query) {
             return $query->result();
@@ -467,7 +488,7 @@ class Event_model extends MY_Model
     public function getLatestJobs()
     {
         $cid=logged('company_id');
-        $this->db->select('first_name,last_name,city,state,jobs.id,jobs.status,job_number,job_type,start_date,amount');
+        $this->db->select('first_name,last_name,city,state,jobs.id,jobs.status,job_number,job_type,jobs.date_updated,start_date,amount');
         $this->db->from('jobs');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
@@ -577,6 +598,8 @@ class Event_model extends MY_Model
         $this->db->where('jobs.employee_id', $salesRepId);
         $this->db->group_by('jobs.employee_id');
         $query = $this->db->get();
+
+        
         return $query->result();
     }
 

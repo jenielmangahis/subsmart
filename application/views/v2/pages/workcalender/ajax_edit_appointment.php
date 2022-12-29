@@ -15,7 +15,13 @@
 <div class="col-12 edit-event-description-container" style="<?= $appointment->appointment_type_id != 4 ? 'display: none;' : ''; ?>">
     <label class="content-subtitle fw-bold d-block mb-2">Event Name</label>
     <span id="wait-list-created-by">
-        <input type="text" value="<?= $appointment->event_name; ?>" name="event_name" class="nsm-field form-control" />
+        <input type="text" value="<?= $appointment->event_name; ?>" name="appointment_event_name" class="nsm-field form-control" />
+    </span>                                                        
+</div>
+<div class="col-12 edit-event-description-container" style="<?= $appointment->appointment_type_id != 4 ? 'display: none;' : ''; ?>">
+    <label class="content-subtitle fw-bold d-block mb-2">Event Location</label>
+    <span id="wait-list-created-by">
+        <textarea name="appointment_event_location" class="nsm-field form-control"><?= $appointment->event_location ?></textarea>
     </span>                                                        
 </div>
 <div class="col-12">
@@ -196,6 +202,7 @@ $(function(){
         if( appointment_type == 4 ){ //Event
             $('.edit-customer-container').fadeOut(500);
             $('.edit-event-description-container').fadeIn(500);
+            $('.edit-event-location-container').fadeIn(500);
             $("a.edit-btn-manage-tags").attr("href", base_url + 'events/event_tags');
             $("#edit-appointment-tags").empty().trigger('change');
             $('#edit-appointment-tags').select2({
@@ -227,6 +234,7 @@ $(function(){
         }else{
             $('.edit-customer-container').fadeIn(500);
             $('.edit-event-description-container').fadeOut(500);
+            $('.edit-event-location-container').fadeOut(500);
             $("a.edit-btn-manage-tags").attr("href", base_url + 'job/job_tags');
             $("#edit-appointment-tags").empty().trigger('change');
             $('#edit-appointment-tags').select2({

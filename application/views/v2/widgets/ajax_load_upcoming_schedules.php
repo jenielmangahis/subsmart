@@ -51,6 +51,7 @@
                 <?php foreach($schedules as $schedule){ ?>
                     <?php 
                         $is_valid = 0;
+                        $is_appointment_event = 0; 
                         if( $schedule['type'] == 'job' ){
                             $schedule_view_url = base_url('job/new_job1/' . $schedule['data']->id);
                             $schedule_date = $schedule['data']->start_date;
@@ -154,11 +155,23 @@
                             //$schedule_number = strtoupper(str_replace("APPT", $schedule['data']->appointment_type, $schedule['data']->appointment_number));
 
                             $schedule_number = $schedule['data']->appointment_number;
-                            $schedule_type   = $schedule['data']->appointment_type;
-                            $schedule_customer_name  = $schedule['data']->customer_name;
-                            $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
-                            $schedule_location   = $schedule['data']->mail_add;
-                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            $schedule_type   = $schedule['data']->appointment_type;                            
+
+                            if( $schedule['data']->appointment_type_id == 4 ){
+                                $is_appointment_event = 1;
+                                $schedule_customer_name  = '';
+                                $schedule_customer_phone = '';
+                                $schedule_event_name = $schedule['data']->event_name;
+                                $schedule_location   = $schedule['data']->event_location;
+                                $schedule_location_b = '';
+                            }else{
+                                $schedule_customer_name  = $schedule['data']->customer_name;
+                                $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';   
+                                $schedule_event_name     = ''; 
+                                $schedule_location   = $schedule['data']->mail_add;
+                                $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            }
+                            
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
@@ -200,22 +213,34 @@
                                 <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
                                     <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
                                 </label>
-                                <?php if( $schedule_customer_name != '' ){ ?>
-                                <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
-                                    <i class='bx bxs-user-rectangle'></i> <?= $schedule_customer_name; ?>
-                                </label>
+                                <?php if( $is_appointment_event == 0 ){ ?>
+                                    <?php if( $schedule_customer_name != '' ){ ?>
+                                    <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                                        <i class='bx bxs-user-rectangle'></i> <?= $schedule_customer_name; ?>
+                                    </label>
+                                    <?php } ?>
+                                    <?php if( $schedule_customer_phone != '' ){ ?>
+                                    <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                                        <i class='bx bxs-phone'></i> <?= $schedule_customer_phone; ?>
+                                    </label>
+                                    <?php } ?>
+                                    <label class="content-title" style="cursor: pointer">
+                                        <ul class="location-list">
+                                            <li><i class='bx bxs-map-pin'></i></li>
+                                            <li><?= $schedule_location; ?><?= $schedule_location_b != '' ? "<br />" . $schedule_location_b : ''; ?></li>
+                                        </ul>                                    
+                                    </label>
+                                <?php }else{ ?>
+                                    <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                                        <i class='bx bxs-calendar-event'></i> <?= $schedule_event_name; ?>
+                                    </label>
+                                    <?php if( $schedule_location != '' ){ ?>
+                                    <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
+                                        <i class='bx bxs-map-pin'></i> <?= $schedule_location; ?>
+                                    </label>
+                                    <?php } ?>
                                 <?php } ?>
-                                <?php if( $schedule_customer_phone != '' ){ ?>
-                                <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
-                                    <i class='bx bxs-phone'></i> <?= $schedule_customer_phone; ?>
-                                </label>
-                                <?php } ?>
-                                <label class="content-title" style="cursor: pointer">
-                                    <ul class="location-list">
-                                        <li><i class='bx bxs-map-pin'></i></li>
-                                        <li><?= $schedule_location; ?><?= $schedule_location_b != '' ? "<br />" . $schedule_location_b : ''; ?></li>
-                                    </ul>                                    
-                                </label>
+                                
                                 <?php if( $schedule_description != '' ){ ?>
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
                                         <i class='bx bx-calendar-event'></i> <?= $schedule_description; ?>
