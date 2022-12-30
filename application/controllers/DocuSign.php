@@ -1403,7 +1403,7 @@ SQL;
             $baseUrl .= '/';
         }
 
-        return $baseUrl . '/eSign';
+        return rtrim($baseUrl, '/') . '/eSign';
     }
 
     private function sendEnvelope(array $envelope, array $recipient, bool $isSelfSigned = false)
@@ -2343,6 +2343,39 @@ SQL;
         $document->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
 
         exit(json_encode(['data' => $document]));
+    }
+
+    public function apiSearchDocument()
+    {
+        $query = $this->input->get('query', TRUE);
+
+        $this->db->like('name', $query, 'both');
+        $this->db->or_like('subject', $query, 'both');
+        $this->db->or_like('unique_key', $query, 'both');
+        $this->db->where('status', 'Completed');
+        $results = $this->db->get('user_docfile')->result();
+
+
+        $results = array_map(function ($document) {
+            $this->db->where('docfile_id', $document->id);
+            $document->generated_pdf = $this->db->get('user_docfile_generated_pdfs')->row();
+
+            $this->db->where('docfile_id', $document->id);
+            $recipients = $this->db->get('user_docfile_recipients')->result();
+
+            $lastRecipient = end(array_values($recipients));
+            $message = json_encode([
+                'recipient_id' => $lastRecipient->id,
+                'document_id' => $document->id,
+            ]);
+
+            $hash = encrypt($message, $this->password);
+            $document->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
+
+            return $document;
+        }, $results);
+
+        exit(json_encode(['data' => $results]));
     }
 }
 

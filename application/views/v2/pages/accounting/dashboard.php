@@ -2,10 +2,22 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 include viewPath('v2/includes/accounting_header'); 
+// include viewPath('includes/header');
 
 ?>
-<link rel="stylesheet" href="<?= base_url("assets/frontend/css/accounting_dashboard.css") ?>">
+<!-- <link rel="stylesheet" href="<?= base_url("assets/frontend/css/accounting_dashboard.css") ?>"> -->
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="<?= base_url("assets/css/accounting/accounting.css") ?>">
+
+<link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
+        
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css">
+        
 
 <?php
 add_css(array(
@@ -73,6 +85,146 @@ add_css(array(
   border-color: #7A08C8;
   color:#7A08C8;
 }
+
+
+#circle {
+      background: white;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      border-style: solid;
+      border-color: #55b702;
+  }
+  
+  #circle:hover {
+      background: #def3cc;
+  }
+  
+  .arrow {
+      width:88px;
+      margin:40px auto;
+  }
+  
+  .line {
+      margin-top:7px;
+      width:81px;
+      background:#8d9096;
+      height:2px;
+      float:left;
+  }
+  .point {	
+      width: 0; 
+      height: 0; 
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 7px solid #8d9096;
+      float:right;
+  }
+  
+  .notification {
+    /* background-color: #555; */
+    color: white;
+    text-decoration: none;
+    /* padding: 15px 26px; */
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+  }
+  
+  /* .notification:hover {
+    background: red;
+  } */
+  
+  .notification .badge {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+  }
+
+  /* Style the tab */
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+  
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    /* display: none; */
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+  
+  .canvasjs-chart-credit
+  {
+      display: none;
+  }
+
+  .area-chart {
+    /* Reset */
+    margin: 0;
+    padding: 0;
+    border: 0;
+  
+    /* Dimensions */
+    width: 100%;
+    max-width: var(--chart-width, 600px);
+    height: var(--chart-height, 300px);
+  
+    /* Layout */
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: row;
+  }
+  ul.area-chart,
+  ol.area-chart {
+    list-style: none;
+  }
+  .area-chart > * {
+    /* Even size items */
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+  
+    /* Color */
+    background: var(--color, rgba(240, 50, 50, .75));
+    clip-path: polygon(
+      0% calc(100% * (1 - var(--start))),
+      100% calc(100% * (1 - var(--end))),
+      100% 100%,
+      0% 100%
+    );
+  }
+
+  
 </style>
 
 <div class="nsm-fab-container">
@@ -406,7 +558,7 @@ add_css(array(
 
                                         </div>
                                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                                            <br>
+                                            <!-- <br>
                                                 <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                     <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                     <p>Some QuickBooks Payments deposits weren't automatically recorded. After you receive the funds in your account, record them manually as a Bank Deposit. <a href="#"  style="color:#0077C5;">Take Action </a> </p>
@@ -448,7 +600,27 @@ add_css(array(
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true" style="font-size:20px;">X</span>
                                                     </button>
-                                                </div>
+                                                </div> -->
+                                                <br>
+                                            <div class="alert simple-alert">
+                                                <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
+                                                <a class="close">&times;</a>
+                                            </div>
+
+                                            <div class="alert success-alert">
+                                                <p>Some nSmarTrac Payments deposits weren't automatically recorded. After you receive the funds in your account, record them manually as a Bank Deposit. <br> <a href="#"  style="color:#0077C5;">Take Action </a> </p>
+                                                <a class="close">&times;</a>
+                                            </div>
+
+                                            <div class="alert danger-alert">
+                                                <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
+                                                <a class="close">&times;</a>
+                                            </div>
+
+                                            <div class="alert warning-alert">
+                                                <p>A bank transfer from your customer received as payment for Invoice 13053 has been canceled due to a problem with their account. To keep your <br>books accurate, you should follow the steps to <a href="#"  style="color:#0077C5;">handle a canceled bank transfer.</a></p>
+                                                <a class="close">&times;</a>
+                                            </div>
 
                                                 <br><br>
                                                 
@@ -927,4 +1099,6 @@ add_css(array(
     });
 
 </script>
+
+<script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>

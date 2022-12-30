@@ -6,7 +6,7 @@ class Dashboard extends Widgets {
     public function __construct() {
         parent::__construct();
         $this->checkLogin();
-		$this->page_data['page']->title = 'Dashboard';
+        $this->page_data['page']->title = 'Dashboard';
         $this->page_data['page']->parent = 'Dashboard';
         $this->load->library('wizardlib');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
@@ -166,7 +166,7 @@ class Dashboard extends Widgets {
         $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
         $this->page_data['subs']=$this->event_model->getAllsubs();
         
-        $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
+        // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
         $this->page_data['latestJobs']=$this->event_model->getLatestJobs(); // fetch Sales Rep and customer they are assigned to
         $this->page_data['company_id'] = $companyId; // Company ID of the logged in USER
@@ -494,10 +494,10 @@ class Dashboard extends Widgets {
         $payment=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $paymentInvoices=$this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
         $jobsDone = $this->event_model->getAllJobs();
-        $collectedAccounts =$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
-        $lostAccounts =$this->event_model->getAccountSituation('cancel_date'); // lost account count, if Cancel Date Office Info is set
-        
-        $data_arr = array("success" => true,"data" => $payment, "paymentInvoice" => $paymentInvoices, "jobsCompleted" => $jobsDone, "lostAccount" => $lostAccounts, "collectedAccounts" => $collectedAccounts);
+        $collectedAccounts =$this->event_model->getAccountSituation('Collections'); // collection account count, if Collection Date Office Info is set
+        $lostAccounts =$this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
+        $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
+        $data_arr = array("success" => true,"data" => $payment, "paymentInvoice" => $paymentInvoices, "onlineBooking" => $onlineBookingCount, "jobsCompleted" => $jobsDone, "lostAccount" => $lostAccounts, "collectedAccounts" => $collectedAccounts);
         die(json_encode($data_arr));
 
     }
