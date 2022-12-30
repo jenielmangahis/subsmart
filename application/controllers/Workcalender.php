@@ -669,6 +669,8 @@ class Workcalender extends MY_Controller
         $this->load->model('EventTags_model');
         $this->load->model('Tickets_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('Users_model');
+        $this->load->model('TechnicianDayOffSchedule_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -740,6 +742,69 @@ class Workcalender extends MY_Controller
                     $inc++;
                 }
             }
+        }
+
+        //TC Schedule Off
+        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getAllByCompanyId($company_id);
+        foreach( $technicianScheduleOff as $tc ){
+            $start_date_time = date('Y-m-d', strtotime($tc->leave_start_date));             
+            $start_date_end  = date('Y-m-d', strtotime($tc->leave_end_date)); 
+            $backgroundColor = "#ff0000";
+
+            $custom_html = '<div class="calendar-title-header">';
+                $view_btn      = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="tc-off" data-id="'.$tc->id.'"><i class="bx bx-window-open"></i> View</a>';
+                $gcalendar_btn = '';
+                if( $google_user_api ){
+                    $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="tc-off" data-id="'.$tc->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                }
+
+                $technicians_ids = explode(",", $tc->technician_user_ids);
+                $custom_html_technicians = array();
+                $tech_names  = array();
+                $resourceIds = array();
+                $users = $this->Users_model->getAllByIds($technicians_ids);
+                $tech_names = array();
+                foreach($users as $u){
+                    $tech_names[] = $u->FName . ' ' . $u->LName;
+                    $custom_html_technicians[] = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($u->id).'\'); width: 20px;display:inline-block;"></div>';
+                    $resourceIds[] = 'user' . $u->id;
+                }
+                $custom_html  .= '<a class="calendar-tile-minmax tc-off-min-max-'.$tc->id.'" data-type="tc-off" data-id="'.$tc->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;"> Schedule Off - '. implode(", ", $tech_names) . '</span></a>';
+            $custom_html .= "</div>";
+
+            $custom_html .= '<div class="calendar-tile-details tc-off-tile-'.$tc->id.'">';    
+                if( $tc->leave_start_date != $tc->leave_end_date ){
+                    $custom_html .= '<small style="font-size:15px;"><i class="bx bx-calendar"></i> Leave Date : ' . date("F j", strtotime($tc->leave_start_date)) . " to " . date("F j, Y", strtotime($tc->leave_end_date)) . "</small>";
+                }else{
+                    $custom_html .= '<small style="font-size:15px;"><i class="bx bx-calendar"></i> Leave Date : ' . date("F j, Y", strtotime($tc->leave_start_date)) . "</small>";
+                }
+
+                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                foreach($custom_html_technicians as $html){                    
+                    $custom_html .= $html;
+                }  
+
+            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-clipboard'></i> Task : " . $tc->task_details . "</small>";
+
+            $userTaskAssigned = $this->Users_model->get_user_name($tc->task_to_user_id);
+            if( $userTaskAssigned ){
+                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Task Assigned : </small>";
+                $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($userTaskAssigned->id).'\'); width: 20px;display:inline-block;"></div>';
+            }
+            $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
+            $custom_html .= '</div>';
+
+            $resources_user_events[$inc]['eventId'] = $tc->id;
+            $resources_user_events[$inc]['eventType'] = 'service_tickets';
+            $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+            $resources_user_events[$inc]['title'] = 'Technician Schedule Off';
+            $resources_user_events[$inc]['customHtml'] = $custom_html;
+            $resources_user_events[$inc]['start'] = $start_date_time;
+            $resources_user_events[$inc]['end'] = $start_date_end;
+            $resources_user_events[$inc]['starttime'] = $start_date_time;
+            $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+            $inc++;
         }
 
         //Service Tickets
@@ -2582,20 +2647,27 @@ class Workcalender extends MY_Controller
         foreach( $upcomingAppointments as $appointment ){
             $date_index = date("Y-m-d", strtotime($appointment->appointment_date));
             $appointment_tags = explode(",", $appointment->tag_ids);
+            $e_tags = array();
+            $tags   = '';
             //$appointmentTags = $this->EventTags_model->getAllByIds($appointment_tags);
-            $appointmentTags   = $this->Job_tags_model->getAllByIds($appointment_tags);
 
-            $appointment_tags = '';
-            $aTags = array();
-            foreach($appointmentTags as $tags){
-                $aTags[] = $tags->name;
-            }
+            if( $appointment->appointment_type_id == 4 ){ //Events
+                $appointmentTags   = $this->EventTags_model->getAllByIds($appointment_tags);
+                foreach($appointmentTags as $t){
+                    $e_tags[] = $t->name;
+                }
 
-            if( !empty($aTags) ){
-                $appointment_tags = implode(",", $aTags);
-            }
+                $tags = implode(",", $e_tags);
+            }else{
+                $appointmentTags   = $this->Job_tags_model->getAllByIds($appointment_tags);
+                foreach($appointmentTags as $t){
+                    $e_tags[] = $t->name;
+                }
+
+                $tags = implode(",", $e_tags);    
+            }  
             
-            $appointment->appt_tags = $appointment_tags;
+            $appointment->appt_tags = $tags;
             $upcomingSchedules[$date_index][] = [
                 'type' => 'appointment',
                 'data' => $appointment
@@ -2791,6 +2863,7 @@ class Workcalender extends MY_Controller
         $this->load->model('GoogleAccounts_model');
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
+        $this->load->model('TechnicianDayOffSchedule_model');
 
         $this->load->helper(array('hashids_helper'));
 
@@ -2870,6 +2943,36 @@ class Workcalender extends MY_Controller
 
                 }
                 break;
+            case 'tc-off':
+                $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getById($post['tile_id']);
+                if( $technicianScheduleOff ){
+                    $tech_names = array();
+                    $technicians_ids = explode(",", $technicianScheduleOff->technician_user_ids);
+                    $users = $this->Users_model->getAllByIds($technicians_ids);
+                    foreach($users as $u){
+                        $tech_names[] = $u->FName . ' ' . $u->LName;
+                    }
+
+                    $calendar_title = 'Schedule Off - ' . implode(", ", $tech_names);
+                    $start_time     = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_start_date));
+                    $end_time       = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_end_date));
+                    $event_time = [
+                        'start_time' => $start_time,
+                        'end_time' => $end_time
+                    ];
+
+                    $attendees = array();
+                    /*if( $technicianScheduleOff->task_to_user_id != '' ){
+                        $user = $this->Users_model->getUserByID($technicianScheduleOff->task_to_user_id);
+                        if( $user ){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }*/
+                    $location  = '';
+                    $description = $technicianScheduleOff->task_details;
+                    
+                    $is_valid = true;
+                }
             case 'event':
                 $event = $this->Event_model->get_specific_event($post['tile_id']);
                 if( $event ){
@@ -3082,6 +3185,49 @@ class Workcalender extends MY_Controller
         echo json_encode($return);
 
         exit;
+    }
+
+    public function ajax_create_technician_off_schedule()
+    {
+        $this->load->model('TechnicianDayOffSchedule_model');
+
+        $post       = $this->input->post();
+        $user_id    = getLoggedUserID();
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $message    = 'Cannot create schedule';
+
+        if( $post['tc_off_start_date'] == '' || $post['tc_off_end_date'] == '' ){
+            $message = 'Please select start and end date';
+        }elseif( empty($post['tc_off_user_ids']) ){
+            $message = 'Please select technician who will take leave';
+        }elseif( $post['tc_off_task_to_user_id'] == '' ){
+            $message = 'Please select technician who will be assigned to the task';
+        }else{
+            $technician_ids = implode(",", $post['tc_off_user_ids']);
+            $data_tc_off = [
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'technician_user_ids' => $technician_ids,
+                'task_to_user_id' => $post['tc_off_task_to_user_id'],
+                'task_details' => $post['tc_off_task_details'],
+                'leave_start_date' => date("Y-m-d", strtotime($post['tc_off_start_date'])),
+                'leave_end_date' => date("Y-m-d", strtotime($post['tc_off_end_date'])),
+                'created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->TechnicianDayOffSchedule_model->create($data_tc_off);
+
+            $is_success = 1;
+            $message    = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $message
+        ];
+
+        echo json_encode($json_data);
     }
 }
 

@@ -922,9 +922,25 @@ class Users_model extends MY_Model
 		$this->db->where('id', $id);
 
         $query = $this->db->get();
-        return $query->row();
-		
+        return $query->row();		
 	}
+
+    public function getAllByIds($ids = array(), $filters = array())
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where_in('id', $ids);
+
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->like('name', $filters['search'], 'both');                
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 

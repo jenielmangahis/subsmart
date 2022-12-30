@@ -104,6 +104,8 @@ class GoogleCalendarApi
 			$curlPost['end'] = array('dateTime' => $event_time['end_time'], 'timeZone' => $event_timezone);
 		}
 
+		//$curlPost['colorId'] = 2;
+
 		$ch = curl_init();		
 		curl_setopt($ch, CURLOPT_URL, $url_events);		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);		

@@ -115,6 +115,10 @@
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('tickets/addnewTicketApmt') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Service Ticket
                                 </button>
+                                <button type="button" class="nsm-button" id="calendar-tc-off">
+                                    <i class='bx bx-fw bx-calendar-event'></i> Schedule Technician Off
+                                </button>
+
                                 <button type="button" class="nsm-button" onclick="location.href='<?= base_url('events/event_add') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Event
                                 </button>
@@ -249,6 +253,7 @@
         });
         $('#wait-list-add-customer-popover').popover();
         $('#wait-list-add-tag-popover').popover();
+
         $("#select-employee").multipleSelect({selectAll:false});
 
         $("#print_calender").on("click", function() {
@@ -504,6 +509,60 @@
                 cache: true
             },
             dropdownParent: $("#create_appointment_modal"),
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        $('#tc-off-users').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_users',
+                dataType: 'json',
+                delay: 250,                
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $("#create_tc_off_modal"),
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        $('#tc-off-assign-to').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_users',
+                dataType: 'json',
+                delay: 250,                
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $("#create_tc_off_modal"),
             placeholder: 'Select User',
             minimumInputLength: 0,
             templateResult: formatRepoUser,
@@ -1946,6 +2005,10 @@
         
     });
 
+    $(document).on('click', '#calendar-tc-off', function(){
+        $('#create_tc_off_modal').modal('show');
+    });
+
     $(document).on('click', '.add-appointment-type', function(){
         var appointmentEventPriorityOptions = <?= json_encode($appointmentPriorityEventOptions); ?>;
         var appointmentPriorityOptions      = <?= json_encode($appointmentPriorityOptions); ?>;
@@ -2075,13 +2138,13 @@
         var tile_type = $(this).data('type');
 
         if( $(this).hasClass('c-max') ){
-            $('.'+tile_type+'-tile-'+tile_id).fadeIn(300);        
+            $('.'+tile_type+'-tile-'+tile_id).fadeIn(5);        
             $(this).removeClass('c-max');
             //$(this).parent().closest('.fc-daygrid-event').addClass('multiple-date');
             $('.'+tile_type+'-min-max-'+tile_id).parent().closest('.fc-daygrid-event').addClass('multiple-date');
         }else{
             $(this).addClass('c-max');
-            $('.'+tile_type+'-tile-'+tile_id).fadeOut(300);   
+            $('.'+tile_type+'-tile-'+tile_id).fadeOut(5);   
             $('.'+tile_type+'-min-max-'+tile_id).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
             //$(this).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
         }
@@ -2160,6 +2223,57 @@
                     });
                 }
             }
+        });
+    });
+
+    $(document).on("submit", "#frm-tc-off-schedule", function(e) {
+        let _this = $(this);
+        e.preventDefault();
+
+        var url = "<?php echo base_url('calendar/_create_technician_off_schedule'); ?>";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType: 'json',
+            success: function(result) {
+                if (result.is_success) {
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Technician dayoff schedule was successfully added.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            reloadCalendar(selected_calendar_view);
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: result.message,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+                $("#create_tc_off_modal").modal('hide');
+
+                $('#tc_off_start_date').val('');
+                $('#tc_off_end_date').val('');
+                $('#tc-off-task-details').val('');
+                $("#tc-off-users").empty().trigger('change');
+                $("#tc-off-assign-to").empty().trigger('change');
+
+                _this.trigger("reset");
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
         });
     });
 </script>
