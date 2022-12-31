@@ -2864,13 +2864,14 @@ class Workcalender extends MY_Controller
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
         $this->load->model('TechnicianDayOffSchedule_model');
+        $this->load->model('GoogleCalendar_model');
 
         $this->load->helper(array('hashids_helper'));
 
         $company_id = logged('company_id');
         $is_valid   = false;
         $post = $this->input->post();
-
+        $calendar_type = '';
         switch ($post['tile_type']) {
             case 'appointment':
                 $appointment = $this->Appointment_model->getByIdAndCompanyId($post['tile_id'], $company_id);
@@ -2880,14 +2881,14 @@ class Workcalender extends MY_Controller
                     if( $appointment->tag_ids != '' ){
                         $a_tags = explode(",", $appointment->tag_ids);    
                         $e_tags = array();
-                        if( $appointment->appointment_type_id == 4 ){ //Events
+                        if( $appointment->appointment_type_id == 4 ){ //Events                            
                             $appointmentTags   = $this->EventTags_model->getAllByIds($a_tags);
                             foreach($appointmentTags as $t){
                                 $e_tags[] = $t->name;
                             }
 
                             $tags = implode(",", $e_tags);
-                        }else{
+                        }else{                            
                             $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
                             foreach($appointmentTags as $t){
                                 $e_tags[] = $t->name;
@@ -2902,11 +2903,13 @@ class Workcalender extends MY_Controller
                     }
 
                     if( $appointment->appointment_type_id == 4 ){
+                        $calendar_type  = $this->GoogleCalendar_model->calendarTypeEvent();
                         $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->event_name;
                         if( $appointment->event_location != '' ){
                             $location = $appointment->event_location;
                         }                        
                     }else{
+                        $calendar_type  = $this->GoogleCalendar_model->calendarTypeAppointment();
                         $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->customer_name;
                         $location       = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
                     }
@@ -2944,6 +2947,7 @@ class Workcalender extends MY_Controller
                 }
                 break;
             case 'tc-off':
+                $calendar_type         = $this->GoogleCalendar_model->calendarTypeTCOff();
                 $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getById($post['tile_id']);
                 if( $technicianScheduleOff ){
                     $tech_names = array();
@@ -2973,8 +2977,10 @@ class Workcalender extends MY_Controller
                     
                     $is_valid = true;
                 }
+                break;
             case 'event':
-                $event = $this->Event_model->get_specific_event($post['tile_id']);
+                $calendar_type = $this->GoogleCalendar_model->calendarTypeEvent();
+                $event         = $this->Event_model->get_specific_event($post['tile_id']);
                 if( $event ){
                     if( $event->event_tag != '' ){
                         $tags = $event->event_tag;
@@ -3009,6 +3015,7 @@ class Workcalender extends MY_Controller
                 }
                 break;
             case 'ticket':
+                $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
                 $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($post['tile_id'], $company_id);
                 if( $ticket ){
                     if( $ticket->job_tag != '' ){
@@ -3050,7 +3057,8 @@ class Workcalender extends MY_Controller
                 }
                 break;
             case 'job':
-                $job = $this->Jobs_model->get_specific_job($post['tile_id']);
+                $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
+                $job           = $this->Jobs_model->get_specific_job($post['tile_id']);
                 if( $job ){
                     if( $job->tags != '' ){
                         $tags = $j->tags;
@@ -3105,6 +3113,7 @@ class Workcalender extends MY_Controller
                 }
                 break;
             default:
+                $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
                 break;
         }
 
@@ -3170,12 +3179,14 @@ class Workcalender extends MY_Controller
                     ];    
                 }*/
                 
-                $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
-                if( $googleAccount->auto_sync_calendar_id != ''){
-                    $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
+                $user_timezone   = $capi->getUserCalendarTimezone($data['access_token']);
+                $googleCalendar = $this->GoogleCalendar_model->getByCompanyIdAndCalendarType($company_id, $calendar_type);
+                if( $googleCalendar ){
+                  $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
                 }else{
-                    $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);    
+                    $is_valid = false;
                 }
+                
             }else{
                 $is_valid = false;
             }  

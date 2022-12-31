@@ -864,13 +864,13 @@ class Settings extends MY_Controller {
 
     public function calendar_unbind_account()
     {
-        $user = $this->session->userdata('logged');
+        $company_id = logged('company_id');
         $post = $this->input->post();
 
         if( $post['account_type'] == 'gmail' ){
             $this->load->model('GoogleAccounts_model');
 
-            $this->GoogleAccounts_model->deleteByUserId($user['id']);
+            $this->GoogleAccounts_model->deleteByCompanyId($company_id);
         }
 
         $this->session->set_flashdata('message', 'Calendar settings was successfully updated');
