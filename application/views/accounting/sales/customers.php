@@ -220,6 +220,7 @@
                             <td><?=$customer->email?></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

@@ -1,5 +1,6 @@
 import * as api from "../api.js";
 import * as common from "../common.js";
+import * as utils from "./utils.js";
 
 const $section = document.querySelector("[module-id=profiledocuments]");
 const $fileInput = $section.querySelector("#docufileinput");
@@ -9,7 +10,7 @@ const actions = {
   upload: onClickUpload,
   download: onClickDownload,
   delete: onClickDelete,
-  view_esign: onClickViewEsign,
+  view_esign: utils.onClickViewEsign,
 };
 
 $buttons.forEach(($button) => {
@@ -20,13 +21,13 @@ $buttons.forEach(($button) => {
 });
 
 function onClickUpload() {
-  $fileInput.setAttribute("document-type", getButtonDocumentType(this));
+  $fileInput.setAttribute("document-type", utils.getButtonDocumentType(this));
   $fileInput.click();
 }
 
 function onClickDownload() {
   const customerId = getCustomerId();
-  const documentType = getButtonDocumentType(this);
+  const documentType = utils.getButtonDocumentType(this);
 
   const params = {
     customer_id: customerId,
@@ -45,7 +46,7 @@ function onClickDownload() {
 }
 
 async function onClickDelete() {
-  const documentType = getButtonDocumentType(this);
+  const documentType = utils.getButtonDocumentType(this);
   const $wrapper = $section.querySelector(`[data-document-type="${documentType}"]`); // prettier-ignore
 
   const $deleteBtn = $wrapper.querySelector("[data-action=delete]");
@@ -67,74 +68,6 @@ async function onClickDelete() {
     $deleteBtn.textContent = prevText;
     $deleteBtn.removeAttribute("disabled");
   }
-}
-
-async function onClickViewEsign() {
-  const DATE_FORMAT = "MM/DD/YYYY hh:mm A";
-
-  const $modal = document.getElementById("viewesigndocumentdetails");
-  const $title = $modal.querySelector(".modal-title");
-  const $loader = $modal.querySelector(".esign-loader");
-  const $content = $modal.querySelector(".esign-content");
-
-  $title.textContent = "";
-  $loader.classList.remove("d-none");
-  $content.classList.add("d-none");
-  $($modal).modal("show");
-
-  const esignId = this.dataset.id;
-  const { data } = await api.getEsignDetails(esignId);
-
-  $title.textContent = data.name;
-
-  const $recipients = $modal.querySelector(".esign-recipients");
-  $recipients.innerHTML = "";
-  data.recipients.forEach((recipient) => {
-    const $item = document.createElement("div");
-    $item.classList.add("d-flex");
-    $item.classList.add("justify-content-between");
-    $item.classList.add("mb-1");
-
-    const $name = document.createElement("div");
-    $name.textContent = `${recipient.name} (${recipient.email})`;
-
-    const $completedAt = document.createElement("div");
-    $completedAt.classList.add("nsm-badge");
-    $completedAt.classList.add("success");
-    $completedAt.classList.add("d-flex");
-    $completedAt.classList.add("align-items-center");
-    $completedAt.textContent = moment(recipient.completed_at).format(
-      DATE_FORMAT
-    );
-
-    $item.appendChild($name);
-    $item.appendChild($completedAt);
-
-    $recipients.appendChild($item);
-  });
-
-  const $createdAt = $modal.querySelector(".esign-created-at");
-  $createdAt.textContent = moment(data.created_at).format(DATE_FORMAT);
-
-  const $link = $modal.querySelector(".esign-link");
-  $link.textContent = data.signing_url;
-  $link.setAttribute("href", data.signing_url);
-
-  const $download = $modal.querySelector(".esign-download");
-  const documentType = getButtonDocumentType(this);
-  const downloadQuery = {
-    customer_id: getCustomerId(),
-    document_type: documentType,
-    generated_esign_id: esignId,
-  };
-  const downloadParams = new URLSearchParams(downloadQuery).toString();
-  $download.setAttribute(
-    "href",
-    `${api.prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?${downloadParams}`
-  );
-
-  $loader.classList.add("d-none");
-  $content.classList.remove("d-none");
 }
 
 $fileInput.addEventListener("change", async function () {
@@ -181,11 +114,6 @@ $fileInput.addEventListener("change", async function () {
 function validateFileSize(file, maxMB = 8) {
   const fileSize = file.size / 1024 / 1024; // in MiB
   return fileSize <= maxMB;
-}
-
-function getButtonDocumentType($button) {
-  const $wrapper = $button.closest("[data-document-type]");
-  return $wrapper ? $wrapper.dataset.documentType : null;
 }
 
 function getCustomerId() {

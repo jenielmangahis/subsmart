@@ -8337,20 +8337,20 @@ $(function() {
     });
 
     $(document).on('change', '#modal-container form .modal #item-table tbody tr input', function() {
-        var quantityEl = $(this).parent().parent().find('input[name="quantity[]"]');
+        var quantityEl = $(this).closest('tr').find('input[name="quantity[]"]');
         var quantity = quantityEl.length > 0 ? quantityEl.val() : 0.00;
-        var amountEl = $(this).parent().parent().find('input[name="item_amount[]"]');
-        var amount = amountEl.length > 0 ? amountEl.val() : $(this).parent().parent().find('span.item-amount').html();
-        var discountEl = $(this).parent().parent().find('input[name="discount[]"]');
+        var amountEl = $(this).closest('tr').find('input[name="item_amount[]"]');
+        var amount = amountEl.length > 0 ? amountEl.val() : $(this).closest('tr').find('span.item-amount').html();
+        var discountEl = $(this).closest('tr').find('input[name="discount[]"]');
         var discount = discountEl.length > 0 ? discountEl.val() : 0.00;
-        var taxEl = $(this).parent().parent().find('input[name="item_tax[]"]');
-        var tax = taxEl.length > 0 ? taxEl.val() : 0.00;
+        var taxEl = $(this).closest('tr').find('input[name="item_tax[]"]');
+        var tax = taxEl.length > 0 && taxEl.val() !== '' ? taxEl.val() : 0.00;
 
-        var amount = parseFloat(amount) * parseInt(quantity);
-        var taxAmount = parseFloat(tax) * amount / 100;
-        var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount);
+        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseInt(quantity === '' ? 0.00 : quantity);
+        var taxAmount = parseFloat(tax === '' ? 0.00 : tax) * amount / 100;
+        var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount === '' ? 0.00 : discount);
 
-        $(this).parent().parent().find('.row-total').html(formatter.format(parseFloat(total)));
+        $(this).closest('tr').find('.row-total').html(formatter.format(parseFloat(total)));
 
         var subtotal = 0.00;
         var taxes = 0.00;
@@ -8361,12 +8361,12 @@ $(function() {
             var itemDisc = $(this).find('input[name="discount[]"]').length > 0 ? $(this).find('input[name="discount[]"]').val() : 0.00;
             var itemTax = $(this).find('input[name="item_tax[]"]').length > 0 ? $(this).find('input[name="item_tax[]"]').val() : 0.00;
 
-            var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
-            var taxAmount = parseFloat(itemTax) * itemTotal / 100;
+            var itemTotal = parseFloat(itemAmount === '' ? 0.00 : itemAmount) * parseFloat(itemQty === '' ? 0.00 : itemQty);
+            var taxAmount = parseFloat(itemTax === '' ? 0.00 : itemTax) * itemTotal / 100;
 
             subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
             taxes = parseFloat(taxes) + parseFloat(taxAmount);
-            discounts = parseFloat(discounts) + parseFloat(itemDisc);
+            discounts = parseFloat(discounts) + parseFloat(itemDisc === '' ? 0.00 : itemDisc);
         });
 
         $('#modal-container form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
@@ -8405,16 +8405,16 @@ $(function() {
             var discounts = 0.00;
             $('#modal-container form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header)').each(function() {
                 var itemAmount = $(this).hasClass('package') ? $(this).find('.item-amount').html().trim() : $(this).find('input[name="item_amount[]"]').val();
-                var itemQty = $(this).find('input[name="quantity[]"]').val();
+                var itemQty = $(this).find('input[name="quantity[]"]').val() === '' ? 0.00 : $(this).find('input[name="quantity[]"]').val();
                 var itemDisc = $(this).hasClass('package') ? 0.00 : $(this).find('input[name="discount[]"]').val();
-                var itemTax = $(this).find('input[name="item_tax[]"]').val();
+                var itemTax = $(this).find('input[name="item_tax[]"]').val() === '' ? 0.00 : $(this).find('input[name="item_tax[]"]').val();
     
-                var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
+                var itemTotal = parseFloat(itemAmount === '' ? 0.00 : itemAmount) * parseFloat(itemQty);
                 var taxAmount = parseFloat(itemTax) * itemTotal / 100;
     
                 subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
                 taxes = parseFloat(taxes) + parseFloat(taxAmount);
-                discounts = parseFloat(discounts) + parseFloat(itemDisc);
+                discounts = parseFloat(discounts) + parseFloat(itemDisc === '' ? 0.00 : itemDisc);
             });
     
             $('#modal-container form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
@@ -8466,13 +8466,13 @@ $(function() {
                     var taxes = 0.00;
                     var discounts = 0.00;
                     $('#modal-container form .modal #item-table tbody tr').each(function() {
-                        var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
-                        var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
-                        var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
-                        var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+                        var itemAmount = $(this).closest('tr').find('input[name="item_amount[]"]').val();
+                        var itemQty = $(this).closest('tr').find('input[name="quantity[]"]').val();
+                        var itemDisc = $(this).closest('tr').find('input[name="discount[]"]').val();
+                        var itemTax = $(this).closest('tr').find('input[name="item_tax[]"]').val();
 
-                        var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
-                        var taxAmount = parseFloat(itemTax) * itemTotal / 100;
+                        var itemTotal = parseFloat(itemAmount === '' ? 0.00 : itemAmount) * parseFloat(itemQty === '' ? 0.00 : itemQty);
+                        var taxAmount = parseFloat(itemTax === '' ? 0.00 : itemTax) * itemTotal / 100;
 
                         subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
                         taxes = parseFloat(taxes) + parseFloat(taxAmount);

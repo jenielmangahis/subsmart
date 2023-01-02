@@ -1,3 +1,5 @@
+import { onClickViewEsign } from "../../../customer/dashboard/modules/utils.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const $modal = document.getElementById("searchesignmodal");
   const $input = $modal.querySelector("#esignsearch");
@@ -31,23 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
       jsonData.data.forEach((item) => {
         const $item = document.importNode($template.content, true);
         $item.querySelector(".name").textContent = item.name;
-        $item
-          .querySelector("[data-action=view]")
-          .setAttribute("href", item.signing_url);
 
-        $item
-          .querySelector("[data-action=download]")
-          .addEventListener("click", () => {
-            const queryString = new URLSearchParams({
-              document_type: "esign",
-              generated_esign_id: item.id,
-            }).toString();
-
-            window.open(
-              `/CustomerDashboardQuickActions/downloadCustomerDocument?${queryString}`,
-              "_blank"
-            );
-          });
+        const $viewBtn = $item.querySelector("[data-action=view]");
+        $viewBtn.setAttribute("data-id", item.id);
+        $viewBtn.setAttribute("data-document-type", "esign");
+        $viewBtn.addEventListener("click", onClickViewEsign);
 
         $wrapper.appendChild($item);
       });
