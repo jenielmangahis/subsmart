@@ -2023,6 +2023,11 @@ SQL;
 
         $pdf = new FPDI('P', 'px');
 
+        $envelopId = null;
+        if ($document->unique_key) {
+            $envelopId = 'eSign Envelope ID: ' . $document->unique_key;
+        }
+
         foreach ($files as $file) {
             $filepath = FCPATH . ltrim($file->path, '/');
             $pageCount = 0;
@@ -2040,6 +2045,14 @@ SQL;
                 $pageIndex = $pdf->importPage($pageNo);
                 $pdf->AddPage();
                 $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+
+                if (!is_null($envelopId)) {
+                    $pdf->setY(5);
+                    $pdf->setX(5);
+                    $pdf->SetFont('Courier', '', 10);
+                    $pdf->SetFillColor(255, 255, 255);
+                    $pdf->Cell(360, 10, $envelopId, 0, 0, 'L', 1);
+                }
 
 
                 foreach ($fields as $field) {

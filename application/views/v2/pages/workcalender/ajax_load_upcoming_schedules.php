@@ -185,9 +185,9 @@
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
-                            if( $schedule['data']->notes != '' ){
+                            /*if( $schedule['data']->notes != '' ){
                                 $schedule_description = $schedule['data']->notes;
-                            }                            
+                            }*/                            
 
                             $assigned_employees = array();
                             $emp_ids = json_decode($schedule['data']->assigned_employee_ids);

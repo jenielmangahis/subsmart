@@ -29,6 +29,14 @@ class Accounting_account_transactions_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function get_account_transactions_by_transaction($transactionType, $transactionId)
+	{
+		$this->db->where('transaction_type', $transactionType);
+		$this->db->where('transaction_id', $transactionId);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
+
 	public function delete_account_transactions_by_transaction($transactionType, $transactionId)
 	{
 		$this->db->where('transaction_type', $transactionType);

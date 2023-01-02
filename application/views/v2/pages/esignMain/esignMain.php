@@ -167,23 +167,25 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
-                            <div class="nsm-card-content">
-                                <div class="row">
-                                    <div class="col-12 text-center">
-                                        <img class="nsm-card-img" src="<?php echo base_url('uploads/image/esign/search.png') ?>">
-                                    </div>
-                                    <div class="col-12 text-center">
-                                        <div class="nsm-card-title mt-4">
-                                            <span>Search eSign</span>
+                    <?php if ($users->company_id == 1 /*nsmartrac company*/) : ?>
+                        <div class="col-12 col-md-3">
+                            <div class="nsm-card primary p-5" role="button" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
+                                <div class="nsm-card-content">
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <img class="nsm-card-img" src="<?php echo base_url('uploads/image/esign/search.png') ?>">
                                         </div>
-                                        <label class="nsm-subtitle d-block">Search eSign by key, name, subject, etc.</label>
+                                        <div class="col-12 text-center">
+                                            <div class="nsm-card-title mt-4">
+                                                <span>Search eSign</span>
+                                            </div>
+                                            <label class="nsm-subtitle d-block">Search eSign by key, name, subject, etc.</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -228,7 +230,7 @@
                     </div>
                 </form>
 
-                <div style="min-height: 250px;">
+                <div style="min-height: 200px;">
                     <div id="esignsearchloader" class="d-flex align-items-center justify-content-center esign-loader d-none" style="padding: 4rem 0;">
                         <div class="spinner-border" role="status"></div>
                     </div>
@@ -246,8 +248,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span class="name"></span>
                         <div>
-                            <a href="#" data-action="download" class="nsm-button primary" style="margin-bottom: 0; display: inline-block;">Download</a>
-                            <a href="#" target="_blank" data-action="view" class="nsm-button" style="margin-bottom: 0; display: inline-block;">View</a>
+                            <button data-action="view" class="nsm-button primary" style="margin-bottom: 0; display: inline-block;">View</button>
                         </div>
                     </li>
                 </template>
@@ -256,7 +257,53 @@
     </div>
 </div>
 
-<script src="<?= base_url("assets/js/esign/docusign/v2/search.js") ?>"></script>
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="viewesigndocumentdetails">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center justify-content-center esign-loader" style="padding: 4rem 0;">
+                    <div class="spinner-border" role="status"></div>
+                </div>
+
+                <div class="esign-content">
+                    <div>
+                        <div class="content-title">Recipients</div>
+                        <div class="esign-recipients"></div>
+                    </div>
+
+                    <br />
+
+                    <div>
+                        <div class="content-title">Created at</div>
+                        <div class="esign-created-at"></div>
+                    </div>
+
+                    <br />
+
+                    <div>
+                        <div class="content-title">Signing link</div>
+                        <a class="esign-link" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;" target="_blank"></a>
+                    </div>
+
+                    <br />
+
+                    <a target="_blank" class="nsm-button primary esign-download" style="margin: 0; display:inline-flex; align-items:center; cursor: pointer;">
+                        <i class="bx bxs-download" style="margin-right: 3px;"></i>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<?= base_url("assets/js/esign/docusign/v2/search.js") ?>" type="module"></script>
 <script type="text/javascript">
     $(document).ready(function() {});
 </script>

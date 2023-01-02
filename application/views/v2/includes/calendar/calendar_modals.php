@@ -164,7 +164,7 @@
                                 <textarea id="appointment-notes" name="appointment_notes" class="nsm-field form-control"></textarea>
                             </div>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
                 <div class="modal-footer" style="display:block;">
                     <div style="float:left;">
@@ -530,6 +530,53 @@
         <div class="modal-content">
             <div class="modal-body"></div>
         </div>
+    </div>
+</div>
+
+<!-- Create TC Off -->
+<div class="modal fade nsm-modal fade" id="create_tc_off_modal" tabindex="-1" aria-labelledby="update_waitlist_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <form id="frm-tc-off-schedule" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Schedule Technician Off</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 tc-off-group">
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Leave Date</label>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <input type="text" name="tc_off_start_date" id="tc_off_start_date" class="nsm-field form-control datepicker" placeholder="Start Date" required style="padding: 0.375rem 0.75rem;">                                    
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <input type="text" name="tc_off_end_date" id="tc_off_end_date" class="nsm-field form-control datepicker" placeholder="End Date" required style="padding: 0.375rem 0.75rem;">                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Technicians</label>
+                            <select class="nsm-field form-select" name="tc_off_user_ids[]" id="tc-off-users" multiple="multiple"></select>
+                        </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Assign Task To</label>
+                            <select class="nsm-field form-select" name="tc_off_task_to_user_id" id="tc-off-assign-to"></select>
+                        </div>
+                        <div class="col-12">
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Task Details</label>
+                                <textarea name="tc_off_task_details" id="tc-off-task-details" class="nsm-field form-control" required=""></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 

@@ -224,6 +224,120 @@ add_css(array(
     );
   }
 
+  .con-inner-container .con-bar .open-invoices {
+    height: 129px;
+    background-color: rgb(186, 190, 197);
+}
+
+.con-inner-container .con-bar .paid-invoices {
+    margin-top: 2px;
+    height: 82px;
+    background-color: rgb(127, 208, 0);
+}
+
+.con-data-label {
+    padding-left: 55px;
+}
+
+.con-data-label .con-label {
+    color: rgb(57, 58, 61);
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 16px;
+    padding-top: 20px;
+}
+
+.con-data-label .con-sub-label {
+    color: rgb(57, 58, 61);
+    font-weight: 400;
+    line-height: 17px;
+    padding-top: 8px;
+    padding-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.box-invoices-bar {
+    cursor: pointer;
+}
+
+.expenses-money-section {
+    cursor: pointer;
+}
+
+.expenses-money-section .expenses-con-data {
+    font-weight: 400;
+    font-size: 14px;
+    color: rgb(57, 58, 61);
+}
+
+.expenses-money-section .expenses-money-data {
+    visibility: hidden;
+    color: rgb(57, 58, 61);
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1em;
+    margin-bottom: 4px;
+}
+
+.expenses-donutchart-section {
+    padding-top: 10px;
+}
+
+.expenses-donutchart-section .donut-chart-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    padding-left: 0;
+}
+
+.expenses-donutchart-section #expensesChart {
+    position: relative;
+    float: left;
+    right: 10px;
+    display: inline-block;
+}
+
+.expenses-donutchart-section svg {
+    /*left: -50px!important;*/
+    padding: 0;
+}
+
+.expenses-donutchart-section #legendExpenses {
+    display: inline-block;
+    height: 200px;
+    position: relative;
+    width: 40%;
+    float: right;
+    z-index: 20;
+}
+
+.expenses-donutchart-section #legendExpenses .legendList {
+    padding-top: 0;
+    margin-left: -22px;
+}
+
+.expenses-donutchart-section #legendExpenses .legendList .box {
+    width: 13px;
+    height: 12px;
+    background-color: #0b62a4;
+    display: inline-block;
+}
+
+.expenses-donutchart-section #legendExpenses .legendList .amount {
+    font-weight: bolder;
+    display: inline-block;
+}
+
+.expenses-donutchart-section #legendExpenses .legendList .name {
+    color: rgb(107, 108, 114);
+    font-size: 12px;
+    margin-bottom: 9px;
+    margin-left: 17px;
+    width: 110px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
   
 </style>
 
@@ -683,12 +797,74 @@ add_css(array(
                                                                                         <div class="paid-invoices box-invoices-bar"></div>
                                                                                     </div>
                                                                                     <div class="con-data-label">
-                                                                                        <div class="con-label">3</div>
-                                                                                        <div class="con-sub-label">Open invoices</div>
-                                                                                        <div class="con-label">0</div>
-                                                                                        <div class="con-sub-label">Overdue invoices</div>
-                                                                                        <div class="con-label">0</div>
-                                                                                        <div class="con-sub-label">Paid last 30 days</div>
+                                                                                        <!-- <div class="con-label">3</div> -->
+                                                                                        <div class="col-12 mb-2">
+                                                                                            <div class="nsm-counter h-100">
+                                                                                                <div class="row h-100">
+                                                                                                    <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                                                                                        <i class="bx bx-receipt"></i>
+                                                                                                    </div>
+                                                                                                    <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                                                                                        <span>Open Invoices</span>
+                                                                                                        <h2><?php $total = 0; $overdue =0;
+                                                                                                            foreach ($upcomingInvoice as $UI) {
+                                                                                                                if ($UI->status == "Due" || $UI->status == 'Approved' || $UI->status == 'Partially Paid') {
+                                                                                                                    $total++;
+                                                                                                                }else if($UI->status == "Overdue"){
+                                                                                                                    $overdue++;
+                                                                                                                }
+                                                                                                            }
+                                                                                                            echo $total; ?></h2>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-12 mb-2">
+                                                                                            <div class="nsm-counter h-100">
+                                                                                                <div class="row h-100">
+                                                                                                    <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                                                                                        <i class="bx bx-calendar-exclamation"></i>
+                                                                                                    </div>
+                                                                                                    <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                                                                                        <span>Overdue Invoices</span>
+                                                                                                        <h2><?php echo $overdue; ?></h2>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-12 mb-2">
+                                                                                            <div class="nsm-counter success h-100">
+                                                                                                <div class="row h-100">
+                                                                                                    <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                                                                                        <i class="bx bx-badge-check"></i>
+                                                                                                    </div>
+                                                                                                    <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                                                                                        <span>Paid last 30 days</span>
+                                                                                                        <h2><?php $totalPaid = 0;
+                                                                                                                foreach($upcomingInvoice as $UI){
+                                                                                                                    if(date("Y-m-d")>=date("Y-m-d",strtotime($UI->date_updated)) && date("Y-m-d",strtotime("-30 days"))<=date("Y-m-d",strtotime($UI->date_updated)) && $UI->status == "Paid"){
+                                                                                                                        $totalPaid++;
+                                                                                                                    }
+                                                                                                                }
+                                                                                                                echo $totalPaid;
+                                                                                                        ?></h2>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-12">
+                                                                                            <div class="nsm-counter yellow h-100">
+                                                                                                <div class="row h-100">
+                                                                                                    <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                                                                                        <i class="bx bx-box subs"></i>
+                                                                                                    </div>
+                                                                                                    <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                                                                                        <span>Subscription</span>
+                                                                                                        <h2><?php echo "$".number_format($subs->TOTAL_MMR, 2); ?></h2>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -707,7 +883,7 @@ add_css(array(
                                                                                     <h3 class="header-content">Expenses</h3>
                                                                                     <div class="header-separator">
                                                                                         <div class="hs-content">
-                                                                                            <div class="dropdown" style="position: relative; float: right; display: inline-block;margin-left: 10px;">
+                                                                                            <!-- <div class="dropdown" style="position: relative; float: right; display: inline-block;margin-left: 10px;">
                                                                                                 <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
                                                                                                     Last 30 Days&nbsp;<span class="fa fa-caret-down"></span></span>
                                                                                                 <ul class="dropdown-menu dropdown-menu-right">
@@ -719,11 +895,100 @@ add_css(array(
                                                                                                     <li><a href="#" class="dropdown-item">Last quarter</a></li>
                                                                                                     <li><a href="#" class="dropdown-item">Last year</a></li>
                                                                                                 </ul>
-                                                                                            </div>
+                                                                                            </div> -->
+                                                                                            <?php
+                                                                                                // if(!is_null($dynamic_load) && $dynamic_load == true):
+                                                                                                //     echo '<div class="col-12 col-lg-4">';
+                                                                                                // endif;
+                                                                                            ?>
+                                                                                            
+                                                                                            <!-- <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true"> -->
+                                                                                                <!-- <div class="">
+                                                                                                    <div class="">
+                                                                                                        <span>Expenses</span>
+                                                                                                    </div>
+                                                                                                    <div class="nsm-card-controls">
+                                                                                                        <div class="dropdown">
+                                                                                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                                                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                                                                            </a>
+                                                                                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                                                                                <li><a class="dropdown-item" href="#" onclick="addToMain('<?= $id ?>',<?php echo ($isMain?'1':'0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain?'Remove From Main':'Add to Main') ?></a></li>
+                                                                                                                <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a></li>
+                                                                                                            </ul>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div> -->
+                                                                                                <div class="">
+                                                                                                    <?php if($total_expenses > 0) : ?>
+                                                                                                    <canvas id="expenses_chart" class="nsm-chart" data-chart-type="expenses"></canvas>
+                                                                                                    <?php else : ?>
+                                                                                                    <div class="nsm-empty">
+                                                                                                    <i class="bx bx-meh-blank"></i>
+                                                                                                    <span>There is currently no expenses recorded.</span>
+                                                                                                    </div>
+                                                                                                    <?php endif; ?>
+                                                                                                </div>
+                                                                                            <!-- </div> -->
+
+                                                                                            <script type="text/javascript">
+                                                                                                $(document).ready(function(){
+                                                                                                    initializeExpensesChart();
+                                                                                                });
+
+                                                                                                function initializeExpensesChart(){
+                                                                                                    var estimates = $("#expenses_chart");
+
+                                                                                                    new Chart(estimates, {
+                                                                                                    type: 'doughnut',
+                                                                                                    data: {
+                                                                                                        labels: <?=$account_names?>,
+                                                                                                        datasets: [{
+                                                                                                        label: 'Expenses',
+                                                                                                        data: <?=$account_expenses?>,
+                                                                                                        backgroundColor: [
+                                                                                                            'rgba(255, 99, 132, 0.2)',
+                                                                                                            'rgba(75, 192, 192, 0.2)',
+                                                                                                            'rgba(54, 162, 235, 0.2)',
+                                                                                                            'rgba(255, 206, 86, 0.2)',
+                                                                                                            'rgb(255, 205, 86, 0.2)',
+                                                                                                            'rgba(255, 159, 64, 0.2)',
+                                                                                                            'rgba(153, 102, 255, 0.2)',
+                                                                                                        ],
+                                                                                                        borderColor: [
+                                                                                                            'rgba(255, 99, 132, 1)',
+                                                                                                            'rgba(75, 192, 192, 1)',
+                                                                                                            'rgba(54, 162, 235, 1)',
+                                                                                                            'rgba(255, 206, 86, 1)',
+                                                                                                            'rgb(255, 205, 86, 1)',
+                                                                                                            'rgba(255, 159, 64, 1)',
+                                                                                                            'rgba(153, 102, 255, 1)',
+                                                                                                        ],
+                                                                                                        borderWidth: 1
+                                                                                                        }]
+                                                                                                    },
+                                                                                                    options: {
+                                                                                                        responsive: true,
+                                                                                                        plugins: {
+                                                                                                        legend: {
+                                                                                                            position: 'bottom',
+                                                                                                        },
+                                                                                                        },
+                                                                                                        aspectRatio: 1.5,
+                                                                                                    }
+                                                                                                    });
+                                                                                                }
+                                                                                            </script>
+
+                                                                                            <?php
+                                                                                                if(!is_null($dynamic_load) && $dynamic_load == true):
+                                                                                                    echo '</div>';
+                                                                                                endif;
+                                                                                            ?>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="expenses-money-section">
+                                                                                <!-- <div class="expenses-money-section">
                                                                                     <div class="expenses-money-data">$4,247</div>
                                                                                     <div class="expenses-con-data">This month</div>
                                                                                 </div>
@@ -747,7 +1012,7 @@ add_css(array(
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </div> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1099,6 +1364,9 @@ add_css(array(
     });
 
 </script>
-
-<script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>
+
+<!--Morris js Chart-->
+<script src="<?php echo $url->assets ?>plugins/morris.js/morris.min.js">
+</script>
+<script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>

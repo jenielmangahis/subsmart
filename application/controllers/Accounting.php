@@ -55,6 +55,11 @@ class Accounting extends MY_Controller
         $this->load->model('Accounting_management_reports', 'accounting_management_reports');
         $this->load->model('Account_model.php', 'account_model');
         $this->load->library('excel');
+        $this->load->model('event_model');
+        $this->load->model('Activity_model', 'activity');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('taskhub_status_model');
+        $this->load->model('Crud', 'crud');
         //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -164,6 +169,172 @@ class Accounting extends MY_Controller
         $this->page_data['list_categories'] = $this->categories_model->getCategories();
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();
+        
+        // $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
+        // $this->page_data['subs']=$this->event_model->getAllsubs();
+
+         // load necessary model and functions
+         $this->load->model('widgets_model');
+         $this->load->helper('functions');
+         $this->load->helper('functions_helper');
+ 
+         $user_id = logged('id');
+         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
+         // echo $this->db->last_query(); 
+         // echo "<br>";
+         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
+         if ($this->page_data['activity_list_count'] > 5) {
+             array_pop($this->page_data['activity_list']);
+         }
+         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6, 0], 1);
+         // echo $this->db->last_query();
+         $this->page_data['history_activity_list_count'] = sizeof($this->page_data['history_activity_list']);
+         if ($this->page_data['history_activity_list_count'] > 5) {
+             array_pop($this->page_data['history_activity_list']);
+         }
+         $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id', $user_id, "ac_dashboard_sort");
+         if (!$check_if_exist) {
+             $input = array();
+             $input['fk_user_id'] = $user_id;
+             $input['ds_values'] = "bulletin,open_estimates,upcoming_job,jobs,sales_leaderbord,tech_leaderbord,tags,lead_source,activities,history,today_stats,taskhub_stats,tasks,income,
+                                    expenses,bank_accounts,sales,messages,paid_invoices,lead_stats,overdue_invoices,invoicing,task_stats,plan_setup,discover_more";
+             $this->customer_ad_model->add($input, "ac_dashboard_sort");
+         }
+ 
+         $status_arr = array();
+         $status_selection = $this->taskhub_status_model->get();
+         foreach ($status_selection as $status_selec) {
+             $task_status = $this->crud->total_record("tasks", "status_id='" . $status_selec->status_id . "'");
+             $status_arr[] = $status_selec->status_text . "@#@" . $task_status;
+         }
+         
+         $companyId = logged('company_id');
+         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
+ 
+         //$this->page_data['events'] = $this->event_model->get_all_events(5);
+         //$this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
+         $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
+         $this->page_data['subs']=$this->event_model->getAllsubs();
+         
+         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
+ 
+         $this->page_data['latestJobs']=$this->event_model->getLatestJobs(); // fetch Sales Rep and customer they are assigned to
+         $this->page_data['company_id'] = $companyId; // Company ID of the logged in USER
+ 
+         $this->page_data['sales']=$this->event_model->getAllSales();
+         // $this->page_data['mmr']=$this->AcsProfile_model->getCustomerMMR(logged('company_id'));
+         // $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
+         // $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
+         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
+         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
+             return $widget->wu_is_main == true;
+         });
+         $this->page_data['status_arr'] = $status_arr;
+ 
+ 
+         // fetch open estimates
+         $open_estimate_query = array(
+             'where' => array('company_id' => logged('company_id'), 'view_flag' => '0'),
+             'table' => 'estimates',
+             'select' => '*',
+         );
+         $this->page_data['open_estimates'] = $this->general->get_data_with_param($open_estimate_query);
+ 
+         // fetch open estimates
+         $plans_query = array(
+             'where' => array('company_id' => logged('company_id'), 'status' => 1),
+             'table' => 'plan_type',
+             'select' => 'count(*) as totalPlan',
+         );
+         $this->page_data['plan_type'] = $this->general->get_data_with_param($plans_query);
+ 
+         // fetch open estimates
+         $estimate_draft_query = array(
+             'where' => array('company_id' => logged('company_id')),
+             'table' => 'estimates',
+             'select' => 'id,status',
+         );
+         $this->page_data['estimate_draft'] = $this->general->get_data_with_param($estimate_draft_query);
+ 
+ 
+         // fetch open estimates
+         $invoice_draft = array(
+             'where' => array('company_id' => logged('company_id'), 'status' => 'Draft'),
+             'table' => 'invoices',
+             'select' => 'count(*) as total',
+         );
+         $this->page_data['invoice_draft'] = $this->general->get_data_with_param($invoice_draft,FALSE);
+ 
+         // fetch open estimates
+         $invoice_due = array(
+             'where' => array('company_id' => logged('company_id'), 'status' => 'Due'),
+             'table' => 'invoices',
+             'select' => 'count(*) as total',
+         );
+         $this->page_data['invoice_due'] = $this->general->get_data_with_param($invoice_due,FALSE);
+ 
+ 
+         $invoice_paid_last_30days = array(
+             'where' => array('company_id' => logged('company_id'), 'status' => 'Paid','due_date ' => 'Paid'),
+             'table' => 'invoices',
+             'select' => 'count(*) as total',
+         );
+         $this->page_data['invoice_paid_last_30days'] = $this->general->get_data_with_param($invoice_paid_last_30days,FALSE);
+ 
+         // fetch open estimates
+         $total_amount_invoice = array(
+             'where' => array('company_id' => logged('company_id'), 'status' => 'Paid'),
+             'table' => 'invoices',
+             'select' => 'SUM(grand_total) as total',
+         );
+         $this->page_data['total_amount_invoice'] = $this->general->get_data_with_param($total_amount_invoice,FALSE);
+ 
+         // fetch open estimates
+         $total_invoice_paid = array(
+             'where' => array('company_id' => logged('company_id'), 'status' => 'Paid'),
+             'table' => 'invoices',
+             'select' => 'count(*) as total',
+         );
+         $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid,FALSE);
+ 
+         // get customer subscription history
+         $feeds_query = array(
+             //'where' => array('company_id' => logged('company_id')),
+             'table' => 'feed',
+             'select' => '*',
+         );
+         $this->page_data['feeds'] = $this->general->get_data_with_param($feeds_query);
+ 
+         // get customer newsletter
+         $news_query = array(
+             'where' => array('company_id' => logged('company_id')),
+             'table' => 'news',
+             'select' => '*',
+         );
+         $this->page_data['news'] = $this->general->get_data_with_param($news_query);
+ 
+         $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();    
+         $this->page_data['total_agreements_to_expire_in_30_days'] = $this->getAgreementsToExpireIn30Days();
+ 
+         //Plaid
+         $this->load->model('PlaidAccount_model');
+         $plaid_handler_open = 0;
+         $plaid_token = '';
+         $client_name = '';
+         $get = $this->input->get();
+         if( isset($get['oauth_state_id']) ){
+             $plaid_handler_open = 1;                     
+             $plaid_token        = $this->session->userdata('plaid_token');
+ 
+             $plaidAccount = $this->PlaidAccount_model->getByCompanyId($companyId);
+             $client_name  = $plaidAccount->client_name;
+         }
+ 
+         $this->page_data['client_name'] = $plaid_token;
+         $this->page_data['plaid_token'] = $plaid_token;
+         $this->page_data['plaid_handler_open'] = $plaid_handler_open;
+ 
+         $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
 
         /*$this->page_data['vendors'] = $this->vendors_model->getVendors();
         $this->page_data['checks'] = $this->expenses_model->getCheck();
@@ -177,6 +348,56 @@ class Accounting extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();*/
 
         $this->load->view('v2/pages/accounting/dashboard', $this->page_data);
+    }
+
+    private function getTotalRecurringPayment()
+    {
+
+        // SELECT SUM(acs_billing.mmr) AS TOTAL_RECURRING FROM acs_billing JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id JOIN acs_profile ON acs_profile.prof_id = acs_alarm.fk_prof_id WHERE acs_alarm.acct_type = "IN-HOUSE" AND acs_profile.status = "Active";
+        $companyId = logged('company_id');
+        $this->db->select('SUM(acs_billing.mmr) AS SUM_RECURRING_PAYMENT');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = acs_alarm.fk_prof_id', 'left');
+        $this->db->where("acs_alarm.acct_type = 'IN-HOUSE' AND acs_profile.status = 'Active'");
+        $query = $this->db->get();
+        $result = $query->row();
+        return $result;
+        // return '$' . number_format($result->total, 2);
+        // $this->db->select('SUM(billing.transaction_amount + 0) AS total', false);
+        // $this->db->from('acs_billing billing');
+        // $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
+        // $this->db->where('profile.company_id', $companyId);
+        // $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
+        // $query = $this->db->get();
+        // $result = $query->row();
+        // return '$' . number_format($result->total, 2);
+    }
+
+    private function getAgreementsToExpireIn30Days()
+    {
+        $companyId = logged('company_id');
+        $this->db->select('COUNT(billing.recurring_end_date) AS total', false);
+        $this->db->from('acs_billing billing');
+        $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
+        $this->db->where('profile.company_id', $companyId);
+        $this->db->where("STR_TO_DATE(billing.recurring_end_date, '%m/%d/%Y') BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 30 DAY)");
+        $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
+        $query = $this->db->get();
+        $result = $query->row();
+        return $result->total;
+    }
+
+    private function getActiveCustomerStatuses()
+    {
+        return [
+            'draft',
+            'installed',
+            'active',
+            'lead',
+            'scheduled',
+            'service customer',
+        ];
     }
 
     public function bank_connect()
