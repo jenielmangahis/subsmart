@@ -324,9 +324,11 @@ class Items_model extends MY_Model
 
     public function getLocationByItemId($id)
     {
+        $COMPANY_ID = logged('company_id');
         $this->db->select('*');
         $this->db->from($this->table_has_location);
         $this->db->where('item_id', $id);
+        $this->db->where('company_id', $COMPANY_ID);
         $query = $this->db->get();
         return $query->result_array();
     }

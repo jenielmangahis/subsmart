@@ -64,11 +64,18 @@ class Inventory extends MY_Controller
             }
             $items = $this->items_model->getByWhere($arg);
         }
-        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
+        $ITEM_DATA = $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
         $comp = array(
             'company_id' => $comp_id
         );
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
+
+        $ITEM_LOCATION_ARRAY = array();
+        foreach ($ITEM_DATA as $ITEM_DATAS) {
+            array_push($ITEM_LOCATION_ARRAY, $this->items_model->getLocationByItemId($ITEM_DATAS[10]));
+        }
+        $this->page_data['items_location'] = $ITEM_LOCATION_ARRAY;
+
         $this->load->view('v2/pages/inventory/list', $this->page_data);
     }
 
