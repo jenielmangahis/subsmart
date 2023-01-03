@@ -143,25 +143,50 @@ class Cron_Api extends MYF_Controller {
         $this->load->helper(array('hashids_helper'));
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
-
         foreach($googleSync as $gs){            
-            $is_valid   = false;
+            $is_valid = false;
+            $err_msg  = '';
             switch ($gs->module_name) {
                 case 'appointment':                
                     $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->object_id, $gs->company_id);
                     if( $appointment ){               
-                        $tags = '---';
+                        $tags = '';
+                        $location = '';
                         if( $appointment->tag_ids != '' ){
-                            $a_tags = explode(",", $appointment->tag_ids);     
-                            $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
-                            foreach($appointmentTags as $t){
-                                $e_tags[] = $t->name;
-                            }
+                            $a_tags = explode(",", $appointment->tag_ids);    
+                            $e_tags = array();
+                            if( $appointment->appointment_type_id == 4 ){ //Events
+                                $appointmentTags   = $this->EventTags_model->getAllByIds($a_tags);
+                                foreach($appointmentTags as $t){
+                                    $e_tags[] = $t->name;
+                                }
 
-                            $tags = implode(",", $e_tags);
+                                $tags = implode(",", $e_tags);
+                            }else{
+                                $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+                                foreach($appointmentTags as $t){
+                                    $e_tags[] = $t->name;
+                                }
+
+                                $tags = implode(",", $e_tags);    
+                            }  
+
+                            if( $tags ){
+                                $tags = ' - ' . $tags;
+                            }
+                            
                         }
 
-                        $calendar_title = $appointment->appointment_number . ' - ' . $tags . ' : ' . $appointment->customer_name;
+                        if( $appointment->appointment_type_id == 4 ){
+                            $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->event_name;
+                            if( $appointment->event_location != '' ){
+                                $location = $appointment->event_location;
+                            }                        
+                        }else{
+                            $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->customer_name;
+                            $location       = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
+                        }
+
                         $start_time     = date("Y-m-d\TH:i:s", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time_from));
                         $end_time     = date("Y-m-d\TH:i:s", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time_to));
                         $event_time = [
@@ -180,8 +205,6 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
-                        $location = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
-
                         $appointment_eid = hashids_encrypt($appointment->id, '', 15);
                         $view_link       = base_url('appointment/'.$appointment_eid);
 
@@ -196,6 +219,8 @@ class Cron_Api extends MYF_Controller {
 
                         $is_valid = true;
 
+                    }else{
+                        $err_msg = 'Cannot find object data';
                     }
                     break;
                 case 'event':
@@ -230,6 +255,8 @@ class Cron_Api extends MYF_Controller {
                         $description .= "Event Description : ".$event->event_description."\n";
 
                         $is_valid = true;
+                    }else{
+                        $err_msg = 'Cannot find object data';
                     }
                     break;
                 case 'service_ticket':
@@ -269,6 +296,8 @@ class Cron_Api extends MYF_Controller {
                         $description .= "Notes : ". $appointment->notes ."\n";
 
                         $is_valid = true;
+                    }else{
+                        $err_msg = 'Cannot find object data';
                     }
                     break;
                 case 'job':
@@ -324,6 +353,8 @@ class Cron_Api extends MYF_Controller {
                         $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
 
                         $is_valid = true;
+                    }else{
+                        $err_msg = 'Cannot find object data';
                     }
                     break;
                 default:
@@ -338,31 +369,50 @@ class Cron_Api extends MYF_Controller {
                     $capi = new GoogleCalendarApi();
                     $data = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $googleAccount->google_refresh_token);
                     if( $data['access_token'] ){
-                        $settings = $this->CalendarSettings_model->getByCompanyId($company_id); 
+                        $settings = $this->CalendarSettings_model->getByCompanyId($gs->company_id); 
                         if( $settings ){
-                            $email_minutes = 1440;//1day
-                            if( $settings->google_calendar_email_notification != '' ){
+                            //$email_minutes = 1440;//1day
+                            $email_minutes = 0;
+                            if( $settings->google_calendar_email_notification != '' && $settings->google_calendar_email_notification != 'disabled'){
                                 $eNotif = explode(" " , $settings->google_calendar_email_notification);
                                 if( isset($eNotif[0]) ){
                                     $email_minutes = $eNotif[0];
                                 }
                             }
 
-                            $popup_minutes = 5;
-                            if( $settings->google_calendar_popup_notification != '' ){
+                            //$popup_minutes = 5;
+                            $popup_minutes = 0;
+                            if( $settings->google_calendar_popup_notification != '' && $settings->google_calendar_popup_notification != 'disabled' ){
                                 $pNotif = explode(" " , $settings->google_calendar_popup_notification);
                                 if( isset($pNotif[0]) ){
                                     $popup_minutes = $pNotif[0];
                                 }
                             }
-                            $reminders = [
-                                'useDefault' => "FALSE",
-                                'overrides' => [
-                                    ['method' => 'email', 'minutes' => $email_minutes],
-                                    ['method' => 'popup', 'minutes' => $popup_minutes]
-                                ]
-                            ];
-                        }else{
+
+                            if( $email_minutes > 0 && $popup_minutes > 0 ){
+                                $reminders = [
+                                    'useDefault' => "FALSE",
+                                    'overrides' => [
+                                        ['method' => 'email', 'minutes' => $email_minutes],
+                                        ['method' => 'popup', 'minutes' => $popup_minutes]
+                                    ]
+                                ];    
+                            }elseif( $email_minutes > 0 ){
+                                $reminders = [
+                                    'useDefault' => "FALSE",
+                                    'overrides' => [
+                                        ['method' => 'email', 'minutes' => $email_minutes]
+                                    ]
+                                ];
+                            }elseif( $popup_minutes > 0 ){
+                                $reminders = [
+                                    'useDefault' => "FALSE",
+                                    'overrides' => [
+                                        ['method' => 'popup', 'minutes' => $popup_minutes]
+                                    ]
+                                ];
+                            }
+                        }/*else{
                             $reminders = [
                                 'useDefault' => "FALSE",
                                 'overrides' => [
@@ -370,7 +420,7 @@ class Cron_Api extends MYF_Controller {
                                     ['method' => 'popup', 'minutes' => 5]
                                 ]
                             ];    
-                        }
+                        }*/
 
                         $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                                             
@@ -403,6 +453,14 @@ class Cron_Api extends MYF_Controller {
 
                     $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
                 }                
+            }else{
+                $googleSyncData = [
+                    'is_sync' => 0,
+                    'error_msg' => $err_msg,
+                    'date_sync' => date("Y-m-d H:i:s")
+                ];
+
+                $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
             }
         }
     }

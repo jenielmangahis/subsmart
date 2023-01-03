@@ -121,36 +121,3 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade nsm-modal fade" id="inventory_location_modal" tabindex="-1" aria-labelledby="inventory_location_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id="inventory_location_modal_label">Locations</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body">
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td data-name="Location">Location</td>
-                            <td data-name="Quantity">Quantity</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="2">
-                                <div class="nsm-empty">
-                                    <span>No results found.</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>

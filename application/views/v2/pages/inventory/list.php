@@ -1,27 +1,27 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/inventory/inventory_modals'); ?>
 <style type="text/css">
-table {
+    table {
         width: 100% !important;
     }
-    .dataTables_filter, .dataTables_length{
+    #INVENTORY_TABLE_filter, #INVENTORY_TABLE_length, #ITEM_LOCATION_TABLE_info, #ITEM_LOCATION_TABLE_paginate, #ITEM_LOCATION_TABLE_length, #ITEM_LOCATION_TABLE_filter{
         display: none;
     }
     table.dataTable thead th, table.dataTable thead td {
     padding: 10px 18px;
     border-bottom: 1px solid lightgray;
-}
-table.dataTable.no-footer {
-     border-bottom: 0px solid #111; 
-     margin-bottom: 10px;
-}
+    }
+    table.dataTable.no-footer {
+         border-bottom: 0px solid #111; 
+         margin-bottom: 10px;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
-        <li onclick="location.href='<?= url('inventor/import') ?>'">
+        <li onclick="location.href='<?php echo url('inventor/import') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-import"></i>
             </div>
@@ -33,7 +33,7 @@ table.dataTable.no-footer {
             </div>
             <span class="nsm-fab-label">Export</span>
         </li>
-        <li onclick="location.href='<?= base_url('inventory/add') ?>'">
+        <li onclick="location.href='<?php echo base_url('inventory/add') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-list-plus"></i>
             </div>
@@ -92,13 +92,13 @@ table.dataTable.no-footer {
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?= url('inventor/import') ?>'">
+                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('inventor/import') ?>'">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
                             <button type="button" class="nsm-button export-items">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
-                            <button type="button" class="nsm-button" onclick="location.href='<?= base_url('inventory/add') ?>'">
+                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('inventory/add') ?>'">
                                 <i class='bx bx-fw bx-list-plus'></i> New Item
                             </button>
                             <button type="button" class="nsm-button btn-share-url">
@@ -127,9 +127,7 @@ table.dataTable.no-footer {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                            foreach ($items as $item) {
-                        ?>
+                        <?php foreach ($items as $item) { ?>
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
@@ -146,7 +144,7 @@ table.dataTable.no-footer {
                             <td><?php echo $item[8]; ?></td>
                             <td><?php echo $item[9]; ?></td>
                             <td>
-                                <button class="nsm-button btn-sm" data-bs-toggle="modal" data-bs-target="#inventory_location_modal">See Location</button>
+                                <button class="nsm-button btn-sm SEE_LOCATION" data-bs-toggle="modal" data-bs-target="#inventory_location_modal" data-id="<?php echo $item[10]; ?>" disabled>See Location</button>
                             </td>
                             <td>
                                 <div class="dropdown table-management">
@@ -155,18 +153,16 @@ table.dataTable.no-footer {
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item edit-item" href="<?= base_url('inventory/edit_item/' . $item[3]); ?>" data-id="<?= $item[3]; ?>">Edit</a>
+                                            <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/edit_item/' . $item[3]); ?>" data-id="<?php echo $item[3]; ?>">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $item[10]; ?>">Delete</a>
+                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $item[10]; ?>">Delete</a>
                                         </li>
                                     </ul>
                                 </div>
                             </td>
                         </tr>
-                        <?php 
-                            }
-                        ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -174,9 +170,83 @@ table.dataTable.no-footer {
     </div>
 </div>
 
-<script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
+
+<!-- MODAL SECTION -->
+<div class="modal" id="inventory_location_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Item Locations</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-1">
+                            <table id="ITEM_LOCATION_TABLE" class="nsm-table">
+                                <thead>
+                                    <tr>
+                                        <td class='d-none' data-name="Item_ID">Item ID</td>
+                                        <td data-name="Location">Location</td>
+                                        <td data-name="Quantity">Quantity</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                        $TR = "";
+                                        foreach ($items_location as $items_locations) {
+                                            if ($items_locations != null) { 
+                                                if (count($items_locations) > 1) {
+                                                    for ($i=0; $i < count($items_locations); $i++) { 
+                                                        $TR .= "<tr>
+                                                            <td class='d-none'>".$items_locations[$i]['item_id']."</td>
+                                                            <td>".$items_locations[$i]['name']."</td>
+                                                            <td>".$items_locations[$i]['qty']."</td>
+                                                        </tr>";
+                                                    } 
+                                                } else {
+                                                    $TR .= "<tr>
+                                                            <td class='d-none'>".$items_locations[0]['item_id']."</td>
+                                                            <td>".$items_locations[0]['name']."</td>
+                                                            <td>".$items_locations[0]['qty']."</td>
+                                                        </tr>";
+                                                }
+                                            }
+                                        }
+                                        echo $TR;
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL SECTION -->
+
+
+<script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+
+    var ITEM_LOCATION_TABLE = $("#ITEM_LOCATION_TABLE").DataTable({
+        "ordering": false,
+        language: {
+            processing: '<span>Fetching data...</span>'
+        },
+    });
+
+    $('.SEE_LOCATION').delay(1000).removeAttr('disabled');
+    $('.SEE_LOCATION').hover(function() {
+        const DATA_ID = parseInt($(this).attr("data-id"));
+        ITEM_LOCATION_TABLE.columns(0).search('^'+DATA_ID+'$', true, false).draw();
+    }, function() {
+        ITEM_LOCATION_TABLE.search('').draw();
+    });
+
 
     var INVENTORY_TABLE = $("#INVENTORY_TABLE").DataTable({
         "ordering": false,
@@ -232,7 +302,7 @@ $(document).ready(function() {
     });
 
     $(".export-items").click(function() {
-        window.location.href = "<?= base_url('inventory/export_list') ?>";
+        window.location.href = "<?php echo base_url('inventory/export_list') ?>";
     });
 
     $(document).on("change", ".table-select", function() {
@@ -293,7 +363,7 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url('inventory/deleteMultiple') ?>",
+                    url: "<?php echo base_url('inventory/deleteMultiple') ?>",
                     data: params,
                     // success: function(response) {
                     //     Swal.fire({
@@ -338,7 +408,7 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url('/inventory/delete') ?>",
+                    url: "<?php echo base_url('/inventory/delete') ?>",
                     data: {
                         id: id
                     },
