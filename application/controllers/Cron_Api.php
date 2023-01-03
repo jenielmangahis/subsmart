@@ -140,7 +140,8 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('GoogleAccounts_model');
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
-        $this->load->helper(array('hashids_helper'));
+        $this->load->model('GoogleCalendar_model');
+        $this->load->helper(array('hashids_helper'));       
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
         foreach($googleSync as $gs){            
@@ -178,11 +179,13 @@ class Cron_Api extends MYF_Controller {
                         }
 
                         if( $appointment->appointment_type_id == 4 ){
+                            $calendar_type  = $this->GoogleCalendar_model->calendarTypeEvent();
                             $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->event_name;
                             if( $appointment->event_location != '' ){
                                 $location = $appointment->event_location;
                             }                        
                         }else{
+                            $calendar_type  = $this->GoogleCalendar_model->calendarTypeAppointment();
                             $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->customer_name;
                             $location       = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
                         }
@@ -223,8 +226,50 @@ class Cron_Api extends MYF_Controller {
                         $err_msg = 'Cannot find object data';
                     }
                     break;
+                case 'tc-off':
+                $calendar_type         = $this->GoogleCalendar_model->calendarTypeTCOff();
+                $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getById($gs->object_id);
+                if( $technicianScheduleOff ){
+                    $tech_names = array();
+                    $technicians_ids = explode(",", $technicianScheduleOff->technician_user_ids);
+                    $users = $this->Users_model->getAllByIds($technicians_ids);
+                    foreach($users as $u){
+                        $tech_names[] = $u->FName . ' ' . $u->LName;
+                    }
+
+                    $calendar_title = 'Schedule Off - ' . implode(", ", $tech_names);
+                    $start_time     = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_start_date));
+                    $end_time       = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_end_date));
+                    $event_time = [
+                        'start_time' => $start_time,
+                        'end_time' => $end_time
+                    ];
+
+                    $attendees = array();
+                    if( $technicianScheduleOff->task_to_user_id != '' ){
+                        $user = $this->Users_model->getUserByID($technicianScheduleOff->task_to_user_id);
+                        if( $user ){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+
+                    if( $technicianScheduleOff->technician_user_ids != '' ){
+                        $technicians_ids = explode(",", $technicianScheduleOff->technician_user_ids);
+                        $users = $this->Users_model->getAllByIds($technicians_ids);
+                        foreach($users as $user){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+                    
+                    $location  = '';
+                    $description = $technicianScheduleOff->task_details;
+                    
+                    $is_valid = true;
+                }
+                break;
                 case 'event':
-                    $event = $this->Event_model->get_specific_event($gs->object_id);
+                    $calendar_type = $this->GoogleCalendar_model->calendarTypeEvent();
+                    $event         = $this->Event_model->get_specific_event($gs->object_id);
                     if( $event ){
                         if( $event->event_tag != '' ){
                             $tags = $event->event_tag;
@@ -260,6 +305,7 @@ class Cron_Api extends MYF_Controller {
                     }
                     break;
                 case 'service_ticket':
+                    $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
                     $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->object_id, $gs->company_id);
                     if( $ticket ){
                         if( $ticket->job_tag != '' ){
@@ -301,6 +347,7 @@ class Cron_Api extends MYF_Controller {
                     }
                     break;
                 case 'job':
+                    $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
                     $job = $this->Jobs_model->get_specific_job($gs->object_id);
                     if( $job ){
                         if( $job->tags != '' ){
@@ -423,18 +470,27 @@ class Cron_Api extends MYF_Controller {
                         }*/
 
                         $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
-                                            
-                        if( $googleAccount->auto_sync_calendar_id != ''){
-                            $event_id      = $capi->createCalendarEvent($googleAccount->auto_sync_calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
+                        $googleCalendar = $this->GoogleCalendar_model->getByCompanyIdAndCalendarType($gs->company_id, $calendar_type);
+                        if( $googleCalendar ){
+                          $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
                         }else{
-                            $event_id      = $capi->createCalendarEvent('primary', $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);    
+                            $is_valid = false;
                         }
 
-                        $googleSyncData = [
-                            'is_sync' => 1,
-                            'error_msg' => '',
-                            'date_sync' => date("Y-m-d H:i:s")
-                        ];
+                        if( $is_valid ){
+                            $googleSyncData = [
+                                'is_sync' => 1,
+                                'error_msg' => '',
+                                'date_sync' => date("Y-m-d H:i:s")
+                            ];
+                        }else{
+                            $googleSyncData = [
+                                'is_sync' => 0,
+                                'error_msg' => 'Cannot sync data. Please check google credentials',
+                                'date_sync' => date("Y-m-d H:i:s")
+                            ];
+                        }
+                        
                     }else{
                         $googleSyncData = [
                             'is_sync' => 0,

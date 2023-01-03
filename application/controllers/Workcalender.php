@@ -784,13 +784,13 @@ class Workcalender extends MY_Controller
                     $custom_html .= $html;
                 }  
 
-            $custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-clipboard'></i> Task : " . $tc->task_details . "</small>";
+            /*$custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-clipboard'></i> Task : " . $tc->task_details . "</small>";
 
             $userTaskAssigned = $this->Users_model->get_user_name($tc->task_to_user_id);
             if( $userTaskAssigned ){
                 $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Task Assigned : </small>";
                 $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($userTaskAssigned->id).'\'); width: 20px;display:inline-block;"></div>';
-            }
+            }*/
             $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
             $custom_html .= '</div>';
 
@@ -2966,12 +2966,21 @@ class Workcalender extends MY_Controller
                     ];
 
                     $attendees = array();
-                    /*if( $technicianScheduleOff->task_to_user_id != '' ){
+                    if( $technicianScheduleOff->task_to_user_id != '' ){
                         $user = $this->Users_model->getUserByID($technicianScheduleOff->task_to_user_id);
                         if( $user ){
                             $attendees[] = ['email' => $user->email];
                         }
-                    }*/
+                    }
+
+                    if( $technicianScheduleOff->technician_user_ids != '' ){
+                        $technicians_ids = explode(",", $technicianScheduleOff->technician_user_ids);
+                        $users = $this->Users_model->getAllByIds($technicians_ids);
+                        foreach($users as $user){
+                            $attendees[] = ['email' => $user->email];
+                        }
+                    }
+
                     $location  = '';
                     $description = $technicianScheduleOff->task_details;
                     
