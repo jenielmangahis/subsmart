@@ -41,6 +41,13 @@ function createSyncToCalendar($object_id, $module_name, $company_id)
                 }
             }
 
+            if( $module_name == 'tc-off' ){
+                /*if( $settings->auto_add_ticket == 1 ){
+                    $is_valid_sync_calendar = true;
+                }*/
+                $is_valid_sync_calendar = true;
+            } 
+
             if( $is_valid_sync_calendar ){
                 $isExists = $CI->GoogleCalendarSync_model->getByObjectIdAndModuleName($object_id, $module_name);
                 if( !$isExists ){
@@ -59,8 +66,8 @@ function createSyncToCalendar($object_id, $module_name, $company_id)
                 }else{
                     $msg = 'Already sync to google calendar';
                 }               
-            }else{
-                $is_valid = 1;                
+            }else{                      
+                $msg = 'Cannot sync data';
             }
         }     
     }    
