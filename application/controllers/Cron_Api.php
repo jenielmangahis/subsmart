@@ -144,6 +144,7 @@ class Cron_Api extends MYF_Controller {
         $this->load->helper(array('hashids_helper'));       
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
+        $total_sync = 0;
         foreach($googleSync as $gs){            
             $is_valid = false;
             $err_msg  = '';
@@ -483,6 +484,8 @@ class Cron_Api extends MYF_Controller {
                                 'error_msg' => '',
                                 'date_sync' => date("Y-m-d H:i:s")
                             ];
+
+                            $total_sync++;
                         }else{
                             $googleSyncData = [
                                 'is_sync' => 0,
@@ -519,6 +522,8 @@ class Cron_Api extends MYF_Controller {
                 $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
             }
         }
+
+        echo 'Total Sync : ' . $total_sync;
     }
         
 }
