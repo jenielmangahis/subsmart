@@ -1860,6 +1860,17 @@ class Workcalender extends MY_Controller
         $this->load->view('v2/pages/workcalender/ajax_load_view_appointment', $this->page_data);
     }
 
+    public function ajax_load_view_tcoff()
+    {
+        $this->load->model('TechnicianDayOffSchedule_model');
+
+        $post = $this->input->post();
+        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getById($post['tcoff_id']);
+
+        $this->page_data['technicianScheduleOff'] = $technicianScheduleOff;
+        $this->load->view('v2/pages/workcalender/ajax_load_view_tcoff', $this->page_data);
+    }
+
     public function ajax_edit_appointment()
     {
         $this->load->model('Appointment_model');
@@ -2085,6 +2096,37 @@ class Workcalender extends MY_Controller
             $this->Appointment_model->delete($appointment->id);
 
             customerAuditLog(logged('id'), $appointment_cus_id, $appointment_id, 'Appointment', 'Deleted appointment id '.$appointment_id);
+
+            $is_success = true;
+            $message    = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_tcoff()
+    {
+        $this->load->model('TechnicianDayOffSchedule_model');
+
+        $is_success = false;
+        $message    = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getByIdAndCompanyId($post['tcoff_id'], $cid);
+
+        if( $technicianScheduleOff ){
+            $tcoff_id = $technicianScheduleOff->id;
+            $tcoff_cus_id = 0;
+
+            $this->TechnicianDayOffSchedule_model->delete($technicianScheduleOff->id);
+
+            customerAuditLog(logged('id'), $tcoff_cus_id, $tcoff_id, 'TC Off', 'Deleted tc off id '.$tcoff_id);
 
             $is_success = true;
             $message    = '';
@@ -2849,7 +2891,7 @@ class Workcalender extends MY_Controller
 
     }
 
-    public function ajax_add_to_google_calendar()
+    public function ajax_add_to_google_calendar_old()
     {
         include APPPATH . 'libraries/google-calendar-api.php';
 
@@ -3248,6 +3290,27 @@ class Workcalender extends MY_Controller
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_add_to_google_calendar()
+    {
+        $company_id = logged('company_id');
+        $is_valid   = false;
+        $msg        = 'Cannot sync data';
+        $post       = $this->input->post();
+
+        $result = createSyncToCalendar($post['tile_id'], $post['tile_type'], $company_id);
+        if( $result['is_valid'] == 1 ){
+            $is_valid = true;
+            $msg = '';
+        }else{
+            $msg = $result['msg'];
+        }
+
+        $return = ['is_success' => $is_valid, 'msg' => $msg];
+        echo json_encode($return);
+
+        exit;
     }
 }
 

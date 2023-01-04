@@ -145,13 +145,13 @@ class Cron_Api extends MYF_Controller {
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
         $total_sync = 0;
-        foreach($googleSync as $gs){            
+        foreach($googleSync as $gs){                    
             $is_valid = false;
-            $err_msg  = '';
+            $err_msg  = '';            
             switch ($gs->module_name) {
-                case 'appointment':                
+                case 'appointment':     
                     $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->object_id, $gs->company_id);
-                    if( $appointment ){               
+                    if( $appointment ){                                   
                         $tags = '';
                         $location = '';
                         if( $appointment->tag_ids != '' ){
