@@ -338,6 +338,25 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="view_tcoff_modal" tabindex="-1" aria-labelledby="view_tcoff_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">View Technician Off Details</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3" id="view_tcoff_container">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button error" id="btn_delete_tcoff">Delete</button>
+                <button type="button" class="nsm-button primary" id="btn_edit_tcoff">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="edit_appointment_modal" tabindex="-1" aria-labelledby="edit_appointment_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form id="frm-update-appointment" method="POST">

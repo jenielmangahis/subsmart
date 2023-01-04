@@ -49,6 +49,7 @@ function createSyncToCalendar($object_id, $module_name, $company_id)
                         'object_id' => $object_id,
                         'module_name' => $module_name,
                         'is_sync' => 0,
+                        'is_with_error' => 0,
                         'created' => date('Y-m-d H:i:s')
                     ];
 
@@ -56,7 +57,7 @@ function createSyncToCalendar($object_id, $module_name, $company_id)
 
                     $is_valid = 1;
                 }else{
-                    $msg = 'Already exists';
+                    $msg = 'Already sync to google calendar';
                 }               
             }else{
                 $is_valid = 1;                

@@ -37,6 +37,18 @@ class TechnicianDayOffSchedule_model extends MY_Model
         return $query;
     }
 
+    public function getByIdAndCompanyId($id, $company_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getAllByCompanyId($company_id, $filters=array())
     {
         $id = logged('id');

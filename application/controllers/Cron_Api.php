@@ -482,6 +482,7 @@ class Cron_Api extends MYF_Controller {
                             $googleSyncData = [
                                 'is_sync' => 1,
                                 'error_msg' => '',
+                                'is_with_error' => 0,
                                 'date_sync' => date("Y-m-d H:i:s")
                             ];
 
@@ -490,6 +491,7 @@ class Cron_Api extends MYF_Controller {
                             $googleSyncData = [
                                 'is_sync' => 0,
                                 'error_msg' => 'Cannot sync data. Please check google credentials',
+                                'is_with_error' => 1,
                                 'date_sync' => date("Y-m-d H:i:s")
                             ];
                         }
@@ -498,6 +500,7 @@ class Cron_Api extends MYF_Controller {
                         $googleSyncData = [
                             'is_sync' => 0,
                             'error_msg' => 'Cannot find valid google account',
+                            'is_with_error' => 1,
                             'date_sync' => date("Y-m-d H:i:s")
                         ];
                     }  
@@ -507,6 +510,7 @@ class Cron_Api extends MYF_Controller {
                     $googleSyncData = [
                         'is_sync' => 0,
                         'error_msg' => 'Cannot find valid google account',
+                        'is_with_error' => 1,
                         'date_sync' => date("Y-m-d H:i:s")
                     ];
 
@@ -516,6 +520,7 @@ class Cron_Api extends MYF_Controller {
                 $googleSyncData = [
                     'is_sync' => 0,
                     'error_msg' => $err_msg,
+                    'is_with_error' => 1,
                     'date_sync' => date("Y-m-d H:i:s")
                 ];
 
