@@ -7,6 +7,8 @@ class GoogleCalendar_model extends MY_Model
     public $calendar_type_appointment = 'Appointment';
     public $calendar_type_tc_off = 'TC Off';
     public $calendar_type_event = 'Event';
+    public $calendar_type_job = 'Job';
+    public $calendar_type_service_ticket = 'Service Ticket';
 
 
     public function getAll()
@@ -66,6 +68,16 @@ class GoogleCalendar_model extends MY_Model
         return $this->calendar_type_tc_off;
     }
 
+    public function calendarTypeJob()
+    {
+        return $this->calendar_type_job;
+    }
+
+    public function calendarTypeServiceTicket()
+    {
+        return $this->calendar_type_service_ticket;
+    }
+
     public function calendarAppointmentColorID()
     {
         return 24;
@@ -78,7 +90,17 @@ class GoogleCalendar_model extends MY_Model
 
     public function calendarTCOffColorID()
     {
+        return 3;
+    }
+
+    public function calendarServiceTicketColorID()
+    {
         return 4;
+    }
+
+    public function calendarJobsColorID()
+    {
+        return 8;
     }
 }
 

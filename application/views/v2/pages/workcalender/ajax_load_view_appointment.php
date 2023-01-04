@@ -68,9 +68,12 @@
             <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
                 <span class="fw-bold"><i class='bx bxs-calendar'></i></span> 
                 <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
+            <br />
             <label class="content-subtitle d-block mb-2 font-15"><span class="fw-bold"><i class='bx bx-link'></i> </span> 
                 <?php if( $appointment->url_link != ''){ ?>
+                    <input type="hidden" id="url-link" value="<?= $appointment->url_link; ?>">
                     <a href="<?= $appointment->url_link; ?>" target="_new"><?= $appointment->url_link; ?></a>
+                    <button type="button" class="nsm-button primary btn-sm btn-copy-url-link" style="margin-left:20px;">Copy Link</button>
                 <?php }else{ ?>
                     ---
                 <?php } ?>
@@ -201,5 +204,15 @@
             $("#btn_edit_appointment").show();
             $("#btn_payment_details_appointment").hide();
         <?php } ?>
+
+        $('.btn-copy-url-link').on('click', function(){
+            var url_link = $('#url-link').val();
+            var _shareableLink = $("<input>");
+            
+            $("#view_appointment_container").append(_shareableLink);
+            _shareableLink.val(url_link).select();
+            document.execCommand('copy');
+            _shareableLink.remove();
+        });
     });
 </script>

@@ -396,10 +396,21 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
 
+                        if( $job->hash_id != '' ){
+                            $job_eid = $job->hash_id;
+                        }else{
+                            $job_eid = hashids_encrypt($job->job_unique_id, '', 15);
+                            $this->jobs_model->update($job->job_unique_id, ['hash_id' => $job_eid]);
+                        }
+
+                        $view_link = base_url('/job_invoice_view/' . $job_eid);
+                        
+
                         $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                         $description .= "Job Type : ".$job->job_type."\n";                
                         $description .= "Phone Number : ".$job->cust_phone."\n";                
                         $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
+                        $description .= $view_link . "\n";
 
                         $is_valid = true;
                     }else{
