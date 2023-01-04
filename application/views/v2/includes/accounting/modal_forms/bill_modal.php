@@ -524,13 +524,15 @@
                                                                     <?php $locations = $this->items_model->getLocationByItemId($item->item_id);?>
                                                                     <tr>
                                                                         <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
-                                                                        <td>Product</td>
+                                                                        <td><?=ucfirst($itemDetails->type)?></td>
                                                                         <td>
+                                                                            <?php if(in_array($itemDetails->type, ['product', 'Product', 'inventory', 'Inventory'])) : ?>
                                                                             <select name="location[]" class="nsm-field form-control" required>
                                                                                 <?php foreach($locations as $location) : ?>
                                                                                     <option value="<?=$location['id']?>" data-quantity="<?=$location['qty'] === null ? 0 : $location['qty']?>" <?=$item->location_id === $location['id'] ? 'selected' : ''?>><?=$location['name']?></option>
                                                                                 <?php endforeach; ?>
                                                                             </select>
+                                                                            <?php endif; ?>
                                                                         </td>
                                                                         <td><input type="number" name="quantity[]" class="nsm-field form-control text-end" required value="<?=$item->quantity?>" max="<?=$locations[0]['qty']?>"></td>
                                                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="<?=number_format(floatval($item->rate), 2, '.', ',')?>"></td>

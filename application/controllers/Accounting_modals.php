@@ -3377,7 +3377,7 @@ class Accounting_modals extends MY_Controller
                         $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
 
                         if(!isset($data['template_name'])) {
-                            if($item->type === 'Product' || $item->type === 'product') {
+                            if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                 $location = $this->items_model->getItemLocation($data['location'][$index], $value);
     
                                 $newQty = intval($location->qty) + intval($data['quantity'][$index]);
@@ -3388,7 +3388,7 @@ class Accounting_modals extends MY_Controller
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
                             if ($itemAccDetails) {
-                                if($item->type === 'Product' || $item->type === 'product') {
+                                if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                     $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                                     $accType = $this->account_model->getById($account->account_id);
                                     $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval($data['item_total'][$index]);
@@ -3817,7 +3817,7 @@ class Accounting_modals extends MY_Controller
                         $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
 
                         if(!isset($data['template_name'])) {
-                            if($item->type === 'Product' || $item->type === 'product') {
+                            if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                 $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
                                 $newQty = intval($location->qty) + intval($data['quantity'][$index]);
@@ -3828,7 +3828,7 @@ class Accounting_modals extends MY_Controller
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
                             if ($itemAccDetails) {
-                                if($item->type === 'Product' || $item->type === 'product') {
+                                if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                     $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                                     $accType = $this->account_model->getById($account->account_id);
                                     $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval($data['item_total'][$index]);
@@ -4257,7 +4257,7 @@ class Accounting_modals extends MY_Controller
                         $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
 
                         if(!isset($data['template_name'])) {
-                            if($item->type === 'Product' || $item->type === 'product') {
+                            if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                 $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
                                 $newQty = intval($location->qty) + intval($data['quantity'][$index]);
@@ -4268,7 +4268,7 @@ class Accounting_modals extends MY_Controller
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
                             if ($itemAccDetails) {
-                                if($item->type === 'Product' || $item->type === 'product') {
+                                if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                     $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                                     $accType = $this->account_model->getById($account->account_id);
                                     $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
@@ -5013,7 +5013,7 @@ class Accounting_modals extends MY_Controller
                         $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
 
                         if(!isset($data['template_name'])) {
-                            if($item->type === 'Product' || $item->type === 'product') {
+                            if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                 $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
                                 $newQty = intval($location->qty) - intval($data['quantity'][$index]);
@@ -5024,7 +5024,7 @@ class Accounting_modals extends MY_Controller
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
                             if ($itemAccDetails) {
-                                if(in_array($item->type, ['Product', 'product'])) {
+                                if(in_array($item->type, ['Product', 'product', 'Inventory', 'inventory'])) {
                                     $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
 
                                     if(floatval($item->cost) !== floatval($data['item_amount'][$index])) {
@@ -5756,7 +5756,7 @@ class Accounting_modals extends MY_Controller
                         $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
 
                         if(!isset($data['template_name'])) {
-                            if($item->type === 'Product' || $item->type === 'product') {
+                            if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
                                 $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
                                 $newQty = intval($location->qty) - intval($data['quantity'][$index]);
@@ -5767,7 +5767,7 @@ class Accounting_modals extends MY_Controller
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
                             if ($itemAccDetails) {
-                                if(in_array($item->type, ['Product', 'product'])) {
+                                if(in_array($item->type, ['Product', 'product', 'Inventory', 'inventory'])) {
                                     $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
 
                                     if(floatval($item->cost) !== floatval($data['item_amount'][$index])) {
@@ -5796,6 +5796,8 @@ class Accounting_modals extends MY_Controller
                                         ];
     
                                         $this->accounting_account_transactions_model->create($accTransacData);
+
+                                        $account->balance = $newBalance;
                                     }
                                 } else {
                                     $account = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
@@ -14382,6 +14384,10 @@ class Accounting_modals extends MY_Controller
 
                     $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
                 }
+
+                if($data['expense_account'] === null || $data['expense_account'][$index] === null) {
+                    $this->vendors_model->delete_transaction_category($category->id, $transactionType);
+                }
             }
         }
     }
@@ -14391,138 +14397,9 @@ class Accounting_modals extends MY_Controller
         $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
 
         if ($data['item'] !== null) {
-            // foreach($data['item'] as $index => $value)
-            // {
-            //     $item = $this->items_model->getByID($value);
-            //     $linkedTransacItem = $data['item_linked'][$index] !== '' ? explode('-', $data['item_linked'][$index]) : null;
-
-            //     $itemDetails = [
-            //         'item_id' => $value,
-            //         'location_id' => $data['location'][$index],
-            //         'quantity' => $data['quantity'][$index],
-            //         'rate' => $data['item_amount'][$index],
-            //         'discount' => $data['discount'][$index],
-            //         'tax' => $data['item_tax'][$index],
-            //         'total' => floatval(str_replace(',', '', $data['item_total'][$index])),
-            //         'linked_transaction_type' => !is_null($linkedTransacItem) ? $linkedTransacItem[0] : null,
-            //         'linked_transaction_id' => !is_null($linkedTransacItem) ? $linkedTransacItem[1] : null,
-            //         'linked_transaction_item_id' => !is_null($linkedTransacItem) ? $data['transac_item_id'][$index] : null
-            //     ];
-
-            //     $key =  array_search($value, array_column($items, 'item_id'));
-            //     if($transactionType === 'Purchase Order' && $key !== false) {
-            //         $itemDetails['received'] = $items[$key]->received;
-            //     }
-
-            //     if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '' && !in_array($transactionType, ['Vendor Credit', 'Credit Card Credit', 'Purchase Order'])) {
-            //         $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($data['transac_item_id'][$index]);
-
-            //         $received = floatval(str_replace(',', '', $linkedCat->received)) + floatval(str_replace(',', '', $data['item_total'][$index]));
-
-            //         $itemDetails = [
-            //             'received' => floatval(str_replace(',', '', $received))
-            //         ];
-
-            //         $this->vendors_model->update_transaction_item($data['transac_item_id'][$index], $itemDetail);
-
-            //         $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacItem[1], logged('company_id'));
-            //         $remainingBal = floatval(str_replace(',', '', $purchOrder->remaining_balance)) - floatval(str_replace(',', '', $data['item_total'][$index]));
-
-            //         $purchOrderData = [
-            //             'remaining_balance' => floatval(str_replace(',', '', $remainingBal)),
-            //             'status' => $remainingBal > 0 ? 1 : 2
-            //         ];
-
-            //         $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
-            //     }
-
-            //     if (!is_null($items[$index])) {
-            //         $this->vendors_model->update_transaction_item($items[$index]->id, $itemDetails);
-            //         $itemDetailId = $items[$index]->id;
-            //     } else {
-            //         $itemDetails['transaction_type'] = $transactionType;
-            //         $itemDetails['transaction_id'] = $transactionId;
-
-            //         $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetails);
-            //     }
-
-            //     // $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetail);
-
-            //     // if(!isset($data['template_name'])) {
-            //     //     if($item->type === 'Product' || $item->type === 'product') {
-            //     //         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
-
-            //     //         $newQty = intval($location->qty) + intval($data['quantity'][$index]);
-    
-            //     //         $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
-            //     //     }
-
-            //     //     $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
-
-            //     //     if ($itemAccDetails) {
-            //     //         if($item->type === 'Product' || $item->type === 'product') {
-            //     //             $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-            //     //             $accType = $this->account_model->getById($account->account_id);
-            //     //             $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval($data['item_total'][$index]);
-            //     //             $newBalance = number_format($newBalance, 2, '.', ',');
-            //     //         } else {
-            //     //             $account = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
-            //     //             $accType = $this->account_model->getById($account->account_id);
-
-            //     //             if ($accType->account_name === 'Credit Card') {
-            //     //                 $newBalance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $data['item_total'][$index]));
-            //     //             } else {
-            //     //                 $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
-            //     //             }
-            //     //             $newBalance = number_format($newBalance, 2, '.', ',');
-            //     //         }
-
-            //     //         $accountData = [
-            //     //             'id' => $account->id,
-            //     //             'company_id' => logged('company_id'),
-            //     //             'balance' => floatval(str_replace(',', '', $newBalance))
-            //     //         ];
-
-            //     //         $this->chart_of_accounts_model->updateBalance($accountData);
-
-            //     //         $accTransacData = [
-            //     //             'account_id' => $account->id,
-            //     //             'transaction_type' => 'Expense',
-            //     //             'transaction_id' => $expenseId,
-            //     //             'amount' => floatval($data['item_total'][$index]),
-            //     //             'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
-            //     //             'type' => 'increase',
-            //     //             'is_item_category' => 1,
-            //     //             'child_id' => $itemDetailId
-            //     //         ];
-
-            //     //         $this->accounting_account_transactions_model->create($accTransacData);
-            //     //     }
-
-            //     //     if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '') {
-            //     //         $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($data['transac_item_id'][$index]);
-
-            //     //         $received = floatval(str_replace(',', '', $linkedItem->received)) + floatval($data['item_total'][$index]);
-
-            //     //         $itemDetail = [
-            //     //             'received' => floatval(str_replace(',', '', $received))
-            //     //         ];
-
-            //     //         $this->vendors_model->update_transaction_item($data['transac_item_id'][$index], $itemDetail);
-
-            //     //         $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacItem[1], logged('company_id'));
-            //     //         $remainingBal = floatval(str_replace(',', '', $purchOrder->remaining_balance)) - floatval($data['item_total'][$index]);
-
-            //     //         $purchOrderData = [
-            //     //             'remaining_balance' => floatval(str_replace(',', '', $remainingBal)),
-            //     //             'status' => $remainingBal > 0 ? 1 : 2
-            //     //         ];
-
-            //     //         $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
-            //     //     }
-            //     // }
-            // }
-            foreach ($data['item'] as $index => $value) {
+            foreach($data['item'] as $index => $value)
+            {
+                $item = $this->items_model->getByID($value);
                 $linkedTransacItem = $data['item_linked'][$index] !== '' ? explode('-', $data['item_linked'][$index]) : null;
 
                 $itemDetails = [
@@ -14567,265 +14444,246 @@ class Accounting_modals extends MY_Controller
 
                 if (!is_null($items[$index])) {
                     $this->vendors_model->update_transaction_item($items[$index]->id, $itemDetails);
-                    $id = $items[$index]->id;
-
-                    if ($items[$index]->location_id !== $data['location'][$index] || $items[$index]->quantity !== $data['quantity'][$index]) {
-                        $newLoc = $this->items_model->getItemLocation($data['location'][$index], $value);
-                        $oldLoc = $this->items_model->getItemLocation($items[$index]->location_id, $items[$index]->item_id);
-    
-                        switch ($transactionType) {
-                            case 'Expense':
-                                $newQty = intval($newLoc->qty) + intval($data['quantity'][$index]);
-                                $oldQty = intval($oldLoc->qty) - intval($items[$index]->quantity);
-                            break;
-                            case 'Check':
-                                $newQty = intval($newLoc->qty) + intval($data['quantity'][$index]);
-                                $oldQty = intval($oldLoc->qty) - intval($items[$index]->quantity);
-                            break;
-                            case 'Bill':
-                                $newQty = intval($newLoc->qty) + intval($data['quantity'][$index]);
-                                $oldQty = intval($oldLoc->qty) - intval($items[$index]->quantity);
-                            break;
-                            case 'Purchase Order':
-                                $newItemDet = $this->items_model->getItemAccountingDetails($value);
-                                $oldItemDet = $this->items_model->getItemAccountingDetails($items[$index]->item_id);
-    
-                                $newQty = intval($newItemDet->qty_po) + intval($data['quantity'][$index]);
-                                $oldQty = intval($oldItemDet->qty_po) - intval($items[$index]->quantity);
-    
-                                $this->items_model->updateItemAccountingDetails(['qty_po' => $newQty], $value);
-                                $this->items_model->updateItemAccountingDetails(['qty_po' => $oldQty], $oldItemDet->id);
-                            break;
-                            case 'Vendor Credit':
-                                $newQty = intval($newLoc->qty) - intval($data['quantity'][$index]);
-                                $oldQty = intval($oldLoc->qty) + intval($items[$index]->quantity);
-                            break;
-                            case 'Credit Card Credit':
-                                $newQty = intval($newLoc->qty) - intval($data['quantity'][$index]);
-                                $oldQty = intval($oldLoc->qty) + intval($items[$index]->quantity);
-                            break;
-                        }
-    
-                        if ($transactionType !== 'Purchase Order') {
-                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
-                            $this->items_model->updateLocationQty($items[$index]->location_id, $items[$index]->item_id, $oldQty);
-                        }
-                    }
-
-                    if ($items[$index]->item_id !== $value) {
-                        $newItem = $this->items_model->getItemAccountingDetails($value);
-                        $oldItem = $this->items_model->getItemAccountingDetails($items[$index]->item_id);
-                        $accId = $newItem->inv_asset_acc_id;
-    
-                        $newInvAssetAcc = $this->chart_of_accounts_model->getById($newItem->inv_asset_acc_id);
-                        $oldInvAssetAcc = $this->chart_of_accounts_model->getById($oldItem->inv_asset_acc_id);
-    
-                        $newBalance = floatval(str_replace(',', '', $newInvAssetAcc->balance));
-                        $oldBalance = floatval(str_replace(',', '', $oldInvAssetAcc->balance));
-    
-                        switch ($transactionType) {
-                            case 'Expense':
-                                $newBalance = floatval(str_replace(',', '', $newInvAssetAcc->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
-                                $oldBalance = floatval(str_replace(',', '', $oldInvAssetAcc->balance)) - floatval(str_replace(',', '', $items[$index]->total));
-                            break;
-                            case 'Check':
-                                $newBalance = floatval(str_replace(',', '', $newInvAssetAcc->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
-                                $oldBalance = floatval(str_replace(',', '', $oldInvAssetAcc->balance)) - floatval(str_replace(',', '', $items[$index]->total));
-                            break;
-                            case 'Bill':
-                                $newBalance = floatval(str_replace(',', '', $newInvAssetAcc->balance)) + floatval(str_replace(',', '', $data['item_total'][$index]));
-                                $oldBalance = floatval(str_replace(',', '', $oldInvAssetAcc->balance)) - floatval(str_replace(',', '', $items[$index]->total));
-                            break;
-                            case 'Vendor Credit':
-                                $newBalance = floatval(str_replace(',', '', $data['item_total'][$index])) - floatval(str_replace(',', '', $data['quantity'][$index]));
-                                $newBalance = floatval(str_replace(',', '', $newInvAssetAcc->balance)) + $newBalance;
-                                $newBalance = $newBalance - floatval(str_replace(',', '', $data['item_total'][$index]));
-
-                                $oldBalance = floatval(str_replace(',', '', $items[$index]->total)) - floatval(str_replace(',', '', $items[$index]->quantity));
-                                $oldBalance = floatval(str_replace(',', '', $oldInvAssetAcc->balance)) - $oldBalance;
-                                $oldBalance = $oldBalance + floatval(str_replace(',', '', $items[$index]->total));
-                            break;
-                            case 'Credit Card Credit':
-                                $newBalance = floatval(str_replace(',', '', $data['item_total'][$index])) - floatval(str_replace(',', '', $data['quantity'][$index]));
-                                $newBalance = floatval(str_replace(',', '', $newInvAssetAcc->balance)) + $newBalance;
-                                $newBalance = $newBalance - floatval(str_replace(',', '', $data['item_total'][$index]));
-
-                                $oldBalance = floatval(str_replace(',', '', $items[$index]->total)) - floatval(str_replace(',', '', $items[$index]->quantity));
-                                $oldBalance = floatval(str_replace(',', '', $oldInvAssetAcc->balance)) - $oldBalance;
-                                $oldBalance = $oldBalance + floatval(str_replace(',', '', $items[$index]->total));
-                            break;
-                        }
-    
-                        $newInvAssetAccData = [
-                            'id' => $newInvAssetAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => floatval(str_replace(',', '', $newBalance))
-                        ];
-    
-                        $oldInvAssetAccData = [
-                            'id' => $oldInvAssetAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => floatval(str_replace(',', '', $oldBalance))
-                        ];
-    
-                        $this->chart_of_accounts_model->updateBalance($newInvAssetAccData);
-                        $this->chart_of_accounts_model->updateBalance($oldInvAssetAccData);
-                    }
-    
-                    if ($data['item_total'][$index] !== $items[$index]->total && $value === $items[$index]->item_id) {
-                        $item = $this->items_model->getItemAccountingDetails($value);
-                        $invAssetAcc = $this->chart_of_accounts_model->getById($item->inv_asset_acc_id);
-    
-                        $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance));
-    
-                        switch ($transactionType) {
-                            case 'Expense':
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $items[$index]->total));
-                                $newBalance = $newBalance + floatval(str_replace(',', '', $data['item_total'][$index]));
-                            break;
-                            case 'Check':
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $items[$index]->total));
-                                $newBalance = $newBalance + floatval(str_replace(',', '', $data['item_total'][$index]));
-                            break;
-                            case 'Bill':
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $items[$index]->total));
-                                $newBalance = $newBalance + floatval(str_replace(',', '', $data['item_total'][$index]));
-                            break;
-                            case 'Vendor Credit':
-                                $newBalance = floatval(str_replace(',', '', $items[$index]->total)) - floatval(str_replace(',', '', $items[$index]->quantity));
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - $newBalance;
-                                $newBalance = $newBalance + floatval(str_replace(',', '', $items[$index]->total));
-
-                                $newBalance = $newBalance + (floatval(str_replace(',', '', $data['item_total'][$index])) - floatval(str_replace(',', '', $data['quantity'][$index])));
-                                $newBalance = $newBalance - floatval(str_replace(',', '', $data['item_total'][$index]));
-                            break;
-                            case 'Credit Card Credit':
-                                $newBalance = floatval(str_replace(',', '', $items[$index]->total)) - floatval(str_replace(',', '', $items[$index]->quantity));
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - $newBalance;
-                                $newBalance = $newBalance + floatval(str_replace(',', '', $items[$index]->total));
-
-                                $newBalance = $newBalance + (floatval(str_replace(',', '', $data['item_total'][$index])) - floatval(str_replace(',', '', $data['quantity'][$index])));
-                                $newBalance = $newBalance - floatval(str_replace(',', '', $data['item_total'][$index]));
-                            break;
-                        }
-    
-                        $invAssetAccData = [
-                            'id' => $invAssetAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => floatval(str_replace(',', '', $newBalance))
-                        ];
-    
-                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                    }
+                    $itemDetailId = $items[$index]->id;
                 } else {
                     $itemDetails['transaction_type'] = $transactionType;
                     $itemDetails['transaction_id'] = $transactionId;
 
                     $itemDetailId = $this->expenses_model->insert_vendor_transaction_item($itemDetails);
-                    $id = $itemDetailId;
+                }
 
-                    $location = $this->items_model->getItemLocation($itemDetails['location_id'], $itemDetails['item_id']);
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+
+                if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
+                    $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+
                     switch($transactionType) {
-                        case 'Expense':
-                            $newQty = intval($location->qty) + intval($itemDetails['quantity']);
+                        case 'Expense' :
+                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
                         break;
-                        case 'Check':
-                            $newQty = intval($location->qty) + intval($itemDetails['quantity']);
+                        case 'Check' :
+                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
                         break;
-                        case 'Bill':
-                            $newQty = intval($location->qty) + intval($itemDetails['quantity']);
+                        case 'Bill' :
+                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
                         break;
-                        case 'Vendor Credit':
-                            $newQty = intval($location->qty) - intval($itemDetails['quantity']);
+                        case 'Vendor Credit' :
+                            $newQty = intval($location->qty) - intval($data['quantity'][$index]);
                         break;
-                        case 'Credit Card Credit':
-                            $newQty = intval($location->qty) - intval($itemDetails['quantity']);
+                        case 'Credit Card Credit' :
+                            $newQty = intval($location->qty) - intval($data['quantity'][$index]);
                         break;
                     }
 
                     if($transactionType !== 'Purchase Order') {
-                        $this->items_model->updateLocationQty($itemDetails['location_id'], $itemDetails['item_id'], $newQty);
+                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                    } else {
+                        $newQtyPO = intval($itemAccDetails->qty_po) + intval($data['quantity'][$index]);
+
+                        $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $value);
                     }
+                }
 
-                    $itemAccDetails = $this->items_model->getItemAccountingDetails($itemDetails['item_id']);
-                    $accId = $itemAccDetail->inv_asset_acc_id;
-
-                    if ($itemAccDetails) {
-                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                if ($itemAccDetails) {
+                    if($item->type === 'Product' || $item->type === 'product' || $item->type === 'Inventory' || $item->type === 'inventory') {
+                        $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $accType = $this->account_model->getById($account->account_id);
                         switch($transactionType) {
-                            case 'Expense':
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + floatval(str_replace(',', '', $itemDetails['total']));
+                            case 'Expense' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'increase';
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+                                $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
                             break;
-                            case 'Check':
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + floatval(str_replace(',', '', $itemDetails['total']));
+                            case 'Check' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'increase';
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+                                $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
                             break;
-                            case 'Bill':
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + floatval(str_replace(',', '', $itemDetails['total']));
+                            case 'Bill' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['bill_date']));
+                                $accTransacType = 'increase';
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+                                $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
                             break;
-                            case 'Purchase Order' :
-                                $newQtyPO = intval($itemAccDetails->qty_po) + intval($itemDetails['quantity']);
-    
-                                $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $value);
+                            case 'Vendor Credit' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'decrease';
+
+                                if(floatval($item->cost) !== floatval($data['item_amount'][$index])) {
+                                    $totalCost = floatval($item->cost) * floatval($data['quantity'][$index]);
+                                    $cost = floatval(str_replace(',', '', $data['item_total'][$index])) - $totalCost;
+
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $cost;
+
+                                    $accountData = [
+                                        'id' => $account->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => floatval(str_replace(',', '', $newBalance))
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($accountData);
+
+                                    $accTransacData = [
+                                        'account_id' => $account->id,
+                                        'transaction_type' => 'Vendor Credit',
+                                        'transaction_id' => $vendorCreditId,
+                                        'amount' => $cost,
+                                        'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                                        'type' => 'increase',
+                                        'is_item_category' => 1,
+                                        'child_id' => $itemDetailId
+                                    ];
+
+                                    $this->accounting_account_transactions_model->create($accTransacData);
+
+                                    $account->balance = $newBalance;
+                                }
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+                                if ($accType->account_name === 'Credit Card') {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
+                                } else {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) - $amount;
+                                }
                             break;
-                            case 'Vendor Credit':
-                                $newBalance = floatval(str_replace(',', '', $itemDetails['total'])) - floatval(str_replace(',', '', $itemDetails['quantity']));
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + $newBalance;
-                                $newBalance = $newBalance - floatval(str_replace(',', '', $itemDetails['total']));
-                            break;
-                            case 'Credit Card Credit':
-                                $newBalance = floatval(str_replace(',', '', $itemDetails['total'])) - floatval(str_replace(',', '', $itemDetails['quantity']));
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + $newBalance;
-                                $newBalance = $newBalance - floatval(str_replace(',', '', $itemDetails['total']));
+                            case 'Credit Card Credit' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'decrease';
+
+                                if(floatval($item->cost) !== floatval($data['item_amount'][$index])) {
+                                    $totalCost = floatval($item->cost) * floatval($data['quantity'][$index]);
+                                    $cost = floatval(str_replace(',', '', $data['item_total'][$index])) - $totalCost;
+
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $cost;
+
+                                    $accountData = [
+                                        'id' => $account->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => floatval(str_replace(',', '', $newBalance))
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($accountData);
+
+                                    $accTransacData = [
+                                        'account_id' => $account->id,
+                                        'transaction_type' => 'Vendor Credit',
+                                        'transaction_id' => $vendorCreditId,
+                                        'amount' => $cost,
+                                        'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                                        'type' => 'increase',
+                                        'is_item_category' => 1,
+                                        'child_id' => $itemDetailId
+                                    ];
+
+                                    $this->accounting_account_transactions_model->create($accTransacData);
+
+                                    $account->balance = $newBalance;
+                                }
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+                                if ($accType->account_name === 'Credit Card') {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
+                                } else {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) - $amount;
+                                }
                             break;
                         }
+                    } else {
+                        $account = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+                        $accType = $this->account_model->getById($account->account_id);
 
-                        $invAssetAccData = [
-                            'id' => $invAssetAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => floatval(str_replace(',', '', $newBalance))
-                        ];
+                        switch($transactionType) {
+                            case 'Expense' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'increase';
 
-                        if($transactionType !== 'Purchase Order') {
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+
+                                if ($accType->account_name === 'Credit Card') {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) - $amount;
+                                } else {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
+                                }
+                            break;
+                            case 'Check' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'increase';
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+
+                                if ($accType->account_name === 'Credit Card') {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) - $amount;
+                                } else {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
+                                }
+                            break;
+                            case 'Bill' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['bill_date']));
+                                $accTransacType = 'increase';
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+
+                                if ($accType->account_name === 'Credit Card') {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) - $amount;
+                                } else {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
+                                }
+                            break;
+                            case 'Vendor Credit' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'decrease';
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+
+                                if ($accType->account_name === 'Credit Card') {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
+                                } else {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) - $amount;
+                                }
+                            break;
+                            case 'Credit Card Credit' :
+                                $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
+                                $accTransacType = 'decrease';
+
+                                $amount = floatval(str_replace(',', '', $data['item_total'][$index]));
+
+                                if ($accType->account_name === 'Credit Card') {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) + $amount;
+                                } else {
+                                    $newBalance = floatval(str_replace(',', '', $account->balance)) - $amount;
+                                }
+                            break;
                         }
                     }
+
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $accountData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval(str_replace(',', '', $newBalance))
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($accountData);
+
+                    $accTransacData = [
+                        'account_id' => $account->id,
+                        'transaction_type' => $transactionType,
+                        'transaction_id' => $transactionId,
+                        'amount' => $amount,
+                        'transaction_date' => $accTransacDate,
+                        'type' => $accTransacType,
+                        'is_item_category' => 1,
+                        'child_id' => $id
+                    ];
+
+                    $this->accounting_account_transactions_model->create($accTransacData);
                 }
-
-                switch($transactionType) {
-                    case 'Expense' :
-                        $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
-                        $accTransacType = 'increase';
-                    break;
-                    case 'Check' :
-                        $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
-                        $accTransacType = 'increase';
-                    break;
-                    case 'Bill' :
-                        $accTransacDate = date("Y-m-d", strtotime($data['bill_date']));
-                        $accTransacType = 'increase';
-                    break;
-                    case 'Vendor Credit' :
-                        $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
-                        $accTransacType = 'increase';
-                    break;
-                    case 'Credit Card Credit' :
-                        $accTransacDate = date("Y-m-d", strtotime($data['payment_date']));
-                        $accTransacType = 'increase';
-                    break;
-                }
-
-                $accTransacData = [
-                    'account_id' => $accId,
-                    'transaction_type' => $transactionType,
-                    'transaction_id' => $transactionId,
-                    'amount' => floatval($data['item_total'][$index]),
-                    'transaction_date' => $accTransacDate,
-                    'type' => $accTransacType,
-                    'is_item_category' => 1,
-                    'child_id' => $id
-                ];
-
-                $this->accounting_account_transactions_model->create($accTransacData);
             }
         }
 
@@ -14868,54 +14726,37 @@ class Accounting_modals extends MY_Controller
                     $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
                 }
 
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+
+                switch ($transactionType) {
+                    case 'Expense':
+                        $newQty = intval($location->qty) - intval($item->quantity);
+                    break;
+                    case 'Check':
+                        $newQty = intval($location->qty) - intval($item->quantity);
+                    break;
+                    case 'Bill':
+                        $newQty = intval($location->qty) - intval($item->quantity);
+                    break;
+                    case 'Purchase Order':
+                        $newQty = intval($itemAccDetails->qty_po) - intval($item->quantity);
+
+                        $this->items_model->updateItemAccountingDetails(['qty_po' => $newQty], $item->item_id);
+                    break;
+                    case 'Vendor Credit':
+                        $newQty = intval($location->qty) + intval($item->quantity);
+                    break;
+                    case 'Credit Card Credit':
+                        $newQty = intval($location->qty) + intval($item->quantity);
+                    break;
+                }
+
+                if ($transactionType !== 'Purchase Order') {
+                    $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+                }
+
                 if ($data['item'] === null || $data['item'][$index] === null) {
-                    $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
-                    $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-
-                    switch ($transactionType) {
-                        case 'Expense':
-                            $newQty = intval($location->qty) - intval($item->quantity);
-                            $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $item->total));
-                        break;
-                        case 'Check':
-                            $newQty = intval($location->qty) - intval($item->quantity);
-                            $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $item->total));
-                        break;
-                        case 'Bill':
-                            $newQty = intval($location->qty) - intval($item->quantity);
-                            $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $item->total));
-                        break;
-                        case 'Purchase Order':
-                            $newQty = intval($itemAccDetails->qty_po) - intval($item->quantity);
-
-                            $this->items_model->updateItemAccountingDetails(['qty_po' => $newQty], $item->item_id);
-                        break;
-                        case 'Vendor Credit':
-                            $newQty = intval($location->qty) + intval($item->quantity);
-                            $newBalance = floatval(str_replace(',', '', $item->total)) - floatval(str_replace(',', '', $item->quantity));
-                            $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - $newBalance;
-                            $newBalance = $newBalance + floatval(str_replace(',', '', $item->total));
-                        break;
-                        case 'Credit Card Credit':
-                            $newQty = intval($location->qty) + intval($item->quantity);
-                            $newBalance = floatval(str_replace(',', '', $item->total)) - floatval(str_replace(',', '', $item->quantity));
-                            $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - $newBalance;
-                            $newBalance = $newBalance + floatval(str_replace(',', '', $item->total));
-                        break;
-                    }
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => floatval(str_replace(',', '', $newBalance))
-                    ];
-
-                    if ($transactionType !== 'Purchase Order') {
-                        $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                    }
-
                     $this->vendors_model->delete_transaction_item($item->id, $transactionType);
                 }
             }

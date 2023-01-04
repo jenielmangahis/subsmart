@@ -790,9 +790,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ <span class="equipment_cost"><?php echo number_format($workorder->subtotal,2); ?></span></h4> 
+                                                        <h4>$ <span class="equipment_cost"><?php echo number_format((float)$workorder->subtotal,2); ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;height:100%;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="<?php echo number_format($workorder->subtotal,2); ?>" readonly>
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;height:100%;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="<?php echo number_format((float)$workorder->subtotal,2); ?>" readonly>
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -802,9 +802,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span class="sales_tax_total"><?php echo number_format($workorder->taxes,2); ?></span></h4> 
+                                                        <h4>$ &nbsp;<span class="sales_tax_total"><?php echo number_format((float)$workorder->taxes,2); ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="<?php echo number_format($workorder->taxes,2); ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="<?php echo number_format((float)$workorder->taxes,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -816,7 +816,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="<?php echo number_format($workorder->installation_cost,2); ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="<?php echo number_format((float)$workorder->installation_cost,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -828,7 +828,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="<?php echo number_format($workorder->otp_setup,2); ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="<?php echo number_format((float)$workorder->otp_setup,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -840,7 +840,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="<?php echo number_format($workorder->monthly_monitoring,2); ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="<?php echo number_format((float)$workorder->monthly_monitoring,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -850,7 +850,7 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span id="totalDue"><?php echo number_format($workorder->grand_total,2); ?></span></h4> 
+                                                        <h4>$ &nbsp;<span id="totalDue"><?php echo number_format((float)$workorder->grand_total,2); ?></span></h4> 
                                                     </div> &nbsp;
                                                     <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 totalDue" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="<?php echo number_format($workorder->grand_total,2); ?>" readonly>
                                                     </div>

@@ -22,7 +22,7 @@
                             <span class="content-subtitle d-block"><?= $sms['msg']; ?></span>
                         </div>
                         <div class="sms-date">
-                            <span class="content-subtitle d-block"><?= $sms['date']; ?></span>
+                            <span class="content-subtitle d-block"><?= date("F j, Y g:i A", strtotime($sms['date'])); ?></span>
                         </div>
                     </div>
                 </td>
