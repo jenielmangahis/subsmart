@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php //include viewPath('includes/header'); 
+include viewPath('v2/includes/accounting_header'); 
+?>
 <style>
     /* body {
      background-color: #f9f9fa
@@ -129,9 +131,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     // var tableRows = document.getElementsByTagName('tr');
     // console.dir(tableRows);
 </script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="<?= base_url("assets/css/accounting/accounting.css") ?>">
+<link rel="stylesheet" href="<?= base_url("assets/css/accounting/accounting_includes/cashflow.css") ?>">
 
 
 <div class="wrapper" role="wrapper">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/dashboard'); ?>
+    </div>
     <!-- page wrapper start -->
     <div wrapper__section style="padding-left:1.4%;">
         <div class="container-fluid" style="background-color:white;">
@@ -175,7 +183,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <button class="tablinks" onclick="openCity(event, 'MoneyOut')"
                                     style="border-radius: 0 12px 12px 0;padding:6%;">Cash balance</button>
                             </div> -->
-                            <div class="section-above-chart">
+                            <div class="section-above-chart" style="float:right;">
                                 <div class="cashflowchart-tab-btns">
                                     <button class="tablinks money_in_out">
                                         <i class="fa fa-line-chart" aria-hidden="true"></i>
@@ -435,7 +443,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div style="background-color:#f4f5f8;padding:1.5%;display:none;height: rem;" id="cfp_add_item_area">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="date" id="datepicker"  class="addDate" name="item_date" class="form-control date_plan" placeholder="Date" required>
+                                <input type="text" id="date_plan" name="item_date" class="form-control date_plan" placeholder="Date" required>
                             </div>
                             <div class="col-md-6 input-group" style="">
                                 <input type="text" name="item_desc" class="form-control merchant_name" style="width: 65%;" placeholder="Merchant name" required> &nbsp;&nbsp;&nbsp;
@@ -630,7 +638,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                         </div>
                         <hr>
-                        <button class="btn btn-warning bton">Save</button>
+                        <button class="btn btn-warning bton savecashflowplannedForm">Save</button>
                     </div>
                     <!-- end off adding items -->
                     <br><br>
@@ -854,11 +862,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!-- end container-fluid -->
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+    <?php //include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper end -->
 </div>
 
 
+<script
+    src="<?php echo $url->assets ?>js/accounting/accounting/cashflow.js">
+</script>
 <script>
     
     
@@ -940,11 +951,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $('input[name=MONEY_OUT1]').prop("checked", false);
         }
     });
-    $(document).on("click", ".savecashflowplanned", function(event) {
-        var date = $('.addDate').val();
-        var name = $('.merchant_name').val();
-        var amount = $('.plan_amount').val();
-    })
+    // $(document).on("click", ".savecashflowplanned", function(event) {
+    //     var date = $('.addDate').val();
+    //     var name = $('.merchant_name').val();
+    //     var amount = $('.plan_amount').val();
+    // })
 
 
 
@@ -1000,7 +1011,63 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     var data_3m = <?= $data_dates_3m ?>;
     var data_projected_3m = <?= $data_dates_projected_3m ?>;
 </script>
+<script>
+    $('.savecashflowplannedForm').click(function() {
+		//   alert('test');
+		var date_planDate = $("#date_plan").val();
+		var merchant_name = $(".merchant_name").val();
+		var plan_amount = $(".plan_amount").val();
+		//   plan_type 2x
+		var plan_type = $('input[name="plan_type"]:checked').val();
 
-<?php include viewPath('includes/footer_accounting');
+		// alert(plan_type);
+
+		if ($('.plan_repeat').is(':checked')) {
+			var plan_repeat = '1';
+		} else {
+			var plan_repeat = '0';
+		}
+
+		//   plan_repeat
+
+		// sucess("Data Added Successfully!");
+
+        // alert($("#date_plan").val());
+		$.ajax({
+			type: 'POST',
+			url: "<?php echo base_url(); ?>accounting/savecashflowplan",
+			dataType: 'json',
+			data: {
+				date_planDate: date_planDate,
+				merchant_name: merchant_name,
+				plan_amount: plan_amount,
+				plan_type: plan_type,
+				plan_repeat: plan_repeat
+			},
+			success: function(response) {
+				sucess("Data Added Successfully!");
+			},
+		});
+
+		// function sucess(information, $id) {
+		// 	Swal.fire({
+		// 		title: 'Success!',
+		// 		text: information,
+		// 		icon: 'success',
+		// 		showCancelButton: false,
+		// 		confirmButtonColor: '#32243d',
+		// 		cancelButtonColor: '#d33',
+		// 		confirmButtonText: 'Ok'
+		// 	}).then((result) => {
+		// 		if (result.value) {
+		// 			location.reload();
+		// 		}
+		// 	});
+		// }
+	});
+</script>
+
+<?php include viewPath('v2/includes/footer'); ?>
+<?php //include viewPath('includes/footer_accounting');
       include viewPath('accounting/cashflow_modal');
 
