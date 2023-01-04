@@ -53,8 +53,6 @@ class GoogleCalendarSync_model extends MY_Model
 
     public function getAllToSync($limit = 0)
     {
-        $id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('is_sync', 0);
