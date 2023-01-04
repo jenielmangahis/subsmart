@@ -347,6 +347,15 @@ class Accounting extends MY_Controller
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();*/
 
+        
+        $get_company_account = array(
+            'table' => 'accounting_bank_accounts',
+            'where' => array('company_id' => $companyId,),
+            'select' => '*',
+        );
+
+        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account, false);
+
         $this->load->view('v2/pages/accounting/dashboard', $this->page_data);
     }
 
@@ -14151,7 +14160,7 @@ class Accounting extends MY_Controller
     public function savecashflowplan()
     {   
         
-        $date_plan      = $this->input->post("date_plan");
+        $date_plan      = $this->input->post("date_planDate");
         $merchant_name  = $this->input->post("merchant_name");
         $plan_amount    = $this->input->post("plan_amount");
         $plan_type      = $this->input->post("plan_type");
