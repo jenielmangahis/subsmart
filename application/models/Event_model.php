@@ -339,7 +339,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_office.technician', $id);
-        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
+        // $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
         // $this->db->group_by('jobs.customer_id');
         $query = $this->db->get();
         return $query->result();
@@ -351,13 +351,16 @@ class Event_model extends MY_Model
         $this->db->select('users.id,FName,LName, count(fk_sales_rep_office) as customerCount');
         $this->db->from('users');
         $this->db->join('acs_office', 'acs_office.fk_sales_rep_office = users.id', 'left');
-        $this->db->where('users.company_id', $cid);
-        $this->db->where('fk_sales_rep_office !=', null);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = acs_office.fk_prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $cid);
+        $this->db->where('acs_office.fk_sales_rep_office !=', null);
         $this->db->group_by('users.id');
         $this->db->order_by('customerCount', 'desc');
         $query = $this->db->get();
         return $query->result();
     }
+
+// SELECT users.id, FName, LName, COUNT(acs_office.fk_sales_rep_office) AS customerCount FROM users LEFT JOIN acs_office ON acs_office.fk_sales_rep_office = users.id LEFT JOIN acs_profile ON acs_profile.prof_id = acs_office.fk_prof_id WHERE acs_profile.company_id = 31;
 
     /**
      * This function will fetch lead source data with count of customer connected to it
@@ -591,17 +594,19 @@ class Event_model extends MY_Model
 
     public function getSalesRepRevenue($salesRepId)
     {
-        $this->db->select('SUM(job_payments.amount) as salesRepRev');
-        $this->db->from('job_payments');
-        $this->db->join('jobs', ' job_payments.job_id = jobs.id', 'left');
-        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
-        $this->db->where('jobs.employee_id', $salesRepId);
-        $this->db->group_by('jobs.employee_id');
+        $COMPANY_ID = logged('company_id');
+        $this->db->select('SUM(acs_billing.mmr) as salesRepRev');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_office', 'acs_billing.fk_prof_id = acs_office.fk_prof_id', 'left');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_office.fk_sales_rep_office', $salesRepId);
+        $this->db->where(' acs_profile.company_id', $COMPANY_ID);
+        $this->db->group_by('acs_profile.company_id');
         $query = $this->db->get();
-
-        
         return $query->result();
     }
+
+// SELECT SUM(acs_billing.mmr) FROM acs_billing LEFT JOIN acs_office ON acs_billing.fk_prof_id = acs_office.fk_prof_id LEFT JOIN acs_profile ON acs_billing.fk_prof_id = acs_profile.prof_id WHERE acs_office.fk_sales_rep_office = 5 AND acs_profile.company_id = 31 GROUP BY acs_profile.company_id;
 
     public function getSalesRepRevenueSolar($salesRepId)
     {
