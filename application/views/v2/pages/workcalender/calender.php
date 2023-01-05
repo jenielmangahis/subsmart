@@ -2326,7 +2326,7 @@
                 } else {
                     Swal.fire({
                         title: 'Error',
-                        text: result.message,
+                        text: result.msg,
                         icon: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'

@@ -3263,15 +3263,20 @@ class Workcalender extends MY_Controller
             $message = 'Please select start and end date';
         }elseif( empty($post['tc_off_user_ids']) ){
             $message = 'Please select technician who will take leave';
-        }elseif( $post['tc_off_task_to_user_id'] == '' ){
+        }/*elseif( $post['tc_off_task_to_user_id'] == '' ){
             $message = 'Please select technician who will be assigned to the task';
-        }else{
+        }*/else{
+            $assigned_tech = 0;
+            if( $post['tc_off_task_to_user_id'] > 0 ){
+                $assigned_tech = $post['tc_off_task_to_user_id'];
+            }
+            
             $technician_ids = implode(",", $post['tc_off_user_ids']);
             $data_tc_off = [
                 'company_id' => $company_id,
                 'user_id' => $user_id,
                 'technician_user_ids' => $technician_ids,
-                'task_to_user_id' => $post['tc_off_task_to_user_id'],
+                'task_to_user_id' => $assigned_tech,
                 'task_details' => $post['tc_off_task_details'],
                 'leave_start_date' => date("Y-m-d", strtotime($post['tc_off_start_date'])),
                 'leave_end_date' => date("Y-m-d", strtotime($post['tc_off_end_date'])),
