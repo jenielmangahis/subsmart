@@ -3283,7 +3283,10 @@ class Workcalender extends MY_Controller
                 'created' => date("Y-m-d H:i:s")
             ];
 
-            $this->TechnicianDayOffSchedule_model->create($data_tc_off);
+            $last_id = $this->TechnicianDayOffSchedule_model->create($data_tc_off);
+
+            //Google Calendar
+            createSyncToCalendar($last_id, 'tc-off', $company_id);
 
             $is_success = 1;
             $message    = '';

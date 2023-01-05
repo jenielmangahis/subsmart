@@ -265,6 +265,10 @@
                                             <input class="form-check-input" type="checkbox" name="calendar_auto_add_ticket" id="calendar_auto_add_ticket" <?= $settings && $settings->auto_add_ticket == 1 ? 'checked="checked"' : ''; ?> value="1">
                                             <label class="form-check-label" for="calendar_auto_add_ticket">Service Tickets</label>
                                         </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="calendar_auto_add_tcoff" id="calendar_auto_add_tcoff" <?= $settings && $settings->auto_add_tcoff == 1 ? 'checked="checked"' : ''; ?> value="1">
+                                            <label class="form-check-label" for="calendar_auto_add_tcoff">Technician Off</label>
+                                        </div>
                                     </div>
                                 </div>
 

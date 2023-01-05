@@ -2319,9 +2319,9 @@
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
+                        //if (result.value) {
                             reloadCalendar(selected_calendar_view);
-                        }
+                        //}
                     });
                 } else {
                     Swal.fire({

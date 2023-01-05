@@ -579,12 +579,12 @@
                             <select class="nsm-field form-select" name="tc_off_user_ids[]" id="tc-off-users" multiple="multiple"></select>
                         </div>
                         <div class="col-12">
-                            <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Assign Task To</label>
+                            <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Assign Task To <small>(optional)</small></label>
                             <select class="nsm-field form-select" name="tc_off_task_to_user_id" id="tc-off-assign-to"></select>
                         </div>
                         <div class="col-12">
                             <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Task Details</label>
+                                <label class="content-subtitle fw-bold d-block mb-2">Task / Leave Details</label>
                                 <textarea name="tc_off_task_details" id="tc-off-task-details" class="nsm-field form-control" required=""></textarea>
                             </div>
                         </div>
