@@ -6250,13 +6250,28 @@ class Customer extends MY_Controller
 
     private function getCustomerGeneratedEsigns($customerId)
     {
+
+        $this->db->where('customer_id', $customerId);
+        $attachedGeneratedPDFEntries = $this->db->get('user_docfile_customer_attached_generated_pdfs')->result();
+
+        $attachedGeneratedPDFs = [];
+        if (count($attachedGeneratedPDFEntries)) {
+            $generatedPDFIds = array_map(function ($entry) {
+                return $entry->generated_pdf_id;
+            }, $attachedGeneratedPDFEntries);
+
+            $this->db->where_in('id', $generatedPDFIds);
+            $attachedGeneratedPDFs = $this->db->get('user_docfile_generated_pdfs')->result_array();
+        }
+
+
         $this->db->select(['id']);
         $this->db->where('customer_id', $customerId);
         $customerJobs = $this->db->get('jobs')->result();
         $jobIds = array_map(function ($item) { return $item->id; }, $customerJobs);
 
         if (empty($jobIds)) {
-            return [];
+            return $attachedGeneratedPDFs;
         }
 
         $this->db->select(['user_docfile_recipient_id']);
@@ -6265,7 +6280,7 @@ class Customer extends MY_Controller
         $recipientIds = array_map(function ($item) { return $item->user_docfile_recipient_id; }, $docfileRecipients);
 
         if (empty($recipientIds)) {
-            return [];
+            return $attachedGeneratedPDFs;
         }
 
         $this->db->select(['docfile_id']);
@@ -6274,11 +6289,55 @@ class Customer extends MY_Controller
         $docfileIds = array_map(function ($item) { return $item->docfile_id; }, $docfiles);
 
         if (empty($docfileIds)) {
-            return [];
+            return $attachedGeneratedPDFs;
         }
 
         $this->db->where_in('docfile_id', $docfileIds);
-        return $this->db->get('user_docfile_generated_pdfs')->result_array();
+        $generatedPDFs = $this->db->get('user_docfile_generated_pdfs')->result_array();
+        $generatedPDFs = array_merge($generatedPDFs, $attachedGeneratedPDFs);
+
+        // remove duplicates
+        return array_reduce($generatedPDFs, function ($carry, $generatedPDF) {
+            foreach ($carry as $existing) {
+                if ($existing['id'] === $generatedPDF['id']) {
+                    return $carry;
+                }
+            }
+
+            array_push($carry, $generatedPDF);
+            return $carry;
+        }, []);
+    }
+
+    public function apiAttachGeneratedEsign()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            exit(json_encode(['success' => false]));
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $documentId = $payload['esign_id'] ?? null;
+        $customerId = $payload['customer_id'] ?? null;
+
+        $this->db->where('docfile_id', $documentId);
+        $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
+
+        if ($generatedPDF) {
+            $this->db->where('customer_id', $customerId);
+            $this->db->where('generated_pdf_id', $generatedPDF->id);
+            $attachedPDF = $this->db->get('user_docfile_customer_attached_generated_pdfs')->row();
+
+            if (!$attachedPDF) {
+                $this->db->insert('user_docfile_customer_attached_generated_pdfs', [
+                    'customer_id' => $customerId,
+                    'generated_pdf_id' => $generatedPDF->id
+                ]);
+            }
+        }
+
+        exit(json_encode(['success' => true]));
     }
 
     public function ajax_get_phone_number()

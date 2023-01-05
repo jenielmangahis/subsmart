@@ -73,3 +73,30 @@ export function getButtonDocumentType($button) {
   const $wrapper = $button.closest("[data-document-type]");
   return $wrapper ? $wrapper.dataset.documentType : null;
 }
+
+export async function importEsignToCustomer() {
+  const pathRegex = /^\/customer\/module\/(?<customer_id>\d*)/i;
+  const match = window.location.pathname.match(pathRegex);
+
+  if (!match || !match.groups.customer_id) {
+    return;
+  }
+
+  const customerId = match.groups.customer_id;
+  const esignId = this.dataset.id;
+
+  this.setAttribute("disabled", true);
+  const textContent = this.textContent;
+  this.textContent = "Loading...";
+
+  await api.http.post("/Customer/apiAttachGeneratedEsign", {
+    customer_id: customerId,
+    esign_id: esignId,
+  });
+
+  this.removeAttribute("disabled");
+  this.textContent = textContent;
+
+  const $modal = this.closest(".modal");
+  $($modal).modal("hide");
+}

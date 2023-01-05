@@ -103,7 +103,7 @@ export function getEsignDetails(id) {
   return http.get(`${prefixURL}/DocuSign/apiGetEsignDetails/${id}`);
 }
 
-const http = {
+export const http = {
   post: sendPost,
   delete: sendDelete,
   get: sendGet,

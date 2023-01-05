@@ -1,4 +1,7 @@
-import { onClickViewEsign } from "../../../customer/dashboard/modules/utils.js";
+import {
+  onClickViewEsign,
+  importEsignToCustomer,
+} from "../../../customer/dashboard/modules/utils.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const $modal = document.getElementById("searchesignmodal");
@@ -34,10 +37,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const $item = document.importNode($template.content, true);
         $item.querySelector(".name").textContent = item.name;
 
-        const $viewBtn = $item.querySelector("[data-action=view]");
-        $viewBtn.setAttribute("data-id", item.id);
-        $viewBtn.setAttribute("data-document-type", "esign");
-        $viewBtn.addEventListener("click", onClickViewEsign);
+        const actions = {
+          view: onClickViewEsign,
+          import: importEsignToCustomer,
+        };
+
+        const buttons = $item.querySelectorAll("[data-action]");
+        buttons.forEach(($button) => {
+          const action = actions[$button.dataset.action];
+          $button.setAttribute("data-id", item.id);
+          $button.setAttribute("data-document-type", "esign");
+
+          if (action) {
+            $button.setAttribute("data-id", item.id);
+            $button.setAttribute("data-document-type", "esign");
+            $button.addEventListener("click", action);
+          }
+        });
 
         $wrapper.appendChild($item);
       });

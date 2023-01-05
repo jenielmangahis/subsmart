@@ -291,14 +291,24 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
     
+    // public function getCustomerMMR($id){
+    //     $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date');
+    //     $this->db->from('acs_billing');
+    //     $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id');
+    //     $this->db->where('acs_profile.company_id', $id);
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
+
     public function getCustomerMMR($id){
-        $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date');
+        $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date, acs_office.install_date');
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id');
+        $this->db->join('acs_office', 'acs_billing.fk_prof_id = acs_office.fk_prof_id');
         $this->db->where('acs_profile.company_id', $id);
         $query = $this->db->get();
         return $query->result();
-    }
+    } 
 
     public function getInstalledDate($id, $table){
         $this->db->select('install_date');

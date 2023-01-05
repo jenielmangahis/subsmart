@@ -2139,12 +2139,12 @@ $(function() {
                 }
 
                 locs += '</select>';
-            }
 
-            if ($('#modal-container form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form .modal').attr('id') === 'vendorCreditModal') {
-                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}">`;
+                if ($('#modal-container form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form .modal').attr('id') === 'vendorCreditModal') {
+                    var qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0" max="${locations[0].qty}">`;
+                }
             } else {
-                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+                var qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0">`;
             }
 
             if ($('#modal-container form .modal').attr('id') === 'purchaseOrderModal' && $('#modal-container #item-details-table thead th').length > 9) {
