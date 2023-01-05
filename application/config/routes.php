@@ -933,6 +933,8 @@ $route['calendar/_load_upcoming_calendar_by_date'] = 'Workcalender/ajax_load_upc
 $route['calendar/_add_to_google_calendar'] = 'Workcalender/ajax_add_to_google_calendar';
 //TC Off Schedule
 $route['calendar/_create_technician_off_schedule'] = 'Workcalender/ajax_create_technician_off_schedule';
+$route['calendar/_view_tcoff'] = 'Workcalender/ajax_load_view_tcoff';
+$route['calendar/_delete_tcoff'] = 'Workcalender/ajax_delete_tcoff';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

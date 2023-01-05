@@ -962,6 +962,54 @@
             });
         });
 
+        $(document).on("click", "#btn_delete_tcoff", function() {
+            let id = $(this).attr('data-id');
+
+            Swal.fire({
+                title: 'Delete Technician Off',
+                text: "Do you want to delete selected technician off?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('calendar/_delete_tcoff'); ?>",
+                        data: {
+                            tcoff_id: id
+                        },
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Good job!',
+                                    text: "Technician schedule off was successfully deleted.",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        $("#view_tcoff_modal").modal("hide");
+                                        reloadCalendar();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.message,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
         $("#btn_checkout_appointment").on("click", function() {
             let appointment_id = $(this).attr('data-id');
             let url = "<?= base_url('calendar/_appointment_checkout') ?>";
@@ -1846,6 +1894,26 @@
         });
     }
 
+    function viewTCOff(tcoff_id) {
+        let url = "<?php echo base_url('calendar/_view_tcoff'); ?>";
+
+        $("#view_tcoff_modal").modal('show');
+        showLoader($("#view_tcoff_container"));
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                tcoff_id: tcoff_id
+            },
+            success: function(result) {
+                $("#btn_edit_tcoff").attr("data-id", tcoff_id);
+                $("#btn_delete_tcoff").attr("data-id", tcoff_id);
+                $("#view_tcoff_container").html(result);
+            }
+        });
+    }
+
     $(document).on('click', '.fc-monthView-button', function(){
         $('.calendar-tile-details').hide();
     });
@@ -2162,6 +2230,8 @@
             location.href = base_url + 'tickets/viewDetails/' + tile_id;
         }else if( tile_type == 'event' ){
             location.href = base_url + 'events/event_preview/' + tile_id;
+        }else if( tile_type == 'tc-off' ){
+            viewTCOff(tile_id);
         }
     });
 
@@ -2190,8 +2260,8 @@
 
         let url = "<?php echo base_url('calendar/_add_to_google_calendar'); ?>";
 
-        $('#loading_modal').modal('show');
-        $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Connecting to your google account....');
+        /*$('#loading_modal').modal('show');
+        $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Connecting to your google account....');*/
 
         $.ajax({
             type: "POST",
@@ -2202,7 +2272,6 @@
                 tile_type: tile_type
             },
             success: function(result) {
-                $('#loading_modal').modal('hide');
                 if (result.is_success) {
                     Swal.fire({
                         title: 'Save Successful!',
@@ -2211,15 +2280,17 @@
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        
+                        //$('#loading_modal').modal('hide');
                     });
                 } else {
                     Swal.fire({
                         title: 'Error',
-                        text: 'Google API Error.Cannot add to your google calendar.',
+                        text: result.msg,
                         icon: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //$('#loading_modal').modal('hide');       
                     });
                 }
             }

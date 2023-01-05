@@ -147,13 +147,13 @@
                 <label class="content-subtitle fw-bold">Phone (H)</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_h) ? $profile_info->phone_h : '---'; ?></label>
+                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_h) ? substr($profile_info->phone_h, 0, 13) : '---'; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Phone (M)</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_m) ? $profile_info->phone_m : '---'; ?></label>
+                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_h) ? substr($profile_info->phone_h, 20, 33) : '---'; ?></label>
             </div>
         </div>
 

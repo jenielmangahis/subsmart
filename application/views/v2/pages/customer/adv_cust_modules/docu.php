@@ -196,22 +196,29 @@
                     </div>
                 <?php endif; ?>
 
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-12 col-md-6">
                     <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
                         <i class='bx bx-fw bx-list-minus'></i> Customize List
                     </button>
                 </div>
 
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-12 col-md-6">
                     <button type="button" class="nsm-button w-100 ms-0 mt-3" id="managecustomerdocumentsbtn--download">
                         <i class='bx bx-fw bx-import'></i> Download Selected
                     </button>
                 </div>
 
-                <div class="col-12 col-md-4">
-                    <button type="button" class="nsm-button w-100 ms-0 mt-3" id="managecustomerdocumentsbtn--delete">
+                <div class="col-12 col-12 col-md-6">
+                    <button type="button" class="nsm-button w-100 ms-0" id="managecustomerdocumentsbtn--delete">
                         <i class='bx bx-fw bx-trash'></i>
                         <span class="text">Delete Selected</span>
+                    </button>
+                </div>
+
+                <div class="col-12 col-12 col-md-6">
+                    <button type="button" class="nsm-button w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
+                        <i class='bx bx-fw bx-import'></i>
+                        <span class="text">Import eSign</span>
                     </button>
                 </div>
             </div>
@@ -374,7 +381,7 @@
 </div>
 
 
-<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="viewesigndocumentdetails">
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="viewesigndocumentdetails" style="z-index: 1056;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -419,3 +426,71 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade nsm-modal" id="searchesignmodal" tabindex="-1" aria-labelledby="searchesignmodal_label" aria-modal="true" role="dialog">
+    <style>
+        #searchesignmodal .widget-form {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #searchesignmodal .widget-form input {
+            border-radius: .25rem !important;
+        }
+
+        #searchesignmodal .widget-form button {
+            border-radius: 5px !important;
+            margin-bottom: 0 !important;
+        }
+
+        #searchesignmodal .nsm-empty {
+            padding: 1rem 0;
+        }
+    </style>
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="searchesignmodal_label">Search eSign to import</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="mb-3">
+                    <div class="col-12 col-md">
+                        <div class="input-group widget-form">
+                            <input id="esignsearch" placeholder="Search eSign by key, name, subject, etc." class="form-control nsm-field" maxlength="50" type="search">
+                        </div>
+                    </div>
+                </form>
+
+                <div style="min-height: 200px;">
+                    <div id="esignsearchloader" class="d-flex align-items-center justify-content-center esign-loader d-none" style="padding: 4rem 0;">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+
+                    <ul id="esignsearchresults" class="list-group d-none">
+                    </ul>
+
+                    <div class="nsm-empty">
+                        <i class="bx bx-meh-blank"></i>
+                        <span>No matching eSigns.</span>
+                    </div>
+                </div>
+
+                <template id="esignsearchresulttemplate">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="name"></span>
+                        <div>
+                            <button data-action="import" class="nsm-button primary" style="margin-bottom: 0; display: inline-block;">Import</button>
+                            <button data-action="view" class="nsm-button" style="margin-bottom: 0; display: inline-block;">View</button>
+                        </div>
+                    </li>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<?= base_url("assets/js/esign/docusign/v2/search.js") ?>" type="module"></script>

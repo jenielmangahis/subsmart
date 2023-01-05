@@ -1463,11 +1463,7 @@ class Debug extends MY_Controller {
         $googleAccount = $this->GoogleAccounts_model->getByCompanyId($company_id);
         if( $googleAccount ){
             $company = $this->Business_model->getByCompanyId($company_id);
-            if( $company ){
-                $calendar_name = $company->business_name . ' - APPOINTMENTS';
-            }else{
-                $calendar_name  = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
-            } 
+            $calendar_name = $company->business_name . ' - CALENDAR TEST';
 
             echo "<pre>";
             $capi = new GoogleCalendarApi();
@@ -1476,7 +1472,7 @@ class Debug extends MY_Controller {
             print_r($token);            
             $colors = $capi->getColors($google_credentials['api_key'], $token['access_token']);
             print_r($colors);
-            $updateCalendar = $capi->updateCalendar(6, $google_credentials['api_key'], $token['access_token'], $googleAccount->auto_sync_calendar_id);
+            $updateCalendar = $capi->updateCalendar(8, $google_credentials['api_key'], $token['access_token'], $googleAccount->auto_sync_calendar_id);
             
             
             print_r($updateCalendar);
@@ -1551,6 +1547,67 @@ class Debug extends MY_Controller {
                                     'calendar_id' => $calendarTCOff['id'],
                                     'calendar_name' => $calendar_tc_off_name,
                                     'calendar_type' => $this->GoogleCalendar_model->calendarTypeTCOff(),
+                                    'created' => date("Y-m-d H:i:s")
+                                ];
+
+                                $this->GoogleCalendar_model->create($calendar_data);
+                            }
+                        }
+                    }
+                }                
+            }
+        }        
+    }
+
+    public function createJobsServicesCalendarsForExistingGoogleAccounts()
+    {
+        include APPPATH . 'libraries/google-calendar-api.php';
+
+        $this->load->model('GoogleAccounts_model');
+        $this->load->model('Business_model');
+        $this->load->model('GoogleCalendar_model');
+
+        $google_credentials = google_credentials();
+
+        $googleAccount  = $this->GoogleAccounts_model->getAll();
+        if( $googleAccount && $google_credentials ){
+            $googleAccounts = $this->GoogleAccounts_model->getAll();
+            foreach( $googleAccounts as $g ){
+                if( $g->company_id > 0 ){
+                    $company = $this->Business_model->getByCompanyId($g->company_id);
+                    if( $company ){
+                        $calendar_job_name = $company->business_name . ' - JOBS';
+                        $calendar_services_name = $company->business_name . ' - SERVICE TICKET';
+
+                        $capi = new GoogleCalendarApi();
+                        $token = $capi->getToken($google_credentials['client_id'], $google_credentials['redirect_url'], $google_credentials['client_secret'], $g->google_refresh_token);
+                        if( isset($token['access_token']) && $token['access_token'] != '' ){
+                            //Jobs
+                            $calendarJob = $capi->createCalendar($google_credentials['api_key'], $token['access_token'], $calendar_job_name);
+                            if( isset($calendarJob['id']) ){
+                                $updateCalendar = $capi->updateCalendar($this->GoogleCalendar_model->calendarJobsColorID(), $google_credentials['api_key'], $token['access_token'], $calendarJob['id']);
+                                //Create calendar
+                                $calendar_data = [
+                                    'company_id' => $g->company_id,
+                                    'calendar_id' => $calendarJob['id'],
+                                    'calendar_name' => $calendar_job_name,
+                                    'calendar_type' => $this->GoogleCalendar_model->calendarTypeJob(),
+                                    'created' => date("Y-m-d H:i:s")
+                                ];
+
+                                $this->GoogleCalendar_model->create($calendar_data);
+                            }
+
+                            //Service Ticket
+                            $calendarEvent = $capi->createCalendar($google_credentials['api_key'], $token['access_token'], $calendar_services_name);
+                            if( isset($calendarEvent['id']) ){
+                                $updateCalendar = $capi->updateCalendar($this->GoogleCalendar_model->calendarServiceTicketColorID(), $google_credentials['api_key'], $token['access_token'], $calendarEvent['id']);
+                                //Create calendar
+                                $calendar_data = [
+                                    'company_id' => $g->company_id,
+                                    'calendar_id' => $calendarEvent['id'],
+                                    'calendar_name' => $calendar_services_name,
+                                    'calendar_type' => $this->GoogleCalendar_model->calendarTypeServiceTicket(),
                                     'created' => date("Y-m-d H:i:s")
                                 ];
 

@@ -141,16 +141,18 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
         $this->load->model('GoogleCalendar_model');
+        $this->load->model('TechnicianDayOffSchedule_model');
         $this->load->helper(array('hashids_helper'));       
         
         $googleSync = $this->GoogleCalendarSync_model->getAllToSync(10);
-        foreach($googleSync as $gs){            
+        $total_sync = 0;
+        foreach($googleSync as $gs){                    
             $is_valid = false;
-            $err_msg  = '';
+            $err_msg  = '';            
             switch ($gs->module_name) {
-                case 'appointment':                
+                case 'appointment':     
                     $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->object_id, $gs->company_id);
-                    if( $appointment ){               
+                    if( $appointment ){                                   
                         $tags = '';
                         $location = '';
                         if( $appointment->tag_ids != '' ){
@@ -394,10 +396,21 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
 
+                        if( $job->hash_id != '' ){
+                            $job_eid = $job->hash_id;
+                        }else{
+                            $job_eid = hashids_encrypt($job->job_unique_id, '', 15);
+                            $this->jobs_model->update($job->job_unique_id, ['hash_id' => $job_eid]);
+                        }
+
+                        $view_link = base_url('/job_invoice_view/' . $job_eid);
+                        
+
                         $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                         $description .= "Job Type : ".$job->job_type."\n";                
                         $description .= "Phone Number : ".$job->cust_phone."\n";                
                         $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
+                        $description .= $view_link . "\n";
 
                         $is_valid = true;
                     }else{
@@ -481,12 +494,16 @@ class Cron_Api extends MYF_Controller {
                             $googleSyncData = [
                                 'is_sync' => 1,
                                 'error_msg' => '',
+                                'is_with_error' => 0,
                                 'date_sync' => date("Y-m-d H:i:s")
                             ];
+
+                            $total_sync++;
                         }else{
                             $googleSyncData = [
                                 'is_sync' => 0,
                                 'error_msg' => 'Cannot sync data. Please check google credentials',
+                                'is_with_error' => 1,
                                 'date_sync' => date("Y-m-d H:i:s")
                             ];
                         }
@@ -495,6 +512,7 @@ class Cron_Api extends MYF_Controller {
                         $googleSyncData = [
                             'is_sync' => 0,
                             'error_msg' => 'Cannot find valid google account',
+                            'is_with_error' => 1,
                             'date_sync' => date("Y-m-d H:i:s")
                         ];
                     }  
@@ -504,6 +522,7 @@ class Cron_Api extends MYF_Controller {
                     $googleSyncData = [
                         'is_sync' => 0,
                         'error_msg' => 'Cannot find valid google account',
+                        'is_with_error' => 1,
                         'date_sync' => date("Y-m-d H:i:s")
                     ];
 
@@ -513,12 +532,15 @@ class Cron_Api extends MYF_Controller {
                 $googleSyncData = [
                     'is_sync' => 0,
                     'error_msg' => $err_msg,
+                    'is_with_error' => 1,
                     'date_sync' => date("Y-m-d H:i:s")
                 ];
 
                 $this->GoogleCalendarSync_model->update($gs->id,$googleSyncData);
             }
         }
+
+        echo 'Total Sync : ' . $total_sync;
     }
         
 }

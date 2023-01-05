@@ -81,7 +81,7 @@
         <?php endif; ?>
         <div class="row form_line">
             <div class="col-md-4">
-                Sales Area <span class="required"> *</span>
+                Sales Area
             </div>
             <div class="col-md-8">
                 <select name="fk_sa_id" data-type="customer_sales_area" class="form-control" >
