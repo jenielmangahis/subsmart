@@ -1348,3 +1348,201 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 	}
 </script>
+
+
+<script>
+    
+    
+
+    $(document).on("click", "#Apply", function(event) {
+        setTimeout(function() {
+            $(".filter-btn-section .filter-panel").fadeOut();
+        }, 300);
+
+    });
+    $(document).on("click", "#reset", function(event) {
+        $('input[name=CREDIT_CARDS1]').prop("checked", false);
+        $('input[name=EXPENSES1]').prop("checked", false);
+        $('input[name=PAYROLL1]').prop("checked", false);
+        $('input[name=SALES_RECEIPTS1]').prop("checked", false);
+        $('input[name=BILLS]').prop("checked", false);
+        $('input[name=EXPENSES]').prop("checked", false);
+        $('input[name=CHECK]').prop("checked", false);
+        $('input[name=INVOICES]').prop("checked", false);
+        $('input[name=CREDIT_CARDS]').prop("checked", false);
+        $('input[name=PAYCHECKS]').prop("checked", false);
+        $('input[name=ESTIMATES]').prop("checked", false);
+        $('input[name=SALES_RECEIPTS]').prop("checked", false);
+        $('input[name=REPEATING]').prop("checked", false);
+        $('input[name=MONEY_IN1]').prop("checked", false);
+        $('input[name=MONEY_OUT1]').prop("checked", false);
+        $('input[name=MONEY_OUT]').prop("checked", false);
+        $('input[name=MONEY_IN]').prop("checked", false);
+        $('input[name=PREDICTED]').prop("checked", false);
+        $('input[name=fyb]').prop("checked", false);
+        $('input[name=ADDED_BY_YOU]').prop("checked", false);
+    });
+    $(document).on("click", "#PREDICTED", function(event) {
+        if ($('input[name=PREDICTED]').is(":checked")) {
+            $('input[name=CREDIT_CARDS1]').prop("checked", true);
+            $('input[name=EXPENSES1]').prop("checked", true);
+            $('input[name=PAYROLL1]').prop("checked", true);
+            $('input[name=SALES_RECEIPTS1]').prop("checked", true);
+        } else {
+            $('input[name=CREDIT_CARDS1]').prop("checked", false);
+            $('input[name=EXPENSES1]').prop("checked", false);
+            $('input[name=PAYROLL1]').prop("checked", false);
+            $('input[name=SALES_RECEIPTS1]').prop("checked", false);
+
+        }
+    });
+
+    $(document).on("click", "#fyb", function(event) {
+        if ($('input[name=fyb]').is(":checked")) {
+            $('input[name=BILLS]').prop("checked", true);
+            $('input[name=EXPENSES]').prop("checked", true);
+            $('input[name=CHECK]').prop("checked", true);
+            $('input[name=INVOICES]').prop("checked", true);
+            $('input[name=CREDIT_CARDS]').prop("checked", true);
+            $('input[name=PAYCHECKS]').prop("checked", true);
+            $('input[name=ESTIMATES]').prop("checked", true);
+            $('input[name=SALES_RECEIPTS]').prop("checked", true);
+        } else {
+            $('input[name=BILLS]').prop("checked", false);
+            $('input[name=EXPENSES]').prop("checked", false);
+            $('input[name=CHECK]').prop("checked", false);
+            $('input[name=INVOICES]').prop("checked", false);
+            $('input[name=CREDIT_CARDS]').prop("checked", false);
+            $('input[name=PAYCHECKS]').prop("checked", false);
+            $('input[name=ESTIMATES]').prop("checked", false);
+            $('input[name=SALES_RECEIPTS]').prop("checked", false);
+
+        }
+    })
+    $(document).on("click", "#ADDED_BY_YOU", function(event) {
+        if ($('input[name=ADDED_BY_YOU]').is(":checked")) {
+            $('input[name=REPEATING]').prop("checked", true);
+            $('input[name=MONEY_IN1]').prop("checked", true);
+            $('input[name=MONEY_OUT1]').prop("checked", true);
+
+        } else {
+            $('input[name=REPEATING]').prop("checked", false);
+            $('input[name=MONEY_IN1]').prop("checked", false);
+            $('input[name=MONEY_OUT1]').prop("checked", false);
+        }
+    });
+    // $(document).on("click", ".savecashflowplanned", function(event) {
+    //     var date = $('.addDate').val();
+    //     var name = $('.merchant_name').val();
+    //     var amount = $('.plan_amount').val();
+    // })
+
+
+
+
+
+
+    // $(document).on("click", function(event) {
+    //     if ($(event.target).closest(".filter-btn-section button.filter-btn").length === 0) {
+    //         $(".filter-btn-section .filter-panel").hide();
+    //     }
+    // });
+    <?php
+    $data_dates_projected = "[";
+    $data_dates = "[";
+    $data_labels = "[";
+
+    $data_dates_projected_3m = "[";
+    $data_dates_3m = "[";
+    $data_labels_3m = "[";
+    $date_start = date("Y-m-d", strtotime("- 10 months", strtotime(date("Y-m-01"))));
+    $date_end = date("Y-m-t", strtotime("+ 2 months", strtotime(date("Y-m-01"))));
+    $total = 0;
+    $month = date("m", strtotime($date_start));
+    $ctr = 0;
+    while ($date_start <= $date_end) {
+        $value = rand(rand(1, $ctr + 2), $ctr + 2);
+        if ($month == date("m", strtotime($date_start))) {
+            $total += $value;
+        } else {
+            $month = date("m", strtotime($date_start));
+            $data_dates .= $total . ",";
+            $data_dates_projected .= rand(rand(1, $total), $total + 2) . ",";
+            $data_labels .= "'" . strtoupper(date("M", strtotime($date_start))) . "',";
+            $total = 0;
+        }
+        $date_start = date("Y-m-d", strtotime("+ 1 day", strtotime($date_start)));
+        $ctr++;
+    }
+    $data_dates_projected .= "]";
+    $data_dates .= "]";
+    $data_labels .= "]";
+
+    $data_dates_projected_3m .= "]";
+    $data_dates_3m .= "]";
+    $data_labels_3m .= "]";
+    ?>
+
+    var labels = <?= $data_labels ?>;
+    var data = <?= $data_dates ?>;
+    var data_projected = <?= $data_dates_projected ?>;
+
+    var labels_3m = <?= $data_labels_3m ?>;
+    var data_3m = <?= $data_dates_3m ?>;
+    var data_projected_3m = <?= $data_dates_projected_3m ?>;
+</script>
+<script>
+    $('.savecashflowplannedForm').click(function() {
+		//   alert('test');
+		var date_planDate = $("#date_plan").val();
+		var merchant_name = $(".merchant_name").val();
+		var plan_amount = $(".plan_amount").val();
+		//   plan_type 2x
+		var plan_type = $('input[name="plan_type"]:checked').val();
+
+		// alert(plan_type);
+
+		if ($('.plan_repeat').is(':checked')) {
+			var plan_repeat = '1';
+		} else {
+			var plan_repeat = '0';
+		}
+
+		//   plan_repeat
+
+		// sucess("Data Added Successfully!");
+
+        // alert($("#date_plan").val());
+		$.ajax({
+			type: 'POST',
+			url: "<?php echo base_url(); ?>accounting/savecashflowplan",
+			dataType: 'json',
+			data: {
+				date_planDate: date_planDate,
+				merchant_name: merchant_name,
+				plan_amount: plan_amount,
+				plan_type: plan_type,
+				plan_repeat: plan_repeat
+			},
+			success: function(response) {
+				sucess("Data Added Successfully!");
+			},
+		});
+
+		// function sucess(information, $id) {
+		// 	Swal.fire({
+		// 		title: 'Success!',
+		// 		text: information,
+		// 		icon: 'success',
+		// 		showCancelButton: false,
+		// 		confirmButtonColor: '#32243d',
+		// 		cancelButtonColor: '#d33',
+		// 		confirmButtonText: 'Ok'
+		// 	}).then((result) => {
+		// 		if (result.value) {
+		// 			location.reload();
+		// 		}
+		// 	});
+		// }
+	});
+</script>

@@ -3273,21 +3273,21 @@ $(function() {
                         $.each(items, function(index, item) {
                             if(parseFloat(item.remaining_balance) > 0) {
                                 var link = `
-                                <td>
+                                <td class="overflow-visible">
                                     <div class="dropdown">
                                         <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
                                         <div class="dropdown-menu">
-                                            <table class="nsm-table">
+                                            <table class="nsm-table linked-transaction-table">
                                                 <thead>
-                                                    <tr>
+                                                    <tr class="linked-transaction-header">
                                                         <td data-name="Type">Type</td>
                                                         <td data-name="Date">Date</td>
                                                         <td data-name="Amount">Amount</td>
                                                         <td data-name="Action"></td>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
+                                                <tbody class="linked-transaction-table-body">
+                                                    <tr class="linked-transaction-row">
                                                         <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
                                                         <td>${dateString}</td>
                                                         <td>${remainingBalance.replace('$-', '-$')}</td>
@@ -3332,12 +3332,12 @@ $(function() {
                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
                                         <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                         <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                        <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
+                                        <td><span class="row-total">-${total.replace('$-', '-$')}</span></td>
                                         ${link}
                                         <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
         
-                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table, .linked-transaction-table-body)').append(`<tr>${fields}</tr>`);
                     
                                     $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
                                         minimumResultsForSearch: -1,
@@ -3363,7 +3363,7 @@ $(function() {
                                         <td><span class="item-amount">${parseFloat(item.price).toFixed(2)}</span></td>
                                         <td></td>
                                         <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                        <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
+                                        <td><span class="row-total">-${total.replace('$-', '-$')}</span></td>
                                         ${link}
                                         <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
@@ -3432,17 +3432,17 @@ $(function() {
                             <div class="dropdown">
                                 <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Purchase Order</a>
                                 <div class="dropdown-menu">
-                                    <table class="nsm-table">
+                                    <table class="nsm-table linked-transaction-table">
                                         <thead>
-                                            <tr>
+                                            <tr class="linked-transaction-header">
                                                 <td data-name="Type">Type</td>
                                                 <td data-name="Date">Date</td>
                                                 <td data-name="Amount">Amount</td>
                                                 <td data-name="Action"></td>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
+                                        <tbody class="linked-transaction-table-body">
+                                            <tr class="linked-transaction-row">
                                                 <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
                                                 <td>${dateString}</td>
                                                 <td>${remainingBalance.replace('$-', '-$')}</td>
@@ -3477,21 +3477,21 @@ $(function() {
                         $.each(items, function(index, item) {
                             if(parseFloat(item.remaining_balance) > 0) {
                                 var link = `
-                                <td>
+                                <td class="overflow-visible">
                                     <div class="dropdown">
                                         <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
                                         <div class="dropdown-menu">
-                                            <table class="nsm-table">
+                                            <table class="nsm-table linked-transaction-table">
                                                 <thead>
-                                                    <tr>
+                                                    <tr class="linked-transaction-header">
                                                         <td data-name="Type">Type</td>
                                                         <td data-name="Date">Date</td>
                                                         <td data-name="Amount">Amount</td>
                                                         <td data-name="Action"></td>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
+                                                <tbody class="linked-transaction-table-body">
+                                                    <tr class="linked-transaction-row">
                                                         <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
                                                         <td>${dateString}</td>
                                                         <td>${remainingBalance.replace('$-', '-$')}</td>
@@ -3529,7 +3529,7 @@ $(function() {
                                         <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
                                         <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                                         <td>${locs}</td>
-                                        <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="-${item.quantity}"></td>
+                                        <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="${item.quantity}"></td>
                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
                                         <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                         <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
@@ -3538,7 +3538,7 @@ $(function() {
                                         <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                                     `;
         
-                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                                    $('#modal-container form .modal #item-table tbody:not(#package-items-table, .linked-transaction-table-body)').append(`<tr>${fields}</tr>`);
                     
                                     $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
                                         minimumResultsForSearch: -1,
@@ -3636,17 +3636,17 @@ $(function() {
                             <div class="dropdown">
                                 <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Purchase Order</a>
                                 <div class="dropdown-menu">
-                                    <table class="nsm-table">
+                                    <table class="nsm-table linked-transaction-table">
                                         <thead>
-                                            <tr>
+                                            <tr class="linked-transaction-header">
                                                 <td data-name="Type">Type</td>
                                                 <td data-name="Date">Date</td>
                                                 <td data-name="Amount">Amount</td>
                                                 <td data-name="Action"></td>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
+                                        <tbody class="linked-transaction-table-body">
+                                            <tr class="linked-transaction-row">
                                                 <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
                                                 <td>${dateString}</td>
                                                 <td>${remainingBalance.replace('$-', '-$')}</td>
@@ -3672,11 +3672,11 @@ $(function() {
         switch($('#modal-container .modal').attr('id')) {
             case 'invoiceModal' :
                 $(`#invoiceModal #item-table input[name="item_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
-                    $(this).parent().parent().remove();
+                    $(this).closest('tr').remove();
                 });
 
                 if($(`#invoiceModal input[name="linked_transaction[]"]`).length > 1) {
-                    $(`#invoiceModal #linked-transaction`).next().find(`.unlink-transaction[data-type="${data.type}"][data-id="${data.id}"]`).parent().parent().remove();
+                    $(`#invoiceModal #linked-transaction`).next().find(`.unlink-transaction[data-type="${data.type}"][data-id="${data.id}"]`).closest('tr').remove();
                 } else {
                     $('#invoiceModal #linked-transaction').parent().remove();
 
@@ -8361,7 +8361,7 @@ $(function() {
         var subtotal = 0.00;
         var taxes = 0.00;
         var discounts = 0.00;
-        $('#modal-container form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header)').each(function() {
+        $('#modal-container form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header, .linked-transaction-row, .linked-transaction-header)').each(function() {
             var itemAmount = $(this).find('input[name="item_amount[]"]').length > 0 ? $(this).find('input[name="item_amount[]"]').val() : $(this).find('span.item-amount').html();
             var itemQty = $(this).find('input[name="quantity[]"]').length > 0 ? $(this).find('input[name="quantity[]"]').val() : 0;
             var itemDisc = $(this).find('input[name="discount[]"]').length > 0 ? $(this).find('input[name="discount[]"]').val() : 0.00;
@@ -8400,11 +8400,11 @@ $(function() {
 
     $(document).on('click', '#modal-container form .modal #item-table .delete-row', function() {
         var el = $(this);
-        if($(this).parent().parent().find('input[name="item_linked_transaction[]"]').length < 1) {
-            if($(this).parent().parent().hasClass('package')) {
-                $(this).parent().parent().next().remove();
+        if(el.closest('tr').find('input[name="item_linked_transaction[]"]').length < 1) {
+            if(el.closest('tr').hasClass('package')) {
+                el.closest('tr').next().remove();
             }
-            $(this).parent().parent().remove();
+            el.closest('tr').remove();
     
             var subtotal = 0.00;
             var taxes = 0.00;
@@ -8428,8 +8428,8 @@ $(function() {
             $('#modal-container form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
             $('#modal-container form .modal #adjustment_input_cm').trigger('change');
         } else {
-            var linkedTransac = $(this).parent().parent().find('input[name="item_linked_transaction[]"]').val();
-            var linkedTransacType = linkedTransac.split('-')[0].replace('delayed_');
+            var linkedTransac = el.closest('tr').find('input[name="item_linked_transaction[]"]').val();
+            var linkedTransacType = linkedTransac.split('-')[0].replace('delayed_', '');
             var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
             if($(`#modal-container form .modal #item-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
                 var message = `There are multiple lines for ${type}. Would you like to remove this line from the invoice or unlink the whole transaction?`;
@@ -8441,6 +8441,7 @@ $(function() {
                 var cancelButtonText = 'No, keep it';
             }
 
+            console.log(message);
             Swal.fire({
                 title: message,
                 icon: 'warning',
@@ -8452,20 +8453,20 @@ $(function() {
                 cancelButtonColor: '#d33'
             }).then((result) => {
                 if(result.isConfirmed) {
-                    el.parent().parent().parent().find('.unlink-transaction').trigger('click');
+                    el.closest('tr').find('.unlink-transaction').trigger('click');
                 } else {
                     if($(`#modal-container form .modal #item-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
                         $(`#modal-container form .modal #item-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).each(function() {
-                            if($(this).parent().parent().hasClass('package')) {
-                                $(this).parent().parent().next().remove();
+                            if($(this).closest('tr').hasClass('package')) {
+                                $(this).closest('tr').next().remove();
                             }
-                            $(this).parent().parent().remove();
+                            $(this).closest('tr').remove();
                         });
                     } else {
-                        if(el.parent().parent().parent().hasClass('package')) {
-                            el.parent().parent().parent().next().remove();
+                        if(el.closest('tr').hasClass('package')) {
+                            el.closest('tr').next().remove();
                         }
-                        el.parent().parent().parent().remove();
+                        el.closest('tr').remove();
                     }
 
                     var subtotal = 0.00;

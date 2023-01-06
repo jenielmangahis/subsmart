@@ -199,7 +199,7 @@
                                                     <?php $itemDetails = $item->itemDetails;?>
                                                     <?php $locations = $item->locations;?>
                                                     <tr>
-                                                        <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->items_id?>"></td>
+                                                        <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                         <td><?=ucfirst($itemDetails->type)?></td>
                                                         <td>
                                                             <?php if($itemDetails->type === 'product' || $itemDetails->type === 'item') : ?>
@@ -211,7 +211,7 @@
                                                             <?php endif; ?>
                                                         </td>
                                                         <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->quantity?>"></td>
-                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->cost), 2, '.', ',')?>"></td>
+                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
                                                         <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                         <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                         <td>

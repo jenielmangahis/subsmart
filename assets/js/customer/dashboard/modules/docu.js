@@ -8,9 +8,10 @@ const $buttons = [...$section.querySelectorAll("[data-action]")];
 
 const actions = {
   upload: onClickUpload,
-  download: onClickDownload,
+  download: utils.onClickDownload,
   delete: onClickDelete,
   view_esign: utils.onClickViewEsign,
+  delete_attached_generated_pdf_entry: utils.onDeleteAttachedPDF,
 };
 
 $buttons.forEach(($button) => {
@@ -23,26 +24,6 @@ $buttons.forEach(($button) => {
 function onClickUpload() {
   $fileInput.setAttribute("document-type", utils.getButtonDocumentType(this));
   $fileInput.click();
-}
-
-function onClickDownload() {
-  const customerId = getCustomerId();
-  const documentType = utils.getButtonDocumentType(this);
-
-  const params = {
-    customer_id: customerId,
-    document_type: documentType,
-  };
-
-  if (documentType === "esign") {
-    params.generated_esign_id = this.dataset.id;
-  }
-
-  const queryString = new URLSearchParams(params).toString();
-  window.open(
-    `${api.prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?${queryString}`,
-    "_blank"
-  );
 }
 
 async function onClickDelete() {

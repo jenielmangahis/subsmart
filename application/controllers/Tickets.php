@@ -695,12 +695,25 @@ class Tickets extends MY_Controller
 
         $ticketdet = $this->tickets_model->get_tickets_data_one($id);
             // $tech = explode(",", $tick->technicians);
-            $assigned_technician = unserialize($ticketdet->technicians);
-            // var_dump($assigned_technician);
-                foreach($assigned_technician as $eid){
-                    $custom_html = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 30px;display:inline-block;">'.getUserName($eid).'</div>';
-                }
+            // $assigned_technician = unserialize($ticketdet->technicians);
+            // // var_dump($assigned_technician);
+            //     foreach($assigned_technician as $eid){
+            //         $custom_html = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 30px;display:inline-block;">'.getUserName($eid).'</div>';
+            //     }
         // $this->page_data['technicians'] = $custom_html;
+
+        $assigned_technician = unserialize($ticketdet->technicians);
+            if(!empty($assigned_technician))
+            {
+                // var_dump($assigned_technician);
+                    foreach($assigned_technician as $eid){
+                        $custom_html = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 30px;display:inline-block;">'.getUserName($eid).'</div>';
+                    }
+
+            }else
+            {
+                $custom_html = '<span></span>';
+            }
 
         
         $this->load->view('tickets/view', $this->page_data);

@@ -6408,39 +6408,39 @@ class Accounting_modals extends MY_Controller
 
                     $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
 
-                    // if(!is_null($linkedTransaction)) {
-                    //     if($linkedTransaction[0] === 'delayed_credit') {
-                    //         $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
-                    //         $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransaction[1]);
+                    if(!is_null($linkedTransaction)) {
+                        if($linkedTransaction[0] === 'delayed_credit') {
+                            $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
+                            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransaction[1]);
 
-                    //         if(floatval(str_replace('-', '', $data['item_total'][$key])) > floatval($transactionItem->total)) {
-                    //             $amount = floatval($transactionItem->total);
-                    //         } else {
-                    //             $amount = floatval(str_replace('-', '', $data['item_total'][$key]));
-                    //         }
+                            if(floatval(str_replace('-', '', $data['item_total'][$key])) > floatval($transactionItem->total)) {
+                                $amount = floatval($transactionItem->total);
+                            } else {
+                                $amount = floatval(str_replace('-', '', $data['item_total'][$key]));
+                            }
 
-                    //         $creditData = [
-                    //             'remaining_balance' => floatval($delayedCredit->remaining_balance) - $amount
-                    //         ];
+                            $creditData = [
+                                'remaining_balance' => floatval($delayedCredit->remaining_balance) - $amount
+                            ];
 
-                    //         $balUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
-                    //     } else {
-                    //         $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
-                    //         $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransaction[1]);
+                            $balUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                        } else {
+                            $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
+                            $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransaction[1]);
 
-                    //         if(floatval($data['item_total'][$key]) > floatval($transactionItem->total)) {
-                    //             $amount = floatval($transactionItem->total);
-                    //         } else {
-                    //             $amount = floatval($data['item_total'][$key]);
-                    //         }
+                            if(floatval($data['item_total'][$key]) > floatval($transactionItem->total)) {
+                                $amount = floatval($transactionItem->total);
+                            } else {
+                                $amount = floatval($data['item_total'][$key]);
+                            }
 
-                    //         $chargeData = [
-                    //             'remaining_balance' => floatval($delayedCharge->remaining_balance) - $amount
-                    //         ];
+                            $chargeData = [
+                                'remaining_balance' => floatval($delayedCharge->remaining_balance) - $amount
+                            ];
 
-                    //         $balUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
-                    //     }
-                    // }
+                            $balUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                        }
+                    }
 
                     if(!isset($data['template_name'])) {
                         if($explode[0] === 'item') {
@@ -16577,25 +16577,6 @@ class Accounting_modals extends MY_Controller
                 }
             }
 
-            $refundAcc = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
-            $refundAccType = $this->account_model->getById($refundAcc->account_id);
-
-            if ($refundAccType->account_name === 'Credit Card') {
-                $newBalance = floatval(str_replace(',', '', $refundAcc->balance)) - floatval(str_replace(',', '', $refundReceipt->total_amount));
-            } else {
-                $newBalance = floatval(str_replace(',', '', $refundAcc->balance)) + floatval(str_replace(',', '', $refundReceipt->total_amount));
-            }
-
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $refundAccData = [
-                'id' => $refundAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => floatval(str_replace(',', '', $newBalance))
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($refundAccData);
-
             // NEW
             if (isset($data['attachments']) && is_array($data['attachments'])) {
                 $order = 1;
@@ -17691,8 +17672,6 @@ class Accounting_modals extends MY_Controller
                     }
                 }
             }
-
-            // $this->accounting_credit_memo_model->insert_transaction_items($newItems);
         }
 
         if($transactionType !== 'Delayed Credit' && $transactionType !== 'Delayed Charge') {

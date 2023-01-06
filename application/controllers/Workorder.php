@@ -8057,9 +8057,8 @@ class Workorder extends MY_Controller
         // dd($service_name);
 
 
-
-    $action = $this->input->post('action');
-    if($action == 'submit') {
+    ///
+    if(true) {
 
         $dateIssued = date('Y-m-d', strtotime($this->input->post('current_date')));
 

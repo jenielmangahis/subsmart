@@ -158,7 +158,7 @@
                                                     <?php $itemDetails = $item->itemDetails;?>
                                                     <?php $locations = $item->locations;?>
                                                     <tr>
-                                                        <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->items_id?>"></td>
+                                                        <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                         <td><?=ucfirst($itemDetails->type)?></td>
                                                         <td>
                                                             <?php if($itemDetails->type === 'product' || $itemDetails->type === 'item') : ?>
