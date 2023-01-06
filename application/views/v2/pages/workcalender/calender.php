@@ -1609,6 +1609,7 @@
         showLoader(_container);
 
         $.ajax({
+            async:false,
             type: 'POST',
             url: url,
             data: {},

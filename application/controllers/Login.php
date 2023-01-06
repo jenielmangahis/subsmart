@@ -70,6 +70,7 @@ class Login extends CI_Controller
         $this->load->model('IndustryTemplateModules_model');
         $this->load->model('CompanyDeactivatedModule_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('CalendarSettings_model');
                 
         $this->load->library('form_validation');
 
@@ -112,8 +113,13 @@ class Login extends CI_Controller
                 $this->index();
                 return;
             }else{
+                $calendarSettings = $this->CalendarSettings_model->getByCompanyId($user->company_id);
+                $default_timezone = '';
+                if( $calendarSettings && $calendarSettings->timezone != '' ){
+                    date_default_timezone_set($calendarSettings->timezone);                    
+                }
                 // If Allowed, then retreive user row and login the user                
-                $this->users_model->login($user, post('remember_me'));
+                $this->users_model->login($user, post('remember_me'), $default_timezone);
 
                 $client = $this->Clients_model->getById($user->company_id);
                 if( $client->is_plan_active == 3 ){
@@ -203,6 +209,7 @@ class Login extends CI_Controller
         $this->load->model('Activity_model', 'activity');
         $activity['activityName'] = "User Login";
         $activity['activity'] = " User " . logged('username') . " is loggedin";
+        $activity['createdAt']   = date("Y-m-d H:i:s");
         $activity['user_id'] = logged('id');
 
         $isUserInserted = $this->activity->addEsignActivity($activity);

@@ -35,13 +35,26 @@
     vertical-align: top;
     display: inline-block;
 }
+@media screen and (max-width: 600px) {
+  .content-title {
+    font-size: 13px !important;
+    word-break: break-all;
+  }
+  .nsm-calendar-info-container .content-subtitle{
+    font-size: 11px !important;
+  }
+  .nsm-calendar-info-container{
+    margin-top: 10px;
+  }
+  
+}
 </style>
 <table class="nsm-table" id="upcoming_schedules_table">
     <thead>
         <tr>
-            <td></td>
-            <td data-name="Job Details"></td>
-            <td data-name="Status"></td>
+            <td class=""></td>
+            <td data-name="Job Details111"></td>
+            <td data-name="Tech Assigned"></td>
         </tr>
     </thead>
     <tbody>
@@ -200,35 +213,37 @@
                         }
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
-                        <?php if( $schedule['type'] == 'appointment' ){ ?>
-                            <tr class="schedule-jobs upcoming-tile-view" data-type="appointment" data-id="<?= $schedule['data']->id; ?>" style="cursor: pointer">
-                        <?php }else{ ?>
-                            <tr class="schedule-jobs" style="cursor: pointer" onclick="location.href='<?= $schedule_view_url; ?>'">
-                        <?php } ?>
+                            <tr class="schedule-jobs">
                             <td>
                                 <?php 
                                     $event_month = date("F", strtotime($schedule_date));
                                     $event_day   = date("d", strtotime($schedule_date));
                                     $event_day_word = date("D", strtotime($schedule_date));
                                 ?>
-                                <div class="nsm-calendar" ng-app="myApp">
-                                    <div class="week">
-                                        <b><?= $event_day_word; ?></b>
-                                    </div>
-                                    <div class="date">
-                                        <?= $event_day; ?>
-                                    </div>
-                                </div>    
-                                <div class="nsm-calendar-info-container" style="text-align:center;">
-                                    <?php if( $schedule_status != '' ){ ?>
-                                    <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
-                                    <?php } ?>
-                                    <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
-                                    <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
-                                    <?php }elseif( $schedule_start_time != '' ){  ?>
-                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
-                                    <?php } ?>                                
-                                </div>                    
+                                <?php if( $schedule['type'] == 'appointment' ){ ?>
+                                    <a class="schedule-jobs upcoming-tile-view" data-type="appointment" data-id="<?= $schedule['data']->id; ?>" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);">
+                                <?php }else{ ?>
+                                    <a class="schedule-job" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);" onclick="location.href='<?= $schedule_view_url; ?>'">
+                                <?php } ?>
+                                    <div class="nsm-calendar" ng-app="myApp">
+                                        <div class="week">
+                                            <b><?= $event_day_word; ?></b>
+                                        </div>
+                                        <div class="date">
+                                            <?= $event_day; ?>
+                                        </div>
+                                    </div> 
+                                    <div class="nsm-calendar-info-container" style="text-align:center;">
+                                        <?php if( $schedule_status != '' ){ ?>
+                                        <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
+                                        <?php } ?>
+                                        <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
+                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
+                                        <?php }elseif( $schedule_start_time != '' ){  ?>
+                                            <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
+                                        <?php } ?>                                
+                                    </div>      
+                                </a>              
                             </td>
                             <td style="vertical-align: text-top;padding-top: 16px;">                                
                                 <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
@@ -289,7 +304,7 @@
             <?php } ?>
         <?php }else{ ?>
             <tr>
-                <td colspan="4">
+                <td colspan="3">
                     <div class="nsm-empty">
                         <span>No upcoming schedules for now.</span>
                     </div>
