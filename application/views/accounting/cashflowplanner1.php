@@ -303,8 +303,8 @@ include viewPath('v2/includes/accounting_header');
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="row cols">
-                                                <div class="from-your-books col-4">
+                                            <div class="row cols" style="font-size:12px;">
+                                                <div class="from-your-books col-4" style="font-size:12px;">
                                                     <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
                                                         <input class="colTable" type="checkbox" name="fyb" value="fyb" id="fyb" checked="">
                                                         <label for="fyb">

@@ -61,9 +61,15 @@ class Widgets extends MY_Controller
     public function getV2JobTags()
     {
         $this->load->model('widgets_model');
-        //$data['tags'] = $this->widgets_model->getTags();
         $comp_id = getLoggedCompanyID();
-        $data['tags'] = $this->widgets_model->rawGetTagsWithCount($comp_id);
+        $GET_TAGS_COUNT = $this->widgets_model->rawGetTagsWithCount($comp_id);
+        $REMOVE_ZERO_TAGCOUNT = array();
+        for ($i=0; $i < count($GET_TAGS_COUNT); $i++) {
+            if ($GET_TAGS_COUNT[$i]->total_job_tags > 0) {
+                array_push($REMOVE_ZERO_TAGCOUNT, $GET_TAGS_COUNT[$i]);
+            }
+        }
+        $data['tags'] = $REMOVE_ZERO_TAGCOUNT;
         $this->load->view('v2/widgets/tags_details', $data);
     }
 

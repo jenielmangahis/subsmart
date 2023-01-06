@@ -2319,14 +2319,14 @@
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
+                        //if (result.value) {
                             reloadCalendar(selected_calendar_view);
-                        }
+                        //}
                     });
                 } else {
                     Swal.fire({
                         title: 'Error',
-                        text: result.message,
+                        text: result.msg,
                         icon: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'

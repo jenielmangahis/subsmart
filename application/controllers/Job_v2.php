@@ -313,7 +313,6 @@ class Job_v2 extends MY_Controller
         );
         $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
 
-
         // lead source data
         $get_leadsource = array(
             'table' => 'ac_leadsource',

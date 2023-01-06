@@ -75,21 +75,18 @@ export function getButtonDocumentType($button) {
 }
 
 export async function importEsignToCustomer() {
-  const pathRegex = /^\/customer\/module\/(?<customer_id>\d*)/i;
-  const match = window.location.pathname.match(pathRegex);
-
-  if (!match || !match.groups.customer_id) {
+  const customerId = getCustomerIdFromUrl();
+  if (!customerId) {
     return;
   }
 
-  const customerId = match.groups.customer_id;
   const esignId = this.dataset.id;
 
   this.setAttribute("disabled", true);
   const textContent = this.textContent;
   this.textContent = "Loading...";
 
-  await api.http.post("/Customer/apiAttachGeneratedEsign", {
+  const { data } = await api.http.post("/Customer/apiAttachGeneratedEsign", {
     customer_id: customerId,
     esign_id: esignId,
   });
@@ -97,6 +94,100 @@ export async function importEsignToCustomer() {
   this.removeAttribute("disabled");
   this.textContent = textContent;
 
+  const itemMarkup = `
+    <div class="col-12" data-document-type="esign">
+      <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-6 position-relative">
+              <div class="form-check d-inline-block" style="padding: 0;">
+                  <input class="form-check-input d-none" type="checkbox" id="esign${data.id}">
+                  <label class="form-check-label" for="esign${data.id}">
+                      ${data.label}
+                  </label>
+              </div>
+          </div>
+          <div class="col-12 col-md-6 text-end buttons has-document">
+              <button type="button" class="nsm-button btn-sm" data-action="download" data-id="${data.docfile_id}">
+                Download
+              </button>
+
+              <button type="button" class="nsm-button btn-sm" data-action="view_esign" data-id="${data.docfile_id}">
+                View details
+              </button>
+
+              <button type="button" class="nsm-button error btn-sm" data-action="delete_attached_generated_pdf_entry" data-attached-generated-pdf-entry-id="${data.attached_generated_pdf_entry.id}">
+                Delete
+              </button>
+          </div>
+      </div>
+    </div>
+  `;
+
+  const actions = {
+    download: onClickDownload,
+    view_esign: onClickViewEsign,
+    delete_attached_generated_pdf_entry: onDeleteAttachedPDF,
+  };
+
+  const $item = createElementFromHTML(itemMarkup);
+  const $buttons = $item.querySelectorAll("[data-action]");
+  [...$buttons].forEach(($button) => {
+    const action = actions[$button.dataset.action];
+    if (typeof action === "function") {
+      $button.addEventListener("click", action);
+    }
+  });
+
+  const $wrapper = document.getElementById("generatedpdfwrapper");
+  $wrapper.appendChild($item);
+
   const $modal = this.closest(".modal");
   $($modal).modal("hide");
+}
+
+function getCustomerIdFromUrl() {
+  const pathRegex = /^\/customer\/module\/(?<customer_id>\d*)/i;
+  const match = window.location.pathname.match(pathRegex);
+
+  if (!match || !match.groups.customer_id) {
+    return null;
+  }
+
+  return match.groups.customer_id;
+}
+
+export async function onDeleteAttachedPDF() {
+  const id = this.dataset.attachedGeneratedPdfEntryId;
+
+  this.setAttribute("disabled", true);
+  this.textContent = "Deleting...";
+
+  await api.http.post("/Customer/apiDeleteAttachedGeneratedEsign", { id });
+  this.closest("[data-document-type=esign]").remove();
+}
+
+// https://stackoverflow.com/a/494348/8062659
+function createElementFromHTML(htmlString) {
+  var div = document.createElement("div");
+  div.innerHTML = htmlString.trim();
+  return div.firstChild;
+}
+
+export function onClickDownload() {
+  const customerId = getCustomerIdFromUrl();
+  const documentType = getButtonDocumentType(this);
+
+  const params = {
+    customer_id: customerId,
+    document_type: documentType,
+  };
+
+  if (documentType === "esign") {
+    params.generated_esign_id = this.dataset.id;
+  }
+
+  const queryString = new URLSearchParams(params).toString();
+  window.open(
+    `${api.prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?${queryString}`,
+    "_blank"
+  );
 }

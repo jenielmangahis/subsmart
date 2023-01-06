@@ -141,6 +141,13 @@
                             $schedule_description = '';
 
                             $assigned_employees = array();
+                            $emp_ids = unserialize($schedule['data']->technicians);
+                            if( is_array($emp_ids) ){
+                                foreach($emp_ids as $eid){
+                                    $assigned_employees[] = $eid;    
+                                }
+                            }                            
+
                             $assigned_employees[] = $schedule['data']->sales_rep;
 
                             $is_valid = 1;
@@ -177,7 +184,10 @@
                             $schedule_description = '';
 
                             $assigned_employees = array();
-                            $assigned_employees[] = $schedule['data']->user_id;
+                            $emp_ids = json_decode($schedule['data']->assigned_employee_ids);
+                            foreach($emp_ids as $eid){
+                                $assigned_employees[] = $eid;    
+                            }
 
                             $is_valid = 1;
                         }

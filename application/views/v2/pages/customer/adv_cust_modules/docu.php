@@ -167,7 +167,7 @@
                 </div>
 
                 <?php if (!empty($esign_documents)): ?>
-                    <div class="upload-wrapper">
+                    <div class="upload-wrapper" id="generatedpdfwrapper">
                     <h6>Generated eSigns</h6>
 
                     <?php foreach ($esign_documents as $esign_document): ?>
@@ -189,6 +189,11 @@
                                     <button type="button" class="nsm-button btn-sm" data-action="view_esign" data-id="<?= $esign_document['docfile_id']; ?>">
                                         View details
                                     </button>
+                                    <?php if($esign_document['attached_generated_pdf_entry']): ?>
+                                        <button type="button" class="nsm-button error btn-sm" data-action="delete_attached_generated_pdf_entry" data-attached-generated-pdf-entry-id="<?= $esign_document['attached_generated_pdf_entry']->id; ?>">
+                                            Delete
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

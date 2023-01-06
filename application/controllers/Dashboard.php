@@ -310,7 +310,7 @@ class Dashboard extends Widgets {
         $this->db->from('acs_billing');
         $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = acs_alarm.fk_prof_id', 'left');
-        $this->db->where("acs_alarm.acct_type = 'IN-HOUSE' AND acs_profile.status = 'Installed'");
+        $this->db->where("acs_profile.status = 'Installed'");
         $query = $this->db->get();
         $result = $query->row();
         return $result;

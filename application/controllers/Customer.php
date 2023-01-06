@@ -6250,7 +6250,6 @@ class Customer extends MY_Controller
 
     private function getCustomerGeneratedEsigns($customerId)
     {
-
         $this->db->where('customer_id', $customerId);
         $attachedGeneratedPDFEntries = $this->db->get('user_docfile_customer_attached_generated_pdfs')->result();
 
@@ -6262,8 +6261,17 @@ class Customer extends MY_Controller
 
             $this->db->where_in('id', $generatedPDFIds);
             $attachedGeneratedPDFs = $this->db->get('user_docfile_generated_pdfs')->result_array();
-        }
 
+            // mark as imported
+            $attachedGeneratedPDFs = array_map(function ($attachedGeneratedPDF) use ($attachedGeneratedPDFEntries) {
+                foreach ($attachedGeneratedPDFEntries as $entry) {
+                    if ($entry->generated_pdf_id == $attachedGeneratedPDF['id']) {
+                        $attachedGeneratedPDF['attached_generated_pdf_entry'] = $entry;
+                    }
+                }
+                return $attachedGeneratedPDF;
+            }, $attachedGeneratedPDFs);
+        }
 
         $this->db->select(['id']);
         $this->db->where('customer_id', $customerId);
@@ -6321,9 +6329,19 @@ class Customer extends MY_Controller
         $documentId = $payload['esign_id'] ?? null;
         $customerId = $payload['customer_id'] ?? null;
 
+        $customerGeneratedEsigns = $this->getCustomerGeneratedEsigns($customerId);
+
+        foreach ($customerGeneratedEsigns as $esign) {
+            if ($esign['docfile_id'] == $documentId) {
+                // makes sure esign is not owned by the customer
+                exit(json_encode(['success' => true]));
+            }
+        }
+
         $this->db->where('docfile_id', $documentId);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
 
+        $attachedGeneratedPDFId = null;
         if ($generatedPDF) {
             $this->db->where('customer_id', $customerId);
             $this->db->where('generated_pdf_id', $generatedPDF->id);
@@ -6334,9 +6352,33 @@ class Customer extends MY_Controller
                     'customer_id' => $customerId,
                     'generated_pdf_id' => $generatedPDF->id
                 ]);
+                $attachedGeneratedPDFId = $this->db->insert_id();
             }
         }
 
+        $generatedPDF = null;
+        if ($attachedGeneratedPDFId) {
+            $this->db->where('docfile_id', $documentId);
+            $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
+    
+            $this->db->where('id', $attachedGeneratedPDFId);
+            $generatedPDF->attached_generated_pdf_entry = $this->db->get('user_docfile_customer_attached_generated_pdfs')->row();
+        }
+
+        exit(json_encode(['success' => true, 'data' => $generatedPDF]));
+    }
+
+    public function apiDeleteAttachedGeneratedEsign()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            exit(json_encode(['success' => false]));
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $this->db->where('id', $payload['id']);
+        $this->db->delete('user_docfile_customer_attached_generated_pdfs');
         exit(json_encode(['success' => true]));
     }
 
