@@ -2899,8 +2899,8 @@ $(function() {
                     var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
 
                     if($('#modal-container .modal #linked-transaction').length < 1) {
-                        $('#modal-container .modal table#category-details-table thead tr').append('<th></th>');
-                        $('#modal-container .modal table#item-details-table thead tr').append('<th></th>');
+                        $('<td></td>').insertBefore($('#modal-container .modal table#category-details-table thead tr td:last-child'));
+                        $('<td></td>').insertBefore($('#modal-container .modal table#item-details-table thead tr td:last-child'));
 
                         $('#modal-container .modal table#category-details-table tbody tr').each(function() {
                             if ($(this).find('select').length === 0) {
@@ -2915,21 +2915,21 @@ $(function() {
                     if (categories.length > 0) {
                         $.each(categories, function(index, category) {
                             var link = `
-                            <td>
+                            <td class="overflow-visible">
                                 <div class="dropdown">
                                     <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
                                     <div class="dropdown-menu">
-                                        <table class="nsm-table">
+                                        <table class="nsm-table linked-transaction-table">
                                             <thead>
-                                                <tr>
+                                                <tr class="linked-transaction-header">
                                                     <td data-name="Type">Type</td>
                                                     <td data-name="Date">Date</td>
                                                     <td data-name="Amount">Amount</td>
                                                     <td data-name="Action"></td>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
+                                            <tbody class="linked-transaction-table-body">
+                                                <tr class="linked-transaction-row">
                                                     <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
                                                     <td>${dateString}</td>
                                                     <td>${remainingBalance.replace('$-', '-$')}</td>
@@ -2945,17 +2945,38 @@ $(function() {
                             `;
 
                             count++;
-                            $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child td:first-child').html(count);
-                            $(link).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_account[]"]').append(`<option value="${category.expense_account_id}">${category.expense_account}</option>`);
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="description[]"]').val(category.description);
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_amount[]"]').val(parseFloat(category.amount).toFixed(2));
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_billable[]"]').prop('checked', category.billable === "1");
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_markup[]"]').val(parseFloat(category.markup_percentage).toFixed(2));
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_tax[]"]').prop('checked', category.tax === "1");
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').append(`<option value="${category.customer_id}">${category.customer_name}</option>`);
+                            var fields = `
+                                <td>${count}</td>
+                                <td><select name="expense_account[]" class="nsm-field form-control" required=""><option value="${category.expense_account_id}">${category.expense_account}</option></select></td>
+                                <td>
+                                    <select name="category[]" class="nsm-field form-control">
+                                        <option disabled="" selected="">&nbsp;</option>
+                                        <option value="fixed">Fixed Cost</option>
+                                        <option value="variable">Variable Cost</option>
+                                        <option value="periodic">Periodic Cost</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="description[]" class="nsm-field form-control" value="${category.description}"></td>
+                                <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${parseFloat(category.amount).toFixed(2)}"></td>
+                                <td>
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1" ${category.billable === "1" ? 'checked' : ''}>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)" value="${parseFloat(category.markup_percentage).toFixed(2)}">
+                                </td>
+                                <td>
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" ${category.tax === "1" ? 'checked' : ''}>
+                                    </div>
+                                </td>
+                                <td><select name="category_customer[]" class="nsm-field form-control"><option value="${category.customer_id}">${category.customer_name}</option></select></td>
+                                ${link}
+                                <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
+                            `;
+
+                            $('#modal-container .modal table#category-details-table tbody').append(`<tr>${fields}</tr>`);
                         });
 
                         $('#modal-container .modal table#category-details-table tbody tr:last-child select').each(function() {
@@ -2997,13 +3018,13 @@ $(function() {
                         });
                     }
 
-                    if($('#modal-container .modal #category-details-table tbody tr').length < rowCount) {
-                        var currentCount = $('#modal-container .modal #category-details-table tbody tr').length;
+                    if($('#modal-container .modal #category-details-table tbody:not(.linked-transaction-table-body) tr:not(.linked-transaction-row, .linked-transaction-header').length < rowCount) {
+                        var currentCount = $('#modal-container .modal #category-details-table tbody tr:not(.linked-transaction-row, .linked-transaction-header').length;
 
                         do {
-                            $('#modal-container .modal #category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+                            $('#modal-container .modal #category-details-table tbody:not(.linked-transaction-table-body)').append(`<tr>${catDetailsBlank}</tr>`);
 
-                            $('<td></td>').insertBefore('#modal-container .modal #category-details-table tbody tr:last-child td:last-child');
+                            $('<td></td>').insertBefore('#modal-container .modal #category-details-table tbody:not(.linked-transaction-table-body) tr:last-child:not(.linked-transaction-row, .linked-transaction-header) td:last-child');
 
                             currentCount++;
                         } while(currentCount < rowCount);
@@ -3012,7 +3033,6 @@ $(function() {
                     if (items.length > 0) {
                         if ($('#modal-container .modal #collapse-item-details').hasClass('show') === false) {
                             $('#modal-container .modal #collapse-item-details').collapse('toggle');
-                            // $('#modal-container .modal button[data-target="#item-details"]').trigger('click');
                         }
 
                         $.each(items, function(index, item) {
@@ -3022,27 +3042,27 @@ $(function() {
                             }
 
                             if ($('#modal-container form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form .modal').attr('id') === 'vendorCreditModal') {
-                                var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" max="${item.locations[0].qty}">`;
+                                var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="${item.quantity}" max="${item.locations[0].qty}">`;
                             } else {
-                                var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0">`;
+                                var qtyField = `<input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="${item.quantity}">`;
                             }
 
                             var link = `
-                            <td>
+                            <td class="overflow-visible">
                                 <div class="dropdown">
                                     <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
                                     <div class="dropdown-menu">
-                                        <table class="nsm-table">
+                                        <table class="nsm-table linked-transaction-table">
                                             <thead>
-                                                <tr>
+                                                <tr class="linked-transaction-header">
                                                     <td data-name="Type">Type</td>
                                                     <td data-name="Date">Date</td>
                                                     <td data-name="Amount">Amount</td>
                                                     <td data-name="Action"></td>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
+                                            <tbody class="linked-transaction-table-body">
+                                                <tr class="linked-transaction-row">
                                                     <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
                                                     <td>${dateString}</td>
                                                     <td>${remainingBalance.replace('$-', '-$')}</td>
@@ -3062,7 +3082,7 @@ $(function() {
                                     <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
                                     <td>Product</td>
                                     <td><select name="location[]" class="form-control nsm-field" required>${locs}</select></td>
-                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="${item.quantity}"></td>
+                                    <td>${qtyField}</td>
                                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
                                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
@@ -3131,15 +3151,21 @@ $(function() {
                     button.parent().append(`<input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction[]">`);
                 });
 
-                $(this).parent().parent().parent().parent().parent().remove();
+                $(this).closest('.card').parent().remove();
 
                 $('#modal-container form .modal .transactions-container .row div.col-12 .add-transaction[data-type="bill"]').each(function() {
-                    $(this).parent().parent().parent().parent().parent().remove();
+                    $(this).closest('.card').parent().remove();
                 });
 
                 $('#modal-container form .modal .transactions-container .row div.col-12 .add-transaction[data-type="vendor-credit"]').each(function() {
-                    $(this).parent().parent().parent().parent().parent().remove();
+                    $(this).closest('.card').parent().remove();
                 });
+
+                // if ($('#modal-container .modal .transactions-container .row div.col-12').length === 1) {
+                //     $('#modal-container .modal .transactions-container').parent().remove();
+                //     $('#modal-container .modal .close-transactions-container').remove();
+                //     $('#modal-container .modal .open-transactions-container').remove();
+                // }
             break;
             case 'bill':
                 if ($('#modal-container form .modal').attr('id') !== 'billPaymentModal') {
@@ -3261,8 +3287,8 @@ $(function() {
                     var items = result.items;
 
                     if (items.length > 0) {
-                        if($('#modal-container form .modal #item-table thead tr th').length < 10) {
-                            $('#modal-container form .modal #item-table thead tr').append('<th width="3%"></th>');
+                        if($('#modal-container form .modal #item-table thead tr td').length < 10) {
+                            $('<td></td>').insertBefore($('#modal-container form .modal #item-table thead tr td:last-child'));
                         }
 
                         var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
@@ -3430,7 +3456,7 @@ $(function() {
                     } else {
                         button.parent().append(`
                             <div class="dropdown">
-                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Purchase Order</a>
+                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Credit</a>
                                 <div class="dropdown-menu">
                                     <table class="nsm-table linked-transaction-table">
                                         <thead>
@@ -3465,8 +3491,8 @@ $(function() {
                     var items = result.items;
 
                     if (items.length > 0) {
-                        if($('#modal-container form .modal #item-table thead tr th').length < 10) {
-                            $('#modal-container form .modal #item-table thead tr').append('<th width="3%"></th>');
+                        if($('#modal-container form .modal #item-table thead tr td').length < 10) {
+                            $('<td></td>').insertBefore($('#modal-container form .modal #item-table thead tr td:last-child'));
                         }
 
                         var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
@@ -3634,7 +3660,7 @@ $(function() {
                     } else {
                         button.parent().append(`
                             <div class="dropdown">
-                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Purchase Order</a>
+                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Charge</a>
                                 <div class="dropdown-menu">
                                     <table class="nsm-table linked-transaction-table">
                                         <thead>
@@ -3692,12 +3718,10 @@ $(function() {
                         $('#invoiceModal #linked-transaction').html(`${linkedCount} linked transactions`);
                     } else {
                         var linked = $('#invoiceModal input[name="linked_transaction[]"]').val().split('-');
-                        var linkedType = linked[0].split('_');
+                        var linkedType = linked[0].replace('delayed_', '');
 
                         var text = '1 linked ';
-                        for(i in linkedType) {
-                            text += `${linkedType[i].charAt(0).toUpperCase() + linkedType[i].slice(1).toLowerCase()} `;
-                        }
+                        text += `${linkedType.charAt(0).toUpperCase() + linkedType.slice(1).toLowerCase()} `;
 
                         $('#invoiceModal #linked-transaction').html(`${text.trim()}`);
                     }
@@ -3791,7 +3815,7 @@ $(function() {
                             transaction.data_type !== 'vendor-credit' &&
                             $(`#expenseModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                                 $('#expenseModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                                    <div class="col-12">
+                                    <div class="col-12 grid-mb">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
@@ -3902,7 +3926,7 @@ $(function() {
                             transaction.data_type !== 'vendor-credit' &&
                             $(`#checkModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                                 $('#checkModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                                    <div class="col-12">
+                                    <div class="col-12 grid-mb">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
@@ -4010,7 +4034,7 @@ $(function() {
                             $('#billModal input[name="linked_transaction[]"]').length > 0 &&
                             $(`#billModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                                 $('#billModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                                    <div class="col-12">
+                                    <div class="col-12 grid-mb">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
@@ -7419,11 +7443,9 @@ $(function() {
                             $('#invoiceModal .close-transactions-container').parent().remove();
                             $('#invoiceModal .open-transactions-container').parent().remove();
 
-                            $('#invoiceModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                                <div class="col-md-12 px-0 pb-2">
-                                    <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                                        <i class="fa fa-chevron-right"></i>
-                                    </a>
+                            $('#invoiceModal .modal-body .row .col').children('.row:first-child').prepend(`
+                                <div class="col-12">
+                                    <button class="nsm-button close-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-right"></i></button>
                                 </div>
                             `);
                         }
@@ -12612,13 +12634,13 @@ const getInvoiceLinkableTransactions = (transactionType, transactionDate) => {
 
             if(flag) {
                 $('#invoiceModal .modal-body .row .nsm-callout .transactions-container .row').append(`
-                    <div class="col-12">
+                    <div class="col-12 grid-mb">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">${title}</h5>
                                 <p class="card-subtitle">${transaction.formatted_date}</p>
                                 <p class="card-text">
-                                                    ${transaction.type === 'Purchase Order' ? `<strong>Total</strong>&emsp;${transaction.total}<br><strong>Balance</strong>&emsp;${transaction.balance}` : transaction.amount}
+                                    ${transaction.type === 'Purchase Order' ? `<strong>Total</strong>&emsp;${transaction.total}<br><strong>Balance</strong>&emsp;${transaction.balance}` : transaction.amount}
                                 </p>
                                 <ul class="d-flex justify-content-around list-unstyled">
                                     <li><a href="#" class="add-transaction text-decoration-none" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>

@@ -15,7 +15,8 @@ class Activity_model extends MY_Model {
         {
             $this->db->where('company_id', $company_id);
             $this->db->limit($limit);
-            $this->db->order_by('createdAt', 'DESC');
+            //$this->db->order_by('createdAt', 'DESC');
+            $this->db->order_by('activity_id', 'DESC');
             return $this->db->get('esign_activity')->result();
         }
 
@@ -28,10 +29,12 @@ class Activity_model extends MY_Model {
 			'created_at' => date("Y-m-d H:i:s"),
 			'updated_at' => date("Y-m-d H:i:s")
 		]);
+
+
 	}
 	
 	public function addEsignActivity($data){
-		$data['company_id'] = logged('company_id');
+		$data['company_id'] = logged('company_id');		
 		return $this->db->insert($this->esign_table, $data); 	
 	}
 

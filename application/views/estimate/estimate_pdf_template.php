@@ -282,13 +282,13 @@ table {
                         <table class="table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
                         <thead>
                             <tr>
-                                <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
-                                <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
-                                <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
-                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
-                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
-                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
-                                <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
+                                <!-- <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th> -->
+                                <th style="background: #f4f4f4; text-align: left;">Items</th>
+                                <th style="background: #f4f4f4; text-align: left;">Item Type</th>
+                                <th style="background: #f4f4f4; text-align: center;">Price</th>
+                                <th style="background: #f4f4f4; text-align: center;">Qty</th>
+                                <th style="background: #f4f4f4; text-align: center;">Discount</th>
+                                <th style="background: #f4f4f4; text-align: center;" class="text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -311,13 +311,13 @@ table {
                         <?php //} ?> -->
                         <?php foreach($items_data as $itemData){ ?>
                             <tr class="table-items__tr">
-                              <td valign="top" style="width:30px; text-align:center;"></td>
-                              <td valign="top" style="width:45%;"><?= $itemData->title; ?></td>
-                              <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
-                              <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iCost,2); ?></td>
-                              <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->qty; ?></td>
-                              <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->discount; ?></td>
-                              <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iTotal,2); ?></td>
+                              <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                              <td valign="top" style="width:40%;"><?= $itemData->title; ?></td>
+                              <td valign="top" style="width:18%;"><?= $itemData->type; ?></td>
+                              <td valign="top" style="text-align: right;">$<?= number_format($itemData->iCost,2); ?></td>
+                              <td valign="top" style="width: 50px; text-align: center;"><?= $itemData->qty; ?></td>
+                              <td valign="top" style="text-align: center;">$<?= $itemData->discount; ?></td>
+                              <td valign="top" style="text-align: right;">$<?= number_format($itemData->iTotal,2); ?></td>
                             </tr>
                           <?php } ?>
                         

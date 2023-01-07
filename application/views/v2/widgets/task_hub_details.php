@@ -46,8 +46,13 @@ if ($tasks) :
 else :
     ?>
     <div class="nsm-empty">
-        <i class='bx bx-meh-blank'></i>
-        <span>All Caught Up!</span>
+        <a class="btn-add-task" href="javascript:void(0);" style="text-decoration: none; color:#6a4a86 !important;">
+            <i class='bx bx-plus-circle'></i>
+            <br />
+            <span>Add Task</span>
+        </a>
+        <!-- <i class='bx bx-meh-blank'></i>
+        <span>All Caught Up!11</span> -->
     </div>
 <?php
 endif;

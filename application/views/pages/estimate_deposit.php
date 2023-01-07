@@ -147,10 +147,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <table class="right-text">
                                         <tbody>
                                             <tr>
-                                                <td align="right" width="65%"><?= $estimate->estimate_date; ?></td>
+                                                <td align="right" width="65%"><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
                                             </tr>
                                             <tr>
-                                                <td align="right"><?= $estimate->expiry_date;  ?></td>
+                                                <td align="right"><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -183,27 +183,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div>
                                                 <span>Email: <?= $customer->email; ?></span> <a href="mailto:<?= $customer->email; ?>"><span class="fa fa-envelope icon_preview"></span></a><br>
                                             </div>
+                                            <?php if ($customer->phone_h != "" || $customer->phone_h != NULL) : ?>
 
-                                            <div>
-                                                <span>Phone: </span>
-                                                <?php if ($customer->phone_h != "" || $customer->phone_h != NULL) : ?>
-                                                    <?= $customer->phone_h;  ?>
-                                                    <span class="fa fa-phone icon_preview"></span>
-                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
-                                                <?php else : echo 'N/A'; ?>
-                                                <?php endif; ?>
-                                            </div>
+                                            <?php else : ?>
+                                                <div>
+                                                    <span>Phone: </span>
+                                                    <?php if ($customer->phone_h != "" || $customer->phone_h != NULL) : ?>
+                                                        <?= $customer->phone_h;  ?>
+                                                        <span class="fa fa-phone icon_preview"></span>
+                                                        <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                    <?php else : echo 'N/A'; ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
 
-                                            <div>
-                                                <span>Mobile: </span>
-                                                <?php if ($customer->phone_m != "" || $customer->phone_m != NULL) : ?>
-                                                    <?= $customer->phone_h;  ?>
-                                                    <?= $customer->phone_m;  ?>
-                                                    <span class="fa fa-phone icon_preview"></span>
-                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
-                                                <?php else : echo 'N/A'; ?>
-                                                <?php endif; ?>
-                                            </div>
+                                            <?php if ($customer->phone_m != "" || $customer->phone_m != NULL) : ?>
+
+                                            <?php else : ?>
+                                                <div>
+                                                    <span>Mobile: </span>
+                                                    <?php if ($customer->phone_m != "" || $customer->phone_m != NULL) : ?>
+                                                        <?= $customer->phone_h;  ?>
+                                                        <?= $customer->phone_m;  ?>
+                                                        <span class="fa fa-phone icon_preview"></span>
+                                                        <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                    <?php else : echo 'N/A'; ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+
                                         </div>
                                     </div>
                                 </div>
@@ -213,12 +221,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <table class="table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
                                         <thead>
                                             <tr>
-                                                <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
+                                                <!-- <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th> -->
                                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
                                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
-                                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
-                                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
-                                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
+                                                <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">Price</th>
+                                                <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">Qty</th>
+                                                <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">Discount</th>
                                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
                                             </tr>
                                         </thead>
@@ -231,13 +239,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </tr>
                                                     <?php foreach ($items_dataOP1 as $itemData1) : ?>
                                                         <tr class="table-items__tr">
-                                                            <td valign="top" style="width:30px; text-align:center;"></td>
-                                                            <td valign="top" style="width:45%;"><?= $itemData1->title; ?></td>
-                                                            <td valign="top" style="width:20%;"><?= $itemData1->type; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData1->costing, 2); ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->qty; ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->discount; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData1->total, 2); ?></td>
+                                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                                            <td valign="top" style="width:40%;"><?= $itemData1->title; ?></td>
+                                                            <td valign="top" style="width:18%;"><?= $itemData1->type; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: center;">$<?= number_format((float) $itemData1->costing, 2); ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;"><?= $itemData1->qty; ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;">$<?= $itemData1->discount; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: right;">$<?= number_format((float) $itemData1->total, 2); ?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                     <tr>
@@ -278,13 +286,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </tr>
                                                     <?php foreach ($items_dataOP2 as $itemData2) : ?>
                                                         <tr class="table-items__tr">
-                                                            <td valign="top" style="width:30px; text-align:center;"></td>
-                                                            <td valign="top" style="width:45%;"><?= $itemData2->title; ?></td>
-                                                            <td valign="top" style="width:20%;"><?= $itemData2->type; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData2->costing, 2); ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->qty; ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->discount; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData2->total, 2); ?></td>
+                                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                                            <td valign="top" style="width:40%;"><?= $itemData2->title; ?></td>
+                                                            <td valign="top" style="width:18%;"><?= $itemData2->type; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: center;">$<?= number_format((float) $itemData2->costing, 2); ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;"><?= $itemData2->qty; ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;">$<?= $itemData2->discount; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: right;">$<?= number_format((float) $itemData2->total, 2); ?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                     <tr>
@@ -326,13 +334,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </tr>
                                                     <?php foreach ($items_dataBD1 as $itemDatabd1) : ?>
                                                         <tr class="table-items__tr">
-                                                            <td valign="top" style="width:30px; text-align:center;"></td>
-                                                            <td valign="top" style="width:45%;"><?= $itemDatabd1->title; ?></td>
-                                                            <td valign="top" style="width:20%;"><?= $itemDatabd1->type; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd1->costing, 2); ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->qty; ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->discount; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd1->total, 2); ?></td>
+                                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                                            <td valign="top" style="width:40%;"><?= $itemDatabd1->title; ?></td>
+                                                            <td valign="top" style="width:18%;"><?= $itemDatabd1->type; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: center;">$<?= number_format((float) $itemDatabd1->costing, 2); ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;"><?= $itemDatabd1->qty; ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;">$<?= $itemDatabd1->discount; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: right;">$<?= number_format((float) $itemDatabd1->total, 2); ?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                     <tr>
@@ -373,13 +381,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </tr>
                                                     <?php foreach ($items_dataBD2 as $itemDatabd2) : ?>
                                                         <tr class="table-items__tr">
-                                                            <td valign="top" style="width:30px; text-align:center;"></td>
-                                                            <td valign="top" style="width:45%;"><?= $itemDatabd2->title; ?></td>
-                                                            <td valign="top" style="width:20%;"><?= $itemDatabd2->type; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd2->costing, 2); ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->qty; ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->discount; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd2->total, 2); ?></td>
+                                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                                            <td valign="top" style="width:40%;"><?= $itemDatabd2->title; ?></td>
+                                                            <td valign="top" style="width:18%;"><?= $itemDatabd2->type; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: center;">$<?= number_format((float) $itemDatabd2->costing, 2); ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;"><?= $itemDatabd2->qty; ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;">$<?= $itemDatabd2->discount; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: right;">$<?= number_format((float) $itemDatabd2->total, 2); ?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                     <tr>
@@ -419,13 +427,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php if (!empty($items)) : ?>
                                                     <?php foreach ($items as $itemData) : ?>
                                                         <tr class="table-items__tr">
-                                                            <td valign="top" style="width:30px; text-align:center;"></td>
-                                                            <td valign="top" style="width:45%;"><?= $itemData->title; ?></td>
-                                                            <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData->iCost, 2); ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->qty; ?></td>
-                                                            <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->discount; ?></td>
-                                                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData->iTotal, 2); ?></td>
+                                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                                            <td valign="top" style="width:40%;"><?= $itemData->title; ?></td>
+                                                            <td valign="top" style="width:18%;"><?= $itemData->type; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: center;">$<?= number_format((float) $itemData->iCost, 2); ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;"><?= $itemData->qty; ?></td>
+                                                            <td valign="top" style="width: 50px; text-align: center;">$<?= $itemData->discount; ?></td>
+                                                            <td valign="top" style="width: 100px; text-align: right;">$<?= number_format((float) $itemData->iTotal, 2); ?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
 
@@ -494,9 +502,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-12">
                                     <h6 class="title-border"></h6>
-                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float) $depositAmount, 2, '.', ','); ?></span>
+                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float) $grand_total - $depositAmount, 2, '.', ','); ?></span>
                                     <input type="hidden" id="estimate_id" value="<?= $estimate->id; ?>">
-                                    <input type="hidden" id="total_amount" value="<?= $depositAmount; ?>">
+                                    <input type="hidden" id="total_amount" value="<?= $grand_total - $depositAmount; ?>">
                                     <br /><br />
                                     <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
                                     <div class="payment-msg"></div>

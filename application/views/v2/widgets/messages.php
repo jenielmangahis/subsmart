@@ -42,6 +42,7 @@ $(function(){
 
         $('.messages-list').html('<span class="bx bx-loader bx-spin"></span>');
         $.ajax({
+            async: false,
             url: url,
             success: function(result) {
                 $('.messages-list').html(result);

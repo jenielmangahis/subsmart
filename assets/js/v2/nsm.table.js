@@ -24,8 +24,8 @@ $(document).ready(function () {
                 headColIndex = 2;
             }
             else {
-                _table.find("thead td:nth-child(1)").addClass("show");
-                _this.find("td:nth-child(1)").append("<i class='bx bx-chevron-down'></i>");
+                /*_table.find("thead td:nth-child(1)").addClass("show");
+                _this.find("td:nth-child(1)").append("<i class='bx bx-chevron-down'></i>");*/
                 headColIndex = 1;
             }
 
