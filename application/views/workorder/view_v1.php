@@ -1064,18 +1064,18 @@ table input.form-control {
 													                            <tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Subtotal</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format($workorder->subtotal,2) ?></td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format((Float)$workorder->subtotal,2) ?></td>
 													                            </tr>
 																				<tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Taxes</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format($workorder->taxes,2) ?></td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format((Float)$workorder->taxes,2) ?></td>
 													                            </tr>
 																				<?php if($workorder->work_order_type_id == 1){ ?>
 																				<tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class=""><?php echo $workorder->adjustment_name ?></td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format($workorder->adjustment_value,2) ?></td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format((Float)$workorder->adjustment_value,2) ?></td>
 													                            </tr>
 																				<tr>
 																					<td colspan="5"></td>
@@ -1097,7 +1097,7 @@ table input.form-control {
 													                            <tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="mobile_size"><b>Grand Total ($)</b></td>
-													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo number_format($workorder->grand_total,2) ?></b></td>
+													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo number_format((Float)$workorder->grand_total,2) ?></b></td>
 													                            </tr>
 													                          </tbody>
 													                    <!-- </table>

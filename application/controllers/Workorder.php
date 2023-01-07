@@ -8228,28 +8228,25 @@ class Workorder extends MY_Controller
             $i++;
         }
 
-        // $a = $this->input->post('itemid');
-        //     $d = $this->input->post('quantity');
-        //     $f = $this->input->post('price');
-        //     $h = $this->input->post('tax');
-        //     $discount = $this->input->post('discount');
-        //     $total = $this->input->post('total');
+        $a = $this->input->post('itemid');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $h = $this->input->post('tax');
+            $discount = $this->input->post('discount');
+            $total = $this->input->post('total');
 
-        //     $i = 0;
-        //     foreach($a as $row){
-        //         $data['items_id '] = $a[$i];
-        //         $data['work_order_id '] = $id;
-        //         $data['qty'] = $d[$i];
-        //         $data['cost'] = $f[$i];
-        //         $data['tax'] = $h[$i];
-        //         $data['discount'] = $discount[$i];
-        //         $data['total'] = $total[$i];
-        //         $addQuery2 = $this->workorder_model->add_work_order_details($data);
-        //         $i++;
-        //     }
-
-
-
+            $i = 0;
+            foreach($a as $row){
+                $data['items_id '] = $a[$i];
+                $data['work_order_id '] = $id;
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['tax'] = $h[$i];
+                $data['discount'] = $discount[$i];
+                $data['total'] = $total[$i];
+                $addQuery2 = $this->workorder_model->add_work_order_details($data);
+                $i++;
+            }
 
         customerAuditLog(logged('id'), $w_acs, $addQuery, 'Workorder', 'Created workorder #'.$this->input->post('workorder_number'));
 
