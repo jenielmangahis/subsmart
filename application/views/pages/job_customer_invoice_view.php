@@ -152,7 +152,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td align="right" ><?= $jobs_data->name;  ?></td>
                                         </tr>
                                         <tr>
-                                            <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
+                                            <td align="right"><?= isset($jobs_data) ?  date('F d, Y', strtotime($jobs_data->start_date)) : '';  ?></td>
                                         </tr>
                                         <tr>
                                             <td align="right" style="color: darkred;"><?=  $jobs_data->priority;  ?></td>
@@ -180,21 +180,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <span><?= $jobs_data->mail_add; ?></span><br>
                                                 <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
                                                 <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"><span class="fa fa-envelope icon_preview"></span></a><br>
-                                                <span>Phone:  </span>
                                                 <?php if($jobs_data->phone_h!="" || $jobs_data->phone_h!=NULL): ?>
+                                                    <span>Phone:  </span>
                                                     <?= $jobs_data->phone_h;  ?>
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
-                                                <?php else : echo 'N/A';?>
+                                                <?php //else : echo 'N/A';?>
                                                 <?php endif; ?>
-                                                <br>
-                                                <span>Mobile: </span>
+                                                <br>                                                
                                                 <?php if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
+                                                    <span>Mobile: </span>
                                                     <?= $jobs_data->phone_h;  ?>
                                                     <?= $jobs_data->phone_m;  ?>
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
-                                                <?php else : echo 'N/A';?>
+                                                <?php //else : echo 'N/A';?>
                                                 <?php endif; ?>
                                                 <br>
                                             </div>
