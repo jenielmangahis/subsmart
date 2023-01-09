@@ -179,8 +179,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
                                                 <span><?= $jobs_data->mail_add; ?></span><br>
                                                 <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
-                                                <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"><span class="fa fa-envelope icon_preview"></span></a><br>
+                                                <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"><span class="fa fa-envelope icon_preview"></span></a>
                                                 <?php if($jobs_data->phone_h!="" || $jobs_data->phone_h!=NULL): ?>
+                                                    <br>
                                                     <span>Phone:  </span>
                                                     <?= $jobs_data->phone_h;  ?>
                                                     <span class="fa fa-phone icon_preview"></span>
