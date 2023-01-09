@@ -187,8 +187,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
                                                 <?php //else : echo 'N/A';?>
                                                 <?php endif; ?>
-                                                <br>                                                
                                                 <?php if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
+                                                    <br>
                                                     <span>Mobile: </span>
                                                     <?= $jobs_data->phone_h;  ?>
                                                     <?= $jobs_data->phone_m;  ?>
