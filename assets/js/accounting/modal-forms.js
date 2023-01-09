@@ -2641,7 +2641,7 @@ $(function() {
                         `);
 
                         $('#expenseModal .modal-body').children('.row').append(`
-                            <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                            <div class="nsm-callout primary" style="width: 15%">
                                 <div class="transactions-container h-100 p-3">
                                     <div class="row">
                                         <div class="col-12">
@@ -2720,7 +2720,7 @@ $(function() {
                         `);
 
                         $('#checkModal .modal-body').children('.row').append(`
-                            <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                            <div class="nsm-callout primary" style="width: 15%">
                                 <div class="transactions-container h-100 p-3">
                                     <div class="row">
                                         <div class="col-12">
@@ -2797,7 +2797,7 @@ $(function() {
                     `);
 
                     $('#billModal .modal-body').children('.row').append(`
-                        <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                        <div class="nsm-callout primary" style="width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
@@ -3149,6 +3149,12 @@ $(function() {
                     }
 
                     button.parent().append(`<input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction[]">`);
+
+                    if ($('#modal-container .modal .transactions-container .row div.col-12').length === 1) {
+                        $('#modal-container .modal .transactions-container').parent().remove();
+                        $('#modal-container .modal .close-transactions-container').remove();
+                        $('#modal-container .modal .open-transactions-container').remove();
+                    }
                 });
 
                 $(this).closest('.card').parent().remove();
@@ -3480,6 +3486,12 @@ $(function() {
                             </div>
                         `);
                     }
+
+                    if ($('#modal-container .modal .transactions-container .row div.col-12').length === 2) {
+                        $('#modal-container .modal .transactions-container').parent().remove();
+                        $('#modal-container .modal .close-transactions-container').remove();
+                        $('#modal-container .modal .open-transactions-container').remove();
+                    }
                 });
 
                 $(this).parent().parent().parent().parent().parent().remove();
@@ -3683,6 +3695,12 @@ $(function() {
                                 </div>
                             </div>
                         `);
+                    }
+
+                    if ($('#modal-container .modal .transactions-container .row div.col-12').length === 2) {
+                        $('#modal-container .modal .transactions-container').parent().remove();
+                        $('#modal-container .modal .close-transactions-container').remove();
+                        $('#modal-container .modal .open-transactions-container').remove();
                     }
                 });
 
@@ -7379,7 +7397,7 @@ $(function() {
                             $('#invoiceModal .transactions-container').parent().remove();
 
                             $('#invoiceModal .modal-body').children('.row').append(`
-                                <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                                <div class="nsm-callout primary" style="width: 15%">
                                     <div class="transactions-container h-100 p-3">
                                         <div class="row">
                                             <div class="col-12">
@@ -12919,7 +12937,7 @@ const get_bill_payment_linkable_transactions = () => {
             `);
 
             $('#billPaymentModal .modal-body').children('.row').append(`
-                <div class="w-auto nsm-callout primary" style="max-width: 15%">
+                <div class="nsm-callout primary" style="width: 15%">
                     <div class="transactions-container h-100 p-3">
                         <div class="row">
                             <div class="col-12">
