@@ -1,4 +1,4 @@
-<style>
+    <style>
 .nsm-messages .details{
     display: inline-block;
     width: 68%;
@@ -12,6 +12,11 @@
 </style>
 <?php if( $smsMessages ){ ?>
     <table class="nsm-table" id="sms_list_table">
+        <thead>
+            <tr>
+                <td data-name=""></td>
+            </tr>
+        </thead>
         <tbody>
         <?php foreach($smsMessages as $sms){ ?>
             <tr>
