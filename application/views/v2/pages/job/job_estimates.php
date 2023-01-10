@@ -844,7 +844,12 @@
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                     </tr>
-                                    <?php } } } ?>
+                                    <?php 
+                                            } 
+                                        } 
+                                    } 
+
+                                    ?>
                                 </tbody>
                             </table>
                         </div>

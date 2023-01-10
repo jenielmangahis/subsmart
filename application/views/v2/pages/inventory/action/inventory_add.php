@@ -14,14 +14,13 @@
         Locations are places, like warehouses, sites, or work vehicles, where inventory is stored. Product items represent products in your inventory stored at a particular location, such as bolts stored in a warehouse. Each product item is associated with a product and a location in nSmarTrac.
     </div>
 </div>
-<form id="inventory_form">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="nsm-card primary">
+                            <div class="nsm-card primary GET_INVENTORY_FORM_UI">
                                 <div class="nsm-card-header">
                                     <div class="nsm-card-title">
                                         <span class="d-block">
@@ -33,6 +32,7 @@
                                 </div>
                                 <hr>
                                 <div class="nsm-card-body">
+                                    <form id="inventory_form">
                                     <div class="row">
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Name</strong>
@@ -145,11 +145,12 @@
                                         <?php endforeach; ?>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
-                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory')">Cancel</button>
+                                                <button class="nsm-button CANCEL_BUTTON_INVENTORY" type="button" onclick="window.location.replace('/inventory')">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +159,6 @@
             </div>
         </div>
     </div>
-</form>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
