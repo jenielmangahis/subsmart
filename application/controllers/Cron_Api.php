@@ -349,7 +349,7 @@ class Cron_Api extends MYF_Controller {
                     }
                     break;
                 case 'job':
-                    $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
+                    $calendar_type = $this->GoogleCalendar_model->calendarTypeJob();
                     $job = $this->Jobs_model->get_specific_job($gs->object_id);
                     if( $job ){
                         if( $job->tags != '' ){

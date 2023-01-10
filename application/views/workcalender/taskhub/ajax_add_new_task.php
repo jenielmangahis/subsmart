@@ -13,8 +13,8 @@
 </style>
 <div class="row">
     <div class="col-6 mt-3 company-select">
-        <label for="">Customer</label>
-        <select name="customer_id" id="" class="nsm-field mb-2 form-control d-select2-customer" required="">     
+        <label for="">Customer <small>(optional)</small></label>
+        <select name="customer_id" id="" class="nsm-field mb-2 form-control d-select2-customer">     
             <option value="">Select Customer</option>
             <?php foreach($companyCustomers as $c){ ?>
                 <option value="<?= $c->prof_id; ?>"><?= $c->first_name.' '.$c->last_name; ?></option>

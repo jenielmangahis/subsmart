@@ -3166,6 +3166,12 @@ $(function() {
                 $('#modal-container form .modal .transactions-container .row div.col-12 .add-transaction[data-type="vendor-credit"]').each(function() {
                     $(this).closest('.card').parent().remove();
                 });
+
+                // if ($('#modal-container .modal .transactions-container .row div.col-12').length === 1) {
+                //     $('#modal-container .modal .transactions-container').parent().remove();
+                //     $('#modal-container .modal .close-transactions-container').remove();
+                //     $('#modal-container .modal .open-transactions-container').remove();
+                // }
             break;
             case 'bill':
                 if ($('#modal-container form .modal').attr('id') !== 'billPaymentModal') {
@@ -11062,8 +11068,8 @@ const initModalFields = (modalName, data = {}) => {
                 break;
             }
 
-            $('div#modal-container form .modal table tbody tr:first-child()').html(blankRow);
-            $('div#modal-container form .modal table tbody tr:first-child() td:first-child()').html(1);
+            $('div#modal-container form .modal table tbody tr:first-child()').remove();
+            $('div#modal-container form .modal table tbody tr:last-child()').remove();
         }
     }
 

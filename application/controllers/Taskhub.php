@@ -176,10 +176,15 @@ class Taskhub extends MY_Controller {
 						}
 					}
 					
+					$prof_id = 0;
+					if( $this->input->post('customer_id') > 0 ){
+						$prof_id = $this->input->post('customer_id');
+					}
+					
 					$data = array(
 						'subject' => $this->input->post('subject'),
 						'description' => $this->input->post('description'),
-						'prof_id' => $this->input->post('customer_id'),
+						'prof_id' => $prof_id,
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
 						'status_id' => $status,
 						'priority' => $this->input->post('priority')
@@ -199,9 +204,14 @@ class Taskhub extends MY_Controller {
 						customerAuditLog(logged('id'), $this->input->post('customer_id'), $taskid, 'Taskhub', 'Updated task '.$this->input->post('subject'));
 					}
 				} else {
+					$prof_id = 0;
+					if( $this->input->post('customer_id') > 0 ){
+						$prof_id = $this->input->post('customer_id');
+					}
+
 					$data = array(
 						'subject' => $this->input->post('subject'),
-						'prof_id' => $this->input->post('customer_id'),
+						'prof_id' => $prof_id,
 						'description' => $this->input->post('description'),
 						'created_by' => $uid,
 						'date_created' => date('Y-m-d h:i:s'),
@@ -467,8 +477,14 @@ class Taskhub extends MY_Controller {
 
         if( $post['subject'] != '' ){
             $taskStatus = $this->Taskhub_status_model->getById($post['status']);
+
+            $prof_id = 0;
+            if( $post['customer_id'] > 0 ){
+            	$prof_id = $post['customer_id'];
+            }
+            
             $task_data = [
-                'prof_id' => $post['customer_id'],
+                'prof_id' => $prof_id,
                 'subject' => $post['subject'],
                 'description' => $post['description'],
                 'created_by' => $uid,

@@ -70,10 +70,12 @@
                                                     <td class="taskhub_sidebar_details_caption font-weight-bold">Created By :</td>
                                                     <td class="taskhub_sidebar_details_values"><?php echo $taskHub->created_by_name; ?></td>
                                                 </tr>
+                                                <?php if( $taskHub->customer_name != '' ){ ?>
                                                 <tr>
                                                     <td class="taskhub_sidebar_details_caption font-weight-bold">Customer :</td>
                                                     <td class="taskhub_sidebar_details_values"><?php echo $taskHub->customer_name; ?></td>
                                                 </tr>
+                                                <?php } ?>
                                                 <tr>
                                                     <td class="taskhub_sidebar_details_caption font-weight-bold">Assigned To :</td>
                                                     <td class="taskhub_sidebar_details_values"><?php

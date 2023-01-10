@@ -35,6 +35,10 @@
     vertical-align: top;
     display: inline-block;
 }
+#upcoming_schedules_table .content-subtitle{
+  font-size: 11px;
+  font-weight: bold;  
+}
 @media screen and (max-width: 600px) {
   .content-title {
     font-size: 13px !important;

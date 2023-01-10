@@ -1043,7 +1043,7 @@ $("#attachment-file").change(function() {
                 if(data.email){
                     $('#cust_email').text(data.email);
                 }else{
-                    $('#cust_email').text('xxxxx@xxxxx.xxx');
+                    $('#cust_email').text('Email is not available.');
                 }
                 $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
                 $('#cust_number').text(phone_h);

@@ -77,7 +77,7 @@ if (isset($selected_participants)) {
                                     </div>
 
                                     <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Customer <small>(optional)</small></label>
                                         <select class="nsm-field form-select" name="customer_id" id="customer_id">
                                             <?php if ($customer) { ?>
                                                 <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
@@ -177,7 +177,7 @@ if (isset($selected_participants)) {
                                     <div class="col-12 col-md-4">
                                         <?php
                                         $date = date("m/d/Y");
-                                        if (isset($task)) {
+                                        if (isset($taskHub->estimated_date_complete)) {                                            
                                             $date = date("m/d/Y",strtotime($taskHub->estimated_date_complete));
                                         }
                                         ?>

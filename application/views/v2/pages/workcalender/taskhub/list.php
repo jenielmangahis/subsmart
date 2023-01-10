@@ -96,7 +96,15 @@
                                         ?>
                                         <span class="nsm-badge <?= $class_priority ?>"><?php echo ucwords($row->priority); ?></span>
                                     </td>
-                                    <td><?= $row->customer_name; ?></td>
+                                    <td>
+                                        <?php 
+                                            if( $row->customer_name != '' ){
+                                                echo $row->customer_name;
+                                            }else{
+                                                echo '---';
+                                            }
+                                        ?>        
+                                    </td>
                                     <td><?= getTaskAssignedUser($row->task_id); ?></td>
                                     <td>
                                     <?php
