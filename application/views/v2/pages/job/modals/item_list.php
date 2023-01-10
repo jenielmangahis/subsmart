@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12">                        
                         <table id="items_table" class="table table-hover" style="width: 100%;">
                             <thead>
                             <tr>
@@ -29,7 +29,7 @@
                                         <td><?= $item->title; ?></td>
                                         <td><?= $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
                                         <td><?= $item->price; ?></td>
-                                        <td><?=ucfirst($item->type); ?></td>
+                                        <td><?= ucfirst($item->type); ?></td>
                                         <td>
                                             <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="nsm-button primary select_item">
                                             <i class='bx bx-plus'></i>

@@ -710,8 +710,8 @@ class Job extends MY_Controller
             'table' => 'items',
             'select' => 'items.id,title,price,type',
         );
-        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
-
+       $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+     
         $get_settings= array(
             'table' => 'job_tax_rates',
             'select' => '*',

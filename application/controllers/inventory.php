@@ -382,7 +382,7 @@ class Inventory extends MY_Controller
 
     }
 
-    public function  save_new_item()
+    public function save_new_item()
     {
         $input = $this->input->post();
         $input['is_active'] =  1;

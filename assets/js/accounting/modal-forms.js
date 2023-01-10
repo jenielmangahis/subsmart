@@ -11068,8 +11068,8 @@ const initModalFields = (modalName, data = {}) => {
                 break;
             }
 
-            $('div#modal-container form .modal table tbody tr:first-child()').html(blankRow);
-            $('div#modal-container form .modal table tbody tr:first-child() td:first-child()').html(1);
+            $('div#modal-container form .modal table tbody tr:first-child()').remove();
+            $('div#modal-container form .modal table tbody tr:last-child()').remove();
         }
     }
 

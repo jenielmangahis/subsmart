@@ -1994,13 +1994,12 @@ class Accounting_modals extends MY_Controller
                         if($account->account_id !== "7" && $account->account_id !== "6") {
                             $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
                             $newBalance = $newBalance + floatval($data['debits'][$key]);
-                            $type = floatval($data['debits'][$key]) > 0 && floatval($data['credits'][$key]) < 1 ? 'increase' : 'decrease';
                         } else {
                             $newBalance = floatval($account->balance) + floatval($data['credits'][$key]);
                             $newBalance = $newBalance - floatval($data['debits'][$key]);
-
-                            $type = 'decrease';
                         }
+
+                        $type = floatval($data['debits'][$key]) > 0 && floatval($data['credits'][$key]) < 1 ? 'increase' : 'decrease';
 
                         $newBalance = number_format($newBalance, 2, '.', ',');
 
@@ -15068,6 +15067,8 @@ class Accounting_modals extends MY_Controller
 
                 $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Deposit', $depositId);
 
+                $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
+
                 $fundsData = [];
                 foreach ($data['funds_account'] as $key => $value) {
                     $receivedFrom = explode('-', $data['received_from'][$key]);
@@ -15116,7 +15117,6 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
                 foreach($funds as $index => $fund) {
                     if($data['funds_account'][$index] === null) {
                         $this->accounting_bank_deposit_model->delete_fund_by_id($fund->id);
@@ -15246,28 +15246,31 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                $oldTransferFrom = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
-                $oldTransferTo = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+                $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Transfer', $transferId);
 
-                $oldTransferFromBal = $oldTransferFrom->account_id !== "7" ? floatval(str_replace(',', '', $oldTransferFrom->balance)) + floatval(str_replace(',', '', $transfer->transfer_amount)) : floatval(str_replace(',', '', $oldTransferFrom->balance)) - floatval(str_replace(',', '', $transfer->transfer_amount));
-                $oldTransferToBal = $oldTransferTo->account_id !== "7" ? floatval(str_replace(',', '', $oldTransferTo->balance)) - floatval(str_replace(',', '', $transfer->transfer_amount)) : floatval(str_replace(',', '', $oldTransferTo->balance)) + floatval(str_replace(',', '', $transfer->transfer_amount));
+                foreach($accountTransacs as $transac)
+                {
+                    $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                    $accountType = $this->account_model->getById($account->account_id);
 
-                $oldTransferFromBal = number_format($oldTransferFromBal, 2, '.', ',');
-                $oldTransferToBal = number_format($oldTransferToBal, 2, '.', ',');
+                    if($accountType->account_name === 'Credit Card') {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                    } else {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                    }
 
-                $oldTransferFromData = [
-                    'id' => $oldTransferFrom->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => floatval(str_replace(',', '', $oldTransferFromBal))
-                ];
-                $oldTransferToData = [
-                    'id' => $oldTransferTo->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => floatval(str_replace(',', '', $oldTransferToBal))
-                ];
+                    $newBalance = number_format($newBalance, 2, '.', ',');
 
-                $this->chart_of_accounts_model->updateBalance($oldTransferFromData);
-                $this->chart_of_accounts_model->updateBalance($oldTransferToData);
+                    $accData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval(str_replace(',', '', $newBalance))
+                    ];
+        
+                    $this->chart_of_accounts_model->updateBalance($accData);
+                }
+
+                $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Transfer', $transferId);
 
                 // NEW
                 $transferFromAcc = $this->chart_of_accounts_model->getById($data['transfer_from_account']);
@@ -15292,6 +15295,28 @@ class Accounting_modals extends MY_Controller
 
                 $this->chart_of_accounts_model->updateBalance($transferFromAccData);
                 $this->chart_of_accounts_model->updateBalance($transferToAccData);
+
+                $accTransacData = [
+                    'account_id' => $transferFromAcc->id,
+                    'transaction_type' => 'Transfer',
+                    'transaction_id' => $transferId,
+                    'amount' => floatval(str_replace(',', '', $data['transfer_amount'])),
+                    'transaction_date' => date('Y-m-d', strtotime($data['date'])),
+                    'type' => 'decrease'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
+
+                $accTransacData = [
+                    'account_id' => $transferToAcc->id,
+                    'transaction_type' => 'Transfer',
+                    'transaction_id' => $transferId,
+                    'amount' => floatval(str_replace(',', '', $data['transfer_amount'])),
+                    'transaction_date' => date('Y-m-d', strtotime($data['date'])),
+                    'type' => 'increase'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     $order = 1;
@@ -15414,28 +15439,33 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                $entries = $this->accounting_journal_entries_model->getEntries($journalId);
-                foreach($entries as $entry) {
-                    $account = $this->chart_of_accounts_model->getById($entry->account_id);
+                $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Journal', $journalId);
 
-                    if($account->account_id !== "7") {
-                        $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $entry->credit));
-                        $newBalance = $newBalance - floatval(str_replace(',', '', $entry->debit));
+                foreach($accountTransacs as $transac)
+                {
+                    $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                    $accountType = $this->account_model->getById($account->account_id);
+
+                    if($accountType->account_name === 'Credit Card') {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
                     } else {
-                        $newBalance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $entry->credit));
-                        $newBalance = $newBalance + floatval(str_replace(',', '', $entry->debit));
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
                     }
-                    
+
                     $newBalance = number_format($newBalance, 2, '.', ',');
 
-                    $accountData = [
+                    $accData = [
                         'id' => $account->id,
                         'company_id' => logged('company_id'),
                         'balance' => floatval(str_replace(',', '', $newBalance))
                     ];
-
-                    $this->chart_of_accounts_model->updateBalance($accountData);
+        
+                    $this->chart_of_accounts_model->updateBalance($accData);
                 }
+
+                $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Journal', $journalId);
+
+                $entries = $this->accounting_journal_entries_model->getEntries($journalId);
 
                 $this->accounting_journal_entries_model->deleteEntries($journalId);
 
@@ -15475,7 +15505,7 @@ class Accounting_modals extends MY_Controller
                 foreach ($data['journal_entry_accounts'] as $key => $value) {
                     $name = explode('-', $data['names'][$key]);
     
-                    $entryItems[] = [
+                    $entryItem = [
                         'journal_entry_id' => $journalId,
                         'account_id' => $value,
                         'debit' => $data['debits'][$key],
@@ -15486,29 +15516,46 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     if(!is_null($entries[$key])) {
-                        $entryItems[$key]['created_at'] = $entries[$key]->created_at;
+                        $entryItem['created_at'] = $entries[$key]->created_at;
                     }
 
+                    $entryItemId = $this->accounting_journal_entries_model->insertEntryItem($entryItem);
+
                     $account = $this->chart_of_accounts_model->getById($value);
-                    if($account->account_id !== "7") {
-                        $newBalance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $data['credits'][$key]));
-                        $newBalance = $newBalance + floatval(str_replace(',', '', $data['debits'][$key]));
+                    if($account->account_id !== "7" && $account->account_id !== "6") {
+                        $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
+                        $newBalance = $newBalance + floatval($data['debits'][$key]);
                     } else {
-                        $newBalance = floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $data['credits'][$key]));
-                        $newBalance = $newBalance - floatval(str_replace(',', '', $data['debits'][$key]));
+                        $newBalance = floatval($account->balance) + floatval($data['credits'][$key]);
+                        $newBalance = $newBalance - floatval($data['debits'][$key]);
                     }
+
+                    $type = floatval($data['debits'][$key]) > 0 && floatval($data['credits'][$key]) < 1 ? 'increase' : 'decrease';
+
                     $newBalance = number_format($newBalance, 2, '.', ',');
 
                     $accountData = [
                         'id' => $account->id,
                         'company_id' => logged('company_id'),
-                        'balance' => floatval(str_replace(',', '', $newBalance))
+                        'balance' => $newBalance
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($accountData);
+
+                    $accTransacData = [
+                        'account_id' => $account->id,
+                        'transaction_type' => 'Journal',
+                        'transaction_id' => $journalId,
+                        'amount' => floatval($data['debits'][$key]) + floatval($data['credits'][$key]),
+                        'transaction_date' => date("Y-m-d", strtotime($data['journal_date'])),
+                        'type' => $type,
+                        'child_id' => $entryItemId
+                    ];
+
+                    $this->accounting_account_transactions_model->create($accTransacData);
                 }
 
-                $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
+                // $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
             }
 
             $return['data'] = $journalId;
