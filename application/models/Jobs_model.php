@@ -415,6 +415,7 @@ class Jobs_model extends MY_Model
         $this->db->where('jobs.company_id', $company_id);
         //$this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
         $this->db->where('jobs.start_date >=', $start_date);
+        $this->db->where("jobs.status", 'Scheduled');
         //$this->db->order_by('jobs.id', 'DESC');
         $this->db->order_by('jobs.start_date', 'ASC');
         //$this->db->group_by('jobs.id');
@@ -596,6 +597,21 @@ class Jobs_model extends MY_Model
         return $insert_id;
     }
     // END: INSERT DATA FROM jobs TABLE to invoices TABLE ON "SEND INVOICE" COMMAND.
+
+    public function get_all_company_scheduled_jobs($company_id)
+    {
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_payments.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
+        $this->db->where("jobs.company_id", $company_id);
+        $this->db->where("jobs.status", 'Scheduled');
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 /* End of file JobType_model.php */
 /* Location: ./application/models/JobType_model.php */

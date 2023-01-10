@@ -949,7 +949,7 @@ class Workcalender extends MY_Controller
         }
 
         //Jobs
-        $jobs = $this->Jobs_model->get_all_jobs();
+        $jobs = $this->Jobs_model->get_all_company_scheduled_jobs($company_id);
         foreach ($jobs as $j) {
             if ($j->job_description != '') {
                 $starttime = $j->start_date . " " . $j->start_time;
@@ -3307,7 +3307,7 @@ class Workcalender extends MY_Controller
         $msg        = 'Cannot sync data';
         $post       = $this->input->post();
 
-        $result = createSyncToCalendar($post['tile_id'], $post['tile_type'], $company_id);
+        $result = createSyncToCalendar($post['tile_id'], $post['tile_type'], $company_id, 1);
         if( $result['is_valid'] == 1 ){
             $is_valid = true;
             $msg = '';
