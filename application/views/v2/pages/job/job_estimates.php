@@ -1078,7 +1078,7 @@ $(function() {
           }
 
           var $container = $(
-            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_h+' / '+repo.email+'</small></div>'
+            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
           );
 
           return $container;
@@ -1214,9 +1214,12 @@ function load_customer_data($id){
                 // if(data.mail_add !== null){
                 //     $('#cust_address').text(data.mail_add + ' ');
                 // }
-                if(data.cross_street !== null){
+                if(data.cross_street != null){
                     $('#cust_address').text(data.cross_street + ' ');
                     ADDR_1 = data.cross_street;
+                } else {
+                    $('#cust_address').text(data.mail_add + ' ');
+                    ADDR_1 = data.mail_add;
                 }
                 if(data.phone_h){
                     if(data.phone_h.includes('Mobile:')){

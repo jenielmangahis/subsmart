@@ -1020,16 +1020,19 @@ $("#attachment-file").change(function() {
                 // if(data.mail_add !== null){
                 //     $('#cust_address').text(data.mail_add + ' ');
                 // }
-                if(data.cross_street !== null){
+                if(data.cross_street != null){
                     $('#cust_address').text(data.cross_street + ' ');
                     ADDR_1 = data.cross_street;
+                } else {
+                    $('#cust_address').text(data.mail_add + ' ');
+                    ADDR_1 = data.mail_add;
                 }
                 if(data.phone_h){
                     if(data.phone_h.includes('Mobile:')){
-                    phone_h = ((data.phone_h).slice(0,13))
-                }else{
-                    phone_h = data.phone_h;
-                }
+                        phone_h = ((data.phone_h).slice(0,13))
+                    }else{
+                        phone_h = data.phone_h;
+                    }
                 }
                 if(data.city || data.state || data.zip_code){
                     $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);

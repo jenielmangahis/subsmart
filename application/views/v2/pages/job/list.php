@@ -195,7 +195,7 @@ foreach ($jobs as $job) {
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a></li>
                                         <li><a class="dropdown-item" href="<?php echo base_url('job/new_job1/') . $job->id; ?>">Edit</a></li>
-                                        <li class="delete-item"><a class="dropdown-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a></li>
+                                        <li class="DELETE_ITEM" onclick="DELETE_JOB(<?php echo $job->id; ?>)"><a class="dropdown-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a></li>
                                     </ul>
                                 </div>
                             </td>
@@ -226,9 +226,8 @@ $('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
     JOB_LIST_TABLE.columns(11).search(this.value).draw();
 });
 
-$(".delete-item").click(function(event) {
-    var job_id = $(".delete-item > a").attr("data-id");
-        Swal.fire({
+function DELETE_JOB(job_id){
+    Swal.fire({
             title: 'Continue to REMOVE this Job?',
             text: "",
             icon: 'warning',
@@ -263,7 +262,46 @@ $(".delete-item").click(function(event) {
                 });
             }
         });
-});
+}
+
+// $(".DELETE_ITEM > a").click(function(event) {
+//     var job_id = $(".DELETE_ITEM > a").attr("data-id");
+//         Swal.fire({
+//             title: 'Continue to REMOVE this Job?',
+//             text: "",
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonText: 'Yes',
+//             cancelButtonText: 'No',
+//         }).then((result) => {
+//             if (result.isConfirmed) {
+//                 $.ajax({
+//                     type: "POST",
+//                     url: "<?php echo base_url('job/delete_job'); ?>",
+//                     data: {
+//                         job_id: job_id
+//                     }, // serializes the form's elements.
+//                     success: function(data) {
+//                         if (data === "1") {
+//                             Swal.fire({
+//                             icon: 'success',
+//                             title: 'Success',
+//                             text: 'Job deleted successfully!',
+//                             }).then((result) => {
+//                                 window.location.reload();
+//                             });
+//                         } else {
+//                            Swal.fire({
+//                             icon: 'error',
+//                             title: 'Error',
+//                             text: 'Failed to Delete Job!',
+//                             });
+//                         }
+//                     }
+//                 });
+//             }
+//         });
+// });
 
 $(document).ready(function() {
     // loadJobs();
@@ -286,6 +324,6 @@ $(document).ready(function() {
 // function loadJobs(id = "filter_all") {
 //     $(".nsm-table").hide();
 //     $("#" + id).show();
-// }
+// }        
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
