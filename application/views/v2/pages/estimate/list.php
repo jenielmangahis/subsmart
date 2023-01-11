@@ -151,7 +151,7 @@
                                     <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>
                                     <td>
                                         <label class="d-block"><?php echo $estimate->job_name; ?></label>
-                                        <a class="nsm-link" href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
+                                        <a class="nsm-link" href="<?php echo base_url('customer/preview_/' . $estimate->customer_id) ?>">
                                             <?php echo get_customer_by_id($estimate->customer_id)->first_name . ' ' . get_customer_by_id($estimate->customer_id)->last_name ?>
                                         </a>
                                     </td>
