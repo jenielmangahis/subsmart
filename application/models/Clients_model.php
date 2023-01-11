@@ -57,6 +57,31 @@ class Clients_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+    
+    public function getCompanyCompanyId($id)
+    {
+        // $this->db->select('company_id');
+		// $this->db->from('work_orders');
+		// $this->db->where('id', $id);
+        // $query = $this->db->get();
+        // $comp = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        // $this->db->select('*');
+        // $this->db->select('*','business_profile.company_id','business_profile.street as b_street','business_profile.city as b_city','business_profile.postal_code as b_postal_code','business_profile.state as b_state','business_profile.license_state as b_license_state','business_profile.office_phone as b_office_phone');
+		// $this->db->from('clients');
+        // $this->db->join('business_profile', 'clients.id  = business_profile.company_id');
+		// $this->db->where('clients.id', $id);
+        // $query2 = $this->db->get();
+        // return $query2->row();
+        $this->db->select('*');
+		$this->db->from('business_profile');
+		$this->db->where('company_id', $id);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
 
     public function getById($id)
     {

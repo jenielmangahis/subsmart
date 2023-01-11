@@ -2347,17 +2347,31 @@ class Accounting_modals extends MY_Controller
 
         $delete = $this->accounting_inventory_qty_adjustments_model->delete_adjustment_products($adjustment->id);
 
-        $adjustmentAcc = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
-        $newBalance = floatval(str_replace(',', '', $adjustmentAcc->balance)) + floatval(str_replace(',', '', $adjustment->total_amount));
-        $newBalance = number_format($newBalance, 2, '.', ',');
+        $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Inventory Qty Adjust', $adjustment->id);
 
-        $adjustmentAccData = [
-            'id' => $adjustmentAcc->id,
-            'company_id' => logged('company_id'),
-            'balance' => floatval(str_replace(',', '', $newBalance))
-        ];
+        foreach($accountTransacs as $transac)
+        {
+            $account = $this->chart_of_accounts_model->getById($transac->account_id);
+            $accountType = $this->account_model->getById($account->account_id);
 
-        $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+            if($accountType->account_name === 'Credit Card') {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+            } else {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $accData = [
+                'id' => $account->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval(str_replace(',', '', $newBalance))
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($accData);
+        }
+
+        $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Inventory Qty Adjust', $adjustment->id);
 
         return $delete;
     }
@@ -14809,6 +14823,32 @@ class Accounting_modals extends MY_Controller
             $update = $this->accounting_pay_down_credit_card_model->update($paymentId, $updateData);
 
             if ($update) {
+                $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('CC Payment', $paymentId);
+
+                foreach($accountTransacs as $transac)
+                {
+                    $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                    $accountType = $this->account_model->getById($account->account_id);
+
+                    if($accountType->account_name === 'Credit Card') {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                    } else {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                    }
+
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $accData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval(str_replace(',', '', $newBalance))
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($accData);
+                }
+
+                $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('CC Payment', $paymentId);
+
                 // REVERT OLD
                 $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $payment->id);
 
@@ -14820,20 +14860,6 @@ class Accounting_modals extends MY_Controller
                         }
                     }
                 }
-
-                $oldCreditAcc = $this->chart_of_accounts_model->getById($payment->credit_card_id);
-
-                $newBalance = floatval(str_replace(',', '', $oldCreditAcc->balance)) + floatval(str_replace(',', '', $payment->amount));
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $this->chart_of_accounts_model->updateBalance(['id' => $oldCreditAcc->id, 'company_id' => logged('company_id'), 'balance' => floatval(str_replace(',', '', $newBalance))]);
-
-                $oldBank = $this->chart_of_accounts_model->getById($payment->bank_account_id);
-
-                $newBalance = floatval(str_replace(',', '', $oldBank->balance)) + floatval(str_replace(',', '', $payment->amount));
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $this->chart_of_accounts_model->updateBalance(['id' => $oldBank->id, 'company_id' => logged('company_id'), 'balance' => floatval(str_replace(',', '', $newBalance))]);
 
                 // NEW
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -14874,12 +14900,34 @@ class Accounting_modals extends MY_Controller
 
                 $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => floatval(str_replace(',', '', $newBalance))]);
 
+                $accTransacData = [
+                    'account_id' => $creditAcc->id,
+                    'transaction_type' => 'CC Payment',
+                    'transaction_id' => $payDownId,
+                    'amount' => floatval(str_replace(',', '', $data['amount'])),
+                    'transaction_date' => date('Y-m-d', strtotime($data['payment_date'])),
+                    'type' => 'increase'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
+
                 $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
 
                 $newBalance = floatval(str_replace(',', '', $bankAcc->balance)) - floatval(str_replace(',', '', $data['amount']));
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => floatval(str_replace(',', '', $newBalance))]);
+
+                $accTransacData = [
+                    'account_id' => $bankAcc->id,
+                    'transaction_type' => 'CC Payment',
+                    'transaction_id' => $payDownId,
+                    'amount' => floatval(str_replace(',', '', $data['amount'])),
+                    'transaction_date' => date('Y-m-d', strtotime($data['payment_date'])),
+                    'type' => 'decrease'
+                ];
+
+                $this->accounting_account_transactions_model->create($accTransacData);
             }
 
             $return['data'] = $paymentId;
@@ -15671,6 +15719,18 @@ class Accounting_modals extends MY_Controller
                         ];
     
                         $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                        $accTransacData = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Inventory Qty Adjust',
+                            'transaction_id' => $adjustmentId,
+                            'amount' => $amount,
+                            'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                            'type' => 'increase',
+                            'is_item_category' => 1
+                        ];
+        
+                        $this->accounting_account_transactions_model->create($accTransacData);
                     }
 
                     $adjustedProducts = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustmentId);
@@ -15710,6 +15770,18 @@ class Accounting_modals extends MY_Controller
                         ];
     
                         $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                        $accTransacData = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Inventory Qty Adjust',
+                            'transaction_id' => $adjustmentId,
+                            'amount' => $amount,
+                            'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                            'type' => 'increase',
+                            'is_item_category' => 1
+                        ];
+        
+                        $this->accounting_account_transactions_model->create($accTransacData);
                     }
     
                     $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
@@ -15726,6 +15798,17 @@ class Accounting_modals extends MY_Controller
                     ];
     
                     $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
+                    $accTransacData = [
+                        'account_id' => $adjustmentAcc->id,
+                        'transaction_type' => 'Inventory Qty Adjust',
+                        'transaction_id' => $adjustmentId,
+                        'amount' => $total,
+                        'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                        'type' => 'decrease'
+                    ];
+    
+                    $this->accounting_account_transactions_model->create($accTransacData);
                 }
             }
 
@@ -19421,6 +19504,8 @@ class Accounting_modals extends MY_Controller
 
             $this->void_customer_transaction_items('Credit Memo', $creditMemoId);
 
+            $this->accounting_credit_memo_model->delete_customer_transaction_items('Credit Memo', $creditMemoId);
+
             $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Credit Memo', $creditMemoId);
             $removeTags = $this->tags_model->remove_transaction_tags('Credit Memo', $creditMemoId);
         }
@@ -19471,6 +19556,8 @@ class Accounting_modals extends MY_Controller
             $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Sales Receipt', $salesReceiptId);
 
             $this->void_customer_transaction_items('Sales Receipt', $salesReceiptId);
+
+            $this->accounting_credit_memo_model->delete_customer_transaction_items('Sales Receipt', $salesReceiptId);
 
             $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Sales Receipt', $salesReceiptId);
             $removeTags = $this->tags_model->remove_transaction_tags('Sales Receipt', $salesReceiptId);
@@ -19523,6 +19610,8 @@ class Accounting_modals extends MY_Controller
 
             $this->void_customer_transaction_items('Refund Receipt', $refundReceiptId);
 
+            $this->accounting_credit_memo_model->delete_customer_transaction_items('Refund Receipt', $refundReceiptId);
+
             $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Refund Receipt', $refundReceiptId);
             $removeTags = $this->tags_model->remove_transaction_tags('Refund Receipt', $refundReceiptId);
         }
@@ -19574,6 +19663,8 @@ class Accounting_modals extends MY_Controller
 
             $this->void_customer_transaction_items('Delayed Credit', $delayedCreditId);
 
+            $this->accounting_credit_memo_model->delete_customer_transaction_items('Delayed Credit', $delayedCreditId);
+
             $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Delayed Credit', $delayedCreditId);
             $removeTags = $this->tags_model->remove_transaction_tags('Delayed Credit', $delayedCreditId);
         }
@@ -19624,6 +19715,8 @@ class Accounting_modals extends MY_Controller
             $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Delayed Charge', $delayedChargeId);
 
             $this->void_customer_transaction_items('Delayed Charge', $delayedChargeId);
+
+            $this->accounting_credit_memo_model->delete_customer_transaction_items('Delayed Charge', $delayedChargeId);
 
             $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Delayed Charge', $delayedChargeId);
             $removeTags = $this->tags_model->remove_transaction_tags('Delayed Charge', $delayedChargeId);
@@ -19786,17 +19879,35 @@ class Accounting_modals extends MY_Controller
     {
         $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
 
-        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-        $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
-        $newBalance = number_format($newBalance, 2, '.', ',');
+        $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Expense', $expenseId);
 
-        $paymentAccData = [
-            'id' => $paymentAcc->id,
-            'company_id' => logged('company_id'),
-            'balance' => $newBalance
-        ];
+        foreach($accountTransacs as $transac)
+        {
+            $account = $this->chart_of_accounts_model->getById($transac->account_id);
+            $accountType = $this->account_model->getById($account->account_id);
 
-        $this->chart_of_accounts_model->updateBalance($paymentAccData);
+            if($accountType->account_name === 'Credit Card') {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+            } else {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $accData = [
+                'id' => $account->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval(str_replace(',', '', $newBalance))
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($accData);
+
+            $transacData = [
+                'amount' => 0.00
+            ];
+
+            $this->accounting_account_transactions_model->update($transac->id, $transacData);
+        }
 
         $this->accounting_linked_transactions_model->unlink_all_from_linked_to('expense', $expenseId);
 
@@ -19824,17 +19935,35 @@ class Accounting_modals extends MY_Controller
     {
         $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
 
-        $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
-        $newBalance = floatval($bankAcc->balance) + floatval($check->total_amount);
-        $newBalance = number_format($newBalance, 2, '.', ',');
+        $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Check', $checkId);
 
-        $bankAccData = [
-            'id' => $bankAcc->id,
-            'company_id' => logged('company_id'),
-            'balance' => $newBalance
-        ];
+        foreach($accountTransacs as $transac)
+        {
+            $account = $this->chart_of_accounts_model->getById($transac->account_id);
+            $accountType = $this->account_model->getById($account->account_id);
 
-        $this->chart_of_accounts_model->updateBalance($bankAccData);
+            if($accountType->account_name === 'Credit Card') {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+            } else {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $accData = [
+                'id' => $account->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval(str_replace(',', '', $newBalance))
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($accData);
+
+            $transacData = [
+                'amount' => 0.00
+            ];
+
+            $this->accounting_account_transaction_model->update($transac->id, $transacData);
+        }
 
         $this->accounting_linked_transactions_model->unlink_all_from_linked_to('check', $checkId);
 
@@ -19862,11 +19991,35 @@ class Accounting_modals extends MY_Controller
     {
         $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
 
-        $creditAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
-        $newBalance = floatval($creditAcc->balance) + floatval($ccCredit->total_amount);
-        $newBalance = number_format($newBalance, 2, '.', ',');
+        $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('CC Credit', $ccCreditId);
 
-        $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+        foreach($accountTransacs as $transac)
+        {
+            $account = $this->chart_of_accounts_model->getById($transac->account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+
+            if($accountType->account_name === 'Credit Card') {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+            } else {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $accData = [
+                'id' => $account->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval(str_replace(',', '', $newBalance))
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($accData);
+
+            $transacData = [
+                'amount' => 0.00
+            ];
+
+            $this->accounting_account_transaction_model->update($transac->id, $transacData);
+        }
 
         $data = [
             'memo' => 'Voided',
@@ -19892,19 +20045,35 @@ class Accounting_modals extends MY_Controller
     {
         $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
 
-        $creditAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
+        $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('CC Payment', $ccPaymentId);
 
-        $newBalance = floatval($creditAcc->balance) + floatval($ccPayment->amount);
-        $newBalance = number_format($newBalance, 2, '.', ',');
+        foreach($accountTransacs as $transac)
+        {
+            $account = $this->chart_of_accounts_model->getById($transac->account_id);
+            $accountType = $this->account_model->getById($account->account_id);
 
-        $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+            if($accountType->account_name === 'Credit Card') {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+            } else {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+            }
 
-        $bankAcc = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
+            $newBalance = number_format($newBalance, 2, '.', ',');
 
-        $newBalance = floatval($bankAcc->balance) + floatval($ccPayment->amount);
-        $newBalance = number_format($newBalance, 2, '.', ',');
+            $accData = [
+                'id' => $account->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval(str_replace(',', '', $newBalance))
+            ];
 
-        $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+            $this->chart_of_accounts_model->updateBalance($accData);
+
+            $transacData = [
+                'amount' => 0.00
+            ];
+
+            $this->accounting_account_transaction_model->update($transac->id, $transacData);
+        }
 
         $data = [
             'memo' => 'Voided',
@@ -19931,24 +20100,35 @@ class Accounting_modals extends MY_Controller
             'status' => 4,
         ];
 
-        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
-        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+        $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Bill Payment', $billPaymentId);
 
-        if ($paymentAccType->account_name === 'Credit Card') {
-            $newBalance = floatval($paymentAcc->balance) - floatval($billPayment->total_amount);
-        } else {
-            $newBalance = floatval($paymentAcc->balance) + floatval($billPayment->total_amount);
+        foreach($accountTransacs as $transac)
+        {
+            $account = $this->chart_of_accounts_model->getById($transac->account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+
+            if($accountType->account_name === 'Credit Card') {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+            } else {
+                $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $accData = [
+                'id' => $account->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval(str_replace(',', '', $newBalance))
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($accData);
+
+            $transacData = [
+                'amount' => 0.00
+            ];
+
+            $this->accounting_account_transaction_model->update($transac->id, $transacData);
         }
-
-        $newBalance = number_format($newBalance, 2, '.', ',');
-
-        $paymentAccData = [
-            'id' => $paymentAcc->id,
-            'company_id' => logged('company_id'),
-            'balance' => $newBalance
-        ];
-
-        $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
         $void = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
 
@@ -19994,35 +20174,6 @@ class Accounting_modals extends MY_Controller
 
         if (count($categories) > 0) {
             foreach ($categories as $category) {
-                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
-
-                switch($transactionType) {
-                    case 'Credit Card Credit' :
-                        if ($expenseAccType->account_name === 'Credit Card') {
-                            $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
-                        } else {
-                            $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
-                        }
-                    break;
-                    default :
-                        if ($expenseAccType->account_name === 'Credit Card') {
-                            $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
-                        } else {
-                            $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
-                        }
-                    break;
-                }
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $expenseAccData = [
-                    'id' => $expenseAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($expenseAccData);
-
                 $categoryDetails = [
                     'amount' => 0.00,
                     'linked_transaction_type' => null,
@@ -20066,33 +20217,16 @@ class Accounting_modals extends MY_Controller
 
                 $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
 
-                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-
                 switch($transactionType) {
                     case 'Credit Card Credit' :
                         $newQty = intval($location->qty) + intval($item->quantity);
-
-                        $newBalance = floatval($item->total) - floatval($item->quantitiy);
-                        $newBalance = floatval($invAssetAcc->balance) - $newBalance;
-                        $newBalance = $newBalance + floatval($item->total);
                     break;
                     default :
                         $newQty = intval($location->qty) - intval($item->quantity);
-
-                        $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
                     break;
                 }
 
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $invAssetAccData = [
-                    'id' => $invAssetAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
                 $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
 
                 $itemDetails = [
                     'quantity' => 0,
@@ -20144,28 +20278,35 @@ class Accounting_modals extends MY_Controller
         $void = $this->accounting_transfer_funds_model->update($transfer->id, $transferData);
 
         if($void) {
-            $transferFromAcc = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
-            $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Transfer', $transferId);
 
-            $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) + floatval($transfer->transfer_amount) : floatval($transferFromAcc->balance) - floatval($transfer->transfer_amount);
-            $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) - floatval($transfer->transfer_amount) : floatval($transferToAcc->balance) + floatval($transfer->transfer_amount);
+            foreach($accountTransacs as $transac)
+            {
+                $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                $accountType = $this->account_model->getById($account->account_id);
 
-            $transferFromBal = number_format($transferFromBal, 2, '.', ',');
-            $transferToBal = number_format($transferToBal, 2, '.', ',');
+                if($accountType->account_name === 'Credit Card') {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                } else {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                }
 
-            $transferFromAccData = [
-                'id' => $transferFromAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $transferFromBal
-            ];
-            $transferToAccData = [
-                'id' => $transferToAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $transferToBal
-            ];
+                $newBalance = number_format($newBalance, 2, '.', ',');
 
-            $this->chart_of_accounts_model->updateBalance($transferFromAccData);
-            $this->chart_of_accounts_model->updateBalance($transferToAccData);
+                $accData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accData);
+
+                $transacData = [
+                    'amount' => 0.00
+                ];
+
+                $this->accounting_account_transaction_model->update($transac->id, $transacData);
+            }
         }
 
         return [
@@ -20190,24 +20331,35 @@ class Accounting_modals extends MY_Controller
         $update = $this->accounting_receive_payment_model->updateReceivePayment($payment->id, $paymentData);
 
         if($update) {
-            $depositToAcc = $this->chart_of_accounts_model->getById($payment->deposit_to);
-            $depositToAccType = $this->account_model->getById($depositToAcc->account_id);
+            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Payment', $receivePaymentId);
 
-            if ($depositToAccType->account_name === 'Credit Card') {
-                $newBalance = floatval($depositToAcc->balance) + floatval($payment->amount_received);
-            } else {
-                $newBalance = floatval($depositToAcc->balance) - floatval($payment->amount_received);
+            foreach($accountTransacs as $transac)
+            {
+                $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                $accountType = $this->account_model->getById($account->account_id);
+
+                if($accountType->account_name === 'Credit Card') {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                } else {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $accData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accData);
+
+                $transacData = [
+                    'amount' => 0.00
+                ];
+
+                $this->accounting_account_transaction_model->update($transac->id, $transacData);
             }
-
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $depositToAccData = [
-                'id' => $depositToAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($depositToAccData);
 
             $invoices = $this->accounting_receive_payment_model->get_payment_invoices($payment->id);
             $credits = $this->accounting_receive_payment_model->get_payment_credits($payment->id);
@@ -20278,6 +20430,36 @@ class Accounting_modals extends MY_Controller
         $void = $this->accounting_credit_memo_model->updateCreditMemo($creditMemoId, $creditMemoData);
 
         if($void) {
+            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Credit Memo', $creditMemoId);
+
+            foreach($accountTransacs as $transac)
+            {
+                $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                $accountType = $this->account_model->getById($account->account_id);
+
+                if($accountType->account_name === 'Credit Card') {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                } else {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $accData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accData);
+
+                $transacData = [
+                    'amount' => 0.00
+                ];
+
+                $this->accounting_account_transaction_model->update($transac->id, $transacData);
+            }
+
             $this->void_customer_transaction_items('Credit Memo', $creditMemoId);
         }
 
@@ -20305,24 +20487,35 @@ class Accounting_modals extends MY_Controller
         $void = $this->accounting_sales_receipt_model->updateSalesReceipt($salesReceiptId, $salesReceiptData);
 
         if($void) {
-            $depositAcc = $this->chart_of_accounts_model->getById($salesReceipt->deposit_to_account);
-            $depositAccType = $this->account_model->getById($depositAcc->account_id);
+            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Sales Receipt', $salesReceiptId);
 
-            if ($depositAccType->account_name === 'Credit Card') {
-                $newBalance = floatval($depositAcc->balance) + floatval($salesReceipt->total_amount);
-            } else {
-                $newBalance = floatval($depositAcc->balance) - floatval($salesReceipt->total_amount);
+            foreach($accountTransacs as $transac)
+            {
+                $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                $accountType = $this->account_model->getById($account->account_id);
+
+                if($accountType->account_name === 'Credit Card') {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                } else {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $accData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accData);
+
+                $transacData = [
+                    'amount' => 0.00
+                ];
+
+                $this->accounting_account_transaction_model->update($transac->id, $transacData);
             }
-
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $depositAccData = [
-                'id' => $depositAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($depositAccData);
 
             $this->void_customer_transaction_items('Sales Receipt', $salesReceiptId);
         }
@@ -20351,24 +20544,35 @@ class Accounting_modals extends MY_Controller
         $void = $this->accounting_refund_receipt_model->updateRefundReceipt($refundReceiptId, $refundReceiptData);
 
         if($void) {
-            $refundAcc = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
-            $refundAccType = $this->account_model->getById($refundAcc->account_id);
+            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Refund Receipt', $refundReceiptId);
 
-            if ($refundAccType->account_name === 'Credit Card') {
-                $newBalance = floatval($refundAcc->balance) - floatval($refundReceipt->total_amount);
-            } else {
-                $newBalance = floatval($refundAcc->balance) + floatval($refundReceipt->total_amount);
+            foreach($accountTransacs as $transac)
+            {
+                $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                $accountType = $this->account_model->getById($account->account_id);
+
+                if($accountType->account_name === 'Credit Card') {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                } else {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $accData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accData);
+
+                $transacData = [
+                    'amount' => 0.00
+                ];
+
+                $this->accounting_account_transaction_model->update($transac->id, $transacData);
             }
-
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $refundAccData = [
-                'id' => $refundAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($refundAccData);
 
             $this->void_customer_transaction_items('Refund Receipt', $refundReceiptId);
         }
@@ -20398,6 +20602,36 @@ class Accounting_modals extends MY_Controller
         $void = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
 
         if($void) {
+            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Invoice', $invoiceId);
+
+            foreach($accountTransacs as $transac)
+            {
+                $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                $accountType = $this->account_model->getById($account->account_id);
+
+                if($accountType->account_name === 'Credit Card') {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                } else {
+                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $accData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accData);
+
+                $transacData = [
+                    'amount' => 0.00
+                ];
+
+                $this->accounting_account_transaction_model->update($transac->id, $transacData);
+            }
+
             $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
 
             foreach($invoiceItems as $invoiceItem) {
@@ -20410,36 +20644,6 @@ class Accounting_modals extends MY_Controller
                             $location = $this->items_model->getItemLocation($invoiceItem->location_id, $invoiceItem->items_id);
                             $newQty = intval($location->qty) + intval($invoiceItem->qty);
                             $this->items_model->updateLocationQty($invoiceItem->location_id, $invoiceItem->items_id, $newQty);
-
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($invAssetAcc->balance) + floatval($item->cost);
-                            $newBalance = number_format($newBalance, 2, '.', ',');
-
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                        } else {
-                            $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
-                            $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
-
-                            if ($incomeAccType->account_name === 'Credit Card') {
-                                $newBalance = floatval($incomeAcc->balance) - floatval($invoiceItem->total);
-                            } else {
-                                $newBalance = floatval($incomeAcc->balance) + floatval($invoiceItem->total);
-                            }
-                            $newBalance = number_format($newBalance, 2, '.', ',');
-
-                            $incomeAccData = [
-                                'id' => $incomeAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-
-                            $this->chart_of_accounts_model->updateBalance($incomeAccData);
                         }
                     }
                 } else {
@@ -20456,38 +20660,6 @@ class Accounting_modals extends MY_Controller
                                 $location = $this->items_model->get_first_location($packageItem->item_id);
                                 $newQty = intval($location->qty) + intval($totalQty);
                                 $this->items_model->updateLocationQty($location->id, $packageItem->item_id, $newQty);
-
-                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                                $totalAmount = floatval($item->cost) * floatval($totalQty);
-                                $newBalance = floatval($invAssetAcc->balance) + floatval($totalAmount);
-                                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                                $invAssetAccData = [
-                                    'id' => $invAssetAcc->id,
-                                    'company_id' => logged('company_id'),
-                                    'balance' => $newBalance
-                                ];
-
-                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                            } else {
-                                $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
-                                $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
-                                $totalAmount = floatval($item->price) * floatval($totalQty);
-
-                                if ($incomeAccType->account_name === 'Credit Card') {
-                                    $newBalance = floatval($incomeAcc->balance) - floatval($totalAmount);
-                                } else {
-                                    $newBalance = floatval($incomeAcc->balance) + floatval($totalAmount);
-                                }
-                                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                                $incomeAccData = [
-                                    'id' => $incomeAcc->id,
-                                    'company_id' => logged('company_id'),
-                                    'balance' => $newBalance
-                                ];
-
-                                $this->chart_of_accounts_model->updateBalance($incomeAccData);
                             }
                         }
                     }

@@ -538,14 +538,14 @@ echo put_header_assets();
                                         <tr>
                                             <td>Subtotal</td>
                                             <!-- <td></td> -->
-                                            <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span>
+                                            <td colspan="2" align="right">$<span id="span_sub_total_invoice">0.00</span>
                                                 <input type="hidden" name="subtotal" id="item_total">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <!-- <td></td> -->
-                                            <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            <td colspan="2" align="right">$<span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
                                             <td>

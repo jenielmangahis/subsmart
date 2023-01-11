@@ -93,7 +93,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <ul class="list-unstyled">
                                     <li><a href="#" class="ajax-modal" data-view="invoice_modal" data-toggle="modal" data-target="#invoiceModal">Invoice</a></li>
                                     <li><a href="#" class="ajax-modal" data-view="receive_payment_modal" data-toggle="modal" data-target="#receivePaymentModal">Receive payment</a></li>
-                                    <li><a href="#" class="ajax-modal">Estimate</a></li>
+                                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">Estimate</a></li>
                                     <li><a href="#" class="ajax-modal" data-view="credit_memo_modal" data-toggle="modal" data-target="#creditMemoModal">Credit memo</a></li>
                                     <li><a href="#" class="ajax-modal" data-view="sales_receipt_modal" data-toggle="modal" data-target="#salesReceiptModal">Sales receipt</a></li>
                                     <li><a href="#" class="ajax-modal" data-view="refund_receipt_modal" data-toggle="modal" data-target="#refundReceiptModal">Refund receipt</a></li>
@@ -785,6 +785,37 @@ if ($this->session->userdata('usertimezone') == null) {
             </div>
             <div class="nsm-content-container">
                 <div class="nsm-content">
+                    <div class="modal fade nsm-modal fade" id="new_estimate_modal" tabindex="-1" aria-labelledby="new_estimate_modal_label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="new_estimate_modal_label">New Estimate</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row text-center gy-3">
+                                        <div class="col-12">
+                                            <label class="content-title">What type of estimate you want to create</label>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="content-subtitle d-block mb-2">Create a regular estimate with items</label>
+                                            <button type="button" class="nsm-button w-50 primary">Standard Estimate</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="content-subtitle d-block mb-2">Customers can select all or only certain options</label>
+                                            <button type="button" class="nsm-button w-50 primary">Options Estimate</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages to<br>obtain an overall discount</label>
+                                            <button type="button" class="nsm-button w-50 primary">Bundle Estimate</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="nsm-fab-container">
                         <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
                             <i class="bx bx-plus"></i>
