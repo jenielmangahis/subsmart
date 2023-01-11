@@ -2237,8 +2237,7 @@
 
     $(document).on('click', '.calendar-tile-minmax', function(){
         var tile_id   = $(this).data('id');
-        var tile_type = $(this).data('type');
-        alert(3);
+        var tile_type = $(this).data('type');        
 
         if( $(this).hasClass('c-max') ){
             $('.'+tile_type+'-tile-'+tile_id).fadeIn(5);        
