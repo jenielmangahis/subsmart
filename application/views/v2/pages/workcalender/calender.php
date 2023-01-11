@@ -1298,6 +1298,8 @@
                 // loadCompanyCustomers($("#appointment-customer"));
                 //$("#calendar_action_select_modal").modal('show');
                 $('.customer-address').html('');
+                $('.appointment-form').hide();
+                $('.add-appointment-type').val(0).change();
                 $("#create_appointment_modal").modal('show');
 
             },
@@ -2082,114 +2084,145 @@
         var appointmentEventPriorityOptions = <?= json_encode($appointmentPriorityEventOptions); ?>;
         var appointmentPriorityOptions      = <?= json_encode($appointmentPriorityOptions); ?>;
         var appointment_type = $(this).val();
-        if( appointment_type ==  3 || appointment_type == 1 ){
-            $('.appointment-add-sales-agent').fadeIn(500);
-            $('.invoice-price-container').fadeIn(500);
-        }else if( appointment_type ==  2 ){
-            $('.appointment-add-sales-agent').fadeOut(500);
-            $('.invoice-price-container').fadeIn(500);
+
+        if( appointment_type == 1 ){
+            $('.appointment-form').hide();
+            var start_date = $('#action_select_date').val();
+            var start_time = $('#action_select_time').val();
+
+            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
+        }else if( appointment_type == 3 ){
+            $('.appointment-form').hide();
+            var appointment_date = $('#appointment_date').val();
+            var appointment_time = $('#appointment_time').val();
+            var appointment_user_id = $('#appointment-user').val();
+            var appointment_customer_id = $('#appointment-customer').val();
+            var appointment_type_id = $("input[name=appointment_type_id]").val();
+            var appointment_time_to = $('#appointment_time_to').val();
+
+            // address 
+            var customer_address = $('#m-customer-address').val();
+            var customer_city = $('#m-customer-city').val();
+            var customer_state = $('#m-customer-state').val();
+            var customer_zip = $('#m-customer-zip').val();
+            var customer_phone = $('#m-customer-mobile').val();
+
+            location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id+'&appointment_time_to='+appointment_time_to+'&customer_address='+customer_address+'&customer_city='+customer_city+'&customer_state='+customer_state+'&customer_zip='+customer_zip+'&customer_phone='+customer_phone;
+        }else if( appointment_type > 0 ){
+            $('.appointment-form').show();
+            $('.btn-create-appointment').show();
+            if( appointment_type ==  3 || appointment_type == 1 ){
+                $('.appointment-add-sales-agent').fadeIn(500);
+                $('.invoice-price-container').fadeIn(500);
+            }else if( appointment_type ==  2 ){
+                $('.appointment-add-sales-agent').fadeOut(500);
+                $('.invoice-price-container').fadeIn(500);
+            }else{
+                $('.appointment-add-sales-agent').fadeOut(500);
+                $('.invoice-price-container').fadeOut(500);
+            }
+
+            if( appointment_type == 4 ){ //Event
+                $('.customer-container').fadeOut(500);
+                $('.event-description-container').fadeIn(500);
+                $('.event-location-container').fadeIn(500);
+                $("a.btn-manage-tags").attr("href", base_url + 'events/event_tags');
+                $("#appointment-tags").empty().trigger('change');
+                $('#appointment-tags').select2({
+                    ajax: {
+                        url: base_url + 'autocomplete/_company_event_tags',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                q: params.term, // search term
+                                page: params.page
+                            };
+                        },
+                        processResults: function(data, params) {
+                            params.page = params.page || 1;
+
+                            return {
+                                results: data,
+                            };
+                        },
+                        cache: true
+                    },
+                    dropdownParent: $("#create_appointment_modal"),
+                    placeholder: 'Select Tags',
+                    minimumInputLength: 0,
+                    templateResult: formatRepoTag,
+                    templateSelection: formatRepoTagSelection
+                });
+            }else{
+                $('.customer-container').fadeIn(500);
+                $('.event-description-container').fadeOut(500);
+                $('.event-location-container').fadeOut(500);
+                $("a.btn-manage-tags").attr("href", base_url + 'job/job_tags');
+                $("#appointment-tags").empty().trigger('change');
+                $('#appointment-tags').select2({
+                    ajax: {
+                        url: base_url + 'autocomplete/_company_job_tags',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                q: params.term, // search term
+                                page: params.page
+                            };
+                        },
+                        processResults: function(data, params) {
+                            params.page = params.page || 1;
+
+                            return {
+                                results: data,
+                            };
+                        },
+                        cache: true
+                    },
+                    dropdownParent: $("#create_appointment_modal"),
+                    placeholder: 'Select Tags',
+                    minimumInputLength: 0,
+                    templateResult: formatRepoTag,
+                    templateSelection: formatRepoTagSelection
+                });
+            }
+
+            if( appointment_type == 4 ){
+                $('.create-tech-attendees').text('Attendees');
+                $('#wait-list-add-employee-popover').popover('dispose');
+                $('#wait-list-add-employee-popover').popover({    
+                    content:'Who will attend the event',
+                    title:'Attendees',        
+                    trigger: 'hover'
+                });
+
+                var $el = $(".add-appointment-priority");
+                $el.empty(); // remove old options
+                $.each(appointmentEventPriorityOptions, function(key,value) {
+                  $el.append($("<option></option>")
+                     .attr("value", value).text(value));
+                });
+
+            }else{
+                $('.create-tech-attendees').text('Assigned Techincian');
+                $('#wait-list-add-employee-popover').popover('dispose');
+                $('#wait-list-add-employee-popover').popover({    
+                    content:'Assign employee that will handle the appointment',
+                    title:'Which Employee',        
+                    trigger: 'hover'
+                }); 
+
+                var $el = $(".add-appointment-priority");
+                $el.empty(); // remove old options
+                $.each(appointmentPriorityOptions, function(key,value) {
+                  $el.append($("<option></option>")
+                     .attr("value", value).text(value));
+                });           
+            }
         }else{
-            $('.appointment-add-sales-agent').fadeOut(500);
-            $('.invoice-price-container').fadeOut(500);
-        }
-
-        if( appointment_type == 4 ){ //Event
-            $('.customer-container').fadeOut(500);
-            $('.event-description-container').fadeIn(500);
-            $('.event-location-container').fadeIn(500);
-            $("a.btn-manage-tags").attr("href", base_url + 'events/event_tags');
-            $("#appointment-tags").empty().trigger('change');
-            $('#appointment-tags').select2({
-                ajax: {
-                    url: base_url + 'autocomplete/_company_event_tags',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-
-                        return {
-                            results: data,
-                        };
-                    },
-                    cache: true
-                },
-                dropdownParent: $("#create_appointment_modal"),
-                placeholder: 'Select Tags',
-                minimumInputLength: 0,
-                templateResult: formatRepoTag,
-                templateSelection: formatRepoTagSelection
-            });
-        }else{
-            $('.customer-container').fadeIn(500);
-            $('.event-description-container').fadeOut(500);
-            $('.event-location-container').fadeOut(500);
-            $("a.btn-manage-tags").attr("href", base_url + 'job/job_tags');
-            $("#appointment-tags").empty().trigger('change');
-            $('#appointment-tags').select2({
-                ajax: {
-                    url: base_url + 'autocomplete/_company_job_tags',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-
-                        return {
-                            results: data,
-                        };
-                    },
-                    cache: true
-                },
-                dropdownParent: $("#create_appointment_modal"),
-                placeholder: 'Select Tags',
-                minimumInputLength: 0,
-                templateResult: formatRepoTag,
-                templateSelection: formatRepoTagSelection
-            });
-        }
-
-        if( appointment_type == 4 ){
-            $('.create-tech-attendees').text('Attendees');
-            $('#wait-list-add-employee-popover').popover('dispose');
-            $('#wait-list-add-employee-popover').popover({    
-                content:'Who will attend the event',
-                title:'Attendees',        
-                trigger: 'hover'
-            });
-
-            var $el = $(".add-appointment-priority");
-            $el.empty(); // remove old options
-            $.each(appointmentEventPriorityOptions, function(key,value) {
-              $el.append($("<option></option>")
-                 .attr("value", value).text(value));
-            });
-
-        }else{
-            $('.create-tech-attendees').text('Assigned Techincian');
-            $('#wait-list-add-employee-popover').popover('dispose');
-            $('#wait-list-add-employee-popover').popover({    
-                content:'Assign employee that will handle the appointment',
-                title:'Which Employee',        
-                trigger: 'hover'
-            }); 
-
-            var $el = $(".add-appointment-priority");
-            $el.empty(); // remove old options
-            $.each(appointmentPriorityOptions, function(key,value) {
-              $el.append($("<option></option>")
-                 .attr("value", value).text(value));
-            });           
+            $('.appointment-form').hide();
+            $('.btn-create-appointment').hide();
         }
     });
 
@@ -2205,6 +2238,7 @@
     $(document).on('click', '.calendar-tile-minmax', function(){
         var tile_id   = $(this).data('id');
         var tile_type = $(this).data('type');
+        alert(3);
 
         if( $(this).hasClass('c-max') ){
             $('.'+tile_type+'-tile-'+tile_id).fadeIn(5);        
@@ -2254,6 +2288,11 @@
     $(document).on('click', '.fc-threeDaysView-button', function(){
         selected_calendar_view = 'threeDaysView';
     });
+
+    /*$(document).on('click', '.fc-daygrid-event', function(){        
+        $(this).next('.calendar-tile-minmax').trigger('click');
+        console.log($(this).next('.calendar-tile-minmax'));
+    });*/
 
     $(document).on('click', '.calendar-tile-add-gcalendar', function(){
         var tile_id   = $(this).data('id');
