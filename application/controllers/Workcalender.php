@@ -931,7 +931,7 @@ class Workcalender extends MY_Controller
                     $resourceIds[] = "user" . $eid;                                    
                     $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
                 }
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("H:i A", strtotime($a->appointment_time_from)) . ' to ' . date("H:i A", strtotime($a->appointment_time_to)) . "</small>";  
+                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($a->appointment_time_from)) . ' to ' . date("g:i A", strtotime($a->appointment_time_to)) . "</small>";  
                 $custom_html .= '<br/><br/>'. $view_btn . $gcalendar_btn;              
             $custom_html .= '</div>';
 
