@@ -336,7 +336,7 @@ class Cron_Api extends MYF_Controller {
                             }
                         }
 
-                        $location = $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
+                        $location = $ticket->service_location . ' ' . $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
 
                         $description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
                         $description .= "Phone Number : ".$ticket->phone_m."\n";                  
