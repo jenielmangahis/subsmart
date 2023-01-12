@@ -1650,8 +1650,8 @@ class Debug extends MY_Controller {
         $total_services = 0;
         $total_jobs     = 0;
 
-        $start_date   = '2022-12-01';
-        $end_date     = date("Y-m-d");                
+        $start_date   = '2023-01-13';
+        $end_date     = '2023-03-25';                
 
         $appointments = $this->Appointment_model->getAllByDateRange($start_date, $end_date);
         foreach($appointments as $a){
