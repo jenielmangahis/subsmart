@@ -217,37 +217,35 @@
                         }
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
-                            <tr class="schedule-jobs">
+                            <?php if( $schedule['type'] == 'appointment' ){ ?>
+                                <tr class="schedule-jobs upcoming-tile-view" data-type="appointment" data-id="<?= $schedule['data']->id; ?>" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);">
+                            <?php }else{ ?>
+                                <tr class="schedule-job" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);" onclick="location.href='<?= $schedule_view_url; ?>'">
+                            <?php } ?>
                             <td>
                                 <?php 
                                     $event_month = date("F", strtotime($schedule_date));
                                     $event_day   = date("d", strtotime($schedule_date));
                                     $event_day_word = date("D", strtotime($schedule_date));
-                                ?>
-                                <?php if( $schedule['type'] == 'appointment' ){ ?>
-                                    <a class="schedule-jobs upcoming-tile-view" data-type="appointment" data-id="<?= $schedule['data']->id; ?>" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);">
-                                <?php }else{ ?>
-                                    <a class="schedule-job" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);" onclick="location.href='<?= $schedule_view_url; ?>'">
-                                <?php } ?>
-                                    <div class="nsm-calendar" ng-app="myApp">
-                                        <div class="week">
-                                            <b><?= $event_day_word; ?></b>
-                                        </div>
-                                        <div class="date">
-                                            <?= $event_day; ?>
-                                        </div>
-                                    </div> 
-                                    <div class="nsm-calendar-info-container" style="text-align:center;">
-                                        <?php if( $schedule_status != '' ){ ?>
-                                        <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
-                                        <?php } ?>
-                                        <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
-                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
-                                        <?php }elseif( $schedule_start_time != '' ){  ?>
-                                            <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
-                                        <?php } ?>                                
-                                    </div>      
-                                </a>              
+                                ?>                                
+                                <div class="nsm-calendar" ng-app="myApp">
+                                    <div class="week">
+                                        <b><?= $event_day_word; ?></b>
+                                    </div>
+                                    <div class="date">
+                                        <?= $event_day; ?>
+                                    </div>
+                                </div> 
+                                <div class="nsm-calendar-info-container" style="text-align:center;">
+                                    <?php if( $schedule_status != '' ){ ?>
+                                    <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
+                                    <?php } ?>
+                                    <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
+                                    <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
+                                    <?php }elseif( $schedule_start_time != '' ){  ?>
+                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
+                                    <?php } ?>                                
+                                </div>        
                             </td>
                             <td style="vertical-align: text-top;padding-top: 16px;">                                
                                 <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">

@@ -1,10 +1,18 @@
 $(document).ready(function () {
-    $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal").on("click", function(e) {
+    $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal, #new_estimate_modal .modal-body button.nsm-button").on("click", function(e) {
 		e.preventDefault();
-        var target = e.currentTarget.dataset;
-        var view = target.view
-        var modal_element = target.target;
-        modalName = target.target;
+
+        if($(this).hasClass('nsm-button')) {
+            var view = $(this).attr('id').replace('-', '_');
+            view += '_modal';
+            var modal_element = '#'+$(this).attr('id')+'-modal';
+            modalName = modal_element;
+        } else {
+            var target = e.currentTarget.dataset;
+            var view = target.view
+            var modal_element = target.target;
+            modalName = target.target;
+        }
 
         $.get(GET_OTHER_MODAL_URL + view, function(res) {
             if ($('div#modal-container').length > 0) {

@@ -799,15 +799,15 @@ if ($this->session->userdata('usertimezone') == null) {
                                         </div>
                                         <div class="col-12">
                                             <label class="content-subtitle d-block mb-2">Create a regular estimate with items</label>
-                                            <button type="button" class="nsm-button w-50 primary">Standard Estimate</button>
+                                            <button type="button" class="nsm-button w-50 primary" id="standard-estimate">Standard Estimate</button>
                                         </div>
                                         <div class="col-12">
                                             <label class="content-subtitle d-block mb-2">Customers can select all or only certain options</label>
-                                            <button type="button" class="nsm-button w-50 primary">Options Estimate</button>
+                                            <button type="button" class="nsm-button w-50 primary" id="options-estimate">Options Estimate</button>
                                         </div>
                                         <div class="col-12">
                                             <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages to<br>obtain an overall discount</label>
-                                            <button type="button" class="nsm-button w-50 primary">Bundle Estimate</button>
+                                            <button type="button" class="nsm-button w-50 primary" id="bundle-estimate">Bundle Estimate</button>
                                         </div>
                                     </div>
                                 </div>

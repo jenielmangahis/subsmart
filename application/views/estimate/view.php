@@ -854,11 +854,11 @@ span.sc-item {
 
                             <?php if($estimate->estimate_type == 'Standard'){ ?>
                               <?php if($estimate->customer_message){ ?>
-                            <b>Message</b><br><?= $estimate->customer_message; ?>
+                            <br><br><b>Message</b><br><?= $estimate->customer_message; ?>
                             <?php } }?>
 
                             <?php if($estimate->terms_conditions){ ?>
-                            <b>Terms</b><br><?= $estimate->terms_conditions; }?>
+                              <br><br><b>Terms</b><br><?= $estimate->terms_conditions; }?>
                       
                             <?php }else{ ?>
                               <div class="alert alert-primary" role="alert">

@@ -327,6 +327,7 @@ class Tickets_model extends MY_Model
         $this->db->where('id', $id);
         $this->db->update('tickets', array(
             'customer_id'           => $customer_id,
+            'business_name'         => $business_name,
             'service_location'      => $service_location,
             'acs_city'              => $acs_city,
             'acs_state'             => $acs_state,

@@ -35,8 +35,25 @@
                 <div class="modal-body">
                     <input type="hidden" id="action_select_date" value="" />        
                     <input type="hidden" id="action_select_time" value="" />        
-                    <input type="hidden" id="action_select_user" value="" />        
-                    <div class="row g-3">
+                    <input type="hidden" id="action_select_user" value="" />  
+                    <div class="select-appointment-type">
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
+                                <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required style="display: inline-block;width: 60%;">
+                                    <?php $start = 0; ?>
+                                    <option value="0">- Select Appointment Type -</option>
+                                    <?php foreach ($appointmentTypes as $a) { ?>
+                                        <option value="<?= $a->id; ?>"><?= $a->name; ?></option>
+                                    <?php $start++; } ?>
+                                </select>
+                                <!-- <a class="nsm-button" href="<?= base_url('appointment_types/index'); ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
+                                    <i class='bx bx-fw bx-plus'></i> Manage Type
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>      
+                    <div class="row g-3 appointment-form" style="display: none;">
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">When</label>
                             <div class="row g-3">
@@ -97,19 +114,22 @@
                             <div class="customer-address"></div>
                         </div>
                         <div class="col-12">
-                            <div class="row">
+                            <div class="row">  
                                 <div class="col-6">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                                    <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required style="display: inline-block;width: 60%;">
-                                        <?php $start = 0; ?>
-                                        <?php foreach ($appointmentTypes as $a) { ?>
-                                            <option <?= $default_appointment_type_id == $a->id ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
-                                        <?php $start++; } ?>
-                                    </select>
-                                    <a class="nsm-button" href="<?= base_url('appointment_types/index'); ?>" style="display: inline-block;padding: 2px;margin: 1px;position: relative;top: 3px;padding-right: 10px;">
-                                        <i class='bx bx-fw bx-plus'></i> Manage Type
-                                    </a>
-                                </div>
+                                    <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+                                    <select name="appointment_status" class="nsm-field form-select appointment-status" required style="display: inline-block;">
+                                        <option value="New">New</option>
+                                        <option value="Draft">Draft</option>
+                                        <option value="Scheduled">Scheduled</option>
+                                        <option value="Arrival">Arrival</option>
+                                        <option value="Paused">Paused</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Invoiced">Invoiced</option>
+                                        <option value="Closed">Closed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>                                    
+                                </div>                              
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
                                     <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
@@ -155,9 +175,9 @@
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">URL Link <small style="color:#ff4d4d;">(Must be public url)</small></label>
                                     <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
-                                </div>
+                                </div>                                
                             </div>
-                        </div>                        
+                        </div>                    
                         <div class="col-12">
                             <div class="col-12">
                                 <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
@@ -166,15 +186,10 @@
                         </div>
                     </div>                    
                 </div>
-                <div class="modal-footer" style="display:block;">
-                    <div style="float:left;">
-                        <button type="button" id="calendar-add-job" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Job</button>
-                        <button type="button" id="calendar-add-event" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Event</button>
-                        <button type="button" id="calendar-add-ticket" class="nsm-button primary" style="display:inline-block;"><i class='bx bxs-calendar-plus'></i> Create Service Ticket</button>
-                    </div>
+                <div class="modal-footer" style="display:block;">                    
                     <div style="float:right;">
                         <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary">Schedule</button>
+                        <button type="submit" class="nsm-button primary btn-create-appointment" style="display:none;">Schedule</button>
                     </div>
                 </div>
             </div>

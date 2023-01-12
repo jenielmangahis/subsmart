@@ -42,7 +42,7 @@
 @media screen and (max-width: 600px) {
   .content-title {
     font-size: 13px !important;
-    word-break: break-all;
+    word-break: break-word;
   }
   .nsm-calendar-info-container .content-subtitle{
     font-size: 11px !important;
@@ -208,33 +208,31 @@
                         }
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
-                        <tr class="schedule-jobs" style="cursor: pointer">
+                        <tr class="schedule-job" style="cursor: pointer; text-decoration: none;color:inherit;" href="javascript:void(0);" onclick="location.href='<?= $schedule_view_url; ?>'">                  
                             <td>
                                 <?php 
                                     $event_month = date("F", strtotime($schedule_date));
                                     $event_day   = date("d", strtotime($schedule_date));
                                     $event_day_word = date("D", strtotime($schedule_date));
                                 ?>
-                                <a class="schedule-job" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);" onclick="location.href='<?= $schedule_view_url; ?>'">
-                                    <div class="nsm-calendar" ng-app="myApp">
-                                        <div class="week">
-                                            <b><?= $event_day_word; ?></b>
-                                        </div>
-                                        <div class="date">
-                                            <?= $event_day; ?>
-                                        </div>
-                                    </div>    
-                                    <div class="nsm-calendar-info-container" style="text-align:center;">
-                                        <?php if( $schedule_status != '' ){ ?>
-                                        <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
-                                        <?php } ?>
-                                        <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
-                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
-                                        <?php }elseif( $schedule_start_time != '' ){  ?>
-                                            <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
-                                        <?php } ?>                                
-                                    </div>      
-                                </a>              
+                                <div class="nsm-calendar" ng-app="myApp">
+                                    <div class="week">
+                                        <b><?= $event_day_word; ?></b>
+                                    </div>
+                                    <div class="date">
+                                        <?= $event_day; ?>
+                                    </div>
+                                </div>    
+                                <div class="nsm-calendar-info-container" style="text-align:center;">
+                                    <?php if( $schedule_status != '' ){ ?>
+                                    <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
+                                    <?php } ?>
+                                    <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
+                                    <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
+                                    <?php }elseif( $schedule_start_time != '' ){  ?>
+                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
+                                    <?php } ?>                                
+                                </div>         
                             </td>
                             <td style="vertical-align: text-top;padding-top: 16px;">
                                 <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
