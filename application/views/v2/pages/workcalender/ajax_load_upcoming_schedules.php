@@ -85,6 +85,7 @@
                             $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             $schedule_description = '';
+                            $schedule_invoice_amount = $schedule['data']->invoice_amount;
 
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->e_employee_id;
@@ -120,6 +121,8 @@
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->employee_id;
 
+                            $schedule_invoice_amount = 0;
+
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'estimate' ){
                             $schedule_view_url = base_url('estimate/view/' . $schedule['data']->id);
@@ -137,6 +140,8 @@
                             $schedule_expiry_date = $schedule['data']->expiry_date;
                             $schedule_description = '';
                             $schedule_event_name = '';
+
+                            $schedule_invoice_amount = 0;
 
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->user_id;
@@ -159,6 +164,7 @@
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
+                            $schedule_invoice_amount = number_format($schedule['data']->grandtotal,2);
 
                             $assigned_employees = array();
                             $emp_ids = unserialize($schedule['data']->technicians);
@@ -202,6 +208,7 @@
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
+                            $schedule_invoice_amount = 0;
                             /*if( $schedule['data']->notes != '' ){
                                 $schedule_description = $schedule['data']->notes;
                             }*/                            
@@ -237,13 +244,13 @@
                                     </div>
                                 </div> 
                                 <div class="nsm-calendar-info-container" style="text-align:center;">
-                                    <?php if( $schedule_status != '' ){ ?>
+                                    <!-- <?php if( $schedule_status != '' ){ ?>
                                     <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
-                                    <?php } ?>
+                                    <?php } ?> -->
                                     <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
-                                    <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
+                                    <label class="content-subtitle mt-2 d-block text-uppercase" style="cursor: pointer;"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
                                     <?php }elseif( $schedule_start_time != '' ){  ?>
-                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
+                                        <label class="content-subtitle mt-2 d-block text-uppercase" style="cursor: pointer;"><?= $schedule_start_time; ?></label>
                                     <?php } ?>                                
                                 </div>        
                             </td>
@@ -281,10 +288,15 @@
                                                 </ul>                                    
                                             </label>
                                         <?php } ?>
-                                <?php } ?>                                
+                                <?php } ?>   
                                 <?php if( $schedule_description != '' ){ ?>
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
                                         <i class='bx bx-calendar-event'></i> <?= $schedule_description; ?>
+                                    </label>
+                                <?php } ?>
+                                <?php if( $schedule_invoice_amount > 0 ){ ?>                             
+                                    <label class="content-title" style="cursor: pointer;margin-bottom: 4px; margin-top: 10px;">
+                                        Invoice Amount :  $<?= $schedule_invoice_amount; ?>
                                     </label>
                                 <?php } ?>
                                 <?php if( $schedule_expiry_date != '' ){ ?>

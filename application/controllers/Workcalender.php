@@ -2655,6 +2655,14 @@ class Workcalender extends MY_Controller
         $upcomingSchedules = array();
 
         foreach( $upcomingJobs as $job ){
+            $jobItems = $this->Jobs_model->get_specific_job_items($job->id);
+            $total_amount = $job->tax_rate;
+            foreach($jobItems as $jt){
+                $total_amount += $jt->price * $jt->qty;
+            }
+
+            $job->invoice_amount = $total_amount;
+
             $date_index = date("Y-m-d", strtotime($job->start_date));
             $upcomingSchedules[$date_index][] = [
                 'type' => 'job',
