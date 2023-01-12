@@ -222,6 +222,12 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="city"><b>Business Name</b> (optional)</label>
+                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" />
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <label for="job_location"><b>Service Location</b></label>
                         <input type="text" class="form-control" name="service_location" id="service_location"
@@ -512,7 +518,7 @@ a.btn-primary.btn-md {
                                                     </td>
                                                 <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
                                                         data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="number" class="form-control price price hidden_mobile_view" name="price[]"
+                                                <td width="10%"><input type="text" class="form-control price price hidden_mobile_view" name="price[]"
                                                         data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
                                                         <div class="show_mobile_view">
                                                         </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>

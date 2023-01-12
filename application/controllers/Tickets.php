@@ -76,6 +76,7 @@ class Tickets extends MY_Controller
         // dd($this->input->post());
         $new_data = array(
             'customer_id'               => $this->input->post('customer_id'),
+            'business_name'             => $this->input->post('business_name'),
             'service_location'          => $this->input->post('service_location'),
             'service_description'       => $this->input->post('service_description'),
             'acs_city'                  => $this->input->post('customer_city'),
@@ -397,6 +398,7 @@ class Tickets extends MY_Controller
         $update_data = array(
             'id'                        => $this->input->post('ticketID'),
             'customer_id'               => $this->input->post('customer_id'),
+            'business_name'             => $this->input->post('business_name'),
             'service_location'          => $this->input->post('service_location'),
             'service_description'       => $this->input->post('service_description'),
             'acs_city'                  => $this->input->post('customer_city'),

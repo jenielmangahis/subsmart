@@ -216,6 +216,12 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="city"><b>Business Name</b> (optional)</label>
+                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value="<?php echo $tickets->business_name; ?>"/>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <label for="job_location" class="required"><b>Service Location</b></label>
                         <input type="text" class="form-control" name="service_location" id="service_location"
@@ -530,7 +536,7 @@ a.btn-primary.btn-md {
                                                         </div>
                                                     </td>
                                                     <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]" data-counter="<?php echo $i; ?>" id="quantity_<?php echo $i; ?>" value="<?php echo $itemL->qty; ?>"></td>
-                                                    <td width="1<?php echo $i; ?>%"><input type="number" class="form-control price price hidden_mobile_view" name="price[]" data-counter="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>">
+                                                    <td width="1<?php echo $i; ?>%"><input type="text" class="form-control price price hidden_mobile_view" name="price[]" data-counter="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>">
                                                         <input type="hidden" class="priceqty" id="priceqty_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>"> 
                                                         <div class="show_mobile_view"></div>
                                                         <input id="priceM_qty<?php echo $i; ?>" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty">

@@ -42,7 +42,7 @@
 @media screen and (max-width: 600px) {
   .content-title {
     font-size: 13px !important;
-    word-break: break-all;
+    word-break: break-word;
   }
   .nsm-calendar-info-container .content-subtitle{
     font-size: 11px !important;

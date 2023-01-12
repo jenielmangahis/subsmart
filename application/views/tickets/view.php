@@ -98,6 +98,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <td>Status:</td>
                                     <td><?php echo $tickets->ticket_status; ?></td>
                                 </tr>
+                                <tr>
+                                    <td>Business Name:</td>
+                                    <td><?php echo $tickets->business_name; ?></td>
+                                </tr>
                             </table>
                             </div>
                         </div>
@@ -369,11 +373,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <b>Assigned Technicians</b> <br>
                         <?php //echo $technicians; 
                         $assigned_technician = unserialize($tickets->technicians);
+                        if($assigned_technician){
                         // var_dump($assigned_technician);
                             foreach($assigned_technician as $eid){
                                 $user = getUserName($eid);
                                 echo $custom_html = '<img src="'.userProfileImage($eid).'" style="width: 60px;">'.$user['name'].'<br>';
                             }
+                        }
                         ?>
                     </div>
                 </div>

@@ -180,9 +180,13 @@ foreach ($jobs as $job) {
                             <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
                             <td><?php echo $job->FName . ' ' . $job->LName; ?></td>
                             <td></td>
-                            <td><?php for($x=1;$x<=$badgeCount;$x++){ ?> <span class="nsm-badge primary-enhanced"></span>
-                                <?php } for($y=1;$y < 9 - $badgeCount;$y++){ ?> <span class="nsm-badge primary"></span>
-                                <?php } ?>
+                            <td>
+                                <div>
+                                    <?php for($x=1;$x<=$badgeCount;$x++){ ?> <span class="nsm-badge primary-enhanced"></span>
+                                    <?php } for($y=1;$y < 9 - $badgeCount;$y++){ ?> <span class="nsm-badge primary"></span>
+                                    <?php } ?>
+                                </div>
+                                <small class="content-subtitle d-block mt-1"><?= $job->status; ?></small>
                             </td>
                             <td>$<?php echo number_format((float)$job->amount, 2, '.', ',');  ?></td>
                             <td><?php echo $job->job_type; ?></td>
