@@ -64,7 +64,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-no">Estimate # <span class="text-danger">*</span></label>
-                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="">
+                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=$est_number?>">
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-date">Estimate Date <span class="text-danger">*</span></label>
@@ -293,12 +293,12 @@
                                     <div class="col-12 col-md-6">
                                         <label for="message-to-customer">Message to Customer</label>
                                         <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" id="message-to-customer" cols="40" rows="2" class="form-control nsm-field mb-2">I would be happy to have an opportunity to work with you.</textarea>
+                                        <textarea name="customer_message" id="estimate-message-to-customer" cols="40" rows="2" class="form-control nsm-field mb-2">I would be happy to have an opportunity to work with you.</textarea>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label for="terms-and-conditions">Terms &amp; Conditions</label>
                                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
-                                        <textarea name="terms_conditions" id="terms-and-conditions" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
+                                        <textarea name="terms_conditions" id="estimate-terms-and-conditions" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="attachments">
@@ -318,7 +318,7 @@
                                     <div class="col-12">
                                         <label for="instructions">Instructions</label>
                                         <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
-                                        <textarea name="instructions" id="instructions" cols="40" rows="2" class="form-control nsm-field"></textarea>
+                                        <textarea name="instructions" id="estimate-instructions" cols="40" rows="2" class="form-control nsm-field"></textarea>
                                     </div>
                                 </div>
                             </div>
