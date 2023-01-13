@@ -221,6 +221,23 @@ class Appointment_model extends MY_Model
 
         return $options;
     }
+
+    public function getAllByDateRange($start_date, $end_date)
+    {
+        $where = array(
+            'appointments.company_id' => $company_id
+          );
+
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, acs_profile.mail_add,acs_profile.city AS cust_city, acs_profile.state AS cust_state,acs_profile.zip_code AS cust_zip_code, acs_profile.phone_m AS cust_phone');
+        $this->db->from($this->table);   
+        $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');          
+        $this->db->where('appointments.appointment_date >=', $start_date);
+        $this->db->where('appointments.appointment_date <=', $end_date);
+        $this->db->order_by('appointments.id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Appointment_model.php */

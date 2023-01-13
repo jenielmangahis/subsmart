@@ -64,7 +64,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-no">Estimate # <span class="text-danger">*</span></label>
-                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="">
+                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=$est_number?>">
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-date">Estimate Date <span class="text-danger">*</span></label>
@@ -79,6 +79,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="purchase-order-no">Purchase Order #</label>
@@ -102,6 +103,309 @@
                                             <option value="Declined By Customer">Declined By Customer</option>
                                             <option value="Lost">Lost</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 grid-mb">
+                                        <div class="accordion">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-option-1" aria-expanded="false" aria-controls="collapse-option-1">
+                                                        Option 1 Items
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse-option-1" class="accordion-collapse collapse show">
+                                                    <div class="accordion-body">
+                                                        <div class="row">
+                                                            <div class="col-12 mb-2">
+                                                                <table class="nsm-table" id="option-1-item-table">
+                                                                    <thead>
+                                                                        <td data-name="Item">ITEM</td>
+                                                                        <td data-name="Group">GROUP</td>
+                                                                        <td data-name="Quantity">QUANTITY</td>
+                                                                        <td data-name="Price">PRICE</td>
+                                                                        <td data-name="Discount">DISCOUNT</td>
+                                                                        <td data-name="Tax">TAX (CHANGE IN %)</td>
+                                                                        <td data-name="Total">TOTAL</td>
+                                                                        <td data-name="Manage"></td>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <?php if(isset($items) && count($items) > 0) : ?>
+                                                                            <?php foreach($items as $item) : ?>
+                                                                                <?php $itemDetails = $item->itemDetails;?>
+                                                                                <?php $locations = $item->locations;?>
+                                                                                <tr>
+                                                                                    <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
+                                                                                    <td><?=ucfirst($itemDetails->type)?></td>
+                                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->quantity?>"></td>
+                                                                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
+                                                                                    <td>
+                                                                                        <span class="row-total">
+                                                                                            <?php
+                                                                                                $rowTotal = '$'.number_format(floatval($item->total), 2, '.', ',');
+                                                                                                $rowTotal = str_replace('$-', '-$', $rowTotal);
+                                                                                                echo $rowTotal;
+                                                                                            ?>
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <button type="button" class="nsm-button delete-row">
+                                                                                            <i class='bx bx-fw bx-trash'></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            <?php endforeach; ?>
+                                                                        <?php endif; ?>
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <td colspan="10">
+                                                                                <div class="nsm-page-buttons page-buttons-container">
+                                                                                    <button type="button" class="nsm-button" id="add_option_item">
+                                                                                        Add items
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-12 col-md-6">
+                                                                <label for="option-1-message">Option 1 Message</label>
+                                                                <textarea name="option_1_message" id="option-1-message" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
+                                                            </div>
+                                                            <div class="col-12 col-md-3 offset-md-3">
+                                                                <table class="nsm-table float-end text-end">
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <td>Subtotal</td>
+                                                                            <td>
+                                                                                <span class="transaction-subtotal">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Taxes</td>
+                                                                            <td>
+                                                                                <span class="transaction-taxes">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Discounts</td>
+                                                                            <td>
+                                                                                <span class="transaction-discounts">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="row">
+                                                                                    <div class="col-8">
+                                                                                        <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="">
+                                                                                    </div>
+                                                                                    <div class="col-3">
+                                                                                        <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="">
+                                                                                    </div>
+                                                                                    <div class="col-1 d-flex align-items-center">
+                                                                                        <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="transaction-adjustment">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Grand Total ($)</td>
+                                                                            <td>
+                                                                                <span class="transaction-grand-total">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 grid-mb">
+                                        <div class="accordion">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-option-2" aria-expanded="false" aria-controls="collapse-option-2">
+                                                        Option 2 Items
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse-option-2" class="accordion-collapse collapse show">
+                                                    <div class="accordion-body">
+                                                        <div class="row">
+                                                            <div class="col-12 mb-2">
+                                                                <table class="nsm-table" id="option-2-item-table">
+                                                                    <thead>
+                                                                        <td data-name="Item">ITEM</td>
+                                                                        <td data-name="Group">GROUP</td>
+                                                                        <td data-name="Quantity">QUANTITY</td>
+                                                                        <td data-name="Price">PRICE</td>
+                                                                        <td data-name="Discount">DISCOUNT</td>
+                                                                        <td data-name="Tax">TAX (CHANGE IN %)</td>
+                                                                        <td data-name="Total">TOTAL</td>
+                                                                        <td data-name="Manage"></td>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <?php if(isset($items) && count($items) > 0) : ?>
+                                                                            <?php foreach($items as $item) : ?>
+                                                                                <?php $itemDetails = $item->itemDetails;?>
+                                                                                <?php $locations = $item->locations;?>
+                                                                                <tr>
+                                                                                    <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
+                                                                                    <td><?=ucfirst($itemDetails->type)?></td>
+                                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->quantity?>"></td>
+                                                                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
+                                                                                    <td>
+                                                                                        <span class="row-total">
+                                                                                            <?php
+                                                                                                $rowTotal = '$'.number_format(floatval($item->total), 2, '.', ',');
+                                                                                                $rowTotal = str_replace('$-', '-$', $rowTotal);
+                                                                                                echo $rowTotal;
+                                                                                            ?>
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <button type="button" class="nsm-button delete-row">
+                                                                                            <i class='bx bx-fw bx-trash'></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            <?php endforeach; ?>
+                                                                        <?php endif; ?>
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <td colspan="10">
+                                                                                <div class="nsm-page-buttons page-buttons-container">
+                                                                                    <button type="button" class="nsm-button" id="add_option_item">
+                                                                                        Add items
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-12 col-md-6">
+                                                                <label for="option-2-message">Option 2 Message</label>
+                                                                <textarea name="option_2_message" id="option-2-message" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
+                                                            </div>
+                                                            <div class="col-12 col-md-3 offset-md-3">
+                                                                <table class="nsm-table float-end text-end">
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <td>Subtotal</td>
+                                                                            <td>
+                                                                                <span class="transaction-subtotal">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Taxes</td>
+                                                                            <td>
+                                                                                <span class="transaction-taxes">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Discounts</td>
+                                                                            <td>
+                                                                                <span class="transaction-discounts">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="row">
+                                                                                    <div class="col-8">
+                                                                                        <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="">
+                                                                                    </div>
+                                                                                    <div class="col-3">
+                                                                                        <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="">
+                                                                                    </div>
+                                                                                    <div class="col-1 d-flex align-items-center">
+                                                                                        <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="transaction-adjustment">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Grand Total ($)</td>
+                                                                            <td>
+                                                                                <span class="transaction-grand-total">$0.00</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h6>Request a Deposit</h6>
+                                        <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <select name="deposit_request" class="form-control nsm-field">
+                                            <option value="1" selected="selected">Deposit amount $</option>
+                                            <option value="2">Percentage %</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <input type="text" name="deposit_amount" value="0" class="form-control nsm-field mb-2" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="message-to-customer">Message to Customer</label>
+                                        <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
+                                        <textarea name="customer_message" id="estimate-message-to-customer" cols="40" rows="2" class="form-control nsm-field mb-2">I would be happy to have an opportunity to work with you.</textarea>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="terms-and-conditions">Terms &amp; Conditions</label>
+                                        <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
+                                        <textarea name="terms_conditions" id="estimate-terms-and-conditions" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="attachments">
+                                            <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                            <span>Maximum size: 20MB</span>
+                                            <div id="estimate-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div class="dz-message" style="margin: 20px;border">
+                                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="instructions">Instructions</label>
+                                        <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                        <textarea name="instructions" id="estimate-instructions" cols="40" rows="2" class="form-control nsm-field"></textarea>
                                     </div>
                                 </div>
                             </div>

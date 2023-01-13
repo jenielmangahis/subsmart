@@ -1619,6 +1619,248 @@ class Debug extends MY_Controller {
             }
         }        
     }
+
+    public function createCalendarAutoSms()
+    {
+        $this->load->helper('google_calendar_helper');
+
+        $company_id  = 1;
+        $module_name = 'job';
+        $job_id      = 261;
+        /*$module_name = 'appointment';
+        $job_id      = 14;*/
+
+        $sms = createSmsNotification($job_id, $module_name, $company_id);
+        echo "<pre>";
+        print_r($sms);
+        exit;
+    }
+
+    public function migrateAppointments()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('General_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('JobTags_model');
+        $this->load->model('Business_model');
+        $this->load->model('Tickets_model');
+
+        $this->load->helper(array('hashids_helper'));
+
+        $total_services = 0;
+        $total_jobs     = 0;
+
+        $start_date   = '2023-01-13';
+        $end_date     = '2023-03-25';                
+
+        $appointments = $this->Appointment_model->getAllByDateRange($start_date, $end_date);
+        foreach($appointments as $a){
+            if (strpos($a->appointment_number, 'JOB') !== false) {
+                $get_job_settings = array(
+                    'where' => array(
+                        'company_id' => $a->company_id
+                    ),
+                    'table' => 'job_settings',
+                    'select' => '*',
+                );
+                $job_settings = $this->General_model->get_data_with_param($get_job_settings);
+                $is_with_job_settings = 0;
+                if( $job_settings ){
+                    $prefix   = $job_settings[0]->job_num_prefix;
+                    $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
+                    $is_with_job_settings = 1;        
+                }else{
+                    $prefix = 'JOB-';
+                    $lastId = $this->Jobs_model->getlastInsert($a->company_id);
+                    if( $lastId ){
+                        $next_num = $lastId->id + 1;
+                        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                    }else{
+                        $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                    }
+                }
+
+                $job_number = $prefix . $next_num;                
+
+                $assigned_employees = json_decode($a->assigned_employee_ids);
+
+                $employee_id  = 0;
+                $employee2_id = 0;
+                $employee3_id = 0;
+                $employee4_id = 0;
+                $employee5_id = 0;
+                $employee6_id = 0;
+                $start_eid = 1;
+                foreach($assigned_employees as $uid){
+                    if( $start_eid == 1 ){
+                        $employee_id = $uid;
+                    }elseif( $start_eid == 2 ){
+                        $employee2_id = $uid;
+                    }elseif( $start_eid == 3 ){
+                        $employee3_id = $uid;
+                    }elseif( $start_eid == 4 ){
+                        $employee4_id = $uid;
+                    }elseif( $start_eid == 5 ){
+                        $employee5_id = $uid;
+                    }elseif( $start_eid == 6 ){
+                        $employee6_id = $uid;
+                    }
+
+                    $start_eid++;
+                }
+
+                //Tags
+                $tags   = explode(",", $a->tag_ids);
+                $a_tags = array();
+                foreach($tags as $tag_id){
+                    $jobTag = $this->JobTags_model->getById($tag_id);
+                    if( $jobTag ){
+                        $a_tags[] = $jobTag->name;
+                    }
+                }
+
+                $jobs_data = [
+                    'job_number' => $job_number,
+                    'work_order_id' => 0,
+                    'lead_source_id' => 0,
+                    'company_id' => $a->company_id,
+                    'job_location ' => $a->mail_add ? $a->mail_add : '',
+                    'job_name' => $a->customer_name,
+                    'customer_id' => $a->prof_id,
+                    'employee_id' => $employee_id,
+                    'employee2_id' => $employee2_id,
+                    'employee3_id' => $employee3_id,
+                    'employee4_id' => $employee4_id,
+                    'employee4_id' => $employee5_id,
+                    'employee4_id' => $employee6_id,
+                    'job_description' => 'Jobs from Appointments',
+                    'job_type' => 'Service',
+                    'start_date' => date("Y-m-d", strtotime($a->appointment_date)),
+                    'end_date' => date("Y-m-d", strtotime($a->appointment_date)),
+                    'start_time' => date('g:i a', strtotime($a->appointment_time_from)),
+                    'end_time' => date('g:i a', strtotime($a->appointment_time_to)),
+                    'status' => 'Scheduled',
+                    'tags' => !empty($a_tags) ? implode(",", $a_tags) : '',
+                    'priority' => $a->priority
+                ];
+                
+                //Create Job
+                $jobs_id = $this->General_model->add_return_id($jobs_data, 'jobs');
+
+                if( $jobs_id > 0 ){
+                    //Create hash_id
+                    $job_hash_id = hashids_encrypt($jobs_id, '', 15);
+                    $this->Jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
+
+                    //Update job settings
+                    if( $is_with_job_settings ){
+                        $jobs_settings_data = array(
+                            'job_num_next' => $job_settings[0]->job_num_next + 1
+                        );
+                        $this->General_model->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+                    }         
+
+                    //Delete appointment
+                    $this->Appointment_model->delete($a->id);
+
+                    $total_jobs++;       
+
+                }                
+
+            }elseif(strpos($a->appointment_number, 'SERVICES') !== false){
+                $prefix = 'SERVICE-';
+                $lastInserted = $this->Tickets_model->getlastInsert($a->company_id);
+                if( $lastInserted ){
+                    $next = $lastInserted->ticket_no;
+                    $arr = explode("-", $next);
+                    $val = $arr[1];
+                    $next_num = $val + 1;
+                }else{
+                    $next_num = 1;
+                }
+
+                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+                $ticket_no = $prefix . $next_num;
+
+                $assigned_employees = json_decode($a->assigned_employee_ids);
+                $technicians = serialize($assigned_employees);
+
+                //Tags
+                $tags   = explode(",", $a->tag_ids);
+                $a_tags = array();
+                foreach($tags as $tag_id){
+                    $jobTag = $this->JobTags_model->getById($tag_id);
+                    if( $jobTag ){
+                        $a_tags[] = $jobTag->name;
+                    }
+                }
+
+                $default_msg = 'I would be happy to have an opportunity to work with you.';
+                $default_terms_condition = 'YOU EXPRESSLY AUTHORIZE ADI AND ITS AFFILIATES TO RECEIVE PAYMENT FOR THE LISTED SERVICES ABOVE. BY SIGNING BELOW BUYER AGREES TO THE TERMS OF YOUR SERVICE AGREEMENT AND ACKNOWLEDGES RECEIPT OF A COPY OF THIS SERVICE AGREEMENT.';
+
+                $taxes = $a->cost *  0.075;
+                $grand_total = $a->cost + $taxes;
+
+                $business = $this->Business_model->getByCompanyId($a->company_id);
+                $service_ticket_data = [
+                    'company_id' => $a->company_id,
+                    'employee_id' => $a->user_id,
+                    'created_by' => $a->user_id,
+                    'customer_id' => $a->prof_id,
+                    'business_name' => $business->business_name,
+                    'service_location' => $a->mail_add ? $a->mail_add : '',
+                    'service_type' => 'Services',
+                    'acs_city' => $a->cust_city,
+                    'acs_state' => $a->cust_state,
+                    'acs_zip' => $a->cust_zip_code,
+                    'service_description' => $a->customer_name,
+                    'job_tag' => !empty($a_tags) ? implode(",", $a_tags) : '',
+                    'ticket_no' => $ticket_no,
+                    'ticket_date' => date("Y-m-d", strtotime($a->appointment_date)),
+                    'scheduled_time' => date('g:i a', strtotime($a->appointment_time_from)),
+                    'scheduled_time_to' => date('g:i a', strtotime($a->appointment_time_to)),
+                    'technicians' => $technicians,
+                    'ticket_status' => 'Scheduled',
+                    'message' => $default_msg,
+                    'terms_conditions' => $default_terms_condition,
+                    'customer_phone' => $a->cust_phone,
+                    'subtotal' => $a->cost,
+                    'taxes' => $taxes,
+                    'billing_date ' => 0,
+                    'grandtotal' => $grand_total,
+                    'payment_method' => 'Cash',
+                    'payment_amount' => 0
+                ];
+
+                //Create Ticket
+                $service_ticket_id = $this->Tickets_model->save_tickets($service_ticket_data);
+
+                if( $service_ticket_id > 0 ){
+                    //Create payment
+                    $payment_data = array(
+                        'payment_method'            => 'Cash',
+                        'amount'                    => $grand_total,
+                        'is_collected'              => '1',
+                        'ticket_id'                  => $service_ticket_id,
+                        'date_created'              => date("Y-m-d H:i:s"),
+                        'date_updated'              => date("Y-m-d H:i:s")
+                    );
+
+                    $pay = $this->Tickets_model->save_payment($payment_data);
+
+                    //Delete appointment
+                    $this->Appointment_model->delete($a->id);
+
+                    $total_services++;       
+                } 
+            }
+        }
+
+        echo "Total Jobs :" . $total_jobs . "<br />";
+        echo "Total Services :" . $total_services . "<br />";
+        exit;
+    }
 }
 /* End of file Debug.php */
 

@@ -183,6 +183,10 @@ $(document).ready(function () {
                 $('#receivePaymentModal #payment-summary').hide();
             }
 
+            CKEDITOR.replace('estimate-terms-and-conditions');
+            CKEDITOR.replace('estimate-message-to-customer');
+            CKEDITOR.replace('estimate-instructions');
+
             $(modal_element).modal('show');
             $(document).off('shown', modal_element);
         });

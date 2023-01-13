@@ -60,6 +60,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_linked_transactions_model');
         $this->load->model('accounting_print_checks_settings_model');
         $this->load->model('accounting_account_transactions_model');
+        $this->load->model('estimate_model');
         $this->load->library('form_validation');
     }
 
@@ -451,6 +452,48 @@ class Accounting_modals extends MY_Controller
 
                     $this->page_data['amountGridMargin'] = $amountGridMargin;
                     $this->page_data['settings'] = $settings;
+                break;
+                case 'standard_estimate_modal' :
+                    $number = $this->estimate_model->getlastInsert();
+                    $estNum = "EST-";
+                    foreach ($number as $num) {
+                        $next = $num->estimate_number;
+                        $arr = explode("-", $next);
+                        $date_start = $arr[0];
+                        $nextNum = $arr[1];
+                    }
+                    $val = $nextNum + 1;
+                    $estNum .= str_pad($val, 9, "0", STR_PAD_LEFT);
+
+                    $this->page_data['est_number'] = $estNum;
+                break;
+                case 'options_estimate_modal' :
+                    $number = $this->estimate_model->getlastInsert();
+                    $estNum = "EST-";
+                    foreach ($number as $num) {
+                        $next = $num->estimate_number;
+                        $arr = explode("-", $next);
+                        $date_start = $arr[0];
+                        $nextNum = $arr[1];
+                    }
+                    $val = $nextNum + 1;
+                    $estNum .= str_pad($val, 9, "0", STR_PAD_LEFT);
+
+                    $this->page_data['est_number'] = $estNum;
+                break;
+                case 'bundle_estimate_modal' :
+                    $number = $this->estimate_model->getlastInsert();
+                    $estNum = "EST-";
+                    foreach ($number as $num) {
+                        $next = $num->estimate_number;
+                        $arr = explode("-", $next);
+                        $date_start = $arr[0];
+                        $nextNum = $arr[1];
+                    }
+                    $val = $nextNum + 1;
+                    $estNum .= str_pad($val, 9, "0", STR_PAD_LEFT);
+
+                    $this->page_data['est_number'] = $estNum;
                 break;
             }
 
@@ -1383,6 +1426,15 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'delayedChargeModal' :
                     $this->result = $this->delayed_charge($data);
+                break;
+                case 'standard-estimate-modal' :
+                    $this->result = $this->standard_estimate($data);
+                break;
+                case 'options-estimate-modal' :
+                    $this->result = $this->options_estimate($data);
+                break;
+                case 'bundle-estimate-modal' :
+                    $this->result = $this->bundle_estimate($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -8511,6 +8563,114 @@ class Accounting_modals extends MY_Controller
         }
 
         return $return;
+    }
+
+    private function standard_estimate($data)
+    {
+        $return = [];
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'customer_id' => $data['customer'],
+            'job_location' => $data['job_location'],
+            'job_name' => $data['job_name'],
+            'estimate_number' => $data['estimate_number'],
+            // 'email' => $data['email'],
+            // 'billing_address' => $data['billing_address'],
+            'estimate_date' => $data['estimate_date'],
+            'expiry_date' => $data['expiry_date'],
+            'purchase_order_number' => $data['purchase_order_number'],
+            'status' => $data['status'],
+            'estimate_type' => 'Standard',
+            //'type' => $data['estimate_type'],
+            // 'ship_via' => $data['ship_via'],
+            // 'ship_date' => $data['ship_date'],
+            // 'tracking_no' => $data['tracking_no'],
+            // 'ship_to' => $data['ship_to'],
+            // 'tags' => $data['tags'],
+            'attachments' => 'testing',
+            // 'message_invoice' => $data['message_invoice'],
+            // 'message_statement' => $data['message_statement'],
+            'status' => $data['status'],
+            'deposit_request' => $data['deposit_request'],
+            'deposit_amount' => $data['deposit_amount'],
+            'customer_message' => $data['customer_message'],
+            'terms_conditions' => $data['terms_conditions'],
+            'instructions' => $data['instructions'],
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            // 'created_by' => logged('id'),
+
+            'sub_total' => $data['subtotal'],//
+            // 'deposit_request' => $data['adjustment_name'],//
+            // 'deposit_amount' => $data['adjustment_input'],//
+            'grand_total' => $data['total_amount'],//
+            'tax1_total' => $data['tax_total'],
+
+            'adjustment_name' => $data['adjustment_name'],//
+            'adjustment_value' => $data['adjustment_value'],//
+
+            'markup_type' => '$',//
+            'markup_amount' => $data['markup_input_form'],//
+
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        if($addQuery) {
+            $a = $data['item'];
+            $quantity = $data['quantity'];
+            $price = $data['item_amount'];
+            $tax = $data['item_tax'];
+            $gtotal = $data['item_total'];
+
+            $i = 0;
+            foreach($a as $row){
+                $data['items_id'] = $a[$i];
+                $data['qty'] = $quantity[$i];
+                $data['cost'] = $price[$i];
+                $data['tax'] = $tax[$i];
+                $data['total'] = $gtotal[$i];
+                $data['estimates_id '] = $addQuery;
+                $addQuery2 = $this->estimate_model->add_estimate_items($data);
+                $i++;
+            }
+
+            $userid = logged('id');
+
+            $getname = $this->estimate_model->getname($userid);
+
+            $notif = array(
+        
+                'user_id'               => $userid,
+                'title'                 => 'New Estimates',
+                'content'               => $getname->FName. ' has created new Estimates.'. $data['estimate_number'],
+                'date_created'          => date("Y-m-d H:i:s"),
+                'status'                => '1',
+                'company_id'            => getLoggedCompanyID()
+            );
+
+            $notification = $this->estimate_model->save_notification($notif);
+        }
+
+        $return['data'] = $addQuery;
+        $return['success'] = $addQuery ? true : false;
+        $return['message'] = $addQuery ? 'Entry Successful!' : 'An unexpected error occured!';
+
+        return $return;
+    }
+
+    private function options_estimate($data)
+    {
+
+    }
+
+    private function bundle_estimate($data)
+    {
+
     }
 
     public function get_linkable_transactions($transactionType, $id)
