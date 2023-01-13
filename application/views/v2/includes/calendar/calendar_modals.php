@@ -336,7 +336,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title">View Appointment</span>
+                <span class="modal-title content-title">View Calendar Schedule</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
@@ -350,6 +350,20 @@
                 <button type="button" class="nsm-button primary" id="btn_edit_appointment">Edit</button>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-view-upcoming-jobs-tickets" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">View Calendar Schedule</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" style="max-height:700px; overflow: auto;">
+                <div class="view-schedule-container row"></div>
+            </div>         
+        </div>        
     </div>
 </div>
 

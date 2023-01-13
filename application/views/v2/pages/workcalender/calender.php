@@ -1897,6 +1897,42 @@
         });
     }
 
+    function viewJob(appointment_id) {
+        let url = base_url + "job/_quick_view_details";
+
+        $("#modal-view-upcoming-jobs-tickets").modal('show');
+        showLoader($(".view-schedule-container"));
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                appointment_id: appointment_id
+            },
+            success: function(result) {
+                $(".view-schedule-container").html(result);
+            }
+        });
+    }
+
+    function viewServiceTicket(appointment_id) {
+        let url = base_url + "ticket/_quick_view_details";
+
+        $("#modal-view-upcoming-jobs-tickets").modal('show');
+        showLoader($(".view-schedule-container"));
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                appointment_id: appointment_id
+            },
+            success: function(result) {
+                $(".view-schedule-container").html(result);
+            }
+        });
+    }
+
     function viewTCOff(tcoff_id) {
         let url = "<?php echo base_url('calendar/_view_tcoff'); ?>";
 
@@ -2259,9 +2295,9 @@
         if( tile_type == 'appointment' ){
             viewAppointment(tile_id);
         }else if( tile_type == 'job' ){
-            location.href = base_url + 'job/job_preview/' + tile_id;
+            viewJob(tile_id);            
         }else if( tile_type == 'ticket' ){
-            location.href = base_url + 'tickets/viewDetails/' + tile_id;
+            viewServiceTicket(tile_id);            
         }else if( tile_type == 'event' ){
             location.href = base_url + 'events/event_preview/' + tile_id;
         }else if( tile_type == 'tc-off' ){
@@ -2276,9 +2312,9 @@
         if( tile_type == 'appointment' ){
             viewAppointment(tile_id);
         }else if( tile_type == 'job' ){
-            location.href = base_url + 'job/job_preview/' + tile_id;
+            viewJob(tile_id);
         }else if( tile_type == 'ticket' ){
-            location.href = base_url + 'tickets/viewDetails/' + tile_id;
+            viewServiceTicket(tile_id)            
         }else if( tile_type == 'event' ){
             location.href = base_url + 'events/event_preview/' + tile_id;
         }

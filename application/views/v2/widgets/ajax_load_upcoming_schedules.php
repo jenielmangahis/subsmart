@@ -208,7 +208,7 @@
                         }
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
-                        <tr class="schedule-job" style="cursor: pointer; text-decoration: none;color:inherit;" href="javascript:void(0);" onclick="location.href='<?= $schedule_view_url; ?>'">                  
+                        <tr class="schedule-job quick-view-upcoming-schedule" data-id="<?= $schedule['data']->id; ?>" data-type="<?= $schedule['type']; ?>" style="cursor: pointer; text-decoration: none;color:inherit;">                  
                             <td>
                                 <?php 
                                     $event_month = date("F", strtotime($schedule_date));
@@ -299,8 +299,62 @@
         <?php } ?>
     </tbody>
 </table>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-view-upcoming-schedule" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">View Calendar Schedule</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" style="max-height:700px; overflow: auto;">
+                <div class="view-schedule-container row"></div>
+            </div> 
+            <div class="modal-footer" style="display:none;">
+                <button type="button" class="nsm-button primary" data-id="" data-type="" id="upcoming-schedule-view-more-details">View More Details</button>
+            </div>           
+        </div>        
+    </div>
+</div>
+
 <script>
 $(function(){
     $("#dashboard_upcoming_schedules_table").nsmPagination({itemsPerPage:3});
+
+    $('.quick-view-upcoming-schedule').on('click', function(){
+        var appointment_type = $(this).data('type');
+        var appointment_id   = $(this).data('id');
+
+        $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
+        $('#upcoming-schedule-view-more-details').attr('data-id', appointment_id);
+        
+        if( appointment_type == 'job' ){
+            var url = base_url + "job/_quick_view_details";
+        }else if( appointment_type == 'ticket' ){
+            var url = base_url + "ticket/_quick_view_details";
+        }else{
+            var url = base_url + "calendar/_view_appointment";
+        }
+        
+        $('#modal-quick-view-upcoming-schedule').modal('show');
+        showLoader($(".view-schedule-container"));        
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {appointment_id:appointment_id},
+             success: function(o)
+             {          
+                $(".view-schedule-container").html(o);
+             }
+          });
+        }, 500);       
+    });
+
+    $('#upcoming-schedule-view-more-details').on('click', function(){
+        var appointment_type = $(this).data('type');
+        var appointment_id   = $(this).data('id');
+    });
 });
 </script>

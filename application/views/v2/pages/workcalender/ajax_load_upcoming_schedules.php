@@ -224,11 +224,7 @@
                         }
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
-                            <?php if( $schedule['type'] == 'appointment' ){ ?>
-                                <tr class="schedule-jobs upcoming-tile-view" data-type="appointment" data-id="<?= $schedule['data']->id; ?>" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);">
-                            <?php }else{ ?>
-                                <tr class="schedule-job" style="cursor: pointer; text-decoration: none;color:inherit;"  href="javascript:void(0);" onclick="location.href='<?= $schedule_view_url; ?>'">
-                            <?php } ?>
+                        <tr class="schedule-jobs upcoming-tile-view" data-id="<?= $schedule['data']->id; ?>" data-type="<?= $schedule['type']; ?>" style="cursor: pointer; text-decoration: none;color:inherit;">     
                             <td>
                                 <?php 
                                     $event_month = date("F", strtotime($schedule_date));
