@@ -560,7 +560,11 @@ function Signing(hash) {
       }
 
       if (customer && specs.name && !value) {
-        value = customer[specs.name] || "";
+        if (specs.name.toLowerCase() === "zip") {
+          value = customer[specs.name] || customer["zip_code"];
+        } else {
+          value = customer[specs.name] || "";
+        }
       }
 
       if (specs.value && !value && data.recipient.id === recipient.id) {
