@@ -1,4 +1,4 @@
-    ``<div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

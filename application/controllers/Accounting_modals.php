@@ -8629,13 +8629,13 @@ class Accounting_modals extends MY_Controller
 
             $i = 0;
             foreach($a as $row){
-                $data['items_id'] = $a[$i];
-                $data['qty'] = $quantity[$i];
-                $data['cost'] = $price[$i];
-                $data['tax'] = $tax[$i];
-                $data['total'] = $gtotal[$i];
-                $data['estimates_id '] = $addQuery;
-                $addQuery2 = $this->estimate_model->add_estimate_items($data);
+                $itemData['items_id'] = $a[$i];
+                $itemData['qty'] = $quantity[$i];
+                $itemData['cost'] = $price[$i];
+                $itemData['tax'] = $tax[$i];
+                $itemData['total'] = $gtotal[$i];
+                $itemData['estimates_id '] = $addQuery;
+                $addQuery2 = $this->estimate_model->add_estimate_items($itemData);
                 $i++;
             }
 
@@ -8665,12 +8665,284 @@ class Accounting_modals extends MY_Controller
 
     private function options_estimate($data)
     {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
 
+        $new_data = array(
+            'customer_id' => $data['customer'],
+            'job_location' => $data['job_location'],
+            'job_name' => $data['job_name'],
+            'estimate_number' => $data['estimate_number'],
+            'estimate_date' => $data['estimate_date'],
+            'expiry_date' => $data['expiry_date'],
+            'purchase_order_number' => $data['purchase_order_number'],
+            'status' => $data['status'],
+            'estimate_type' => 'Option',
+            'type' => $data['estimate_type'],
+            'attachments' => 'testing',
+            // 'status' => $data['status'],
+            'deposit_request' => $data['deposit_request'],
+            'deposit_amount' => $data['deposit_amount'],
+            'customer_message' => $data['customer_message'],
+            'terms_conditions' => $data['terms_conditions'],
+            'instructions' => $data['instructions'],
+            'option_message' => $data['option1_message'],
+            'option2_message' => $data['option2_message'],
+            'option1_total' => $data['grand_total'],
+            'option2_total' => $data['grand_total2'],
+            // 'bundle_discount' => $data['bundle_discount'],
+            'tax1_total' => $data['total_tax_'],
+            'tax2_total' => $data['total_tax2_'],
+            'sub_total' => $data['sub_total'],//
+            'sub_total2' => $data['sub_total2'],//
+            // 'tax1_total' => $data['total_tax_'],
+            // 'tax2_total' => $data['total_tax2_'],
+            // 'grand_total' => $data['supergrandtotal'],
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        if($addQuery) {
+            $a = $data['table_1_item'];
+            $quantity = $data['table_1_quantity'];
+            $price = $data['table_1_item_amount'];
+            $tax = $data['table_1_item_tax'];
+            $discount = $data['table_1_discount'];
+            $total = $data['table_1_item_total'];
+
+            $i = 0;
+            foreach($a as $row){
+                $itemData['items_id']       = $a[$i];
+                // $itemData['package_id ']    = $packageID[$i];
+                $itemData['qty']            = $quantity[$i];
+                $itemData['cost']           = $price[$i];
+                $itemData['tax']            = $tax[$i];
+                $itemData['discount']       = $discount[$i];
+                $itemData['total']          = $total[$i];
+                $itemData['estimate_type']  = 'Option';
+                $itemData['estimates_id ']  = $addQuery;
+                $itemData['bundle_option_type'] = '1';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i++;
+            }
+
+            $a2 = $data['table_2_item'];
+            $quantity2 = $data['table_2_quantity'];
+            $price2 = $data['table_2_item_amount'];
+            $tax2 = $data['table_2_item_tax'];
+            $discount2 = $data['table_2_discount'];
+            $total2 = $data['table_2_item_total'];
+
+            $i2 = 0;
+            foreach($a2 as $row2){
+                $itemData['items_id']       = $a2[$i2];
+                $itemData['qty']            = $quantity2[$i2];
+                $itemData['cost']           = $price2[$i2];
+                $itemData['tax']            = $tax2[$i2];
+                $itemData['discount']       = $discount2[$i2];
+                $itemData['total']          = $total2[$i2];
+                $itemData['estimate_type']  = 'Option';
+                $itemData['estimates_id ']  = $addQuery;
+                $itemData['bundle_option_type'] = '2';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i2++;
+            }
+
+            $userid = logged('id');
+
+            $getname = $this->estimate_model->getname($userid);
+
+            $notif = array(
+        
+                'user_id'               => $userid,
+                'title'                 => 'New Estimates',
+                'content'               => $getname->FName. ' has created new Estimates.'. $data['estimate_number'],
+                'date_created'          => date("Y-m-d H:i:s"),
+                'status'                => '1',
+                'company_id'            => getLoggedCompanyID()
+            );
+
+            $notification = $this->estimate_model->save_notification($notif);
+        }
+
+        $return['data'] = $addQuery;
+        $return['success'] = $addQuery ? true : false;
+        $return['message'] = $addQuery ? 'Entry Successful!' : 'An unexpected error occured!';
+
+        return $return;
     }
 
     private function bundle_estimate($data)
     {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
 
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'job_location' => $this->input->post('job_location'),
+            'job_name' => $this->input->post('job_name'),
+            'estimate_number' => $this->input->post('estimate_number'),
+            // 'email' => $this->input->post('email'),
+            // 'billing_address' => $this->input->post('billing_address'),
+            'estimate_date' => $this->input->post('estimate_date'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'status' => $this->input->post('status'),
+            'estimate_type' => 'Bundle',
+            'type' => $this->input->post('estimate_type'),
+            'attachments' => 'testing',
+            'status' => $this->input->post('status'),
+            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_amount' => $this->input->post('deposit_amount'),
+            'customer_message' => $this->input->post('customer_message'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'instructions' => $this->input->post('instructions'),
+
+            // 'estimate_type' => 'Bundle',
+            'bundle1_message' => $this->input->post('bundle1_message'),
+            'bundle2_message' => $this->input->post('bundle2_message'),
+            // 'bundle1_total' => $this->input->post('bundle1_total'),
+            // 'bundle2_total' => $this->input->post('bundle2_total'),
+            'bundle_discount' => $this->input->post('bundle_discount'),
+
+
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            // 'created_by' => logged('id'),
+
+            // 'sub_total' => $this->input->post('sub_total'),
+            'deposit_request' => '$',
+            'deposit_amount' => $this->input->post('adjustment_input'),//
+            'bundle1_total' => $this->input->post('grand_total'),//
+            'bundle2_total' => $this->input->post('grand_total2'),//
+            'sub_total' => $this->input->post('sub_total'),//
+            'sub_total2' => $this->input->post('sub_total2'),//
+
+            'tax1_total' => $this->input->post('total_tax_'),
+            'tax2_total' => $this->input->post('total_tax2_'),
+
+            'grand_total' => $this->input->post('supergrandtotal'),//
+
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
+
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $new_data = array(
+            'customer_id' => $data['customer'],
+            'job_location' => $data['job_location'],
+            'job_name' => $data['job_name'],
+            'estimate_number' => $data['estimate_number'],
+            'estimate_date' => $data['estimate_date'],
+            'expiry_date' => $data['expiry_date'],
+            'purchase_order_number' => $data['purchase_order_number'],
+            'status' => $data['status'],
+            'estimate_type' => 'Bundle',
+            'type' => $data['estimate_type'],
+            'attachments' => 'testing',
+            // 'status' => $data['status'],
+            'deposit_request' => $data['deposit_request'],
+            'deposit_amount' => $data['deposit_amount'],
+            'customer_message' => $data['customer_message'],
+            'terms_conditions' => $data['terms_conditions'],
+            'instructions' => $data['instructions'],
+            'bundle1_message' => $data['bundle1_message'],
+            'bundle2_message' => $data['bundle2_message'],
+            'bundle1_total' => $data['grand_total'],
+            'bundle2_total' => $data['grand_total2'],
+            'bundle_discount' => $data['bundle_discount'],
+            'tax1_total' => $data['total_tax_'],
+            'tax2_total' => $data['total_tax2_'],
+            'sub_total' => $data['sub_total'],//
+            'sub_total2' => $data['sub_total2'],//
+            // 'tax1_total' => $data['total_tax_'],
+            // 'tax2_total' => $data['total_tax2_'],
+            // 'grand_total' => $data['supergrandtotal'],
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        if($addQuery) {
+            $a = $data['table_1_item'];
+            $quantity = $data['table_1_quantity'];
+            $price = $data['table_1_item_amount'];
+            $tax = $data['table_1_item_tax'];
+            $discount = $data['table_1_discount'];
+            $total = $data['table_1_item_total'];
+
+            $i = 0;
+            foreach($a as $row){
+                $itemData['items_id']       = $a[$i];
+                // $itemData['package_id ']    = $packageID[$i];
+                $itemData['qty']            = $quantity[$i];
+                $itemData['cost']           = $price[$i];
+                $itemData['tax']            = $tax[$i];
+                $itemData['discount']       = $discount[$i];
+                $itemData['total']          = $total[$i];
+                $itemData['estimate_type']  = 'Option';
+                $itemData['estimates_id ']  = $addQuery;
+                $itemData['bundle_option_type'] = '1';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i++;
+            }
+
+            $a2 = $data['table_2_item'];
+            $quantity2 = $data['table_2_quantity'];
+            $price2 = $data['table_2_item_amount'];
+            $tax2 = $data['table_2_item_tax'];
+            $discount2 = $data['table_2_discount'];
+            $total2 = $data['table_2_item_total'];
+
+            $i2 = 0;
+            foreach($a2 as $row2){
+                $itemData['items_id']       = $a2[$i2];
+                $itemData['qty']            = $quantity2[$i2];
+                $itemData['cost']           = $price2[$i2];
+                $itemData['tax']            = $tax2[$i2];
+                $itemData['discount']       = $discount2[$i2];
+                $itemData['total']          = $total2[$i2];
+                $itemData['estimate_type']  = 'Option';
+                $itemData['estimates_id ']  = $addQuery;
+                $itemData['bundle_option_type'] = '2';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i2++;
+            }
+
+            $userid = logged('id');
+
+            $getname = $this->estimate_model->getname($userid);
+
+            $notif = array(
+        
+                'user_id'               => $userid,
+                'title'                 => 'New Estimates',
+                'content'               => $getname->FName. ' has created new Estimates.'. $data['estimate_number'],
+                'date_created'          => date("Y-m-d H:i:s"),
+                'status'                => '1',
+                'company_id'            => getLoggedCompanyID()
+            );
+
+            $notification = $this->estimate_model->save_notification($notif);
+        }
+
+        $return['data'] = $addQuery;
+        $return['success'] = $addQuery ? true : false;
+        $return['message'] = $addQuery ? 'Entry Successful!' : 'An unexpected error occured!';
+
+        return $return;
     }
 
     public function get_linkable_transactions($transactionType, $id)

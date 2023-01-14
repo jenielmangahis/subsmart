@@ -1733,7 +1733,7 @@ class Job extends MY_Controller
             );
             $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
         }else{
-            
+            $jobs_id = $isJob->id;
             // update data to job items table (items_id, qty, jobs_id)
             if (isset($input['item_id'])) {
                 $devices = count($input['item_id']);
@@ -1819,6 +1819,7 @@ class Job extends MY_Controller
 
         //SMS Notification
         createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
+
         if( $input['employee2_id'] > 0 ){
             createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
         }
@@ -3034,6 +3035,38 @@ class Job extends MY_Controller
 
         header('content-type: application/json');
         exit(json_encode(['data' => array_values($result)]));
+    }
+
+    public function ajax_quick_view_details()
+    {
+        $this->load->helper('functions');
+
+        $post    = $this->input->post();
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        $id      = $post['appointment_id'];
+
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
+        $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+        $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        $this->load->view('v2/pages/job/ajax_quick_view_details', $this->page_data);
     }
 }
 
