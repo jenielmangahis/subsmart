@@ -148,7 +148,7 @@
                             $schedule_number = $schedule['data']->ticket_no;
                             $schedule_type   = $schedule['data']->service_type;
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
-                            $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
+                            $schedule_customer_phone = $schedule['data']->phone_h != '' ? $schedule['data']->phone_h : '---';
                             $schedule_location = $schedule['data']->service_location;
                             $schedule_location_b = $schedule['data']->acs_city . ' ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip;
                             $schedule_expiry_date = '';
@@ -163,7 +163,13 @@
                                 }
                             }                            
 
-                            $assigned_employees[] = $schedule['data']->sales_rep;
+                            if( !empty($assigned_employees) ){
+                                if( !in_array($schedule['data']->sales_rep, $assigned_employees) ){
+                                    $assigned_employees[] = $schedule['data']->sales_rep;        
+                                }
+                            }else{
+                                $assigned_employees[] = $schedule['data']->sales_rep;
+                            }
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'appointment' ){
@@ -299,24 +305,6 @@
         <?php } ?>
     </tbody>
 </table>
-
-<div class="modal fade nsm-modal fade" id="modal-quick-view-upcoming-schedule" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">        
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title">View Calendar Schedule</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body" style="max-height:700px; overflow: auto;">
-                <div class="view-schedule-container row"></div>
-            </div> 
-            <div class="modal-footer" style="display:none;">
-                <button type="button" class="nsm-button primary" data-id="" data-type="" id="upcoming-schedule-view-more-details">View More Details</button>
-            </div>           
-        </div>        
-    </div>
-</div>
-
 <script>
 $(function(){
     $("#dashboard_upcoming_schedules_table").nsmPagination({itemsPerPage:3});
@@ -336,6 +324,7 @@ $(function(){
             var url = base_url + "calendar/_view_appointment";
         }
         
+        calendar_modal_source = 'upcoming-list';        
         $('#modal-quick-view-upcoming-schedule').modal('show');
         showLoader($(".view-schedule-container"));        
 
@@ -355,6 +344,13 @@ $(function(){
     $('#upcoming-schedule-view-more-details').on('click', function(){
         var appointment_type = $(this).data('type');
         var appointment_id   = $(this).data('id');
+        if( appointment_type == 'job' ){
+            location.href = base_url + 'job/job_preview/' + appointment_id;
+        }else if( appointment_type == 'ticket' ){
+            location.href = base_url + 'tickets/viewDetails/' + appointment_id;
+        }else{
+            location.href = base_url + 'workcalender';
+        }
     });
 });
 </script>

@@ -3328,6 +3328,299 @@ class Workcalender extends MY_Controller
 
         exit;
     }
+
+    public function ajax_quick_view_calendar_events()
+    {
+        $this->load->model('Event_model', 'event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('GoogleAccounts_model');
+        $this->load->model('ColorSettings_model');
+        $this->load->model('DealsBookings_model');
+        $this->load->model('ColorSettings_model');
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Job_tags_model');
+        $this->load->model('Users_model');
+        $this->load->model('TechnicianDayOffSchedule_model');
+
+        $post = $this->input->post();
+        $role = logged('role');
+        $company_id = logged('company_id');
+
+        $events = $this->event_model->getAllByCompany($company_id);
+
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
+        $a_settings = unserialize($settings[0]->value);
+        if ($a_settings) {
+            $user_timezone = $a_settings['calendar_timezone'];
+        } else {
+            $user_timezone = 'UTC';
+        }
+
+        $google_user_api       = $this->GoogleAccounts_model->getByCompanyId($company_id);
+        $get_users             = $this->Users_model->getUsers();
+        $resources_user_events = array();
+        $inc = 0;
+        //Events
+        foreach ($events as $event) {
+            if ($event->event_description != '') {
+                if ($event->employee_id > 0) {
+                    $starttime = $event->start_date . " " . $event->start_time;
+                    $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
+                    $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
+                    $title = $event->start_time . " - " . $event->end_time;
+
+                    $custom_html = '<div class="calendar-title-header">';
+                        if( $event->event_tag != '' ){
+                            $tags = $event->event_tag;
+                        }else{
+                            $tags = '---';
+                        }
+
+                        if (isset($a_settings['work_order_show_customer'])) {
+                            $custom_html  .= '<a class="calendar-tile-minmax event-min-max-'.$event->id.'" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $event->event_number . ' - ' . $tags . '</span></a>';
+                        }
+                    $custom_html .= '</div>';
+
+                    $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
+
+                    $gcalendar_btn = '';
+                    if( $google_user_api ){
+                        $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                    }
+
+                    $custom_html .= '<div class="calendar-tile-details event-tile-'.$event->id.'">';
+                        $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $event->event_address . "</small>";
+                        $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                        $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($event->employee_id).'\'); width: 20px;display:inline-block;"></div>';
+                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $event->start_time . " - " . $event->end_time . "</small>";
+                        $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
+                    $custom_html .= '</div>';
+
+                    $resourceIds = array();
+                    $resourceIds[] = 'user' . $event->employee_id;
+                    $resources_user_events[$inc]['eventId'] = $event->id;
+                    $resources_user_events[$inc]['eventType'] = 'events';
+                    $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+                    $resources_user_events[$inc]['title'] = $title;
+                    $resources_user_events[$inc]['customHtml'] = $custom_html;
+                    $resources_user_events[$inc]['start'] = $start_date_time;
+                    $resources_user_events[$inc]['end'] = $start_date_end;                    
+                    $resources_user_events[$inc]['allDay'] = false;
+                    $resources_user_events[$inc]['starttime'] = strtotime($starttime);
+                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+
+                    $inc++;
+                }
+            }
+        }
+
+        //TC Schedule Off
+        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getAllByCompanyId($company_id);
+        foreach( $technicianScheduleOff as $tc ){
+            $start_date_time = date('Y-m-d', strtotime($tc->leave_start_date));             
+            $start_date_end  = date('Y-m-d', strtotime($tc->leave_end_date)); 
+            $backgroundColor = "#ff0000";
+
+            $custom_html = '<div class="calendar-title-header">';
+                $technicians_ids = explode(",", $tc->technician_user_ids);
+                $tech_names  = array();
+                $resourceIds = array();
+                $users = $this->Users_model->getAllByIds($technicians_ids);
+                $tech_names = array();
+                foreach($users as $u){
+                    $tech_names[] = $u->FName . ' ' . $u->LName;                    
+                    $resourceIds[] = 'user' . $u->id;
+                }
+                $custom_html  .= '<a class="quick-calendar-tile" data-type="tc-off" data-id="'.$tc->id.'" href="javascript:void(0);"><span> Schedule Off - '. implode(", ", $tech_names) . '</span></a>';
+            $custom_html .= "</div>";
+
+            $resources_user_events[$inc]['eventId'] = $tc->id;
+            $resources_user_events[$inc]['eventType'] = 'service_tickets';
+            $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+            $resources_user_events[$inc]['title'] = 'Technician Schedule Off';
+            $resources_user_events[$inc]['customHtml'] = $custom_html;
+            $resources_user_events[$inc]['start'] = $start_date_time;
+            $resources_user_events[$inc]['end'] = $start_date_end;
+            $resources_user_events[$inc]['starttime'] = $start_date_time;
+            $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+            $inc++;
+        }
+
+        //Service Tickets
+        $serviceTickets = $this->Tickets_model->get_tickets_by_company_id($company_id);
+        foreach($serviceTickets as $st){
+            $start_date_time = date('Y-m-d H:i:s', strtotime($st->ticket_date . " " . $st->scheduled_time)); 
+            $start_date_end  = $start_date_time;
+            $backgroundColor = "#ff751a";
+
+            $custom_html = '<div class="calendar-title-header">';
+                if( $st->job_tag != '' ){
+                    $tags = $st->job_tag;
+                }else{
+                    $tags = '---';
+                }
+
+                $customer_name =  $st->first_name . ' ' . $st->last_name;
+                $custom_html  .= '<a class="quick-calendar-tile" data-type="ticket" data-id="'.$st->id.'" href="javascript:void(0);"><span>'. $st->ticket_no . ' - ' . $tags . ' : ' . $customer_name  . '</span></a>';
+            $custom_html .= '</div>';
+            $resources_user_events[$inc]['eventId'] = $st->id;
+            $resources_user_events[$inc]['eventType'] = 'service_tickets';
+            $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+            $resources_user_events[$inc]['title'] = 'Service Ticket : ' . date('Y-m-d g:i A', strtotime($st->ticket_date));
+            $resources_user_events[$inc]['customHtml'] = $custom_html;
+            $resources_user_events[$inc]['start'] = $start_date_time;
+            $resources_user_events[$inc]['end'] = $start_date_end;
+            $resources_user_events[$inc]['starttime'] = $start_date_time;
+            $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+            $inc++;
+        }
+
+        //Appointments
+        $appointments = $this->Appointment_model->getAllNotWaitListByCompany($company_id);
+        foreach ($appointments as $a) {
+            $starttime = $a->appointment_date . " " . $a->appointment_time;
+            $start_date_time = date('Y-m-d H:i:s', strtotime($a->appointment_date . " " . $a->appointment_time_from));
+            $start_date_end  = date('Y-m-d H:i:s', strtotime($a->appointment_date . " " . $a->appointment_time_to));
+            $backgroundColor = "#38a4f8";
+
+            //$appointment_number = strtoupper(str_replace("APPT", $a->appointment_type, $a->appointment_number));
+            $custom_html = '<div class="calendar-title-header">';
+                $tags = '';
+                if( $a->tag_ids != '' ){
+                    $a_tags = explode(",", $a->tag_ids);    
+                    $e_tags = array();
+                    if( $a->appointment_type_id == 4 ){ //Events
+                        $appointmentTags   = $this->EventTags_model->getAllByIds($a_tags);
+                        foreach($appointmentTags as $t){
+                            $e_tags[] = $t->name;
+                        }
+
+                        $tags = implode(",", $e_tags);
+                    }else{
+                        $appointmentTags   = $this->Job_tags_model->getAllByIds($a_tags);
+                        foreach($appointmentTags as $t){
+                            $e_tags[] = $t->name;
+                        }
+
+                        $tags = implode(",", $e_tags);    
+                    }  
+
+                    if( $tags ){
+                        $tags = ' - ' . $tags;
+                    }
+                    
+                }
+
+                if( $a->appointment_type_id == 4 ){ //Events                    
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . $tags . ' : ' . $a->event_name . '</span></a>';
+                }else{  
+                    $customer_name = $j->first_name . ' ' . $j->last_name;
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . $tags . ' : ' . $a->customer_name . '</span></a>';
+                }
+            $custom_html .= '</div>';
+            $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+            $resources_user_events[$inc]['eventId'] = $a->id;
+            $resources_user_events[$inc]['eventType'] = 'appointments';
+            $resources_user_events[$inc]['title'] = 'Appointment : ' . date('Y-m-d g:i A', strtotime($a->appointment_date . " " . $a->appointment_time));
+            $resources_user_events[$inc]['customHtml'] = $custom_html;
+            $resources_user_events[$inc]['start'] = $start_date_time;
+            $resources_user_events[$inc]['end'] = $start_date_end;
+            $resources_user_events[$inc]['starttime'] = strtotime($start_date_time);
+            $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+            $inc++; 
+        }
+
+        //Jobs
+        $jobs = $this->Jobs_model->get_all_company_scheduled_jobs($company_id);
+        foreach ($jobs as $j) {
+            if ($j->job_description != '') {
+                $starttime = $j->start_date . " " . $j->start_time;
+                $start_date_time = date('Y-m-d H:i:s', strtotime($j->start_date . " " . $j->start_time));
+                $start_date_end  = date('Y-m-d H:i:s', strtotime($j->end_date . " " . $j->end_time));
+                $backgroundColor = "#38a4f8";
+
+                $colorSetting = $this->ColorSettings_model->getById($j->event_color);
+                if($colorSetting){
+                    $backgroundColor = $colorSetting->color_code;
+                }
+
+                $custom_html = '<div class="calendar-title-header">';
+
+                if( $j->tags != '' ){
+                    $tags = $j->tags;
+                }else{
+                    $tags = '---';
+                }
+
+                if (isset($a_settings['work_order_show_customer'])) {
+                    if( $j->first_name != '' ||  $j->last_name != ''){
+                        $customer_name = $j->first_name . ' ' . $j->last_name;
+                        $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
+                    }else{
+                        $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$a->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.'</span></a>';                        
+                    }
+                }
+                $custom_html .= '</div>';           
+
+                $assigned_employees = array();
+                $assigned_employees[] = $j->employee_id;
+                if( $j->employee2_id > 0 ){
+                    $assigned_employees[] = $j->employee2_id;
+                }
+                if( $j->employee3_id > 0 ){
+                    $assigned_employees[] = $j->employee3_id;
+                }
+                if( $j->employee4_id > 0 ){
+                    $assigned_employees[] = $j->employee4_id;
+                }
+
+                $resourceIds = array();
+                foreach($assigned_employees as $eid){
+                    $resourceIds[] = 'user' . $eid;                    
+                }
+                
+                $resources_user_events[$inc]['eventId'] = $j->id;
+                $resources_user_events[$inc]['eventType'] = 'jobs';
+                $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+                $resources_user_events[$inc]['title'] = $j->job_description;
+                $resources_user_events[$inc]['customHtml'] = $custom_html;
+                $resources_user_events[$inc]['start'] = $start_date_time;
+                $resources_user_events[$inc]['end'] = $start_date_end;
+                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
+                $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+                $inc++;
+            }
+        }
+
+        echo json_encode($resources_user_events);
+    }
+
+    public function ajax_quick_view_tc_off(){
+        $this->load->model('TechnicianDayOffSchedule_model');
+
+        $post = $this->input->post();
+        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getById($post['appointment_id']);
+
+        $this->page_data['technicianScheduleOff'] = $technicianScheduleOff;
+        $this->load->view('v2/pages/workcalender/ajax_load_view_tcoff', $this->page_data);
+    }
+
+    public function ajax_appointment_quick_add_form(){
+        $this->load->model('Appointment_model');
+        $this->load->model('AppointmentType_model');
+
+        $appointmentPriorityEventOptions = $this->Appointment_model->priorityEventOptions();
+
+        $this->page_data['default_appointment_type_id'] = 11;
+        $this->page_data['appointmentTypes'] = $this->AppointmentType_model->getAllByCompany($company_id, true);
+        $this->load->view('v2/pages/workcalender/ajax_appointment_quick_add_form', $this->page_data);
+    }
 }
 
 
