@@ -29,14 +29,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 text-end grid-mb">
-                                        <h6>AMOUNT</h6>
-                                        <h2>
-                                            <span class="transaction-grand-total">
-                                                $0.00
-                                            </span>
-                                        </h2>
-                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -193,12 +185,6 @@
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td>Discounts</td>
-                                                                            <td>
-                                                                                <span class="transaction-discounts">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
                                                                             <td>
                                                                                 <div class="row">
                                                                                     <div class="col-8">
@@ -317,12 +303,6 @@
                                                                             <td>Taxes</td>
                                                                             <td>
                                                                                 <span class="transaction-taxes">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Discounts</td>
-                                                                            <td>
-                                                                                <span class="transaction-discounts">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>

@@ -8067,6 +8067,7 @@ $(function() {
             if(targetItemTable !== null) {
                 targetItemTable.children('tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
                 targetItemTable.children('tbody:not(#package-items-table)').children('tr:last-child').children('td:nth-child(3)').remove();
+                targetItemTable.children('tbody:not(#package-items-table)').children('tr:last-child').find('input[name="discount[]"]').attr('disabled', true);
 
                 targetItemTable.children('tbody:not(#package-items-table)').children('tr:last-child').find('select').each(function() {
                     $(this).select2({
@@ -8509,7 +8510,6 @@ $(function() {
                 var cancelButtonText = 'No, keep it';
             }
 
-            console.log(message);
             Swal.fire({
                 title: message,
                 icon: 'warning',
@@ -8670,6 +8670,82 @@ $(function() {
         }
 
         targetItemTable = $(this).closest('table.nsm-table');
+    });
+
+    $(document).on('change', '#options-estimate-modal #option-1-item-table input, #options-estimate-modal #option-2-item-table input', function() {
+        var quantityEl = $(this).closest('tr').find('input[name="quantity[]"]');
+        var quantity = quantityEl.length > 0 ? quantityEl.val() : 0.00;
+        var amountEl = $(this).closest('tr').find('input[name="item_amount[]"]');
+        var amount = amountEl.length > 0 ? amountEl.val() : $(this).closest('tr').find('span.item-amount').html();
+        var discountEl = $(this).closest('tr').find('input[name="discount[]"]');
+        var discount = discountEl.length > 0 ? discountEl.val() : 0.00;
+        var taxEl = $(this).closest('tr').find('input[name="item_tax[]"]');
+        var tax = taxEl.length > 0 && taxEl.val() !== '' ? taxEl.val() : 0.00;
+
+        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseInt(quantity === '' ? 0.00 : quantity);
+        var taxAmount = parseFloat(tax === '' ? 0.00 : tax) * amount / 100;
+        var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount === '' ? 0.00 : discount);
+
+        $(this).closest('tr').find('.row-total').html(formatter.format(parseFloat(total)));
+
+        var subtotal = 0.00;
+        var taxes = 0.00;
+        var grandTotal = 0.00;
+        $(this).closest('tbody').find('tr:not(.package-items, .package-item, .package-item-header, .linked-transaction-row, .linked-transaction-header)').each(function() {
+            var itemAmount = $(this).find('input[name="item_amount[]"]').length > 0 ? $(this).find('input[name="item_amount[]"]').val() : $(this).find('span.item-amount').html();
+            var itemQty = $(this).find('input[name="quantity[]"]').length > 0 ? $(this).find('input[name="quantity[]"]').val() : 0;
+            var itemTax = $(this).find('input[name="item_tax[]"]').length > 0 ? $(this).find('input[name="item_tax[]"]').val() : 0.00;
+
+            var itemTotal = parseFloat(itemAmount === '' ? 0.00 : itemAmount) * parseFloat(itemQty === '' ? 0.00 : itemQty);
+            var taxAmount = parseFloat(itemTax === '' ? 0.00 : itemTax) * itemTotal / 100;
+
+            subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
+            taxes = parseFloat(taxes) + parseFloat(taxAmount);
+            grandTotal = parseFloat(grandTotal) + parseFloat($(this).find('.row-total').html().replace('$', ''));
+        });
+
+        var table = $(this).closest('table');
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
+    });
+
+    $(document).on('change', '#bundle-estimate-modal #bundle-1-item-table input, #bundle-estimate-modal #bundle-2-item-table input', function() {
+        var quantityEl = $(this).closest('tr').find('input[name="quantity[]"]');
+        var quantity = quantityEl.length > 0 ? quantityEl.val() : 0.00;
+        var amountEl = $(this).closest('tr').find('input[name="item_amount[]"]');
+        var amount = amountEl.length > 0 ? amountEl.val() : $(this).closest('tr').find('span.item-amount').html();
+        var discountEl = $(this).closest('tr').find('input[name="discount[]"]');
+        var discount = discountEl.length > 0 ? discountEl.val() : 0.00;
+        var taxEl = $(this).closest('tr').find('input[name="item_tax[]"]');
+        var tax = taxEl.length > 0 && taxEl.val() !== '' ? taxEl.val() : 0.00;
+
+        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseInt(quantity === '' ? 0.00 : quantity);
+        var taxAmount = parseFloat(tax === '' ? 0.00 : tax) * amount / 100;
+        var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount === '' ? 0.00 : discount);
+
+        $(this).closest('tr').find('.row-total').html(formatter.format(parseFloat(total)));
+
+        var subtotal = 0.00;
+        var taxes = 0.00;
+        var grandTotal = 0.00;
+        $(this).closest('tbody').find('tr:not(.package-items, .package-item, .package-item-header, .linked-transaction-row, .linked-transaction-header)').each(function() {
+            var itemAmount = $(this).find('input[name="item_amount[]"]').length > 0 ? $(this).find('input[name="item_amount[]"]').val() : $(this).find('span.item-amount').html();
+            var itemQty = $(this).find('input[name="quantity[]"]').length > 0 ? $(this).find('input[name="quantity[]"]').val() : 0;
+            var itemTax = $(this).find('input[name="item_tax[]"]').length > 0 ? $(this).find('input[name="item_tax[]"]').val() : 0.00;
+
+            var itemTotal = parseFloat(itemAmount === '' ? 0.00 : itemAmount) * parseFloat(itemQty === '' ? 0.00 : itemQty);
+            var taxAmount = parseFloat(itemTax === '' ? 0.00 : itemTax) * itemTotal / 100;
+
+            subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
+            taxes = parseFloat(taxes) + parseFloat(taxAmount);
+            grandTotal = parseFloat(grandTotal) + parseFloat($(this).find('.row-total').html().replace('$', ''));
+        });
+
+        var table = $(this).closest('table');
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
     });
 });
 

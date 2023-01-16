@@ -29,14 +29,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 text-end grid-mb">
-                                        <h6>AMOUNT</h6>
-                                        <h2>
-                                            <span class="transaction-grand-total">
-                                                $0.00
-                                            </span>
-                                        </h2>
-                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -140,7 +132,7 @@
                                                                                     <td><?=ucfirst($itemDetails->type)?></td>
                                                                                     <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->quantity?>"></td>
                                                                                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
-                                                                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="discount[]" disabled onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                                                     <td>
                                                                                         <span class="row-total">
@@ -190,30 +182,6 @@
                                                                             <td>Taxes</td>
                                                                             <td>
                                                                                 <span class="transaction-taxes">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Discounts</td>
-                                                                            <td>
-                                                                                <span class="transaction-discounts">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <div class="row">
-                                                                                    <div class="col-8">
-                                                                                        <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="">
-                                                                                    </div>
-                                                                                    <div class="col-3">
-                                                                                        <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="">
-                                                                                    </div>
-                                                                                    <div class="col-1 d-flex align-items-center">
-                                                                                        <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <span class="transaction-adjustment">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
@@ -267,7 +235,7 @@
                                                                                     <td><?=ucfirst($itemDetails->type)?></td>
                                                                                     <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->quantity?>"></td>
                                                                                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
-                                                                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="discount[]" disabled onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                                                     <td>
                                                                                         <span class="row-total">
@@ -317,30 +285,6 @@
                                                                             <td>Taxes</td>
                                                                             <td>
                                                                                 <span class="transaction-taxes">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Discounts</td>
-                                                                            <td>
-                                                                                <span class="transaction-discounts">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <div class="row">
-                                                                                    <div class="col-8">
-                                                                                        <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="">
-                                                                                    </div>
-                                                                                    <div class="col-3">
-                                                                                        <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="">
-                                                                                    </div>
-                                                                                    <div class="col-1 d-flex align-items-center">
-                                                                                        <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <span class="transaction-adjustment">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>

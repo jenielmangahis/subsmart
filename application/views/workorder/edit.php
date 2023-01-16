@@ -1,14 +1,16 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/header'); ?>
 <div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/workorder'); ?>
+<?php //include viewPath('includes/sidebars/workorder'); ?>
 <?php include viewPath('includes/workorder/sign-modal'); ?>
 
 <!-- Script for autosaving form -->
 <!-- <script src="<?=base_url("assets/js/workorder/autosave-update.js")?>"></script> -->
 
+<link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
     <style>
     label>input {
       visibility: initial !important;
@@ -150,9 +152,9 @@ border-top-color: #e74c3c ;
 .tab-content{
 background: #fdfdfd;
   line-height: 25px;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd;
   border-top:5px solid #e74c3c;
-  border-bottom:5px solid #e74c3c;
+  border-bottom:5px solid #e74c3c; */
   padding:30px 25px;
 }
 
@@ -207,6 +209,9 @@ border: none;
 
 #box-one:target, #box-two:target, #box-three:target {
   z-index: 1;
+}
+.card {
+    border: solid white 1px !important;
 }
 
 
@@ -354,6 +359,14 @@ border: none;
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
+        <div class="col-12 mb-3">
+            <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        </div>
+        <div class="col-12 mb-3">
+            <?php include viewPath('v2/includes/page_navigations/workorder_subtabs'); ?>
+        </div><br>
+        <div style="padding:0 5% 0 5%;">
+
             <div class="row" style="margin-top: 30px;">
                 <div class="col">
                     <h3 class="m-0">Edit Work Order</h3>
@@ -410,6 +423,7 @@ border: none;
 								<input type="text" class="form-control" name="customer[first_name]" id="first_name" required placeholder="Enter First Name" value="<?php echo $customer->first_name; ?>" readonly/>
 							</div>
                         </div>
+                        <br>
                         <div class="row">
                         <div class="col-md-3 form-group">
                                 <label for="security_number">Security Number</label>
@@ -419,7 +433,8 @@ border: none;
                                 <label for="birthdate">Birth Date</label>
                                 <input type="text" class="form-control" name="birthdate" id="date_of_birth" value="<?php echo $workorder->birthdate; ?>"/>
                             </div>
-                            </div>
+                        </div>
+                        <br>
                         <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="phone_no">Phone Number</label>
@@ -434,7 +449,7 @@ border: none;
                                 <input type="email" class="form-control" name="email" id="email"  value="<?php echo $workorder->email; ?>"   />
                             </div>
                         </div>
-                        
+                        <br>
                         <!-- end row -->
                         <div class="row" id="sel-cul">                    
                             <div class="col-md-4 form-group">
@@ -481,7 +496,7 @@ border: none;
                         </div> 
                         <div class="row">
                         </div>-->
-
+                        <br>
                         <div class="row">                   
                             <div class="col-md-4 form-group">
                                 <label for="contact_phone">Password</label> 
@@ -526,7 +541,7 @@ border: none;
                             </div> -->
                             <?php } ?>
                         </div>
-                        
+                        <br>
                         <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
                                     <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
@@ -720,12 +735,12 @@ border: none;
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice"><?php echo number_format(floatval($workorder->subtotal),2); ?></span>
+                                            <td colspan="" align="center">$ <span id="span_sub_total_invoice"><?php echo number_format(floatval($workorder->subtotal),2); ?></span>
                                                 <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo number_format(floatval($workorder->taxes),2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
+                                            <td colspan="" align="center">$ <span id="total_tax_"><?php echo number_format(floatval($workorder->taxes),2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
@@ -733,25 +748,25 @@ border: none;
                                             <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($workorder->adjustment_value)){ echo "0"; }else{ echo $workorder->adjustment_value; } ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td><?php echo number_format($workorder->adjustment_value,2); ?></td>
+                                            <!-- <td><?php //echo number_format((Float)$workorder->adjustment_value,2); ?></td> -->
                                         </tr>
                                             <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                         <?php if(empty($workorder->voucher_value)){ ?>
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
-                                            <td></td>
+                                            <!-- <td></td> -->
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input" value="0"></td>
                                         </tr>
                                         <?php }else{ ?>
                                             <tr id="saved" style="color:green;font-weight:bold;">
                                             <td>Amount Saved</td>
-                                            <td></td>
+                                            <!-- <td></td> -->
                                             <td><span id="offer_cost"><?php echo $workorder->voucher_value; ?></span><input type="hidden" name="voucher_value" id="offer_cost_input" value="<?php echo $workorder->voucher_value; ?>"></td>
                                         </tr>
                                         <?php } ?>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
-                                            <td colspan="2" align="center"><b><span id="grand_total"><?php echo number_format($workorder->grand_total,2); ?></span>
+                                            <td colspan="" align="center"><b><span id="grand_total"><?php echo number_format((Float)$workorder->grand_total,2); ?></span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'></b></td>
                                         </tr>
                                     </table>
@@ -841,7 +856,7 @@ border: none;
                                 </div>   
                                                                    
                             </div>
-
+                            <br>
                             <h5>Checklist</h5>
                             <small class="help help-sm">You can set up a checklist for employees.</small><br>
                             <br><br>
@@ -858,9 +873,9 @@ border: none;
                             </div>
                             <!-- <div id="citems"> -->
                             <!-- </div> -->
-                            <br><br>
+                            
                             <a class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal" href="javascript:void(0);"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</a>
-                        <br><br><br><br>
+                        <br><br>
                             <h6>JOB DETAIL</h6><br>
                             
                         <div class="row">
@@ -941,6 +956,7 @@ border: none;
                                     </div>
                                 </div>                                           
                             </div> -->
+                            <br>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
@@ -957,6 +973,7 @@ border: none;
                                     </select>
                                 </div>                                      
                             </div>
+                            <br>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="job_name">Job Name</label>
@@ -1227,7 +1244,7 @@ border: none;
                                 </div>                                            -->
                             </div>
                             
-
+                            <br>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="purchase_order">Purchase Order# (optional)</label>
@@ -1333,7 +1350,7 @@ border: none;
                                 </div>
                             </div>
                 
-                            <div class="row" style="margin-top:80px;">                        
+                            <div class="row" style="margin-top:50px;">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
                                     <?php if( $workorder->attached_photo != '' ){ ?>
@@ -1344,6 +1361,7 @@ border: none;
                                     <input type="file" class="form-control" name="attachment_photo" id="attachment">
                                 </div>                                                                
                             </div>
+                            <br>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Document</label>
@@ -1356,7 +1374,7 @@ border: none;
                                 </div>                                                                
                             </div>
 
-                <br><br><br><br><br>
+                <br><br><br>
                 <div>
 
                      <div class="form-group">
@@ -1374,7 +1392,10 @@ border: none;
 
 
 
+            </div>
         </div>
+
+
 
         <style>
 
@@ -1570,7 +1591,8 @@ border: none;
                         </button>
                     </div>
                     <div class="modal-body">
-                        <?php foreach($checklists as $key => $checklist){ ?>
+                        <?php if($checklists){
+                        foreach($checklists as $key => $checklist){ ?>
                             <?php if( !empty($checklist['items']) ){ ?>
                                 <label style="width: 100%;">
                                 <h4 style="font-size: 16px; padding: 10px; background-color:#32243d; color:#ffffff;margin:17px 0px;">                                    
@@ -1587,7 +1609,7 @@ border: none;
                                     <?php } ?>                                    
                                 </div>
                             <?php } ?>
-                        <?php } ?>
+                        <?php } }?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -3442,3 +3464,4 @@ $(document).ready(function(){
     });
   } );
 </script>
+<?php //include viewPath('v2/includes/footer'); ?>
