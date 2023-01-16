@@ -1428,3 +1428,6 @@ $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';
 //Modal Quickview
 $route['job/_quick_view_details'] = 'Job/ajax_quick_view_details';
 $route['ticket/_quick_view_details'] = 'Tickets/ajax_quick_view_details';
+$route['calendar/_quick_view_calendar_events'] = 'Workcalender/ajax_quick_view_calendar_events';
+$route['calendar/_quick_view_tc_off'] = 'Workcalender/ajax_quick_view_tc_off';
+$route['calendar/_appointment_quick_add_form'] = 'Workcalender/ajax_appointment_quick_add_form';

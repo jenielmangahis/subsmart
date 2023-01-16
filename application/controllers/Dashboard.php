@@ -128,6 +128,22 @@ class Dashboard extends Widgets {
         $this->load->helper('functions');
         $this->load->helper('functions_helper');
 
+        add_css(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'assets/libs/jcanvas/global.css',
+            'assets/plugins/timeline_calendar/main.css',
+            'assets/css/wokrcalendar/workcalendar.css',
+        ));
+
+        add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
+            'assets/plugins/timeline_calendar/main.js',
+            'assets/frontend/js/workcalender/workcalender.js',
+            'assets/js/quick_launch.js',
+        ));
+
         $user_id = logged('id');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
         // echo $this->db->last_query(); 
