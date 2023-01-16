@@ -29,14 +29,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 text-end grid-mb">
-                                        <h6>AMOUNT</h6>
-                                        <h2>
-                                            <span class="transaction-grand-total">
-                                                $0.00
-                                            </span>
-                                        </h2>
-                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -69,13 +61,13 @@
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-date">Estimate Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control nsm-field mb-2" value="">
+                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control date nsm-field mb-2" value="">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="expiry-date">Expiry Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control nsm-field mb-2" value="">
+                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +156,7 @@
                                                                         <tr>
                                                                             <td colspan="10">
                                                                                 <div class="nsm-page-buttons page-buttons-container">
-                                                                                    <button type="button" class="nsm-button" id="add_bundle_item">
+                                                                                    <button type="button" class="nsm-button" id="add_bundle_1_item">
                                                                                         Add items
                                                                                     </button>
                                                                                 </div>
@@ -190,12 +182,6 @@
                                                                             <td>Taxes</td>
                                                                             <td>
                                                                                 <span class="transaction-taxes">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Discounts</td>
-                                                                            <td>
-                                                                                <span class="transaction-discounts">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
@@ -291,7 +277,7 @@
                                                                         <tr>
                                                                             <td colspan="10">
                                                                                 <div class="nsm-page-buttons page-buttons-container">
-                                                                                    <button type="button" class="nsm-button" id="bundle_item">
+                                                                                    <button type="button" class="nsm-button" id="add_bundle_2_item">
                                                                                         Add items
                                                                                     </button>
                                                                                 </div>
@@ -317,12 +303,6 @@
                                                                             <td>Taxes</td>
                                                                             <td>
                                                                                 <span class="transaction-taxes">$0.00</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Discounts</td>
-                                                                            <td>
-                                                                                <span class="transaction-discounts">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>

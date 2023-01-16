@@ -4155,6 +4155,8 @@ class Workorder extends MY_Controller
         $company_id     = getLoggedCompanyID();
         // $user_id        = getLoggedUserID();
         $user_id = logged('id');
+        $hasID = bin2hex(random_bytes(18));
+        // dd($hasID);
 
         $wo_id          = $this->input->post('workorder_number');
 
@@ -4272,6 +4274,7 @@ class Workorder extends MY_Controller
             'payment_method'                        => $this->input->post('payment_method'),
             'payment_amount'                        => $this->input->post('payment_amount'),
             'lead_source_id'                        => $this->input->post('lead_source'),
+            // 'hash_id'                               => $hasID,
             // 'account_holder_name' => $this->input->post('account_holder_name'),
             // 'account_number' => $this->input->post('account_number'),
             // 'expiry' => $this->input->post('expiry'),
@@ -4657,6 +4660,7 @@ class Workorder extends MY_Controller
         $company_id     = getLoggedCompanyID();
         // $user_id        = getLoggedUserID();
         $user_id = logged('id');
+        $hasID = bin2hex(random_bytes(18));
 
         $wo_id          = $this->input->post('workorder_number');
 
@@ -4743,6 +4747,7 @@ class Workorder extends MY_Controller
             'payment_method'                        => $this->input->post('payment_method'),
             'payment_amount'                        => $this->input->post('payment_amount'),
             'lead_source_id'                        => $this->input->post('lead_source'),
+            // 'hash_id'                               => $hasID,
             // 'account_holder_name' => $this->input->post('account_holder_name'),
             // 'account_number' => $this->input->post('account_number'),
             // 'expiry' => $this->input->post('expiry'),
@@ -6703,6 +6708,7 @@ class Workorder extends MY_Controller
 
         $company_id  = getLoggedCompanyID();
         $user_id  = logged('id');
+        $hasID = bin2hex(random_bytes(18));
 
         // $data = $this->input->post('output-1');
         $wo_id = $this->input->post('wo_id');
@@ -7510,6 +7516,7 @@ class Workorder extends MY_Controller
 
         $company_id  = getLoggedCompanyID();
         $user_id  = logged('id');
+        $hasID = bin2hex(random_bytes(18));
 
         // $data = $this->input->post('output-1');
         $wo_id = $this->input->post('wo_id');
@@ -7604,6 +7611,7 @@ class Workorder extends MY_Controller
             'date_issued'                           => $dateIssued,
             'lead_source_id'                        => $this->input->post('lead_source'),
             'panel_communication'                   => $this->input->post('system_type'),
+            // 'hash_id'                               => $hasID,
 
              //signature
              'company_representative_signature'     => $file_save,
@@ -8010,6 +8018,7 @@ class Workorder extends MY_Controller
 
         // $data = $this->input->post('output-1');
         $wo_id = $this->input->post('wo_id');
+        $hasID = bin2hex(random_bytes(18));
 
         if(empty($this->input->post('company_representative_approval_signature1aM_web'))){
             $file_save = '';
@@ -8114,6 +8123,7 @@ class Workorder extends MY_Controller
             'grand_total'                           => $this->input->post('totalDue'),
             'terms_and_conditions'                  => $this->input->post('terms_conditions'),
             'job_tags'                              => $this->input->post('job_tags'),
+            // 'hash_id'                               => $hasID,
 
              //signature
              'company_representative_signature'     => $file_save,

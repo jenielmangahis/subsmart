@@ -58,6 +58,7 @@ class Tickets extends MY_Controller
 
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
+        $hasID = bin2hex(random_bytes(18));
         
         $action = $this->input->post('action');
         if($action == 'Scheduled') 
@@ -112,6 +113,7 @@ class Tickets extends MY_Controller
             'customer_phone'            => $this->input->post('customer_phone'),
             'employee_id'               => $this->input->post('employee_id'),
             'created_by'                => logged('id'),
+            'hash_id'                               => $hasID,
             'company_id'                => $company_id,
             'created_at'                => date("Y-m-d H:i:s"),
             'updated_at'                => date("Y-m-d H:i:s")
