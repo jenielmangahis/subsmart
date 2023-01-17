@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                            $<?php if(isset($billing_info)){ echo $billing_info->mmr; }; ?>
+                            <?php if(isset($billing_info)){ echo $billing_info->bill_method; }; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
