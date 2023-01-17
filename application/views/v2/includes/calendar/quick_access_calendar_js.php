@@ -250,7 +250,7 @@ $(function(){
         $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
         $('#upcoming-schedule-view-more-details').attr('data-id', appointment_id);
 
-        $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
+        $('#edit-upcoming-schedule').attr('data-type', appointment_type);
         $('#edit-upcoming-schedule').attr('data-id', appointment_id);
         
         if( appointment_type == 'job' ){
