@@ -1,3 +1,21 @@
+<?php
+function formatJobNumber($number) {
+    $formatFunc = function ($prefix, $number) {
+        $numericPart = (int) str_replace($prefix, '', $number);
+        return 'JOB-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
+    };
+
+    if (strpos(strtoupper($number), 'JOB-') === 0) {
+        return $formatFunc('JOB-', $number);
+    }
+
+    if (strpos(strtoupper($number), 'JOB') === 0) {
+        return $formatFunc('JOB', $number);
+    }
+
+    return $number;
+}
+?>
 <?php include viewPath('v2/includes/header'); ?>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
@@ -175,7 +193,7 @@ foreach ($jobs as $job) {
                             <td>
                                 <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                             </td>
-                            <td class="fw-bold nsm-text-primary"><?php echo $job->job_number; ?></td>
+                            <td class="fw-bold nsm-text-primary"><?php echo formatJobNumber($job->job_number); ?></td>
                             <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
                             <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
                             <td><?php echo $job->FName . ' ' . $job->LName; ?></td>

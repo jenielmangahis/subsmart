@@ -315,15 +315,12 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td>
-                                                                                <div class="row">
+                                                                                <div class="row justify-content-end">
                                                                                     <div class="col-8">
-                                                                                        <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="">
+                                                                                        Bundle Discount
                                                                                     </div>
                                                                                     <div class="col-3">
                                                                                         <input type="number" name="adjustment_value" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="">
-                                                                                    </div>
-                                                                                    <div class="col-1 d-flex align-items-center">
-                                                                                        <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
                                                                                     </div>
                                                                                 </div>
                                                                             </td>

@@ -9555,8 +9555,8 @@ const submitModalForm = (event, el) => {
                 var table1 = $('#options-estimate-modal #option-1-item-table');
                 var table2 = $('#options-estimate-modal #option-2-item-table');
             } else {
-                var table1 = $('#bundle-estimate-modal #bunle-1-item-table');
-                var table2 = $('#bundle-estimate-modal #bunle-2-item-table');
+                var table1 = $('#bundle-estimate-modal #bundle-1-item-table');
+                var table2 = $('#bundle-estimate-modal #bundle-2-item-table');
             }
 
             table1.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function() {
@@ -9579,18 +9579,19 @@ const submitModalForm = (event, el) => {
                 }
             });
 
-            var t1subtotal = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.transaction-subtotal').html().replace('$', '');
-            var t1taxes = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.transaction-taxes').html().replace('$', '');
+            var t1subtotal = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.table-subtotal').html().replace('$', '');
+            var t1taxes = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.table-taxes').html().replace('$', '');
             data.set('table_1_subtotal', t1subtotal);
             data.set('table_1_taxes', t1taxes);
 
             if(modalId === '#bundle-estimate-modal') {
                 var t1adjustmentVal = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('input[name="adjustment_value"]').val();
+                var t1adjustmentName = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('input[name="adjustment_name"]').val();
+                data.set('table_1_adjustment_name', t1adjustmentName);
                 data.set('table_1_adjustment', t1adjustmentVal);
             }
-            var t1total = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.transaction-grand-total').html().replace('$', '');
+            var t1total = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.table-total').html().replace('$', '');
             data.set('table_1_total', t1total);
-            
 
             table2.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function() {
                 if(data.has('table_2_item_total[]')) {
@@ -9612,8 +9613,8 @@ const submitModalForm = (event, el) => {
                 }
             });
 
-            var t2subtotal = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.transaction-subtotal').html().replace('$', '');
-            var t2taxes = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.transaction-taxes').html().replace('$', '');
+            var t2subtotal = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.table-subtotal').html().replace('$', '');
+            var t2taxes = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.table-taxes').html().replace('$', '');
             data.set('table_2_subtotal', t2subtotal);
             data.set('table_2_taxes', t2taxes);
 
@@ -9621,7 +9622,7 @@ const submitModalForm = (event, el) => {
                 var t2adjustmentVal = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('input[name="adjustment_value"]').val();
                 data.set('table_2_adjustment', t2adjustmentVal);
             }
-            var t2total = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.transaction-grand-total').html().replace('$', '');
+            var t2total = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.table-total').html().replace('$', '');
             data.set('table_2_total', t2total);
         }
     }
