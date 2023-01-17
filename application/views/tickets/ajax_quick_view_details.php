@@ -83,9 +83,9 @@
             </div>
         </div>
     </div>
-
+    <br />
     <div class="row mt-5">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <h6 class="title-border">FROM :</h6>
             <div style="font-size:16px;padding:3px;">
                 <b><?php echo $clients->business_name; ?></span></b> <br>
@@ -93,8 +93,7 @@
                 <?php echo $clients->email_address; ?><br>
                 <?php echo $clients->phone_number; ?>
             </div>
-        </div>
-        <div class="col-md-12">
+            <br />
             <h6 class="title-border">TO :</h6>
             <div style="font-size:16px;padding:3px;">
                 <b><span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span></b><br>
@@ -103,8 +102,33 @@
                 <span><?php echo $tickets->phone_h; ?></span>
             </div>
         </div>
-    </div>
-    <br>
+        <div class="col-md-4">
+            <h6 class="title-border">TECHNICIANS :</h6>
+            <?php 
+                $assigned_employees = array();
+                $emp_ids = unserialize($tickets->technicians);
+                if( is_array($emp_ids) ){
+                    foreach($emp_ids as $eid){
+                        $assigned_employees[] = $eid;    
+                    }
+                }    
+
+                if( !empty($assigned_employees) ){
+                    if( !in_array($tickets->sales_rep, $assigned_employees) ){
+                        $assigned_employees[] = $tickets->sales_rep;    
+                    }                            
+                }else{
+                    $assigned_employees[] = $tickets->sales_rep;    
+                }
+            ?>
+            <?php foreach($assigned_employees as $eid){ ?>
+                <div class="nsm-list-icon primary" style="background-color:#ffffff;">
+                    <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
+                </div>
+            <?php } ?>
+        </div>
+    </div>    
+    <br />
     <div class="row">        
         <div class="col-md-12">
             <h6 class="title-border">ITEMS :</h6>
@@ -121,7 +145,9 @@
                 <tbody>
                     <?php
                     $i = 1;
+                    $total_discount = 0;
                      foreach($items as $item){ ?>
+                    <?php $total_discount = $total_discount + $item->discount; ?>
                     <tr>
                         <td><?php echo $i; ?></td>
                         <td><?php echo $item->title; ?></td>
@@ -291,13 +317,17 @@
                     <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
                 </tr>
                 <tr style="font-weight:bold;">
+                    <td>Discount</td>
+                    <td style="text-align:right;">$<?php echo number_format($total_discount,2); ?></td>
+                </tr>
+                <!-- <tr style="font-weight:bold;">
                     <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
                     <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
-                </tr>
-                <tr style="font-weight:bold;">
+                </tr> -->
+                <!-- <tr style="font-weight:bold;">
                     <td>Markup</td>
                     <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
-                </tr>
+                </tr> -->
                 <tr style="font-weight:bold;">
                     <td>Grand Total</td>
                     <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
