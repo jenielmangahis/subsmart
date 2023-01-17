@@ -86,6 +86,9 @@
     display:inline-block;
     color: #ffffff;
 }
+#upcoming-schedule-view-more-details, #edit-upcoming-schedule{
+    width: 150px;
+}
 </style>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-access-calendar-schedule" tabindex="-1" aria-labelledby="modal-quick-access-calendar-schedule-label" aria-hidden="true">
@@ -114,6 +117,7 @@
             </div> 
             <div class="modal-footer">
                 <button type="button" class="nsm-button primary" data-id="" data-type="" id="upcoming-schedule-view-more-details">View More Details</button>
+                <button type="button" class="nsm-button primary" data-id="" data-type="" id="edit-upcoming-schedule">Edit</button>
             </div>           
         </div>        
     </div>

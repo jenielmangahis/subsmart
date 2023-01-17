@@ -249,6 +249,9 @@ $(function(){
 
         $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
         $('#upcoming-schedule-view-more-details').attr('data-id', appointment_id);
+
+        $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
+        $('#edit-upcoming-schedule').attr('data-id', appointment_id);
         
         if( appointment_type == 'job' ){
             var url = base_url + "job/_quick_view_details";
@@ -276,6 +279,17 @@ $(function(){
              }
           });
         }, 500);
+    });
+
+    $(document).on('click', '#edit-upcoming-schedule', function(){
+        var schedule_id   = $(this).data('id');
+        var schedule_type = $(this).data('type');
+
+        if( schedule_type == 'job' ){
+            location.href = base_url + 'job/new_job1/' + schedule_id;
+        }else if( schedule_type == 'ticket' ){
+            location.href = base_url + 'tickets/editDetails/' + schedule_id;
+        }
     });
 });
 </script>
