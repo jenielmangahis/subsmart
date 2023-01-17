@@ -367,6 +367,17 @@ class Tickets_model extends MY_Model
         return true;
     }
 
+    public function updateTicketsHash_ID($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('tickets', array(
+            'hash_id'           => $hash_id,
+        ));
+
+        return true;
+    }
+
     public function update_cash($data)
     {
         extract($data);

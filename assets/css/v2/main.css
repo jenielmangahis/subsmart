@@ -1224,7 +1224,7 @@ a.nsm-button {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	/*white-space: nowrap;*/
-	word-break: break-all;
+	word-break: break-word;
 	max-width: 200px;
 }
 

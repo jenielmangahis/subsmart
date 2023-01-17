@@ -8717,13 +8717,13 @@ class Accounting_modals extends MY_Controller
                 'instructions' => $data['instructions'],
                 'option_message' => $data['option_1_message'],
                 'option2_message' => $data['option_2_message'],
-                'option1_total' => $data['grand_total'],
-                'option2_total' => $data['grand_total2'],
+                'option1_total' => $data['table_1_total'],
+                'option2_total' => $data['table_2_total'],
                 // 'bundle_discount' => $data['bundle_discount'],
-                'tax1_total' => $data['total_tax_'],
-                'tax2_total' => $data['total_tax2_'],
-                'sub_total' => $data['sub_total'],//
-                'sub_total2' => $data['sub_total2'],//
+                'tax1_total' => $data['table_1_taxes'],
+                'tax2_total' => $data['table_2_taxes'],
+                'sub_total' => $data['table_1_subtotal'],//
+                'sub_total2' => $data['table_2_subtotal'],//
                 // 'tax1_total' => $data['total_tax_'],
                 // 'tax2_total' => $data['total_tax2_'],
                 // 'grand_total' => $data['supergrandtotal'],
@@ -8846,74 +8846,30 @@ class Accounting_modals extends MY_Controller
                 'customer_message' => $data['customer_message'],
                 'terms_conditions' => $data['terms_conditions'],
                 'instructions' => $data['instructions'],
+                'bundle1_message' => $data['bundle_1_message'],
+                'bundle2_message' => $data['bundle_2_message'],
 
-                // 'estimate_type' => 'Bundle',
-                'bundle1_message' => $data['bundle1_message'],
-                'bundle2_message' => $data['bundle2_message'],
-                // 'bundle1_total' => $data['bundle1_total'],
-                // 'bundle2_total' => $data['bundle2_total'],
-                'bundle_discount' => $data['bundle_discount'],
-
-
+                'bundle_discount' => $data['table_2_adjustment'],
                 'user_id' => $user_id,
                 'company_id' => $company_id,
-                // 'created_by' => logged('id'),
-
-                // 'sub_total' => $data['sub_total'],
                 'deposit_request' => '$',
-                'deposit_amount' => $data['adjustment_input'],//
-                'bundle1_total' => $data['grand_total'],//
-                'bundle2_total' => $data['grand_total2'],//
-                'sub_total' => $data['sub_total'],//
-                'sub_total2' => $data['sub_total2'],//
+                'deposit_amount' => $data['adjustment_input'],
+                'bundle1_total' => $data['table_1_total'],
+                'bundle2_total' => $data['table_2_total'],
+                'sub_total' => $data['table_1_subtotal'],
+                'sub_total2' => $data['table_2_subtotal'],
 
-                'tax1_total' => $data['total_tax_'],
-                'tax2_total' => $data['total_tax2_'],
+                'tax1_total' => $data['table_1_taxes'],
+                'tax2_total' => $data['table_2_taxes'],
 
-                'grand_total' => $data['supergrandtotal'],//
-
-                'adjustment_name' => $data['adjustment_name'],//
-                'adjustment_value' => $data['adjustment_input'],//
-
-                'markup_type' => '$',//
-                'markup_amount' => $data['markup_input_form'],//
-
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            );
-
-            $new_data = array(
-                'customer_id' => $data['customer'],
-                'job_location' => $data['job_location'],
-                'job_name' => $data['job_name'],
-                'estimate_number' => $data['estimate_number'],
-                'estimate_date' => $data['estimate_date'],
-                'expiry_date' => $data['expiry_date'],
-                'purchase_order_number' => $data['purchase_order_number'],
-                'status' => $data['estimate_status'],
-                'estimate_type' => 'Bundle',
-                'type' => $data['estimate_type'],
-                'attachments' => 'testing',
-                // 'status' => $data['status'],
-                'deposit_request' => $data['deposit_request'],
-                'deposit_amount' => $data['deposit_amount'],
-                'customer_message' => $data['customer_message'],
-                'terms_conditions' => $data['terms_conditions'],
-                'instructions' => $data['instructions'],
-                'bundle1_message' => $data['bundle1_message'],
-                'bundle2_message' => $data['bundle2_message'],
-                'bundle1_total' => $data['grand_total'],
-                'bundle2_total' => $data['grand_total2'],
-                'bundle_discount' => $data['bundle_discount'],
-                'tax1_total' => $data['total_tax_'],
-                'tax2_total' => $data['total_tax2_'],
-                'sub_total' => $data['sub_total'],//
-                'sub_total2' => $data['sub_total2'],//
-                // 'tax1_total' => $data['total_tax_'],
-                // 'tax2_total' => $data['total_tax2_'],
                 // 'grand_total' => $data['supergrandtotal'],
-                'user_id' => $user_id,
-                'company_id' => $company_id,
+
+                // 'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['table_1_adjustment'],
+
+                'markup_type' => '$',
+                'markup_amount' => $data['markup_input_form'],
+
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             );

@@ -160,13 +160,34 @@ endif;
             left: 13%;
         }
     }
-</style>
-<style>
+    .TECH_ICON {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 12px !important;
+        font-weight: bold !important;
+        border: 1px solid black !important;
+    }
+    .STACK_ICON {
+        margin-top: -30px; 
+        margin-left: 23px;
+    }
+    #JOB_ACTIVITY_TABLE_length,
+    #JOB_ACTIVITY_TABLE_filter,
+    #JOB_ACTIVITY_TABLE_info {
+        display: none;
+    }
     /*.nsm-table {
         display: none;
     }*/
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
+    }
+    table.dataTable.no-footer {
+         border-bottom: 1px solid #ebebeb !important; 
+    }
+    .JOB_PREVIEW:hover {
+        cursor: pointer;
+        font-weight: bold;
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -193,66 +214,88 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <table class="nsm-table" id="jobs_list">
-            <thead>
-                <th>Updated</th>
-                <th>Name</th>
-                <th>Job Number</th>
-                <th> <?= $company_id == 58 ? 'Proposed' : 'Amount' ?></th>
-            </thead>
-            <tbody>
-            <?php foreach($latestJobs as $job): 
-                switch($job->status):
-                    case "New":
-                        $badgeCount = 1;
-                        break;
-                    case "Scheduled":
-                        $badgeCount = 2;
-                        break;
-                    case "Arrival":
-                        $badgeCount = 3;
-                        break;          
-                    case "Started":
-                        $badgeCount = 4;
-                        break;
-                    case "Approved":
-                        $badgeCount = 5;
-                        break;
-                    case "Closed":
-                        $badgeCount = 6;
-                        break;
-                    case "Invoiced":
-                        $badgeCount = 7;
-                        break;
-                    case "Completed":
-                        $badgeCount = 8;
-                        break;
-                endswitch;
-                ?>
-                <tr onclick="location.href='<?= base_url('job/job_preview/').$job->id ?>'">
-                    <?php
-                        $updated_date = date_create($job->date_updated);
-                    ?>
-                    <td ><?php echo date_format($updated_date, 'F'). ' '. date_format($updated_date, 'd')?></td>
-                    <td >
-                        <b><?= $job->first_name . ', '  .  $job->last_name ; ?></b><br>
-                        <small><?= $job->city. ',<br>'. $job->state ; ?></small>
-                    </td>
-                    <td ><?= $job->job_number; ?></td>
-                    <td >$<?= $job->amount; ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>   
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-reponsinve">
+                        <table id="JOB_ACTIVITY_TABLE" class="table table-hover mb-3">
+                            <thead>
+                                <tr>
+                                    <th>Updated</th>
+                                    <th>Job&nbsp;No.</th>
+                                    <th><?php echo $company_id == 58 ? 'Proposed' : 'Amount' ?></th>
+                                    <th style="width: 0%;">View&nbsp;Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    function getInitials($string = null) {
+                                        return array_reduce(
+                                            explode(' ', $string),
+                                            function ($initials, $word) {
+                                                return strtoupper(sprintf('%s%s', $initials, substr($word, 0, 1)));
+                                            },
+                                            ''
+                                        );
+                                    }
+                                    $VIEW_INFO = "";
+                                    $TECH_BADGE = "";
+                                    $ADDRESS = "";
+                                    $UPDATED = "";
+                                    $JOB_PREVIEW = "";
+                                    foreach($latestJobs as $latestJobs_data){
+                                        ($latestJobs_data->TECH_1 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
+                                        ($latestJobs_data->TECH_2 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
+                                        ($latestJobs_data->TECH_3 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
+                                        ($latestJobs_data->TECH_4 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
+                                        ($latestJobs_data->TECH_5 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
+                                        ($latestJobs_data->TECH_6 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
+
+                                        if ($latestJobs_data->city == "") {
+                                            $ADDRESS = "Not Available";
+                                        } else {
+                                            $ADDRESS = "$latestJobs_data->city, $latestJobs_data->state";
+                                        }
+
+                                        $UPDATED = date_format(date_create($job->date_updated), 'M').", ".date_format(date_create($job->date_updated), 'd');
+                                        $JOB_PREVIEW = base_url('job/job_preview/').$latestJobs_data->id;
+
+                                        $VIEW_INFO = "<strong>Name:</strong> $latestJobs_data->first_name, $latestJobs_data->last_name<br><strong>Address:</strong> $ADDRESS<br><strong>Tech Rep</strong>:$TECH_BADGE<br><strong>Amount:</strong> $$latestJobs_data->amount<br><strong>Updated:</strong> $UPDATED";
+                                ?>  
+                                <tr>
+                                    <td><?php echo date_format(date_create($job->date_updated), 'M').", ".date_format(date_create($job->date_updated), 'd'); ?></td>
+                                    <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')"><?php echo "$latestJobs_data->job_number"; ?></td>
+                                    <!-- <td><small><?php echo "$latestJobs_data->first_name, $latestJobs_data->last_name"; ?></small></td> -->
+                                    <td><?php echo "$$latestJobs_data->amount"; ?></td>
+                                    <td style="width: 0%;"><button class="nsm-button small" data-bs-trigger="hover focus" data-bs-toggle="popover" title="<?php echo "$latestJobs_data->job_number"; ?>" data-bs-content="<?php echo $VIEW_INFO; ?>" data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
+                                </tr>
+                                <?php 
+                                    $TECH_BADGE = "";
+                                    }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>  
+            </div>
+        </div>
     </div>   
 </div>
+
+
+<script>
+$(function(){
+    var JOB_ACTIVITY_TABLE = $("#JOB_ACTIVITY_TABLE").DataTable({
+    "ordering": false,
+    language: {
+        processing: '<span>Fetching data...</span>'
+    },
+});
+ $('[data-bs-toggle="popover"]').popover();  
+    // $("#jobs_list").nsmPagination({itemsPerPage:5});
+});
+</script>
+
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '</div>';
 endif;
 ?>
-<script>
-$(function(){
-    $("#jobs_list").nsmPagination({itemsPerPage:5});
-});
-</script>

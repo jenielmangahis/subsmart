@@ -2,6 +2,15 @@
 if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '<div class="col-12 col-lg-4">';
 endif;
+
+function formatEstimateNumber($number) {
+    if (strpos(strtoupper($number), 'EST-') !== 0) {
+        return $number;
+    }
+
+    $numericPart = (int) str_replace('EST-', '', $number);
+    return 'EST-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
+}
 ?>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -51,7 +60,7 @@ endif;
                         <div class="widget-item">
                             <div class="content">
                                 <div class="details">
-                                    <span class="content-title"><?php echo strtoupper($estimate->estimate_number); ?> </span>
+                                    <span class="content-title"><?php echo formatEstimateNumber($estimate->estimate_number); ?> </span>
                                     <span class="content-subtitle d-block"><?php if($estimate->grand_total == NULL || $estimate->grand_total == 0){ echo '$0.00';}else{ echo currency($estimate->grand_total);  } ?></span>
                                 </div>
 

@@ -62,6 +62,12 @@ $(document).ready(function() {
 
         if(success){
             if(companies){
+                companies = companies.map(company => {
+                    return new Proxy(company, {
+                        // return fallback if property/value is null
+                        get: (object, key) => object[key] === null ? "--" : object[key],
+                    });
+                });
                 
                 for(var i=0; i < companies.length; i++){
                     $("#companiesData").append(

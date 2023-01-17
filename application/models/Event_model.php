@@ -492,7 +492,7 @@ class Event_model extends MY_Model
     public function getLatestJobs()
     {
         $cid=logged('company_id');
-        $this->db->select('first_name,last_name,city,state,jobs.id,jobs.status,job_number,job_type,jobs.date_updated,start_date,amount');
+        $this->db->select('acs_profile.first_name , acs_profile.last_name, acs_profile.city, acs_profile.state, jobs.id, jobs.status, jobs.job_number, jobs.job_type, jobs.date_updated, jobs.start_date, job_payments.amount, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee_id) AS TECH_1, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee2_id) AS TECH_2, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee3_id) AS TECH_3, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee4_id) AS TECH_4, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee5_id) AS TECH_5, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee6_id) AS TECH_6');
         $this->db->from('jobs');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
