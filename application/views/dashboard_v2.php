@@ -3,13 +3,15 @@
 <?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 <?php include viewPath('v2/widgets/add_widgets'); ?>
+<?php include viewPath('v2/includes/calendar/quick_access_calendar_modals'); ?>
+<?php include viewPath('v2/includes/calendar/quick_access_calendar_js'); ?>
 <?php include viewPath('dashboard_v2_js') ?>
 
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
-    </div>
+    </div>    
     <ul class="nsm-fab-options">
         <li onclick="window.open('<?= base_url('customer/addTicket') ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
             <div class="nsm-fab-icon">
@@ -79,7 +81,6 @@
         </li>
     </ul>
 </div>
-
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
         <button name="button" type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">

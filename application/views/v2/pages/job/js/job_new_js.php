@@ -239,15 +239,14 @@ $("#attachment-file").change(function() {
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
-            markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-                "<td><small>Qty</small><input min=\"1\" data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\" maxlength=\"1\"></td>\n" +
-                "<td><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
-                "<td><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
-                //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td><small>Amount</small><br><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">$"+total+"</b></td>" +
-                "<td><button type=\"button\" class=\"nsm-button items_remove_btn remove_item_row mt-2\"><i class=\'bx bx-trash\'></i></button></td>\n" +
-
+            markup = "<tr id='ss'>" +
+                "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
+                "<td><small>Qty</small><input min='1' data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type='number' name='item_qty[]' class='form-control qty' maxlength='1'></td>" +
+                "<td><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control' placeholder='Unit Price'></td>" +
+                "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
+                // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
+                "<td><small>Amount</small><br><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
+                "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2'><i class='bx bx-trash'></i></button></td>" +
                 "</tr>";
             tableBody = $("#jobs_items");
             tableBody.append(markup);

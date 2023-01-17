@@ -98,6 +98,12 @@
                             if( $schedule['data']->employee4_employee_id > 0 ){
                                 $assigned_employees[] = $schedule['data']->employee4_employee_id;
                             }
+                            if( $schedule['data']->employee5_employee_id > 0 ){
+                                $assigned_employees[] = $schedule['data']->employee4_employee_id;
+                            }
+                            if( $schedule['data']->employee6_employee_id > 0 ){
+                                $assigned_employees[] = $schedule['data']->employee4_employee_id;
+                            }
 
                             $is_valid = 1;
 
@@ -157,7 +163,7 @@
                             $schedule_number = $schedule['data']->ticket_no;
                             $schedule_type   = $schedule['data']->service_type;
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
-                            $schedule_customer_phone = $schedule['data']->phone_m != '' ? $schedule['data']->phone_m : '---';
+                            $schedule_customer_phone = $schedule['data']->phone_h != '' ? $schedule['data']->phone_h : '---';
                             $schedule_location = $schedule['data']->service_location;
                             $schedule_location_b = $schedule['data']->acs_city != '' ? $schedule['data']->acs_city . ', ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip : '---';
                             $schedule_event_name = '';

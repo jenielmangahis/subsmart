@@ -8705,9 +8705,9 @@ $(function() {
         });
 
         var table = $(this).closest('table');
-        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
-        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
-        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.table-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.table-taxes').html(formatter.format(parseFloat(taxes)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.table-total').html(formatter.format(parseFloat(grandTotal)));
     });
 
     $(document).on('change', '#bundle-estimate-modal #bundle-1-item-table input, #bundle-estimate-modal #bundle-2-item-table input', function() {
@@ -8743,9 +8743,40 @@ $(function() {
         });
 
         var table = $(this).closest('table');
-        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
-        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
-        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
+        var adjustmentVal = $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('input[name="adjustment_value"]').val();
+        grandTotal -= adjustmentVal === '' ? 0.00 : parseFloat(adjustmentVal);
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.table-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.table-taxes').html(formatter.format(parseFloat(taxes)));
+        $(this).closest('.accordion-body').find(`table:not(#${table.attr('id')})`).find('span.table-total').html(formatter.format(parseFloat(grandTotal)));
+
+        var transactionTotal = 0.00;
+        $('#bundle-estimate-modal .table-total').each(function() {
+            var amount = $(this).html().replace('$', '');
+
+            transactionTotal += parseFloat(amount);
+        });
+
+        $('#bundle-estimate-modal span.transaction-grand-total').html(formatter.format(transactionTotal));
+    });
+
+    $(document).on('change', '#bundle-estimate-modal input[name="adjustment_value"]', function() {
+        var value = $(this).val() === '' ? 0.00 : parseFloat($(this).val());
+        var subtotal = $(this).closest('table').find('span.table-subtotal').html().replace('$', '');
+        var taxes = $(this).closest('table').find('span.table-taxes').html().replace('$', '');
+
+        $(this).closest('td').next().find('span.table-adjustment').html(formatter.format(value));
+        var grandTotal = parseFloat(subtotal) + parseFloat(taxes);
+        grandTotal -= value;
+        $(this).closest('table').find('span.table-total').html(formatter.format(grandTotal));
+
+        var transactionTotal = 0.00;
+        $('#bundle-estimate-modal .table-total').each(function() {
+            var amount = $(this).html().replace('$', '');
+
+            transactionTotal += parseFloat(amount);
+        });
+
+        $('#bundle-estimate-modal span.transaction-grand-total').html(formatter.format(transactionTotal));
     });
 });
 
@@ -9548,6 +9579,19 @@ const submitModalForm = (event, el) => {
                 }
             });
 
+            var t1subtotal = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.transaction-subtotal').html().replace('$', '');
+            var t1taxes = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.transaction-taxes').html().replace('$', '');
+            data.set('table_1_subtotal', t1subtotal);
+            data.set('table_1_taxes', t1taxes);
+
+            if(modalId === '#bundle-estimate-modal') {
+                var t1adjustmentVal = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('input[name="adjustment_value"]').val();
+                data.set('table_1_adjustment', t1adjustmentVal);
+            }
+            var t1total = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.transaction-grand-total').html().replace('$', '');
+            data.set('table_1_total', t1total);
+            
+
             table2.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function() {
                 if(data.has('table_2_item_total[]')) {
                     data.append('table_2_item[]', $(this).find('input[name="item[]"]').val());
@@ -9567,6 +9611,18 @@ const submitModalForm = (event, el) => {
                     data.set('table_2_item_total[]', $(this).find('span.row-total').html().replace('$', ''));
                 }
             });
+
+            var t2subtotal = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.transaction-subtotal').html().replace('$', '');
+            var t2taxes = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.transaction-taxes').html().replace('$', '');
+            data.set('table_2_subtotal', t2subtotal);
+            data.set('table_2_taxes', t2taxes);
+
+            if(modalId === '#bundle-estimate-modal') {
+                var t2adjustmentVal = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('input[name="adjustment_value"]').val();
+                data.set('table_2_adjustment', t2adjustmentVal);
+            }
+            var t2total = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.transaction-grand-total').html().replace('$', '');
+            data.set('table_2_total', t2total);
         }
     }
 

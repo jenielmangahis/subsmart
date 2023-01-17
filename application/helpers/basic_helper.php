@@ -578,7 +578,7 @@ if (!function_exists('currency')) {
     function currency($amount)
 
     {
-        return '$ '.number_format($amount, 2);
+        return '$'.number_format($amount, 2);
     }
 }
 

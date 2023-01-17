@@ -175,19 +175,19 @@
                                                                         <tr>
                                                                             <td>Subtotal</td>
                                                                             <td>
-                                                                                <span class="transaction-subtotal">$0.00</span>
+                                                                                <span class="table-subtotal">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Taxes</td>
                                                                             <td>
-                                                                                <span class="transaction-taxes">$0.00</span>
+                                                                                <span class="table-taxes">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Grand Total ($)</td>
                                                                             <td>
-                                                                                <span class="transaction-grand-total">$0.00</span>
+                                                                                <span class="table-total">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                     </tfoot>
@@ -278,19 +278,19 @@
                                                                         <tr>
                                                                             <td>Subtotal</td>
                                                                             <td>
-                                                                                <span class="transaction-subtotal">$0.00</span>
+                                                                                <span class="table-subtotal">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Taxes</td>
                                                                             <td>
-                                                                                <span class="transaction-taxes">$0.00</span>
+                                                                                <span class="table-taxes">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Grand Total ($)</td>
                                                                             <td>
-                                                                                <span class="transaction-grand-total">$0.00</span>
+                                                                                <span class="table-total">$0.00</span>
                                                                             </td>
                                                                         </tr>
                                                                     </tfoot>

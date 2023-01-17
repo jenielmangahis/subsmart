@@ -276,7 +276,7 @@ class Tickets_model extends MY_Model
         //$start_date = date('m/d/Y');
         $start_date = date("Y-m-d");
 
-        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name,acs_profile.phone_m');
+        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name,acs_profile.phone_m,acs_profile.phone_h');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'acs_profile.prof_id = tickets.customer_id', 'left');        
         $this->db->where('tickets.company_id', $company_id);
@@ -362,6 +362,17 @@ class Tickets_model extends MY_Model
             'terms_conditions'      => $terms_conditions,
             'attachments'           => $attachments,
             'instructions'          => $instructions,
+        ));
+
+        return true;
+    }
+
+    public function updateTicketsHash_ID($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('tickets', array(
+            'hash_id'           => $hash_id,
         ));
 
         return true;

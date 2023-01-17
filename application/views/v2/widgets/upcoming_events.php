@@ -10,6 +10,9 @@ endif;
             <span>Upcoming Calendar</span>
         </div>
         <div class="nsm-card-controls">
+            <a role="button" class="nsm-button btn-sm m-0 me-2 btn-quick-access-calendar-schedule" href="javascript:void(0);">
+                Calendar
+            </a>
             <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url() ?>workcalender">
                 See More
             </a>
