@@ -362,7 +362,10 @@
             </div>
             <div class="modal-body" style="max-height:700px; overflow: auto;">
                 <div class="view-schedule-container row"></div>
-            </div>         
+            </div>  
+            <div class="modal-footer">
+                <button type="button" class="nsm-button primary" data-id="" data-type="" id="btn_edit_job_ticket">Edit</button>
+            </div>       
         </div>        
     </div>
 </div>

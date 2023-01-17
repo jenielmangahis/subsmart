@@ -85,6 +85,9 @@
 .clear{
   clear: both;
 }
+#btn_edit_job_ticket, #btn_edit_appointment, #btn_delete_appointment, #btn_edit_tcoff, #btn_delete_tcoff{
+    width: 140px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -1903,6 +1906,9 @@
         $("#modal-view-upcoming-jobs-tickets").modal('show');
         showLoader($(".view-schedule-container"));
 
+        $('#btn_edit_job_ticket').attr('data-id', appointment_id);
+        $('#btn_edit_job_ticket').attr('data-type', 'job');
+
         $.ajax({
             type: "POST",
             url: url,
@@ -1920,6 +1926,9 @@
 
         $("#modal-view-upcoming-jobs-tickets").modal('show');
         showLoader($(".view-schedule-container"));
+
+        $('#btn_edit_job_ticket').attr('data-id', appointment_id);
+        $('#btn_edit_job_ticket').attr('data-type', 'ticket');
 
         $.ajax({
             type: "POST",
@@ -2285,6 +2294,17 @@
             $('.'+tile_type+'-tile-'+tile_id).fadeOut(5);   
             $('.'+tile_type+'-min-max-'+tile_id).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
             //$(this).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
+        }
+    });
+
+    $(document).on('click', '#btn_edit_job_ticket', function(){
+        var schedule_id   = $(this).data('id');
+        var schedule_type = $(this).data('type');
+
+        if( schedule_type == 'job' ){
+            location.href = base_url + 'job/new_job1/' + schedule_id;
+        }else if( schedule_type == 'ticket' ){
+            location.href = base_url + 'tickets/editDetails/' + schedule_id;
         }
     });
 
