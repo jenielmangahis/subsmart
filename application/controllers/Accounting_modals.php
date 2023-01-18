@@ -8589,23 +8589,13 @@ class Accounting_modals extends MY_Controller
                 'job_location' => $data['job_location'],
                 'job_name' => $data['job_name'],
                 'estimate_number' => $data['estimate_no'],
-                // 'email' => $data['email'],
-                // 'billing_address' => $data['billing_address'],
-                'estimate_date' => $data['estimate_date'],
-                'expiry_date' => $data['expiry_date'],
-                'purchase_order_number' => $data['purchase_order_number'],
+                'estimate_date' => date("Y-m-d", strtotime($data['estimate_date'])),
+                'expiry_date' => date("Y-m-d", strtotime($data['expiry_date'])),
+                'purchase_order_number' => $data['purchase_order_no'],
                 'status' => $data['status'],
                 'estimate_type' => 'Standard',
                 'type' => $data['estimate_type'],
-                // 'ship_via' => $data['ship_via'],
-                // 'ship_date' => $data['ship_date'],
-                // 'tracking_no' => $data['tracking_no'],
-                // 'ship_to' => $data['ship_to'],
-                // 'tags' => $data['tags'],
                 'attachments' => 'testing',
-                // 'message_invoice' => $data['message_invoice'],
-                // 'message_statement' => $data['message_statement'],
-                'status' => $data['estimate_status'],
                 'deposit_request' => $data['deposit_request'],
                 'deposit_amount' => $data['deposit_amount'],
                 'customer_message' => $data['customer_message'],
@@ -8613,20 +8603,13 @@ class Accounting_modals extends MY_Controller
                 'instructions' => $data['instructions'],
                 'user_id' => $user_id,
                 'company_id' => $company_id,
-                // 'created_by' => logged('id'),
-    
-                'sub_total' => $data['subtotal'],//
-                // 'deposit_request' => $data['adjustment_name'],//
-                // 'deposit_amount' => $data['adjustment_input'],//
-                'grand_total' => $data['total_amount'],//
+                'sub_total' => $data['subtotal'],
+                'grand_total' => $data['total_amount'],
                 'tax1_total' => $data['tax_total'],
-    
-                'adjustment_name' => $data['adjustment_name'],//
-                'adjustment_value' => $data['adjustment_value'],//
-    
-                'markup_type' => '$',//
-                'markup_amount' => $data['markup_input_form'],//
-    
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'markup_type' => '$',
+                'markup_amount' => $data['markup_input_form'],
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             );
@@ -8686,7 +8669,6 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
         $this->form_validation->set_rules('estimate_type', 'Estimate Type', 'required');
         $this->form_validation->set_rules('estimate_status', 'Estimate Status', 'required');
-        $this->form_validation->set_rules('delayed_charge_date', 'Delayed charge date', 'required');
 
         $return = [];
         if ($this->form_validation->run() === false) {
@@ -8701,15 +8683,14 @@ class Accounting_modals extends MY_Controller
                 'customer_id' => $data['customer'],
                 'job_location' => $data['job_location'],
                 'job_name' => $data['job_name'],
-                'estimate_number' => $data['estimate_number'],
-                'estimate_date' => $data['estimate_date'],
-                'expiry_date' => $data['expiry_date'],
-                'purchase_order_number' => $data['purchase_order_number'],
+                'estimate_number' => $data['estimate_no'],
+                'estimate_date' => date("Y-m-d", strtotime($data['estimate_date'])),
+                'expiry_date' => date("Y-m-d", strtotime($data['expiry_date'])),
+                'purchase_order_number' => $data['purchase_order_no'],
                 'status' => $data['estimate_status'],
                 'estimate_type' => 'Option',
                 'type' => $data['estimate_type'],
                 'attachments' => 'testing',
-                // 'status' => $data['status'],
                 'deposit_request' => $data['deposit_request'],
                 'deposit_amount' => $data['deposit_amount'],
                 'customer_message' => $data['customer_message'],
@@ -8719,14 +8700,10 @@ class Accounting_modals extends MY_Controller
                 'option2_message' => $data['option_2_message'],
                 'option1_total' => $data['table_1_total'],
                 'option2_total' => $data['table_2_total'],
-                // 'bundle_discount' => $data['bundle_discount'],
                 'tax1_total' => $data['table_1_taxes'],
                 'tax2_total' => $data['table_2_taxes'],
-                'sub_total' => $data['table_1_subtotal'],//
-                'sub_total2' => $data['table_2_subtotal'],//
-                // 'tax1_total' => $data['total_tax_'],
-                // 'tax2_total' => $data['total_tax2_'],
-                // 'grand_total' => $data['supergrandtotal'],
+                'sub_total' => $data['table_1_subtotal'],
+                'sub_total2' => $data['table_2_subtotal'],
                 'user_id' => $user_id,
                 'company_id' => $company_id,
                 'created_at' => date("Y-m-d H:i:s"),
@@ -8815,7 +8792,6 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
         $this->form_validation->set_rules('estimate_type', 'Estimate Type', 'required');
         $this->form_validation->set_rules('estimate_status', 'Estimate Status', 'required');
-        $this->form_validation->set_rules('delayed_charge_date', 'Delayed charge date', 'required');
 
         $return = [];
         if ($this->form_validation->run() === false) {
@@ -8827,20 +8803,17 @@ class Accounting_modals extends MY_Controller
             $user_id  = getLoggedUserID();
 
             $new_data = array(
-                'customer_id' => $data['customer_id'],
+                'customer_id' => $data['customer'],
                 'job_location' => $data['job_location'],
                 'job_name' => $data['job_name'],
-                'estimate_number' => $data['estimate_number'],
-                // 'email' => $data['email'],
-                // 'billing_address' => $data['billing_address'],
-                'estimate_date' => $data['estimate_date'],
-                'expiry_date' => $data['expiry_date'],
+                'estimate_number' => $data['estimate_no'],
+                'estimate_date' => date("Y-m-d", strtotime($data['estimate_date'])),
+                'expiry_date' => date("Y-m-d", strtotime($data['expiry_date'])),
                 'purchase_order_number' => $data['purchase_order_number'],
                 'status' => $data['estimate_status'],
                 'estimate_type' => 'Bundle',
                 'type' => $data['estimate_type'],
                 'attachments' => 'testing',
-                'status' => $data['status'],
                 'deposit_request' => $data['deposit_request'],
                 'deposit_amount' => $data['deposit_amount'],
                 'customer_message' => $data['customer_message'],
@@ -8848,7 +8821,6 @@ class Accounting_modals extends MY_Controller
                 'instructions' => $data['instructions'],
                 'bundle1_message' => $data['bundle_1_message'],
                 'bundle2_message' => $data['bundle_2_message'],
-
                 'bundle_discount' => $data['table_2_adjustment'],
                 'user_id' => $user_id,
                 'company_id' => $company_id,
@@ -8858,18 +8830,12 @@ class Accounting_modals extends MY_Controller
                 'bundle2_total' => $data['table_2_total'],
                 'sub_total' => $data['table_1_subtotal'],
                 'sub_total2' => $data['table_2_subtotal'],
-
                 'tax1_total' => $data['table_1_taxes'],
                 'tax2_total' => $data['table_2_taxes'],
-
-                // 'grand_total' => $data['supergrandtotal'],
-
-                // 'adjustment_name' => $data['adjustment_name'],
+                'adjustment_name' => $data['table_1_adjustment_name'],
                 'adjustment_value' => $data['table_1_adjustment'],
-
                 'markup_type' => '$',
                 'markup_amount' => $data['markup_input_form'],
-
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             );
