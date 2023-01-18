@@ -89,6 +89,23 @@
 #upcoming-schedule-view-more-details, #edit-upcoming-schedule{
     width: 150px;
 }
+.quick-select-calendar-schedule-type{
+    width: 100% !important;
+    display: block;
+    margin: 5px;
+    padding-left: 25%;
+    font-size: 16px;
+}
+#modal-quick-add-job .modal-lg{
+    max-width:1107px !important;
+}
+#quick-add-job-form-container{
+    /*max-height: 650px;
+    overflow: auto;*/
+}
+.swal2-container{
+    z-index: 9999999 !important;
+}
 </style>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-access-calendar-schedule" tabindex="-1" aria-labelledby="modal-quick-access-calendar-schedule-label" aria-hidden="true">
@@ -123,21 +140,36 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="modal-quick-add-appointment" aria-labelledby="modal-quick-add-appointment-label" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="modal-quick-select-schedule-type" tabindex="-1" aria-labelledby="modal-quick-access-calendar-schedule-label" aria-hidden="true">
+    <div class="modal-dialog modal-sm" style="margin-top: 5%;">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Select Schedule Type</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="quick-add-date-selected" value="" />                
+                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-job" href="javascript:void(0);"><i class="bx bx-fw bx-message-square-error"></i>Job</a>
+                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-service-ticket" href="javascript:void(0);"><i class="bx bx-fw bx bx-fw bx-note"></i>Service Ticket</a>
+                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class="bx bx-fw bx-calendar-event"></i>Appointment</a>
+            </div>            
+        </div>        
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-add-job" aria-labelledby="modal-quick-add-job-label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form id="frm-quick-add-create-appointment" method="POST">
+        <form method="post" id="quick-add-job-form">   
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Create Appointment</span>
+                    <span class="modal-title content-title">Create Job</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body">
-                                        
-                </div>
+                <div class="modal-body" id="quick-add-job-form-container"></div>
                 <div class="modal-footer" style="display:block;">                    
                     <div style="float:right;">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button" style="display:none;">Schedule</button>
+                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-job-submit">Schedule</button>
                     </div>
                 </div>
             </div>
