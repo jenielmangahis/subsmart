@@ -1,9 +1,32 @@
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key']; ?>&callback=initialize&libraries=&v=weekly"></script>
 <script>
 var calendar_modal_source = 'upcoming-list';
 $(function(){    
     $('.btn-quick-access-calendar-schedule').on('click', function(){
         $('#modal-quick-access-calendar-schedule').modal('show');
         calendar_modal_source = 'calendar';
+    });
+
+    $('#calendar-quick-add-job').on('click', function(){
+        var url = base_url + "job/_quick_add_job_form";
+        var date_selected   = $('#quick-add-date-selected').val();
+        calendar_modal_source = 'quick-add-job';
+        $('#modal-quick-select-schedule-type').modal('hide');
+        $('#modal-quick-add-job').modal('show');
+
+        showLoader($("#quick-add-job-form-container"));        
+
+        setTimeout(function () {
+          $.ajax({
+             type: "GET",
+             url: url,
+             data: {date_selected:date_selected},
+             success: function(o)
+             {          
+                $("#quick-add-job-form-container").html(o);
+             }
+          });
+        }, 500);
     });
 
     function reloadQuickAccessCalendarSchedule() {
@@ -59,7 +82,7 @@ $(function(){
             eventDidMount : function(info) { 
             },  
             dayCellDidMount(info) {                         
-                /*$(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Appointment");
@@ -69,31 +92,17 @@ $(function(){
                 $('.fc-timegrid-slot:before').attr("data-bs-placement", "top");
                 $('.fc-timegrid-slot:before').attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Appointment");
 
-                initPopover();*/
+                initPopover();
             },
             selectable: true,
             slotEventOverlap: true,
             eventOverlap: true,
-            select: function(info) {  
-                /*var url = base_url + "calendar/_appointment_quick_add_form";                              
-                var result = info.hasOwnProperty('resource');
+            select: function(info) {                  
                 var date_selected = moment(info.startStr).format('YYYY-MM-DD');
-
+                calendar_modal_source = 'calendar';
+                $('#quick-add-date-selected').val(date_selected);
                 $('#modal-quick-access-calendar-schedule').modal('hide');
-                $('#modal-quick-add-appointment').modal('show');
-                showLoader($("#modal-quick-add-appointment .modal-body"));        
-
-                setTimeout(function () {
-                  $.ajax({
-                     type: "POST",
-                     url: url,
-                     data: {date_selected:date_selected},
-                     success: function(o)
-                     {          
-                        $("#modal-quick-add-appointment .modal-body").html(o);
-                     }
-                  });
-                }, 500);*/
+                $('#modal-quick-select-schedule-type').modal('show');
             },
             resourceLabelDidMount: function(info) {
                 //console.log(info);
@@ -243,6 +252,12 @@ $(function(){
         }        
     });
 
+    $('#modal-quick-select-schedule-type').on('hidden.bs.modal', function (e) {
+        if( calendar_modal_source == 'calendar' ){
+            $('#modal-quick-access-calendar-schedule').modal('show');
+        }
+    });
+
     $(document).on('click', '.quick-calendar-tile', function(){
         var appointment_type = $(this).data('type');
         var appointment_id   = $(this).data('id');
@@ -291,5 +306,45 @@ $(function(){
             location.href = base_url + 'tickets/editDetails/' + schedule_id;
         }
     });
+
+    $("#quick-add-job-form").submit(function(e) {
+        e.preventDefault();         
+        
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/job/_create_job",
+            dataType:'json',
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-add-job').modal('hide');
+                    $('#modal-quick-access-calendar-schedule').modal('show');
+
+                    Swal.fire({
+                        text: 'Job has been added!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadQuickAccessCalendarSchedule();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#btn-job-submit").html('Schedule');
+            }, beforeSend: function() {
+                $("#btn-job-submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
 });
 </script>

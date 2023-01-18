@@ -34,6 +34,25 @@ $(document).on('change', '#customers-table tbody tr:visible .select-one', functi
     } else {
         $('.batch-actions li a.dropdown-item').removeClass('disabled');
     }
+
+    var href = 'mailto:';
+    var index = $('#customers-table thead tr td[data-name="Email"]').index();
+    checked.each(function() {
+        var row = $(this).closest('tr');
+        var email = $(row.find('td')[index]).text().trim();
+
+        if(email !== '') {
+            href += ' '+email+',';
+        }
+    });
+
+    if(href !== 'mailto:') {
+        $('#email').removeClass('disabled');
+    } else {
+        $('#email').addClass('disabled');
+    }
+
+    $('#email').attr('href', href);
 });
 
 $(document).on('change', '.dropdown-menu.table-settings input[name="col_chk"]', function() {
@@ -49,21 +68,45 @@ $(document).on('change', '.dropdown-menu.table-settings input[name="col_chk"]', 
         }
     });
 
-    console.log(1231231232);
+    $(`#print_customers_modal table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
 
-    // $(`#print_items_modal table tr`).each(function() {
-    //     if(chk.prop('checked')) {
-    //         $($(this).find('td')[index - 1]).show();
-    //     } else {
-    //         $($(this).find('td')[index - 1]).hide();
-    //     }
-    // });
-
-    // $(`#print_preview_items_modal #items_table_print tr`).each(function() {
-    //     if(chk.prop('checked')) {
-    //         $($(this).find('td')[index - 1]).show();
-    //     } else {
-    //         $($(this).find('td')[index - 1]).hide();
-    //     }
-    // });
+    $(`#print_preview_customers_modal #customers_table_print tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
 });
+
+$('#select-customer-type').on('click', function() {
+    $('#select-customer-type-modal').modal('show')
+});
+
+$("#btn_print_customers").on("click", function() {
+    $("#customers_table_print").printThis();
+});
+
+$('#customer-type').select2({
+    minimumResultsForSearch: -1,
+    dropdownParent: $('#select-customer-type-modal')
+});
+
+// $('#apply-customer-type').on('click', function() {
+//     $.ajax({
+//         url: '/accounting/vendors/make-inactive',
+//         data: data,
+//         type: 'post',
+//         processData: false,
+//         contentType: false,
+//         success: function(result) {
+//             location.reload();
+//         }
+//     });
+// });

@@ -158,4 +158,9 @@ class Customers extends MY_Controller {
         $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
+
+    public function batch_select_customer_type()
+    {
+        $post = $this->input->post();
+    }
 }

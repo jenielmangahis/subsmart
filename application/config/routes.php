@@ -508,6 +508,7 @@ $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payme
 $route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms/print';
 
 $route['accounting/customers'] = 'accounting_controllers/customers/index';
+$route['accounting/customers/batch-select-customer-type']['post'] = 'accounting_controllers/customers/batch_select_customer_type';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -1433,3 +1434,5 @@ $route['ticket/_quick_view_details'] = 'Tickets/ajax_quick_view_details';
 $route['calendar/_quick_view_calendar_events'] = 'Workcalender/ajax_quick_view_calendar_events';
 $route['calendar/_quick_view_tc_off'] = 'Workcalender/ajax_quick_view_tc_off';
 $route['calendar/_appointment_quick_add_form'] = 'Workcalender/ajax_appointment_quick_add_form';
+$route['job/_quick_add_job_form'] = 'Job/ajax_quick_add_job_form';
+$route['job/_create_job'] = 'Job/ajax_create_job';
