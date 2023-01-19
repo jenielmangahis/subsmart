@@ -2150,3 +2150,7 @@ span.select2-selection {
     /*position: relative;
     top: -4px;*/
 }
+#sidebar-calendar-schedule-counter, #sidebar-taskhub-counter{
+	display: inline-block;
+    width: 50%;
+}
