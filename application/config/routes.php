@@ -799,7 +799,7 @@ $route['nsmart_features/update_feature'] = 'Nsmart_Features/update_feature';
 $route['nsmart_adminmgt/subscribers'] = 'Nsmart_AdminMgt/subscribers';
 $route['nsmart_adminmgt/_load_subscriber_details'] = 'Nsmart_AdminMgt/ajax_load_subscriber_details';
 
-$route['notification/calendar_notification_counter'] = 'Notification_Counter/calendar_notification_counter';
+$route['notification/_calendar_notification_counter'] = 'Notification_Counter/ajax_calendar_notification_counter';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
@@ -1435,3 +1435,4 @@ $route['calendar/_quick_view_tc_off'] = 'Workcalender/ajax_quick_view_tc_off';
 $route['calendar/_appointment_quick_add_form'] = 'Workcalender/ajax_appointment_quick_add_form';
 $route['job/_quick_add_job_form'] = 'Job/ajax_quick_add_job_form';
 $route['job/_create_job'] = 'Job/ajax_create_job';
+$route['ticket/_quick_add_service_ticket_form'] = 'Tickets/ajax_quick_add_service_ticket_form';
