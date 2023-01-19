@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/customers_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -125,7 +126,7 @@
                             <button type="button" class="nsm-button export-items">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customers_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -201,7 +202,7 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$customer->prof_id?>">
                                 </div>
                             </td>
                             <td><?=$customer->last_name.', '.$customer->first_name?></td>
@@ -218,7 +219,7 @@
                             </td>
                             <td><?=$customer->phone_h?></td>
                             <td><?=$customer->email?></td>
-                            <td></td>
+                            <td><?=$customer->customer_type?></td>
                             <td></td>
                             <td></td>
                             <td>

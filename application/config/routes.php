@@ -508,6 +508,7 @@ $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payme
 $route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms/print';
 
 $route['accounting/customers'] = 'accounting_controllers/customers/index';
+$route['accounting/customers/batch-select-customer-type']['post'] = 'accounting_controllers/customers/batch_select_customer_type';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
