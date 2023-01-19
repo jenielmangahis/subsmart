@@ -144,12 +144,14 @@ if ($this->session->userdata('usertimezone') == null) {
                                     endif; ?>">
                             <a href="<?= base_url("workcalender") ?>">
                                 <i class='bx bx-fw bx-calendar-event'></i> Schedule
+                                <div id="sidebar-calendar-schedule-counter"></div>
                             </a>
                         </li>
                         <li class="<?php if ($page->title == 'Task Hub') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("taskhub") ?>">
                                 <i class='bx bx-fw bx-task'></i> TaskHub
+                                <div id="sidebar-taskhub-counter"></div>                                
                             </a>
                         </li>
                         <li class="<?php if ($page->title == '') : echo 'selected';
