@@ -450,12 +450,12 @@
                                                 <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= $default_start_date;  ?>" required>
                                               </div>
                                               <div class="col-sm-5">
-                                                  <select id="end_time" name="end_time" class="nsm-field form-select " required>
+                                                    <select id="end_time" name="end_time" class="nsm-field form-select " required>
                                                         <option value="">End time</option>
                                                         <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                                             <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                                         <?php } ?>
-                                                </select>
+                                                    </select>
                                               </div>
                                             </div>
                                         </div>
@@ -670,41 +670,7 @@
                                         <hr>
                                         <h6 class='card_header custom-job-header'>Job Items Listing</h6>                                        
                                         <table class="table table-hover">
-                                            <tbody id="jobs_items">
-                                            <?php if(isset($jobs_data)): ?>
-                                                <?php
-                                                    $subtotal = 0.00;
-                                                    foreach ($jobs_data_items as $item):
-                                                    $total = $item->price * $item->qty;
-                                                ?>
-                                                   <tr id=ss>
-                                                        <td width="35%"><small>Item name</small>
-                                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" readonly>
-                                                            <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
-                                                        </td>
-                                                        <td><small>Qty</small>
-                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
-                                                        </td>
-                                                        <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
-                                                        </td>
-                                                        <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
-                                                        <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
-                                                        <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
-                                                        <td>
-                                                            <small>Amount</small><br>
-                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                <?php
-                                                    $subtotal = $subtotal + $total;
-                                                    endforeach;
-                                                ?>
-                                            <?php endif; ?>
-                                            </tbody>
+                                            <tbody id="jobs_items"></tbody>
                                         </table>
                                             <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
                                                 <i class='bx bx-plus'></i>Add Items
