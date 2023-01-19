@@ -3181,6 +3181,7 @@ class Job extends MY_Controller
         $get_items = array(
             'where' => array(
                 'is_active' => 1,
+                'company_id' => $comp_id
             ),
             'table' => 'items',
             'select' => 'items.id,title,price,type',
