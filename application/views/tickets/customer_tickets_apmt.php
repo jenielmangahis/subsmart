@@ -308,7 +308,7 @@ a.btn-primary.btn-md {
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div> -->
-                                        <input type="text" class="form-control" name="scheduled_time" id="scheduled_time" value="<?php $time = date("H:i", strtotime($appointment_time)); echo $time; ?>" required />
+                                        <input type="text" class="form-control" name="scheduled_time" id="scheduled_time" value="<?php $time = date("h:i a", strtotime($appointment_time)); echo $time; ?>" required />
                                         <!-- <select id="scheduled_time" name="scheduled_time" class="form-control">
                                             <option value="8-10">8-10</option>
                                             <option value="10-12">10-12</option>
@@ -319,7 +319,7 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="expiry_date" class="required"><b>Schedule Time To</b></label>
-                                        <input type="text" class="form-control" name="scheduled_time_to" id="scheduled_time_to" value="<?php $time = date("H:i", strtotime($appointment_time_to)); echo $time; ?>" required />
+                                        <input type="text" class="form-control" name="scheduled_time_to" id="scheduled_time_to" value="<?php $time = date("h:i a", strtotime($appointment_time_to)); echo $time; ?>" required />
                                     </div>
                                 </div>
                                 <div class="row">
