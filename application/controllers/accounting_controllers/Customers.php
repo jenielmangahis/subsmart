@@ -23,7 +23,8 @@ class Customers extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
 
-        $this->page_data['page']->title = 'Attachments';
+        $this->page_data['page']->title = 'Customers';
+        $this->page_data['page']->parent = 'Sales';
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -154,13 +155,67 @@ class Customers extends MY_Controller {
             $this->page_data['terms'] = $terms;
         }
 
-        $this->page_data['page']->title = 'Customers';
-        $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
 
     public function batch_select_customer_type()
     {
         $post = $this->input->post();
+
+        $customerData = [];
+        foreach($post['customers'] as $customerId)
+        {
+            $customerData[] = [
+                'prof_id' => $customerId,
+                'customer_type' => $post['customer_type']
+            ];
+        }
+
+        $update = $this->accounting_customers_model->update_by_batch($customerData);
+
+        return json_encode([
+            'success' => $update ? true : false,
+            'message' => $update ? 'Updated successfully!' : 'Update failed!' 
+        ]);
+    }
+
+    public function view($customerId)
+    {
+        $customer = $this->accounting_customers_model->getCustomerDetails($customerId)[0];
+
+        $not = ['', null];
+        $customerAddress = '';
+        $customerAddress .= in_array($customer->mail_add, $not) ? "" : $customer->mail_add;
+        if (!in_array($customer->city, $not)) {
+            if ($customerAddress !== '') {
+                $customerAddress .= ', ';
+            }
+            $customerAddress .= $customer->city;
+        }
+
+        if (!in_array($customer->state, $not)) {
+            if ($customerAddress !== '') {
+                $customerAddress .= ', ';
+            }
+            $customerAddress .= $customer->state;
+        }
+
+        if (!in_array($customer->zip_code, $not)) {
+            if ($customerAddress !== '') {
+                $customerAddress .= ' ';
+            }
+            $customerAddress .= $customer->zip_code;
+        }
+
+        if (!in_array($customer->country, $not)) {
+            if ($customerAddress !== '') {
+                $customerAddress .= ' ';
+            }
+            $customerAddress .= $customer->country;
+        }
+
+        $this->page_data['customer'] = $customer;
+        $this->page_data['customerAddress'] = $customerAddress;
+        $this->load->view('v2/pages/accounting/sales/customers/view', $this->page_data);
     }
 }

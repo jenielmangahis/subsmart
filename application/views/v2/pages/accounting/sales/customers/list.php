@@ -205,7 +205,7 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$customer->prof_id?>">
                                 </div>
                             </td>
-                            <td><?=$customer->last_name.', '.$customer->first_name?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/customers/view/' . $customer->prof_id) ?>'"><?=$customer->last_name.', '.$customer->first_name?></td>
                             <td>
                                 <?php
                                     $address = '';

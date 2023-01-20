@@ -293,7 +293,11 @@ class Accounting_customers_model extends MY_Model
         $this->db->update($table, $input);
     }
 
-
+    public function update_by_batch($data)
+    {
+        $query = $this->db->update_batch($this->table, $data, 'prof_id');
+        return $query;
+    }
 }
 
 

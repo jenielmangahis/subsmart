@@ -200,7 +200,7 @@ a.btn-primary.btn-md {
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
                         <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
-                            <option value="0">- Select Customer -</option>
+                            <option value="">- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
                                 <?php $default_customer_id = $tickets->customer_id;
                                     //if( $default_customer_id > 0 ){ ?>
@@ -385,6 +385,10 @@ a.btn-primary.btn-md {
                                                     }
                                             ?>
                                         </select>
+                                        <?php
+                                            if($assigned_technician)
+                                            {
+                                        ?>
                                         <span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: 438.5px;">
                                             <span class="selection">
                                                 <span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1">
@@ -406,6 +410,7 @@ a.btn-primary.btn-md {
                                             </span>
                                             <span class="dropdown-wrapper" aria-hidden="true"></span>
                                         </span>
+                                        <?php } ?>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
