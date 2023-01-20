@@ -98,15 +98,23 @@ $('#customer-type').select2({
     dropdownParent: $('#select-customer-type-modal')
 });
 
-// $('#apply-customer-type').on('click', function() {
-//     $.ajax({
-//         url: '/accounting/vendors/make-inactive',
-//         data: data,
-//         type: 'post',
-//         processData: false,
-//         contentType: false,
-//         success: function(result) {
-//             location.reload();
-//         }
-//     });
-// });
+$('#apply-customer-type').on('click', function() {
+    var data = new FormData();
+
+    data.set('customer_type', $('#customer-type').val());
+    var checked = $('#customers-table tbody tr:visible input.select-one:checked');
+    checked.each(function() {
+        data.append('customers[]', $(this).val());
+    });
+
+    $.ajax({
+        url: '/accounting/customers/batch-select-customer-type',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            location.reload();
+        }
+    });
+});

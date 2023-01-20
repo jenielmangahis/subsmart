@@ -203,8 +203,8 @@ a.btn-primary.btn-md {
                 <div class="row">
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
-                        <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
-                            <option value="0">- Select Customer -</option>
+                        <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required class="form-control searchable-dropdown" placeholder="Select">
+                            <option value="">- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
                                 <?php if( $default_customer_id > 0 ){ ?>
                                     <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
@@ -522,7 +522,7 @@ a.btn-primary.btn-md {
                                                 <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                         data-counter="0" id="discount_0" min="0" value="0"></td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0" readonly="">
+                                                        data-counter="0" id="tax1_0" min="0" value="0" >
                                                         </td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                         data-counter="0" id="item_total_0" min="0" value="0">

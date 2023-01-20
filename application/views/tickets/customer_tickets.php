@@ -198,7 +198,7 @@ a.btn-primary.btn-md {
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
                         <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
-                            <option value="0">- Select Customer -</option>
+                            <option value="">- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
                             <option value="<?php echo $c->prof_id; ?>" <?php if($c->prof_id == $custIndividual->prof_id){ echo "selected"; } ?>><?= $c->first_name . ' ' . $c->last_name; ?></option>
                             <?php } ?>
