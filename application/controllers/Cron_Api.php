@@ -306,7 +306,7 @@ class Cron_Api extends MYF_Controller {
                         $err_msg = 'Cannot find object data';
                     }
                     break;
-                case 'service_ticket':
+                case ($gs->module_name == 'service_ticket' || $gs->module_name == 'ticket'):
                     $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
                     $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->object_id, $gs->company_id);
                     if( $ticket ){
