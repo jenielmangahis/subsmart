@@ -211,7 +211,7 @@
                                                 </li>
 
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice') ?>">Convert to Invoice</a>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/estimateConversion/'. $estimate->id) ?>">Convert to Invoice</a>
                                                 </li>
 
                                                 <li>

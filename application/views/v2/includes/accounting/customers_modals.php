@@ -71,7 +71,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <table class="nsm-table" id="customers_table_print">
+                <table class="w-100" id="customers_table_print">
                     <thead>
                         <tr>
                             <td data-name="Customer/Company">CUSTOMER/COMPANY</td>

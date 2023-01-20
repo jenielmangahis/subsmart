@@ -32,6 +32,8 @@
     <!-- Datetimepicker -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/moment.min.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datetimepicker.min.js") ?>"></script>
+    <!-- Sidebar counbter -->
+    <script type="text/javascript" src="<?= base_url("assets/js/v2/sidebar-counter.js") ?>"></script>
     <!-- Select2 -->
     <script src="<?= base_url("assets/plugins/select2/dist/js/select2.full.min.js"); ?>"></script>
     <!-- Input Mask -->

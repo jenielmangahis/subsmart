@@ -3068,6 +3068,286 @@ class Job extends MY_Controller
         $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         $this->load->view('v2/pages/job/ajax_quick_view_details', $this->page_data);
     }
+
+    public function ajax_quick_add_job_form()
+    {
+        $this->load->model('CalendarSettings_model');
+
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        // get all employees
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
+        $this->page_data['table'] = 'job';
+
+        // check if settings has been set
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'job_settings',
+            'select' => 'id',
+        );
+        $event_settings = $this->general->get_data_with_param($get_job_settings);
+
+        $settings = $this->CalendarSettings_model->getByCompanyId($comp_id);
+        $this->page_data['settings'] = $settings;
+
+        // add default event settings if not set
+        if (empty($event_settings)) {
+            $event_settings_data = array(
+                'job_num_prefix' => 'JOB',
+                'job_num_next' => 1,
+                'company_id' => $comp_id,
+            );
+            $this->general->add_($event_settings_data, 'job_settings');
+        }
+
+        $get_sales_rep = array(
+            'where' => array(
+                'users.company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName',
+            'join' => array(
+                'table' => 'acs_office',
+                'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                'join_as' => 'left',
+            ),
+        );
+        $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'select' => 'id, FName, LName',
+        );
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+
+        // get all job tags
+        $get_job_tags = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_tags',
+            'select' => 'id,name,marker_icon',
+        );
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
+
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_types',
+            'select' => 'id,title,icon_marker',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
+        
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'is_active' => 1,
+                'company_id' => $comp_id
+            ),
+            'table' => 'items',
+            'select' => 'items.id,title,price,type',
+        );
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        $get_settings= array(
+            'table' => 'job_tax_rates',
+            'select' => '*',
+        );
+        $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
+
+        add_css([
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+        ]);
+
+        add_footer_js([
+            'https://html2canvas.hertzen.com/dist/html2canvas.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+        ]);
+
+        $default_start_date = date("Y-m-d");
+        if( $this->input->get('date_selected') ){
+            $default_start_date = $this->input->get('date_selected');
+        }
+
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->load->view('v2/pages/job/ajax_quick_add_job_form', $this->page_data);
+    }
+
+    public function ajax_create_job()
+    {
+        $this->load->helper(array('hashids_helper'));
+
+        $is_valid = 1;
+        $msg = '';
+
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        $input   = $this->input->post();
+
+        if( $input['event_color'] == '' ){
+            $msg = 'Please select event color';
+            $is_valid = 0;
+        }
+
+        if( $input['customer_id'] == 0 || $input['customer_id'] == '' ){
+            $msg = 'Please select customer';
+            $is_valid = 0;
+        }
+
+        if( $is_valid != 0 ){
+            $get_job_settings = array(
+                'where' => array(
+                    'company_id' => $comp_id
+                ),
+                'table' => 'job_settings',
+                'select' => '*',
+            );
+
+            $job_settings = $this->general->get_data_with_param($get_job_settings);
+            if( $job_settings ){
+                $prefix   = $job_settings[0]->job_num_prefix;
+                $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);   
+            }else{
+                $prefix = 'JOB-';
+                $lastId = $this->jobs_model->getlastInsert($comp_id);
+                if( $lastId ){
+                    $next_num = $lastId->id + 1;
+                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                }else{
+                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                }            
+            }
+
+            $job_number = $prefix . $next_num;
+            
+
+            $jobs_data = array(
+                'job_number' => $job_number,
+                'customer_id' => $input['customer_id'],
+                'employee_id' => $input['employee_id'],
+                'employee2_id' => $input['employee2_id'],
+                'employee3_id' => $input['employee3_id'],
+                'employee4_id' => $input['employee4_id'],
+                'employee5_id' => $input['employee5_id'],
+                'employee6_id' => $input['employee6_id'],
+                'job_name' => $input['job_name'],
+                'job_description' => $input['job_description'],
+                'start_date' => $input['start_date'],
+                'start_time' => $input['start_time'],
+                'end_date' => $input['end_date'],
+                'end_time' => $input['end_time'],
+                'event_color' => $input['event_color'],
+                'customer_reminder_notification' => $input['customer_reminder_notification'],
+                'priority' => $input['priority'],//$this->input->post('job_priority'),
+                'tags' => $input['tags'],//$this->input->post('job_priority'),
+                'status' => 'Scheduled',//$this->input->post('job_status'),
+                'message' => '',
+                'company_id' => $comp_id,
+                'date_created' => date('Y-m-d H:i:s'),
+                //'notes' => $input['notes'],
+                'attachment' => '',
+                'tax_rate' => '0',
+                'job_type' => $input['job_type'],
+                'date_issued' => $input['start_date'],
+            );
+
+            // INSERT DATA TO JOBS TABLE
+            $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+            //Create hash_id
+            $job_hash_id = hashids_encrypt($jobs_id, '', 15);
+            $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
+            
+            customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
+
+            //Google Calendar
+            createSyncToCalendar($jobs_id, 'job', $comp_id);
+
+            // insert data to job items table (items_id, qty, jobs_id)
+            if (isset($input['item_id'])) {
+                $devices = count($input['item_id']);
+                for ($xx=0;$xx<$devices;$xx++) {
+                    $job_items_data = array();
+                    $job_items_data['job_id'] = $jobs_id; //from jobs table
+                    $job_items_data['items_id'] = $input['item_id'][$xx];
+                    $job_items_data['qty'] = $input['item_qty'][$xx];
+                    $this->general->add_($job_items_data, 'job_items');
+                    unset($job_items_data);
+                }
+            }
+            
+            // insert data to job settings table
+            $jobs_settings_data = array(
+                'job_num_next' => $job_settings[0]->job_num_next + 1
+            );
+            $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+
+            //SMS Notification
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
+
+            if( $input['employee2_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
+            }
+            if( $input['employee3_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee3_id'], 0);
+            }
+            if( $input['employee4_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
+            }
+            if( $input['employee5_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee5_id'], 0);
+            }
+            if( $input['employee6_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee6_id'], 0);
+            }
+        }
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg];
+        echo json_encode($json_data);       
+
+        exit;
+    }
 }
 
 /* End of file Job.php */

@@ -69,6 +69,15 @@
                         $is_valid = 0;
                         $is_appointment_event = 0;                        
                         if( $schedule['type'] == 'job' ){
+                            if( $schedule['data']->cust_phone != '' ){
+                                $cust_phone = $schedule['data']->cust_phone;
+                            }else{
+                                if( $schedule['data']->cust_phone_home != '' ){
+                                    $cust_phone = $schedule['data']->cust_phone_home;
+                                }else{
+                                    $cust_phone = '';
+                                }
+                            }
                             $schedule_view_url = base_url('job/new_job1/' . $schedule['data']->id);
                             $schedule_date = $schedule['data']->start_date;
                             $schedule_start_time = $schedule['data']->start_time;
@@ -78,7 +87,7 @@
                             $schedule_tags   = $schedule['data']->tags_name;
                             $schedule_number = $schedule['data']->job_number;
                             $schedule_customer_name = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
-                            $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
+                            $schedule_customer_phone = $cust_phone;
                             $schedule_event_name = '';
                             //$schedule_location = $schedule['data']->job_location != '' ? $schedule['data']->job_location : '---';
                             $schedule_location = $schedule['data']->mail_add;
@@ -154,6 +163,18 @@
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'ticket' ){
+                            if( $schedule['data']->customer_phone != '' ){
+                                $cust_phone = $schedule['data']->customer_phone;
+                            }else{
+                                if( $schedule['data']->phone_h != '' ){
+                                    $cust_phone = $schedule['data']->phone_h;
+                                }elseif( $schedule['data']->phone_m != '' ){
+                                    $cust_phone = $schedule['data']->phone_m;
+                                }else{
+                                    $cust_phone = '';
+                                }
+                            }
+
                             $schedule_view_url = base_url('tickets/viewDetails/' . $schedule['data']->id);
                             $schedule_date = date("Y-m-d", strtotime($schedule['data']->ticket_date));
                             $schedule_start_time = date("g:i A", strtotime($schedule['data']->scheduled_time));
@@ -163,7 +184,7 @@
                             $schedule_number = $schedule['data']->ticket_no;
                             $schedule_type   = $schedule['data']->service_type;
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
-                            $schedule_customer_phone = $schedule['data']->phone_h != '' ? $schedule['data']->phone_h : '---';
+                            $schedule_customer_phone = $cust_phone;
                             $schedule_location = $schedule['data']->service_location;
                             $schedule_location_b = $schedule['data']->acs_city != '' ? $schedule['data']->acs_city . ', ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip : '---';
                             $schedule_event_name = '';

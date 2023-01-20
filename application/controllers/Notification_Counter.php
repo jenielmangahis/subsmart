@@ -12,25 +12,35 @@ class Notification_Counter extends MY_Controller {
 		$this->load->model('Taskhub_model');
 	}
 
-	public function calendar_notification_counter() {
+	public function ajax_calendar_notification_counter() {
+		$this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Estimate_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+        $this->load->model('Job_tags_model');
 
-		$uid  = logged('id');
-		$role = logged('role');
+		$company_id = logged('company_id');
 
-		//Schedule Events
-        $company_id = logged('company_id');
-        $events     = $this->event_model->getAllByCompany($company_id);
-        $total_events = count($events);
+		//Calendar
+        $upcomingJobs   = $this->Jobs_model->getAllUpcomingJobsByCompanyId($company_id);
+        $upcomingEvents = $this->Event_model->getAllUpComingEventsByCompanyId($company_id);
+        $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($company_id);
+        $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($company_id);    
+        $upcomingAppointments = $this->Appointment_model->getAllUpcomingAppointmentsByCompany($company_id);                 
+        $total_calendar_schedule = count($upcomingJobs) + count($upcomingEvents) + count($upcomingServiceTickets) + count($scheduledEstimates) + count($upcomingAppointments); 
 
         //Taskhub
-        $tasks = $this->Taskhub_model->getAllByCompanyId($company_id);
+        $tasks = $this->Taskhub_model->getAllNotCompletedTasksByCompanyId($company_id);
 		$total_taskhub = count($tasks);
 
 		//Online Booking
-		$inquiries = $this->BookingInquiry_model->findAllByCompanyIdAndStatus($company_id, 1);
-		$total_online_booking = count($inquiries);
+		/*$inquiries = $this->BookingInquiry_model->findAllByCompanyIdAndStatus($company_id, 1);
+		$total_online_booking = count($inquiries);*/
+		$total_online_booking = 0;
 
-		$json_data = ['total_events' => $total_events, 'total_taskhub' => $total_taskhub, 'total_online_booking' => $total_online_booking];
+		$json_data = ['total_calendar_schedule' => $total_calendar_schedule, 'total_taskhub' => $total_taskhub, 'total_online_booking' => $total_online_booking];
 
 		echo json_encode($json_data);
 		exit;

@@ -21,6 +21,7 @@ class Invoice extends MY_Controller
         $this->load->model('AcsProfile_model', 'AcsProfile_model');
         $this->load->model('Accounting_terms_model', 'accounting_terms_model');
         $this->load->model('Accounting_invoices_model', 'accounting_invoices_model');
+        $this->load->model('Estimate_model', 'estimate_model');
 
         $user_id = getLoggedUserID();
 
@@ -196,6 +197,71 @@ class Invoice extends MY_Controller
         $this->page_data['items']      = $this->items_model->getItemlist();
 
         $this->load->view('invoice/add', $this->page_data);
+    }
+
+    public function estimateConversion($id)
+    {
+        
+        $query       = $this->input->get();        
+        $workorder   = array();
+        $w_customer  = array();
+        $w_items     = array();
+        if( isset($query['workorder']) ){            
+            $this->load->model('Workorder_model');
+            $this->load->model('AcsProfile_model');
+            $workorder   = $this->Workorder_model->getByWhere(['work_order_number' => $query['workorder']]);
+            $w_items     = $this->Workorder_model->getworkorderItems($workorder[0]->id);
+            $w_customer  = $this->AcsProfile_model->getByProfId($workorder[0]->customer_id);
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        if ($role == 1 || $role == 2) {
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        } else {
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }
+
+
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        $terms = $this->accounting_terms_model->getCompanyTerms_a($company_id);
+        $this->page_data['number'] = $this->invoice_model->getlastInsert();
+
+        if (!empty($setting)) {
+            foreach ($setting as $key => $value) {
+                if (is_serialized($value)) {
+                    $setting->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['setting'] = $setting;
+            $this->page_data['terms'] = $terms;
+        }
+
+        $default_cust_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_cust_id = $this->input->get('cus_id');
+        }
+
+        $this->page_data['default_cust_id'] = $default_cust_id;
+        $this->page_data['workorder']  = $workorder;
+        $this->page_data['w_customer'] = $w_customer;
+        $this->page_data['w_items']    = $w_items;
+        $this->page_data['items']      = $this->items_model->getItemlist();
+        $this->page_data['estimate'] = $this->estimate_model->getById($id);
+        $this->page_data['itemsDetails'] = $this->estimate_model->getItemlistByID($id);
+
+        $this->load->view('invoice/estimateConversion', $this->page_data);
     }
 
     public function addNewInvoice()

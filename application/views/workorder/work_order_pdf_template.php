@@ -40,7 +40,8 @@ table {
 
 
         <div style="padding: 2%;">
-        <img src="<?php echo base_url('uploads/users/business_profile/'.$company_id.'/'.$business_logo); ?>" style="width:110px;height:80px;">
+        <!-- <img src="<?php echo base_url('uploads/users/business_profile/'.$company_id.'/'.$business_logo); ?>" style="width:110px;height:80px;"> -->
+         <img src="https://nsmartrac.com/uploads/users/business_profile/8/new_adi_logo.png?1674178408" style="width:110px;height:80px;">
         </div>
 
         <div style="margin-top:5%">

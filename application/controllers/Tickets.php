@@ -122,7 +122,7 @@ class Tickets extends MY_Controller
         $addQuery = $this->tickets_model->save_tickets($new_data);
 
         
-        
+        $this->load->helper(array('hashids_helper'));
         // $hasID = bin2hex(random_bytes(18));
         $hasID = hashids_encrypt($addQuery, '', 15);
 

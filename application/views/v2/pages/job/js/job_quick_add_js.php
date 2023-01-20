@@ -16,7 +16,7 @@ $(document).ready(function() {
             "<td><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
             //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
             "<td><small>Amount</small><br><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">$"+total+"</b></td>" +
-            "<td><button type=\"button\" class=\"nsm-button items_remove_btn remove_item_row mt-2\"><i class=\'bx bx-trash\'></i></button></td>\n" +
+            "<td style='vertical-align:middle;'><button type=\"button\" class=\"nsm-button btn-sm primary items_remove_btn remove_item_row mt-2\"><i class=\'bx bx-trash\'></i></button></td>\n" +
 
             "</tr>";
         tableBody = $("#jobs_items");
@@ -186,7 +186,7 @@ $(document).ready(function() {
             success: function(data)
             {
                 var template_data = JSON.parse(data);
-                $('#summernote').summernote('code', template_data.content);
+                //$('#summernote').summernote('code', template_data.content);
             }
         });
     });
@@ -207,11 +207,11 @@ $(document).ready(function() {
     });
 
     //$('#summernote').summernote('code', '');
-    $('#summernote').summernote({
+    /*$('#summernote').summernote({
         placeholder: 'Type Here ... ',
         tabsize: 2,
         height: 250,
-    });
+    });*/
 
     $("#customer_id").on('change', function () {
         
