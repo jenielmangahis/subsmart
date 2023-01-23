@@ -1,3 +1,4 @@
+import("/assets/js/customer/components/FieldCustomName.js");
 $('.dropdown-menu.table-settings, .dropdown-menu.table-filter').on('click', function(e) {
     e.stopPropagation();
 });
@@ -117,4 +118,88 @@ $('#apply-customer-type').on('click', function() {
             location.reload();
         }
     });
+});
+
+$('#add-customer-modal [data-type="customer_sales_area"').select2({
+    placeholder: "Select Sales Area",
+    ajax: {
+        url: base_url+`Customer_Form/apiGetSalesAreas`,
+        dataType: "json",
+        data: (params) => {
+            return { search: params.term };
+        },
+        processResults: (response) => {
+            return {
+                results: response.data.map((item) => ({
+                    id: item.sa_id,
+                    text: item.sa_name,
+                })),
+            };
+        },
+    },
+    dropdownParent: $('#add-customer-modal')
+});
+
+$('#add-customer-modal [data-type=billing_rate_plan]').select2({
+    placeholder: "Select Rate Plan",
+    ajax: {
+        url: base_url+`/Customer_Form/apiGetRatePlans`,
+        dataType: "json",
+        data: (params) => {
+            return { search: params.term };
+        },
+        processResults: (response) => {
+            return {
+                results: response.data.map((item) => ({
+                    id: item.amount,
+                    text: item.amount,
+                })),
+            };
+        },
+    },
+    dropdownParent: $('#add-customer-modal')
+});
+
+$('#add-customer-modal [data-type=funding_info_activation_fee]').select2({
+    placeholder: "Select Activation Fee",
+    ajax: {
+        url: base_url+`Customer_Form/apiGetActivationFees`,
+        dataType: "json",
+        data: (params) => {
+            return { search: params.term };
+        },
+        processResults: (response) => {
+            return {
+                results: response.data.map((item) => ({
+                    id: item.amount,
+                    text: item.amount,
+                })),
+            };
+        },
+    },
+    dropdownParent: $('#add-customer-modal')
+});
+
+$('#add-customer-modal [data-type=alarm_info_system_type]').select2({
+    placeholder: "Select Account Type",
+    ajax: {
+      url: base_url+`Customer_Form/apiGetSystemPackages`,
+      dataType: "json",
+      data: (params) => {
+            return { search: params.term };
+      },
+      processResults: (response) => {
+        return {
+            results: response.data.map((item) => ({
+                id: item.name,
+                text: item.name,
+            })),
+        };
+      },
+    },
+    dropdownParent: $('#add-customer-modal')
+});
+
+$('#add-customer-modal select:not(.select2-hidden-accessible)').select2({
+    dropdownParent: $('#add-customer-modal')
 });
