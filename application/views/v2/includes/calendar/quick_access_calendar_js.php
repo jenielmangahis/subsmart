@@ -1,7 +1,12 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key']; ?>&callback=initialize&libraries=&v=weekly"></script>
 <script>
 var calendar_modal_source = 'upcoming-list';
-$(function(){    
+$(function(){ 
+
+    $('#modal-quick-add-job').modal({backdrop: 'static', keyboard: false});
+    $('#modal-quick-add-service-ticket').modal({backdrop: 'static', keyboard: false});
+    $('#modal-quick-add-appointment').modal({backdrop: 'static', keyboard: false});
+
     $('.btn-quick-access-calendar-schedule').on('click', function(){
         $('#modal-quick-access-calendar-schedule').modal('show');
         calendar_modal_source = 'calendar';
@@ -24,6 +29,50 @@ $(function(){
              success: function(o)
              {          
                 $("#quick-add-job-form-container").html(o);
+             }
+          });
+        }, 500);
+    });
+
+    $('#calendar-quick-add-appointment').on('click', function(){
+        var url = base_url + "calendar/_quick_add_appointment_form";
+        var date_selected   = $('#quick-add-date-selected').val();
+        calendar_modal_source = 'quick-add-appointment';
+        $('#modal-quick-select-schedule-type').modal('hide');
+        $('#modal-quick-add-appointment').modal('show');
+
+        showLoader($("#quick-add-appointment-form-container"));        
+
+        setTimeout(function () {
+          $.ajax({
+             type: "GET",
+             url: url,
+             data: {date_selected:date_selected},
+             success: function(o)
+             {          
+                $("#quick-add-appointment-form-container").html(o);
+             }
+          });
+        }, 500);
+    });
+
+    $('#calendar-quick-add-service-ticket').on('click', function(){
+        var url = base_url + "ticket/_quick_add_service_ticket_form";
+        var date_selected   = $('#quick-add-date-selected').val();
+        calendar_modal_source = 'quick-add-service-ticket';
+        $('#modal-quick-select-schedule-type').modal('hide');
+        $('#modal-quick-add-service-ticket').modal('show');
+
+        showLoader($("#quick-add-service-ticket-form-container"));        
+
+        setTimeout(function () {
+          $.ajax({
+             type: "GET",
+             url: url,
+             data: {date_selected:date_selected},
+             success: function(o)
+             {          
+                $("#quick-add-service-ticket-form-container").html(o);
              }
           });
         }, 500);
@@ -310,10 +359,11 @@ $(function(){
     $("#quick-add-job-form").submit(function(e) {
         e.preventDefault();         
         
+        var url  = base_url + 'job/_create_job';
         var form = $(this);
         $.ajax({
             type: "POST",
-            url: "<?= base_url() ?>/job/_create_job",
+            url: url,
             dataType:'json',
             data: form.serialize(), // serializes the form's elements.
             success: function(data) {
@@ -342,6 +392,85 @@ $(function(){
                 $("#btn-job-submit").html('Schedule');
             }, beforeSend: function() {
                 $("#btn-job-submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $("#quick-add-service-ticket-form").submit(function(e) {
+        e.preventDefault();         
+        
+        var url  = base_url + 'ticket/_create_service_ticket';
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-add-service-ticket').modal('hide');
+                    $('#modal-quick-access-calendar-schedule').modal('show');
+
+                    Swal.fire({
+                        text: 'Service ticket has been added!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadQuickAccessCalendarSchedule();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#btn-service-ticket-submit").html('Schedule');
+            }, beforeSend: function() {
+                $("#btn-service-ticket-submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $("#quick-add-appointment-form").submit(function(e) {
+        e.preventDefault();         
+        var url  = base_url + 'calendar/_create_appointment';
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-add-appointment').modal('hide');
+                    $('#modal-quick-access-calendar-schedule').modal('show');
+
+                    Swal.fire({
+                        text: 'Appointment has been added!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadQuickAccessCalendarSchedule();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#btn-appointment-submit").html('Schedule');
+            }, beforeSend: function() {
+                $("#btn-appointment-submit").html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });
