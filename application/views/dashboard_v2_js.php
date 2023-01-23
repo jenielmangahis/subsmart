@@ -427,4 +427,266 @@ fetch('<?= base_url('Dashboard/accounting_sales') ?>',{
 
 
 })
+
+$('#quick_links_modal .shortcut-item.print-check').on('click', function() {
+    $.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+		$(`#printChecksModal select`).each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+
+				if (type.includes('transfer')) {
+					type = 'transfer-account';
+				}
+			}
+
+			if (type === 'payment-account') {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'printChecksModal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect,
+					dropdownParent: $('#printChecksModal')
+				});
+			} else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#printChecksModal')
+                });
+			}
+		});
+
+		if ($(`#printChecksModal .dropdown`).length > 0) {
+			$(`#printChecksModal .dropdown-menu`).on('click', function(e) {
+				e.stopPropagation();
+			});
+		}
+
+		$('#printChecksModal').on('hidden.bs.modal', function() {
+			$('#modal-container').remove();
+			$('.modal-backdrop').remove();
+		});
+
+		$('#printChecksModal').modal('show');
+	});
+});
+
+$('#quick_links_modal .shortcut-item.receive-payment').on('click', function() {
+    $.get(GET_OTHER_MODAL_URL + 'receive_payment_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+        $(`#receivePaymentModal [data-bs-toggle="popover"]`).popover();
+
+        $(`#receivePaymentModal select`).each(function() {
+            var type = $(this).attr('id');
+            if (type === undefined) {
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            } else {
+                type = type.replaceAll('_', '-');
+
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
+            }
+
+            if (dropdownFields.includes(type)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: type,
+                                modal: 'receivePaymentModal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#receivePaymentModal')
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#receivePaymentModal')
+                });
+            }
+        });
+
+        if ($(`#receivePaymentModal .date`).length > 0) {
+            $(`#receivePaymentModal .date`).each(function() {
+                $(this).datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+            });
+        }
+
+        var attachmentContId = $(`#receivePaymentModal .attachments .dropzone`).attr('id');
+        modalAttachments = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#receivePaymentModal`);
+
+                    for (i in ids) {
+                        if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+
+                $(`#receivePaymentModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                if($('#modal-container form .modal .attachments-container').length > 0) {
+                    $('#modal-container form .modal .attachments-container #attachment-types').trigger('change');
+                }
+
+                //remove thumbnail
+                var previewElement;
+                return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+            }
+        });
+
+        if ($(`#receivePaymentModal .dropdown`).length > 0) {
+            $(`#receivePaymentModal .dropdown-menu`).on('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        $('#receivePaymentModal #invoices-container').hide();
+        $('#receivePaymentModal #credits-container').hide();
+        $('#receivePaymentModal #payment-summary').hide();
+
+		$('#receivePaymentModal').modal('show');
+	});
+});
+
+$('#quick_links_modal .shortcut-item.process-payment').on('click', function() {
+    $.get(GET_OTHER_MODAL_URL + 'pay_bills_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+        $(`#payBillsModal [data-bs-toggle="popover"]`).popover();
+
+        $(`#payBillsModal select`).each(function() {
+            var type = $(this).attr('id');
+            if (type === undefined) {
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            } else {
+                type = type.replaceAll('_', '-');
+
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
+            }
+
+            if (dropdownFields.includes(type)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: type,
+                                modal: 'payBillsModal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#payBillsModal')
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#payBillsModal')
+                });
+            }
+        });
+
+        if ($(`#payBillsModal .date`).length > 0) {
+            $(`#payBillsModal .date`).each(function() {
+                $(this).datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+            });
+        }
+
+        if ($(`#payBillsModal .dropdown`).length > 0) {
+            $(`#payBillsModal .dropdown-menu`).on('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+		$('#payBillsModal').modal('show');
+	});
+});
 </script>

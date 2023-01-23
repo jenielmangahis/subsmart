@@ -1,159 +1,8 @@
-<div class="modal fade nsm-modal" id="print_customers_modal" tabindex="-1" aria-labelledby="print_customers_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id="print_customers_modal_label">Print Customers List</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body">
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td data-name="Customer/Company">CUSTOMER/COMPANY</td>
-                            <td data-name="Address">ADDRESS</td>
-                            <td data-name="Phone">PHONE</td>
-                            <td data-name="Email">EMAIL</td>
-                            <td data-name="Customer Type">CUSTOMER TYPE</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
-                            <td data-name="Open Balance">OPEN BALANCE</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(count($customers) > 0) : ?>
-						<?php foreach($customers as $customer) : ?>
-                        <tr>
-                            <td><?=$customer->last_name.', '.$customer->first_name?></td>
-                            <td>
-                                <?php
-                                    $address = '';
-                                    $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
-                                    $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
-                                    $address .= $customer->state !== "" ? ', ' . $customer->state : "";
-                                    $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
-
-                                    echo $address;
-                                ?>
-                            </td>
-                            <td><?=$customer->phone_h?></td>
-                            <td><?=$customer->email?></td>
-                            <td><?=$customer->customer_type?></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="19">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="nsm-button primary" id="btn_print_customers">Print</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade nsm-modal" id="print_preview_customers_modal" tabindex="-1" aria-labelledby="print_preview_customers_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id="print_preview_customers_modal_label">Print Customers List</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body">
-                <table class="w-100" id="customers_table_print">
-                    <thead>
-                        <tr>
-                            <td data-name="Customer/Company">CUSTOMER/COMPANY</td>
-                            <td data-name="Address">ADDRESS</td>
-                            <td data-name="Phone">PHONE</td>
-                            <td data-name="Email">EMAIL</td>
-                            <td data-name="Customer Type">CUSTOMER TYPE</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
-                            <td data-name="Open Balance">OPEN BALANCE</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(count($customers) > 0) : ?>
-						<?php foreach($customers as $customer) : ?>
-                        <tr>
-                            <td><?=$customer->last_name.', '.$customer->first_name?></td>
-                            <td>
-                                <?php
-                                    $address = '';
-                                    $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
-                                    $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
-                                    $address .= $customer->state !== "" ? ', ' . $customer->state : "";
-                                    $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
-
-                                    echo $address;
-                                ?>
-                            </td>
-                            <td><?=$customer->phone_h?></td>
-                            <td><?=$customer->email?></td>
-                            <td><?=$customer->customer_type?></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="19">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade nsm-modal" id="select-customer-type-modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title">Select Customer Type</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12">
-                        <select name="customer_type" id="customer-type" class="form-select nsm-field">
-                            <option value="Residential">Residential</option>
-                            <option value="Business">Business</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="nsm-button primary" id="apply-customer-type">Apply</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade nsm-modal" id="add-customer-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade nsm-modal" id="edit-customer-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xxl">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title">Add Customer</span>
+                <span class="modal-title content-title">Edit Customer</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <div class="modal-body">
@@ -180,7 +29,7 @@
                                                 <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
                                                     <option value="" disabled selected disabled selected>&nbsp;</option>
                                                     <?php foreach ($customer_status as $status): ?>
-                                                        <option value="<?= $status->name ?>"><?= $status->name ?></option>
+                                                        <option <?= isset($customer) ? ($customer->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                                 <a href="javascript:void(0);" onclick="window.open('<?= base_url('customer/settings/customerStatus') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Status</a>&nbsp;&nbsp;
@@ -191,7 +40,13 @@
                                                 Customer Type
                                             </div>
                                             <div class="col-md-8">
-                                                <select  id="customer_type"  name="customer_type"  data-customer-source="dropdown"  class="form-controls input_select">
+                                                <select 
+                                                    id="customer_type" 
+                                                    name="customer_type" 
+                                                    data-customer-source="dropdown" 
+                                                    class="form-controls input_select"
+                                                    data-value="<?php if(isset($customer)) { echo $customer->customer_type; } ?>" 
+                                                >
                                                     <option value="Residential">Residential</option>
                                                     <option value="Business">Business</option>
                                                 </select>
@@ -215,20 +70,25 @@
                                                 Industry Type
                                             </div>
                                             <div class="col-md-8">
-                                                <select id="industry_type" name="industry_type" data-customer-source="dropdown" class="form-controls input_select">
-                                                    <option disabled selected>Select your Industry</option>
+                                                <select 
+                                                    id="industry_type" 
+                                                    name="industry_type" 
+                                                    data-customer-source="dropdown" 
+                                                    class="form-controls input_select"
+                                                >
+                                                    <option>Select your Industry</option>
                                                     <?php $businessTypeName  = "";
                                                         foreach($industryTypes  as $industryType ){ ?>
                                                         <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
-                                                        <optgroup label="<?php echo $industryType->business_type_name; ?>">
+                                                                    <optgroup label="<?php echo $industryType->business_type_name; ?>">
                                                         <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
                                                         <?php 
                                                             $selected_industry_type = 0;
-                                                            if( isset($profile_info) ){
-                                                                $selected_industry_type = $profile_info->industry_type_id;
+                                                            if( isset($customer) ){
+                                                                $selected_industry_type = $customer->industry_type_id;
                                                             }
                                                         ?>
-                                                            <option value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
+                                                            <option <?= $selected_industry_type == $industryType->id ? 'selected="selected"' : ''; ?> value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
                                                         <?php  }   ?>
                                                 </select>
                                             </div>
@@ -240,7 +100,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <select name="fk_sa_id" data-type="customer_sales_area" class="form-control" >
-                                                    <option value="<?=$profile_info->fk_sa_id?>"><?=$profile_info->fk_sa_text?></option>
+                                                    <option value="<?=$customer->fk_sa_id?>"><?=$customer->fk_sa_text?></option>
                                                 </select>
                                                 <a href="<?= base_url() ?>customer/settings/salesArea" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
                                             </div>
@@ -250,7 +110,7 @@
                                                 <label for="" >Business Name
                                             </div>
                                             <div class="col-md-8" id="businessNameInput">
-                                                <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
+                                                <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($customer)){ echo $customer->business_name; } ?>"/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -258,7 +118,7 @@
                                                 First Name <span class="required"> *</span>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
+                                                <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($customer->first_name)){ echo $customer->first_name; } ?>" required/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -266,7 +126,7 @@
                                                 Middle Initial
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
+                                                <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="<?php if(isset($customer)){ echo $customer->middle_name; } ?>" />
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -274,7 +134,7 @@
                                                 Last Name <span class="required"> *</span>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
+                                                <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($customer)){ echo $customer->last_name; } ?>" required/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -286,7 +146,7 @@
                                                     <?php
                                                     for ($prefix=0;$prefix<28;$prefix++){
                                                         ?>
-                                                        <option <?php if(isset($profile_info)){ if($profile_info->prefix == prefix_name($prefix)){ echo 'selected'; } } ?> value="<?= prefix_name($prefix); ?>">
+                                                        <option <?php if(isset($customer)){ if($customer->prefix == prefix_name($prefix)){ echo 'selected'; } } ?> value="<?= prefix_name($prefix); ?>">
                                                             <?= prefix_name($prefix) ? prefix_name($prefix) : '&nbsp;'; ?>
                                                         </option>
                                                         <?php
@@ -304,7 +164,7 @@
                                                     <?php
                                                     for ($suffix=0;$suffix<14;$suffix++){
                                                         ?>
-                                                        <option <?php if(isset($profile_info)){ if($profile_info->suffix == suffix_name($suffix)){ echo 'selected'; } } ?> value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix) ? suffix_name($suffix) : '&nbsp;'; ?></option>
+                                                        <option <?php if(isset($customer)){ if($customer->suffix == suffix_name($suffix)){ echo 'selected'; } } ?> value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix) ? suffix_name($suffix) : '&nbsp;'; ?></option>
                                                         <?php
                                                     }
                                                     ?>
@@ -316,7 +176,7 @@
                                                 Address <span class="required"> *</span>
                                             </div>
                                             <div class="col-md-8">
-                                                <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
+                                                <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="<?php if(isset($customer->mail_add)){ echo $customer->mail_add; } ?>" required/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -324,7 +184,7 @@
                                                 City <span class="required"> *</span>
                                             </div>
                                             <div class="col-md-8">
-                                                <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
+                                                <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="<?php if(isset($customer->city)){ echo $customer->city; } ?>" required/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -332,7 +192,7 @@
                                                 State <span class="required"> *</span>
                                             </div>
                                             <div class="col-md-8">
-                                                <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
+                                                <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="<?php if(isset($customer->state)){ echo $customer->state; } ?>" required/>
                                             </div>
                                         </div>
 
@@ -341,7 +201,7 @@
                                                 Zip Code <span class="required"> *</span>
                                             </div>
                                             <div class="col-md-8">
-                                                <input required data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
+                                                <input required data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($customer->zip_code)){ echo $customer->zip_code; } ?>"/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -349,7 +209,7 @@
                                                 Cross Street
                                             </div>
                                             <div class="col-md-8">
-                                                <input data-type="customer_address_street" type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
+                                                <input data-type="customer_address_street" type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($customer->cross_street)){ echo $customer->cross_street; } ?>"/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -357,7 +217,7 @@
                                                 County
                                             </div>
                                             <div class="col-md-8">
-                                                <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
+                                                <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($customer->country)){ echo $customer->country; } ?> " />
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -365,7 +225,7 @@
                                                 Subdivision
                                             </div>
                                             <div class="col-md-8">
-                                                <input data-type="customer_address_subdivision" type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($profile_info->subdivision)){ echo $profile_info->subdivision; } ?>" />
+                                                <input data-type="customer_address_subdivision" type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($customer->subdivision)){ echo $customer->subdivision; } ?>" />
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -373,7 +233,7 @@
                                                 Social Security No.
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($profile_info)){ echo $profile_info->ssn; } ?>" />
+                                                <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($customer)){ echo $customer->ssn; } ?>" />
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -381,7 +241,7 @@
                                                 Date Of Birth 
                                             </div>
                                             <div class="col-md-8">
-                                                <div data-type="customer_birthday" data-value="<?php if(isset($profile_info)){ echo date("Y-m-d", strtotime($profile_info->date_of_birth)); } ?>"></div>
+                                                <div data-type="customer_birthday" data-value="<?php if(isset($customer)){ echo date("Y-m-d", strtotime($customer->date_of_birth)); } ?>"></div>
                                             </div>
                                         </div>
 
@@ -390,7 +250,7 @@
                                                 Email 
                                             </div>
                                             <div class="col-md-8">
-                                                <input data-type="customer_email" type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
+                                                <input data-type="customer_email" type="email" class="form-control" name="email" id="email" value="<?php if(isset($customer)){ echo $customer->email; } ?>" />
                                             </div>
                                         </div>
 
@@ -399,19 +259,19 @@
                                             $phone_h;
                                             $phone_m;
 
-                                            if(strpos($profile_info->phone_h, "Mobile:") !== false){
-                                                $str = $profile_info->phone_h;
+                                            if(strpos($customer->phone_h, "Mobile:") !== false){
+                                                $str = $customer->phone_h;
                                                 $exp = explode("Mobile:",$str);
                                                 $phone_h = preg_replace('/\s+/', '-', ltrim($exp[0]));
                                                 $phone_m = preg_replace('/\s+/', '-', ltrim($exp[1]));
                                             }else{
-                                                $phone = preg_replace('/\s+/', '-', ltrim($profile_info->phone_h));
+                                                $phone = preg_replace('/\s+/', '-', ltrim($customer->phone_h));
                                             } ?>
                                             <div class="col-md-4">
                                                 Phone (H)
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $phone_h == null ? $phone : $phone_h; } ?>" />
+                                                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($customer)){ echo $phone_h == null ? $phone : $phone_h; } ?>" />
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -419,7 +279,7 @@
                                                 Phone (M) <span class="required"> *</span>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_h) || isset($profile_info->phone_m)){ echo $profile_info->phone_m != null ? $profile_info->phone_m : $phone_m; } ?>" required />
+                                                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($customer->phone_h) || isset($customer->phone_m)){ echo $customer->phone_m != null ? $customer->phone_m : $phone_m; } ?>" required />
                                             </div>
                                         </div>
                                     </div>
@@ -438,7 +298,7 @@
                                                 Card First Name
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : $profile_info->first_name;  ?>" />
+                                                <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : $customer->first_name;  ?>" />
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -446,7 +306,7 @@
                                                 Card Last Name
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : $profile_info->last_name ?>"/>
+                                                <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : $customer->last_name ?>"/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -471,7 +331,7 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <input data-type="billing_address_city" type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city != null ? $billing_info->city : $profile_info->city; } ?>" />
+                                                <input data-type="billing_address_city" type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city != null ? $billing_info->city : $customer->city; } ?>" />
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -479,7 +339,7 @@
                                                 State
                                             </div>
                                             <div class="col-md-6">
-                                                <input data-type="billing_address_state" type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state != null ? $billing_info->state : $profile_info->state; } ?>"/>
+                                                <input data-type="billing_address_state" type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state != null ? $billing_info->state : $customer->state; } ?>"/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -487,7 +347,7 @@
                                                 ZIP
                                             </div>
                                             <div class="col-md-6">
-                                                <input data-type="billing_address_zip" type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip != null ? $billing_info->zip : $profile_info->zip_code; } ?>"/>
+                                                <input data-type="billing_address_zip" type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip != null ? $billing_info->zip : $customer->zip_code; } ?>"/>
                                             </div>
                                         </div>
                                         <div class="row form_line">
@@ -523,8 +383,8 @@
                                             <div class="col-md-6">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <select data-value="<?=$billing_info->mmr?>" name="mmr" data-type="billing_rate_plan" class="form-control">
-                                                            <option value=""><?=isset($billing_info) ? $billing_info->mmr : ""?></option>
+                                                        <select data-value="<?=$billing_info->mmr?>" name="mmr" data-type="billing_rate_plan" class="form-control" >
+                                                            <option><?=isset($billing_info) ? $billing_info->mmr : ""?></option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-12">
@@ -540,7 +400,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <select data-type="billing_frequency" id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select searchable-dropdown">
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == ""){echo "selected";} } ?> value="" disabled selected>- Select -</option>
+                                                    <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == ""){echo "selected";} } ?> value="">- Select -</option>
                                                     <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "One Time Only"){echo "selected";} } ?> value="One Time Only">One Time Only</option>
                                                     <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 1 Month"){echo "selected";} } ?> value="Every 1 Month">Every 1 Month</option>
                                                     <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 3 Months"){echo "selected";} } ?> value="Every 3 Months">Every 3 Months</option>
@@ -632,7 +492,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
-                                                    <option  value="" disabled selected>Select Billing Method</option>
+                                                    <option  value="">Select Billing Method</option>
                                                     <option <?= isset($billing_info) && $billing_info->bill_method == 'CC' ?  'selected' : '';?> value="CC">Credit Card</option>
                                                     <option <?= isset($billing_info) && $billing_info->bill_method == 'DC' ?  'selected' : '';?> value="DC">Debit Card</option>
                                                     <option <?= isset($billing_info) && $billing_info->bill_method == 'CHECK' ?  'selected' : '';?> value="CHECK">Check</option>
@@ -818,7 +678,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
-                                                    <option  value="" disabled selected></option>
+                                                    <option  value=""></option>
                                                     <option <?= isset($billing_info) && $billing_info->transaction_category == 'E' ?  'selected' : '';?> value="E">Equipment</option>
                                                     <option <?= isset($billing_info) && $billing_info->transaction_category == 'MMR' ?  'selected' : '';?> value="MMR">MMR</option>
                                                     <option <?= isset($billing_info) && $billing_info->transaction_category == 'RMR' ?  'selected' : '';?> value="RMR">RMR</option>
@@ -837,8 +697,8 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <select data-type="subscription_frequency" id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
-                                                    <option  value="" disabled selected>Select</option>
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == ""){echo "selected";} } ?> value="" disabled selected>- Select -</option>
+                                                    <option  value="">Select</option>
+                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == ""){echo "selected";} } ?> value="">- Select -</option>
                                                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == "0"){echo "selected";} } ?> value="0">One Time Only</option>
                                                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == "1"){echo "selected";} } ?> value="1">Every 1 Month</option>
                                                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == "3"){echo "selected";} } ?> value="3">Every 3 Months</option>
@@ -948,7 +808,7 @@
                                                 <select id="technician" name="technician"  class="input_select" data-value="<?= isset($office_info->technician) ? $office_info->technician : "" ?>">
                                                     <option value="" disabled selected>Select</option>
                                                     <?php foreach ($technicians as $user): ?>
-                                                        <option value="<?= $user->id ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                                                        <option <?php if(isset($office_info)){ if($office_info->technician == $user->id ){ echo 'selected'; } } ?> value="<?= $user->id ?>"><?= $user->FName.' '.$user->LName; ?></option>
                                                     <?php endforeach ?>
                                                 </select>
                                             </div>
@@ -995,7 +855,7 @@
                                                         <option value="<?php echo $LEAD_SOURCE->ls_name ?>"><?php echo $LEAD_SOURCE->ls_name ?></option>
                                                     <?php } } ?>
 
-                                                    <!-- <option <?php if(isset($office_info)){ if($office_info->lead_source == ""){ echo 'selected'; } } ?> value="" disabled selected>Select</option>
+                                                    <!-- <option <?php if(isset($office_info)){ if($office_info->lead_source == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Customer Referral"){ echo 'selected'; } } ?> value="Customer Referral">Customer Referral</option>
                                                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Door"){ echo 'selected'; } } ?> value="Door">Door</option>
                                                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Door Hanger"){ echo 'selected'; } } ?> value="Door Hanger">Door Hanger</option>
@@ -1044,7 +904,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
-                                                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == ""){ echo 'selected'; } } ?> value="" disabled selected>Select</option>
+                                                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                         <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'DS'){ echo 'selected'; } } ?> value="DS">Dissatisfied with Service</option>
                                                         <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FH'){ echo 'selected'; } } ?> value="FH">Financial Hardship</option>
                                                         <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FC'){ echo 'selected'; } } ?> value="FC">Fulfilled Contract</option>
@@ -1151,7 +1011,7 @@
                                                     <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
                                                 </select>
                                                 <!-- <select name="system_type" id="system_type" class="input_select">
-                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value="" disabled selected></option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
                                                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline'){echo "selected";} } ?> value="Landline">Landline</option>
                                                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ 2-Way'){echo "selected";} } ?> value="Landline W/ 2-Way">Landline W/ 2-Way</option>
                                                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ Cell Backup'){echo "selected";} } ?> value="Landline W/ Cell Backup">Landline W/ Cell Backup</option>
@@ -1194,7 +1054,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <select id="pre_install_survey" name="pre_install_survey" data-customer-source="dropdown" class="input_select" >
-                                                    <option <?php if(isset($office_info)){ if($office_info->pre_install_survey == ""){ echo 'selected'; } } ?> value="" disabled selected></option>
+                                                    <option <?php if(isset($office_info)){ if($office_info->pre_install_survey == ""){ echo 'selected'; } } ?> value=""></option>
                                                     <option <?php if(isset($office_info)){ if($office_info->pre_install_survey == "Pass"){ echo 'selected'; } } ?> value="Pass">Pass</option>
                                                     <option <?php if(isset($office_info)){ if($office_info->pre_install_survey == "Fail"){ echo 'selected'; } } ?>value="Fail">Fail</option>
                                                     <option  <?php if(isset($office_info)){ if($office_info->pre_install_survey == "Pending"){ echo 'selected'; } } ?> value="Pending">Pending</option>
@@ -1207,7 +1067,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <select id="post_install_survey" name="post_install_survey" data-customer-source="dropdown" class="input_select" >
-                                                    <option <?php if(isset($office_info)){ if($office_info->post_install_survey == ""){ echo 'selected'; } } ?> value="" disabled selected>Select</option>
+                                                    <option <?php if(isset($office_info)){ if($office_info->post_install_survey == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                     <option <?php if(isset($office_info)){ if($office_info->post_install_survey == "Pass"){ echo 'selected'; } } ?> value="Pass">Pass</option>
                                                     <option <?php if(isset($office_info)){ if($office_info->post_install_survey == "Fail"){ echo 'selected'; } } ?> value="Fail">Fail</option>
                                                     <option <?php if(isset($office_info)){ if($office_info->post_install_survey == "Pending"){ echo 'selected'; } } ?> value="Pending">Pending</option>
@@ -1221,7 +1081,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <select id="monitoring_waived" name="monitoring_waived" data-customer-source="dropdown" class="input_select" >
-                                                    <option  value="" disabled selected></option>
+                                                    <option  value=""></option>
                                                     <option <?= isset($office_info) && $office_info->monitoring_waived == 1 ?  'selected' : '';?> value="1">1 month</option>
                                                     <option <?= isset($office_info) && $office_info->monitoring_waived == 2 ?  'selected' : '';?> value="2">2 months</option>
                                                     <option <?= isset($office_info) && $office_info->monitoring_waived == 3 ?  'selected' : '';?> value="3">3 months</option>
@@ -1509,7 +1369,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <select id="purchase_multiple" name="purchase_multiple" data-customer-source="dropdown" class="input_select ">
-                                                    <option <?php if(isset($office_info)){ if($office_info->purchase_multiple == ""){ echo 'selected'; } } ?> value="" disabled selected>Select</option>
+                                                    <option <?php if(isset($office_info)){ if($office_info->purchase_multiple == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                     <?php
                                                     for($pm=12;$pm<76;$pm++){
                                                         ?>
@@ -1611,7 +1471,7 @@
                                         <div class="nsm-card-header">
                                             <div class="nsm-card-title">
                                                 <span><i class="bx bx-fw bx-user"></i>Solar Information</span>
-                                                <?php if( $profile_info->adt_sales_project_id > 0 ){ ?>
+                                                <?php if( $customer->adt_sales_project_id > 0 ){ ?>
                                                     <span class="badge badge-primary" style="font-size:13px; float: right;">ADT Sales Portal Project Data</span>
                                                 <?php } ?>
                                             </div>
@@ -1633,7 +1493,7 @@
                                                 <div class="col-md-6">
                                                     <?php $lenderTypes = json_decode($solar_info_settings[0]->field_value); ?>
                                                     <select name="lender_type" id="lender_type" class="input_select solar_infos">
-                                                        <option  value="" disabled selected></option>
+                                                        <option  value=""></option>
                                                         <?php foreach ($lenderTypes  as $lender): ?>
                                                             <option  value="<?= $lender->name ?>"><?= $lender->name ?></option>
                                                         <?php endforeach; ?>
@@ -1648,7 +1508,7 @@
                                                 <div class="col-md-6">
                                                 <?php $proposed_system_sizes = json_decode($solar_info_settings[1]->field_value); ?>
                                                     <select name="proposed_system_size" id="proposed_system_size" class="input_select solar_infos">
-                                                        <option  value="" disabled selected></option>
+                                                        <option  value=""></option>
                                                         <?php foreach ($proposed_system_sizes  as $size): ?>
                                                             <option  value="<?= $size->name ?>"><?= $size->name ?></option>
                                                         <?php endforeach; ?>
@@ -1663,7 +1523,7 @@
                                                 <div class="col-md-6">
                                                     <?php $proposed_modules = json_decode($solar_info_settings[2]->field_value); ?>
                                                     <select name="proposed_modules" id="proposed_modules" class="input_select solar_infos">
-                                                        <option  value="" disabled selected></option>
+                                                        <option  value=""></option>
                                                         <?php foreach ($proposed_modules  as $module): ?>
                                                             <option  value="<?= $module->name ?>"><?= $module->name ?></option>
                                                         <?php endforeach; ?>
@@ -1678,7 +1538,7 @@
                                                 <div class="col-md-6">
                                                     <?php $proposed_inverters = json_decode($solar_info_settings[3]->field_value); ?>
                                                     <select name="proposed_inverter" id="proposed_inverter" class="input_select solar_infos">
-                                                        <option  value="" disabled selected></option>
+                                                        <option  value=""></option>
                                                         <?php foreach ($proposed_inverters  as $inverter): ?>
                                                             <option  value="<?= $inverter->name ?>"><?= $inverter->name ?></option>
                                                         <?php endforeach; ?>
@@ -1692,7 +1552,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <select name="proposed_offset" id="proposed_offset" class="input_select">
-                                                        <option  value="" disabled selected></option>
+                                                        <option  value=""></option>
                                                         <option  value="1">Less than 30%</option>
                                                         <?php for($x=31;$x<=120;$x++): ?>
                                                             <option  value="<?= $x ?>"><?= $x ?>%</option>
@@ -1709,7 +1569,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control input_select" name="proposed_solar" value="" disabled selected>
+                                                        <input type="number" class="form-control input_select" name="proposed_solar" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1722,7 +1582,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control input_select" name="proposed_utility" value="" disabled selected>
+                                                        <input type="number" class="form-control input_select" name="proposed_utility" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1735,7 +1595,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control input_select" name="proposed_payment" value="" disabled selected>
+                                                        <input type="number" class="form-control input_select" name="proposed_payment" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1748,7 +1608,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control input_select" name="annual_income" value="" disabled selected>
+                                                        <input type="number" class="form-control input_select" name="annual_income" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1761,7 +1621,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control input_select" name="tree_estimate" value="" disabled selected>
+                                                        <input type="number" class="form-control input_select" name="tree_estimate" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1774,7 +1634,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control input_select" name="roof_estimate" value="" disabled selected>
+                                                        <input type="number" class="form-control input_select" name="roof_estimate" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1881,7 +1741,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <select name="acct_type" id="acct_type" class="input_select">
-                                                        <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value="" disabled selected></option>
+                                                        <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Purchase'){echo "selected";} } ?> value="Purchase">Purchase</option>
                                                     </select>
@@ -1972,7 +1832,7 @@
                                                         <?php foreach($panel_type as $panels) : ?>
                                                             <option <?php if(isset($alarm_info)){if($alarm_info->panel_type == $panels->panel_type){echo "selected";}} ?>><?= $panels->panel_type ?></option>
                                                         <?php endforeach; ?>
-                                                        <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value="" disabled selected></option>
+                                                        <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
@@ -2010,7 +1870,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
-                                                        <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="" disabled selected>Select</option>
+                                                        <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
                                                         <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
@@ -2159,8 +2019,8 @@
                                     </div>
                                     <div class="nsm-card-content" id="custom_field" data-section="custom_field"><hr>
                                         <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 12px;"><span class="fa fa-plus"></span> Add Field</a>
-                                        <?php if(isset($profile_info)):  ?>
-                                            <?php $custom_fields = json_decode($profile_info->custom_fields); ?>
+                                        <?php if(isset($customer)):  ?>
+                                            <?php $custom_fields = json_decode($customer->custom_fields); ?>
                                             <?php if(!empty($custom_fields)): ?>
                                             <?php foreach ($custom_fields as $field): ?>
                                                 <div class="row form_line">

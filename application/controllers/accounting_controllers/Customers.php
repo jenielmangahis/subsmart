@@ -13,6 +13,9 @@ class Customers extends MY_Controller {
         $this->load->model('vendors_model');
         $this->load->model('invoice_settings_model');
         $this->load->model('accounting_terms_model');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('General_model', 'general');
+        $this->load->model('IndustryType_model');
 
         $this->load->model('AcsProfile_model');
         $this->load->model('invoice_model');
@@ -55,6 +58,8 @@ class Customers extends MY_Controller {
             "assets/js/accounting/sales/invoices_page.js",
             "assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js"
         ));
+
+        $this->load->helper('functions');
 
 		$this->page_data['menu_name'] =
             array(
@@ -155,6 +160,74 @@ class Customers extends MY_Controller {
             $this->page_data['terms'] = $terms;
         }
 
+        $get_customer_groups = array(
+            'where' => array(
+                    'company_id' => logged('company_id')
+                ),
+                'table' => 'customer_groups',
+                'select' => '*',
+            );
+
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+
+        $rate_plan_query = array(
+            // 'where' => array(
+            //     'id' => $user_id
+            // ),
+            'table' => 'ac_rateplan',
+            'select' => 'id,amount',
+        );
+
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'select' => 'id,name',
+        );
+
+        $activation_fee_query = array(
+            'table' => 'ac_activationfee',
+            'select' => 'id,amount',
+        );
+
+        $spt_query = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'ac_system_package_type',
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+
+
+        if(logged('company_id') == 58){
+            $solar_info_query = array(
+                'table' => 'acs_solar_info_settings',
+                'select' => '*',
+            );
+            $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_query);
+        }
+        
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
+        $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
+        $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
+        $this->page_data['activation_fees'] = $this->general->get_data_with_param($activation_fee_query);
+
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['technicians'] = $this->users_model->getUsersByRole([7]);
+        $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
+
+        // fetch customer statuses
+        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
+        $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
+
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
 
@@ -181,6 +254,10 @@ class Customers extends MY_Controller {
 
     public function view($customerId)
     {
+        add_footer_js([
+            "assets/js/v2/printThis.js",
+            "assets/js/v2/accounting/sales/customers/view.js"
+        ]);
         $customer = $this->accounting_customers_model->getCustomerDetails($customerId)[0];
 
         $not = ['', null];
@@ -216,6 +293,127 @@ class Customers extends MY_Controller {
 
         $this->page_data['customer'] = $customer;
         $this->page_data['customerAddress'] = $customerAddress;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            $this->page_data['panel_type'] = $this->customer_ad_model->get_select_options('acs_alarm','panel_type');
+
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
+            //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+        
+            $customer_contacts = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'contacts',
+                'select' => '*',
+                'order' => array(
+                    'order_by' => 'id',
+                    'ordering' => 'asc'
+                ),
+            );
+            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
+
+            $customer_papers_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_papers',
+                'select' => '*',
+            );
+            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
+            if (count($this->page_data['papers'])) {
+                $this->page_data['papers'] = $this->page_data['papers'][0];
+            }
+        }
+        $get_customer_groups = array(
+            'where' => array(
+                    'company_id' => logged('company_id')
+                ),
+                'table' => 'customer_groups',
+                'select' => '*',
+            );
+
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+
+        $rate_plan_query = array(
+            // 'where' => array(
+            //     'id' => $user_id
+            // ),
+            'table' => 'ac_rateplan',
+            'select' => 'id,amount',
+        );
+
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'select' => 'id,name',
+        );
+
+        $activation_fee_query = array(
+            'table' => 'ac_activationfee',
+            'select' => 'id,amount',
+        );
+
+        $spt_query = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'ac_system_package_type',
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+
+
+        if(logged('company_id') == 58){
+            $solar_info_query = array(
+                'table' => 'acs_solar_info_settings',
+                'select' => '*',
+            );
+            $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_query);
+        }
+        
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
+        $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
+        $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
+        $this->page_data['activation_fees'] = $this->general->get_data_with_param($activation_fee_query);
+
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['technicians'] = $this->users_model->getUsersByRole([7]);
+        $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
+
+        // fetch customer statuses
+        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
+        $this->page_data['industryTypes'] = $this->IndustryType_model->getAll(); 
+
+        if (isset($this->page_data['profile_info']->fk_sa_id)) {
+            foreach ($this->page_data['sales_area'] as $area) {
+                if ($area->sa_id == $this->page_data['profile_info']->fk_sa_id) {
+                    $this->page_data['profile_info']->fk_sa_text = $area->sa_name;
+                }
+            }
+        }
+        $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
+
         $this->load->view('v2/pages/accounting/sales/customers/view', $this->page_data);
     }
 }

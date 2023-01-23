@@ -1203,6 +1203,249 @@ class Tickets extends MY_Controller
         $this->load->view('tickets/ajax_quick_view_details', $this->page_data);
     }
 
+    public function ajax_quick_add_service_ticket_form()
+    {
+        $this->load->helper('functions');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Job_tags_model');
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+
+        $default_customer_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_customer_id = $this->input->get('cus_id');
+        }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+
+        $default_start_date = date("Y-m-d");
+        $default_start_time = '';
+        $default_user = 0;
+        $redirect_calendar = 0;
+
+        if( $this->input->get('start_date') ){
+            $default_start_date = $this->input->get('start_date');
+            $redirect_calendar = 1;
+        }
+
+        if( $this->input->get('start_time') ){
+            $default_start_time = $this->input->get('start_time');
+            $redirect_calendar = 1;
+        }
+
+        if( $this->input->get('user') ){
+            $default_user = $this->input->get('user');
+            $redirect_calendar = 1;
+        }        
+        
+        //Settings
+        $prefix = 'TK-';
+        $lastInserted = $this->tickets_model->getlastInsert($company_id);
+        if( $lastInserted ){
+            $next = $lastInserted->ticket_no;
+            $arr = explode("-", $next);
+            $val = $arr[1];
+
+            $next_num = $val + 1;            
+        }else{
+            $next_num = 1;
+        }
+
+        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
+        $this->page_data['redirect_calendar'] = $redirect_calendar;
+        $this->page_data['default_user'] = $default_user;
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+        $this->page_data['items'] = $this->items_model->getItemlist();        
+        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
+        $this->page_data['type'] = $this->input->get('type');
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->load->view('tickets/ajax_quick_add_service_ticket_form', $this->page_data);
+    }
+
+    public function ajax_create_service_ticket()
+    {
+        $this->load->helper('form');
+
+        $is_valid = 1;
+        $msg = '';
+
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        if( $this->input->post('customer_id') == '' || $this->input->post('customer_id') == 0 ){
+            $msg = 'Please select customer';
+            $is_valid = 0;
+        }
+
+        if( $this->input->post('customer_city') == '' || $this->input->post('service_location') == '' || $this->input->post('customer_state') == ''){
+            $msg = 'Please specify location (city, state, service location)';
+            $is_valid = 0;
+        }
+
+        if( $this->input->post('customer_phone') == '' ){
+            $msg = 'Please specify contact number';
+            $is_valid = 0;
+        }
+
+        if( $this->input->post('assign_tech') == '' ){
+            $msg = 'Please select assigned technician';
+            $is_valid = 0;
+        }
+
+        if( $is_valid == 1 ){
+            $techni = serialize($this->input->post('assign_tech'));
+            $tDate  = date("Y-m-d",strtotime($this->input->post('ticket_date')));
+            $status = $this->input->post('ticket_status');
+
+            $new_data = array(
+                'customer_id'               => $this->input->post('customer_id'),
+                'business_name'             => $this->input->post('business_name'),
+                'service_location'          => $this->input->post('service_location'),
+                'service_description'       => $this->input->post('service_description'),
+                'acs_city'                  => $this->input->post('customer_city'),
+                'acs_state'                 => $this->input->post('customer_state'),
+                'acs_zip'                   => $this->input->post('customer_zip'),
+                'job_tag'                   => $this->input->post('job_tag'),
+                'ticket_no'                 => $this->input->post('ticket_no'),
+                'ticket_date'               => $tDate,
+                'scheduled_time'            => $this->input->post('scheduled_time'),
+                'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
+                'purchase_order_no'         => $this->input->post('purchase_order_no'),
+                'ticket_status'             => $status,
+                'panel_type'                => $this->input->post('panel_type'),
+                'service_type'              => $this->input->post('service_type'),
+                'warranty_type'             => $this->input->post('warranty_type'),
+                'technicians'               => $techni,
+                'subtotal'                  => $this->input->post('subtotal'),
+                'taxes'                     => $this->input->post('taxes'),
+                'adjustment'                => '',
+                'adjustment_value'          => 0,
+                'markup'                    => '',
+                'grandtotal'                => $this->input->post('grandtotal'),
+                'payment_method'            => '',
+                'payment_amount'            => 0,
+                'billing_date'              => '',
+                'sales_rep'                 => $this->input->post('sales_rep'),
+                'sales_rep_no'              => $this->input->post('sales_rep_no'),
+                'tl_mentor'                 => $this->input->post('tl_mentor'),
+                'message'                   => $this->input->post('message'),
+                'terms_conditions'          => $this->input->post('terms_conditions'),
+                'attachments'               => '',
+                'instructions'              => $this->input->post('instructions'),
+                'customer_phone'            => $this->input->post('customer_phone'),
+                'employee_id'               => $this->input->post('employee_id'),
+                'created_by'                => logged('id'),
+                // 'hash_id'                   => $hasID,
+                'company_id'                => $company_id,
+                'created_at'                => date("Y-m-d H:i:s"),
+                'updated_at'                => date("Y-m-d H:i:s")
+            );
+            
+
+            $addQuery = $this->tickets_model->save_tickets($new_data);
+            $hasID    = hashids_encrypt($addQuery, '', 15);
+
+            $update_data = array(
+                'id'                        => $addQuery,
+                'hash_id'                   => $hasID,
+            );
+
+            $updateaddQuery = $this->tickets_model->updateTicketsHash_ID($update_data);
+
+            //Google Calendar
+            createSyncToCalendar($addQuery, 'service_ticket', $company_id);
+
+            if ($addQuery > 0) {
+                $item_id    = $this->input->post('item_id');
+                $item_type  = $this->input->post('item_type');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $discount   = $this->input->post('discount');
+                $h          = $this->input->post('tax');
+                $gtotal     = $this->input->post('total');
+
+                $i = 0;
+                foreach($item_id as $row){
+                    $data['items_id']   = $item_id[$i];
+                    $data['qty']        = $quantity[$i];
+                    $data['cost']       = $price[$i];
+                    $data['tax']        = $h[$i];
+                    $data['item_type']  = $item_type[$i];
+                    $data['discount']   = $discount[$i];
+                    $data['total']      = $gtotal[$i];
+                    $data['ticket_id '] = $addQuery;
+
+                    $addQuery2 = $this->tickets_model->add_ticket_items($data);
+                    $i++;
+                }
+            }
+        }
+        
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg];
+        echo json_encode($json_data);       
+
+        exit;
+    }
+
+    public function ajax_get_customer_basic_info()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $prof_id    = $this->input->post('id');
+        $company_id = logged('company_id');
+
+        $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id);
+        if( $customer ){
+            $json_data = [
+                'mail_add' => $customer->mail_add,
+                'city' => $customer->city,
+                'state' => $customer->state,
+                'zip_code' => $customer->zip_code,
+                'phone_h' => $customer->phone_h,
+                'phone_m' => $customer->phone_m,
+                'business_name' => $customer->business_name
+            ];    
+        }else{
+            $json_data = [
+                'mail_add' => '',
+                'city' => '',
+                'state' => '',
+                'zip_code' => '',
+                'phone_h' => '',
+                'phone_m' => '',
+                'business_name' => ''
+            ];
+        }
+        
+        echo json_encode($json_data);
+    }
 }
 
 

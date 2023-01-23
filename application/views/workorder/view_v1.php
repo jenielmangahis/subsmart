@@ -1522,115 +1522,119 @@ table input.form-control {
 															<b>Billing Date</b>
 														</div>
 												</div>
-												<div class="row">                   
+												<div class="row" style="margin-top:-10px;">                   
 													<div class="col-md-12">
-														<div style="text-align: justify; text-justify: inter-word;font-size:8px;">
+														<div style="text-align: justify; text-justify: inter-word;font-size:16px;">
 															<!-- <b>PAYMENT DETAILS:</b>
 															<hr> -->
 																<?php //echo 'Amount: '.$amount; ?>
 																<?php 
+																$payment_method = $workorder->payment_method;
+
+
 																if($payment_method ==  'Cash'){
-																	echo 'Payment Method: Cash';
+																	echo '<b> Payment Method:</b>  Cash';
 																}
 																elseif($payment_method ==  'Check')
 																{
 																	// echo 'Payment Method: Check';
-																	echo '<br> Check Number: '. $check_number;
-																	echo '<br> Rounting Number: '. $routing_number;
-																	echo '<br> Account Number: '. $account_number;
+																	echo '<br><b> Check Number:</b> '. $payment->check_number;
+																	echo '<br><b>  Rounting Number:</b> '. $payment->routing_number;
+																	echo '<br><b>  Account Number:</b> '. $payment->account_number;
 																}
 																elseif($payment_method ==  'Credit Card')
 																{
 																	// echo 'Payment Method: Credit Card';
-																	echo '<br> Credit Number: '. $credit_number;
-																	echo '<br> Credit Expiry: '. $credit_expiry;
-																	echo '<br> CVC: '. $credit_cvc;
+																	echo '<br><b>  Credit Number:</b> '. $payment->credit_number;
+																	echo '<br><b>  Credit Expiry:</b> '. $payment->credit_expiry;
+																	echo '<br><b>  CVC:</b> '. $payment->credit_cvc;
 																}
 																elseif($payment_method ==  'Debit Card')
 																{
 																	// echo 'Payment Method: Debit Card';
-																	echo '<br> Credit Number: '. $credit_number;
-																	echo '<br> Credit Expiry: '. $credit_expiry;
-																	echo '<br> CVC: '. $credit_cvc;
+																	echo '<br><b>  Credit Number:</b> '. $payment->credit_number;
+																	echo '<br><b>  Credit Expiry:</b> '. $payment->credit_expiry;
+																	echo '<br><b>  CVC:</b> '. $payment->credit_cvc;
 																}
 																elseif($payment_method ==  'ACH')
 																{
 																	// echo 'Payment Method: Debit Card';
-																	echo '<br> Routing Number: '. $routing_number;
-																	echo '<br> Account Number: '. $account_number;
+																	echo '<br><b>  Routing Number:</b> '. $payment->routing_number;
+																	echo '<br><b>  Account Number:</b> '. $payment->account_number;
 																}
 																elseif($payment_method ==  'Venmo')
 																{
 																	// echo 'Payment Method: Venmo';
-																	echo '<br> Account Credential: '. $account_credentials;
-																	echo '<br> Account Note: '. $account_note;
-																	echo '<br> Confirmation: '. $confirmation;
+																	echo '<br><b>  Account Credential:</b> '. $payment->account_credentials;
+																	echo '<br><b>  Account Note:</b> '. $payment->account_note;
+																	echo '<br><b>  Confirmation:</b> '. $payment->confirmation;
 																}
 																elseif($payment_method ==  'Paypal')
 																{
 																	// echo 'Payment Method: Paypal';
-																	echo '<br> Account Credential: '. $account_credentials;
-																	echo '<br> Account Note: '. $account_note;
-																	echo '<br> Confirmation: '. $confirmation;
+																	echo '<br><b>  Account Credential:</b> '. $payment->account_credentials;
+																	echo '<br><b>  Account Note:</b> '. $payment->account_note;
+																	echo '<br><b>  Confirmation:</b> '. $payment->confirmation;
 																}
 																elseif($payment_method ==  'Square')
 																{
 																	// echo 'Payment Method: Square';
-																	echo '<br> Account Credential: '. $account_credentials;
-																	echo '<br> Account Note: '. $account_note;
-																	echo '<br> Confirmation: '. $confirmation;
+																	echo '<br><b>  Account Credential:</b> '. $payment->account_credentials;
+																	echo '<br><b>  Account Note:</b> '. $payment->account_note;
+																	echo '<br><b>  Confirmation:</b> '. $payment->confirmation;
 																}
 																elseif($payment_method ==  'Invoicing')
 																{
 																	// echo 'Payment Method: Invoicing';
-																	echo '<br> Address: '. $mail_address.' '. $mail_locality.' '. $mail_state.' '. $mail_postcode.' '. $mail_cross_street;
+																	echo '<br><b>  Address:</b> '. $payment->mail_address.' '. $payment->mail_locality.' '. $payment->mail_state.' '. $payment->mail_postcode.' '. $mail_cross_street;
 																}
 																elseif($payment_method ==  'Warranty Work')
 																{
 																	// echo 'Payment Method: Warranty Work';
-																	echo '<br> Account Credential: '. $account_credentials;
-																	echo '<br> Account Note: '. $account_note;
+																	echo '<br><b>  Account Credential:</b> '. $payment->account_credentials;
+																	echo '<br><b>  Account Note:</b> '. $payment->account_note;
 																}
 																elseif($payment_method ==  'Home Owner Financing')
 																{
 																	// echo 'Payment Method: Home Owner Financing';
-																	echo '<br> Account Credential: '. $account_credentials;
-																	echo '<br> Account Note: '. $account_note;
+																	echo '<br><b>  Account Credential:</b> '. $payment->account_credentials;
+																	echo '<br><b>  Account Note:</b> '. $payment->account_note;
 																}
 																elseif($payment_method ==  'e-Transfer')
 																{
 																	// echo 'Payment Method: e-Transfer';
-																	echo '<br> Account Credential: '. $account_credentials;
-																	echo '<br> Account Note: '. $account_note;
+																	echo '<br><b>  Account Credential:</b> '. $payment->account_credentials;
+																	echo '<br><b>  Account Note:</b> '. $payment->account_note;
 																}
 																elseif($payment_method ==  'Other Credit Card Professor')
 																{
 																	// echo 'Payment Method: Other Credit Card Professor';
-																	echo '<br> Credit Number: '. $credit_number;
-																	echo '<br> Credit Expiry: '. $credit_expiry;
-																	echo '<br> CVC: '. $credit_cvc;
+																	echo '<br><b>  Credit Number:</b> '. $payment->credit_number;
+																	echo '<br><b>  Credit Expiry:</b> '. $payment->credit_expiry;
+																	echo '<br><b>  CVC:</b> '. $payment->credit_cvc;
 																}
 																elseif($payment_method ==  'Other Payment Type')
 																{
 																	// echo 'Payment Method: Other Payment Type';
-																	echo '<br> Account Credential: '. $account_credentials;
-																	echo '<br> Account Note: '. $account_note;
+																	echo '<br><b>  Account Credential:</b> '. $apayment->ccount_credentials;
+																	echo '<br><b>  Account Note:</b> '. $payment->account_note;
 																}
 																?>
-															<!-- <br><br><br> -->
+															<br><br>
 														</div>
 													</div>
 												</div>
 												<div class="row">                   
-													<div class="form-group col-md-12">
+													<div class="col-md-12">
 														<b>Notes</b>
 														<!-- <textarea class="form-control" style="width:100%;"></textarea> -->
-														<div class="form-group">
+														<div class="" style="font-size:16px;">
 															<?php echo $workorder->comments; ?>
 														</div>
+														<br><br>
 													</div>                                        
 												</div>
-												<div class="row" style="margin-top:-46px;">
+												<div class="row" style="margin-top:;">
 													<!-- <div class="form-group col-md-12"> -->
 														<div class="col-md-6">
 															<input type="text" name="sales_re_name" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->sales_re_name; ?>" readonly style="background-color: #fff;">
@@ -1718,7 +1722,7 @@ table input.form-control {
 													<div class="row"> 
 														<div class="col-md-5">
 															<input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->postcode; ?>" readonly style="background-color: #fff;">
-															<b>Postcode:</b>
+															<b>Zip Code:</b>
 														</div>
 														<div class="col-md-7">
 															<input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->county; ?>" readonly style="background-color: #fff;">

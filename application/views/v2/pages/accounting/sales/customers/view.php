@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-<?php //include viewPath('v2/includes/accounting/view_customer_modals'); ?>
+<?php include viewPath('v2/includes/accounting/view_customer_modals'); ?>
 
 <style>
     .notes-container {
@@ -13,7 +13,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/expenses'); ?>
+        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -40,7 +40,7 @@
 
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a href="#" class="dropdown-item edit-vendor">Edit</a>
+                                                    <a href="#" class="dropdown-item edit-customer">Edit</a>
                                                 </li>
                                                 <li>
                                                     <a href="#" class="dropdown-item" id="make-inactive">Make inactive</a>

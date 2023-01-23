@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <div class="row shortcut-container mb-0">
                     <div class="col-4 col-md-3">
-                        <div class="shortcut-item">
+                        <div class="shortcut-item print-check">
                             <div class="nsm-list-icon success">
                                 <i class='bx bx-printer'></i>
                             </div>
@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="col-4 col-md-3">
-                        <div class="shortcut-item">
+                        <div class="shortcut-item process-payment">
                             <div class="nsm-list-icon">
                                 <i class='bx bx-dollar-circle'></i>
                             </div>
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="col-4 col-md-3">
-                        <div class="shortcut-item">
+                        <div class="shortcut-item receive-payment">
                             <div class="nsm-list-icon secondary">
                                 <i class='bx bx-wallet'></i>
                             </div>

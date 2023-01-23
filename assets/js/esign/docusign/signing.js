@@ -29,6 +29,8 @@ function Signing(hash) {
   let data = null;
   let signaturePad = null;
 
+  const $statusIndicator = document.getElementById("statusindicator");
+
   async function fetchData() {
     const endpoint = `${prefixURL}/DocuSign/apiSigning?hash=${hash}`;
     const response = await fetch(endpoint);
@@ -833,6 +835,8 @@ function Signing(hash) {
       formData.append("field_id", id);
 
       const endpoint = `${prefixURL}/DocuSign/apiUploadAttachment`;
+
+      $statusIndicator.classList.add("show");
       const response = await fetch(endpoint, {
         method: "POST",
         body: formData,
@@ -841,6 +845,7 @@ function Signing(hash) {
         },
       });
 
+      $statusIndicator.classList.remove("show");
       return response.json();
     }
 
@@ -850,6 +855,7 @@ function Signing(hash) {
       value,
     };
 
+    $statusIndicator.classList.add("show");
     const response = await fetch(`${prefixURL}/DocuSign/apiStoreFieldValue`, {
       method: "POST",
       body: JSON.stringify(payload),
@@ -859,6 +865,7 @@ function Signing(hash) {
       },
     });
 
+    $statusIndicator.classList.remove("show");
     return response.json();
   }
 
