@@ -294,27 +294,27 @@ class Customers extends MY_Controller {
         $this->page_data['customer'] = $customer;
         $this->page_data['customerAddress'] = $customerAddress;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+        if(isset($customerId) || !empty($customerId)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$customerId,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$customerId,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$customerId,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$customerId,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$customerId,"acs_alarm");
             $this->page_data['panel_type'] = $this->customer_ad_model->get_select_options('acs_alarm','panel_type');
 
             $get_customer_notes = array(
                 'where' => array(
-                    'fk_prof_id' => $userid
+                    'fk_prof_id' => $customerId
                 ),
                 'table' => 'acs_notes',
                 'select' => '*',
             );
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
-            //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+            //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$customerId,"acs_devices");
         
             $customer_contacts = array(
                 'where' => array(
-                    'customer_id' => $userid
+                    'customer_id' => $customerId
                 ),
                 'table' => 'contacts',
                 'select' => '*',
@@ -327,7 +327,7 @@ class Customers extends MY_Controller {
 
             $customer_papers_query = array(
                 'where' => array(
-                    'customer_id' => $userid
+                    'customer_id' => $customerId
                 ),
                 'table' => 'acs_papers',
                 'select' => '*',
@@ -415,5 +415,469 @@ class Customers extends MY_Controller {
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
 
         $this->load->view('v2/pages/accounting/sales/customers/view', $this->page_data);
+    }
+
+    public function add()
+    {
+        $input = $this->input->post();
+
+        $custom_fields_array = [];
+        if (array_key_exists('custom_name', $input) && array_key_exists('custom_value', $input)) {
+            foreach ($input['custom_name'] as $key => $name) {
+                $cleanName = trim($name);
+                $cleanValue = trim($input['custom_value'][$key]);
+
+                if (!empty($cleanName) && !empty($cleanValue)) {
+                    array_push($custom_fields_array, ['name' => $cleanName, 'value' => $cleanValue]);
+                }
+            }
+        }
+
+        $input_profile = array();
+        $input_profile['fk_user_id'] = logged('id');
+        $input_profile['fk_sa_id'] = $input['fk_sa_id'];
+        $input_profile['company_id'] = logged('company_id');
+        $input_profile['status'] = $input['status'];
+        $input_profile['customer_type'] = $input['customer_type'];
+        $input_profile['customer_group_id'] = $input['customer_group'];
+        $input_profile['business_name'] = $input['business_name'];
+        $input_profile['first_name'] = $input['first_name'];
+        $input_profile['last_name'] = $input['last_name'];
+        $input_profile['middle_name'] = $input['middle_name'];
+        $input_profile['prefix'] = $input['prefix'];
+        $input_profile['suffix'] = $input['suffix'];
+        $input_profile['mail_add'] = $input['mail_add'];
+        $input_profile['city'] = $input['city'];
+        $input_profile['state'] = $input['state'];
+        $input_profile['country'] = $input['country'];
+        $input_profile['industry_type_id'] = $input['industry_type'];
+        $input_profile['zip_code'] = $input['zip_code'];
+        $input_profile['cross_street'] = $input['cross_street'];
+        $input_profile['subdivision'] = $input['subdivision'];
+        $input_profile['email'] = $input['email'];
+        $input_profile['ssn'] = $input['ssn'];
+        $input_profile['date_of_birth'] = $input['date_of_birth'];
+        $input_profile['phone_h'] = $input['phone_h'];
+        $input_profile['phone_m'] = $input['phone_m'];
+        $input_profile['custom_fields'] = json_encode($custom_fields_array);
+        $input_profile['is_sync'] = 0;
+        if( $input['bill_method'] == 'CC' ){
+            //Check cc if valid using converge
+            $a_exp_date = explode("/", $input['credit_card_exp']);
+            $exp_date   = $a_exp_date[0] . date("y",strtotime($a_exp_date[1] . "-01-01"));
+            $data_cc = [
+                'card_number' => $input['credit_card_num'],
+                'exp_date' => $exp_date,
+                'cvc' => $input['credit_card_exp_mm_yyyy'],
+                'ssl_amount' => 0,
+                'ssl_first_name' => $input['first_name'],
+                'ssl_last_name' => $input['last_name'],
+                'ssl_address' => $input['mail_add'] . ' ' . $input['city'] . ' ' . $input['state'],
+                'ssl_zip' => $input['zip_code']
+            ];
+            $is_valid = $this->converge_check_cc_details_valid($data_cc);
+
+            echo $is_valid;
+            if( $is_valid['is_success'] == 1 ){
+                $proceed = 1;
+            }else{
+                $proceed = 0;
+            }
+        }else{
+            $proceed = 1;
+        }   
+
+        if( $proceed == 1 ){
+            if(isset($input['customer_id'])){
+                $customer = $this->customer_ad_model->get_customer_data_settings($input['customer_id']);
+                if( $customer->adt_sales_project_id > 0 ){
+                    $input_profile['is_sync'] = 0;
+                }
+                $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+                $profile_id = $input['customer_id'];
+
+                customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer ' .$input['first_name'].' '.$input['last_name']);
+
+            }else{
+                $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
+
+                customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer ' .$input['first_name'].' '.$input['last_name']);
+            }
+
+
+            $companyId = logged('company_id');
+            $save_billing = $this->save_billing_information($input,$profile_id);
+            $save_office = $this->save_office_information($input,$profile_id);
+            $save_alarm = $this->save_alarm_information($input,$profile_id);
+            $save_access = $this->save_access_information($input,$profile_id);
+            $save_papers = $this->save_papers_information($input,$profile_id);
+            $save_contacts = $this->save_contacts($input,$profile_id);
+
+            if($companyId == 58){
+                $this->save_solar_info($input,$profile_id);
+            }
+            
+
+            if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
+                echo 'Error Occured on Saving Billing Information';
+                $data_arr = array("success" => FALSE,"message" => 'Error on saving information');
+            }else {
+                if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
+                    $this->save_notes($input,$profile_id);
+                }
+                //$this->generate_qr_image($profile_id);
+                if(isset($input['customer_id'])){
+                    $data_arr = array("success" => TRUE,"profile_id" => $input['customer_id']);
+                }else{
+                    $data_arr = array("success" => TRUE,"profile_id" => $profile_id);
+                }
+            }
+        }
+
+        die(json_encode($data_arr));
+    }
+
+    public function update($customerId)
+    {
+        $input = $this->input->post();
+    }
+
+    private function save_billing_information($input,$id)
+    {
+        $input_billing = array();
+        // billing data
+        switch ($input['bill_freq']) {
+            case 'One Time Only':
+                $billing_frequency = 1;
+                break;
+            case 'Every 1 Month':
+                $billing_frequency = 1;
+                break;
+            case 'Every 3 Months':
+                $billing_frequency = 3;
+                break;
+            case 'Every 6 Months':
+                $billing_frequency = 6;
+                break;
+            case 'Every 1 Year':
+                $billing_frequency = 12;
+                break;
+            default:
+                $billing_frequency = 0;
+                break;
+        }
+        $input_billing['fk_prof_id'] = $id;
+        $input_billing['card_fname'] = $input['card_fname'];
+        $input_billing['card_lname'] = $input['card_lname'];
+        $input_billing['card_address'] = $input['card_address'];
+        $input_billing['city'] = $input['billing_city'];
+        $input_billing['state'] = $input['billing_state'];
+        $input_billing['zip'] = $input['billing_zip'];
+        $input_billing['equipment'] = $input['equipment'];
+        $input_billing['initial_dep'] = $input['initial_dep'];
+        $input_billing['mmr'] = $input['mmr'];
+        $input_billing['bill_freq'] = $input['bill_freq'];
+        $input_billing['bill_day'] = $input['bill_day'];
+        $input_billing['contract_term'] = $input['contract_term'];
+        $input_billing['bill_start_date'] = $input['bill_start_date'];
+        $input_billing['bill_end_date'] = $input['bill_end_date'];
+
+        $input_billing['bill_method'] = $input['bill_method'];
+        $input_billing['check_num'] = $input['check_num'];
+        $input_billing['routing_num'] = $input['routing_num'];
+        $input_billing['acct_num'] = $input['acct_num'];
+        $input_billing['credit_card_num'] = $input['credit_card_num'];
+        $input_billing['credit_card_exp'] = $input['credit_card_exp'];
+        $input_billing['credit_card_exp_mm_yyyy'] = $input['credit_card_exp_mm_yyyy'];
+        $input_billing['account_credential'] = $input['account_credential'];
+        $input_billing['account_note'] = $input['account_note'];
+        $input_billing['confirmation'] = $input['confirmation'];
+
+        $input_billing['finance_amount'] = $input['finance_amount'];
+        $input_billing['recurring_start_date'] = $input['recurring_start_date'];
+        $input_billing['recurring_end_date'] = $input['recurring_end_date'];
+        $input_billing['transaction_amount'] = $input['transaction_amount'];
+        $input_billing['transaction_category'] = $input['transaction_category'];
+        $input_billing['frequency'] = $input['frequency']; //Subscription
+        $input_billing['billing_frequency'] = $billing_frequency; //Billing
+        $input_billing['next_billing_date'] = date("n/j/Y",strtotime("+" . $billing_frequency . " months", strtotime($input['bill_start_date'])));
+        $input_billing['next_subscription_billing_date'] = date("n/j/Y",strtotime("+" . $input['frequency'] . " months", strtotime($input['recurring_start_date'])));
+
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_billing'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing','fk_prof_id');
+        }else{
+            return $this->general->add_($input_billing, 'acs_billing');
+        }
+    }
+
+    private function save_office_information($input,$id)
+    {
+        $input_office = array();
+
+        // office data
+        $input_office['fk_prof_id'] = $id;
+        $input_office['welcome_sent'] = 0;
+        $input_office['entered_by'] = $input['entered_by'];
+        $input_office['time_entered'] = $input['time_entered'];
+        $input_office['sales_date'] = $input['sales_date'];
+        $input_office['credit_score'] = $input['credit_score'];
+        $input_office['pay_history'] = $input['pay_history'];
+        $input_office['fk_sales_rep_office'] = $input['fk_sales_rep_office'];
+        $input_office['technician'] = $input['technician'];
+        $input_office['install_date'] = $input['install_date'];
+        $input_office['tech_arrive_time'] = $input['tech_arrive_time'];
+        $input_office['tech_depart_time'] = $input['tech_depart_time'];
+        $input_office['lead_source'] = $input['lead_source'];
+        $input_office['verification'] = $input['verification'];
+        $input_office['cancel_date'] = $input['cancel_date'];
+        $input_office['cancel_reason'] = $input['cancel_reason'];
+        $input_office['collect_date'] = $input['collect_date'];
+        $input_office['collect_amount'] = $input['collect_amount'];
+        $input_office['language'] = $input['language'];
+        $input_office['pre_install_survey'] = $input['pre_install_survey'];
+        $input_office['post_install_survey'] = $input['post_install_survey'];
+        $input_office['monitoring_waived'] = $input['monitoring_waived'];
+
+        if(isset($input['rebate_offer'])){
+            $input_office['rebate_offer'] = $input['rebate_offer'];
+        }else{
+            $input_office['rebate_offer'] = 0;
+        }
+
+        $input_office['rebate_check1'] = $input['rebate_check1'];
+        $input_office['rebate_check1_amt'] = $input['rebate_check1_amt'];
+        $input_office['rebate_check2'] = $input['rebate_check2'];
+        $input_office['rebate_check2_amt'] = $input['rebate_check2_amt'];
+        $input_office['activation_fee'] = $input['activation_fee'];
+        $input_office['way_of_pay'] = $input['way_of_pay'];
+
+        if(isset($input['commision_scheme'])){
+            $input_office['commision_scheme'] = $input['commision_scheme'][0];
+        }else{
+            $input_office['commision_scheme'] = 2;
+        }
+
+        $input_office['rep_comm'] = $input['rep_comm'];
+        $input_office['rep_upfront_pay'] = $input['rep_upfront_pay'];
+        $input_office['rep_tiered_bonus'] = $input['rep_tiered_bonus'];
+        $input_office['rep_holdfund_bonus'] = $input['rep_holdfund_bonus'];
+        $input_office['rep_deduction'] = $input['rep_deduction'];
+        $input_office['tech_comm'] = $input['tech_comm'];
+        $input_office['tech_upfront_pay'] = $input['tech_upfront_pay'];
+        $input_office['tech_deduction'] = $input['tech_deduction'];
+        $input_office['rep_charge_back'] = $input['rep_charge_back'];
+        $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'];
+
+        if(isset($input['pso'])){
+            $input_office['pso'] = $input['pso'][0];
+        }else{
+            $input_office['pso'] = 2;
+        }
+
+        $input_office['points_include'] = $input['points_include'];
+        $input_office['price_per_point'] = $input['price_per_point'];
+        $input_office['purchase_price'] = $input['purchase_price'];
+        $input_office['purchase_multiple'] = $input['purchase_multiple'];
+        $input_office['purchase_discount'] = $input['purchase_discount'];
+        $input_office['equipment_cost'] = $input['equipment_cost'];
+        $input_office['labor_cost'] = $input['labor_cost'];
+        $input_office['job_profit'] = $input['job_profit'];
+        $input_office['url'] = $input['url'];
+
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_office'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($input_office, $input['customer_id'], 'acs_office','fk_prof_id');
+        }else{
+            return $this->general->add_($input_office, 'acs_office');
+        }
+    }
+
+    private function save_alarm_information($input,$id)
+    {
+        $input_alarm = array();
+
+        // alarm data
+        $input_alarm['fk_prof_id'] = $id;
+        $input_alarm['monitor_comp'] = $input['monitor_comp'];
+        $input_alarm['monitor_id'] = $input['monitor_id'];
+        //$input_alarm['install_date'] = $input['install_date'];
+        $input_alarm['acct_type'] = $input['acct_type'];
+        $input_alarm['online'] = $input['online'];
+        $input_alarm['in_service'] = $input['in_service'];
+        $input_alarm['equipment'] = $input['equipment'];
+        $input_alarm['collections'] = $input['collections'];
+        $input_alarm['credit_score_alarm'] = '';
+        $input_alarm['passcode'] = $input['passcode'];
+        $input_alarm['install_code'] = $input['install_code'];
+        $input_alarm['mcn'] = $input['mcn'];
+        $input_alarm['scn'] = $input['scn'];
+        $input_alarm['panel_type'] = $input['panel_type'];
+        $input_alarm['system_type'] = $input['system_type'];
+        $input_alarm['warranty_type'] = $input['warranty_type'];
+        $input_alarm['dealer'] = $input['dealer'];
+        $input_alarm['alarm_login'] = $input['alarm_login'];
+        $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
+        $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
+        $input_alarm['comm_type'] = $input['comm_type'];
+        $input_alarm['account_cost'] = $input['account_cost'];
+        $input_alarm['pass_thru_cost'] = $input['pass_thru_cost'];
+
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_alarm'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($input_alarm, $input['customer_id'], 'acs_alarm','fk_prof_id');
+        }else{
+            return $this->general->add_($input_alarm, 'acs_alarm');
+        }
+    }
+
+    private function save_access_information($input,$id)
+    {
+        $input_access = array();
+        //access data
+        $input_access['fk_prof_id'] = $id;
+        if(isset($input['portal_status'])){
+            $input_access['portal_status'] = $input['portal_status'];
+        }else{
+            $input_access['portal_status'] = 2;
+        }
+
+        $input_access['reset_password'] ='';
+        $input_access['access_login'] = $input['access_login'];
+        $input_access['access_password'] = $input['access_password'];
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_access'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access','fk_prof_id');
+        }else{
+            return $this->general->add_($input_access, 'acs_access');
+        }
+    }
+
+    private function save_papers_information($input,$id)
+    {
+        $input_papers = array();
+        $input_papers['customer_id'] = $id;
+        $input_papers['rep_paper_date'] = $input['rep_paper_date'];
+        $input_papers['tech_paper_date'] = $input['tech_paper_date'];
+        $input_papers['scanned_date'] = $input['scanned_date'];
+        $input_papers['paperwork'] = $input['paperwork'];
+        $input_papers['submitted'] = $input['submitted'];
+        $input_papers['funded'] = $input['funded'];
+        $input_papers['charged_back'] = $input['charged_back'];
+        $check = array(
+            'where' => array(
+                'customer_id' => $id
+            ),
+            'table' => 'acs_papers'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($input_papers, $input['customer_id'], 'acs_papers','customer_id');
+        }else{
+            return $this->general->add_($input_papers, 'acs_papers');
+        }
+    }
+
+    private function save_notes($input,$id)
+    {
+        $input_notes = array();
+            // notes data
+            $input_notes['fk_prof_id'] = $id;
+            $input_notes['note'] = $input['notes'];
+            $input_notes['datetime'] = date("m-d-Y h:i A");
+            $this->general->add_($input_notes, 'acs_notes');
+    }
+
+    private function save_contacts($postData, $customerId)
+    {
+        $payload = [];
+        $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
+            if (empty(trim($postData['contact_name' . $customerNumber]))) {
+                return; // ignore empty contact with empty name
+            }
+
+            array_push($payload, [
+                'name' => trim($postData['contact_name' . $customerNumber]),
+                'relation' => $postData['contact_relationship' . $customerNumber],
+                'phone' => $postData['contact_phone' . $customerNumber],
+                'customer_id' => $customerId,
+                'phone_type' => 'mobile',
+            ]);
+        };
+
+        $saveToPayload(1);
+        $saveToPayload(2);
+        $saveToPayload(3);
+
+        if (!empty($payload)) {
+            $this->db->where('customer_id', $customerId);
+            $this->db->delete('contacts');
+
+            $this->db->insert_batch('contacts', $payload);
+        }
+
+        $this->db->where('customer_id', $customerId);
+        $contacts = $this->db->get('contacts')->result();
+        return $contacts;
+    }
+
+    private function save_solar_info($input,$id)
+    {
+        $solarInfo = array();
+        $solarInfo['fk_prof_id'] = $id;
+        $solarInfo['project_id'] = $input['project_id'];
+        $solarInfo['lender_type'] = $input['lender_type'];
+        $solarInfo['proposed_system_size'] = $input['proposed_system_size'];
+        $solarInfo['proposed_modules'] = $input['proposed_modules'];
+        $solarInfo['proposed_inverter'] = $input['proposed_inverter'];
+        $solarInfo['proposed_offset'] = $input['proposed_offset'];
+        $solarInfo['proposed_solar'] = $input['proposed_solar'];
+        $solarInfo['proposed_utility'] = $input['proposed_utility'];
+        $solarInfo['proposed_payment'] = $input['proposed_payment'];
+        $solarInfo['annual_income'] = $input['annual_income'];
+        $solarInfo['tree_estimate'] = $input['tree_estimate'];
+        $solarInfo['roof_estimate'] = $input['roof_estimate'];
+        $solarInfo['utility_account'] = $input['utility_account'];
+        $solarInfo['utility_login'] = $input['utility_login'];
+        $solarInfo['utility_pass'] = $input['utility_pass'];
+        $solarInfo['meter_number'] = $input['meter_number'];
+        $solarInfo['insurance_name'] = $input['insurance_name'];
+        $solarInfo['insurance_number'] = $input['insurance_number'];
+        $solarInfo['policy_number'] = $input['policy_number'];
+
+        $check = array(
+            'where' => array('fk_prof_id' => $id),
+            'table' => 'acs_info_solar'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($solarInfo, $input['customer_id'], 'acs_info_solar','fk_prof_id');
+        }else{
+            return $this->general->add_($solarInfo, 'acs_info_solar');
+        }
     }
 }

@@ -6237,7 +6237,8 @@ class Customer extends MY_Controller
                 'city' => $post['cus_city'],
                 'state' => $post['cus_state'],
                 'zip_code' => $post['cus_zip'],
-                'phone_m' => $post['cus_mobile']
+                'phone_m' => $post['cus_mobile'],
+                'phone_h' => $post['cus_phone'],
             ];
 
             $this->general->update_with_key_field($data, $post['cus_prof'],'acs_profile','prof_id');

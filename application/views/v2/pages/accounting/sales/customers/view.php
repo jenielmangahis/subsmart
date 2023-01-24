@@ -25,7 +25,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <h3 class="m-0">
-                                            <span id="customer-business-name"><?=$customer->business_name === '' ? $customer->last_name.', '.$customer->first_name : $customer->business_name?></span>
+                                            <span id="customer-business-name"><?=$customer->business_name === '' ? $customer->first_name.' '.$customer->last_name : $customer->business_name?></span>
                                             <?php if($customer->email !== "" && $customer->email !== null) : ?>
                                             <small><a href="mailto: <?=$customer->email?>" class="text-muted"><i class="fa fa-envelope-o"></i></a></small>
                                             <?php endif; ?>
@@ -62,7 +62,13 @@
                                                     <a href="#" class="dropdown-item" id="new-payment">Payment</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="dropdown-item" id="new-estimate">Estimate</a>
+                                                    <a href="#" class="dropdown-item" id="new-standard-estimate">Standard Estimate</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="dropdown-item" id="new-options-estimate">Options Estimate</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="dropdown-item" id="new-bundle-estimate">Bundle Estimate</a>
                                                 </li>
                                                 <li>
                                                     <a href="#" class="dropdown-item" id="new-payment-link">Payment Link</a>
@@ -331,7 +337,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Customer</td>
-                                                                <td><?=$customer->business_name?></td>
+                                                                <td><?=in_array($customer->business_name, ['', null]) ?  $customer->first_name.' '.$customer->last_name : $customer->business_name?></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Email</td>

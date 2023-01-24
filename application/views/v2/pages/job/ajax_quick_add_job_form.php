@@ -397,9 +397,9 @@
     table {
         width: 100% !important;
     }
-    .dataTables_filter, .dataTables_length{
+    /*.dataTables_filter, .dataTables_length{
         display: none;
-    }
+    }*/
     table.dataTable thead th, table.dataTable thead td {
     padding: 10px 18px;
     border-bottom: 1px solid lightgray;
@@ -718,12 +718,9 @@
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body" style="background-color: #bfbfbf;">
-                    <div class="row">
-                        <div class="col-sm-12 mb-2">
-                            <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;float: right;" class="form-control" type="text" placeholder="Search Item...">
-                        </div>
+                    <div class="row">                        
                         <div class="col-sm-12">
-                            <table id="items_table" class="table w-100">
+                            <table id="quick-add-jobs-items" class="table w-100">
                                 <thead>
                                     <tr>
                                         <td style="width: 0% !important;"></td>
@@ -738,7 +735,7 @@
                                         if (!empty($items)) {
                                             foreach ($items as $item) {
                                                $item_qty = get_total_item_qty($item->id);
-                                               if ($item_qty[0]->total_qty > 0) {
+                                               //if ($item_qty[0]->total_qty > 0) {
                                     ?>
                                     <tr>
                                         <td style="width: 0% !important;">
@@ -749,7 +746,7 @@
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                     </tr>
-                                    <?php } } } ?>
+                                    <?php  } } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -858,6 +855,19 @@ $(function() {
     }   
 
     $(function(){
+
+        $('#quick-add-jobs-items').DataTable({
+            "autoWidth" : false,
+            "columnDefs": [
+            { width: 50, targets: 0 },
+            { width: 540, targets: 0 },
+            { width: 100, targets: 0 },
+            { width: 100, targets: 0 },
+            { width: 100, targets: 0 }
+            ],
+            "ordering": false,
+        });
+
         $('#customer_id').select2({
             dropdownParent: $("#modal-quick-add-job"),
             ajax: {

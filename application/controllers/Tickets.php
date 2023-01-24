@@ -995,7 +995,7 @@ class Tickets extends MY_Controller
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);  
 
         $this->page_data['appointment_date'] = $this->input->post('appointment_date');
         $this->page_data['appointment_time'] = $this->input->post('appointment_time');
@@ -1228,34 +1228,18 @@ class Tickets extends MY_Controller
 
         $company_id = logged('company_id');
         $role = logged('role');
-        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-
-        $default_customer_id = 0;
-        if( $this->input->get('cus_id') ){
-            $default_customer_id = $this->input->get('cus_id');
-        }
-
-        $this->page_data['default_customer_id'] = $default_customer_id;
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);       
 
         $default_start_date = date("Y-m-d");
         $default_start_time = '';
-        $default_user = 0;
-        $redirect_calendar = 0;
 
-        if( $this->input->get('start_date') ){
-            $default_start_date = $this->input->get('start_date');
-            $redirect_calendar = 1;
+        if( $this->input->get('date_selected') ){
+            $default_start_date = $this->input->get('date_selected');
         }
 
         if( $this->input->get('start_time') ){
             $default_start_time = $this->input->get('start_time');
-            $redirect_calendar = 1;
         }
-
-        if( $this->input->get('user') ){
-            $default_user = $this->input->get('user');
-            $redirect_calendar = 1;
-        }        
         
         //Settings
         $prefix = 'TK-';
@@ -1274,8 +1258,6 @@ class Tickets extends MY_Controller
 
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
-        $this->page_data['redirect_calendar'] = $redirect_calendar;
-        $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
         $this->page_data['items'] = $this->items_model->getItemlist();        
@@ -1290,7 +1272,7 @@ class Tickets extends MY_Controller
 
     public function ajax_create_service_ticket()
     {
-        $this->load->helper('form');
+        $this->load->helper(array('hashids_helper', 'form'));
 
         $is_valid = 1;
         $msg = '';
@@ -1300,6 +1282,11 @@ class Tickets extends MY_Controller
 
         if( $this->input->post('customer_id') == '' || $this->input->post('customer_id') == 0 ){
             $msg = 'Please select customer';
+            $is_valid = 0;
+        }
+
+        if( $this->input->post('business_name') == '' ){
+            $msg = 'Please specify business name';
             $is_valid = 0;
         }
 
