@@ -683,19 +683,19 @@ span.sc-item {
                                   <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
-                                  <td colspan="5" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                  <td colspan="4" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
                                   <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
                                   <td colspan="1" style="text-align: right;"><b>$ <?= number_format((float)$estimate->option1_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-top:15px;"><b>Option 1 Message</b></td>
+                                    <td colspan="7" style="padding-top:15px;"><b>Option 1 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-bottom:30px;"><?= $estimate->option_message; ?></td>
+                                    <td colspan="7" style="padding-bottom:30px;"><?= $estimate->option_message; ?></td>
                                 </tr>
 
                                 <tr>
-                                    <td colspan="8" style="padding:15px;"><b>Option 2</b></td>
+                                    <td colspan="7" style="padding:15px;"><b>Option 2</b></td>
                                 </tr>
                             <?php foreach($items_dataOP2 as $itemData2){ ?>
                                     <tr class="table-items__tr">
@@ -726,16 +726,16 @@ span.sc-item {
                                   <td colspan="1" style="text-align: right;"><b>$<?= number_format((float)$estimate->option2_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-top:15px;"><b>Option 2 Message</b></td>
+                                    <td colspan="7" style="padding-top:15px;"><b>Option 2 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-bottom:15px;"><?= $estimate->option2_message; ?></td>
+                                    <td colspan="7" style="padding-bottom:15px;"><?= $estimate->option2_message; ?></td>
                                 </tr>
 
                             <?php }elseif($estimate->estimate_type == 'Bundle'){ $ix =1;  $iy =1; ?>
 
                               <tr>
-                                    <td colspan="8" style="padding:15px;"><b>Bundle 1</b></td>
+                                    <td colspan="7" style="padding:15px;"><b>Bundle 1</b></td>
                                 </tr>
                               <?php foreach($items_dataBD1 as $itemDatabd1){ ?>
                                     <tr class="table-items__tr">
@@ -766,14 +766,14 @@ span.sc-item {
                                   <td colspan="1" style="text-align: right;"><b>$<?= number_format($estimate->bundle1_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-top:15px;"><b>Bundle 1 Message</b></td>
+                                    <td colspan="7" style="padding-top:15px;"><b>Bundle 1 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-bottom:30px;"><?= $estimate->bundle1_message; ?></td>
+                                    <td colspan="7" style="padding-bottom:30px;"><?= $estimate->bundle1_message; ?></td>
                                 </tr>
 
                                 <tr>
-                                    <td colspan="8" style="padding:15px;"><b>Bundle 2</b></td>
+                                    <td colspan="7" style="padding:15px;"><b>Bundle 2</b></td>
                                 </tr>
                             <?php foreach($items_dataBD2 as $itemDatabd2){ ?>
                                     <tr class="table-items__tr">
@@ -804,10 +804,10 @@ span.sc-item {
                                   <td colspan="1" style="text-align: right;"><b>$<?= number_format($estimate->bundle2_total, 2); ?></b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-top:15px;"><b>Bundle 2 Message</b></td>
+                                    <td colspan="7" style="padding-top:15px;"><b>Bundle 2 Message</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" style="padding-bottom:15px;"><?= $estimate->bundle2_message; ?></td>
+                                    <td colspan="7" style="padding-bottom:15px;"><?= $estimate->bundle2_message; ?></td>
                                 </tr>
 
                             <?php }else{ $i = 1; ?>

@@ -1941,6 +1941,15 @@ class Workorder_model extends MY_Model
         return $query->row();
     }
 
+    public function firstNumeric($id)
+    {
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getusersecond($id)
     {
         $this->db->select('*');

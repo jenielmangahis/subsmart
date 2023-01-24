@@ -510,6 +510,8 @@ $route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms
 $route['accounting/customers'] = 'accounting_controllers/customers/index';
 $route['accounting/customers/batch-select-customer-type']['post'] = 'accounting_controllers/customers/batch_select_customer_type';
 $route['accounting/customers/view/(:any)'] = 'accounting_controllers/customers/view/$1';
+$route['accounting/customers/add']['post'] = 'accounting_controllers/customers/add';
+$route['accounting/customers/update/(:any)']['post'] = 'accounting_controllers/customers/update/$1';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
