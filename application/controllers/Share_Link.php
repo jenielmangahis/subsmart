@@ -1289,7 +1289,7 @@ class Share_Link extends CI_Controller
         }
 
         if (
-            (in_array(trim($estimate->deposit_request), ['1', '2', '$', '%']) && is_numeric($estimate->deposit_amount)) &&
+            (in_array(trim($estimate->deposit_request), ['1', '2', '$', '%']) && is_numeric($estimate->deposit_amount) && (float) $estimate->deposit_amount >= 1) &&
             in_array($status, ['Submitted', 'Draft']) 
         ) {
             return redirect('/share_Link/estimate_deposit/' . $hashedId);
