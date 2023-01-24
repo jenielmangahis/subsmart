@@ -336,7 +336,7 @@
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($postcode)){ echo '<br>'; }else{echo $postcode;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Postcode:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($postcode)){ echo '<br>'; }else{echo $postcode;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Zip Code:</b></td>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($county)){ echo '<br>'; }else{echo $county;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>County:</b></td>
                         </tr>
                         <tr>
@@ -383,27 +383,27 @@
                     <table>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Equipment Cost</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $subtotal; ?></td>
+                            <td style="margin:;padding:6px;">$<?php echo $subtotal; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Sales Tax</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $taxes; ?></td>
+                            <td style="margin:;padding:6px;">$<?php echo $taxes; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Installation Cost</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $installation_cost; ?></td>
+                            <td style="margin:;padding:6px;">$<?php echo $installation_cost; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>One time (Program and Setup)</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $otp_setup; ?></td>
+                            <td style="margin:;padding:6px;">$<?php echo $otp_setup; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Monthly Monitoring</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $monthly_monitoring; ?></td>
+                            <td style="margin:;padding:6px;">$<?php echo $monthly_monitoring; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Total Due</b></td>
-                            <td style="margin:;padding:6px;"><?php echo $total; ?></td>
+                            <td style="margin:;padding:6px;">$<?php echo $total; ?></td>
                         </tr>
                     </table>
                 </div> 
@@ -432,7 +432,15 @@
                         <td style="border: 0px solid white;border-collapse: collapse;margin:0 0 5px 0;" align="center">
                             <?php if(empty($company_representative_signature)){ echo '<p style="width:200px;height:50px;"> </p>'; } else{ ?>
                             <center><img src="<?php echo base_url($company_representative_signature); ?>" style="width:200px;height:50px;" align="center"></center><br>
-                            <?php if(empty($first)){ echo '<br>'; } else{ echo $first; } ?>
+                            <?php 
+                            if(is_numeric($first)){
+                                echo $firstNumeric;
+                            }elseif(empty($first)){
+                                echo '<br>';
+                            }else{
+                                echo $first;
+                            }
+                            ?>
                             <hr style="margin-top:0px;margin-bottom:-1px;">
                             <center>Company Representative Approval</center>
                             <?php } ?>

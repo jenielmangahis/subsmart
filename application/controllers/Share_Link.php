@@ -906,6 +906,8 @@ class Share_Link extends CI_Controller
         $second = $this->workorder_model->getusersecond($workorder->primary_account_holder_name);
         $third = $this->workorder_model->getuserthird($workorder->secondary_account_holder_name);
 
+        $firstNumeric = $this->workorder_model->firstNumeric($workorder->company_representative_name);
+
         // dd($wo_id);
 
         $data = array(
@@ -963,9 +965,10 @@ class Share_Link extends CI_Controller
             'template'                          => '3',
             'business_logo'                     => $business_logo,
 
-            'first'                             => $first->FName.' '.$first->LName,
+            'first'                             => $workorder->company_representative_name,
             'second'                            => $second,
             'third'                             => $third,
+            'firstNumeric'                      => $firstNumeric->FName.' '.$firstNumeric->LName,
 
             'company_id'                        => $company_id,
 
