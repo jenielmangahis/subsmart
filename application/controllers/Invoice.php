@@ -1015,7 +1015,7 @@ class Invoice extends MY_Controller
             'job_location'              => $this->input->post('jobs_location'), //
             'job_name'                  => $this->input->post('job_name'),//
             'invoice_type'              => $this->input->post('invoice_type'),//
-            'po_number'                 => $this->input->post('purchase_order'),//
+            'purchase_order'            => $this->input->post('purchase_order'),//
             'date_issued'               => $this->input->post('date_issued'),//
             'due_date'                  => $this->input->post('due_date'),//
             'status'                    => $this->input->post('status'),//

@@ -271,6 +271,7 @@
                             <td data-name="Qty on hand">QTY ON HAND</td>
                             <td data-name="Qty on PO">QTY ON PO</td>
                             <td data-name="Reorder point">REORDER POINT</td>
+                            <td data-name="Locations">Locations</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -311,6 +312,11 @@
 							<td><?=$item['qty_on_hand']?></td>
 							<td><?=$item['qty_po']?></td>
 							<td><?=$item['reorder_point']?></td>
+                            <td>
+                                <?php if($item['type'] === 'Product') : ?>
+                                    <button class="nsm-button btn-sm see-item-locations">See Locations</button>
+                                <?php endif; ?>
+                            </td>
 							<td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

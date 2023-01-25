@@ -229,25 +229,31 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="#">Receive payment</a>
+                                            <a class="dropdown-item receive-payment" href="#">Receive payment</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Send reminder</a>
+                                            <a class="dropdown-item send-reminder" href="#">Send reminder</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create statement</a>
+                                            <a class="dropdown-item create-statement" href="#">Create statement</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create invoice</a>
+                                            <a class="dropdown-item create-invoice" href="#">Create invoice</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create sales receipt</a>
+                                            <a class="dropdown-item create-sales-receipt" href="#">Create sales receipt</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Create estimate</a>
+                                            <a class="dropdown-item create-standard-estimate" href="#">Create standard estimate</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Send payment link</a>
+                                            <a class="dropdown-item create-options-estimate" href="#">Create options estimate</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item create-bundle-estimate" href="#">Create bundle estimate</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item send-payment-link" href="#">Send payment link</a>
                                         </li>
                                     </ul>
                                 </div>

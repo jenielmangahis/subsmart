@@ -1406,4 +1406,11 @@ class Products_and_services extends MY_Controller {
         
         echo json_encode($data);
     }
+
+    public function get_item_locations($itemId)
+    {
+        $locations = $this->items_model->getLocationByItemId($itemId);
+
+        echo json_encode($locations);
+    }
 }
