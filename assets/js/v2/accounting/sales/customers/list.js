@@ -482,7 +482,7 @@ $('#add-customer-form').on('submit', async function(e) {
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    // window.location.href=`${base_url}accounting/customers`;
+                    window.location.href=`${base_url}accounting/customers`;
                 }
             });
         }
@@ -519,3 +519,171 @@ function sucess(information,id){
         }
     });
 }
+
+$('#customers-table .receive-payment').on('click', function(e) {
+    e.preventDefault();
+    var customerId = $(this).closest('tr').find('.select-one').val();
+    var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
+    var firstName = customerName[1];
+    var lastName = customerName[0];
+    customerName = firstName+' '+lastName;
+
+    $.get('/accounting/get-other-modals/receive_payment_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#receivePaymentModal #customer').html(`<option value="${customerId}">${customerName}</option>`).trigger('change');
+
+        modalName = '#receivePaymentModal';
+        initModalFields('receivePaymentModal');
+
+        $('#receivePaymentModal').modal('show');
+    });
+});
+
+$('#customers-table .create-invoice').on('click', function(e) {
+    e.preventDefault();
+    var customerId = $(this).closest('tr').find('.select-one').val();
+    var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
+    var firstName = customerName[1];
+    var lastName = customerName[0];
+    customerName = firstName+' '+lastName;
+
+    $.get('/accounting/get-other-modals/invoice_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#invoiceModal #customer').html(`<option value="${customerId}">${customerName}</option>`).trigger('change');
+
+        modalName = '#invoiceModal';
+        initModalFields('invoiceModal');
+
+        $('#invoiceModal').modal('show');
+    });
+});
+
+$('#customers-table .create-sales-receipt').on('click', function(e) {
+    e.preventDefault();
+    var customerId = $(this).closest('tr').find('.select-one').val();
+    var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
+    var firstName = customerName[1];
+    var lastName = customerName[0];
+    customerName = firstName+' '+lastName;
+
+    $.get('/accounting/get-other-modals/sales_receipt_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#salesReceiptModal #customer').html(`<option value="${customerId}">${customerName}</option>`).trigger('change');
+
+        modalName = '#salesReceiptModal';
+        initModalFields('salesReceiptModal');
+
+        $('#salesReceiptModal').modal('show');
+    });
+});
+
+$('#customers-table .create-standard-estimate').on('click', function(e) {
+    e.preventDefault();
+    var customerId = $(this).closest('tr').find('.select-one').val();
+    var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
+    var firstName = customerName[1];
+    var lastName = customerName[0];
+    customerName = firstName+' '+lastName;
+
+    $.get('/accounting/get-other-modals/standard_estimate_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#standard-estimate-modal #customer').html(`<option value="${customerId}">${customerName}</option>`).trigger('change');
+
+        modalName = '#standard-estimate-modal';
+        initModalFields('standard-estimate-modal');
+
+        $('#standard-estimate-modal').modal('show');
+    });
+});
+
+$('#customers-table .create-options-estimate').on('click', function(e) {
+    e.preventDefault();
+    var customerId = $(this).closest('tr').find('.select-one').val();
+    var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
+    var firstName = customerName[1];
+    var lastName = customerName[0];
+    customerName = firstName+' '+lastName;
+
+    $.get('/accounting/get-other-modals/options_estimate_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#options-estimate-modal #customer').html(`<option value="${customerId}">${customerName}</option>`).trigger('change');
+
+        modalName = '#options-estimate-modal';
+        initModalFields('options-estimate-modal');
+
+        $('#options-estimate-modal').modal('show');
+    });
+});
+
+$('#customers-table .create-bundle-estimate').on('click', function(e) {
+    e.preventDefault();
+    var customerId = $(this).closest('tr').find('.select-one').val();
+    var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
+    var firstName = customerName[1];
+    var lastName = customerName[0];
+    customerName = firstName+' '+lastName;
+
+    $.get('/accounting/get-other-modals/bundle_estimate_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#bundle-estimate-modal #customer').html(`<option value="${customerId}">${customerName}</option>`).trigger('change');
+
+        modalName = '#bundle-estimate-modal';
+        initModalFields('bundle-estimate-modal');
+
+        $('#bundle-estimate-modal').modal('show');
+    });
+});

@@ -554,6 +554,7 @@ $route['accounting/products-and-services/print-table']['post'] = 'accounting_con
 $route['accounting/products-and-services/export-table']['post'] = 'accounting_controllers/products_and_services/export_table';
 $route['accounting/products-and-services/reorder-items']['post'] = 'accounting_controllers/products_and_services/reorder_items';
 $route['accounting/products-and-services/get-item-details/(:any)/(:any)'] = 'accounting_controllers/products_and_services/get_item_details/$1/$2';
+$route['accounting/products-and-services/get-item-locations/(:any)'] = 'accounting_controllers/products_and_services/get_item_locations/$1';
 
 // Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';

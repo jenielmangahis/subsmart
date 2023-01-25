@@ -171,3 +171,35 @@
     </div>
 </div>
 <!-- end select category modal -->
+
+<!-- MODAL SECTION -->
+<div class="modal fade nsm-modal" id="item-locations-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Item Locations</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 mt-1 mb-1">
+                        <table id="item-locations-table" class="nsm-table">
+                            <thead>
+                                <tr>
+                                    <td class='d-none' data-name="Item_ID">Item ID</td>
+                                    <td data-name="Location">Location</td>
+                                    <td data-name="Quantity">Quantity</td>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL SECTION -->

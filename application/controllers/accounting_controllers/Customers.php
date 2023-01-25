@@ -540,6 +540,122 @@ class Customers extends MY_Controller {
     public function update($customerId)
     {
         $input = $this->input->post();
+        $input['customer_id'] = $customerId;
+
+        $custom_fields_array = [];
+        if (array_key_exists('custom_name', $input) && array_key_exists('custom_value', $input)) {
+            foreach ($input['custom_name'] as $key => $name) {
+                $cleanName = trim($name);
+                $cleanValue = trim($input['custom_value'][$key]);
+
+                if (!empty($cleanName) && !empty($cleanValue)) {
+                    array_push($custom_fields_array, ['name' => $cleanName, 'value' => $cleanValue]);
+                }
+            }
+        }
+
+        // customer profile info
+        $input_profile = array();
+        $input_profile['fk_user_id'] = logged('id');
+        $input_profile['fk_sa_id'] = $input['fk_sa_id'];
+        $input_profile['company_id'] = logged('company_id');
+        $input_profile['status'] = $input['status'];
+        $input_profile['customer_type'] = $input['customer_type'];
+        $input_profile['customer_group_id'] = $input['customer_group'];
+        $input_profile['business_name'] = $input['business_name'];
+        $input_profile['first_name'] = $input['first_name'];
+        $input_profile['last_name'] = $input['last_name'];
+        $input_profile['middle_name'] = $input['middle_name'];
+        $input_profile['prefix'] = $input['prefix'];
+        $input_profile['suffix'] = $input['suffix'];
+        $input_profile['mail_add'] = $input['mail_add'];
+        $input_profile['city'] = $input['city'];
+        $input_profile['state'] = $input['state'];
+        $input_profile['country'] = $input['country'];
+        $input_profile['industry_type_id'] = $input['industry_type'];
+        $input_profile['zip_code'] = $input['zip_code'];
+        $input_profile['cross_street'] = $input['cross_street'];
+        $input_profile['subdivision'] = $input['subdivision'];
+        $input_profile['email'] = $input['email'];
+        $input_profile['ssn'] = $input['ssn'];
+        $input_profile['date_of_birth'] = $input['date_of_birth'];
+        $input_profile['phone_h'] = $input['phone_h'];
+        $input_profile['phone_m'] = $input['phone_m'];
+        $input_profile['custom_fields'] = json_encode($custom_fields_array);
+        $input_profile['is_sync'] = 0;
+        if( $input['bill_method'] == 'CC' ){
+            //Check cc if valid using converge
+            $a_exp_date = explode("/", $input['credit_card_exp']);
+            $exp_date   = $a_exp_date[0] . date("y",strtotime($a_exp_date[1] . "-01-01"));
+            $data_cc = [
+                'card_number' => $input['credit_card_num'],
+                'exp_date' => $exp_date,
+                'cvc' => $input['credit_card_exp_mm_yyyy'],
+                'ssl_amount' => 0,
+                'ssl_first_name' => $input['first_name'],
+                'ssl_last_name' => $input['last_name'],
+                'ssl_address' => $input['mail_add'] . ' ' . $input['city'] . ' ' . $input['state'],
+                'ssl_zip' => $input['zip_code']
+            ];
+            $is_valid = $this->converge_check_cc_details_valid($data_cc);
+
+            echo $is_valid;
+            if( $is_valid['is_success'] == 1 ){
+                $proceed = 1;
+            }else{
+                $proceed = 0;
+            }
+        }else{
+            $proceed = 1;
+        }   
+
+        if( $proceed == 1 ){
+            if(isset($input['customer_id'])){
+                $customer = $this->customer_ad_model->get_customer_data_settings($input['customer_id']);
+                if( $customer->adt_sales_project_id > 0 ){
+                    $input_profile['is_sync'] = 0;
+                }
+                $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+                $profile_id = $input['customer_id'];
+
+                customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer ' .$input['first_name'].' '.$input['last_name']);
+
+            }else{
+                $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
+
+                customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer ' .$input['first_name'].' '.$input['last_name']);
+            }
+
+
+            $companyId = logged('company_id');
+            $save_billing = $this->save_billing_information($input,$profile_id);
+            $save_office = $this->save_office_information($input,$profile_id);
+            $save_alarm = $this->save_alarm_information($input,$profile_id);
+            $save_access = $this->save_access_information($input,$profile_id);
+            $save_papers = $this->save_papers_information($input,$profile_id);
+            $save_contacts = $this->save_contacts($input,$profile_id);
+
+            if($companyId == 58){
+                $this->save_solar_info($input,$profile_id);
+            }
+            
+
+            if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
+                echo 'Error Occured on Saving Billing Information';
+                $data_arr = array("success" => FALSE,"message" => 'Error on saving information');
+            }else {
+                if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
+                    $this->save_notes($input,$profile_id);
+                }
+                //$this->generate_qr_image($profile_id);
+                if(isset($input['customer_id'])){
+                    $data_arr = array("success" => TRUE,"profile_id" => $input['customer_id']);
+                }else{
+                    $data_arr = array("success" => TRUE,"profile_id" => $profile_id);
+                }
+            }
+        }
+        die(json_encode($data_arr));
     }
 
     private function save_billing_information($input,$id)
@@ -879,5 +995,44 @@ class Customers extends MY_Controller {
         }else{
             return $this->general->add_($solarInfo, 'acs_info_solar');
         }
+    }
+
+    public function converge_check_cc_details_valid($data)
+    {
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $msg = '';
+        $is_success = 0;
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $verify = $converge->request('ccverify', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $data['exp_date'],
+            'ssl_cvv2cvc2' => $data['cvc'],
+            'ssl_first_name' => $data['ssl_first_name'],
+            'ssl_last_name' => $data['ssl_last_name'],
+            'ssl_amount' => $data['ssl_amount'],
+            'ssl_avs_address' => $data['ssl_address'],
+            'ssl_avs_zip' => $data['ssl_zip'],
+        ]);
+        if( $verify['success'] == 1 ){
+            if( $verify['ssl_result_message'] == 'DECLINED' ){
+                $is_success = 0;
+            }else{
+                $is_success = 1;    
+            }
+            
+        }else{
+            $msg = $verify['errorMessage'];
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 }
