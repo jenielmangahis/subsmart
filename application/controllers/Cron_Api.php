@@ -417,11 +417,18 @@ class Cron_Api extends MYF_Controller {
                             $job_description = 'None';
                         }
 
+                        if( $job->message != '' ){
+                            $job_notes = strip_tags($job->message);
+                        }else{
+                            $job_notes = 'None';
+                        }
+
                         $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                         $description .= "Job Type : ".$job->job_type."\n";                
                         $description .= "Phone Number : ".$job->cust_phone."\n";                
                         $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
                         $description .= "Job Description : ". $job_description ."\n";
+                        $description .= "Notes : ". $job_notes ."\n";
                         $description .= $view_link . "\n";
 
                         $is_valid = true;
