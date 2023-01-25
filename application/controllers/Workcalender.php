@@ -670,6 +670,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Tickets_model');
         $this->load->model('Job_tags_model');
         $this->load->model('Users_model');
+        $this->load->model('CalendarSettings_model');
         $this->load->model('TechnicianDayOffSchedule_model');
 
         $post = $this->input->post();
@@ -678,12 +679,11 @@ class Workcalender extends MY_Controller
 
         $events = $this->event_model->getAllByCompany($company_id);
 
-        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
-        $a_settings = unserialize($settings[0]->value);
-        if ($a_settings) {
-            $user_timezone = $a_settings['calendar_timezone'];
-        } else {
-            $user_timezone = 'UTC';
+        $settings = $this->CalendarSettings_model->getByCompanyId($company_id);
+        if( $settings && $settings->timezone != '' ){
+            $user_timezone = $settings->timezone;
+        }else{
+            $user_timezone = 'America/Chicago';
         }
 
         $google_user_api       = $this->GoogleAccounts_model->getByCompanyId($company_id);
@@ -979,14 +979,24 @@ class Workcalender extends MY_Controller
                     $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="job" data-id="'.$j->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
                 }
 
-                if (isset($a_settings['work_order_show_customer'])) {
+                /*if( $settings && $settings->display_customer_name ){
                     if( $j->first_name != '' ||  $j->last_name != ''){
                         $customer_name = $j->first_name . ' ' . $j->last_name;
                         $custom_html .= '<a class="calendar-tile-minmax job-min-max-'.$j->id.'" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
                     }else{
-                        $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';                        
+                        $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';                        
                     }
-                }
+                }else{
+                    $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';    
+                }*/
+
+                if( $j->first_name != '' ||  $j->last_name != ''){
+                    $customer_name = $j->first_name . ' ' . $j->last_name;
+                    $custom_html .= '<a class="calendar-tile-minmax job-min-max-'.$j->id.'" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
+                }else{
+                    $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';                        
+                }    
+                            
                 $custom_html .= '</div>';
                 
                 $custom_html .= '<div class="calendar-tile-details job-tile-'.$j->id.'">';
