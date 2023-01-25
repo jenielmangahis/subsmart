@@ -25,8 +25,12 @@
     </ul>    
 </label>
 <label class="content-title" style="cursor: pointer;margin-bottom: 4px;margin-top: 5px;">
-    <span class="address-label" style="width:165px;"><i class="bx bxs-phone"></i> Contact Number : </span>
-    <input type="text" style="display:inline-block;width: 20%;width:178px;" id="m-customer-mobile" class="nsm-field form-control" value="<?= $customer->phone_m != '' ? $customer->phone_m : '---'; ?>" />
+    <span class="address-label" style="width:165px;"><i class='bx bx-mobile'></i> Mobile Number : </span>
+    <input type="text" style="display:inline-block;width: 20%;width:178px;" id="m-customer-mobile" class="nsm-field form-control" value="<?= $customer->phone_m != '' ? $customer->phone_m : '---'; ?>" />    
+</label>
+<label class="content-title" style="cursor: pointer;margin-bottom: 4px;margin-top: 5px;">
+    <span class="address-label" style="width:165px;"><i class="bx bxs-phone"></i> Phone Number : </span>
+    <input type="text" style="display:inline-block;width: 20%;width:178px;" id="m-customer-phone" class="nsm-field form-control" value="<?= $customer->phone_h != '' ? $customer->phone_h : '---'; ?>" />
     <button type="button" class="nsm-button btn-update-customer-info" style="display:inline-block;background-color: #ffffff;margin:0px;">
         <i class='bx bxs-user-check' style="position: relative;top:2px;line-height: 0px;"></i> Update
     </button>
@@ -43,13 +47,14 @@ $(function(){
         var cus_state   = $('#m-customer-state').val();
         var cus_zip     = $('#m-customer-zip').val();
         var cus_mobile  = $('#m-customer-mobile').val();
+        var cus_phone   = $('#m-customer-phone').val();
         var cus_prof    =  $('#m-customer-prof').val();
         if (!isLoading) {
             $.ajax({
                 type: 'POST',
                 url: url,
                 dataType:'json',
-                data: {cus_prof:cus_prof,cus_address:cus_address,cus_city:cus_city,cus_state:cus_state,cus_zip:cus_zip,cus_mobile:cus_mobile},
+                data: {cus_prof:cus_prof,cus_address:cus_address,cus_city:cus_city,cus_state:cus_state,cus_zip:cus_zip,cus_mobile:cus_mobile,cus_phone:cus_phone},
                 success: function(result) {
                     if (result.is_success) {
                         Swal.fire({                    

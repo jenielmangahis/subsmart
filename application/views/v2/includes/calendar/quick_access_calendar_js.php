@@ -78,6 +78,28 @@ $(function(){
         }, 500);
     });
 
+    $('#calendar-quick-add-tc-off').on('click', function(){
+        var url = base_url + "calendar/_quick_add_tc_off_form";
+        var date_selected   = $('#quick-add-date-selected').val();
+        calendar_modal_source = 'quick-add-tc-off';
+        $('#modal-quick-select-schedule-type').modal('hide');
+        $('#modal-quick-add-tc-off').modal('show');
+
+        showLoader($("#quick-add-tc-off-form-container"));        
+
+        setTimeout(function () {
+          $.ajax({
+             type: "GET",
+             url: url,
+             data: {date_selected:date_selected},
+             success: function(o)
+             {          
+                $("#quick-add-tc-off-form-container").html(o);
+             }
+          });
+        }, 500);
+    });
+
     function reloadQuickAccessCalendarSchedule() {
         var _calendar = document.getElementById('quick-access-calendar-schedule');
         var events = '';
@@ -167,12 +189,12 @@ $(function(){
             },
             defaultDate: "<?php echo date('Y-m-d'); ?>",
             editable: true,
-            droppable: true, // this allows things to be dropped onto the calendar
+            droppable: false, // this allows things to be dropped onto the calendar
             drop: function(arg) {
                 
             },
             eventDrop: function(info) {
-                //alert(info.event.extendedProps.eventType);
+                /*//alert(info.event.extendedProps.eventType);
                 //alert(info.event.title + " was dropped on " + info.event.start.toDateString());
 
                 let result = info.hasOwnProperty('newResource');
@@ -242,7 +264,7 @@ $(function(){
                             }
                         }
                     });
-                }
+                }*/
             },
             navLinks: true, // can click day/week names to navigate views
             eventLimit: true, // allow "more" link when too many events
@@ -308,8 +330,8 @@ $(function(){
     });
 
     $(document).on('click', '.quick-calendar-tile', function(){
-        var appointment_type = $(this).data('type');
-        var appointment_id   = $(this).data('id');
+        var appointment_type = $(this).attr('data-type');
+        var appointment_id   = $(this).attr('data-id');
 
         $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
         $('#upcoming-schedule-view-more-details').attr('data-id', appointment_id);
@@ -319,12 +341,16 @@ $(function(){
         
         if( appointment_type == 'job' ){
             var url = base_url + "job/_quick_view_details";
+            $('#upcoming-schedule-view-more-details').show();
         }else if( appointment_type == 'ticket' ){
             var url = base_url + "ticket/_quick_view_details";
+            $('#upcoming-schedule-view-more-details').show();
         }else if( appointment_type == 'tc-off' ){
             var url = base_url + "calendar/_quick_view_tc_off";
+            $('#upcoming-schedule-view-more-details').hide();
         }else{
             var url = base_url + "calendar/_view_appointment";
+            $('#upcoming-schedule-view-more-details').hide();
         }
         
         $('#modal-quick-access-calendar-schedule').modal('hide');
@@ -345,16 +371,38 @@ $(function(){
         }, 500);
     });
 
-    $(document).on('click', '#edit-upcoming-schedule', function(){
-        var schedule_id   = $(this).data('id');
-        var schedule_type = $(this).data('type');
+    $(document).on('click', '.quick-edit-schedule', function(){
+        var schedule_id   = $(this).attr('data-id');
+        var schedule_type = $(this).attr('data-type');
 
         if( schedule_type == 'job' ){
             location.href = base_url + 'job/new_job1/' + schedule_id;
         }else if( schedule_type == 'ticket' ){
             location.href = base_url + 'tickets/editDetails/' + schedule_id;
+        }else if( schedule_type == 'tc-off' ){
+            quickEditTcOff(schedule_id);
         }
     });
+
+    function quickEditTcOff(schedule_id){
+        var url = base_url + "calendar/_quick_edit_tc_off_form";
+        calendar_modal_source = 'quick-edit-tc-off';
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#modal-quick-add-tc-off').modal('show');
+
+        showLoader($("#quick-add-tc-off-form-container"));  
+        setTimeout(function () {
+          $.ajax({
+             type: "GET",
+             url: url,
+             data: {schedule_id:schedule_id},
+             success: function(o)
+             {          
+                $("#quick-add-tc-off-form-container").html(o);
+             }
+          });
+        }, 500);
+    }
 
     $("#quick-add-job-form").submit(function(e) {
         e.preventDefault();         
@@ -365,7 +413,7 @@ $(function(){
             type: "POST",
             url: url,
             dataType:'json',
-            data: form.serialize(), // serializes the form's elements.
+            data: form.serialize(), 
             success: function(data) {
                 if( data.is_success == 1 ){
                     $('#modal-quick-add-job').modal('hide');
@@ -405,7 +453,7 @@ $(function(){
             type: "POST",
             url: url,
             dataType:'json',
-            data: form.serialize(), // serializes the form's elements.
+            data: form.serialize(),
             success: function(data) {
                 if( data.is_success == 1 ){
                     $('#modal-quick-add-service-ticket').modal('hide');
@@ -444,7 +492,7 @@ $(function(){
             type: "POST",
             url: url,
             dataType:'json',
-            data: form.serialize(), // serializes the form's elements.
+            data: form.serialize(),
             success: function(data) {
                 if( data.is_success == 1 ){
                     $('#modal-quick-add-appointment').modal('hide');
@@ -475,5 +523,59 @@ $(function(){
         });
     });
 
+    $("#quick-add-tc-off-form").submit(function(e) {
+        e.preventDefault();         
+        var url  = base_url + 'calendar/_create_technician_off_schedule';
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: form.serialize(),
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-add-tc-off').modal('hide');
+                    $('#modal-quick-access-calendar-schedule').modal('show');
+
+                    Swal.fire({
+                        text: 'Technician Schedule Off has been added!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadQuickAccessCalendarSchedule();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#btn-tc-off-submit").html('Schedule');
+            }, beforeSend: function() {
+                $("#btn-tc-off-submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
 });
+
+function formatRepoUser(repo) {
+    if (repo.loading) {
+        return repo.text;
+    }
+
+    var $container = $(
+        '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+    );
+
+    return $container;
+}
+
+function formatRepoSelectionUser(repo) {
+    return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+}
 </script>

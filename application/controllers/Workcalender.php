@@ -3315,7 +3315,7 @@ class Workcalender extends MY_Controller
         $msg        = 'Cannot sync data';
         $post       = $this->input->post();
 
-        $result = createSyncToCalendar($post['tile_id'], $post['tile_type'], $company_id, 1);
+        $result = createSyncToCalendar($post['tile_id'], $post['tile_type'], $company_id, 1);        
         if( $result['is_valid'] == 1 ){
             $is_valid = true;
             $msg = '';
@@ -3611,15 +3611,82 @@ class Workcalender extends MY_Controller
         $this->load->view('v2/pages/workcalender/ajax_load_view_tcoff', $this->page_data);
     }
 
-    public function ajax_appointment_quick_add_form(){
+    public function ajax_quick_add_appointment_form(){
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
+        $this->load->model('CalendarSettings_model');
 
+        //Default created by
+        $user_id = logged('id');
+        $userLogged = $this->Users_model->getUser($user_id);
         $appointmentPriorityEventOptions = $this->Appointment_model->priorityEventOptions();
+        $appointmentPriorityOptions      = $this->Appointment_model->priorityOptions();
 
-        $this->page_data['default_appointment_type_id'] = 11;
+        // Setting of the calender
+        $calender_settings  = $this->CalendarSettings_model->getByCompanyId($company_id); 
+        $default_time_to    = date("H:00 A");
+        $calendar_start_day = 0;
+        $default_timezone   = 'Central Time (UTC -5)';
+        $default_time_to_interval = 0;
+        $default_calendar_view    = 'Month';  
+
+        if( $calender_settings ){
+            if( $calender_settings->time_interval != '' ){
+                $timeInterval = explode(" ", $calender_settings->time_interval);
+                if( $timeInterval[0] ){
+                    $default_time_to = date("H:00 A", strtotime("+".trim($timeInterval[0]).' hours'));
+                    $default_time_to_interval = trim($timeInterval[0]);
+                }
+                
+            }
+        } 
+
+        $default_start_date = date("Y-m-d");
+        if( $this->input->get('date_selected') ){
+            $default_start_date = $this->input->get('date_selected');
+        }
+
+        $this->page_data['default_time_to'] = $default_time_to;
+        $this->page_data['default_time_to_interval'] = $default_time_to_interval;
+        $this->page_data['userLogged'] = $userLogged; 
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['appointmentPriorityEventOptions'] = $appointmentPriorityEventOptions;
+        $this->page_data['appointmentPriorityOptions'] = $appointmentPriorityOptions;
         $this->page_data['appointmentTypes'] = $this->AppointmentType_model->getAllByCompany($company_id, true);
-        $this->load->view('v2/pages/workcalender/ajax_appointment_quick_add_form', $this->page_data);
+        $this->load->view('v2/pages/workcalender/ajax_quick_add_appointment_form', $this->page_data);
+    }
+
+    public function ajax_quick_add_tc_off_form()
+    {
+        $default_start_date = date("Y-m-d");
+        if( $this->input->get('date_selected') ){
+            $default_start_date = $this->input->get('date_selected');
+        }
+
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->load->view('v2/pages/workcalender/ajax_quick_add_tc_off_form', $this->page_data);
+    }
+
+    public function ajax_quick_edit_tc_off_form()
+    {
+        $this->load->model('TechnicianDayOffSchedule_model');
+        $this->load->model('Users_model');
+
+        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getById($this->input->get('schedule_id'));    
+        
+        $technicians_ids = explode(",",$technicianScheduleOff->technician_user_ids);
+        $users      = $this->Users_model->getAllByIds($technicians_ids);
+        $tech_assigned = array();
+        foreach($users as $u){
+            $tech_assigned[] = ['name' => $u->FName . ' ' . $u->LName, 'id' => $u->id];
+        }
+        
+        $taskAssigned = $this->Users_model->getById($technicianScheduleOff->task_to_user_id);
+
+        $this->page_data['technicianScheduleOff'] = $technicianScheduleOff;
+        $this->page_data['taskAssigned'] = $taskAssigned;
+        $this->page_data['tech_assigned'] = $tech_assigned;
+        $this->load->view('v2/pages/workcalender/ajax_quick_edit_tc_off_form', $this->page_data);
     }
 }
 

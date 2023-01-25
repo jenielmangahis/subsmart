@@ -331,8 +331,8 @@ $(function(){
     $("#dashboard_upcoming_schedules_table").nsmPagination({itemsPerPage:3});
 
     $('.quick-view-upcoming-schedule').on('click', function(){
-        var appointment_type = $(this).data('type');
-        var appointment_id   = $(this).data('id');
+        var appointment_type = $(this).attr('data-type');
+        var appointment_id   = $(this).attr('dat-id');
 
         $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
         $('#upcoming-schedule-view-more-details').attr('data-id', appointment_id);
