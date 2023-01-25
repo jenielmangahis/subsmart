@@ -338,10 +338,16 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $ticket->service_location . ' ' . $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
 
+                        if( $appointment->notes != '' ){
+                            $notes = $appointment->notes;
+                        }else{
+                            $notes = 'None';
+                        }
+
                         $description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
                         $description .= "Phone Number : ".$ticket->phone_m."\n";                  
                         $description .= "Service Location : " . $ticket->service_location . "\n";
-                        $description .= "Notes : ". $appointment->notes ."\n";
+                        $description .= "Notes : ". $notes ."\n";
 
                         $is_valid = true;
                     }else{
@@ -405,11 +411,17 @@ class Cron_Api extends MYF_Controller {
 
                         $view_link = base_url('/job_invoice_view/' . $job_eid);
                         
+                        if( $job->job_description != '' ){
+                            $notes = $job->job_description;
+                        }else{
+                            $notes = 'None';
+                        }
 
                         $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                         $description .= "Job Type : ".$job->job_type."\n";                
                         $description .= "Phone Number : ".$job->cust_phone."\n";                
                         $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
+                        $description .= "Notes : ". $notes ."\n";
                         $description .= $view_link . "\n";
 
                         $is_valid = true;
