@@ -48,7 +48,7 @@ class Inventory extends MY_Controller
         $comp_id = logged('company_id');
         $this->page_data['active_category'] = "Show All";
         $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
-        $role_id = logged('role');
+        $role_id = intval(logged('role'));
         if (!empty($get['category'])) {
             if( $role_id == 1 || $role_id == 2 ){
                 $comp_id = 0;

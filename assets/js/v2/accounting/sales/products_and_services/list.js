@@ -846,3 +846,49 @@ function occupyFields(id, type, action = 'edit') {
         }
     });
 }
+
+$('#items-table .see-item-locations').on('click', function(e) {
+    e.preventDefault();
+
+    var itemId = $(this).closest('tr').find('.select-one').val();
+    $.get(`/accounting/products-and-services/get-item-locations/${itemId}`, function(result) {
+        var locations = JSON.parse(result);
+
+        if(locations.length > 0) {
+            for(i = 0; i < locations.length; i++)
+            {
+                var location = locations[i];
+    
+                $('#item-locations-modal #item-locations-table tbody').append(`
+                <tr>
+                    <td class="d-none">${itemId}</td>
+                    <td>${location.name}</td>
+                    <td>${location.qty}</td>
+                </tr>
+                `);
+            }
+        } else {
+            $('#item-locations-modal #item-locations-table tbody').append(`
+            <tr>
+                <td colspan="3">
+                    <div class="nsm-empty">
+                        <span>No results found.</span>
+                    </div>
+                </td>
+            </tr>
+            `);
+        }
+
+        $('#item-locations-modal').modal('show');
+    });
+});
+
+$('#item-locations-modal').on('hidden.bs.modal', function() {
+    $(this).find('#item-locations-table').find('tbody').html(`<tr>
+        <td colspan="3">
+            <div class="nsm-empty">
+                <span>No results found.</span>
+            </div>
+        </td>
+    </tr>`);
+});

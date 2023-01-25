@@ -351,7 +351,7 @@ input:checked + .slider:before {
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select customer">
                                     </select> -->
-                                    <select name="customer_id" id="customer_id" class="form-control" required>
+                                    <select name="customer_id" id="customer-id" class="form-control" required>
                                     <option>Select a customer</option>
                                     <?php foreach ($customers as $customer):?>
                                     <?php 
@@ -1380,7 +1380,7 @@ function initialize() {
 
 $(document).ready(function(){
  
-    $('#customer_id').change(function(){
+    $('#customer-id').change(function(){
     var id  = $(this).val();
     // alert(id);
 

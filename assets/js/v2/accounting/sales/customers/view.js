@@ -502,3 +502,96 @@ $('#new-bundle-estimate').on('click', function() {
         $('#bundle-estimate-modal').modal('show');
     });
 });
+
+$('#edit-customer-form').on('submit', async function(e) {
+    e.preventDefault();
+    var form = $(this);
+
+    const formArray = form.serializeArray();
+    const payload = {};
+    formArray.forEach(({ name, value }) => payload[name] = value);
+    const prefixURL = base_url;
+    const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, { 
+        method: "post", 
+        body: JSON.stringify(payload),
+        headers: { 
+            accept: "application/json", 
+            "content-type": "application/json"
+        }
+    });
+    const json = await response.json();
+    if (json.data && json.message) {
+        const duplicateConfirmation = await Swal.fire({
+            title: 'Possible duplicate customer',
+            html: json.message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Save anyway'
+        });
+
+        if (!duplicateConfirmation.isConfirmed) {
+            return;
+        }
+    }
+
+    $.ajax({
+        type: "POST",
+        url: base_url + "accounting/customers/update/"+customerId,
+        dataType: 'json',
+        data: form.serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            if(data.success){
+                sucess("Customer Updated Successfully!",data.profile_id);
+            }else{
+                error(data.message);
+            }
+        },error: function (xhr, ajaxOptions, thrownError, data) {
+            Swal.fire({
+                text: 'Customer profile was successfully updated!',
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href=`${base_url}accounting/customers/view/${customerId}`;
+                }
+            });
+        }
+    });
+});
+
+function error(information){
+    Swal.fire({
+        title: 'Sorry!',
+        text: information,
+        icon: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+        if (result.value) {
+            window.location.href=`${base_url}accounting/customers/view/${customerId}`;
+        }
+    });
+}
+function sucess(information,id){
+    Swal.fire({
+        title: 'Good job!',
+        text: information,
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+        if (result.value) {
+            window.location.href=`${base_url}accounting/customers/view/${customerId}`;
+        }
+    });
+}
