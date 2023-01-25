@@ -3562,7 +3562,7 @@ class Workcalender extends MY_Controller
                         $customer_name = $j->first_name . ' ' . $j->last_name;
                         $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
                     }else{
-                        $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$a->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.'</span></a>';                        
+                        $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.'</span></a>';                        
                     }
                 }
                 $custom_html .= '</div>';           
