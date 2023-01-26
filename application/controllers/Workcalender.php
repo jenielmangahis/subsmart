@@ -747,8 +747,8 @@ class Workcalender extends MY_Controller
         //TC Schedule Off
         $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getAllByCompanyId($company_id);
         foreach( $technicianScheduleOff as $tc ){
-            $start_date_time = date('Y-m-d', strtotime($tc->leave_start_date));             
-            $start_date_end  = date('Y-m-d', strtotime($tc->leave_end_date)); 
+            $start_date_time = date('Y-m-d 00:00:00', strtotime($tc->leave_start_date));             
+            $start_date_end  = date('Y-m-d 23:59:59', strtotime($tc->leave_end_date)); 
             $backgroundColor = "#ff0000";
 
             $custom_html = '<div class="calendar-title-header">';
@@ -3429,8 +3429,8 @@ class Workcalender extends MY_Controller
         //TC Schedule Off
         $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getAllByCompanyId($company_id);
         foreach( $technicianScheduleOff as $tc ){
-            $start_date_time = date('Y-m-d', strtotime($tc->leave_start_date));             
-            $start_date_end  = date('Y-m-d', strtotime($tc->leave_end_date)); 
+            $start_date_time = date('Y-m-d 00:00:00', strtotime($tc->leave_start_date));             
+            $start_date_end  = date('Y-m-d 23:59:59', strtotime($tc->leave_end_date)); 
             $backgroundColor = "#ff0000";
 
             $custom_html = '<div class="calendar-title-header">';
@@ -3697,6 +3697,58 @@ class Workcalender extends MY_Controller
         $this->page_data['taskAssigned'] = $taskAssigned;
         $this->page_data['tech_assigned'] = $tech_assigned;
         $this->load->view('v2/pages/workcalender/ajax_quick_edit_tc_off_form', $this->page_data);
+    }
+
+    public function ajax_update_technician_off_schedule()
+    {
+        $this->load->model('TechnicianDayOffSchedule_model');
+
+        $post       = $this->input->post();
+        $user_id    = getLoggedUserID();
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $message    = 'Cannot create schedule';
+
+        if( $post['tc_off_start_date'] == '' || $post['tc_off_end_date'] == '' ){
+            $message = 'Please select start and end date';
+        }elseif( empty($post['tc_off_user_ids']) ){
+            $message = 'Please select technician who will take leave';
+        }else{
+            $technicianDayOffSchedule = $this->TechnicianDayOffSchedule_model->getById($post['tcid']);
+            if( $technicianDayOffSchedule ){
+                $assigned_tech = 0;
+                if( $post['tc_off_task_to_user_id'] > 0 ){
+                    $assigned_tech = $post['tc_off_task_to_user_id'];
+                }
+                
+                $technician_ids = implode(",", $post['tc_off_user_ids']);
+                $data_tc_off = [
+                    'company_id' => $company_id,
+                    'user_id' => $user_id,
+                    'technician_user_ids' => $technician_ids,
+                    'task_to_user_id' => $assigned_tech,
+                    'task_details' => $post['tc_off_task_details'],
+                    'leave_start_date' => date("Y-m-d", strtotime($post['tc_off_start_date'])),
+                    'leave_end_date' => date("Y-m-d", strtotime($post['tc_off_end_date'])),
+                    'created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->TechnicianDayOffSchedule_model->update($technicianDayOffSchedule->id, $data_tc_off);
+
+                $is_success = 1;
+                $message    = '';
+                
+            }else{
+                $msg = "Cannot find data";
+            }            
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $message
+        ];
+
+        echo json_encode($json_data);
     }
 }
 
