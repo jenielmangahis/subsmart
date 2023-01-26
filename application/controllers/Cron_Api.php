@@ -307,7 +307,7 @@ class Cron_Api extends MYF_Controller {
                     }
                     break;
                 case ($gs->module_name == 'service_ticket' || $gs->module_name == 'ticket'):
-                    $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
+                    $calendar_type = $this->GoogleCalendar_model->calendarTypeServiceTicket();
                     $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->object_id, $gs->company_id);
                     if( $ticket ){
                         if( $ticket->job_tag != '' ){
@@ -338,10 +338,25 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $ticket->service_location . ' ' . $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
 
+                        if( $ticket->job_description != '' ){
+                            $job_description = $ticket->job_description;
+                        }else{
+                            $job_description = 'None';
+                        }
+
+                        if( $ticket->instructions != '' ){
+                            $instructions = strip_tags($ticket->instructions);
+                        }else{
+                            $instructions = 'None';
+                        }
+
+                        
+                        $notes = 'None';
                         $description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
                         $description .= "Phone Number : ".$ticket->phone_m."\n";                  
                         $description .= "Service Location : " . $ticket->service_location . "\n";
-                        $description .= "Notes : ". $appointment->notes ."\n";
+                        $description .= "Job Description : ". $job_description ."\n";
+                        $description .= "Instructions / Notes : ". $instructions ."\n";
 
                         $is_valid = true;
                     }else{
@@ -405,11 +420,24 @@ class Cron_Api extends MYF_Controller {
 
                         $view_link = base_url('/job_invoice_view/' . $job_eid);
                         
+                        if( $job->job_description != '' ){
+                            $job_description = $job->job_description;
+                        }else{
+                            $job_description = 'None';
+                        }
+
+                        if( $job->message != '' ){
+                            $job_notes = strip_tags($job->message);
+                        }else{
+                            $job_notes = 'None';
+                        }
 
                         $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                         $description .= "Job Type : ".$job->job_type."\n";                
                         $description .= "Phone Number : ".$job->cust_phone."\n";                
                         $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
+                        $description .= "Job Description : ". $job_description ."\n";
+                        $description .= "Notes : ". $job_notes ."\n";
                         $description .= $view_link . "\n";
 
                         $is_valid = true;

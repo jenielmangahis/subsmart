@@ -1598,6 +1598,7 @@ class Job extends MY_Controller
     public function save_job()
     {
         $this->load->helper(array('hashids_helper'));
+        $this->load->model('JobTags_model');
 
         $input = $this->input->post();
         $comp_id = logged('company_id');
@@ -1641,6 +1642,8 @@ class Job extends MY_Controller
         }
         
 
+        $jobTag = $this->JobTags_model->getById($input['tags']);
+
         $jobs_data = array(
             'job_number' => $job_number,
             'customer_id' => $input['customer_id'],
@@ -1659,7 +1662,7 @@ class Job extends MY_Controller
             'event_color' => $input['event_color'],
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'priority' => $input['priority'],//$this->input->post('job_priority'),
-            'tags' => $input['tags'],//$this->input->post('job_priority'),
+            'tags' => $jobTag->name,//$this->input->post('job_priority'),
             'status' => 'Scheduled',//$this->input->post('job_status'),
             // 'message' => $input['message'],
             'company_id' => $comp_id,

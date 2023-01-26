@@ -548,7 +548,7 @@
                                                 <option value="">Select Tags</option>
                                                 <?php if(!empty($tags)): ?>
                                                     <?php foreach ($tags as $tag): ?>
-                                                        <option value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
+                                                        <option value="<?= $tag->name; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select>
