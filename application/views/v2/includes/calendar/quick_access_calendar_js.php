@@ -156,7 +156,7 @@ $(function(){
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-toggle", "popover");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-trigger", "hover focus");
                 $(info.el).find(".fc-daygrid-day-top").attr("data-bs-placement", "top");
-                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Appointment");
+                $(info.el).find(".fc-daygrid-day-top").attr("data-bs-content", "<i class='bx bxs-calendar-plus'></i> Create Schedule");
 
                 $('.fc-timegrid-slot:before').attr("data-bs-toggle", "popover");
                 $('.fc-timegrid-slot:before').attr("data-bs-trigger", "hover focus");

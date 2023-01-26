@@ -151,8 +151,8 @@
                 <input type="hidden" id="quick-add-date-selected" value="" />                
                 <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-job" href="javascript:void(0);"><i class="bx bx-fw bx-message-square-error"></i>Job</a>
                 <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-service-ticket" href="javascript:void(0);"><i class="bx bx-fw bx bx-fw bx-note"></i>Service Ticket</a>
-                <!-- <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class="bx bx-fw bx-calendar-event"></i>Appointment</a>
-                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-tc-off" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-week' ></i>Technician Off</a> -->
+                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class="bx bx-fw bx-calendar-event"></i>Appointment</a>
+                <!-- <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-tc-off" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-week' ></i>Technician Off</a> -->
             </div>            
         </div>        
     </div>
