@@ -1173,6 +1173,17 @@ SQL;
         $workorderId = $payload['workorder_id'] ?? null;
         $jobId = $payload['job_id'] ?? null;
 
+
+        foreach ($recipients as $recipient) {
+            if (
+                empty(trim($recipient['email']))
+                || empty(trim($recipient['name']))
+            ) {
+                http_response_code(422);
+                exit(json_encode(['success' => false, 'message' => "Recipient's name and email are required"]));
+            }
+        }
+
         // copy template to user_docfile
 
         $this->db->where('id', $templateId);

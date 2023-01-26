@@ -423,6 +423,10 @@ a.btn-primary.btn-md {
                                             <?php } ?>
                                         </select>
                                     </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Job Description</b></label>
+                                        <textarea class="form-control" name="job_description"></textarea>
+                                    </div>
                                 </div>
                                 <div class="row" style="background-color:white;font-size:16px;">
                                     <div class="col-md-3">
@@ -842,6 +846,14 @@ a.btn-primary.btn-md {
                                         <input type="text" name="tl_mentor" class="form-control" placeholder="Enter Team Leader/Mentor">
                                     </div>                                        
                                 </div>
+                                <div class="row" style="background-color:white;">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label><h6>Instructions: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                            <textarea name="instructions" cols="40" rows="2" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
@@ -862,15 +874,6 @@ a.btn-primary.btn-md {
                                         <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
                                         <input type="file" name="attachments" id="attachments"
                                                 class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="row" style="background-color:white;">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label><h6>Instructions: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
-                                            <textarea name="instructions" cols="40" rows="2"
-                                                    class="form-control"></textarea>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">

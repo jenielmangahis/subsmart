@@ -4506,7 +4506,7 @@ class Customer extends MY_Controller
         
         
         //Settings
-        $prefix = 'TK-';
+        $prefix = 'SERVICE-';
         $lastInserted = $this->tickets_model->getlastInsert($company_id);
         if( $lastInserted ){
             $next = $lastInserted->ticket_no;

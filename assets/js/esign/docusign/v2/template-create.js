@@ -285,7 +285,7 @@ function TemplateCreate() {
     $("#saveandclose").on("click", (e) => sendForm(e, templateIdParam, action));
   }
 
-  async function sendForm(event, templateIdParam, action) {
+  async function sendForm(event, templateIdParam, action, redirect = true) {
     event.preventDefault();
 
     const $name = $form.find("#name");
@@ -326,7 +326,11 @@ function TemplateCreate() {
         nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
       }
 
-      window.location = nextUrl;
+      if (redirect) {
+        window.location = nextUrl;
+      } else {
+        return data;
+      }
       return;
     }
 
@@ -382,7 +386,11 @@ function TemplateCreate() {
       nextUrl = `${prefixURL}/esign_v2/Files?template_id=${templateId}&next_step=3`;
     }
 
-    window.location = nextUrl;
+    if (redirect) {
+      window.location = nextUrl;
+    } else {
+      return data;
+    }
   }
 
   function removeRecipient(id) {
@@ -739,7 +747,19 @@ function TemplateCreate() {
     });
   }
 
-  return { init };
+  function submitForm(templateIdParam) {
+    const fakeEvent = {
+      preventDefault: () => {},
+      currentTarget: null,
+      type: "submit",
+    };
+
+    const action =
+      templateIdParam || templateId ? ACTIONS.UPDATE : ACTIONS.CREATE;
+    return sendForm(fakeEvent, templateIdParam, action, false);
+  }
+
+  return { init, submitForm };
 }
 
 function Recipient({
@@ -934,8 +954,49 @@ function Recipient({
   return { getData, createForm };
 }
 
-$(document).ready(function () {
-  new TemplateCreate().init();
+$(document).ready(async function () {
+  const templateCreate = new TemplateCreate();
+  templateCreate.init();
+
+  const $form = document.getElementById("templateForm");
+  if (!$form) return;
+
+  const { FormAutoSave, FormAutoSaveConfig } = await import(
+    "/assets/js/customer/add_advance/FormAutoSave.js"
+  );
+
+  let errorTimeout = null;
+  let hasChangedUrl = false;
+  let templateId = null;
+
+  const config = new FormAutoSaveConfig({
+    onChange: async () => {
+      try {
+        const result = await templateCreate.submitForm(templateId);
+        templateId = result.id;
+
+        if (!hasChangedUrl) {
+          window.history.replaceState({}, "", `/eSign_v2/templateEdit?id=${templateId}`); // prettier-ignore
+          hasChangedUrl = true;
+        }
+      } catch (error) {
+        if (error.toString().toLowerCase().includes("is not valid json")) {
+          return;
+        }
+
+        console.error(error);
+        window.clearTimeout(errorTimeout);
+
+        FormAutoSave.toggleSavingErrorIndicator();
+        errorTimeout = window.setTimeout(() => {
+          FormAutoSave.toggleSavingErrorIndicator(false);
+        }, 5000);
+      }
+    },
+  });
+
+  const form = new FormAutoSave($form, config);
+  form.listen();
 });
 
 // https://stackoverflow.com/a/47480429/8062659

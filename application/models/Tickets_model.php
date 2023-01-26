@@ -336,6 +336,7 @@ class Tickets_model extends MY_Model
             'job_tag'               => $job_tag,
             'ticket_no'             => $ticket_no,
             'ticket_date'           => $ticket_date,
+            'job_description'       => $job_description,
             'scheduled_time'        => $scheduled_time,
             'scheduled_time_to'     => $scheduled_time_to,
             'technicians'           => $technicians,

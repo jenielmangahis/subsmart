@@ -550,7 +550,9 @@
                                                         Billing Start Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input data-type="billing_start_date" type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date != null ? $billing_info->bill_start_date : $office_info->install_date; } ?>" />
+                                                        <div class="nsm-field-group calendar">
+                                                            <input data-type="billing_start_date" type="text" class="form-control nsm-field date" name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date != null ? $billing_info->bill_start_date : $office_info->install_date; } ?>" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -558,7 +560,9 @@
                                                         Billing End Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date != null ? $billing_info->bill_end_date : date("m/d/Y", strtotime("$office_info->install_date +$billing_info->contract_term months"));; } ?>"/>
+                                                        <div class="nsm-field-group calendar">
+                                                            <input data-type="billing_end_date" type="text" class="form-control nsm-field date" name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date != null ? $billing_info->bill_end_date : date("m/d/Y", strtotime("$office_info->install_date +$billing_info->contract_term months"));; } ?>"/>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -566,7 +570,7 @@
                                                         Billing Day of Month
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select data-type="billing_month_day" id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
+                                                        <select data-type="billing_month_day" id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select nsm-field searchable-dropdown">
                                                             <option selected value="0">Select Day</option>
                                                             <?php
                                                             if($billing_info->bill_day == null){
@@ -606,7 +610,7 @@
                                                         Billing Method
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
+                                                        <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select nsm-field searchable-dropdown">
                                                             <option  value="">Select Billing Method</option>
                                                             <option <?= isset($billing_info) && $billing_info->bill_method == 'CC' ?  'selected' : '';?> value="CC">Credit Card</option>
                                                             <option <?= isset($billing_info) && $billing_info->bill_method == 'DC' ?  'selected' : '';?> value="DC">Debit Card</option>
@@ -631,7 +635,7 @@
                                                         Term
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option  value="Due On Receipt">Due On Receipt</option>
                                                             <option  value="Net 5">Net 5</option>
                                                             <option  value="Net 10">Net 10</option>
@@ -647,7 +651,7 @@
                                                         Invoice Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+                                                        <input type="number" class="form-control nsm-field" name="invoice_date" id="invoice_date" />
                                                     </div>
                                                 </div>
 
@@ -656,7 +660,7 @@
                                                     Due Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="invoice_due_date" id="invoice_due_date" />
+                                                        <input type="number" class="form-control nsm-field" name="invoice_due_date" id="invoice_due_date" />
                                                     </div>
                                                 </div>
 
@@ -665,7 +669,7 @@
                                                         Check Number
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="check_num" id="check_num" value="<?php if(isset($billing_info)){ echo $billing_info->check_num; } ?>"/>
+                                                        <input type="number" class="form-control nsm-field" name="check_num" id="check_num" value="<?php if(isset($billing_info)){ echo $billing_info->check_num; } ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line" id="routingNumber">
@@ -673,7 +677,7 @@
                                                         Routing Number
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="routing_num" id="routing_num" value="<?php if(isset($billing_info)){ echo $billing_info->routing_num; } ?>"/>
+                                                        <input type="number" class="form-control nsm-field" name="routing_num" id="routing_num" value="<?php if(isset($billing_info)){ echo $billing_info->routing_num; } ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line" id="accountNumber">
@@ -681,7 +685,7 @@
                                                         Account Number
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="acct_num" id="acct_num" value="<?php if(isset($billing_info)){ echo $billing_info->acct_num; } ?>"/>
+                                                        <input type="number" class="form-control nsm-field" name="acct_num" id="acct_num" value="<?php if(isset($billing_info)){ echo $billing_info->acct_num; } ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line" id="CCN">
@@ -689,7 +693,7 @@
                                                         Credit Card Number
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" placeholder="0000 0000 0000 0000" class="form-control" name="credit_card_num" id="credit_card_num" value="<?= isset($billing_info) &&  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; ?>"/>
+                                                        <input type="number" placeholder="0000 0000 0000 0000" class="form-control nsm-field" name="credit_card_num" id="credit_card_num" value="<?= isset($billing_info) &&  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line" id="CCE">
@@ -699,10 +703,10 @@
                                                     <div class="col-md-6">
                                                         <div class="row">
                                                             <div class="col-md-6">
-                                                                <input type="text" placeholder="MM/YYYY" class="form-control" name="credit_card_exp" id="credit_card_exp" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp; } ?>"/>
+                                                                <input type="text" placeholder="MM/YYYY" class="form-control nsm-field" name="credit_card_exp" id="credit_card_exp" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp; } ?>"/>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <input type="text" placeholder="CVC" class="form-control" name="credit_card_exp_mm_yyyy" id="credit_card_exp_mm_yyyy" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp_mm_yyyy; } ?>"/>
+                                                                <input type="text" placeholder="CVC" class="form-control nsm-field" name="credit_card_exp_mm_yyyy" id="credit_card_exp_mm_yyyy" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp_mm_yyyy; } ?>"/>
                                                             </div> <small></small>
                                                         </div>
                                                     </div>
@@ -713,7 +717,7 @@
                                                         Account Credential
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
+                                                        <input type="number" class="form-control nsm-field" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line account_cred" >
@@ -721,7 +725,7 @@
                                                         Account Note
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
+                                                        <input type="number" class="form-control nsm-field" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line account_cred" id="confirmationPD">
@@ -729,7 +733,7 @@
                                                         Confirmation
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
+                                                        <input type="number" class="form-control nsm-field" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
                                                     </div>
                                                 </div>
 
@@ -754,7 +758,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="finance_amount"  value="<?= isset($billing_info) ? $billing_info->finance_amount : ''; ?> ">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="finance_amount"  value="<?= isset($billing_info) ? $billing_info->finance_amount : ''; ?> ">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -763,7 +767,9 @@
                                                         Recurring Start Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input data-type="subscription_start_date" type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?= isset($billing_info) ? $billing_info->recurring_start_date : ''; ?>" />
+                                                        <div class="nsm-field-group calendar">
+                                                            <input data-type="subscription_start_date" type="text" class="form-control nsm-field date" name="recurring_start_date" id="recurring_start_date" value="<?= isset($billing_info) ? $billing_info->recurring_start_date : ''; ?>" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -771,7 +777,9 @@
                                                         Recurring End Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input data-type="subscription_end_date" type="text" class="form-control datepicker" name="recurring_end_date" id="recurring_end_date" value="<?= isset($billing_info) ? $billing_info->recurring_end_date : ''; ?>" />
+                                                        <div class="nsm-field-group calendar">
+                                                            <input data-type="subscription_end_date" type="text" class="form-control nsm-field date" name="recurring_end_date" id="recurring_end_date" value="<?= isset($billing_info) ? $billing_info->recurring_end_date : ''; ?>" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -783,7 +791,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : ''; ?>">
+                                                            <input data-type="subscription_amount" type="number" step="0.01" class="form-control nsm-field input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : ''; ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -792,7 +800,7 @@
                                                         Category
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option  value=""></option>
                                                             <option <?= isset($billing_info) && $billing_info->transaction_category == 'E' ?  'selected' : '';?> value="E">Equipment</option>
                                                             <option <?= isset($billing_info) && $billing_info->transaction_category == 'MMR' ?  'selected' : '';?> value="MMR">MMR</option>
@@ -811,7 +819,7 @@
                                                         Billing Frequency
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select data-type="subscription_frequency" id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
+                                                        <select data-type="subscription_frequency" id="frequency" name="frequency" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option  value="">Select</option>
                                                             <option <?php if(isset($billing_info)){ if($billing_info->frequency == ""){echo "selected";} } ?> value="">- Select -</option>
                                                             <option <?php if(isset($billing_info)){ if($billing_info->frequency == "0"){echo "selected";} } ?> value="0">One Time Only</option>
@@ -852,7 +860,7 @@
                                                         Entered By
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="entered_by" id="entered_by" value="<?php if(isset($office_info) && $office_info->entered_by){ echo  $office_info->entered_by; } else { echo $logged_in_user->FName.' '. $logged_in_user->LName;} ?>"/>
+                                                        <input type="text" class="form-control nsm-field" name="entered_by" id="entered_by" value="<?php if(isset($office_info) && $office_info->entered_by){ echo  $office_info->entered_by; } else { echo $logged_in_user->FName.' '. $logged_in_user->LName;} ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -860,7 +868,7 @@
                                                         Time Entered
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control timepicker" name="time_entered" id="time_entered" value="<?php if(isset($office_info)){ echo  $office_info->time_entered; } ?>" />
+                                                        <input type="text" class="form-control nsm-field timepicker" name="time_entered" id="time_entered" value="<?php if(isset($office_info)){ echo  $office_info->time_entered; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -868,7 +876,9 @@
                                                         Sales Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input data-type="office_info_sales_date" type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                        <div class="nsm-field-group calendar">
+                                                            <input data-type="office_info_sales_date" type="text" class="form-control nsm-field date" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -876,7 +886,7 @@
                                                         Credit Score 
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="credit_score" name="credit_score" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="credit_score" name="credit_score" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option <?= isset($office_info) && $office_info->credit_score == 'A' ?  'selected' : '';?> value="A">A</option>
                                                             <option <?= isset($office_info) && $office_info->credit_score == 'B' ?  'selected' : '';?> value="B">B</option>
                                                             <option <?= isset($office_info) && $office_info->credit_score == 'C' ?  'selected' : '';?> value="C">C</option>
@@ -891,7 +901,7 @@
                                                         <label class="alarm_label"> <span >Pay History </span>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="pay_history" name="pay_history" class="input_select searchable-dropdown">
+                                                        <select id="pay_history" name="pay_history" class="input_select nsm-field searchable-dropdown">
                                                             <option <?php if(isset($office_info)){ if($office_info->pay_history == 1){ echo 'selected'; } } ?> value="1">1 - Excellent</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->pay_history == 2){ echo 'selected'; } } ?> value="2">2 - Good</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->pay_history == 3){ echo 'selected'; } } ?> value="3">3 - Fair</option>
@@ -906,7 +916,7 @@
                                                         Sales Rep
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option value="" disabled selected>Select</option>
                                                             <?php foreach ($users as $user): ?>
                                                                 <option <?php if(isset($office_info)){ echo $office_info->fk_sales_rep_office ==  $user->id ? 'selected' : ''; } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
@@ -920,7 +930,7 @@
                                                         Technician
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="technician" name="technician"  class="input_select" data-value="<?= isset($office_info->technician) ? $office_info->technician : "" ?>">
+                                                        <select id="technician" name="technician"  class="input_select nsm-field" data-value="<?= isset($office_info->technician) ? $office_info->technician : "" ?>">
                                                             <option value="" disabled selected>Select</option>
                                                             <?php foreach ($technicians as $user): ?>
                                                                 <option <?php if(isset($office_info)){ if($office_info->technician == $user->id ){ echo 'selected'; } } ?> value="<?= $user->id ?>"><?= $user->FName.' '.$user->LName; ?></option>
@@ -933,7 +943,9 @@
                                                         Install Date
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input data-type="office_info_install_date" type="text" class="form-control date_picker" name="install_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->install_date; } ?>"/>
+                                                        <div class="nsm-field-group calendar">
+                                                            <input data-type="office_info_install_date" type="text" class="form-control nsm-field date" name="install_date" id="install-date" value="<?php if(isset($office_info)){ echo  $office_info->install_date; } ?>"/>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -942,7 +954,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="input-group bootstrap-timepicker timepicker">
-                                                            <input id="tech_arrive_time" class="form-control timepicker" value="<?php if(isset($office_info)){ echo  $office_info->tech_arrive_time; } ?>" name="tech_arrive_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
+                                                            <input id="tech_arrive_time" class="form-control nsm-field timepicker" value="<?php if(isset($office_info)){ echo  $office_info->tech_arrive_time; } ?>" name="tech_arrive_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -952,7 +964,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="input-group bootstrap-timepicker timepicker">
-                                                            <input id="tech_depart_time" class="form-control" value="<?php if(isset($office_info)){ echo  $office_info->tech_depart_time; } ?>" name="tech_depart_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
+                                                            <input id="tech_depart_time" class="form-control nsm-field timepicker" value="<?php if(isset($office_info)){ echo  $office_info->tech_depart_time; } ?>" name="tech_depart_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -961,7 +973,7 @@
                                                         Lead Source
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select"> 
+                                                        <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select nsm-field"> 
                                                             <option value selected hidden disabled>Select Lead Source</option>
 
                                                             <?php foreach ($LEAD_SOURCE_OPTION AS $LEAD_SOURCE) { if ($office_info->lead_source == $LEAD_SOURCE->ls_name) { ?>
@@ -996,7 +1008,7 @@
                                                         Verification:
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="verification" name="verification" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="verification" name="verification" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option <?php if(isset($office_info)){ if($office_info->verification == "TrunsUnion"){ echo 'selected'; } } ?> value="TransUnion">TransUnion</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->verification == "Experian"){ echo 'selected'; } } ?>  value="Experian">Experian </option>
                                                             <option <?php if(isset($office_info)){ if($office_info->verification == "Equifax"){ echo 'selected'; } } ?>  value="Equifax">Equifax  </option>
@@ -1010,7 +1022,9 @@
                                                             Cancel Date
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input data-type="office_info_cancel_date" type="text" class="form-control date_picker" name="cancel_date" id="date_picker" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
+                                                            <div class="nsm-field-group calendar">
+                                                                <input data-type="office_info_cancel_date" type="text" class="form-control nsm-field date" name="cancel_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line">
@@ -1018,7 +1032,7 @@
                                                             Cancel Reason
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
+                                                            <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select nsm-field" >
                                                                 <option <?php if(isset($office_info)){ if($office_info->cancel_reason == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                                 <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'DS'){ echo 'selected'; } } ?> value="DS">Dissatisfied with Service</option>
                                                                 <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FH'){ echo 'selected'; } } ?> value="FH">Financial Hardship</option>
@@ -1037,7 +1051,7 @@
                                                             <label>Collections
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
+                                                            <select id="collections" name="collections" data-customer-source="dropdown" class="form-control nsm-field input_select">
                                                                 <option value="" disabled selected>&nbsp;</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->collections == 'In Process' ?  'selected' : '';?> value="In Process">In Process</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->collections == 'Sent' ?  'selected' : '';?> value="Sent">Sent</option>
@@ -1054,7 +1068,9 @@
                                                             Collection Date
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input data-type="office_info_collection_date" type="text" class="form-control date_picker" name="collect_date" id="date_picker" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
+                                                            <div class="nsm-field-group calendar">
+                                                                <input data-type="office_info_collection_date" type="text" class="form-control nsm-field date" name="collect_date" id="" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line">
@@ -1066,7 +1082,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text" id="basic-addon1">$</span>
                                                                 </div>
-                                                                <input type="number" class="form-control input_select" name="collect_amount" value="<?php if(isset($office_info)){ echo $office_info->collect_amount; } ?>">
+                                                                <input type="number" class="form-control nsm-field input_select" name="collect_amount" value="<?php if(isset($office_info)){ echo $office_info->collect_amount; } ?>">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1109,7 +1125,7 @@
                                                         Language
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select id="language" name="language" data-customer-source="dropdown" class="input_select">
+                                                        <select id="language" name="language" data-customer-source="dropdown" class="input_select nsm-field">
                                                             <option <?php if(isset($office_info)){ if($office_info->language == "English"){ echo 'selected'; } } ?> value="English">English</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->language == "Spanish"){ echo 'selected'; } } ?> value="Spanish">Spanish</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->language == "Mandarin Chinese"){ echo 'selected'; } } ?> value="Mandarin Chinese">Mandarin Chinese</option>
@@ -1122,7 +1138,7 @@
                                                         System Package Type
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control" >
+                                                        <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control nsm-field" >
                                                             <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
                                                         </select>
                                                         <!-- <select name="system_type" id="system_type" class="input_select">
@@ -1168,7 +1184,7 @@
                                                         <field-custom-name default="Pre-Install Survey" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <select id="pre_install_survey" name="pre_install_survey" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="pre_install_survey" name="pre_install_survey" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option <?php if(isset($office_info)){ if($office_info->pre_install_survey == ""){ echo 'selected'; } } ?> value=""></option>
                                                             <option <?php if(isset($office_info)){ if($office_info->pre_install_survey == "Pass"){ echo 'selected'; } } ?> value="Pass">Pass</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->pre_install_survey == "Fail"){ echo 'selected'; } } ?>value="Fail">Fail</option>
@@ -1181,7 +1197,7 @@
                                                         <field-custom-name default="Post-Install Survey" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <select id="post_install_survey" name="post_install_survey" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="post_install_survey" name="post_install_survey" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option <?php if(isset($office_info)){ if($office_info->post_install_survey == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->post_install_survey == "Pass"){ echo 'selected'; } } ?> value="Pass">Pass</option>
                                                             <option <?php if(isset($office_info)){ if($office_info->post_install_survey == "Fail"){ echo 'selected'; } } ?> value="Fail">Fail</option>
@@ -1195,7 +1211,7 @@
                                                         <field-custom-name default="Monitoring Waived" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <select id="monitoring_waived" name="monitoring_waived" data-customer-source="dropdown" class="input_select" >
+                                                        <select id="monitoring_waived" name="monitoring_waived" data-customer-source="dropdown" class="input_select nsm-field" >
                                                             <option  value=""></option>
                                                             <option <?= isset($office_info) && $office_info->monitoring_waived == 1 ?  'selected' : '';?> value="1">1 month</option>
                                                             <option <?= isset($office_info) && $office_info->monitoring_waived == 2 ?  'selected' : '';?> value="2">2 months</option>
@@ -1220,7 +1236,7 @@
                                                         </label>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input type="checkbox" name="rebate_offer" class="form-controls" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?> >
+                                                        <input type="checkbox" name="rebate_offer" class="form-controls nsm-field" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?> >
                                                     </div>
                                                 </div>
                                                 <div class="row form_line field-custom-name-container">
@@ -1228,7 +1244,7 @@
                                                         <field-custom-name default="Rebate Check # 1" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1; } ?>"/>
+                                                        <input type="number" class="form-control nsm-field" name="rebate_check1" id="rebate_check1" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1; } ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line field-custom-name-container">
@@ -1236,7 +1252,7 @@
                                                         <field-custom-name default="Rebate Check # 1 Amount $" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input type="number" step="0.01" class="form-control" name="rebate_check1_amt" id="rebate_check1_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1_amt; } ?>"/>
+                                                        <input type="number" step="0.01" class="form-control nsm-field" name="rebate_check1_amt" id="rebate_check1_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1_amt; } ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line field-custom-name-container">
@@ -1244,7 +1260,7 @@
                                                         <field-custom-name default="Rebate Check # 2" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2; } ?>"/>
+                                                        <input type="number" class="form-control nsm-field" name="rebate_check2" id="rebate_check2" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2; } ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line field-custom-name-container">
@@ -1252,7 +1268,7 @@
                                                         <field-custom-name default="Rebate Check # 2 Amount $" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input type="number" step="0.01" class="form-control" name="rebate_check2_amt" id="rebate_check2_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2_amt; } ?>" />
+                                                        <input type="number" step="0.01" class="form-control nsm-field" name="rebate_check2_amt" id="rebate_check2_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2_amt; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line field-custom-name-container">
@@ -1260,7 +1276,7 @@
                                                         <field-custom-name default="Activation Fee" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control">
+                                                        <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control nsm-field">
                                                             <option><?= isset($office_info) ? $office_info->activation_fee : "" ?></option>
                                                         </select>
                                                         <a href="<?= base_url() ?>customer/settings/activationFee" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;
@@ -1300,7 +1316,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php if(isset($office_info)){ echo $office_info->rep_comm; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" id="rep_comm" name="rep_comm" value="<?php if(isset($office_info)){ echo $office_info->rep_comm; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1313,7 +1329,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="rep_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->rep_upfront_pay; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="rep_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->rep_upfront_pay; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1326,7 +1342,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="rep_tiered_bonus" value="<?php if(isset($office_info)){ echo $office_info->rep_tiered_bonus; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="rep_tiered_bonus" value="<?php if(isset($office_info)){ echo $office_info->rep_tiered_bonus; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1339,7 +1355,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="rep_holdfund_bonus" value="<?php if(isset($office_info)){ echo $office_info->rep_holdfund_bonus; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="rep_holdfund_bonus" value="<?php if(isset($office_info)){ echo $office_info->rep_holdfund_bonus; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1353,7 +1369,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="rep_deduction" value="<?php if(isset($office_info)){ echo $office_info->rep_deduction; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="rep_deduction" value="<?php if(isset($office_info)){ echo $office_info->rep_deduction; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1367,7 +1383,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" id="tech_comm" name="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" id="tech_comm" name="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1382,7 +1398,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="tech_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->tech_upfront_pay; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="tech_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->tech_upfront_pay; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1396,7 +1412,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="tech_deduction" value="<?php if(isset($office_info)){ echo $office_info->tech_deduction; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="tech_deduction" value="<?php if(isset($office_info)){ echo $office_info->tech_deduction; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1412,7 +1428,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="rep_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_charge_back; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="rep_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_charge_back; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1425,7 +1441,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="rep_payroll_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_payroll_charge_back; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="rep_payroll_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_payroll_charge_back; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1448,7 +1464,7 @@
                                                         <field-custom-name default="Points Included" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input type="number" step="0.01" class="form-control" name="points_include" id="points_include" value="<?php if(isset($office_info)){ echo $office_info->points_include !=0 ? $office_info->points_include : '';  } ?>"  />
+                                                        <input type="number" step="0.01" class="form-control nsm-field" name="points_include" id="points_include" value="<?php if(isset($office_info)){ echo $office_info->points_include !=0 ? $office_info->points_include : '';  } ?>"  />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line field-custom-name-container">
@@ -1460,7 +1476,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="price_per_point" value="<?php if(isset($office_info)){ echo $office_info->price_per_point; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="price_per_point" value="<?php if(isset($office_info)){ echo $office_info->price_per_point; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1474,7 +1490,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="purchase_price" value="<?php if(isset($office_info)){ echo $office_info->purchase_price; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="purchase_price" value="<?php if(isset($office_info)){ echo $office_info->purchase_price; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1483,7 +1499,7 @@
                                                         <field-custom-name default="Purchase Multiple" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <select id="purchase_multiple" name="purchase_multiple" data-customer-source="dropdown" class="input_select ">
+                                                        <select id="purchase_multiple" name="purchase_multiple" data-customer-source="dropdown" class="input_select nsm-field">
                                                             <option <?php if(isset($office_info)){ if($office_info->purchase_multiple == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                             <?php
                                                             for($pm=12;$pm<76;$pm++){
@@ -1504,7 +1520,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="purchase_discount" value="<?php if(isset($office_info)){ echo $office_info->purchase_discount; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="purchase_discount" value="<?php if(isset($office_info)){ echo $office_info->purchase_discount; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1518,7 +1534,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="equipment_cost" value="<?php if(isset($office_info)){ echo $office_info->equipment_cost; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="equipment_cost" value="<?php if(isset($office_info)){ echo $office_info->equipment_cost; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1531,7 +1547,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" id="labor_cost" name="labor_cost" value="<?php if(isset($office_info)){ echo $office_info->labor_cost; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" id="labor_cost" name="labor_cost" value="<?php if(isset($office_info)){ echo $office_info->labor_cost; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1544,7 +1560,7 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input type="number" step="0.01" class="form-control input_select" name="job_profit" value="<?php if(isset($office_info)){ echo $office_info->job_profit; } ?>">
+                                                            <input type="number" step="0.01" class="form-control nsm-field input_select" name="job_profit" value="<?php if(isset($office_info)){ echo $office_info->job_profit; } ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1553,7 +1569,7 @@
                                                         <field-custom-name default="Customer Shareable Link" form="funding_info"></field-custom-name>
                                                     </div>
                                                     <div class="col-md-12">
-                                                        <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />
+                                                        <input type="url" placeholder="https://sample.com" class="form-control nsm-field" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1598,7 +1614,7 @@
                                                             <field-custom-name default="Project ID" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="project_id" id="project_id"/>
+                                                            <input type="text" class="form-control nsm-field" name="project_id" id="project_id"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1607,7 +1623,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <?php $lenderTypes = json_decode($solar_info_settings[0]->field_value); ?>
-                                                            <select name="lender_type" id="lender_type" class="input_select solar_infos">
+                                                            <select name="lender_type" id="lender_type" class="input_select nsm-field solar_infos">
                                                                 <option  value=""></option>
                                                                 <?php foreach ($lenderTypes  as $lender): ?>
                                                                     <option  value="<?= $lender->name ?>"><?= $lender->name ?></option>
@@ -1622,7 +1638,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                         <?php $proposed_system_sizes = json_decode($solar_info_settings[1]->field_value); ?>
-                                                            <select name="proposed_system_size" id="proposed_system_size" class="input_select solar_infos">
+                                                            <select name="proposed_system_size" id="proposed_system_size" class="input_select nsm-field solar_infos">
                                                                 <option  value=""></option>
                                                                 <?php foreach ($proposed_system_sizes  as $size): ?>
                                                                     <option  value="<?= $size->name ?>"><?= $size->name ?></option>
@@ -1637,7 +1653,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <?php $proposed_modules = json_decode($solar_info_settings[2]->field_value); ?>
-                                                            <select name="proposed_modules" id="proposed_modules" class="input_select solar_infos">
+                                                            <select name="proposed_modules" id="proposed_modules" class="input_select nsm-field solar_infos">
                                                                 <option  value=""></option>
                                                                 <?php foreach ($proposed_modules  as $module): ?>
                                                                     <option  value="<?= $module->name ?>"><?= $module->name ?></option>
@@ -1652,7 +1668,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <?php $proposed_inverters = json_decode($solar_info_settings[3]->field_value); ?>
-                                                            <select name="proposed_inverter" id="proposed_inverter" class="input_select solar_infos">
+                                                            <select name="proposed_inverter" id="proposed_inverter" class="input_select nsm-field solar_infos">
                                                                 <option  value=""></option>
                                                                 <?php foreach ($proposed_inverters  as $inverter): ?>
                                                                     <option  value="<?= $inverter->name ?>"><?= $inverter->name ?></option>
@@ -1666,7 +1682,7 @@
                                                             <field-custom-name default="Proposed Offset" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select name="proposed_offset" id="proposed_offset" class="input_select">
+                                                            <select name="proposed_offset" id="proposed_offset" class="input_select nsm-field">
                                                                 <option  value=""></option>
                                                                 <option  value="1">Less than 30%</option>
                                                                 <?php for($x=31;$x<=120;$x++): ?>
@@ -1684,7 +1700,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text" id="basic-addon1">$</span>
                                                                 </div>
-                                                                <input type="number" class="form-control input_select" name="proposed_solar" value="">
+                                                                <input type="number" class="form-control nsm-field input_select" name="proposed_solar" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1697,7 +1713,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text" id="basic-addon1">$</span>
                                                                 </div>
-                                                                <input type="number" class="form-control input_select" name="proposed_utility" value="">
+                                                                <input type="number" class="form-control nsm-field input_select" name="proposed_utility" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1710,7 +1726,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text" id="basic-addon1">$</span>
                                                                 </div>
-                                                                <input type="number" class="form-control input_select" name="proposed_payment" value="">
+                                                                <input type="number" class="form-control nsm-field input_select" name="proposed_payment" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1723,7 +1739,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text" id="basic-addon1">$</span>
                                                                 </div>
-                                                                <input type="number" class="form-control input_select" name="annual_income" value="">
+                                                                <input type="number" class="form-control nsm-field input_select" name="annual_income" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1736,7 +1752,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text" id="basic-addon1">$</span>
                                                                 </div>
-                                                                <input type="number" class="form-control input_select" name="tree_estimate" value="">
+                                                                <input type="number" class="form-control nsm-field input_select" name="tree_estimate" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1749,7 +1765,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text" id="basic-addon1">$</span>
                                                                 </div>
-                                                                <input type="number" class="form-control input_select" name="roof_estimate" value="">
+                                                                <input type="number" class="form-control nsm-field input_select" name="roof_estimate" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1759,7 +1775,7 @@
                                                             <field-custom-name default="Utility Account #" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="utility_account" id="utility_account"/>
+                                                            <input type="text" class="form-control nsm-field" name="utility_account" id="utility_account"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1767,7 +1783,7 @@
                                                             <field-custom-name default="Utility Login #" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="utility_login" id="utility_login"/>
+                                                            <input type="text" class="form-control nsm-field" name="utility_login" id="utility_login"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1775,7 +1791,7 @@
                                                             <field-custom-name default="Utility Password" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="utility_pass" id="utility_pass"/>
+                                                            <input type="text" class="form-control nsm-field" name="utility_pass" id="utility_pass"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1783,7 +1799,7 @@
                                                             <field-custom-name default="Meter Number" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="meter_number" id="meter_number"/>
+                                                            <input type="text" class="form-control nsm-field" name="meter_number" id="meter_number"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1791,7 +1807,7 @@
                                                             <field-custom-name default="Insurance Name" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="insurance_name" id="insurance_name"/>
+                                                            <input type="text" class="form-control nsm-field" name="insurance_name" id="insurance_name"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1799,7 +1815,7 @@
                                                             <field-custom-name default="Insurance Number" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="insurance_number" id="insurance_number"/>
+                                                            <input type="text" class="form-control nsm-field" name="insurance_number" id="insurance_number"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1807,7 +1823,7 @@
                                                             <field-custom-name default="Policy Number" form="solar_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="policy_number" id="policy_number"/>
+                                                            <input type="text" class="form-control nsm-field" name="policy_number" id="policy_number"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1824,7 +1840,7 @@
                                                             <field-custom-name default="Monitoring Company" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select" >
+                                                            <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select nsm-field" >
                                                                 <option value="" disabled selected>&nbsp;</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'ADT' ?  'selected' : '';?> value="ABT">ADT</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'CMS' ?  'selected' : '';?> value="CMS">CMS</option>
@@ -1847,7 +1863,7 @@
                                                             <field-custom-name default="Monitoring ID" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="monitor_id" id="monitor_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->monitor_id != '0' ? $alarm_info->monitor_id : '' ; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="monitor_id" id="monitor_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->monitor_id != '0' ? $alarm_info->monitor_id : '' ; } ?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1855,7 +1871,7 @@
                                                             <field-custom-name default="Account Type" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select name="acct_type" id="acct_type" class="input_select">
+                                                            <select name="acct_type" id="acct_type" class="input_select nsm-field">
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Purchase'){echo "selected";} } ?> value="Purchase">Purchase</option>
@@ -1870,7 +1886,7 @@
                                                             </label>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="online" name="online" data-customer-source="dropdown" class="form-controls input_select">
+                                                            <select id="online" name="online" data-customer-source="dropdown" class="form-control nsm-field input_select">
                                                                 <option <?= isset($alarm_info) && $alarm_info->online == 'Yes' ?  'selected' : '';?> value="Yes">Yes</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->online == 'No' ?  'selected' : '';?> value="No">No</option>
                                                             </select>
@@ -1883,7 +1899,7 @@
                                                             </label>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="in_service" name="in_service" data-customer-source="dropdown" class="form-controls input_select">
+                                                            <select id="in_service" name="in_service" data-customer-source="dropdown" class="form-control nsm-field input_select">
                                                                 <option <?= isset($alarm_info) && $alarm_info->in_service == 'Yes' ?  'selected' : '';?> value="Yes">Yes</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->in_service == 'No' ?  'selected' : '';?> value="No">No</option>
                                                             </select>
@@ -1896,7 +1912,7 @@
                                                             </label>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="equipment" name="equipment" data-customer-source="dropdown" class="form-controls input_select">
+                                                            <select id="equipment" name="equipment" data-customer-source="dropdown" class="form-control nsm-field input_select">
                                                                 <option value="" disabled selected>&nbsp;</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->equipment == 'Not Installed' ?  'selected' : '';?> value="Not Installed">Not Installed</option>
                                                                 <option <?= isset($alarm_info) && $alarm_info->equipment == 'Installed' ?  'selected' : '';?> value="Installed">Installed</option>
@@ -1910,7 +1926,7 @@
                                                             <field-custom-name default="Abort Code" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1918,7 +1934,7 @@
                                                             <field-custom-name default="Installer Code" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code!=0 ?  $alarm_info->install_code : ''; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code!=0 ?  $alarm_info->install_code : ''; } ?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1926,7 +1942,7 @@
                                                             <field-custom-name default="Monitoring Confirm#" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -1934,7 +1950,7 @@
                                                             <field-custom-name default="Signal Confirm#" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
                                                         </div>
                                                     </div>
 
@@ -1943,7 +1959,7 @@
                                                             <field-custom-name default="Panel Type" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select name="panel_type" id="panel_type" class="input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
+                                                            <select name="panel_type" id="panel_type" class="input_select nsm-field" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
                                                                 <?php foreach($panel_type as $panels) : ?>
                                                                     <option <?php if(isset($alarm_info)){if($alarm_info->panel_type == $panels->panel_type){echo "selected";}} ?>><?= $panels->panel_type ?></option>
                                                                 <?php endforeach; ?>
@@ -1984,7 +2000,7 @@
                                                             <field-custom-name default="Warranty Type" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
+                                                            <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select nsm-field" >
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
@@ -2001,7 +2017,7 @@
                                                             Communication Type
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id='communication_type' name="comm_type"  class="form-control" >
+                                                            <select id='communication_type' name="comm_type"  class="form-control nsm-field" >
                                                                 <option value="" disabled selected>&nbsp;</option>
                                                                 <?php foreach($system_package_type as $cType): ?>
                                                                     <option <?= isset($alarm_info) && $alarm_info->comm_type == $cType->name ?  'selected' : '';  ?> value="<?= $cType->name ?>"><?= $cType->name ?></option>
@@ -2016,7 +2032,7 @@
                                                             <field-custom-name default="Account Cost" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="account_cost" id="account_cost" value="<?= $alarm_info ? ($alarm_info->account_cost !=0 ? $alarm_info->account_cost : '') : '';  ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="account_cost" id="account_cost" value="<?= $alarm_info ? ($alarm_info->account_cost !=0 ? $alarm_info->account_cost : '') : '';  ?>"/>
                                                         </div>
                                                     </div>
 
@@ -2025,7 +2041,7 @@
                                                             <field-custom-name default="Pass Thru Cost" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="pass_thru_cost" id="pass_thru_cost" value="<?= $alarm_info ? ($alarm_info->pass_thru_cost !=0 ? $alarm_info->pass_thru_cost : '') : '';  ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="pass_thru_cost" id="pass_thru_cost" value="<?= $alarm_info ? ($alarm_info->pass_thru_cost !=0 ? $alarm_info->pass_thru_cost : '') : '';  ?>"/>
                                                         </div>
                                                     </div>
 
@@ -2035,7 +2051,7 @@
                                                             <field-custom-name default="Dealer" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <select id="dealer" name="dealer" data-customer-source="dropdown" class="input_select" >
+                                                            <select id="dealer" name="dealer" data-customer-source="dropdown" class="input_select nsm-field" >
                                                                 <option value="" disabled selected>&nbsp;</option>
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->dealer == "Alarm.com"){ echo 'selected'; } } ?> value="Alarm.com">Alarm.com</option>
                                                                 <option <?php if(isset($alarm_info)){ if($alarm_info->dealer == "AlarmNet"){ echo 'selected'; } } ?> value="AlarmNet">AlarmNet</option>
@@ -2047,7 +2063,7 @@
                                                             <field-custom-name default="Login" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_login; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="alarm_login" id="alarm_login" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_login; } ?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -2055,7 +2071,7 @@
                                                             <field-custom-name default="Customer ID" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line field-custom-name-container">
@@ -2063,7 +2079,7 @@
                                                             <field-custom-name default="CS Account" form="alarm_info"></field-custom-name>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="alarm_cs_account" id="alarm_cs_account" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_cs_account; } ?>"/>
+                                                            <input type="text" class="form-control nsm-field" name="alarm_cs_account" id="alarm_cs_account" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_cs_account; } ?>"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2096,7 +2112,7 @@
                                                         Login
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input data-type="access_info_user" type="text" class="form-control" name="access_login" id="login" value="<?php if(isset($access_info)){ echo $access_info->access_login; } ?>"/>
+                                                        <input data-type="access_info_user" type="text" class="form-control nsm-field" name="access_login" id="login" value="<?php if(isset($access_info)){ echo $access_info->access_login; } ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -2105,7 +2121,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <input data-type="access_info_pass" type="text" class="form-control" name="access_password" id="password" data-value="<?php if(isset($access_info)){ echo $access_info->access_password; } ?>"/>
+                                                            <input data-type="access_info_pass" type="text" class="form-control nsm-field" name="access_password" id="password" data-value="<?php if(isset($access_info)){ echo $access_info->access_password; } ?>"/>
                                                             <div class="input-group-append">
                                                                 <button data-action="access_info_generate_pass" class="btn btn-primary" type="button" style="padding: 0;width: 35px;">
                                                                     <i class="fa fa-refresh"></i>
@@ -2141,11 +2157,11 @@
                                                         <div class="row form_line">
                                                             <div class="col-md-5">
                                                                 Name
-                                                                <input type="text" class="form-control" name="custom_name[]" value="<?= $field->name; ?>" />
+                                                                <input type="text" class="form-control nsm-field" name="custom_name[]" value="<?= $field->name; ?>" />
                                                             </div>
                                                             <div class="col-md-5">
                                                                 Value
-                                                                <input type="text" class="form-control" name="custom_value[]" value="<?= $field->value; ?>" />
+                                                                <input type="text" class="form-control nsm-field" name="custom_value[]" value="<?= $field->value; ?>" />
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
@@ -2157,11 +2173,11 @@
                                                     <div class="row form_line">
                                                         <div class="col-md-5">
                                                             Name
-                                                            <input type="text" class="form-control" name="custom_name[]" value="" />
+                                                            <input type="text" class="form-control nsm-field" name="custom_name[]" value="" />
                                                         </div>
                                                         <div class="col-md-5">
                                                             Value
-                                                            <input type="text" class="form-control" name="custom_value[]" value="" />
+                                                            <input type="text" class="form-control nsm-field" name="custom_value[]" value="" />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
@@ -2181,7 +2197,7 @@
                                             </div>
                                             <div class="nsm-card-content"><hr>
                                                 <div class="row form-line">
-                                                    <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"></textarea>
+                                                    <textarea type="text" class="form-control nsm-field" name="notes" id="notes" cols="100%" rows="5"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -2249,7 +2265,7 @@
                                                         Contact Name 1
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?= isset($contact1) ? $contact1->name : "" ?>"/>
+                                                        <input type="text" class="form-control nsm-field" name="contact_name1" id="contact_name1" value="<?= isset($contact1) ? $contact1->name : "" ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -2257,7 +2273,7 @@
                                                         Relationship
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship1">
+                                                        <select data-type="emergency_contact_relationship" class="form-control nsm-field" name="contact_relationship1">
                                                             <option><?= isset($contact1) ? $contact1->relation : "" ?></option>
                                                         </select>
                                                     </div>
@@ -2267,7 +2283,7 @@
                                                         Phone Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?= isset($contact1) ? $contact1->phone : "" ?>"/>
+                                                        <input type="text" class="form-control nsm-field phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?= isset($contact1) ? $contact1->phone : "" ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -2275,7 +2291,7 @@
                                                         Contact Name 2
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?= isset($contact2) ? $contact2->name : "" ?>"/>
+                                                        <input type="text" class="form-control nsm-field" name="contact_name2" id="contact_name2" value="<?= isset($contact2) ? $contact2->name : "" ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -2283,7 +2299,7 @@
                                                         Relationship
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2">
+                                                        <select data-type="emergency_contact_relationship" class="form-control nsm-field" name="contact_relationship2">
                                                             <option><?= isset($contact2) ? $contact2->relation : "" ?></option>
                                                         </select>
                                                     </div>
@@ -2293,7 +2309,7 @@
                                                         Phone Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?= isset($contact2) ? $contact2->phone : "" ?>"/>
+                                                        <input type="text" class="form-control nsm-field phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?= isset($contact2) ? $contact2->phone : "" ?>"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -2301,7 +2317,7 @@
                                                         Contact Name 3
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?= isset($contact3) ? $contact3->name : "" ?>" />
+                                                        <input type="text" class="form-control nsm-field" name="contact_name3" id="contact_name3" value="<?= isset($contact3) ? $contact3->name : "" ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -2309,7 +2325,7 @@
                                                         Relationship
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2">
+                                                        <select data-type="emergency_contact_relationship" class="form-control nsm-field" name="contact_relationship2">
                                                             <option><?= isset($contact3) ? $contact3->relation : "" ?></option>
                                                         </select>
                                                     </div>
@@ -2319,7 +2335,7 @@
                                                         Phone Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?= isset($contact3) ? $contact3->phone : "" ?>"/>
+                                                        <input type="text" class="form-control nsm-field phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?= isset($contact3) ? $contact3->phone : "" ?>"/>
                                                     </div>
                                                 </div>
                                             </div>

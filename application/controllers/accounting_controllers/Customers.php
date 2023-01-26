@@ -136,6 +136,7 @@ class Customers extends MY_Controller {
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
             'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js',
 
+            "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/sales/customers/list.js"
         ));
@@ -255,6 +256,7 @@ class Customers extends MY_Controller {
     public function view($customerId)
     {
         add_footer_js([
+            "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/sales/customers/view.js"
         ]);

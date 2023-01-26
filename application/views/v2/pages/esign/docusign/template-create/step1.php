@@ -3,12 +3,12 @@
         <h2 class="form__title">Template Name and Description</h2>
         <div class="form-group mb-2">
             <label for="name">Name</label>
-            <input class="form-control" id="name">
+            <input class="form-control" id="name" name="name">
         </div>
 
         <div class="form-group mb-2">
             <label for="description">Description</label>
-            <textarea class="form-control" id="description" rows="3" placeholder="Template Description (optional)"></textarea>
+            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Template Description (optional)"></textarea>
         </div>
 
         <div class="docusignTemplateCreate__spacer"></div>
@@ -50,13 +50,13 @@
 
         <div class="form-group mb-2">
             <label for="subject">Subject</label>
-            <input class="form-control" id="subject" placeholder="Please eSign:" maxlength="100">
+            <input class="form-control" id="subject" name="subject" placeholder="Please eSign:" maxlength="100">
             <small class="form-text text-muted d-none">Characters remaining: <span class="limit">100</span></small>
         </div>
 
         <div class="form-group mb-2">
             <label for="message">Message</label>
-            <textarea class="form-control" id="message" rows="3" placeholder="Enter Message" maxlength="10000"></textarea>
+            <textarea class="form-control" id="message" name="message" rows="3" placeholder="Enter Message" maxlength="10000"></textarea>
             <small class="form-text text-muted d-none">Characters remaining: <span class="limit">10000</span></small>
         </div>
     </div>

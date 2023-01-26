@@ -258,7 +258,8 @@ export class FormAutoSave {
       "week",
     ];
 
-    const type = $element.getAttribute("type").toLowerCase();
+    let type = $element.getAttribute("type") || "text";
+    type = type.toLowerCase();
     return inputTypes.indexOf(type) >= 0;
   }
 

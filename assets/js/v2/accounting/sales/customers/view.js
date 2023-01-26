@@ -314,6 +314,66 @@ $("#edit-customer-modal #invoice_term").select2({
     dropdownParent: $('#edit-customer-modal')
 });
 
+$('#edit-customer-modal div[data-type="customer_birthday"]').birthdaypicker({
+    defaultDate: $('#edit-customer-modal div[data-type="customer_birthday"]').data().value ? $('#edit-customer-modal div[data-type="customer_birthday"]').data().value : false,
+});
+
+$('#edit-customer-modal div[data-type="customer_birthday"]').find('select').addClass("form-control");
+
+$('#edit-customer-modal .date').datepicker({
+    format: 'mm/dd/yyyy',
+    orientation: 'bottom',
+    autoclose: true
+});
+
+const Password = {
+    _pattern: /[a-zA-Z0-9_\-\+\.]/,
+
+    _getRandomByte: function () {
+        // http://caniuse.com/#feat=getrandomvalues
+        if (window.crypto && window.crypto.getRandomValues) {
+            var result = new Uint8Array(1);
+            window.crypto.getRandomValues(result);
+            return result[0];
+        } else if (window.msCrypto && window.msCrypto.getRandomValues) {
+            var result = new Uint8Array(1);
+            window.msCrypto.getRandomValues(result);
+            return result[0];
+        } else {
+            return Math.floor(Math.random() * 256);
+        }
+    },
+
+    generate: function (length) {
+        return Array.apply(null, { length: length })
+        .map(function () {
+            var result;
+            while (true) {
+                result = String.fromCharCode(this._getRandomByte());
+                if (this._pattern.test(result)) {
+                    return result;
+                }
+            }
+        }, this)
+        .join("");
+    },
+};
+
+const $password = document.querySelector("[data-type=access_info_pass]");
+const $passwordBtn = document.querySelector("[data-action=access_info_generate_pass]"); // prettier-ignore
+
+function setPassword() {
+  $password.value = Password.generate(16);
+}
+
+if ($password.dataset.value.trim().length) {
+  $password.value = $password.dataset.value;
+} else {
+  setPassword();
+}
+$passwordBtn.addEventListener("click", setPassword);
+
+
 $('#new-invoice').on('click', function() {
     $.get('/accounting/get-other-modals/invoice_modal', function(res) {
         if ($('div#modal-container').length > 0) {
