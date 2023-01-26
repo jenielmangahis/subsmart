@@ -1345,6 +1345,7 @@ class Tickets extends MY_Controller
                 'terms_conditions'          => $this->input->post('terms_conditions'),
                 'attachments'               => '',
                 'instructions'              => $this->input->post('instructions'),
+                'job_description'           => $this->input->post('job_description'),
                 'customer_phone'            => $this->input->post('customer_phone'),
                 'employee_id'               => $this->input->post('employee_id'),
                 'created_by'                => logged('id'),

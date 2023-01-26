@@ -307,7 +307,7 @@ class Cron_Api extends MYF_Controller {
                     }
                     break;
                 case ($gs->module_name == 'service_ticket' || $gs->module_name == 'ticket'):
-                    $calendar_type = $this->GoogleCalendar_model->calendarTypeAppointment();
+                    $calendar_type = $this->GoogleCalendar_model->calendarTypeServiceTicket();
                     $ticket = $this->Tickets_model->get_tickets_by_id_and_company_id($gs->object_id, $gs->company_id);
                     if( $ticket ){
                         if( $ticket->job_tag != '' ){
@@ -338,16 +338,25 @@ class Cron_Api extends MYF_Controller {
 
                         $location = $ticket->service_location . ' ' . $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
 
-                        /*if( $ticket->notes != '' ){
-                            $notes = $appointment->notes;
+                        if( $ticket->job_description != '' ){
+                            $job_description = $ticket->job_description;
                         }else{
-                            $notes = 'None';
-                        }*/
+                            $job_description = 'None';
+                        }
+
+                        if( $ticket->instructions != '' ){
+                            $instructions = strip_tags($ticket->instructions);
+                        }else{
+                            $instructions = 'None';
+                        }
+
+                        
                         $notes = 'None';
                         $description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
                         $description .= "Phone Number : ".$ticket->phone_m."\n";                  
                         $description .= "Service Location : " . $ticket->service_location . "\n";
-                        $description .= "Notes : ". $notes ."\n";
+                        $description .= "Job Description : ". $job_description ."\n";
+                        $description .= "Instructions / Notes : ". $instructions ."\n";
 
                         $is_valid = true;
                     }else{
