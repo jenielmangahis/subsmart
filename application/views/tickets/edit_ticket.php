@@ -449,6 +449,10 @@ a.btn-primary.btn-md {
                                             <?php } ?>
                                         </select>
                                     </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Job Description</b></label>
+                                        <textarea class="form-control" name="job_description"><?php echo $tickets->job_description; ?></textarea>
+                                    </div>
                                 </div>
                                 <div class="row" style="background-color:white;font-size:16px;">
                                     <div class="col-md-3">
@@ -855,28 +859,36 @@ a.btn-primary.btn-md {
                                     <div class="col-md-4">
                                         <b>Sales Rep's Name</b>
                                         <input type="text" name="sales_rep_view" class="form-control" value="<?php echo logged('FName').' '.logged('LName'); ?>">
-                                        <input type="hidden" name="sales_rep" class="form-control" value="<?php echo logged('id'); ?>">
+                                        <input type="hidden" name="sales_rep" class="form-control" value="<?php echo $tickets->sales_rep; ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <b>Cell Phone</b>
-                                        <input type="text" name="sales_rep_no" class="form-control" value="<?php echo logged('mobile'); ?>" placeholder="Enter Cellphone Number">
+                                        <input type="text" name="sales_rep_no" class="form-control" value="<?php echo $tickets->sales_rep_no; ?>" placeholder="Enter Cellphone Number">
                                     </div>                       
                                     <div class="col-md-4">
                                         <b>Team Leader / Mentor</b>
-                                        <input type="text" name="tl_mentor" class="form-control" placeholder="Enter Team Leader/Mentor">
+                                        <input type="text" name="tl_mentor" class="form-control" placeholder="Enter Team Leader/Mentor" value="<?php echo $tickets->tl_mentor; ?>">
                                     </div>                                        
+                                </div>
+                                <div class="row" style="background-color:white;">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label><h6>Instructions: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                            <textarea name="instructions" cols="40" rows="2" class="form-control"><?php echo $tickets->instructions; ?></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label><h6>Message to Customer</h6></label><br> <span class="help help-sm help-block">Add a message that will be displayed on the Ticket.</span>
-                                            <textarea name="message" cols="40" rows="4" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
+                                            <textarea name="message" cols="40" rows="4" class="form-control"><?php echo $tickets->message; ?></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label><h6>Terms &amp; Conditions</h6></label><br> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the Ticket.</span>
-                                            <textarea name="terms_conditions" cols="40" rows="4" class="form-control">YOU EXPRESSLY AUTHORIZE ADI AND ITS AFFILIATES TO RECEIVE PAYMENT FOR THE LISTED SERVICES ABOVE. BY SIGNING BELOW BUYER AGREES TO THE TERMS OF YOUR SERVICE AGREEMENT AND ACKNOWLEDGES RECEIPT OF A COPY OF THIS SERVICE AGREEMENT.</textarea>
+                                            <textarea name="terms_conditions" cols="40" rows="4" class="form-control"><?php echo $tickets->terms_conditions; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -884,17 +896,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-4">
                                         <label for="billing_date"><h6>Attachments</h6></label><br> 
                                         <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
-                                        <input type="file" name="attachments" id="attachments"
-                                                class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="row" style="background-color:white;">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label><h6>Instructions: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
-                                            <textarea name="instructions" cols="40" rows="2"
-                                                    class="form-control"></textarea>
-                                        </div>
+                                        <input type="file" name="attachments" id="attachments" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">

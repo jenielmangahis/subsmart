@@ -92,6 +92,7 @@ class Tickets extends MY_Controller
             'panel_type'                => $this->input->post('panel_type'),
             'service_type'              => $this->input->post('service_type'),
             'warranty_type'             => $this->input->post('warranty_type'),
+            'job_description'           => $this->input->post('job_description'),
             'technicians'               => $techni,
             'subtotal'                  => $this->input->post('subtotal'),
             'taxes'                     => $this->input->post('taxes'),
@@ -426,6 +427,7 @@ class Tickets extends MY_Controller
             'scheduled_time'            => $this->input->post('scheduled_time'),
             'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
             'purchase_order_no'         => $this->input->post('purchase_order_no'),
+            'job_description'           => $this->input->post('job_description'),
             'ticket_status'             => $status,
             'panel_type'                => $this->input->post('panel_type'),
             'service_type'              => $this->input->post('service_type'),
@@ -880,7 +882,7 @@ class Tickets extends MY_Controller
         $this->page_data['default_customer_id'] = $default_customer_id;
         
         //Settings
-            $prefix = 'TK-';
+            $prefix = 'SERVICE-';
             $lastInserted = $this->tickets_model->getlastInsert($company_id);
             if( $lastInserted ){
                 $next = $lastInserted->ticket_no;
@@ -969,7 +971,7 @@ class Tickets extends MY_Controller
         $userID = $_GET['appointment_user_id'];
 
         //Settings
-            $prefix = 'TK-';
+            $prefix = 'SERVICE-';
             $lastInserted = $this->tickets_model->getlastInsert($company_id);
             if( $lastInserted ){
                 $next = $lastInserted->ticket_no;
@@ -1130,7 +1132,7 @@ class Tickets extends MY_Controller
         $userID = $_GET['appointment_user_id'];
 
         //Settings
-            $prefix = 'TK-';
+            $prefix = 'SERVICE-';
             $lastInserted = $this->tickets_model->getlastInsert($company_id);
             if( $lastInserted ){
                 $next = $lastInserted->ticket_no;
@@ -1242,7 +1244,7 @@ class Tickets extends MY_Controller
         }
         
         //Settings
-        $prefix = 'TK-';
+        $prefix = 'SERVICE-';
         $lastInserted = $this->tickets_model->getlastInsert($company_id);
         if( $lastInserted ){
             $next = $lastInserted->ticket_no;
