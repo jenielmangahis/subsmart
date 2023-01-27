@@ -3286,7 +3286,7 @@ class Job extends MY_Controller
                 'priority' => $input['priority'],//$this->input->post('job_priority'),
                 'tags' => $input['tags'],//$this->input->post('job_priority'),
                 'status' => 'Scheduled',//$this->input->post('job_status'),
-                'message' => '',
+                'message' => $input['job_notes'],
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
                 //'notes' => $input['notes'],

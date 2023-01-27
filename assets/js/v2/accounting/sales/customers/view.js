@@ -373,6 +373,72 @@ if ($password.dataset.value.trim().length) {
 }
 $passwordBtn.addEventListener("click", setPassword);
 
+$("#edit-customer-modal #add_field").click(function () {
+    const custom_field_form= "<div class=\"row form_line\">\n" +
+        "                <div class=\"col-md-5\">\n" +
+        "                    Name\n" +
+        "                    <input type=\"text\" class=\"form-control\" name=\"custom_name[]\" id=\"office_custom_field1\" value=\"\" />\n" +
+        "                </div>\n" +
+        "                <div class=\"col-md-5\">\n" +
+        "                    Value\n" +
+        "                    <input type=\"text\" class=\"form-control\" name=\"custom_value[]\" id=\"office_custom_field1\" value=\"\" />\n" +
+        "                </div>\n" +
+        "                <div class=\"col-md-2\">\n" +
+        "                    <button style=\"margin-top: 23px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><i class='bx bx-trash'></i></button>\n" +
+        "                </div>\n" +
+        "            </div>";
+    $("#edit-customer-modal #custom_field").append(custom_field_form);
+});
+
+$("body").delegate(".remove_item_row", "click", function(){
+    $(this).parent().parent().remove();
+});
+
+$(document).on('click', '#edit-customer-modal #btn-notify-customer-new-pw', function(e){
+    e.preventDefault();
+
+    var url = base_url + 'customer/_send_login_details';    
+    var cid = $(this).attr('data-id');     
+
+    Swal.fire({
+        title: 'Email Notification',
+        html: "Are you sure you want to send to customer email their login access?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                data: {cid:cid},
+                success: function(o) {
+                    if( o.is_success == 1 ){   
+                        Swal.fire({
+                            title: 'Email Sent!',
+                            text: "An email was sent to customer of their login details!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                            
+                            //}
+                        });
+                    }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: o.msg
+                      });
+                    }
+                },
+            });
+        }
+    });
+});
 
 $('#new-invoice').on('click', function() {
     $.get('/accounting/get-other-modals/invoice_modal', function(res) {

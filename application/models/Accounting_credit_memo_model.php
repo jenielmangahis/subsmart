@@ -150,8 +150,12 @@ class Accounting_credit_memo_model extends MY_Model {
         $this->db->where('company_id', $data['company_id']);
         $this->db->where('customer_id', $data['customer_id']);
 
-		$this->db->where('credit_memo_date >=', $data['start_date']);
-		$this->db->where('credit_memo_date <=', $data['end_date']);
+		if(isset($data['start_date'])) {
+			$this->db->where('credit_memo_date >=', $data['start_date']);
+		}
+		if(isset($data['end_date'])) {
+			$this->db->where('credit_memo_date <=', $data['end_date']);
+		}
         $query = $this->db->get('accounting_credit_memo');
         return $query->result();
     }

@@ -6,6 +6,8 @@ $(function(){
     $('#modal-quick-add-job').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-add-service-ticket').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-add-appointment').modal({backdrop: 'static', keyboard: false});
+    $('#modal-quick-add-tc-off').modal({backdrop: 'static', keyboard: false});
+    $('#modal-quick-edit-tc-off').modal({backdrop: 'static', keyboard: false});
 
     $('.btn-quick-access-calendar-schedule').on('click', function(){
         $('#modal-quick-access-calendar-schedule').modal('show');
@@ -388,9 +390,9 @@ $(function(){
         var url = base_url + "calendar/_quick_edit_tc_off_form";
         calendar_modal_source = 'quick-edit-tc-off';
         $('#modal-quick-view-upcoming-schedule').modal('hide');
-        $('#modal-quick-add-tc-off').modal('show');
+        $('#modal-quick-edit-tc-off').modal('show');
 
-        showLoader($("#quick-add-tc-off-form-container"));  
+        showLoader($("#quick-edit-tc-off-form-container"));  
         setTimeout(function () {
           $.ajax({
              type: "GET",
@@ -398,7 +400,7 @@ $(function(){
              data: {schedule_id:schedule_id},
              success: function(o)
              {          
-                $("#quick-add-tc-off-form-container").html(o);
+                $("#quick-edit-tc-off-form-container").html(o);
              }
           });
         }, 500);
@@ -555,9 +557,48 @@ $(function(){
                     });
                 }
                 
-                $("#btn-tc-off-submit").html('Schedule');
+                $("#btn-quick-add-tc-off-submit").html('Schedule');
             }, beforeSend: function() {
-                $("#btn-tc-off-submit").html('<span class="bx bx-loader bx-spin"></span>');
+                $("#btn-quick-add-tc-off-submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $("#quick-edit-tc-off-form").submit(function(e) {
+        e.preventDefault();         
+        var url  = base_url + 'calendar/_update_technician_off_schedule';
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: form.serialize(),
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-edit-tc-off').modal('hide');
+                    $('#modal-quick-access-calendar-schedule').modal('show');
+
+                    Swal.fire({
+                        text: 'Technician Schedule Off has been updated!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadQuickAccessCalendarSchedule();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#btn-quick-add-tc-off-submit").html('Schedule');
+            }, beforeSend: function() {
+                $("#btn-quick-add-tc-off-submit").html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });

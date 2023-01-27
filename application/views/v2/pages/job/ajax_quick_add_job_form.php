@@ -679,15 +679,18 @@
                                         <br>
                                         <div class="col-sm-12">
                                             <p>Description of Job</p>
-                                            <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                            <textarea name="job_description" class="form-control" required=""></textarea>
                                             <hr/>
                                         </div>
                                         <div class="col-sm-12">
-                                            <input type="text" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>" hidden>
+                                            <p>Notes</p>
+                                            <?php 
+                                                $message = "Thank you for your business, Please call ".$company_info->business_name." at ".$company_info->business_phone." for quality customer service";
+                                            ?>
+                                            <textarea name="job_notes" class="form-control" required=""><?= $message; ?></textarea>
+                                            <hr/>
                                         </div>
                                         <div class="row">
-                                            <!-- <input id="total_amount" type="hidden" name="total_amount"> -->
-                                            <input id="signature_link" type="hidden" name="signature_link">
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
                                             <input id="created_by" type="hidden" name="created_by" value="<?= $logged_in_user->id; ?>">

@@ -374,7 +374,17 @@ class AcsProfile_model extends MY_Model
         } 
         $query = $this->db->get();
         return $query->result();
+    }
 
+    public function getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id)
+    {
+        $this->db->select('mail_add,city,state,zip_code,phone_m,phone_h,business_name');
+        $this->db->from($this->table);
+        $this->db->where('prof_id', $prof_id);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
     }
 }
 

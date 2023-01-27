@@ -165,8 +165,24 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-md-8 paymentArea">            
-            <table class="table table-borderless">
+        <div class="col-md-8 paymentArea">   
+            <table class="table table-bordered">
+                <tr style="font-weight:bold;"><td>Job Description</td></tr>
+                <tr><td><?= $tickets->job_description; ?></td></tr>                
+                <tr style="font-weight:bold;"><td>Instructions / Notes</td></tr>
+                <tr>
+                    <td>
+                        <?php 
+                            if( $tickets->instructions != '' ){
+                                echo  $tickets->instructions;
+                            }else{
+                                echo "None";
+                            }
+                        ?>
+                    </td>
+                </tr>
+            </table>         
+            <!-- <table class="table table-borderless">
                 <tr>
                     <td style="width:150px;"><b>Payment Method: </b></td>
                     <td style="text-align:;"><?php echo $tickets->payment_method; ?></td>
@@ -303,8 +319,7 @@
                         ?>
                     </td>
                 </tr>
-            </table>
-            
+            </table> -->
         </div>
         <div class="col-md-4 summaryArea">
             <table class="table table-bordered">

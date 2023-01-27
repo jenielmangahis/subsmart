@@ -152,7 +152,7 @@
                 <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-job" href="javascript:void(0);"><i class="bx bx-fw bx-message-square-error"></i>Job</a>
                 <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-service-ticket" href="javascript:void(0);"><i class="bx bx-fw bx bx-fw bx-note"></i>Service Ticket</a>
                 <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class="bx bx-fw bx-calendar-event"></i>Appointment</a>
-                <!-- <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-tc-off" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-week' ></i>Technician Off</a> -->
+                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-tc-off" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-week' ></i>Technician Off</a>
             </div>            
         </div>        
     </div>
@@ -223,13 +223,31 @@
         <form id="quick-add-tc-off-form" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Edit Schedule Technician Off</span>
+                    <span class="modal-title content-title">Schedule Technician Off</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" id="quick-add-tc-off-form-container"></div>
                 <div class="modal-footer">                    
                     <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary" id="btn-tc-off-submit">Update Schedule</button>
+                    <button type="submit" class="nsm-button primary" id="btn-quick-add-tc-off-submit">Schedule</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-edit-tc-off" tabindex="-1" aria-labelledby="modal-quick-edit-tc-off-label" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <form id="quick-edit-tc-off-form" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Edit Schedule Technician Off</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="quick-edit-tc-off-form-container"></div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-quick-add-tc-off-submit">Update Schedule</button>
                 </div>
             </div>
         </form>
