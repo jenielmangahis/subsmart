@@ -313,13 +313,43 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php if(count($transactions) > 0) : ?>
+                                                        <?php foreach($transactions as $transaction) : ?>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="table-row-icon table-checkbox">
+                                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                                                </div>
+                                                            </td>
+                                                            <td><?=$transaction['date']?></td>
+                                                            <td><?=$transaction['type']?></td>
+                                                            <td><?=$transaction['no']?></td>
+                                                            <td><?=$transaction['customer']?></td>
+                                                            <td><?=$transaction['method']?></td>
+                                                            <td><?=$transaction['source']?></td>
+                                                            <td><?=$transaction['memo']?></td>
+                                                            <td><?=$transaction['due_date']?></td>
+                                                            <td><?=$transaction['aging']?></td>
+                                                            <td><?=$transaction['balance']?></td>
+                                                            <td><?=$transaction['total']?></td>
+                                                            <td><?=$transaction['last_delivered']?></td>
+                                                            <td><?=$transaction['email']?></td>
+                                                            <td><?=$transaction['attachments']?></td>
+                                                            <td><?=$transaction['status']?></td>
+                                                            <td><?=$transaction['po_number']?></td>
+                                                            <td><?=$transaction['sales_rep']?></td>
+                                                            <td><?=$transaction['manage']?></td>
+                                                        </tr>
+                                                        <?php endforeach; ?>
+                                                    <?php else : ?>
                                                     <tr>
-                                                        <td colspan="15">
+                                                        <td colspan="19">
                                                             <div class="nsm-empty">
                                                                 <span>No results found.</span>
                                                             </div>
                                                         </td>
                                                     </tr>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>

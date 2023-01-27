@@ -579,6 +579,27 @@ function sucess(information,id){
     });
 }
 
+$("#add-customer-modal #add_field").click(function () {
+    const custom_field_form= "<div class=\"row form_line\">\n" +
+        "                <div class=\"col-md-5\">\n" +
+        "                    Name\n" +
+        "                    <input type=\"text\" class=\"form-control\" name=\"custom_name[]\" id=\"office_custom_field1\" value=\"\" />\n" +
+        "                </div>\n" +
+        "                <div class=\"col-md-5\">\n" +
+        "                    Value\n" +
+        "                    <input type=\"text\" class=\"form-control\" name=\"custom_value[]\" id=\"office_custom_field1\" value=\"\" />\n" +
+        "                </div>\n" +
+        "                <div class=\"col-md-2\">\n" +
+        "                    <button style=\"margin-top: 23px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><i class='bx bx-trash'></i></button>\n" +
+        "                </div>\n" +
+        "            </div>";
+    $("#add-customer-modal #custom_field").append(custom_field_form);
+});
+
+$("body").delegate(".remove_item_row", "click", function(){
+    $(this).parent().parent().remove();
+});
+
 $('#customers-table .receive-payment').on('click', function(e) {
     e.preventDefault();
     var customerId = $(this).closest('tr').find('.select-one').val();

@@ -416,6 +416,110 @@ class Customers extends MY_Controller {
         }
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
 
+        $filters = [
+            'customer_id' => $customerId
+        ];
+
+        if(!empty(get('type'))) {
+            $filters['type'] = get('type');
+            $this->page_data['type'] = get('type');
+        }
+
+        if(!empty(get('date'))) {
+            switch (get('date')) {
+                case 'today':
+                    $filters['start-date'] = date("Y-m-d");
+                    $filters['end-date'] = date("Y-m-d");
+                break;
+                case 'yesterday':
+                    $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                    $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                break;
+                case 'this-week':
+                    $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
+                    $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
+                break;
+                case 'this-month':
+                    $filters['start-date'] = date("Y-m-01");
+                    $filters['end-date'] = date("Y-m-t");
+                    // no break
+                case 'this-quarter':
+                    $quarters = [
+                        1 => [
+                            'start' => date("01/01/Y"),
+                            'end' => date("03/t/Y")
+                        ],
+                        2 => [
+                            'start' => date("04/01/Y"),
+                            'end' => date("06/t/Y")
+                        ],
+                        3 => [
+                            'start' => date("07/01/Y"),
+                            'end' => date("09/t/Y")
+                        ],
+                        4 => [
+                            'start' => date("10/01/Y"),
+                            'end' => date("12/t/Y")
+                        ]
+                    ];
+                    $month = date('n');
+                    $quarter = ceil($month / 3);
+                    
+                    $filters['start-date'] = $quarters[$quarter]['start'];
+                    $filters['end-date'] = $quarters[$quarter]['end'];
+                break;
+                case 'this-year':
+                    $filters['start-date'] = date("Y-01-01");
+                    $filters['end-date'] = date("Y-12-t");
+                break;
+                case 'last-week':
+                    $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                    $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+                break;
+                case 'last-month':
+                    $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                    $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+                break;
+                case 'last-quarter':
+                    $quarters = [
+                        1 => [
+                            'start' => date("01/01/Y"),
+                            'end' => date("03/t/Y")
+                        ],
+                        2 => [
+                            'start' => date("04/01/Y"),
+                            'end' => date("06/t/Y")
+                        ],
+                        3 => [
+                            'start' => date("07/01/Y"),
+                            'end' => date("09/t/Y")
+                        ],
+                        4 => [
+                            'start' => date("10/01/Y"),
+                            'end' => date("12/t/Y")
+                        ]
+                    ];
+                    $month = date('n');
+                    $quarter = ceil($month / 3);
+    
+                    $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                    $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+                break;
+                case 'last-year':
+                    $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                    $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+                break;
+                case 'last-365-days':
+                    $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                    $filters['end-date'] = date("Y-m-d");
+                break;
+            }
+
+            $this->page_data['date'] = get('date');
+        }
+
+        $this->page_data['transactions'] = $this->get_transactions($filters);
+
         $this->load->view('v2/pages/accounting/sales/customers/view', $this->page_data);
     }
 
@@ -1036,5 +1140,203 @@ class Customers extends MY_Controller {
         
         $return = ['is_success' => $is_success, 'msg' => $msg];
         return $return;
+    }
+
+    private function get_transactions($filters = [])
+    {
+        $transactions = [];
+        switch($filters['type']) {
+            default :
+                $transactions = $this->get_invoices($transactions, $filters);
+                $transactions = $this->get_credit_memos($transactions, $filters);
+                $transactions = $this->get_sales_receipts($transactions, $filters);
+            break;
+        }
+
+        return $transactions;
+    }
+
+    private function get_invoices($transactions, $filters = [])
+    {
+        $invoices = $this->invoice_model->getAllByCustomerId($filters['customer_id']);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($invoices as $invoice)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item print-invoice" href="#">Print</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item send-invoice" href="#">Send</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item share-invoice-link" href="#">Share invoice link</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-invoice" href="#">View/Edit</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item copy-invoice" href="#">Copy</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item delete-invoice" href="#">Delete</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item void-invoice" href="#">Void</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $invoice->id,
+                'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                'type' => 'Invoice',
+                'no' => $invoice->invoice_number,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $invoice->message_on_invoice,
+                'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                'aging' => '',
+                'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
+                'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $invoice->customer_email,
+                'attachments' => '',
+                'status' => '',
+                'po_number' => '',
+                'sales_rep' => '',
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_credit_memos($transactions, $filters = [])
+    {
+        $creditMemoFilt = [
+            'company_id' => logged('company_id'),
+            'customer_id' => $filters['customer_id']
+        ];
+        $creditMemos = $this->accounting_credit_memo_model->get_customer_credit_memos($creditMemoFilt);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($creditMemos as $creditMemo)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item print-credit-memo" href="#">Print</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item send-credit-memo" href="#">Send</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-credit-memo" href="#">View/Edit</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item copy-credit-memo" href="#">Copy</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item void-credit-memo" href="#">Void</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $creditMemo->id,
+                'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                'type' => 'Credit Memo',
+                'no' => $creditMemo->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $creditMemo->message_credit_memo,
+                'due_date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                'aging' => '',
+                'balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
+                'total' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $creditMemo->email,
+                'attachments' => '',
+                'status' => '',
+                'po_number' => '',
+                'sales_rep' => '',
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_sales_receipts($transactions, $filters = [])
+    {
+        $salesReceipts = $this->accounting_sales_receipt_model->getAllByCustomerId($filters['customer_id']);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($salesReceipts as $salesReceipt)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item print-sales-receipt" href="#">Print</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item send-sales-receipt" href="#">Send</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-sales-receipt" href="#">View/Edit</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item copy-sales-receipt" href="#">Copy</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item delete-sales-receipt" href="#">Delete</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item void-sales-receipt" href="#">Void</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $salesReceipt->id,
+                'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                'type' => 'Sales Receipt',
+                'no' => $salesReceipt->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $salesReceipt->message_sales_receipt,
+                'due_date' => '',
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $salesReceipt->email,
+                'attachments' => '',
+                'status' => '',
+                'po_number' => '',
+                'sales_rep' => '',
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
     }
 }

@@ -1376,7 +1376,7 @@
                                                         </label>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input type="checkbox" name="rebate_offer" class="form-controls nsm-field" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?> >
+                                                        <input type="checkbox" name="rebate_offer" class="form-controls" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?> >
                                                     </div>
                                                 </div>
                                                 <div class="row form_line field-custom-name-container">
