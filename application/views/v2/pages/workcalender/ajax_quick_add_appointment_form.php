@@ -11,7 +11,7 @@
                         <input type="text" name="appointment_date" id="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;" value="<?= date("l, F d, Y", strtotime($default_start_date)); ?>">                                    
                     </div>
                     <div class="col-12 col-md-3">
-                        <input type="text" name="appointment_time_from" id="appointment_time" class="nsm-field form-control timepicker-from" value="" placeholder="Time From" required />
+                        <input type="text" name="appointment_time_from" id="appointment_time" class="nsm-field form-control timepicker-from" value="<?= $default_time_to; ?>" placeholder="Time From" required />
                     </div>
                     <div class="col-12 col-md-3">
                         <input type="text" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control timepicker-to" placeholder="Time To" value="<?= $default_time_to; ?>" required />
@@ -39,7 +39,7 @@
             <div class="col-12">
                 <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Attendees</label>
                 <span id="wait-list-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
-                    <select class="nsm-field form-select" name="appointment_user_id[]" id="appointment-user" multiple="multiple"></select>
+                    <select class="nsm-field form-select" name="appointment_user_id[]" id="quick-add-appointment-user" multiple="multiple"></select>
                 </span>                                                        
             </div>
             <div class="col-12 appointment-add-sales-agent" style="display:none;">
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <span id="add-customer-popover" data-toggle="popover" data-placement="right"data-container="body">
-                    <select class="nsm-field form-select" name="appointment_customer_id" id="appointment-customer"></select>
+                    <select class="nsm-field form-select" name="appointment_customer_id" id="quick-add-appointment-customer"></select>
                 </span>
                 <div class="customer-address"></div>
             </div>
@@ -68,11 +68,12 @@
                     <div class="col-6">
                         <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
                         <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required>
-                            <?php $start = 0; ?>
                             <option value="0">- Select Appointment Type -</option>
-                            <?php foreach ($appointmentTypes as $a) { ?>
-                                <option value="<?= $a->id; ?>"><?= $a->name; ?></option>
-                            <?php $start++; } ?>
+                            <?php foreach ($appointmentTypes as $a) { ?>       
+                                <?php if( $a->name != 'Job' && $a->name != 'Services' ){ ?>                         
+                                    <option value="<?= $a->id; ?>" <?= $a->name == 'Draft' ? 'selected="selected"' : ''; ?>><?= $a->name; ?></option>
+                                <?php } ?>
+                            <?php } ?>
                         </select>                                
                     </div>                              
                     <div class="col-6">
@@ -119,7 +120,7 @@
                         </div>
                         
                         <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
-                            <select class="nsm-field form-select" name="appointment_tags[]" id="appointment-tags" multiple="multiple"></select>
+                            <select class="nsm-field form-select" name="appointment_tags[]" id="quick-add-appointment-tags" multiple="multiple"></select>
                         </span> 
                     </div>                           
                 </div>
@@ -143,7 +144,7 @@
 </div>
 <script>
 $(function(){
-    $('#appointment-tags').select2({
+    $('#quick-add-appointment-tags').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_job_tags',
             dataType: 'json',
@@ -212,7 +213,7 @@ $(function(){
         format: 'hh:mm A'
     });
 
-    $('#appointment-user').select2({
+    $('#quick-add-appointment-user').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',
             dataType: 'json',
@@ -239,23 +240,7 @@ $(function(){
         templateSelection: formatRepoSelectionUser
     });
 
-    /*function formatRepoUser(repo) {
-        if (repo.loading) {
-            return repo.text;
-        }
-
-        var $container = $(
-            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
-        );
-
-        return $container;
-    }
-
-    function formatRepoSelectionUser(repo) {
-        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
-    }*/
-
-    $('#appointment-customer').on("select2:select", function(e) { 
+    $('#quick-add-appointment-customer').on("select2:select", function(e) { 
         let prof_id = e.params.data.id;
         let url = "<?= base_url('customer/_load_customer_address') ?>";
 
@@ -269,7 +254,7 @@ $(function(){
         });
     });
 
-    $('#appointment-customer').select2({
+    $('#quick-add-appointment-customer').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_customer',
             dataType: 'json',
@@ -335,8 +320,8 @@ $(function(){
             $('.event-description-container').fadeIn(500);
             $('.event-location-container').fadeIn(500);
             $("a.btn-quick-add-manage-tags").attr("href", base_url + 'events/event_tags');
-            $("#appointment-tags").empty().trigger('change');
-            $('#appointment-tags').select2({
+            $("#quick-add-appointment-tags").empty().trigger('change');
+            $('#quick-add-appointment-tags').select2({
                 ajax: {
                     url: base_url + 'autocomplete/_company_event_tags',
                     dataType: 'json',
@@ -367,8 +352,8 @@ $(function(){
             $('.event-description-container').fadeOut(500);
             $('.event-location-container').fadeOut(500);
             $("a.btn-quick-add-manage-tags").attr("href", base_url + 'job/job_tags');
-            $("#appointment-tags").empty().trigger('change');
-            $('#appointment-tags').select2({
+            $("#quick-add-appointment-tags").empty().trigger('change');
+            $('#quick-add-appointment-tags').select2({
                 ajax: {
                     url: base_url + 'autocomplete/_company_job_tags',
                     dataType: 'json',
