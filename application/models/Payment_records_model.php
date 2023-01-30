@@ -169,6 +169,16 @@ class Payment_records_model extends MY_Model
         $delete = $this->db->delete('payment_records');
         return $delete;
     }
+
+    public function get_company_payments($filters)
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        if(isset($filters['start-date'])) {
+            $this->db->where('payment_date >=', $filters['start-date']);
+        }
+        $query = $this->db->get('payment_records');
+        return $query->result();
+    }
 }
 
 /* End of file Invoice_model.php */

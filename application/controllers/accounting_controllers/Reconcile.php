@@ -22,8 +22,8 @@ class Reconcile extends MY_Controller {
         $this->load->model('vendors_model');
 
         add_css(array(
-            "assets/css/accounting/banking.css?v=".rand(),
-            "assets/css/accounting/accounting.css",
+            // "assets/css/accounting/banking.css?v=".rand(),
+            // "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",

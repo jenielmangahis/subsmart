@@ -29,8 +29,8 @@ class Tags extends MY_Controller {
         $this->page_data['page']->parent = 'Banking';
 
         add_css(array(
-            "assets/css/accounting/banking.css?v='rand()'",
-            "assets/css/accounting/accounting.css",
+            // "assets/css/accounting/banking.css?v='rand()'",
+            // "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",

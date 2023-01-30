@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/receipts_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -22,23 +23,26 @@
                                 <i class='bx bx-fw bx-upload'></i> Upload
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="upload-from-computer">Upload from computer</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="upload-from-google-drive">Upload from Google Drive</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="receiptsUploadDropzone">Upload from computer</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="googleDriveConnectButton">Upload from Google Drive</a></li>
                             </ul>
+                            <button type="button" class="nsm-button" id="receiptForwardingButton">
+                                Set up receipt forwarding
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <table class="nsm-table">
+                <table class="nsm-table" id="receiptsReviewed">
                     <thead>
                         <tr>
-                            <td data-name="Receipt">RECEIPT</td>
-                            <td data-name="Created by">CREATED BY</td>
-                            <td data-name="Date">DATE</td>
-                            <td data-name="Description">DESCRIPTION</td>
-                            <td data-name="Amount/Tax">AMOUNT/TAX</td>
-                            <td data-name="Linked Record">LINKED RECORD</td>
-                            <td data-name="Manage"></td>
+                            <th data-name="Receipt">RECEIPT</th>
+                            <th data-name="Created by">CREATED BY</th>
+                            <th data-name="Date">DATE</th>
+                            <th data-name="Description">DESCRIPTION</th>
+                            <th data-name="Amount/Tax">AMOUNT/TAX</th>
+                            <th data-name="Linked Record">LINKED RECORD</th>
+                            <th data-name="Manage"></th>
                         </tr>
                     </thead>
                     <tbody>

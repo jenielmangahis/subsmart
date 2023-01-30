@@ -284,13 +284,13 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Ticket Date</b></label>
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                        <div class="input-group date" data-provide="datepicker">
+                                        <!-- <div class="input-group date" data-provide="datepicker"> -->
                                             <input type="text" class="form-control" value="<?php echo $tickets->ticket_date; ?>" name="ticket_date" id="ticket_date"
-                                                    placeholder="Enter Ticket Date">
-                                            <div class="input-group-addon">
+                                                    placeholder="Enter Ticket Date" data-date-format='yyyy-mm-dd'>
+                                            <!-- <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
+                                            </div> -->
+                                        <!-- </div> -->
                                     </div>
                                     <div class="col-md-3">
                                         <label for="expiry_date" class="required"><b>Schedule Time From</b></label>
@@ -901,7 +901,7 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
+                                        <button type="submit" class="btn btn-warning but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
                                         <button type="button" class="nsm-button primary but" style="border-radius: 0 !important;">Preview</button>
                                         <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
                                     </div>
@@ -1507,5 +1507,11 @@ $('#modal_items_list').DataTable({
     { width: 100, targets: 0 }
     ],
     "ordering": false,
+});
+</script>
+
+<script>
+$('#ticket_date').datepicker({
+    dateFormat: 'yyyy-mm-dd'
 });
 </script>

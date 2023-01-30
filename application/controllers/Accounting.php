@@ -63,7 +63,7 @@ class Accounting extends MY_Controller
         //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
-            "assets/css/accounting/accounting.css",
+            // "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css?2021",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
@@ -579,6 +579,7 @@ class Accounting extends MY_Controller
         $this->page_data['page']->title = 'Rules';
         $this->page_data['page']->parent = 'Banking';
         $this->load->view('accounting/banking/rules', $this->page_data);
+        // $this->load->view('accounting/rules', $this->page_data);
     }
 
     public function receipts()
@@ -598,6 +599,7 @@ class Accounting extends MY_Controller
         $this->page_data['page']->title = 'Receipts';
         $this->page_data['page']->parent = 'Banking';
         $this->load->view('accounting/banking/receipts', $this->page_data);
+        // $this->load->view('accounting/receipts', $this->page_data);
     }
 
     public function reviewed_receipts()
@@ -606,9 +608,11 @@ class Accounting extends MY_Controller
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->page_data['receipts_two'] = $this->receipt_model->getReceipt_two();
         add_css([
+            'assets/css/accounting/receipts/receipts.css',
             'assets/css/accounting/receipts/reviewed_receipts.css',
         ]);
         add_footer_js([
+            'assets/js/accounting/banking/receipts/receipts.js',
             'assets/js/accounting/banking/receipts/reviewed_receipts.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
             'https://apis.google.com/js/client.js?onload=checkAuth,onApiLoad',
@@ -770,6 +774,7 @@ class Accounting extends MY_Controller
         $this->page_data['page']->title = 'Sales Transactions';
         $this->page_data['page']->parent = 'Sales';
         $this->load->view('accounting/sales/all_sales', $this->page_data);
+        // $this->load->view('accounting/all_sales', $this->page_data);
     }
 
     public function invoices()
@@ -893,6 +898,7 @@ class Accounting extends MY_Controller
 
         $this->page_data['page']->title = 'Invoices';
         $this->page_data['page']->parent = 'Sales';
+        // $this->load->view('accounting/invoices', $this->page_data);
         $this->load->view('accounting/sales/invoices', $this->page_data);
     }
 
@@ -918,57 +924,57 @@ class Accounting extends MY_Controller
         echo json_encode($this->page_data);
     }
 
-    // public function customers()
-    // {
-    //     add_css(array(
-    //         'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-    //         "assets/css/accounting/customers.css",
-    //         "assets/css/accounting/accounting_includes/create_statement_modal.css",
-    //         "assets/css/accounting/accounting_includes/time_activity.css",
-    //         "assets/css/accounting/accounting_includes/create_invoice.css",
-    //         "assets/css/accounting/accounting_includes/customer_types.css",
-    //         "assets/css/accounting/accounting_includes/customer_single_modal.css",
-    //         "assets/css/accounting/accounting_includes/new_customer.css",
-    //     ));
-    //     add_footer_js(array(
-    //         "assets/js/accounting/sales/customers.js",
-    //         "assets/js/accounting/sales/customer_includes/send_reminder.js",
-    //         "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
-    //         "assets/js/accounting/sales/customer_includes/create_estimate.js",
-    //         "assets/js/accounting/sales/customer_includes/time_activity.js",
-    //         "assets/js/accounting/sales/customer_includes/create_invoice.js",
-    //         "assets/js/accounting/sales/customer_includes/customer_types.js",
-    //         "assets/js/accounting/sales/customer_includes/export_table.js",
-    //         "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
-    //         "assets/js/accounting/sales/customer_includes/new_customer.js",
-    //         'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-    //         'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js'
-    //     ));
+    public function customers1()
+    {
+        add_css(array(
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            "assets/css/accounting/customers.css",
+            "assets/css/accounting/accounting_includes/create_statement_modal.css",
+            "assets/css/accounting/accounting_includes/time_activity.css",
+            "assets/css/accounting/accounting_includes/create_invoice.css",
+            "assets/css/accounting/accounting_includes/customer_types.css",
+            "assets/css/accounting/accounting_includes/customer_single_modal.css",
+            "assets/css/accounting/accounting_includes/new_customer.css",
+        ));
+        add_footer_js(array(
+            "assets/js/accounting/sales/customers.js",
+            "assets/js/accounting/sales/customer_includes/send_reminder.js",
+            "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
+            "assets/js/accounting/sales/customer_includes/create_estimate.js",
+            "assets/js/accounting/sales/customer_includes/time_activity.js",
+            "assets/js/accounting/sales/customer_includes/create_invoice.js",
+            "assets/js/accounting/sales/customer_includes/customer_types.js",
+            "assets/js/accounting/sales/customer_includes/export_table.js",
+            "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
+            "assets/js/accounting/sales/customer_includes/new_customer.js",
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+            'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js'
+        ));
 
-    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
 
-    //     $this->page_data['page_title'] = "Customers";
-    //     $this->page_data['accounting_timesheet_settings'] = $this->accounting_customers_model->get_accounting_timesheet_settings(logged("company_id"));
+        $this->page_data['page_title'] = "Customers";
+        $this->page_data['accounting_timesheet_settings'] = $this->accounting_customers_model->get_accounting_timesheet_settings(logged("company_id"));
 
-    //     $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
-    //     $terms = $this->accounting_terms_model->getCompanyTerms_a(logged('company_id'));
-    //     $this->page_data['number'] = $this->invoice_model->getlastInsert();
+        $terms = $this->accounting_terms_model->getCompanyTerms_a(logged('company_id'));
+        $this->page_data['number'] = $this->invoice_model->getlastInsert();
 
-    //     if (!empty($setting)) {
-    //         foreach ($setting as $key => $value) {
-    //             if (is_serialized($value)) {
-    //                 $setting->{$key} = unserialize($value);
-    //             }
-    //         }
-    //         $this->page_data['setting'] = $setting;
-    //         $this->page_data['terms'] = $terms;
-    //     }
+        if (!empty($setting)) {
+            foreach ($setting as $key => $value) {
+                if (is_serialized($value)) {
+                    $setting->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['setting'] = $setting;
+            $this->page_data['terms'] = $terms;
+        }
 
-    //     $this->page_data['page']->title = 'Customers';
-    //     $this->page_data['page']->parent = 'Sales';
-    //     $this->load->view('accounting/sales/customers', $this->page_data);
-    // }
+        $this->page_data['page']->title = 'Customers';
+        $this->page_data['page']->parent = 'Sales';
+        $this->load->view('accounting/customers', $this->page_data);
+    }
     public function import_customers()
     {
         $ds = DIRECTORY_SEPARATOR;  //1
@@ -8543,6 +8549,7 @@ class Accounting extends MY_Controller
 
         $this->page_data['page']->title = 'Estimates';
         $this->page_data['page']->parent = 'Sales';
+        // $this->load->view('accounting/estimatesList', $this->page_data);
         $this->load->view('accounting/sales/estimates', $this->page_data);
     }
 

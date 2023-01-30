@@ -1,6 +1,12 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/customers_modals'); ?>
 
+<style>
+    .nsm-counter.selected, .nsm-counter.co-selected {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.35);
+    }
+</style>
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -23,26 +29,26 @@
                     <div class="col-12 col-md-4">
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter primary h-100 mb-2">
+                                <div class="nsm-counter primary h-100 mb-2 <?=$transaction === 'estimates' ? 'selected' : ''?>" id="estimates">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($openEstimates)?></h2>
                                             <span>ESTIMATES</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter secondary h-100 mb-2">
+                                <div class="nsm-counter secondary h-100 mb-2 <?=$transaction === 'unbilled-activity' ? 'selected' : ''?>" id="unbilled-activity">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($unbilledActivities)?></h2>
                                             <span>UNBILLED ACTIVITY</span>
                                         </div>
                                     </div>
@@ -53,26 +59,26 @@
                     <div class="col-12 col-md-4">
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter error h-100 mb-2">
+                                <div class="nsm-counter error h-100 mb-2 <?=$transaction === 'overdue-invoices' ? 'selected' : ''?><?=$transaction === 'open-invoices' ? 'co-selected' : ''?>" id="overdue-invoices">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($overdueInvoices)?></h2>
                                             <span>OVERDUE</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter h-100 mb-2">
+                                <div class="nsm-counter h-100 mb-2 <?=$transaction === 'open-invoices' ? 'selected' : ''?>" id="open-invoices">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($openInvoices)?></h2>
                                             <span>OPEN INVOICES</span>
                                         </div>
                                     </div>
@@ -81,13 +87,13 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter success h-100 mb-2">
+                        <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year">0</h2>
+                                    <h2 id="total_this_year"><?=count($payments)?></h2>
                                     <span>PAID LAST 30 DAYS</span>
                                 </div>
                             </div>
@@ -96,9 +102,11 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search by tag name">
-                        </div>
+                        <form action="<?php echo base_url('accounting/customers') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search by tag name" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
@@ -123,7 +131,7 @@
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-customer-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
-                            <button type="button" class="nsm-button export-items">
+                            <button type="button" class="nsm-button export-customers">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customers_modal">
@@ -145,10 +153,6 @@
                                 <div class="form-check">
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_customer_type" class="form-check-input">
                                     <label for="chk_customer_type" class="form-check-label">Customer Type</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
-                                    <label for="chk_attachments" class="form-check-label">Attachments</label>
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_phone" class="form-check-input">
@@ -189,9 +193,6 @@
                             <td data-name="Phone">PHONE</td>
                             <td data-name="Email">EMAIL</td>
                             <td data-name="Customer Type">CUSTOMER TYPE</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
                             <td data-name="Open Balance">OPEN BALANCE</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -220,7 +221,6 @@
                             <td><?=$customer->phone_h?></td>
                             <td><?=$customer->email?></td>
                             <td><?=$customer->customer_type?></td>
-                            <td></td>
                             <td></td>
                             <td>
                                 <div class="dropdown table-management">
