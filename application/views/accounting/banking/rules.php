@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/rules_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -22,7 +23,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
+                        <!-- <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
@@ -34,19 +35,19 @@
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="disable">Disable</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="enable">Enable</a></li>
                             </ul>
-                        </div>
+                        </div> -->
 
                         <div class="nsm-page-buttons page-button-container">
-                        <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="importRulesLink">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="newRuleButton">
                                 <i class='bx bx-fw bx-list-plus'></i> New Rule
                             </button>
-                            <button type="button" class="nsm-button export-items">
+                            <button type="button" class="nsm-button" id="exportRules">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                            <!-- <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
@@ -84,11 +85,11 @@
                                     <input type="radio" name="page_size" id="page-size-300" class="form-check-input">
                                     <label for="page-size-300" class="form-check-label">300</label>
                                 </div>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="rulesTable">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
@@ -97,7 +98,7 @@
                             <td data-name="Priority">PRIORITY</td>
                             <td data-name="Rule Name">RULE NAME</td>
                             <td data-name="Applied To">APPLIED TO</td>
-                            <td data-name="Conditions">Conditions</td>
+                            <td data-name="Conditions">CONDITIONS</td>
                             <td data-name="Settings">SETTINGS</td>
                             <td data-name="Auto Add">AUTO ADD</td>
                             <td data-name="Status">STATUS</td>
@@ -105,21 +106,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count([]) > 0) : ?>
-						<?php foreach([] as $rule) : ?>
+                        <?php if(count($rules) > 0) : ?>
+						<?php foreach($rules as $rule) : ?>
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox">
                                 </div>
                             </td>
+                            <td><?=$rule->priority?></td>
+                            <td><?=$rule->rules_name?></td>
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><?=$rule->is_active === '1' ? 'Active' : 'Inactive'?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

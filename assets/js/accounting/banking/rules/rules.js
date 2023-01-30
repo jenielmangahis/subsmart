@@ -22,24 +22,24 @@ window.addEventListener("DOMContentLoaded", async () => {
     window.openRuleForm();
   });
 
-  const $selectWithCheckbox = document.querySelector("#transactionsBankSelect");
-  const $checkboxes = $selectWithCheckbox.querySelectorAll("[type=checkbox]");
+  // const $selectWithCheckbox = document.querySelector("#transactionsBankSelect");
+  // const $checkboxes = $selectWithCheckbox.querySelectorAll("[type=checkbox]");
 
-  const bankSelect = new SelectWithCheckbox($selectWithCheckbox);
-  bankSelect.onSelect = function (event) {
-    const $text = bankSelect.$text;
+  // const bankSelect = new SelectWithCheckbox($selectWithCheckbox);
+  // bankSelect.onSelect = function (event) {
+  //   const $text = bankSelect.$text;
 
-    if (event.target.checked) {
-      $text.setAttribute("data-prev-text", $text.textContent);
-      $text.textContent = "All bank accounts";
-    } else {
-      $text.textContent = $text.getAttribute("data-prev-text");
-    }
+  //   if (event.target.checked) {
+  //     $text.setAttribute("data-prev-text", $text.textContent);
+  //     $text.textContent = "All bank accounts";
+  //   } else {
+  //     $text.textContent = $text.getAttribute("data-prev-text");
+  //   }
 
-    [...$checkboxes].forEach(($checkbox) => {
-      $checkbox.checked = event.target.checked;
-    });
-  };
+  //   [...$checkboxes].forEach(($checkbox) => {
+  //     $checkbox.checked = event.target.checked;
+  //   });
+  // };
 
   const $addRuleForm = document.getElementById("addRuleForm");
   const $addRuleBtn = $addRuleForm.querySelector("[data-action=save]");

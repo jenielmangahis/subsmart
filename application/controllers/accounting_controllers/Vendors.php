@@ -33,8 +33,8 @@ class Vendors extends MY_Controller
         $this->page_data['page']->parent = 'Expenses';
 
         add_css(array(
-            "assets/css/accounting/banking.css?v='rand()'",
-            "assets/css/accounting/accounting.css",
+            // "assets/css/accounting/banking.css?v='rand()'",
+            // "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",

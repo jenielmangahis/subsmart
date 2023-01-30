@@ -407,8 +407,16 @@ class Tickets extends MY_Controller
         // }
 
         // implode(",", $this->input->post('assign_tech'));
-        $techni = serialize($this->input->post('assign_tech'));
-
+        $ticketsData = $this->tickets_model->get_tickets_data_one($id);
+        $technician = serialize($this->input->post('assign_tech'));
+        if($technician == 'N;')
+        {
+            $techni = $ticketsData->technicians;
+        }else{
+            $techni = serialize($this->input->post('assign_tech'));
+        }
+        
+        // dd($techni);
         // dd($status);
 
         // dd($this->input->post());

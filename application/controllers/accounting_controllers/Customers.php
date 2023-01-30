@@ -23,15 +23,19 @@ class Customers extends MY_Controller {
         $this->load->model('estimate_model');
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('accounting_sales_receipt_model');
+        $this->load->model('accounting_refund_receipt_model');
         $this->load->model('accounting_credit_memo_model');
+        $this->load->model('accounting_delayed_credit_model');
+        $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('payment_records_model');
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Sales';
 
         add_css(array(
-            "assets/css/accounting/banking.css?v='rand()'",
-            "assets/css/accounting/accounting.css",
+            // "assets/css/accounting/banking.css?v='rand()'",
+            // "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
@@ -112,30 +116,7 @@ class Customers extends MY_Controller {
 
     public function index()
     {
-        add_css(array(
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            "assets/css/accounting/customers.css",
-            "assets/css/accounting/accounting_includes/create_statement_modal.css",
-            "assets/css/accounting/accounting_includes/time_activity.css",
-            "assets/css/accounting/accounting_includes/create_invoice.css",
-            "assets/css/accounting/accounting_includes/customer_types.css",
-            "assets/css/accounting/accounting_includes/customer_single_modal.css",
-            "assets/css/accounting/accounting_includes/new_customer.css",
-        ));
         add_footer_js(array(
-            "assets/js/accounting/sales/customers.js",
-            "assets/js/accounting/sales/customer_includes/send_reminder.js",
-            "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
-            "assets/js/accounting/sales/customer_includes/create_estimate.js",
-            "assets/js/accounting/sales/customer_includes/time_activity.js",
-            "assets/js/accounting/sales/customer_includes/create_invoice.js",
-            "assets/js/accounting/sales/customer_includes/customer_types.js",
-            "assets/js/accounting/sales/customer_includes/export_table.js",
-            "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
-            "assets/js/accounting/sales/customer_includes/new_customer.js",
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-            'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js',
-
             "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/sales/customers/list.js"
@@ -228,6 +209,54 @@ class Customers extends MY_Controller {
         // fetch customer statuses
         $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
+
+        $this->page_data['openEstimates'] = $this->estimate_model->get_company_open_estimates(logged('company_id'));
+
+        $unbilledCredits = $this->accounting_delayed_credit_model->get_unbilled_credits();
+        $unbilledCharges = $this->accounting_delayed_charge_model->get_unbilled_charges();
+
+        $paymentsFilter = [
+            'start-date' => date("Y-m-d", strtotime("-30 days")),
+            'company_id' => logged('company_id')
+        ];
+        $this->page_data['unbilledActivities'] = array_merge($unbilledCredits, $unbilledCharges);
+        $this->page_data['overdueInvoices'] = $this->invoice_model->get_company_overdue_invoices(logged('company_id'));
+        $this->page_data['openInvoices'] = $this->invoice_model->get_company_open_invoices(logged('company_id'));
+        $this->page_data['payments'] = $this->payment_records_model->get_company_payments($paymentsFilter);
+
+        if(!empty(get('transaction'))) {
+            $this->page_data['transaction'] = get('transaction');
+
+            switch(get('transaction')) {
+                case 'estimates' :
+                    $customers = $this->AcsProfile_model->get_customers_with_open_estimates(logged('company_id'));
+                break;
+                case 'unbilled-activity' :
+                    $customers = $this->AcsProfile_model->get_customers_with_unbilled_activities(logged('company_id'));
+                break;
+                case 'overdue-invoices' :
+                    $customers = $this->AcsProfile_model->get_customers_with_overdue_invoices(logged('company_id'));
+                break;
+                case 'open-invoices' :
+                    $customers = $this->AcsProfile_model->get_customers_with_open_invoices(logged('company_id'));
+                break;
+                case 'payments' :
+                    $customers = $this->AcsProfile_model->get_customers_with_payments($paymentsFilter);
+                break;
+            }
+
+            $this->page_data['customers'] = $customers;
+        }
+
+        $search = get('search');
+        if(!empty($search)) {
+            $this->page_data['customers'] = array_filter($this->page_data['customers'], function($customer, $key) use ($search) {
+                $name = $customer->last_name.', '.$customer->first_name;
+                return (stripos($name, $search) !== false);
+            }, ARRAY_FILTER_USE_BOTH);
+
+            $this->page_data['search'] = $search;
+        }
 
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
@@ -1150,8 +1179,18 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_invoices($transactions, $filters);
                 $transactions = $this->get_credit_memos($transactions, $filters);
                 $transactions = $this->get_sales_receipts($transactions, $filters);
+                $transactions = $this->get_refund_receipts($transactions, $filters);
+                $transactions = $this->get_delayed_credits($transactions, $filters);
+                $transactions = $this->get_delayed_charges($transactions, $filters);
             break;
         }
+
+        usort($transactions, function($a, $b) {
+            if($a['date'] === $b['date']) {
+                return strtotime($b['date_created']) > strtotime($a['date_created']);
+            }
+            return strtotime($b['date']) > strtotime($a['date']);
+        });
 
         return $transactions;
     }
@@ -1212,6 +1251,7 @@ class Customers extends MY_Controller {
                 'status' => '',
                 'po_number' => '',
                 'sales_rep' => '',
+                'date_created' => date("m/d/Y", strtotime($invoice->date_created)),
                 'manage' => $manageCol
             ];
         }
@@ -1273,6 +1313,7 @@ class Customers extends MY_Controller {
                 'status' => '',
                 'po_number' => '',
                 'sales_rep' => '',
+                'date_created' => date("m/d/Y", strtotime($creditMemo->created_at)),
                 'manage' => $manageCol
             ];
         }
@@ -1333,10 +1374,240 @@ class Customers extends MY_Controller {
                 'status' => '',
                 'po_number' => '',
                 'sales_rep' => '',
+                'date_created' => date("m/d/Y", strtotime($salesReceipt->created_at)),
                 'manage' => $manageCol
             ];
         }
 
         return $transactions;
+    }
+
+    private function get_refund_receipts($transactions, $filters = [])
+    {
+        $refundReceipts = $this->accounting_refund_receipt_model->get_customer_refund_receipts($filters['customer_id']);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($refundReceipts as $refundReceipt)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item print-refund-receipt-check" href="#">Print check</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item send-refund-receipt" href="#">Send</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item print-refund-receipt" href="#">Print</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-refund-receipt" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $refundReceipt->id,
+                'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                'type' => 'Refund',
+                'no' => $refundReceipt->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $refundReceipt->message_refund_receipt,
+                'due_date' => '',
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $refundReceipt->email,
+                'attachments' => '',
+                'status' => '',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y", strtotime($refundReceipt->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_delayed_credits($transactions, $filters = [])
+    {
+        $delayedCredits = $this->accounting_delayed_credit_model->get_customer_delayed_credits($filters['customer_id'], logged('company_id'));
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($delayedCredits as $delayedCredit)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-delayed-credit" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $delayedCredit->id,
+                'date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                'type' => 'Credit',
+                'no' => $delayedCredit->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $delayedCredit->memo,
+                'due_date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => '',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y", strtotime($delayedCredit->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_delayed_charges($transactions, $filters = [])
+    {
+        $delayedCharges = $this->accounting_delayed_charge_model->get_customer_delayed_charges($filters['customer_id'], logged('company_id'));
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($delayedCharges as $delayedCharge)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-delayed-charge" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $delayedCharge->id,
+                'date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                'type' => 'Charge',
+                'no' => $delayedCharge->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $delayedCharge->memo,
+                'due_date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => '',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y", strtotime($delayedCharge->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    public function export()
+    {
+        $this->load->library('PHPXLSXWriter');
+        $post = $this->input->post();
+        $search = $post['search'];
+
+        $status = [
+            1
+        ];
+
+        if ($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        $data = [];
+        
+    
+        usort($data, function ($a, $b) {
+            return strcasecmp($a['name'], $b['name']);
+        });
+
+        $writer = new XLSXWriter();
+        $headers = [
+            "Vendor",
+            "Company",
+            "Address",
+            "City",
+            "State",
+            "Country",
+            "Zip",
+            "Phone",
+            "Email",
+            "Attachments",
+            "Open Balance"
+        ];
+
+        if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
+            unset($headers[2]);
+        }
+        if(!isset($post['fields']) || !in_array('attachments', $post['fields'])) {
+            unset($headers[9]);
+        }
+        if(!isset($post['fields']) || !in_array('phone', $post['fields'])) {
+            unset($headers[7]);
+        }
+        if(!isset($post['fields']) || !in_array('email', $post['fields'])) {
+            unset($headers[8]);
+        }
+
+        $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+
+        foreach($data as $cust) {
+            $name = $cust['name'];
+            $name .= $cust['status'] === '0' ? ' (deleted)' : '';
+            $cust['name'] = $name;
+            unset($cust['status']);
+
+            if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
+                unset($cust['address']);
+            }
+            if(!isset($post['fields']) || !in_array('phone', $post['fields'])) {
+                unset($cust['phone']);
+            }
+            if(!isset($post['fields']) || !in_array('email', $post['fields'])) {
+                unset($cust['email']);
+            }
+
+            $writer->writeSheetRow('Sheet1', $cust);
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="vendors.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
     }
 }

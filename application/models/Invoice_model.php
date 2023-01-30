@@ -1004,6 +1004,25 @@ class Invoice_model extends MY_Model
         $delete = $this->db->delete('invoices');
         return $delete;
     }
+
+    public function get_company_open_invoices($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where_not_in('status', ['Draft', 'Declined', 'Paid']);
+        $this->db->where('view_flag', 0);
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
+    public function get_company_overdue_invoices($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('due_date <=', date("Y-m-d"));
+        $this->db->where_not_in('status', ['Draft', 'Declined', 'Paid']);
+        $this->db->where('view_flag', 0);
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
 }
 
 /* End of file Invoice_model.php */
