@@ -77,4 +77,13 @@ class Accounting_refund_receipt_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_customer_refund_receipts($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('status !=', 0);
+        $this->db->where('recurring', null);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

@@ -767,3 +767,63 @@ $('#customers-table .create-bundle-estimate').on('click', function(e) {
         $('#bundle-estimate-modal').modal('show');
     });
 });
+
+$("#search_field").on("input", debounce(function() {
+    let _form = $(this).closest("form");
+
+    _form.submit();
+}, 1500));
+
+$('.nsm-counter').on('click', function() {
+    var currUrl = window.location.href;
+
+    if(currUrl.slice(-1) === '#') {
+        currUrl = currUrl.slice(0, -1); 
+    }
+
+    var urlSplit = currUrl.split('/');
+
+    if($(this).hasClass('selected')) {
+        if(currUrl.includes(`&transaction=${$(this).attr('id')}`)) {
+            location.href = currUrl.replace(`&transaction=${$(this).attr('id')}`, '');
+        } else {
+            location.href = currUrl.replace(`transaction=${$(this).attr('id')}`, '');
+        }
+    } else {
+        if($('.nsm-counter.selected').length > 0) {
+            var selected = $('.nsm-counter.selected').attr('id');
+    
+            currUrl = currUrl.replace(`transaction=${selected}`, `transaction=${$(this).attr('id')}`);
+    
+            location.href = currUrl;
+        } else {
+            if(urlSplit[urlSplit.length - 1] === 'customers') {
+                location.href=`customers?transaction=${$(this).attr('id')}`;
+            } else {
+                location.href = currUrl+`&transaction=${$(this).attr('id')}`;
+            }
+        }
+    }
+});
+
+$('.export-customers').on('click', function() {
+    // if($('#export-form').length < 1) {
+    //     $('body').append('<form action="/accounting/customers/export-customers" method="post" id="export-form"></form>');
+    // }
+
+    // var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    // fields.each(function() {
+    //     $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('_chk', '')}">`);
+    // });
+
+    // $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
+
+    // if($('.nsm-counter.selected').length > 0) {
+    //     $('#export-form').append(`<input type="hidden" name="transaction" value="${$('.nsm-counter.selected').attr('id')}">`);
+    // }
+
+    // $('#export-form').append(`<input type="hidden" name="column" value="name">`);
+    // $('#export-form').append(`<input type="hidden" name="order" value="asc">`);
+
+    // $('#export-form').submit();
+});

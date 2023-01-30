@@ -683,7 +683,7 @@ class Expenses_model extends MY_Model
     public function get_company_expense_transactions($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
-        $this->db->where('status !=', 0);
+        $this->db->where('status', 1);
 
         if(isset($filters['start-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);

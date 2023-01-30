@@ -40,8 +40,8 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['page']->parent = 'Accounting';
 
         add_css(array(
-            "assets/css/accounting/banking.css?v=".rand(),
-            "assets/css/accounting/accounting.css",
+            // "assets/css/accounting/banking.css?v=".rand(),
+            // "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",

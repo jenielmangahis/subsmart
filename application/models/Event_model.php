@@ -339,7 +339,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_office.technician', $id);
-        // $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
         // $this->db->group_by('jobs.customer_id');
         $query = $this->db->get();
         return $query->result();

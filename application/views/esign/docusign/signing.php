@@ -96,6 +96,24 @@
         .progressindicator.show {
             display: block !important;
         }
+
+        @media only screen and (max-width: 768px) {
+            #signatureModal {
+                padding: 0 !important;
+            }
+
+            #signatureModal .modal-dialog {
+                margin: 0;
+                max-width: unset;
+                width: inherit;
+                height: inherit;
+            }
+
+            #signatureModal .modal-content {
+                height: inherit;
+                border-radius: 0;
+            }
+        }
     </style>
 </head>
 

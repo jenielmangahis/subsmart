@@ -386,6 +386,68 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function get_customers_with_open_estimates($companyId)
+    {
+        $this->db->select('acs_profile.*');
+        $this->db->where('acs_profile.company_id', $companyId);
+        $this->db->where_not_in('estimates.status', ['Draft', 'Invoiced', 'Lost', 'Declined By Customer']);
+        $this->db->where('estimates.view_flag', 0);
+        $this->db->group_by('acs_profile.prof_id');
+        $this->db->join('estimates', 'estimates.customer_id = acs_profile.prof_id');
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function get_customers_with_unbilled_activities($companyId)
+    {
+        $this->db->select('acs_profile.*');
+        $this->db->where('acs_profile.company_id', $companyId);
+        $this->db->where('accounting_delayed_credit.status', 1);
+        $this->db->where('accounting_delayed_credit.remaining_balance >', 0);
+        $this->db->where('accounting_delayed_charge.status', 1);
+        $this->db->where('accounting_delayed_charge.remaining_balance >', 0);
+        $this->db->group_by('acs_profile.prof_id');
+        $this->db->join('accounting_delayed_credit', 'accounting_delayed_credit.customer_id = acs_profile.prof_id');
+        $this->db->join('accounting_delayed_charge', 'accounting_delayed_charge.customer_id = acs_profile.prof_id');
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function get_customers_with_overdue_invoices($companyId)
+    {
+        $this->db->where('acs.profilecompany_id', $companyId);
+        $this->db->where('invoices.due_date <=', date("Y-m-d"));
+        $this->db->where_not_in('invoices.status', ['Draft', 'Declined', 'Paid']);
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->group_by('acs_profile.prof_id');
+        $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id');
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function get_customers_with_open_invoices($companyId)
+    {
+        $this->db->where('acs.profilecompany_id', $companyId);
+        $this->db->where_not_in('invoices.status', ['Draft', 'Declined', 'Paid']);
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->group_by('acs_profile.prof_id');
+        $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id');
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function get_customers_with_payments($filters)
+    {
+        $this->db->where('acs_profile.company_id', $filters['company_id']);
+        if(isset($filters['start-date'])) {
+            $this->db->where('payment_records.payment_date >=', $filters['start-date']);
+        }
+        $this->db->group_by('acs_profile.prof_id');
+        $this->db->join('payment_records', 'payment_records.customer_id = acs_profile.prof_id');
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }
 
 /* End of file AcsProfile_model.php */

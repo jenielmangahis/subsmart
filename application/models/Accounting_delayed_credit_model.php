@@ -76,4 +76,13 @@ class Accounting_delayed_credit_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_unbilled_credits()
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('remaining_balance >', 0);
+        $this->db->where('status', 1);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

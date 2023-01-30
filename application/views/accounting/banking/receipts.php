@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/receipts_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -33,9 +34,9 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="confirm">Confirm selected</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="review">Review selected</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete">Delete selected</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="confirm" data-action="confirm">Confirm selected</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="review" data-action="review">Review selected</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete" data-action="delete">Delete selected</a></li>
                             </ul>
                         </div>
 
@@ -101,12 +102,12 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button">
+                                        <button type="button" class="nsm-button" type="reset">
                                             Reset
                                         </button>
                                     </div>
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button primary float-end">
+                                        <button type="button" class="nsm-button primary float-end receiptsButton">
                                             Apply
                                         </button>
                                     </div>
@@ -119,65 +120,29 @@
                                 <i class='bx bx-fw bx-upload'></i> Upload
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="upload-from-computer">Upload from computer</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="upload-from-google-drive">Upload from Google Drive</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="receiptsUploadDropzone">Upload from computer</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="googleDriveConnectButton">Upload from Google Drive</a></li>
                             </ul>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-cog"></i>
+                            <button type="button" class="nsm-button" id="receiptForwardingButton">
+                                Set up receipt forwarding
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                                <p class="m-0">Columns</p>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_conditions" id="chk_conditions" class="form-check-input">
-                                    <label for="chk_conditions" class="form-check-label">Conditions</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_settings" id="chk_settings" class="form-check-input">
-                                    <label for="chk_settings" class="form-check-label">Settings</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_status" id="chk_status" class="form-check-input">
-                                    <label for="chk_status" class="form-check-label">Status</label>
-                                </div>
-                                <p class="m-0">Page Size</p>
-                                <div class="form-check">
-                                    <input type="radio" checked="checked" name="page_size" id="page-size-50" class="form-check-input">
-                                    <label for="page-size-50" class="form-check-label">50</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-75" class="form-check-input">
-                                    <label for="page-size-75" class="form-check-label">75</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-100" class="form-check-input">
-                                    <label for="page-size-100" class="form-check-label">100</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-200" class="form-check-input">
-                                    <label for="page-size-200" class="form-check-label">200</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-300" class="form-check-input">
-                                    <label for="page-size-300" class="form-check-label">300</label>
-                                </div>
-                            </ul>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="receiptsReview">
                     <thead>
                         <tr>
-                            <td class="table-icon text-center">
+                            <th class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
-                            </td>
-                            <td data-name="Receipt">RECEIPT</td>
-                            <td data-name="Created by">CREATED BY</td>
-                            <td data-name="Date">DATE</td>
-                            <td data-name="Description">DESCRIPTION</td>
-                            <td data-name="Payment Account">PAYMENT ACCOUNT</td>
-                            <td data-name="Amount/Tax">AMOUNT/TAX</td>
-                            <td data-name="Category">Category</td>
-                            <td data-name="Manage"></td>
+                            </th>
+                            <th data-name="Receipt">RECEIPT</th>
+                            <th data-name="Created by">CREATED BY</th>
+                            <th data-name="Date">DATE</th>
+                            <th data-name="Description">DESCRIPTION</th>
+                            <th data-name="Payment Account">PAYMENT ACCOUNT</th>
+                            <th data-name="Amount/Tax">AMOUNT/TAX</th>
+                            <th data-name="Category">Category</th>
+                            <th data-name="Manage"></th>
                         </tr>
                     </thead>
                     <tbody>
