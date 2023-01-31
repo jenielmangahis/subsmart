@@ -516,6 +516,8 @@ $route['accounting/customers/export-customers']['post'] = 'accounting_controller
 $route['accounting/customers/add-customer-type']['post'] = 'accounting_controllers/customers/add_customer_type';
 $route['accounting/customers/update-customer-type/(:any)']['post'] = 'accounting_controllers/customers/update_customer_type/$1';
 $route['accounting/customers/delete-customer-type/(:any)']['DELETE'] = 'accounting_controllers/customers/delete_customer_type/$1';
+$route['accounting/customers/get-customers-file-headers']['post'] = 'accounting_controllers/customers/get_customer_file_headers';
+$route['accounting/customers/import-customers']['post'] = 'accounting_controllers/customers/import_customers';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -1452,3 +1454,4 @@ $route['ticket/_get_customer_basic_information'] = 'Tickets/ajax_get_customer_ba
 $route['calendar/_quick_add_appointment_form'] = 'Workcalender/ajax_quick_add_appointment_form';
 $route['calendar/_quick_add_tc_off_form'] = 'Workcalender/ajax_quick_add_tc_off_form';
 $route['calendar/_quick_edit_tc_off_form'] = 'Workcalender/ajax_quick_edit_tc_off_form';
+$route['job/_quick_delete_job'] = 'Job/ajax_quick_delete_job';

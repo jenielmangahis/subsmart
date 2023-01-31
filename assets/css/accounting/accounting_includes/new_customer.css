@@ -336,9 +336,7 @@ div#import-customers-modal {
     margin-top: 33px;
 }
 
-#import-customers-modal .instruction {
-    padding: 2px;
+#import-customers-modal .instruction p {
     background-color: rgb(231 231 231);
-    margin-bottom: 10px;
     border-radius: 8px;
 }

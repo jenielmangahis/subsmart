@@ -2610,6 +2610,47 @@
                                     </div>
                                 </div>
                             </fieldset>
+                            <fieldset id="holder-step-2">
+
+                                <!--1st Row-->
+                                <div class="row">
+                                    <div class="col-12 instruction">
+                                        <p class="text-start p-3">For the column from files section, this is the column names of the data in your excel. You can uncheck and check the columns that only need to be stored in the database. For the select columns to store section, after checking the desired column you wanted to store, you can choose the column of the database you want to store your selected data.</p>
+                                    </div>
+                                </div>
+                                <!--2nd Row-->
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h4 class="margin">COLUMNS FROM FILE</h4>
+                                    </div>
+                                    <div class="col-6">
+                                        <h4 class="margin">SELECT COLUMNS TO STORE</h4>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="form-check">
+
+                                </div> -->
+                                <!-- <h1 class="error"></h1> -->
+
+                                <!-- <input type="button" name="next-step" class="next-step mt-5" value="Save Now" />
+                                <input type="button" name="previous-step" class="previous-step mt-5" value="Previous Step" /> -->
+                            </fieldset>
+                            <fieldset id="holder-step-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <img src="https://localhost/nsmartrac/assets/img/accounting/customers/email-marketing.png" style="width:275px; height:275px; margin:0 auto;">
+                                    </div>
+                                    <div class="col-12 col-md-6" style="margin-top: 40px; text-align:left;">
+                                        <h3 style="margin-left:5px;color:#6a4b86;">You've successfully added new customers!!</h3>
+                                        <p style="color:#6a4b86;font-size:15px; margin-left:5px;">The data of the customers from the file you imported has successfully uploaded!</p>
+                                        <button type="button" class="btn btn-primary" id="close" style="background-color:#6a4b86 !important">Close</button>
+                                    </div>
+                                </div>
+                            
+                                                    
+                            </fieldset>
                         </form>
                     </div>
                 </div>

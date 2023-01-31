@@ -186,7 +186,7 @@
                     <span class="modal-title content-title">Create Service Ticket</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body" id="quick-add-service-ticket-form-container"></div>
+                <div class="modal-body" id="quick-add-service-ticket-form-container" style="max-height: 800px; overflow: auto;"></div>
                 <div class="modal-footer" style="display:block;">                    
                     <div style="float:right;">
                         <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>

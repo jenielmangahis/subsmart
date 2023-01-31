@@ -50,37 +50,37 @@
             <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="margin-top: 33px; max-width: 130px; max-height: 130px;" class="compLogo"/> 
         </div>
         <div class="col-md-6">
-            <div class="" style="float:right;">
-                <div style="font-size:16px;">
-                <table class="table-borderless mustRight">
-                    <tr>
-                        <td colspan="2"><h1 style="text-align:right;"><b><?= $tickets->ticket_no; ?></b></h1></td>
-                    </tr>                                
-                    <tr>
-                        <td style="width:180px;">Scheduled Date:</td>
-                        <td><?php echo $tickets->ticket_date; ?></td>
-                    </tr>
-                    <tr>
-                        <td>Scheduled Time:</td>
-                        <td><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
-                    </tr>
-                    <tr>
-                        <td>Purchase Order No:</td>
-                        <td><?php echo $tickets->purchase_order_no; ?></td>
-                    </tr>
-                    <tr>
-                        <td>Status:</td>
-                        <td><?php echo $tickets->ticket_status; ?></td>
-                    </tr>
-                    <?php if($tickets->business_name != ''){ ?>
-                    <tr>
-                        <td>Business Name:</td>
-                        <td><?php echo $tickets->business_name; ?></td>
-                    </tr>
-                    <?php } ?>
-                </table>
-                </div>
-            </div>
+            <table class="table-borderless mustRight" style="width:100%;">
+                <tr>
+                    <td colspan="2"><h1 style="text-align:right;"><b><?= $tickets->ticket_no; ?></b></h1></td>
+                </tr> 
+                <tr>
+                    <td align="right">Job Tags:</td>
+                    <td align="right"><b><?php echo $tickets->job_tag; ?></b></td>
+                </tr>
+                <tr>
+                    <td align="right">Purchase Order No:</td>
+                    <td align="right"><b><?php echo $tickets->purchase_order_no; ?></b></td>
+                </tr>                               
+                <tr>
+                    <td align="right" style="width:47%;">Scheduled Date:</td>
+                    <td align="right"><?php echo $tickets->ticket_date; ?></td>
+                </tr>
+                <tr>
+                    <td align="right">Scheduled Time:</td>
+                    <td align="right"><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
+                </tr>
+                <tr>
+                    <td align="right">Status:</td>
+                    <td align="right"><b><?php echo $tickets->ticket_status; ?></b></td>
+                </tr>
+                <?php if($tickets->business_name != ''){ ?>
+                <tr>
+                    <td align="right">Business Name:</td>
+                    <td align="right"><?php echo $tickets->business_name; ?></td>
+                </tr>
+                <?php } ?>
+            </table>
         </div>
     </div>
     <br />
