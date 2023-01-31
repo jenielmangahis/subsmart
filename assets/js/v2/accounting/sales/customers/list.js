@@ -48,12 +48,11 @@ $(document).on('change', '#customers-table tbody tr:visible .select-one', functi
     });
 
     if(href !== 'mailto:') {
-        $('#email').removeClass('disabled');
+        $('#email-action').attr('href', href);
+        $('#email-action').removeClass('disabled');
     } else {
-        $('#email').addClass('disabled');
+        $('#email-action').addClass('disabled');
     }
-
-    $('#email').attr('href', href);
 });
 
 $(document).on('change', '.dropdown-menu.table-settings input[name="col_chk"]', function() {
@@ -524,14 +523,12 @@ $('#add-customer-form').on('submit', async function(e) {
         data: form.serialize(), // serializes the form's elements.
         success: function(data)
         {
-            // document.getElementById('overlay').style.display = "none";
             if(data.success){
                 sucess("New Customer has been Added Successfully!",data.profile_id);
             }else{
                 error(data.message);
             }
         },error: function (xhr, ajaxOptions, thrownError, data) {
-            // document.getElementById('overlay').style.display = "none";
             Swal.fire({
                 text: 'Customer profile was successfully updated!',
                 icon: 'success',
@@ -807,23 +804,154 @@ $('.nsm-counter').on('click', function() {
 });
 
 $('.export-customers').on('click', function() {
-    // if($('#export-form').length < 1) {
-    //     $('body').append('<form action="/accounting/customers/export-customers" method="post" id="export-form"></form>');
-    // }
+    if($('#export-form').length < 1) {
+        $('body').append('<form action="/accounting/customers/export-customers" method="post" id="export-form"></form>');
+    }
 
-    // var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
-    // fields.each(function() {
-    //     $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('_chk', '')}">`);
-    // });
+    var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('chk_', '')}">`);
+    });
 
-    // $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
 
-    // if($('.nsm-counter.selected').length > 0) {
-    //     $('#export-form').append(`<input type="hidden" name="transaction" value="${$('.nsm-counter.selected').attr('id')}">`);
-    // }
+    if($('.nsm-counter.selected').length > 0) {
+        $('#export-form').append(`<input type="hidden" name="transaction" value="${$('.nsm-counter.selected').attr('id')}">`);
+    }
 
-    // $('#export-form').append(`<input type="hidden" name="column" value="name">`);
-    // $('#export-form').append(`<input type="hidden" name="order" value="asc">`);
+    $('#export-form').submit();
+});
 
-    // $('#export-form').submit();
+$('#customer-type-modal #save-customer-type').on('click', function() {
+    $('#customer-type-modal .modal-body form').submit();
+});
+
+$(document).on('submit', '#customer-type-modal #add-customer-type-form', function(e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+
+    $.ajax({
+        url: '/accounting/customers/add-customer-type',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+            
+            if(res.success) {
+                $('#customer-types-modal table tbody').append(`<tr data-id="${res.data}">
+                    <td>${data.get('customer_type_name')}</td>
+                    <td>
+                        <div class="dropdown table-management">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item edit-customer-type" href="#">Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-customer-type" href="#">Delete</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>`);
+
+                $('#customer-type-modal').modal('hide');
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Unexpected error occured! Try again.',
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        }
+    });
+});
+
+$('#customer-type-modal').on('hidden.bs.modal', function() {
+    $('#customer-type-modal form').attr('id', 'add-customer-type-form');
+    $('#customer-type-modal form').removeAttr('data-id');
+    $('#customer-type-modal #customer-type-name').val('');
+});
+
+$(document).on('click', '#customer-types-modal .edit-customer-type', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var name = row.find('td:first-child').text();
+
+    $('#customer-type-modal form').attr('id', 'edit-customer-type-form');
+    $('#customer-type-modal form').attr('data-id', row.data().id);
+    $('#customer-type-modal #customer-type-name').val(name);
+
+    $('#customer-type-modal').modal('show');
+});
+
+$(document).on('submit', '#customer-type-modal #edit-customer-type-form', function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+    var data = new FormData(this);
+
+    $.ajax({
+        url: '/accounting/customers/update-customer-type/'+form.attr('data-id'),
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+            
+            if(res.success) {
+                $(`#customer-types-modal table tbody tr[data-id="${form.attr('data-id')}"]`).find('td:first-child').html(data.get('customer_type_name'));
+
+                $('#customer-type-modal').modal('hide');
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Unexpected error occured! Try again.',
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        }
+    });
+});
+
+$(document).on('click', '#customer-types-modal .delete-customer-type', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var name = row.find('td:first-child').text();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to delete <b>${name}</b>?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+				url: `/accounting/customers/delete-customer-type/${row.data().id}`,
+				type: 'DELETE',
+				success: function(result) {
+                    $(`#customer-types-modal table tbody tr[data-id="${row.data().id}"]`).remove();
+				}
+			});
+        }
+    });
 });

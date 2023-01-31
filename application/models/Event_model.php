@@ -340,7 +340,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_office.technician', $id);
         $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
-        // $this->db->group_by('jobs.customer_id');
+        $this->db->group_by('jobs.customer_id'); // unique by customer ?
         $query = $this->db->get();
         return $query->result();
     }
@@ -588,6 +588,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', ' acs_profile.prof_id = acs_info_solar.fk_prof_id', 'left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_office.technician', $salesRepId);
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(acs_info_solar.bill_start_date, "%Y")'); // get only revenue for this year?
         $this->db->group_by('acs_office.technician');
         $query = $this->db->get();
         return $query->result();
@@ -602,6 +603,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_office.fk_sales_rep_office', $salesRepId);
         $this->db->where(' acs_profile.company_id', $COMPANY_ID);
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(acs_billing.bill_start_date, "%Y")'); // get only sales for this year?
         $this->db->group_by('acs_profile.company_id');
         $query = $this->db->get();
         return $query->result();
@@ -616,6 +618,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', ' acs_profile.prof_id = acs_info_solar.fk_prof_id', 'left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('fk_sales_rep_office', $salesRepId);
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(acs_info_solar.date_created, "%Y")'); // get only sales for this year?
         $this->db->group_by('fk_sales_rep_office');
         $query = $this->db->get();
         return $query->result();

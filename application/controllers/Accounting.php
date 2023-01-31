@@ -876,6 +876,46 @@ class Accounting extends MY_Controller
             }
         }
 
+        $role = logged('role');
+        $type = 0;
+        if ($role == 2 || $role == 3 || $role == 6 || $role == 8) {
+            $comp_id = logged('company_id');
+
+            if (!empty($tab)) {
+                $this->page_data['tab'] = $tab;
+                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
+            } else {
+                // search
+                if (!empty(get('search'))) {
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
+                } elseif (!empty(get('order'))) {
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
+                } else {
+                    // $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
+                    $this->page_data['invoices'] = $this->invoice_model->getAllData($comp_id);
+                }
+            }
+        }
+
+        if ($role == 4) {
+            if (!empty($tab)) {
+                $this->page_data['tab'] = $tab;
+                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $type);
+            } elseif (!empty(get('order'))) {
+                $this->page_data['order'] = get('order');
+                $this->page_data['invoices'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
+            } else {
+                if (!empty(get('search'))) {
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['invoices'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
+                } else {
+                    $this->page_data['invoices'] = $this->invoice_model->getAllByUserId();
+                }
+            }
+        }
+
 
         $this->page_data['unpaid_last_365'] = $receivable_payment - $total_amount_received;
         $this->page_data['unpaid_last_30'] = $receivable_last30_days - $total_amount_received_last30_days;
@@ -892,7 +932,7 @@ class Accounting extends MY_Controller
         $this->page_data['graph_data'] = "[" . $this->graph_data_to_text($graph_data) . "]";
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
+        // $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
         $this->page_data['page_title'] = "Invoices";
         // print_r($this->page_data);
 
@@ -1523,6 +1563,7 @@ class Accounting extends MY_Controller
         $data->new_page = $new_page;
         echo json_encode($data);
     }
+    
     public function management_report_add_new_report_section_html()
     {
         if ($this->input->post("count") == 0) {
@@ -1536,6 +1577,7 @@ class Accounting extends MY_Controller
         $data->new_report = $new_report;
         echo json_encode($data);
     }
+
     public function create_cover_page_pdf_template()
     {
         $management_report_id = $this->input->post("management_report_id");

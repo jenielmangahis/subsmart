@@ -416,7 +416,7 @@ class AcsProfile_model extends MY_Model
 
     public function get_customers_with_overdue_invoices($companyId)
     {
-        $this->db->where('acs.profilecompany_id', $companyId);
+        $this->db->where('acs_profile.company_id', $companyId);
         $this->db->where('invoices.due_date <=', date("Y-m-d"));
         $this->db->where_not_in('invoices.status', ['Draft', 'Declined', 'Paid']);
         $this->db->where('invoices.view_flag', 0);
@@ -428,7 +428,7 @@ class AcsProfile_model extends MY_Model
 
     public function get_customers_with_open_invoices($companyId)
     {
-        $this->db->where('acs.profilecompany_id', $companyId);
+        $this->db->where('acs_profile.company_id', $companyId);
         $this->db->where_not_in('invoices.status', ['Draft', 'Declined', 'Paid']);
         $this->db->where('invoices.view_flag', 0);
         $this->db->group_by('acs_profile.prof_id');

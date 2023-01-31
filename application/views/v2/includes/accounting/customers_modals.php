@@ -14,9 +14,6 @@
                             <td data-name="Phone">PHONE</td>
                             <td data-name="Email">EMAIL</td>
                             <td data-name="Customer Type">CUSTOMER TYPE</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
                             <td data-name="Open Balance">OPEN BALANCE</td>
                         </tr>
                     </thead>
@@ -39,7 +36,6 @@
                             <td><?=$customer->phone_h?></td>
                             <td><?=$customer->email?></td>
                             <td><?=$customer->customer_type?></td>
-                            <td></td>
                             <td></td>
                         </tr>
                         <?php endforeach; ?>
@@ -79,9 +75,6 @@
                             <td data-name="Phone">PHONE</td>
                             <td data-name="Email">EMAIL</td>
                             <td data-name="Customer Type">CUSTOMER TYPE</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
                             <td data-name="Open Balance">OPEN BALANCE</td>
                         </tr>
                     </thead>
@@ -104,7 +97,6 @@
                             <td><?=$customer->phone_h?></td>
                             <td><?=$customer->email?></td>
                             <td><?=$customer->customer_type?></td>
-                            <td></td>
                             <td></td>
                         </tr>
                         <?php endforeach; ?>
@@ -2493,4 +2485,135 @@
             </div>
         </div>
     </form>
+</div>
+
+<div class="modal fade nsm-modal" id="customer-types-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Customer Types</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#customer-type-modal">
+                                <i class='bx bx-fw bx-list-plus'></i> New
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td data-name="Name">NAME</td>
+                            <td data-name="Manage"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(count($customerTypes) > 0) : ?>
+						<?php foreach($customerTypes as $type) : ?>
+                        <tr data-id="<?=$type->id?>">
+                            <td><?=$type->title?></td>
+                            <td>
+                                <div class="dropdown table-management">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item edit-customer-type" href="#">Edit</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-customer-type" href="#">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+						<?php else : ?>
+						<tr>
+							<td colspan="19">
+								<div class="nsm-empty">
+									<span>No results found.</span>
+								</div>
+							</td>
+						</tr>
+						<?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal" id="customer-type-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">New Customer Type</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-customer-type-form">
+                    <input type="text" class="form-control nsm-field" name="customer_type_name" id="customer-type-name">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="nsm-button primary" id="save-customer-type">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal" id="import-customers-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Import Customers</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <ul id="progressbar">
+                    <li class="active" id="step1">
+                        <strong>Step 1</strong>
+                    </li>
+                    <li id="step2"><strong>Step 2</strong></li>
+                    <li id="step3"><strong>Step 3</strong></li>
+                </ul>
+                <div class="progress">
+                    <div class="progress-bar"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <form id="form">
+                            <!--import section-->
+                            <fieldset id="holder-step-1">
+                                <h2>IMPORT YOUR FILES</h2>
+                                <div class="file-drop-panel">
+                                    <div class="panel-title">Attach Document</div>
+                                    <div class="file-drop-form">
+                                        <div id="import_customer">
+                                            Drop your files here
+                                        </div>
+                                    </div>
+                                    <div class="file-deop-label">Acceptable File Types: .xlsx, .xls and .csv only</div>
+                                    <div class="upload-button">
+                                        <button type="button" id="submit-imported-customer-file">Import</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
