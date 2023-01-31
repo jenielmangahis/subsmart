@@ -1452,3 +1452,4 @@ $route['ticket/_get_customer_basic_information'] = 'Tickets/ajax_get_customer_ba
 $route['calendar/_quick_add_appointment_form'] = 'Workcalender/ajax_quick_add_appointment_form';
 $route['calendar/_quick_add_tc_off_form'] = 'Workcalender/ajax_quick_add_tc_off_form';
 $route['calendar/_quick_edit_tc_off_form'] = 'Workcalender/ajax_quick_edit_tc_off_form';
+$route['job/_quick_delete_job'] = 'Job/ajax_quick_delete_job';

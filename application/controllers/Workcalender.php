@@ -42,7 +42,7 @@ class Workcalender extends MY_Controller
             'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
             'assets/js/quick_launch.js',
-            'assets/js/jquery.slidebox.min.js',
+            //'assets/js/jquery.slidebox.min.js',
         ));
     }
 
@@ -730,6 +730,7 @@ class Workcalender extends MY_Controller
                     $resourceIds[] = 'user' . $event->employee_id;
                     $resources_user_events[$inc]['eventId'] = $event->id;
                     $resources_user_events[$inc]['eventType'] = 'events';
+                    $resources_user_events[$inc]['eventOrderNum'] = $event->event_number;
                     $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                     $resources_user_events[$inc]['title'] = $title;
                     $resources_user_events[$inc]['customHtml'] = $custom_html;
@@ -752,12 +753,6 @@ class Workcalender extends MY_Controller
             $backgroundColor = "#ff0000";
 
             $custom_html = '<div class="calendar-title-header">';
-                $view_btn      = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="tc-off" data-id="'.$tc->id.'"><i class="bx bx-window-open"></i> View</a>';
-                $gcalendar_btn = '';
-                if( $google_user_api ){
-                    $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="tc-off" data-id="'.$tc->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
-                }
-
                 $technicians_ids = explode(",", $tc->technician_user_ids);
                 $custom_html_technicians = array();
                 $tech_names  = array();
@@ -769,33 +764,13 @@ class Workcalender extends MY_Controller
                     $custom_html_technicians[] = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($u->id).'\'); width: 20px;display:inline-block;"></div>';
                     $resourceIds[] = 'user' . $u->id;
                 }
-                $custom_html  .= '<a class="calendar-tile-minmax tc-off-min-max-'.$tc->id.'" data-type="tc-off" data-id="'.$tc->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;"> Schedule Off - '. implode(", ", $tech_names) . '</span></a>';
+
+                $custom_html  .= '<a class="quick-calendar-tile" data-type="tc-off" data-id="'.$tc->id.'" href="javascript:void(0);"><span> Schedule Off - '. implode(", ", $tech_names) . '</span></a>';
             $custom_html .= "</div>";
 
-            $custom_html .= '<div class="calendar-tile-details tc-off-tile-'.$tc->id.'">';    
-                if( $tc->leave_start_date != $tc->leave_end_date ){
-                    $custom_html .= '<small style="font-size:15px;"><i class="bx bx-calendar"></i> Leave Date : ' . date("F j", strtotime($tc->leave_start_date)) . " to " . date("F j, Y", strtotime($tc->leave_end_date)) . "</small>";
-                }else{
-                    $custom_html .= '<small style="font-size:15px;"><i class="bx bx-calendar"></i> Leave Date : ' . date("F j, Y", strtotime($tc->leave_start_date)) . "</small>";
-                }
-
-                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
-                foreach($custom_html_technicians as $html){                    
-                    $custom_html .= $html;
-                }  
-
-            /*$custom_html .= "<br /><small style='font-size:15px;'><i class='bx bx-clipboard'></i> Task : " . $tc->task_details . "</small>";
-
-            $userTaskAssigned = $this->Users_model->get_user_name($tc->task_to_user_id);
-            if( $userTaskAssigned ){
-                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Task Assigned : </small>";
-                $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($userTaskAssigned->id).'\'); width: 20px;display:inline-block;"></div>';
-            }*/
-            $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
-            $custom_html .= '</div>';
-
             $resources_user_events[$inc]['eventId'] = $tc->id;
-            $resources_user_events[$inc]['eventType'] = 'service_tickets';
+            $resources_user_events[$inc]['eventType'] = 'tc-off';
+            $resources_user_events[$inc]['eventOrderNum'] = '';
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['title'] = 'Technician Schedule Off';
             $resources_user_events[$inc]['customHtml'] = $custom_html;
@@ -822,36 +797,21 @@ class Workcalender extends MY_Controller
                 }
 
                 $customer_name =  $st->first_name . ' ' . $st->last_name;
-                $view_btn      = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="ticket" data-id="'.$st->id.'"><i class="bx bx-window-open"></i> View</a>';
-
-                $gcalendar_btn = '';
-                if( $google_user_api ){
-                    $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="ticket" data-id="'.$st->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
-                }
-
-                $custom_html  .= '<a class="calendar-tile-minmax" data-type="ticket" data-id="'.$st->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $st->ticket_no . ' - ' . $tags . ' : ' . $customer_name  . '</span></a>';
-            $custom_html .= '</div>';
-
-            $custom_html .= '<div class="calendar-tile-details ticket-tile-'.$st->id.'">';
-                $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $st->service_location . ", " . $st->acs_zip . "</small>";
-                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
+                $custom_html  .= '<a class="quick-calendar-tile" data-type="ticket" data-id="'.$st->id.'" href="javascript:void(0);"><span>'. $st->ticket_no . ' - ' . $tags . ' : ' . $customer_name  . '</span></a>';
                 $resourceIds = array();
                 if( $st->technicians != '' ){
                     $assigned_technician = unserialize($st->technicians);
                     if( is_array($assigned_technician) ){
                         foreach($assigned_technician as $eid){
-                            $resourceIds[] = 'user' . $eid;
-                            $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                            $resourceIds[] = 'user' . $eid;                            
                         }                    
                     }                    
                 }
-                
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($st->scheduled_time)) . " to " . date("g:i A", strtotime($st->scheduled_time_to)) . "</small>";
-                $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
             $custom_html .= '</div>';
 
             $resources_user_events[$inc]['eventId'] = $st->id;
-            $resources_user_events[$inc]['eventType'] = 'service_tickets';
+            $resources_user_events[$inc]['eventType'] = 'service_ticket';
+            $resources_user_events[$inc]['eventOrderNum'] = $st->ticket_no;
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['title'] = 'Service Ticket : ' . date('Y-m-d g:i A', strtotime($st->ticket_date));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
@@ -898,46 +858,25 @@ class Workcalender extends MY_Controller
                     }
                     
                 }
-
-                $customer_name = '';
-                $view_btn      = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="appointment" data-id="'.$a->id.'"><i class="bx bx-window-open"></i> View</a>';
-
-                $gcalendar_btn = '';
-                if( $google_user_api ){
-                    $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="appointment" data-id="'.$a->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
-                }
-
-                if( $a->appointment_type_id == 4 ){ //Events                    
-                    $custom_html  .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . $tags . ' : ' . $a->event_name . '</span></a>';
-                }else{  
-                    $customer_name = $j->first_name . ' ' . $j->last_name;
-                    $custom_html  .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $a->appointment_number . $tags . ' : ' . $a->customer_name . '</span></a>';
-                }                
-                //$custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$a->id.'"><i class="bx bx-chevron-down"></i></a>';
-            $custom_html .= '</div>';
-
-            $custom_html .= '<div class="calendar-tile-details appointment-tile-'.$a->id.'">';
-                if( $a->appointment_type_id <> 4 ){
-                    $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->mail_add . ", " . $a->cust_zip_code . "</small>";
-                }else{
-                    if( $a->event_location != '' ){
-                        $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $a->event_location . "</small>";    
-                    }
-                }
-                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
                 $assigned_technician = json_decode($a->assigned_employee_ids);
                 $resourceIds = array();
                 foreach($assigned_technician as $key => $eid){    
-                    $resourceIds[] = "user" . $eid;                                    
-                    $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                    $resourceIds[] = "user" . $eid;                                                     
                 }
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . date("g:i A", strtotime($a->appointment_time_from)) . ' to ' . date("g:i A", strtotime($a->appointment_time_to)) . "</small>";  
-                $custom_html .= '<br/><br/>'. $view_btn . $gcalendar_btn;              
+                
+                if( $a->appointment_type_id == 4 ){ //Events                    
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . $tags . ' : ' . $a->event_name . '</span></a>';
+                }else{  
+                    $customer_name = $j->first_name . ' ' . $j->last_name;
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . $tags . ' : ' . $a->customer_name . '</span></a>';
+                }
+
             $custom_html .= '</div>';
 
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['eventId'] = $a->id;
-            $resources_user_events[$inc]['eventType'] = 'appointments';
+            $resources_user_events[$inc]['eventType'] = 'appointment';
+            $resources_user_events[$inc]['eventOrderNum'] = $a->appointment_number;
             $resources_user_events[$inc]['title'] = 'Appointment : ' . date('Y-m-d g:i A', strtotime($a->appointment_date . " " . $a->appointment_time));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
@@ -962,8 +901,6 @@ class Workcalender extends MY_Controller
                     $backgroundColor = $colorSetting->color_code;
                 }
 
-                //$custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
-
                 $custom_html = '<div class="calendar-title-header">';
 
                 if( $j->tags != '' ){
@@ -971,43 +908,6 @@ class Workcalender extends MY_Controller
                 }else{
                     $tags = '---';
                 }
-
-                $view_btn = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="job" data-id="'.$j->id.'"><i class="bx bx-window-open"></i> View</a>';
-
-                $gcalendar_btn = '';
-                if( $google_user_api ){
-                    $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="job" data-id="'.$j->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
-                }
-
-                /*if( $settings && $settings->display_customer_name ){
-                    if( $j->first_name != '' ||  $j->last_name != ''){
-                        $customer_name = $j->first_name . ' ' . $j->last_name;
-                        $custom_html .= '<a class="calendar-tile-minmax job-min-max-'.$j->id.'" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
-                    }else{
-                        $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';                        
-                    }
-                }else{
-                    $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';    
-                }*/
-
-                if( $j->first_name != '' ||  $j->last_name != ''){
-                    $customer_name = $j->first_name . ' ' . $j->last_name;
-                    $custom_html .= '<a class="calendar-tile-minmax job-min-max-'.$j->id.'" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
-                }else{
-                    $custom_html .= '<a class="calendar-tile-minmax" data-type="appointment" data-id="'.$j->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;border-bottom:1px solid;line-height:41px;">'.$j->job_number.' - '.$tags.'</span></a>';                        
-                }    
-                            
-                $custom_html .= '</div>';
-                
-                $custom_html .= '<div class="calendar-tile-details job-tile-'.$j->id.'">';
-                //$custom_html .= '<small style="font-size:15px;"><i class="bx bxs-purchase-tag-alt"></i> Tags : ' . $tags . '</small>';
-                //$custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-task"></i> Status : ' . $j->status . '</small>';
-
-                if (isset($a_settings['work_order_show_details'])) {
-                    $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $j->mail_add . ", ". $j->cust_zipcode. "</small>";
-                }
-
-                $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";                
 
                 $assigned_employees = array();
                 $assigned_employees[] = $j->employee_id;
@@ -1023,33 +923,26 @@ class Workcalender extends MY_Controller
 
                 $resourceIds = array();
                 foreach($assigned_employees as $eid){
-                    $resourceIds[] = 'user' . $eid;
-                    $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 20px;display:inline-block;"></div>';
+                    $resourceIds[] = 'user' . $eid;                    
+                }
+
+                if( $settings && $settings->display_customer_name ){
+                    if( $j->first_name != '' ||  $j->last_name != ''){
+                        $customer_name = $j->first_name . ' ' . $j->last_name;
+                        $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.' : '.$customer_name.'</span></a>';
+                    }else{
+                        $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.'</span></a>';                        
+                    }
+                }else{
+                    $custom_html .= '<a class="quick-calendar-tile" data-type="job" data-id="'.$j->id.'" href="javascript:void(0);"><span>'.$j->job_number.' - '.$tags.'</span></a>';          
                 }
                 
-                $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $j->start_time . " - " . $j->end_time . "</small>";
 
-                $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
-
-                /*if (isset($a_settings['work_order_show_price'])) {
-                    $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
-                    $total_price = 0;
-                    foreach ($jobItems as $item) {
-                        $total_price += ($item->price * $item->qty);
-                    }
-                    $total_price = $j->amount;
-
-                    $custom_html .= "<hr /><small style='font-weight:bold;font-size:17px;'>Total Cost : $". number_format((float)$total_price, 2, '.', ',') . "</small>";
-                }*/
-
-                $custom_html .= "</div>";
-
-                /*if( isset($a_settings['work_order_show_link']) ){
-                    $custom_html .= "<br /><small><a href=''>".$event->url_link."</a></small>";
-                }*/
+                $custom_html .= "</div>";                
                 
                 $resources_user_events[$inc]['eventId'] = $j->id;
-                $resources_user_events[$inc]['eventType'] = 'jobs';
+                $resources_user_events[$inc]['eventType'] = 'job';
+                $resources_user_events[$inc]['eventOrderNum'] = $j->job_number;
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                 $resources_user_events[$inc]['title'] = $j->job_description;
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
@@ -3324,7 +3217,7 @@ class Workcalender extends MY_Controller
         $is_valid   = false;
         $msg        = 'Cannot sync data';
         $post       = $this->input->post();
-
+        
         $result = createSyncToCalendar($post['tile_id'], $post['tile_type'], $company_id, 1);        
         if( $result['is_valid'] == 1 ){
             $is_valid = true;
@@ -3447,7 +3340,7 @@ class Workcalender extends MY_Controller
             $custom_html .= "</div>";
 
             $resources_user_events[$inc]['eventId'] = $tc->id;
-            $resources_user_events[$inc]['eventType'] = 'service_tickets';
+            $resources_user_events[$inc]['eventType'] = 'tc_off';
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['title'] = 'Technician Schedule Off';
             $resources_user_events[$inc]['customHtml'] = $custom_html;

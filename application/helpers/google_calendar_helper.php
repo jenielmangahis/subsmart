@@ -13,7 +13,7 @@ function createSyncToCalendar($object_id, $module_name, $company_id, $is_manual_
     $msg = 'API Error';
 
     $googleAccount = $CI->GoogleAccounts_model->getByCompanyId($company_id);
-    if( $googleAccount ){        
+    if( $googleAccount ){    
         $settings = $CI->CalendarSettings_model->getByCompanyId($company_id);
         IF( $settings ){                    
             $is_valid_sync_calendar = false;
@@ -91,7 +91,9 @@ function createSyncToCalendar($object_id, $module_name, $company_id, $is_manual_
                 $msg = 'Cannot sync data';
             }
         }     
-    }  
+    }else{
+        $msg = 'You do not have any gmail account connected. Please connect your gmail account in calendar settings.';
+    } 
 
     //Create SMS
     //createSmsNotification($object_id, $module_name, $company_id);  

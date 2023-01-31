@@ -37,15 +37,15 @@
                 </span>                                                        
             </div>
             <div class="col-12">
-                <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Attendees</label>
-                <span id="wait-list-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
+                <label class="content-subtitle fw-bold d-block mb-2 quick-add-create-tech-attendees">Attendees</label>
+                <span id="quick-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
                     <select class="nsm-field form-select" name="appointment_user_id[]" id="quick-add-appointment-user" multiple="multiple"></select>
                 </span>                                                        
             </div>
             <div class="col-12 appointment-add-sales-agent" style="display:none;">
                 <label class="content-subtitle fw-bold d-block mb-2">Sales Agent</label>
-                <span id="wait-list-add-sales-agent-popover" data-toggle="popover" data-placement="right"data-container="body">
-                    <select class="nsm-field form-select" name="appointment_sales_agent_id" id="appointment-sales-agent-id"></select>
+                <span id="quick-add-sales-agent-popover" data-toggle="popover" data-placement="right"data-container="body">
+                    <select class="nsm-field form-select" name="appointment_sales_agent_id" id="quick-add-appointment-sales-agent-id"></select>
                 </span>                                                        
             </div>
             
@@ -70,9 +70,9 @@
                         <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required>
                             <option value="0">- Select Appointment Type -</option>
                             <?php foreach ($appointmentTypes as $a) { ?>       
-                                <?php if( $a->name != 'Job' && $a->name != 'Services' ){ ?>                         
+                                <?php //if( $a->name != 'Job' && $a->name != 'Services' ){ ?>                         
                                     <option value="<?= $a->id; ?>" <?= $a->name == 'Draft' ? 'selected="selected"' : ''; ?>><?= $a->name; ?></option>
-                                <?php } ?>
+                                <?php //} ?>
                             <?php } ?>
                         </select>                                
                     </div>                              
@@ -144,6 +144,42 @@
 </div>
 <script>
 $(function(){
+    $('#quick-add-sales-agent-popover').popover({
+        title: 'Which Sales Agent', 
+        content: "Assign Sales Agent that will handle the service or job",
+        trigger: 'hover'
+    });
+    $('#quick-add-employee-popover').popover({    
+        content:'Who will attend the event',
+        title:'Attendees',        
+        trigger: 'hover'
+    });  
+    $('#quick-add-appointment-sales-agent-id').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        dropdownParent: $("#modal-quick-add-appointment"),
+        placeholder: 'Select User',
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
+        templateSelection: formatRepoSelectionUser
+    });
     $('#quick-add-appointment-tags').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_job_tags',
@@ -306,8 +342,10 @@ $(function(){
         var appointmentPriorityOptions      = <?= json_encode($appointmentPriorityOptions); ?>;
         var appointment_type = $(this).val();
 
-        $('.appointment-form').show();        
-        if( appointment_type ==  2 ){
+        if( appointment_type ==  3 || appointment_type == 1 ){
+            $('.appointment-add-sales-agent').fadeIn(500);
+            $('.invoice-price-container').fadeIn(500);
+        }else if( appointment_type ==  2 ){
             $('.appointment-add-sales-agent').fadeOut(500);
             $('.invoice-price-container').fadeIn(500);
         }else{
@@ -382,9 +420,9 @@ $(function(){
         }
 
         if( appointment_type == 4 ){
-            $('.create-tech-attendees').text('Attendees');
-            $('#wait-list-add-employee-popover').popover('dispose');
-            $('#wait-list-add-employee-popover').popover({    
+            $('.quick-add-create-tech-attendees').text('Attendees');
+            $('#quick-add-employee-popover').popover('dispose');
+            $('#quick-add-employee-popover').popover({    
                 content:'Who will attend the event',
                 title:'Attendees',        
                 trigger: 'hover'
@@ -398,9 +436,9 @@ $(function(){
             });
 
         }else{
-            $('.create-tech-attendees').text('Assigned Techincian');
-            $('#wait-list-add-employee-popover').popover('dispose');
-            $('#wait-list-add-employee-popover').popover({    
+            $('.quick-add-create-tech-attendees').text('Assigned Techincian');
+            $('#quick-add-employee-popover').popover('dispose');
+            $('#quick-add-employee-popover').popover({    
                 content:'Assign employee that will handle the appointment',
                 title:'Which Employee',        
                 trigger: 'hover'

@@ -23,54 +23,42 @@
                     src="<?= base_url('/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image); ?>">
                 <?php endif; ?>
             </div>
-            <div class="col-md-3">
-                <table class="right-text">
+            <div class="col-md-7">
+                <table class="right-text" style="width: 100%;">
                     <tbody>
                         <tr>
-                            <td align="right" width="45%">Job Type :</td>
+                            <td align="right" width="35%">Job Type :</td>
+                            <td align="right" width="">
+                                <strong><?= $jobs_data->job_type;  ?></strong>
+                            </td>
                         </tr>
                         <tr>
                             <td align="right">Job Tags:</td>
+                            <td align="right">
+                                <strong><?= $jobs_data->tags != '' ? $jobs_data->tags : '---';  ?></strong>
+                            </td>
                         </tr>
                         <tr>
                             <td align="right">Date :</td>
+                            <td align="right">
+                                <?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
+                            </td>
                         </tr>
                         <tr>
                             <td align="right">Priority :</td>
+                            <td align="right" style="color: darkred;">
+                                <?=  $jobs_data->priority; ?>
+                            </td>
                         </tr>
                         <tr>
                             <td align="right">Status :</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-4">
-                <table class="right-text float-end">
-                    <tbody>
-                        <tr>
-                            <td align="right" width="65%"><strong><?= $jobs_data->job_type;  ?></strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right"><strong><?= $jobs_data->name;  ?></strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right" style="color: darkred;"><?=  $jobs_data->priority;  ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right" style="font-weight: 600;" class="job-status">
-                                <?=  $jobs_data->status;  ?>
+                            <td align="right" class="job-status">
+                                <b><?=  $jobs_data->status; ?></b>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div>            
         </div>
         <div class="row mt-5">
             <div class="col-md-8">

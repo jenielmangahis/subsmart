@@ -251,7 +251,7 @@
                         }
                     ?>
                     <?php if( $is_valid == 1 ){ ?>
-                        <tr class="schedule-jobs upcoming-tile-view" data-id="<?= $schedule['data']->id; ?>" data-type="<?= $schedule['type']; ?>" style="cursor: pointer; text-decoration: none;color:inherit;">     
+                        <tr class="schedule-jobs upcoming-tile-view" data-ordernum="<?= $schedule_number; ?>" data-id="<?= $schedule['data']->id; ?>" data-type="<?= $schedule['type']; ?>" style="cursor: pointer; text-decoration: none;color:inherit;">     
                             <td>
                                 <?php 
                                     $event_month = date("F", strtotime($schedule_date));

@@ -189,7 +189,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="purchase_order_number"><b>Assigned Technician</b></label>
-                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple">
+                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="ticket-appointment-user" multiple="multiple">
                         </select>
                     </div>
                     <div class="col-md-12 form-group">
@@ -344,7 +344,7 @@
 </div>
 <script>
 $(document).ready(function(){
-    $('#appointment-user').select2({
+    $('#ticket-appointment-user').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',
             dataType: 'json',
@@ -367,28 +367,12 @@ $(document).ready(function(){
             },*/
             cache: true
         },
-        dropdownParent: $("#technicianDiv"),
+        dropdownParent: $("#modal-quick-add-service-ticket"),
         placeholder: 'Select User',
         minimumInputLength: 0,
         templateResult: formatRepoUser,
         templateSelection: formatRepoSelectionUser
     });
-
-
-    function formatRepoUser(repo) {
-        if (repo.loading) {
-            return repo.text;
-        }
-        var $container = $(
-            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
-        );
-        return $container;
-    }
-
-
-    function formatRepoSelectionUser(repo) {
-        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
-    }
 
     $('#add-another-items').on('click', function(){
         $('#quick-add-service-ticket-item-list').modal('show');
