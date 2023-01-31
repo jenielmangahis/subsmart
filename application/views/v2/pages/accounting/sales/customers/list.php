@@ -118,14 +118,17 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="create-statements">Create statements</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="email">Email</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="email-action">Email</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="select-customer-type">Select customer type</a></li>
                             </ul>
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#customer-types-modal">
+                                <i class='bx bx-fw bx-list-ul'></i> Customer Types
+                            </button>
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#import-customers-modal">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-customer-modal">

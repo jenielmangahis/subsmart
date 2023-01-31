@@ -2,6 +2,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
 
 <div class="row page-content g-0">
+    
+    <input type="hidden" id="siteurl" value="<?=base_url();?>">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
     </div>
@@ -22,13 +24,11 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-7">
                         <div class="nsm-card primary">
-                            <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    INCOME OVER TIME <i class="bx bx-info-circle" aria-hidden="true"></i>
+                            <div class="row nsm-card-header">
+                                <div class="col-md-4 nsm-card-title">
+                                    <h4>INCOME OVER TIME </h4> <i class="bx bx-info-circle" aria-hidden="true"></i>
                                 </div>
-                            </div>
-                            <div class="nsm-card-content">
-                                <div class="filter-section">
+                                <div class="col-md-4">
                                     <div class="duration">
                                         <label for="">Duration:</label>
                                         <select name="duration" class="duration">
@@ -42,6 +42,8 @@
                                             <option value="">Last year by quarter</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="compare-prev-year">
                                         <label class="main-label">Compare previous year:</label>
                                         <div class="form-group">
@@ -54,11 +56,13 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="nsm-card-content">
                                 <div class="content-monitary-highlight">
-                                        $<span class="amount"><?=number_format($income_this_month, 2)?></span>
+                                        <span class="amount" style="font-size:25px;font-weight:bold;">$<?=number_format($income_this_month, 2)?></span>
                                         <span class="label">This month</span>
                                     </div>
-                                    <div class="monitary-increase">
+                                    <div class="monitary-increase" style="color:green;font-weight:bold;">
                                         $<?=number_format($income_this_month-$income_last_month, 2)?>
                                         more than <?=date("M d", strtotime("first day of previous month"))?>
                                         - <?=date("d, Y", strtotime("last day of previous month"))?>
@@ -84,7 +88,7 @@
                     <div class="col-md-5">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
-                                <div class="nsm-card-title"> SETUP </div>
+                                <div class="nsm-card-title"><h4> SETUP </h4></div>
                             </div>
                             <div class="nsm-card-content">
                                 <div class="headway">
@@ -97,10 +101,10 @@
 									</div>
 								</div>
 								<div class="content-checklists">
-									<div class="row">
+									<div class="row" style="font-size:20px;">
 										<div class="col-md-1">
 											<div class="checklist-icon success">
-												<i class="fa fa-check-circle" aria-hidden="true"></i>
+												<i class="fa fa-check-circle" aria-hidden="true" style="color:green;"></i>
 											</div>
 										</div>
 										<div class="col-md-9">
@@ -112,10 +116,10 @@
 								</div>
 
 								<div class="content-checklists">
-									<div class="row">
+									<div class="row" style="font-size:20px;">
 										<div class="col-md-1">
 											<div class="checklist-icon ">
-												<i class="fa fa-check-circle" aria-hidden="true"></i>
+												<i class="fa fa-check-circle" aria-hidden="true" style="color:green;"></i>
 											</div>
 										</div>
 										<div class="col-md-9">
@@ -125,17 +129,17 @@
 										</div>
 										<div class="col-md-2">
 											<div class="checklist-link">
-												<a href="#">Start</a>
+												<a href="#" style="text-decoration:none;">Start</a>
 											</div>
 										</div>
 									</div>
 								</div>
 
 								<div class="content-checklists">
-									<div class="row">
+									<div class="row" style="font-size:20px;">
 										<div class="col-md-1">
 											<div class="checklist-icon ">
-												<i class="fa fa-check-circle" aria-hidden="true"></i>
+												<i class="fa fa-check-circle" aria-hidden="true" style="color:green;"></i>
 											</div>
 										</div>
 										<div class="col-md-9">
@@ -145,17 +149,17 @@
 										</div>
 										<div class="col-md-2">
 											<div class="checklist-link">
-												<a href="#">Start</a>
+												<a href="#" style="text-decoration:none;">Start</a>
 											</div>
 										</div>
 									</div>
 								</div>
 
 								<div class="content-checklists">
-									<div class="row">
+									<div class="row" style="font-size:20px;">
 										<div class="col-md-1">
 											<div class="checklist-icon success">
-												<i class="fa fa-check-circle" aria-hidden="true"></i>
+												<i class="fa fa-check-circle" aria-hidden="true" style="color:green;"></i>
 											</div>
 										</div>
 										<div class="col-md-9">
@@ -165,7 +169,7 @@
 										</div>
 										<div class="col-md-2">
 											<div class="checklist-link">
-												<a href="#">Edit</a>
+												<a href="#" style="text-decoration:none;">Edit</a>
 											</div>
 										</div>
 									</div>
@@ -182,11 +186,83 @@
                         </div>  -->                       
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="nsm-card primary">
+                            <h4>Learn how to use payments</h4>
+                            <p>Learn how to use nSmarTrac Payments to get paid online, in-person, and on the go.</p>
+                            <div style="float:right;text-decoration:none;">
+                                <a href="#">Not Now</a> &emsp; <button class="btn btn-success">Learn More</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="nsm-card primary">
+                            <h4>SHORTCUTS</h4>
+                            <table class="table" style="width:50%;color:green;">
+                                <tr>
+                                    <td><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Invoice</b></center></td>
+                                    <td><center><i class="fa fa-file-text" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Invoice</b></center></td>
+                                </tr>
+                                <tr>
+                                    <td><center><i class="fa fa-file-o" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Sale</b></center></td>
+                                    <td><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Sale</b></center></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="nsm-card primary">
+                            <h4>Invoices</h4>
+                            <div class="row">
+                                <div class="col-md-3" style="color:red;">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size:30px;"></i><br> <b>Needs Attention $0.00</b>
+                                </div>
+                                <div class="col-md-5">
+                                    <table class="table">
+                                        <tr>
+                                            <td>
+                                                <b>$176,321.97 Unpaid</b>
+                                                <h4>$147,722.44</h4> Overdue
+                                            </td>
+                                            <td>
+                                                <b>Last 365 days</b>
+                                                <h4>$147,722.44</h4> Not Due Yet
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-4">
+                                    <table class="table">
+                                        <tr>
+                                            <td>
+                                                <b>$176,321.97 Unpaid</b>
+                                                <h4>$147,722.44</h4> Overdue
+                                            </td>
+                                            <td>
+                                                <b>Last 365 days</b>
+                                                <h4>$147,722.44</h4> Not Due Yet
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script src="<?php echo $url->assets ?>js/accounting/sales/overview.js"></script>
 <script>
 	var chart;
 	var graph_data = {};

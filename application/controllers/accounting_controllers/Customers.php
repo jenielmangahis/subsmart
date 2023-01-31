@@ -116,6 +116,9 @@ class Customers extends MY_Controller {
 
     public function index()
     {
+        add_css(array(
+            "assets/css/accounting/accounting_includes/new_customer.css",
+        ));
         add_footer_js(array(
             "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
@@ -209,6 +212,7 @@ class Customers extends MY_Controller {
         // fetch customer statuses
         $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
+        $this->page_data['customerTypes'] = $this->accounting_customers_model->get_customer_type_by_company_id(logged("company_id"));
 
         $this->page_data['openEstimates'] = $this->estimate_model->get_company_open_estimates(logged('company_id'));
 
@@ -257,6 +261,12 @@ class Customers extends MY_Controller {
 
             $this->page_data['search'] = $search;
         }
+
+        usort($this->page_data['customers'], function ($a, $b) {
+            $nameA = $a->last_name.', '.$a->first_name;
+            $nameB = $b->last_name.', '.$b->first_name;
+            return strcasecmp($nameA, $nameB);
+        });
 
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
@@ -1541,24 +1551,70 @@ class Customers extends MY_Controller {
         $post = $this->input->post();
         $search = $post['search'];
 
-        $status = [
-            1
-        ];
+        if(!empty(get('transaction'))) {
+            $this->page_data['transaction'] = get('transaction');
 
-        if ($post['inactive'] === '1' || $post['inactive'] === 1) {
-            array_push($status, 0);
+            switch(get('transaction')) {
+                case 'estimates' :
+                    $customers = $this->AcsProfile_model->get_customers_with_open_estimates(logged('company_id'));
+                break;
+                case 'unbilled-activity' :
+                    $customers = $this->AcsProfile_model->get_customers_with_unbilled_activities(logged('company_id'));
+                break;
+                case 'overdue-invoices' :
+                    $customers = $this->AcsProfile_model->get_customers_with_overdue_invoices(logged('company_id'));
+                break;
+                case 'open-invoices' :
+                    $customers = $this->AcsProfile_model->get_customers_with_open_invoices(logged('company_id'));
+                break;
+                case 'payments' :
+                    $paymentsFilter = [
+                        'start-date' => date("Y-m-d", strtotime("-30 days")),
+                        'company_id' => logged('company_id')
+                    ];
+
+                    $customers = $this->AcsProfile_model->get_customers_with_payments($paymentsFilter);
+                break;
+            }
+
+            $this->page_data['customers'] = $customers;
         }
 
-        $data = [];
-        
-    
-        usort($data, function ($a, $b) {
-            return strcasecmp($a['name'], $b['name']);
+        if(!empty($search)) {
+            $this->page_data['customers'] = array_filter($this->page_data['customers'], function($customer, $key) use ($search) {
+                $name = $customer->last_name.', '.$customer->first_name;
+                return (stripos($name, $search) !== false);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        usort($this->page_data['customers'], function ($a, $b) {
+            $nameA = $a->last_name.', '.$a->first_name;
+            $nameB = $b->last_name.', '.$b->first_name;
+            return strcasecmp($nameA, $nameB);
         });
+
+        $data = [];
+        foreach($this->page_data['customers'] as $customer)
+        {
+            $data[] = [
+                'name' => $customer->last_name.', '.$customer->first_name,
+                'company' => $customer->business_name,
+                'address' => $customer->mail_add,
+                'city' => $customer->city,
+                'state' => $customer->state,
+                'country' => $customer->country,
+                'zip' => $customer->zip_code,
+                'phone' => $customer->phone_h,
+                'email' => $customer->email,
+                'type' => $customer->customer_type,
+                'open_balance' => '',
+                'notes' => $customer->notes
+            ];
+        }
 
         $writer = new XLSXWriter();
         $headers = [
-            "Vendor",
+            "Customer",
             "Company",
             "Address",
             "City",
@@ -1567,15 +1623,13 @@ class Customers extends MY_Controller {
             "Zip",
             "Phone",
             "Email",
-            "Attachments",
-            "Open Balance"
+            "Type",
+            "Open Balance",
+            "Notes"
         ];
 
         if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
             unset($headers[2]);
-        }
-        if(!isset($post['fields']) || !in_array('attachments', $post['fields'])) {
-            unset($headers[9]);
         }
         if(!isset($post['fields']) || !in_array('phone', $post['fields'])) {
             unset($headers[7]);
@@ -1588,9 +1642,6 @@ class Customers extends MY_Controller {
 
         foreach($data as $cust) {
             $name = $cust['name'];
-            $name .= $cust['status'] === '0' ? ' (deleted)' : '';
-            $cust['name'] = $name;
-            unset($cust['status']);
 
             if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
                 unset($cust['address']);
@@ -1606,8 +1657,46 @@ class Customers extends MY_Controller {
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="vendors.xlsx"');
+        header('Content-Disposition: attachment;filename="customers.xlsx"');
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
+    }
+
+    public function add_customer_type()
+    {
+        $insert = array(
+            "title" => $this->input->post("customer_type_name"),
+            "company_id" => logged("company_id")
+        );
+        $id = $this->accounting_customers_model->add_new_customer_type($insert);
+
+        echo json_encode([
+            'data' => $id,
+            'success' => $id ? true : false
+        ]);
+    }
+
+    public function update_customer_type($typeId)
+    {
+        $data = array(
+            "title" => $this->input->post("customer_type_name"),
+            "company_id" => logged("company_id")
+        );
+        $updated = $this->accounting_customers_model->update_customer_type($typeId, $data);
+
+        echo json_encode([
+            'data' => $typeId,
+            'success' => $updated > 0 ? true : false
+        ]);
+    }
+
+    public function delete_customer_type($typeId)
+    {
+        $deleted = $this->accounting_customers_model->delete_customer_type($typeId);
+
+        echo json_encode([
+            'data' => $typeId,
+            'success' => $deleted > 0 ? true : false
+        ]);
     }
 }

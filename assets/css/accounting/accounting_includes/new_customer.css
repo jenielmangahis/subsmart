@@ -8,22 +8,6 @@ div#import-customers-modal {
     display: none;
 }
 
-#import-customers-modal .modal-body {
-    background: #ffffff;
-    width: 950px !important;
-    height: 550px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 30px;
-    font-size: 12px;
-    border-radius: 5px;
-    position: relative;
-    overflow: scroll;
-    overflow-x: hidden;
-}
-
 #import-customers-modal .close-modal {
     position: absolute;
     top: 12px;
@@ -32,10 +16,6 @@ div#import-customers-modal {
     color: #A19FA0;
     font-size: 20px;
     font-weight: 100;
-}
-
-#import-customers-modal .modal-body {
-    width: 100%;
 }
 
 #import-customers-modal .modal-body .panel-title {
@@ -233,7 +213,7 @@ div#import-customers-modal {
 }
 
 #import-customers-modal strong {
-    padding-left: 43%;
+    padding-left: 40%;
 }
 
 #import-customers-modal #progressbar #step1:before {
@@ -270,7 +250,6 @@ div#import-customers-modal {
     position: absolute;
     left: 0;
     top: 25px;
-    z-index: -1
 }
 
 #import-customers-modal #progressbar li:first-child:after {
