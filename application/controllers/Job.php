@@ -3351,6 +3351,47 @@ class Job extends MY_Controller
 
         exit;
     }
+
+    public function ajax_quick_delete_job()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';        
+
+        $job = $this->jobs_model->get_specific_job($post['schedule_id']);
+        if( $job ){ 
+
+            $remove_job = array(
+                'where' => array(
+                    'id' => $post['schedule_id'],
+                    'company_id' => $cid
+                ),
+                'table' => 'jobs'
+            );
+
+            if ($this->general->delete_($remove_job)) {
+                $remove_job_items = array(
+                    'where' => array(
+                        'job_id' => $job->id,
+                    ),
+                    'table' => 'job_items'
+                );
+                $this->general->delete_($remove_job_items);
+
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #'.$job->job_number);
+
+                $is_success = 1;
+                $msg = '';
+            }    
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);       
+
+        exit;
+    }
 }
 
 /* End of file Job.php */

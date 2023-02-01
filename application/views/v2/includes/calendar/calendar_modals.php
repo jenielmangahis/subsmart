@@ -1,6 +1,6 @@
 <style>
 .quick-select-calendar-schedule-type{
-    width: 100% !important;
+    /*width: 100% !important;*/
     display: block;
     margin: 5px;
     /*padding-left: 25%;*/
@@ -23,6 +23,17 @@
 #modal-quick-view-upcoming-schedule .modal-footer .nsm-button{
     width: 48%;
     font-size: 16px;
+}
+#quick-access-calendar-loading{
+    position: absolute;
+    top: 589px;
+    z-index: 9999;
+    left: 40%;
+    font-weight: bold;
+}
+.alert-purple{
+    background-color: #6a4a86 !important;
+    color: #ffffff;
 }
 </style>
 <div class="modal fade nsm-modal fade" id="create_calendar_modal" tabindex="-1" aria-labelledby="create_calendar_modal_label" aria-hidden="true">
@@ -493,11 +504,21 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="quick-add-date-selected" value="" />                
-                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-job" href="javascript:void(0);"><i class="bx bx-fw bx-message-square-error"></i>Job</a>
-                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-service-ticket" href="javascript:void(0);"><i class="bx bx-fw bx bx-fw bx-note"></i>Service Ticket</a>
-                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class="bx bx-fw bx-calendar-event"></i>Appointment</a>
-                <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-tc-off" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-week' ></i>Technician Off</a>
+                <input type="hidden" id="quick-add-date-selected" value="" />   
+                <div class="row">
+                    <div class="col-6">
+                        <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-job" href="javascript:void(0);"><i class="bx bx-fw bx-message-square-error"></i>Job</a>
+                    </div>
+                    <div class="col-6">
+                        <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-service-ticket" href="javascript:void(0);"><i class="bx bx-fw bx bx-fw bx-note"></i>Service Ticket</a>
+                    </div>
+                    <div class="col-6">
+                        <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class="bx bx-fw bx-calendar-event"></i>Appointment</a>
+                    </div>
+                    <div class="col-6">
+                        <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-tc-off" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-week' ></i>Technician Off</a>
+                    </div>
+                </div> 
             </div>            
         </div>        
     </div>

@@ -161,6 +161,7 @@
                     <div class="col-12 col-md-12">
                         <div class="row g-3">
                             <div class="col-12 mb-3">
+                                <div id="quick-access-calendar-loading"></div>
                                 <div id='calendar'></div>
                             </div>
                             <div class="col-12">
@@ -1483,9 +1484,9 @@
             },
             loading: function(isLoading) {
                 if (isLoading) {
-                    $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="' + base_url + '/assets/img/spinner.gif" style="display:inline;" /> Loading Events...</div>');
-                } else {                    
-                    $(".left-calendar-loading").html('');
+                    $("#quick-access-calendar-loading").html('<div class="alert alert-info alert-purple" role="alert">Loading calendar data...</div>');
+                } else {                                    
+                    $("#quick-access-calendar-loading").html('');
                 }
 
             },
@@ -2570,16 +2571,16 @@
 
         if( schedule_type == 'job' ){
             var url = base_url + 'job/_quick_delete_job';
-            var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?';
+            var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore job data once deleted</b>';
         }else if( schedule_type == 'service_ticket' ){
-            var url = base_url + 'tickets/_quick_delete_ticket';
-            var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?';
+            var url = base_url + 'ticket/_quick_delete_ticket';
+            var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore service ticket data once deleted</b>';
         }else if( schedule_type == 'tc-off' ){
             var url = base_url + 'calendar/_quick_delete_tc_off';
-            var msg = 'Are you sure you want to delete selected technician schedule off?';
+            var msg = 'Are you sure you want to delete selected technician schedule off?<br /><br /><b>Note : You cannot restore data once deleted</b>';
         }else{
             var url = base_url + 'calendar/_quick_delete_appointment';
-            var msg = 'Are you sure you want to delete appointment <b>'+ order_number +'</b>';
+            var msg = 'Are you sure you want to delete appointment <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore appointment data once deleted</b>';
         }
 
         Swal.fire({
@@ -2599,7 +2600,9 @@
                     },
                     dataType: 'json',
                     success: function(result) {
-                        if (result.is_success) {
+                        if (result.is_success == 1) {
+                            $('#modal-quick-view-upcoming-schedule').modal('hide');
+
                             Swal.fire({
                                 //title: 'Good job!',
                                 text: "Calendar schedule was successfully deleted.",
@@ -2613,7 +2616,7 @@
                         } else {
                             Swal.fire({
                                 title: 'Error',
-                                text: result.message,
+                                text: result.msg,
                                 icon: 'error',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'

@@ -84,7 +84,7 @@
                             $schedule_end_time = $schedule['data']->end_time;
                             $schedule_status = $schedule['data']->status;
                             $schedule_type   = $schedule['data']->job_type;
-                            $schedule_tags   = $schedule['data']->tags_name;
+                            $schedule_tags   = $schedule['data']->tags;
                             $schedule_number = $schedule['data']->job_number;
                             $schedule_customer_name = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $cust_phone;
@@ -279,7 +279,13 @@
                             </td>
                             <td style="vertical-align: text-top;padding-top: 16px;">                                
                                 <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
-                                    <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
+                                    <?php 
+                                        if( trim($schedule_tags) != '' ){  
+                                            echo $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags);
+                                        }else{
+                                            echo $schedule_number . ' : ' . trim($schedule_type);
+                                        }
+                                    ?>
                                 </label>
                                 <?php if( $schedule_customer_name != '' ){ ?>
                                 <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">

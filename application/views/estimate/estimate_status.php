@@ -114,9 +114,9 @@
                     <box-icon name='<?= $is_success ? "check" : "x"; ?>'></box-icon>
 
                 </div>
-                <div class="main__title">
+                <!-- <div class="main__title">
                     <?= $is_success ? "Success!" : "Oops!"; ?>
-                </div>
+                </div> -->
                 <div class="main__body"><?= $message; ?></div>
             </div>
 
