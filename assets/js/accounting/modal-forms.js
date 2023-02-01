@@ -8782,7 +8782,7 @@ $(function() {
 
 const convertToDecimal = (el) => {
     if($(el).val() !== '') {
-        $(el).val(formatter.format(parseFloat($(el).val())).replace('$', ''));
+        $(el).val(formatter.format(parseFloat($(el).val())).replace('$', '').replaceAll(',', ''));
     }
 }
 

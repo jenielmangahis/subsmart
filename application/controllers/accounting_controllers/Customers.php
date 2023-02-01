@@ -1699,4 +1699,90 @@ class Customers extends MY_Controller {
             'success' => $deleted > 0 ? true : false
         ]);
     }
+
+    public function get_customer_file_headers()
+    {
+        $this->load->library('PHPExcel');
+        $post = $this->input->post();
+        $filename = $post['filename'];
+        $title_holder = array();
+        $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $filename);
+        foreach ($object->getWorksheetIterator() as $worksheet_rows) {
+            $highest_Column = $worksheet_rows->getHighestColumn();
+            $colNumber = PHPExcel_Cell::columnIndexFromString($highest_Column);
+            for ($x = 1; $colNumber >= $x; $x++) {
+                $title = $worksheet_rows->getCellByColumnAndRow($x - 1)->getValue();
+                $title_holder[$x - 1] = $title;
+            }
+        }
+
+
+        $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
+        unset($table_column_names[0]);
+        unset($table_column_names[1]);
+        array_unshift($table_column_names, " ");
+        $data = new stdClass();
+        $data->titles = $title_holder;
+        $data->table_column_names = $table_column_names;
+        $data->filename = $filename;
+        echo json_encode($data);
+    }
+
+    public function import_customers()
+    {
+        $data = $this->input->post("tables");
+        $data1 = $this->input->post("filename");
+        $selCol = $this->input->post("selCol");
+        $tableArr = array();
+
+        $this->load->library('PHPExcel');
+        $object = PHPExcel_IOFactory::load('uploads/accounting/customers/' . $data1);
+
+        $highCol = "";
+        $highRow = "";
+
+        $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
+        //progress
+        foreach ($object->getWorksheetIterator() as $work_sheet) {
+            $indiCol = $work_sheet->getHighestColumn();
+            $highCol = PHPExcel_Cell::columnIndexFromString($indiCol);
+            $highRow = $work_sheet->getHighestRow();
+
+                //progress
+            for ($d = 0; $d < count($selCol); $d++) { //data ni para ma-Identify ang kwaonon na data
+                for ($x = 0; $x < $highCol; $x++) { //Column
+                    $indicator = 1;
+                    $excCol = $work_sheet->getCellByColumnAndRow($x, $indicator)->getValue();
+
+
+ 
+                        if ($excCol == $selCol[$d]) {
+
+                            for ($y = 0; $y < $highRow; $y++) { //Row
+                                if($y==0){
+                                    $tableArr[$x][$y] = $data[$x];
+                                }else{
+                                    $tableArr[$x][$y] = $work_sheet->getCellByColumnAndRow($x, ($y + 1))->getValue();
+                                }
+
+                            }
+
+
+
+
+
+                        // if ($x == 0) {
+                        //     $tableArr[$x][$y] = $data[$y];
+                        // } else {
+                        //     $tableArr[$x][$y] = $work_sheet->getCellByColumnAndRow($y, ($x + 1))->getValue();
+                        // }
+                    }
+                }
+            }//end of the for loop
+
+            
+        }
+        $this->accounting_customers_model->import_customers_to_database($tableArr,$selCol);
+        var_dump($selCol);
+    }
 }

@@ -607,7 +607,7 @@ class DocuSign extends MYF_Controller
         ];
 
         if (!is_null($record) && file_exists($filepath . $record->value)) {
-            unlink($filepath . $record->value);
+            // unlink($filepath . $record->value);
         }
 
         move_uploaded_file($tempName, $filepath . $filename);
@@ -718,7 +718,7 @@ class DocuSign extends MYF_Controller
 
             $this->db->where('id', $document['id']);
             $this->db->delete('user_docfile_templates_documents');
-            unlink($filepath . $document['name']);
+            // unlink($filepath . $document['name']);
 
             $this->db->where('docfile_document_id', $document['id']);
             $this->db->delete('user_docfile_templates_fields');
@@ -1186,6 +1186,7 @@ SQL;
 
         // copy template to user_docfile
 
+        $this->db->select(['id', 'name']);
         $this->db->where('id', $templateId);
         $template = $this->db->get('user_docfile_templates')->row();
 
@@ -1203,14 +1204,16 @@ SQL;
 
         // copy template document to user_docfile_documents
 
+        $this->db->select(['id', 'name', 'path']);
         $this->db->where('template_id', $template->id);
         $this->db->order_by('id', 'ASC');
         $templateFiles = $this->db->get('user_docfile_templates_documents')->result();
 
+        $docfileDocumentEntries = [];
         foreach ($templateFiles as $file) {
             $documentPath = $filepath . $file->name;
             copy(FCPATH . $file->path, $documentPath);
-            $this->db->insert('user_docfile_documents', [
+            array_push($docfileDocumentEntries, [
                 'name' => $file->name,
                 'path' => str_replace(FCPATH, '/', $documentPath),
                 'docfile_id' => $docfileId,
@@ -1218,8 +1221,9 @@ SQL;
             ]);
         }
 
-        $this->db->where('id', $docfileId);
-        $document = $this->db->get('user_docfile')->row();
+        if (count($docfileDocumentEntries)) {
+            $this->db->insert_batch('user_docfile_documents', $docfileDocumentEntries);
+        }
 
         // copy template recipients to user_docfile_recipients and
         // template recipient fields to user_docfile_fields
@@ -1227,7 +1231,13 @@ SQL;
         $this->db->where('template_id', $template->id);
         $templateRecipients = $this->db->get('user_docfile_templates_recipients')->result_array();
 
-        $idToDocumentMap = [];
+        $this->db->where('template_id', $template->id);
+        $docfileFields = $this->db->get('user_docfile_templates_fields')->result_array();
+
+        $this->db->select(['id', 'template_id']);
+        $this->db->where('docfile_id', $docfileId);
+        $docfileDocuments = $this->db->get('user_docfile_documents')->result_array();
+
         foreach ($recipients as $recipient) {
             $payload = [
                 'user_id' => $userId,
@@ -1258,17 +1268,23 @@ SQL;
             $this->db->insert('user_docfile_recipients', $payload);
             $recipientId = $this->db->insert_id();
 
-            $this->db->where('recipients_id', $matchedRecipient['id']);
-            $this->db->where('user_id', $matchedRecipient['user_id']);
-            $this->db->where('template_id', $matchedRecipient['template_id']);
-            $recipientFields = $this->db->get('user_docfile_templates_fields')->result_array();
-
             $createdRecipientsFields = [];
-            foreach ($recipientFields as $field) {
-                if (!array_key_exists($field['docfile_document_id'], $idToDocumentMap)) {
-                    $this->db->where('docfile_id', $docfileId);
-                    $this->db->where('template_id', $field['docfile_document_id']);
-                    $idToDocumentMap[$field['docfile_document_id']] = $this->db->get('user_docfile_documents')->row(); // the file where the field belongs
+            foreach ($docfileFields as $field) {
+
+                if ($matchedRecipient['id'] != $field['recipients_id']) continue;
+                if ($matchedRecipient['user_id'] != $field['user_id']) continue;
+                if ($matchedRecipient['template_id'] != $field['template_id']) continue;
+
+                $matchedDocument = null;
+                foreach ($docfileDocuments as $document) {
+                    if ($document['template_id'] == $field['docfile_document_id']) {
+                        $matchedDocument = $document;
+                        break;
+                    }
+                }
+
+                if (is_null($matchedDocument)) {
+                    continue;
                 }
 
                 array_push($createdRecipientsFields, [
@@ -1276,7 +1292,7 @@ SQL;
                     'docfile_id' => $docfileId,
                     'field_name' => $field['field_name'],
                     'doc_page' => $field['doc_page'],
-                    'docfile_document_id' => $idToDocumentMap[$field['docfile_document_id']]->id,
+                    'docfile_document_id' => $matchedDocument['id'],
                     'unique_key ' => uniqid(),
                     'user_id' => $userId,
                     'user_docfile_recipients_id' => $recipientId,
@@ -1305,20 +1321,18 @@ SQL;
         }
 
         // copy sequence
+        $this->db->select(['sequence']);
         $this->db->where('template_id', $template->id);
         $sequence = $this->db->get('user_docfile_templates_document_sequence')->row();
 
         if ($sequence) {
-            $this->db->where('docfile_id', $docfileId);
-            $documents = $this->db->get('user_docfile_documents')->result();
-
             $sequence = explode(',', $sequence->sequence);
             $sequenceIds = [];
 
             foreach ($sequence as $recordId) {
-                foreach ($documents as $document) {
-                    if ($document->template_id == $recordId) {
-                        $sequenceIds[] = $document->id;
+                foreach ($docfileDocuments as $document) {
+                    if ($document['template_id'] == $recordId) {
+                        $sequenceIds[] = $document['id'];
                         break;
                     }
                 }
@@ -1328,9 +1342,11 @@ SQL;
             $this->db->insert('user_docfile_document_sequence', $payload);
         }
 
+        $this->db->select(['id']);
         $this->db->where('id', $docfileId);
         $envelope = $this->db->get('user_docfile')->row_array();
 
+        $this->db->select(['id', 'role']);
         $this->db->where('docfile_id', $docfileId);
         $this->db->where('completed_at is NULL', null, false);
         $this->db->order_by('id', 'asc');

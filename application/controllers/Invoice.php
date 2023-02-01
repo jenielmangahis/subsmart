@@ -22,6 +22,7 @@ class Invoice extends MY_Controller
         $this->load->model('Accounting_terms_model', 'accounting_terms_model');
         $this->load->model('Accounting_invoices_model', 'accounting_invoices_model');
         $this->load->model('Estimate_model', 'estimate_model');
+        $this->load->model('accounting_receive_payment_model');
 
         $user_id = getLoggedUserID();
 
@@ -47,18 +48,156 @@ class Invoice extends MY_Controller
 
     public function index($tab = '')
     {
-		$this->page_data['page']->title = 'Invoices & Payments';
-        $this->page_data['page']->parent = 'Sales';
-        $is_allowed = $this->isAllowedModuleAccess(35);
-        if (!$is_allowed) {
-            $this->page_data['module'] = 'invoice';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+		// $this->page_data['page']->title = 'Invoices & Payments';
+        // $this->page_data['page']->parent = 'Sales';
+        // $is_allowed = $this->isAllowedModuleAccess(35);
+        // if (!$is_allowed) {
+        //     $this->page_data['module'] = 'invoice';
+        //     echo $this->load->view('no_access_module', $this->page_data, true);
+        //     die();
+        // }
+
+        // $role = logged('role');
+        // $type = 0;
+        // if ($role == 2 || $role == 3 || $role == 6 || $role == 8) {
+        //     $comp_id = logged('company_id');
+
+        //     if (!empty($tab)) {
+        //         $this->page_data['tab'] = $tab;
+        //         $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
+        //     } else {
+        //         // search
+        //         if (!empty(get('search'))) {
+        //             $this->page_data['search'] = get('search');
+        //             $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
+        //         } elseif (!empty(get('order'))) {
+        //             $this->page_data['search'] = get('search');
+        //             $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
+        //         } else {
+        //             // $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
+        //             $this->page_data['invoices'] = $this->invoice_model->getAllData($comp_id);
+        //         }
+        //     }
+        // }
+
+        // if ($role == 4) {
+        //     if (!empty($tab)) {
+        //         $this->page_data['tab'] = $tab;
+        //         $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $type);
+        //     } elseif (!empty(get('order'))) {
+        //         $this->page_data['order'] = get('order');
+        //         $this->page_data['invoices'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
+        //     } else {
+        //         if (!empty(get('search'))) {
+        //             $this->page_data['search'] = get('search');
+        //             $this->page_data['invoices'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
+        //         } else {
+        //             $this->page_data['invoices'] = $this->invoice_model->getAllByUserId();
+        //         }
+        //     }
+        // }
+        // $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
+
+        add_css(array(
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            "assets/css/accounting/customers.css",
+        ));
+        add_footer_js(array(
+            "assets/js/accounting/sales/customers.js",
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
+        ));
+
+        $company_id = getLoggedCompanyID();
+        $start_date = date('Y-m-d', strtotime(date("Y-m-d") . ' - 365 days'));
+        $end_date = date('Y-m-d');
+        $invoices = $this->accounting_invoices_model->get_ranged_invoices_by_company_id($company_id, $start_date, $end_date);
+        $receivable_payment = 0;
+        $total_amount_received = 0;
+        $receivable_last30_days = 0;
+        $total_amount_received_last30_days = 0;
+        $total_overdue = 0;
+        $total_not_due = 0;
+        $deposited_last30_days = 0;
+
+        foreach ($invoices as $inv) {
+            if (is_numeric($inv->grand_total)) {
+                $receivable_payment += $inv->grand_total;
+                if ($this->get_date_difference_indays($inv->date_issued, date("Y-m-d")) <= 30) {
+                    $receivable_last30_days += $inv->grand_total;
+                }
+            }
+            $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            $amount_payment = 0;
+            foreach ($receive_payment as $payment) {
+                $total_amount_received += $payment->payment_amount;
+                $amount_payment += $payment->payment_amount;
+                if ($this->get_date_difference_indays($inv->date_issued, date("Y-m-d")) <= 30) {
+                    $total_amount_received_last30_days += $payment->payment_amount;
+                    $deposited_last30_days += $payment->payment_amount;
+                }
+            }
+            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d")) {
+                $total_overdue += (float)$inv->grand_total - (float)$amount_payment;
+            } else {
+                $total_not_due += $inv->grand_total - $amount_payment;
+            }
+        }
+
+        //caculating this month overall income
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id($company_id, date("Y-m-d", strtotime("first day of this month")), date("Y-m-d"));
+        $income_this_month = 0;
+        $income_last_month = 0;
+        $income_per_day = array();
+
+        $graph_data = array();
+        $graph_data["type"] = "line";
+        $graph_data["indexLabelFontSize"] = "12";
+        $dataPoints = array();
+        foreach ($receive_payments as $payment) {
+            if (date("Y-m-d", strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d", strtotime($payment->payment_date)) <= date("Y-m-d")) {
+                $income_this_month += $payment->amount;
+                $per_day_index = date("d", strtotime($payment->payment_date));
+                $income_per_day[$per_day_index] += $payment->amount;
+                $dataPoints["y"][] = $payment->amount;
+            } else {
+                $income_last_month += $payment->amount;
+            }
+        }
+        $dataPoints["y"][] = 100;
+        $graph_data["dataPoints"] = $dataPoints;
+        // var_dump($receive_payments);
+
+        //script for deposit widget
+        $invoices_this_week = $this->invoice_model->get_ranged_PaidInv($company_id, date("Y-m-d", strtotime('monday this week')), date("Y-m-d", strtotime('sunday this week')));
+        $total_deposit = 0;
+        $statuses = array(0, 0, 0, 0);
+        $deposit_transaction_count = 0;
+        foreach ($invoices_this_week as $inv) {
+            $total_deposit += $inv->grand_total;
+            $deposit_transaction_count++;
+            if ($inv->status == 'Submitted') {
+                $statuses[0] += 1;
+            } elseif ($inv->status == 'Approved') {
+                $statuses[1] += 1;
+            } elseif ($inv->status == 'Partially Paid') {
+                $statuses[2] += 1;
+            } elseif ($inv->status == 'Paid') {
+                $statuses[3] += 1;
+            }
+        }
+        $current_status = -1;
+        $largest_status = 0;
+        for ($i = 0; $i < count($statuses); $i++) {
+            if ($statuses[$i] > $largest_status) {
+                $current_status = $i;
+                $largest_status = $statuses[$i];
+                $i = -1;
+            }
         }
 
         $role = logged('role');
         $type = 0;
-        if ($role == 2 || $role == 3 || $role == 6 || $role == 8) {
+        // if ($role == 2 || $role == 3 || $role == 6 || $role == 7 || $role == 8) {
             $comp_id = logged('company_id');
 
             if (!empty($tab)) {
@@ -77,25 +216,74 @@ class Invoice extends MY_Controller
                     $this->page_data['invoices'] = $this->invoice_model->getAllData($comp_id);
                 }
             }
-        }
+        // }
 
-        if ($role == 4) {
-            if (!empty($tab)) {
-                $this->page_data['tab'] = $tab;
-                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $type);
-            } elseif (!empty(get('order'))) {
-                $this->page_data['order'] = get('order');
-                $this->page_data['invoices'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
-            } else {
-                if (!empty(get('search'))) {
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
-                } else {
-                    $this->page_data['invoices'] = $this->invoice_model->getAllByUserId();
-                }
-            }
-        }
+        // if ($role == 4) {
+        //     if (!empty($tab)) {
+        //         $this->page_data['tab'] = $tab;
+        //         $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $type);
+        //     } elseif (!empty(get('order'))) {
+        //         $this->page_data['order'] = get('order');
+        //         $this->page_data['invoices'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
+        //     } else {
+        //         if (!empty(get('search'))) {
+        //             $this->page_data['search'] = get('search');
+        //             $this->page_data['invoices'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
+        //         } else {
+        //             $this->page_data['invoices'] = $this->invoice_model->getAllByUserId();
+        //         }
+        //     }
+        // }
+
+
+        $this->page_data['unpaid_last_365'] = $receivable_payment - $total_amount_received;
+        $this->page_data['unpaid_last_30'] = $receivable_last30_days - $total_amount_received_last30_days;
+        $this->page_data['due_last_365'] = $total_overdue;
+        $this->page_data['not_due_last_365'] = $total_not_due;
+        $this->page_data['deposited_last30_days'] = $deposited_last30_days;
+        $this->page_data['not_deposited_last30_days'] = $receivable_last30_days - $deposited_last30_days;
+        $this->page_data['invoice_needs_attention'] = false;
+        $this->page_data['income_this_month'] = $income_this_month;
+        $this->page_data['income_last_month'] = $income_last_month;
+        $this->page_data['deposit_current_status'] = $current_status;
+        $this->page_data['deposit_total_amount'] = $total_deposit;
+        $this->page_data['deposit_transaction_count'] = $deposit_transaction_count;
+        $this->page_data['graph_data'] = "[" . $this->graph_data_to_text($graph_data) . "]";
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
+        $this->page_data['page_title'] = "Invoices";
+        // print_r($this->page_data);
+
+        $this->page_data['page']->title = 'Invoices';
+        $this->page_data['page']->parent = 'Sales';
+        
         $this->load->view('v2/pages/invoice/invoice_new', $this->page_data);
+    }
+
+    public function get_date_difference_indays($date_from = "", $date_to = "")
+    {
+        $date_1 = strtotime($date_to); // or your date as well
+        $date_2 = strtotime($date_from);
+        $datediff = $date_1 - $date_2;
+        return round($datediff / (60 * 60 * 24));
+    }
+
+    public function graph_data_to_text($graph_data = array())
+    {
+        $the_text = "{";
+        $data_keys = array_keys($graph_data);
+        for ($i = 0; $i < count($data_keys); $i++) {
+            $the_text .= $data_keys[$i] . ":";
+            if (is_array($graph_data[$data_keys[$i]])) {
+                $the_text .= "[" . $this->graph_data_to_text($graph_data[$data_keys[$i]]) . "]";
+            } else {
+                $the_text .= $graph_data[$data_keys[$i]];
+            }
+            $the_text .= ",";
+        }
+        $the_text .= "}";
+        return $the_text;
     }
 
     public function recurring($tab = '')
