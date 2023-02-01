@@ -516,6 +516,8 @@ $route['accounting/customers/export-customers']['post'] = 'accounting_controller
 $route['accounting/customers/add-customer-type']['post'] = 'accounting_controllers/customers/add_customer_type';
 $route['accounting/customers/update-customer-type/(:any)']['post'] = 'accounting_controllers/customers/update_customer_type/$1';
 $route['accounting/customers/delete-customer-type/(:any)']['DELETE'] = 'accounting_controllers/customers/delete_customer_type/$1';
+$route['accounting/customers/get-customers-file-headers']['post'] = 'accounting_controllers/customers/get_customer_file_headers';
+$route['accounting/customers/import-customers']['post'] = 'accounting_controllers/customers/import_customers';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
