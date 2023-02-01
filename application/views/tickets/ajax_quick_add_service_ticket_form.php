@@ -74,7 +74,7 @@
                         <label for="estimate_date" class="required"><b>Schedule Date</b></label>
                         <div class="input-group date" data-provide="datepicker">
                             <input type="text" class="form-control" value="<?= date("m/d/Y", strtotime($default_start_date)); ?>" name="ticket_date" id="ticket_date"
-                                    placeholder="Enter Ticket Date">
+                                    placeholder="Enter Ticket Date" required>
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-th"></span>
                             </div>
