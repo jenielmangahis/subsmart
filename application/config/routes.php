@@ -1453,3 +1453,6 @@ $route['calendar/_quick_add_appointment_form'] = 'Workcalender/ajax_quick_add_ap
 $route['calendar/_quick_add_tc_off_form'] = 'Workcalender/ajax_quick_add_tc_off_form';
 $route['calendar/_quick_edit_tc_off_form'] = 'Workcalender/ajax_quick_edit_tc_off_form';
 $route['job/_quick_delete_job'] = 'Job/ajax_quick_delete_job';
+$route['calendar/_quick_delete_tc_off'] = 'Workcalender/ajax_delete_tcoff';
+$route['calendar/_quick_delete_appointment'] = 'Workcalender/ajax_delete_appointment';
+$route['ticket/_quick_delete_ticket'] = 'Tickets/ajax_quick_delete_ticket';
