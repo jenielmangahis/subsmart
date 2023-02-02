@@ -1315,6 +1315,11 @@ class Tickets extends MY_Controller
             $is_valid = 0;
         }
 
+        if( $this->input->post('item_id') === null ){
+            $msg = 'Please select an item';
+            $is_valid = 0;   
+        }
+
         if( $is_valid == 1 ){
             $techni = serialize($this->input->post('assign_tech'));
             $tDate  = date("Y-m-d",strtotime($this->input->post('ticket_date')));
@@ -1443,6 +1448,30 @@ class Tickets extends MY_Controller
         }
         
         echo json_encode($json_data);
+    }
+
+    public function ajax_quick_delete_ticket()
+    {
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg  = 'Cannot find data'; 
+        
+        $post   = $this->input->post();
+        $ticket = $this->tickets_model->get_tickets_by_id_and_company_id($post['schedule_id'],$company_id);
+        if( $ticket ){
+            if( $this->tickets_model->delete_tickets($ticket->id) ){
+
+                customerAuditLog(logged('id'), $ticket->customer_id, $ticket->id, 'Service Ticket', 'Deleted Ticket #'.$ticket->ticket_no);
+
+                $is_success = 1;
+                $msg = '';
+            }    
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);       
+
+        exit;
     }
 }
 

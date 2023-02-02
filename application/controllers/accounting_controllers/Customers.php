@@ -1700,6 +1700,22 @@ class Customers extends MY_Controller {
         ]);
     }
 
+    public function save_customers_excel_file()
+    {
+        $ds = DIRECTORY_SEPARATOR;  //1
+
+        $storeFolder = 'uploads/accounting/customers';   //2
+
+        if (!empty($_FILES)) {
+
+            $tempFile = $_FILES['file']['tmp_name'];          //3
+
+            $targetPath = dirname(__FILE__) . $ds . $storeFolder . $ds;  //4
+
+            move_uploaded_file($tempFile, 'uploads/accounting/customers/' . $_FILES['file']['name']);
+        }
+    }
+
     public function get_customer_file_headers()
     {
         $this->load->library('PHPExcel');
@@ -1730,13 +1746,26 @@ class Customers extends MY_Controller {
 
     public function import_customers()
     {
+        // $post = $this->input->post();
+        // $columns = $post['columns'];
+        // $filename = $post['filename'];
+
+        // $this->load->library('PHPExcel');
+        // $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $filename);
+
+        // foreach($object->getWorksheetIterator() as $work_sheet)
+        // {
+        //     $indiCol = $work_sheet->getHighestColumn();
+        //     $highCol = PHPExcel_Cell::columnIndexFromString($indiCol);
+        // }
+
         $data = $this->input->post("tables");
         $data1 = $this->input->post("filename");
         $selCol = $this->input->post("selCol");
         $tableArr = array();
 
         $this->load->library('PHPExcel');
-        $object = PHPExcel_IOFactory::load('uploads/accounting/customers/' . $data1);
+        $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $data1);
 
         $highCol = "";
         $highRow = "";

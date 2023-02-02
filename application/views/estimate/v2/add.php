@@ -288,6 +288,11 @@ echo put_header_assets();
                 color: black;
             }
         }
+
+        .is-invalid + .select2-container {
+            border: 1px solid #dc3545;
+            border-radius: 4px;
+        } 
     </style>
 
     <!-- page wrapper start -->
@@ -418,7 +423,7 @@ echo put_header_assets();
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
-                                    <input type="date" class="form-control" name="estimate_date" id="estimate_date_" placeholder="Enter Estimate Date">
+                                    <input required type="date" class="form-control" name="estimate_date" id="estimate_date_" placeholder="Enter Estimate Date">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -428,7 +433,7 @@ echo put_header_assets();
                                     <label for="expiry_date" class="required"><b>Expiry Date</b></label>
                                     <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
-                                    <input type="date" class="form-control" name="expiry_date" id="expiry_date_" placeholder="Enter Expiry Date">
+                                    <input required type="date" class="form-control" name="expiry_date" id="expiry_date_" placeholder="Enter Expiry Date">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -456,7 +461,7 @@ echo put_header_assets();
                                     <label for="status" class="required"><b>Estimate Status</b></label>
                                     <!-- <input type="text" class="form-control" name="zip" id="zip" required
                                                 placeholder="Enter Estimate Status"/> -->
-                                    <select name="status" class="form-control" id="estimate-status">
+                                    <select required name="status" class="form-control" id="estimate-status">
                                         <option value="Draft">Draft</option>
                                         <option value="Submitted">Submitted</option>
                                         <option value="Accepted">Accepted</option>
@@ -1516,13 +1521,41 @@ echo put_header_assets();
 
         $saveDraftButton.addEventListener("click", () => {
             $statusSelect.value = "Draft";
+            if (!isFormValid($form)) return;
             $form.submit();
         });
 
         $saveButton.addEventListener("click", () => {
             $statusSelect.value = "Submitted";
+            if (!isFormValid($form)) return;
             $form.submit();
         });
+        
+        function isFormValid($formElement) {
+            const $requiredInputs = [...$formElement.querySelectorAll("[required]")];
+            let $firstInputHasError = null;
+
+            for (let index = 0; index < $requiredInputs.length; index++) {
+                const $input = $requiredInputs[index];
+                $input.classList.remove("is-invalid");
+
+                if ($input.getAttribute("name") === "customer_id" && $input.value === "0") {
+                    $input.classList.add("is-invalid");
+                    $firstInputHasError = $firstInputHasError ? $firstInputHasError : $input;
+                }
+
+                if (!$input.value) {
+                    $input.classList.add("is-invalid");
+                    $firstInputHasError = $firstInputHasError ? $firstInputHasError : $input;
+                }
+            }
+            
+            if ($firstInputHasError) {
+                $firstInputHasError.focus();
+            }
+
+            return $firstInputHasError === null;
+        }
     });
 </script>
 

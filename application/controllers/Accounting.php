@@ -14627,6 +14627,77 @@ class Accounting extends MY_Controller
 
         fpassthru($f);
     }
+    
+    public function genview($id)
+    {
+        $invoice = get_invoice_by_id($id);
+        $user = get_user_by_id(logged('id'));
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        
+        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
+
+        if (!empty($setting)) {
+            foreach ($setting as $key => $value) {
+                if (is_serialized($value)) {
+                    $setting->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['setting'] = $setting;
+        }
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+            $this->page_data['user'] = $user;
+        }
+
+        $invoiceData = $this->invoice_model->getinvoice($id);
+        $inv_no = $invoiceData->invoice_number;
+
+
+        $this->page_data['record_payment'] = $this->input->get('do');
+        $this->page_data['payments'] = $this->invoice_model->getPayments($inv_no);
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+
+        $this->page_data['invoice_template'] = $this->generateInvoiceHTML($id);
+        $this->load->view('accounting/sales/genview', $this->page_data);
+    }
+
+    public function generateInvoiceHTML($id)
+    {
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
+
+        $invoice = get_invoice_by_id($id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+        }
+
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $invoice->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info, false);
+        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+
+        return $this->load->view('invoice/invoice-new', $this->page_data, true);
+    }
 }
 
 // date_plan: date_plan, merchant_name:merchant_name, plan_amount:plan_amount, plan_type:plan_type, plan_repeat:plan_repeat

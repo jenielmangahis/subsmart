@@ -935,8 +935,6 @@ class Chart_of_accounts extends MY_Controller {
             return $flag;
         }, ARRAY_FILTER_USE_BOTH);
 
-        // $registers = $data;
-
         usort($data, function($a, $b) {
             if(strtotime($a['date']) === strtotime($b['date'])) {
                 return floatval($a['acc_transac_id']) < floatval($b['acc_transac_id']);
@@ -951,18 +949,9 @@ class Chart_of_accounts extends MY_Controller {
             $balance = '$'.$balance;
             $data[$key]['balance'] = str_replace('$-', '-$', $balance);
 
-            $accBalance -= floatval($reg[$increaseKey]);
-            $accBalance += floatval($reg[$decreaseKey]);
+            $accBalance -= floatval(str_replace(',', '', $reg[$increaseKey]));
+            $accBalance += floatval(str_replace(',', '', $reg[$decreaseKey]));
         }
-
-        // $data = $registers;
-
-        // usort($data, function($a, $b) {
-        //     if(strtotime($a['date']) === strtotime($b['date'])) {
-        //         return strtotime($a['date_created']) > strtotime($b['date_created']);
-        //     }
-        //     return strtotime($a['date']) > strtotime($b['date']);
-        // });
 
         if($filters['single_line'] === 0) {
             $registers = $data;

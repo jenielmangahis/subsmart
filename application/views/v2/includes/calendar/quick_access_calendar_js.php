@@ -276,9 +276,9 @@ $(function(){
             },
             loading: function(isLoading) {
                 if (isLoading) {
-                    $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="' + base_url + '/assets/img/spinner.gif" style="display:inline;" /> Loading Events...</div>');
-                } else {                    
-                    $(".left-calendar-loading").html('');
+                    $("#quick-access-calendar-loading").html('<div class="alert alert-info alert-purple" role="alert">Loading calendar data...</div>');
+                } else {                                    
+                    $("#quick-access-calendar-loading").html('');
                 }
 
             },

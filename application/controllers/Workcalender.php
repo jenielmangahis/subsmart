@@ -1988,9 +1988,9 @@ class Workcalender extends MY_Controller
         $is_success = false;
         $message    = 'Cannot find appointment';
 
-        $post       = $this->input->post();
-        $cid = logged('company_id');
-        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['schedule_id'], $cid);
 
         if( $appointment ){
             $appointment_id = $appointment->id;
@@ -2006,7 +2006,7 @@ class Workcalender extends MY_Controller
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message
+            'msg' => $message
         ];
 
         echo json_encode($json_data);
@@ -2021,7 +2021,7 @@ class Workcalender extends MY_Controller
 
         $post = $this->input->post();
         $cid  = logged('company_id');
-        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getByIdAndCompanyId($post['tcoff_id'], $cid);
+        $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getByIdAndCompanyId($post['schedule_id'], $cid);
 
         if( $technicianScheduleOff ){
             $tcoff_id = $technicianScheduleOff->id;
@@ -2037,7 +2037,7 @@ class Workcalender extends MY_Controller
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message
+            'msg' => $message
         ];
 
         echo json_encode($json_data);
