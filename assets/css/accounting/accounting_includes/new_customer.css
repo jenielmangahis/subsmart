@@ -286,17 +286,17 @@ div#import-customers-modal {
     padding: 6px;
 }
 
-#import-customers-modal #holder-step-2 .row select {
-    padding: 5px;
-    width: 275px;
-    font-size: 13px;
-    margin-left: 55px;
-    margin-top: 15px;
+#import-customers-modal .form-check {
+    font-size: 18px;
+    min-height: 2rem;
+    padding-left: 2em;
 }
 
-#import-customers-modal .form-check {
-    text-align: left !important;
-    margin-left: 40px;
+#import-customers-modal .form-check .form-check-input {
+    margin-left: -2em;
+    width: 1.5em;
+    height: 1.5em;
+    margin-top: 0;
 }
 
 #import-customers-modal .form-check .row .align {

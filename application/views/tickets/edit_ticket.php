@@ -282,11 +282,11 @@ a.btn-primary.btn-md {
                                                 required placeholder="Enter Ticket#" autofocus value="<?php echo $tickets->ticket_no; ?>" readonly/>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="estimate_date" class="required"><b>Ticket Date</b></label>
+                                        <label for="estimate_date" class="required"><b>Schedule Date</b></label>
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <!-- <div class="input-group date" data-provide="datepicker"> -->
                                             <input type="text" class="form-control" value="<?php echo $tickets->ticket_date; ?>" name="ticket_date" id="ticket_date"
-                                                    placeholder="Enter Ticket Date" data-date-format='yyyy-mm-dd'>
+                                                    placeholder="Enter Ticket Date" data-date-format='yyyy-mm-dd' required>
                                             <!-- <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div> -->
@@ -375,7 +375,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3" id="technicianDiv">
                                         <label for="purchase_order_number"><b>Assigned Technician</b></label>
                                         <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
-                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" tabindex="-1" aria-hidden="true">
+                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" tabindex="-1" aria-hidden="true" required>
                                             <?php
                                                 $assigned_technician = unserialize($tickets->technicians);
                                                 // var_dump($assigned_technician);

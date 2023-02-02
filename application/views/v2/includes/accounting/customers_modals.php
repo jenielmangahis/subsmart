@@ -2605,9 +2605,6 @@
                                         </div>
                                     </div>
                                     <div class="file-deop-label">Acceptable File Types: .xlsx, .xls and .csv only</div>
-                                    <div class="upload-button">
-                                        <button type="button" id="submit-imported-customer-file">Import</button>
-                                    </div>
                                 </div>
                             </fieldset>
                             <fieldset id="holder-step-2">
@@ -2622,10 +2619,10 @@
 
                                 <div class="row">
                                     <div class="col-6">
-                                        <h4 class="margin">COLUMNS FROM FILE</h4>
+                                        <h4>COLUMNS FROM FILE</h4>
                                     </div>
                                     <div class="col-6">
-                                        <h4 class="margin">SELECT COLUMNS TO STORE</h4>
+                                        <h4>SELECT COLUMNS TO STORE</h4>
                                     </div>
                                 </div>
 
@@ -2655,6 +2652,17 @@
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="nsm-button primary" id="submit-imported-customer-file">Next</button>
+            </div>
         </div>
+    </div>
+</div>
+
+<div id="loader-modal" style="display: none;">
+    <div class="loader-modal-content">
+        <img src="<?=base_url("assets/img/accounting/customers/loader.gif")?>"
+            alt="">
     </div>
 </div>

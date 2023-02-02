@@ -263,7 +263,10 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="#">View/Edit</a>
+                                            <a class="dropdown-item" href="<?php echo base_url('accounting/genview/' . $invoice->id) ?>">View</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>">Edit</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#">Duplicate</a>

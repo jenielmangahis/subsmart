@@ -279,7 +279,7 @@ a.btn-primary.btn-md {
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <div class="input-group date" data-provide="datepicker">
                                             <input type="text" class="form-control" name="ticket_date" id="ticket_date"
-                                                    placeholder="Enter Ticket Date">
+                                                    placeholder="Enter Ticket Date" required>
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -373,7 +373,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3" id="technicianDiv">
                                         <label for="purchase_order_number"><b>Assigned Technician</b></label>
                                         <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
-                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple"></select>
+                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" required></select>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
