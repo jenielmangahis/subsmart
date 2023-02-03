@@ -2580,89 +2580,110 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <ul id="progressbar">
-                    <li class="active" id="step1">
-                        <strong>Step 1</strong>
-                    </li>
-                    <li id="step2"><strong>Step 2</strong></li>
-                    <li id="step3"><strong>Step 3</strong></li>
-                </ul>
-                <div class="progress">
-                    <div class="progress-bar"></div>
-                </div>
-                <br>
                 <div class="row">
-                    <div class="col-12 text-center">
-                        <form id="form">
-                            <!--import section-->
-                            <fieldset id="holder-step-1">
-                                <h2>IMPORT YOUR FILES</h2>
-                                <div class="file-drop-panel">
-                                    <div class="panel-title">Attach Document</div>
-                                    <div class="file-drop-form">
-                                        <div id="import_customer">
-                                            Drop your files here
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            A great process to import all your customers.
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="progress-wrapper" style="padding-bottom: 100px;">
+                            <div id="progress-bar-container">
+                                <ul>
+                                    <li class="step step01 active">
+                                        <div class="step-inner">Step 1</div>
+                                    </li>
+                                    <li class="step step02">
+                                        <div class="step-inner">Step 2</div>
+                                    </li>
+                                    <li class="step step03">
+                                        <div class="step-inner">Step 3</div>
+                                    </li>
+                                </ul>
+
+                                <div id="line">
+                                    <div id="line-progress"></div>
+                                </div>
+
+                                <div id="progress-content-section">
+                                    <div class="section-content step1 active">
+                                        <h2>Step 1</h2>
+                                        <p>Industry Type Select and CSV Upload</p>
+
+                                        <form id="import_customer" enctype="multipart/form-data" style="text-align: center;">
+                                            <input id="file-upload" name="file" type="file" accept=".csv"/>
+                                            <input  name="file2" value="1" type="hidden"/>
+                                            <br><br>
+                                            <!-- <button type="button" id="nextBtn1" class="btn btn-primary btn-sm step step02" disabled ><span class="fa fa-arrow-right"></span> Next</button> -->
+                                        </form>
+                                    </div>
+
+                                    <div class="section-content step2">
+                                        <h2>Step 2</h2>
+                                        <p>Map Headings</p>
+                                        <?php $fieldsValue = $import_settings->value ? explode(',', $import_settings->value) : array() ; ?>
+                                        <?php $headers = $importFieldsList;?>
+                                        <?php $i = 0; ?>
+                                        <?php foreach($headers as $header) : ?>
+                                            <?php if(in_array($header->id, $fieldsValue)) : ?>
+                                                <div class="row grid-mb">
+                                                    <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                                                        <b ><?= $header->field_description; ?></b> <span class='mapping-line'>-----------------</span>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector<?= $i ?>" onclick="test()">
+                                                            <option value="">Select Heading</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            <?php $i++; ?>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        <div class="result"></div>
+                                        <br>
+                                        <!-- <button type="button" class="btn btn-primary btn-sm step step01" ><span class="fa fa-arrow-left"></span> Back</button>
+                                        <button type="button" class="btn btn-primary btn-sm step step03" ><span class="fa fa-arrow-right"></span> Next</button> -->
+                                    </div>
+                                    <div class="section-content step3">
+                                        <h2>Step 3</h2>
+                                        <p>Customer Preview </p>
+
+                                        <?php $headers = $importFieldsList;?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table tbl" style="height: 100px;overflow-y: auto; overflow-x: hidden;border-collapse: collapse; ">
+                                                    <thead>
+                                                        <tr id='tableHeader'></tr>
+                                                    </thead>
+                                                    <tbody id="imported_customer"></tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="file-deop-label">Acceptable File Types: .xlsx, .xls and .csv only</div>
-                                </div>
-                            </fieldset>
-                            <fieldset id="holder-step-2">
-
-                                <!--1st Row-->
-                                <div class="row">
-                                    <div class="col-12 instruction">
-                                        <p class="text-start p-3">For the column from files section, this is the column names of the data in your excel. You can uncheck and check the columns that only need to be stored in the database. For the select columns to store section, after checking the desired column you wanted to store, you can choose the column of the database you want to store your selected data.</p>
+                                        <br>
+                                        <!-- <button type="button" class="btn btn-primary btn-sm step step02" ><span class="fa fa-arrow-left"></span> Back</button>
+                                        <button type="button" class="btn btn-primary btn-sm" id="importCustomer"><span class="fa fa-upload"></span> Import</button> -->
+                                    
                                     </div>
                                 </div>
-                                <!--2nd Row-->
-
-                                <div class="row">
-                                    <div class="col-6">
-                                        <h4>COLUMNS FROM FILE</h4>
-                                    </div>
-                                    <div class="col-6">
-                                        <h4>SELECT COLUMNS TO STORE</h4>
-                                    </div>
-                                </div>
-
-                                <!-- <div class="form-check">
-
-                                </div> -->
-                                <!-- <h1 class="error"></h1> -->
-
-                                <!-- <input type="button" name="next-step" class="next-step mt-5" value="Save Now" />
-                                <input type="button" name="previous-step" class="previous-step mt-5" value="Previous Step" /> -->
-                            </fieldset>
-                            <fieldset id="holder-step-3">
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <img src="https://localhost/nsmartrac/assets/img/accounting/customers/email-marketing.png" style="width:275px; height:275px; margin:0 auto;">
-                                    </div>
-                                    <div class="col-12 col-md-6" style="margin-top: 40px; text-align:left;">
-                                        <h3 style="margin-left:5px;color:#6a4b86;">You've successfully added new customers!!</h3>
-                                        <p style="color:#6a4b86;font-size:15px; margin-left:5px;">The data of the customers from the file you imported has successfully uploaded!</p>
-                                        <button type="button" class="btn btn-primary" id="close" style="background-color:#6a4b86 !important">Close</button>
-                                    </div>
-                                </div>
-                            
-                                                    
-                            </fieldset>
-                        </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="nsm-button primary" id="submit-imported-customer-file">Next</button>
+                <button type="button" class="nsm-button primary step02" id="nextBtn1" disabled>Next</button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="loader-modal" style="display: none;">
-    <div class="loader-modal-content">
-        <img src="<?=base_url("assets/img/accounting/customers/loader.gif")?>"
-            alt="">
+<div id="overlay">
+    <div>
+        <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+        <center><p>Processing...</p></center>
     </div>
 </div>

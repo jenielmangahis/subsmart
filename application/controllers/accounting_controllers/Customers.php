@@ -116,9 +116,9 @@ class Customers extends MY_Controller {
 
     public function index()
     {
-        add_css(array(
-            "assets/css/accounting/accounting_includes/new_customer.css",
-        ));
+        // add_css(array(
+        //     "assets/css/accounting/accounting_includes/new_customer.css",
+        // ));
         add_footer_js(array(
             "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
@@ -267,6 +267,23 @@ class Customers extends MY_Controller {
             $nameB = $b->last_name.', '.$b->first_name;
             return strcasecmp($nameA, $nameB);
         });
+
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'setting_type' => 'import',
+            ),
+            'table' => 'customer_settings',
+            'select' => '*',
+        );
+        $importSettings = $this->general->get_data_with_param($get_company_settings, false);
+        $getImportFields = array(
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        );
+        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
+
+        $this->page_data['import_settings'] = $importSettings;
 
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
@@ -1192,6 +1209,7 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_refund_receipts($transactions, $filters);
                 $transactions = $this->get_delayed_credits($transactions, $filters);
                 $transactions = $this->get_delayed_charges($transactions, $filters);
+                $transactions = $this->get_estimates($transactions, $filters);
             break;
         }
 
@@ -1545,6 +1563,78 @@ class Customers extends MY_Controller {
         return $transactions;
     }
 
+    private function get_estimates($transactions, $filters = [])
+    {
+        $estimates = $this->estimate_model->getAllEstimatesByCustomerId($filters['customer_id']);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($estimates as $estimate)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item print-estimate" href="#">Print</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item send-estimate" href="#">Send</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item update-status" href="#">Update status</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item copy-estimate" href="#">Copy</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-delayed-charge" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
+            $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
+
+            if ($estimate->estimate_type == 'Option') {
+                $grandTotal = $total1;
+            } elseif ($estimate->estimate_type == 'Bundle') {
+                $grandTotal = $total2;
+            } else {
+                $grandTotal = $estimate->grand_total;
+            }
+
+            $transactions[] = [
+                'id' => $estimate->id,
+                'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                'type' => 'Estimate',
+                'no' => $estimate->estimate_number,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $estimate->customer_message,
+                'due_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => '',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y", strtotime($estimate->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
     public function export()
     {
         $this->load->library('PHPXLSXWriter');
@@ -1698,120 +1788,5 @@ class Customers extends MY_Controller {
             'data' => $typeId,
             'success' => $deleted > 0 ? true : false
         ]);
-    }
-
-    public function save_customers_excel_file()
-    {
-        $ds = DIRECTORY_SEPARATOR;  //1
-
-        $storeFolder = 'uploads/accounting/customers';   //2
-
-        if (!empty($_FILES)) {
-
-            $tempFile = $_FILES['file']['tmp_name'];          //3
-
-            $targetPath = dirname(__FILE__) . $ds . $storeFolder . $ds;  //4
-
-            move_uploaded_file($tempFile, 'uploads/accounting/customers/' . $_FILES['file']['name']);
-        }
-    }
-
-    public function get_customer_file_headers()
-    {
-        $this->load->library('PHPExcel');
-        $post = $this->input->post();
-        $filename = $post['filename'];
-        $title_holder = array();
-        $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $filename);
-        foreach ($object->getWorksheetIterator() as $worksheet_rows) {
-            $highest_Column = $worksheet_rows->getHighestColumn();
-            $colNumber = PHPExcel_Cell::columnIndexFromString($highest_Column);
-            for ($x = 1; $colNumber >= $x; $x++) {
-                $title = $worksheet_rows->getCellByColumnAndRow($x - 1)->getValue();
-                $title_holder[$x - 1] = $title;
-            }
-        }
-
-
-        $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
-        unset($table_column_names[0]);
-        unset($table_column_names[1]);
-        array_unshift($table_column_names, " ");
-        $data = new stdClass();
-        $data->titles = $title_holder;
-        $data->table_column_names = $table_column_names;
-        $data->filename = $filename;
-        echo json_encode($data);
-    }
-
-    public function import_customers()
-    {
-        // $post = $this->input->post();
-        // $columns = $post['columns'];
-        // $filename = $post['filename'];
-
-        // $this->load->library('PHPExcel');
-        // $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $filename);
-
-        // foreach($object->getWorksheetIterator() as $work_sheet)
-        // {
-        //     $indiCol = $work_sheet->getHighestColumn();
-        //     $highCol = PHPExcel_Cell::columnIndexFromString($indiCol);
-        // }
-
-        $data = $this->input->post("tables");
-        $data1 = $this->input->post("filename");
-        $selCol = $this->input->post("selCol");
-        $tableArr = array();
-
-        $this->load->library('PHPExcel');
-        $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $data1);
-
-        $highCol = "";
-        $highRow = "";
-
-        $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
-        //progress
-        foreach ($object->getWorksheetIterator() as $work_sheet) {
-            $indiCol = $work_sheet->getHighestColumn();
-            $highCol = PHPExcel_Cell::columnIndexFromString($indiCol);
-            $highRow = $work_sheet->getHighestRow();
-
-                //progress
-            for ($d = 0; $d < count($selCol); $d++) { //data ni para ma-Identify ang kwaonon na data
-                for ($x = 0; $x < $highCol; $x++) { //Column
-                    $indicator = 1;
-                    $excCol = $work_sheet->getCellByColumnAndRow($x, $indicator)->getValue();
-
-
- 
-                        if ($excCol == $selCol[$d]) {
-
-                            for ($y = 0; $y < $highRow; $y++) { //Row
-                                if($y==0){
-                                    $tableArr[$x][$y] = $data[$x];
-                                }else{
-                                    $tableArr[$x][$y] = $work_sheet->getCellByColumnAndRow($x, ($y + 1))->getValue();
-                                }
-
-                            }
-
-
-
-
-
-                        // if ($x == 0) {
-                        //     $tableArr[$x][$y] = $data[$y];
-                        // } else {
-                        //     $tableArr[$x][$y] = $work_sheet->getCellByColumnAndRow($y, ($x + 1))->getValue();
-                        // }
-                    }
-                }
-            }//end of the for loop
-
-            
-        }
-        $this->accounting_customers_model->import_customers_to_database($tableArr,$selCol);
-        var_dump($selCol);
     }
 }

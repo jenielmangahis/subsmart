@@ -589,6 +589,12 @@ class Estimate_model extends MY_Model
 		return  $insert;
 	}
 
+    public function addNewCustomer($data){
+		$vendor = $this->db->insert('acs_profile', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+	}
+
     public function add_estimate_details($data)
     {
         $vendor = $this->db->insert('estimates_items', $data);
