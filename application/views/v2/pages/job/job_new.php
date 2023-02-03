@@ -668,7 +668,7 @@
                                                 <option value="">Select Tags</option>
                                                 <?php if(!empty($tags)): ?>
                                                     <?php foreach ($tags as $tag): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select>

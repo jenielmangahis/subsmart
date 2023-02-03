@@ -56,9 +56,9 @@
     table {
         width: 100% !important;
     }
-    .dataTables_filter, .dataTables_length{
+    /*.dataTables_filter, .dataTables_length{
         display: none;
-    }
+    }*/
     table.dataTable thead th, table.dataTable thead td {
     padding: 10px 18px;
     border-bottom: 1px solid lightgray;
@@ -72,6 +72,11 @@
         border-style: solid;
         border-color: lightgray;
         border-width: 0;
+    }
+    /** css fix for data table missing search input **/
+    label>input {
+        visibility: visible !important;
+        position: inherit !important;
     }
 </style>
 
@@ -127,7 +132,7 @@
                                                 <label>From:</label>
                                               </div>
                                               <div class="col-sm-5">
-                                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->estimate_date : $default_start_date;  ?>" required>
+                                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->estimate_date : $default_start_date; ?>" required>
                                               </div>
                                               <div class="col-sm-5">
                                                   <?php if( isset($jobs_data) ){ $default_start_time = strtolower($jobs_data->start_time); } ?>
@@ -168,10 +173,10 @@
                                         </div><br>
                                         <h6>Sales Rep</h6>
                                             <select id="employee_id" name="employee_id" class="form-control " required>
-                                                <option value="10001">Select All</option>
+                                                <!-- <option value="10001">Select All</option> -->
                                                 <?php if(!empty($sales_rep)): ?>
                                                     <?php foreach ($sales_rep as $employee): ?>
-                                                        <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
+                                                        <option <?= isset($jobs_data) && $jobs_data->user_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select><br>
@@ -212,7 +217,11 @@
                                         <div class="mb-3">
                                             <h6>Time Zone</h6>
                                             <select id="inputState" name="timezone" class="form-control ">
-                                                <option value="utc5">Central Time (UTC -5)</option>
+                                            <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
+                                                <option value="<?php echo $key ?>" <?= $jobs_data && $jobs_data->timezone == $key ? 'selected="selected"' : ''; ?>>
+                                                    <?php echo $zone ?>
+                                                </option>
+                                            <?php } ?>                                            
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -224,11 +233,9 @@
                                             </div>
                                             <select id="job_type_option" name="jobtypes" class="form-control " required>
                                                 <option value="">Select Type</option>
-                                                <?php if(!empty($job_types)): ?>
-                                                    <?php foreach ($job_types as $type): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
+                                                <?php foreach ($job_types as $type): ?>
+                                                    <option value="<?= $type->title; ?>"><?= $type->title; ?></option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -385,31 +392,33 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-12">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <small>Job Type</small>
+                                                            <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <small>Job Tags</small>
+                                                            <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <p>Description of Job</p>
+                                            <textarea name="job_description" class="form-control" required><?= isset($jobs_data) ? $jobs_data->job_name : ''; ?></textarea>
+                                            <hr/>
+                                        </div>
                                         <hr>
-                                        <h6 class='card_header'>Job Items Listing</h6>
-                                        <table class="table">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <small>Job Type</small>
-                                                        <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
-                                                    </td>
-                                                    <td>
-                                                        <small>Job Tags</small>
-                                                        <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <h6 class='card_header'>Job Items Listing</h6>                                        
                                         <table class="table table-hover">
                                             <tbody id="jobs_items">
-                                            <?php if(isset($jobs_data)): ?>
-                                                <?php
-                                                    $subtotal = 0.00;
-                                                    foreach ($jobs_data_items as $item):
-                                                    $total = $item->cost * $item->qty;
-
-                                                ?>
+                                            <?php if( !empty($estimate_items) ){ ?>
+                                                <?php $subtotal = 0.00; ?>
+                                                <?php foreach($estimate_items as $key => $item){ ?>
+                                                    <?php $total = $item->cost * $item->qty; ?>
                                                     <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
                                                             <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control"  readonly>
@@ -421,8 +430,6 @@
                                                         <td><small>Unit Price</small>
                                                             <input id='price<?= $item->id ?>' value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
                                                         </td>
-                                                        <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
-                                                        <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
                                                         <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
                                                         <td>
                                                             <small>Amount</small><br>
@@ -433,23 +440,16 @@
                                                         </td>
 
                                                     </tr>
-                                                <?php
-                                                    $subtotal = $subtotal + $total;
-                                                    endforeach;
-                                                ?>
-                                            <?php endif; ?>
+                                                    <?php $subtotal = $subtotal + $total; ?>
+                                                <?php } ?>
+                                            <?php } ?>
                                             </tbody>
                                         </table>
                                         <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
                                                 <i class='bx bx-plus'></i>Add Items
                                             </button>
                                         <br>
-                                        <br>
-                                        <div class="col-sm-12">
-                                            <p>Description of Job</p>
-                                            <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
-                                            <hr/>
-                                        </div>
+                                        <br>                                        
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -469,7 +469,7 @@
                                                                     ?>
                                                                     <input id="attachment-file" name="filetoupload" type="file" accept="image/png, image/jpg, image/jpeg, image/bmp, image/ico"/>
                                                                     <img class="<?php echo $IMG_HIDE_STATUS; ?> w-100 IMG_PREVIEW" id="attachment-image" alt="Attachment" src="<?php echo $THUMBNAIL_SRC; ?>">
-                                                                    <button class="btn btn-danger btn-sm REMOVE_THUMBNAIL <?php echo $IMG_HIDE_STATUS; ?>" type="button" style="position: absolute; left: 160px;">Remove</button>
+                                                                    <button class="btn btn-danger btn-sm REMOVE_THUMBNAIL <?php echo $IMG_HIDE_STATUS; ?>" type="button" style="position: absolute; left: 160px;top:45%;">Remove</button>
                                                                     <span class="<?php echo $SPAN_HIDE_STATUS; ?> THUMBNAIL_BOX">
                                                                         <p>Thumbnail</p>
                                                                        <!--  <p class="or-text">Or</p>
@@ -608,15 +608,15 @@
                                                 <div class="col-sm-12" id="approval_card_right" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                                     <div style="float: right;">
                                                         <?php if(isset($jobs_data) && $jobs_data->signature_link != '') : ?>
-                                                        <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                            <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
 
-                                                        <center>
-                                                            <img width="150" id="customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
-                                                        </center>
+                                                            <center>
+                                                                <img width="150" id="customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
+                                                            </center>
 
-                                                        <center><span id="appoval_name_right"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span></center><br>
-                                                        <span>-----------------------------</span><br>
-                                                        <center><small>Approved By</small></center><br>
+                                                            <center><span id="appoval_name_right"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span></center><br>
+                                                            <span>-----------------------------</span><br>
+                                                            <center><small>Approved By</small></center><br>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -814,42 +814,29 @@
             </div>
             <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-12 mb-2">
-                            <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
-                        </div>
                         <div class="col-sm-12">
                             <table id="items_table" class="table table-hover w-100">
                                 <thead class="bg-light">
-                                    <tr>
-                                        <td style="width: 0% !important;"></td>
+                                    <tr>                                        
                                         <td><strong>Name</strong></td>
-                                        <td><strong>Qty</strong></td>
                                         <td><strong>Price</strong></td>
                                         <td><strong>Type</strong></td>
+                                        <td style="width: 0% !important;"></td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                        if (!empty($items)) {
-                                            foreach ($items as $item) {
-                                               $item_qty = get_total_item_qty($item->id);
-                                               if ($item_qty[0]->total_qty > 0) {
-                                    ?>
-                                    <tr>
-                                        <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
-                                        </td>
-                                        <td><?php echo $item->title; ?></td>
-                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
-                                        <td><?php echo $item->price; ?></td>
-                                        <td><?php echo $item->type; ?></td>
-                                    </tr>
-                                    <?php 
-                                            } 
-                                        } 
-                                    } 
-
-                                    ?>
+                                    <?php if (!empty($items)) { ?>
+                                        <?php foreach ($items as $item) { ?>
+                                            <tr>                                                
+                                                <td><?php echo $item->title; ?></td>                                                
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><?php echo $item->type; ?></td>
+                                                <td style="width: 0% !important;">
+                                                    <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -975,6 +962,17 @@ $(function() {
     (HIDDEN_4.val() == '') ? $('.ASSIGNED_TO_4').hide(): TOTAL++;
     (HIDDEN_5.val() == '') ? $('.ASSIGNED_TO_5').hide(): TOTAL++;
 
+     $('#items_table').DataTable({
+        "autoWidth" : false,
+        "columnDefs": [
+        { width: 540, targets: 0 },
+        { width: 100, targets: 0 },
+        { width: 100, targets: 0 },
+        { width: 10, targets: 0 },
+        ],
+        "ordering": false,
+    });
+
     $(".ADD_ASSIGN_EMPLOYEE").click(function(event) {
         (TOTAL == 4) ? $(".ADD_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
         if (TOTAL >= 1 && TOTAL < 5) {
@@ -997,13 +995,13 @@ $(function() {
 });
 // END: ADD AND REMOVE BUTTON IN "ASSIGNED TO"
 
-var ITEMS_TABLE = $('#items_table').DataTable({
+/*var ITEMS_TABLE = $('#items_table').DataTable({
             "ordering": false,
         });
         $("#ITEM_CUSTOM_SEARCH").keyup(function() {
             ITEMS_TABLE.search($(this).val()).draw()
         });
-        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
+        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();*/
 
 CKEDITOR.replace( 'Message_Editor', {
     toolbarGroups: [
