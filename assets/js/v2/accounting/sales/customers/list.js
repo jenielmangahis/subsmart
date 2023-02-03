@@ -956,231 +956,152 @@ $(document).on('click', '#customer-types-modal .delete-customer-type', function(
     });
 });
 
-var counter = 0;
-var checkDropzone = new Dropzone('div#import_customer', {
-    url: baseURL + "accounting/customers/save-customers-excel-file",
-    autoProcessQueue: false,
-    uploadMultiple: false,
-    maxFilesize: 128,
-    addRemoveLinks: true,
-    acceptedFiles: ".xlsx, .xls, .csv",
-    init: function() {
-        var submitButton = document.querySelector("#submit-imported-customer-file");
-        myDropzone = this;
-        submitButton.addEventListener("click", function() {
-            if ($("#import-customers-modal .dz-error-message span").html() == "") {
-                $("#loader-modal").show();
-                myDropzone.processQueue();
-            }
-        });
-        this.on("complete", function() {
-            if (this.getQueuedFiles().length == 0 && this.getUploadingFiles().length == 0 && $("#import-customers-modal .dz-error-message span").html() == "") {
-                var file_elem = this;
-                $.ajax({
-                    url: baseURL + "accounting/customers/get-customers-file-headers",
-                    type: "POST",
-                    dataType: "json",
-                    data: { filename: file_elem.files[0]["upload"]["filename"] },
-                    success: function(data) {
-                        var html_temp = "";
-                        var html_temp2 = "";
-                        data.titles.length;
-                        var html_temp3 = "";
+const $overlay = document.getElementById('overlay');
+$("#import-customers-modal #file-upload").change(function(){
+    console.log("A file has been selected.");
+    const formData = new FormData();
+    const fileInput = document.getElementById('file-upload');
+    formData.append('file', fileInput.files[0]);
 
-                        $("#holder-step-2").append(`<div class="row">
-                            <div class="col-12">
-                                <input type="hidden" class="file_name" name="file_name" value="${data.filename}">
-                            </div>
-                        </div>`);
-
-                        var columnChoices = '';
-                        for(index = 0; index < data.table_column_names.length; index++)
-                        {
-                            columnChoices += `<option value="${data.table_column_names[index]}">${data.table_column_names[index]}</option>`;
-                        }
-
-                        for(i = 0; i < data.titles.length; i++)
-                        {
-                            $("#holder-step-2").append(`
-                            <div class="row grid-mb">
-                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="header[${i}]" value="${data.titles[i]}" id="header-${i}" checked>
-                                        <label for="header-${i}" class="form-check-label">${data.titles[i]}</label>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <select class="form-select nsm-field" required name="column[${i}]">
-                                    ${columnChoices}
-                                    </select>
-                                </div>
-                            </div>
-                            `);
-                        }
-
-                        // html_temp += html_temp3;
-                        // $("#holder-step-2").append(html_temp);
-                        // $("#holder-step-2").append('<h1 class="error"></h1>');
-                        $('#import-customers-modal .modal-footer').html(`<button type="button" class="nsm-button" id="previous-step">Back</button>
-                        <button type="button" class="nsm-button primary" id="next-step">Next</button>`);
-
-                        file_elem.removeFile(file_elem.files[0]);
-                        $("#loader-modal").hide();
-                        next_step("#holder-step-1");
-
-                    },
+    if ($overlay) $overlay.style.display = "flex";
+    fetch(base_url+'customer/getImportData', {
+        method: 'POST',
+        body: formData
+    }) .then(response => response.json() ).then(response => {
+        var { data, headers, success, message }  = response;
+        if ($overlay) $overlay.style.display = "none";
+        if(!success){
+            sweetAlert('Sorry!','error',message);
+        }else{
+            console.log(response);
+            $.each(headers,function(i,o){
+                $('#import-customers-modal .headersSelector').append(
+                    '<option value="'+i+'">'+o+'</option>'
+                );
+                $('#import-customers-modal #tableHeader').append(
+                    '<th><strong>'+o+'</strong></th>'
+                );
+            });
+            csvHeaders = headers;
+            customerData = data; // save customer array data
+            // process mapping preview
+            $.each(data,function(i,o){
+                var toAppend = '';
+                $.each(o,function(index,data){
+                    toAppend += '<td>'+data+'</td>';
                 });
-            }
-        });
-        this.on("addedfile", function() {
-            $("#import-customers-modal .dz-image img").attr("src", baseURL + "assets/img/accounting/customers/excel.png");
-            if (this.files[1] != null) {
-                this.removeFile(this.files[0]);
-            }
-        });
+                $('#import-customers-modal #imported_customer').append(
+                    '<tr>'+toAppend+'</tr>'
+                );
+            });
 
+            $('#import-customers-modal #nextBtn1').prop("disabled", false);
+        }
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+});
 
-    },
-    error(file, message) {
-        $("#import-customers-modal .dz-image img").attr("src", baseURL + "assets/img/accounting/customers/error.png");
-        if (file.previewElement) {
-            file.previewElement.classList.add("dz-error");
-            if (typeof message !== "string" && message.error) {
-                message = message.error;
-            }
-            for (let node of file.previewElement.querySelectorAll(
-                    "[data-dz-errormessage]"
-                )) {
-                node.textContent = message;
+$(document).on('click', "#import-customers-modal .step", function () {
+    $(this).addClass("active").prevAll().addClass("active");
+    $(this).nextAll().removeClass("active");
+});
+
+$(document).on('click', "#import-customers-modal .step01", function () {
+    $("#import-customers-modal #line-progress").css("width", "8%");
+    $("#import-customers-modal .step1").addClass("active").siblings().removeClass("active");
+});
+
+$(document).on('click', "#import-customers-modal .step02", function () {
+    $("#import-customers-modal #line-progress").css("width", "50%");
+    $("#import-customers-modal .step2").addClass("active").siblings().removeClass("active");
+
+    $('#import-customers-modal .modal-footer').html(`<button type="button" class="nsm-button step01">Back</button>
+    <button type="button" class="nsm-button primary step03">Next</button>`);
+});
+
+$(document).on('click', "#import-customers-modal .step03", function () {
+    $("#import-customers-modal #line-progress").css("width", "100%");
+    $("#import-customers-modal .step3").addClass("active").siblings().removeClass("active");
+
+    $('#import-customers-modal .modal-footer').html(`<button type="button" class="nsm-button step02">Back</button>
+    <button type="button" class="nsm-button primary" id="importCustomer">Import</button>`);
+});
+
+$(document).on('click', "#import-customers-modal #importCustomer", function(e) {
+    // prepare form data to be posted
+    
+    var selectedHeader = [];
+    $('#import-customers-modal select[name="headers[]"]').each(function() {
+        selectedHeader.push(this.value);
+    });
+
+    const formData = new FormData();
+    formData.append('customers', JSON.stringify(customerData));
+    formData.append('mapHeaders', JSON.stringify(selectedHeader));
+    formData.append('csvHeaders', JSON.stringify(csvHeaders));
+    
+    if ($overlay) $overlay.style.display = "flex";
+    // perform post request
+    fetch(base_url+'customer/importCustomerData', {
+        method: 'POST',
+        body: formData,
+    }) .then(response => response.json() ).then(response => {
+        if ($overlay) $overlay.style.display = "none";
+        var { customer, csv, mapping, fields, dataValue, office, billing, profile, message, success }  = response;
+        if(success){
+            sweetAlert('Awesome!','success',message ,1);
+        }else{
+            sweetAlert('Sorry!','error',message);
+        }
+
+        console.log(response);
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+});
+
+function sweetAlert(title,icon,information,is_reload){
+    Swal.fire({
+        title: title,
+        text: information,
+        icon: icon,
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+        if(is_reload === 1){
+            if (result.value) {
+                window.location.reload();
             }
         }
-    },
-});
-
-var currentGfgStep, nextGfgStep, previousGfgStep;
-var opacity;
-var current = 1;
-var steps = $("fieldset").length - 1;
-setProgressBar(current);
-
-function next_step(elem) {
-    currentGfgStep = $(elem);
-    nextGfgStep = $(elem).next();
-
-    $("#progressbar li").eq($("fieldset").index(nextGfgStep) - 1).addClass("active");
-
-    nextGfgStep.show();
-
-    currentGfgStep.animate({ opacity: 0 }, {
-        step: function(now) {
-            opacity = 1 - now;
-
-
-            currentGfgStep.css({
-                'display': 'none',
-                'position': 'relative'
-            });
-            nextGfgStep.css({ 'opacity': opacity });
-        },
-        duration: 100
-
-
     });
-    setProgressBar(++current);
 }
 
-function previous_step(elem) {
-    currentGfgStep = $(elem);
-    previousGfgStep = $(elem).prev();
-
-    $("#progressbar li").eq($("fieldset").index(currentGfgStep) - 1).removeClass("active");
-
-    previousGfgStep.show();
-
-    currentGfgStep.animate({ opacity: 0 }, {
-        step: function(now) {
-            opacity = 1 - now;
-
-            currentGfgStep.css({
-                'display': 'none',
-                'position': 'relative'
-            });
-            previousGfgStep.css({ 'opacity': opacity });
-        },
-        duration: 500
+function test(){
+    var selectedHeader = [];
+    var head = [];
+    $('#import-customers-modal select[name="headers[]"]').each(function() {
+        selectedHeader.push(this.value);
     });
-    setProgressBar(--current);
-}
+    var ar = selectedHeader.length;
+    for(var x=0; x<ar; x++){
+        head.push(x);
+    }
 
-function setProgressBar(currentStep) {
-    var percent = parseFloat(100 / steps) * current;
-    percent = percent.toFixed();
-    $(".progress-bar").css("width", percent + "%")
-}
+    var arHead = head.length;
 
-var hmtl_in = "";
-// $(document).on('click', '#import-customers-modal div.modal-footer #next-step', function(e) {
-//     e.preventDefault();
-
-//     var data = new FormData();
-//     data.set('filename', $('#import-customers-modal #holder-step-2 input[name="file_name"]').val());
-
-//     $('#import-customers-modal #holder-step-2 input[type="checkbox"]:checked').each(function() {
-//         var id = $(this).attr('id');
-//         var selectVal = $(this).parent().parent().next().find('select').val()
-//         data.set(`header[${id.replace('header-', '')}]`, $(this).val());
-//         data.set(`column[${id.replace('header-', '')}]`, selectVal);
-//     });
-
-//     $.ajax({
-//         url: baseURL + "accounting/customers/import-customers",
-//         type: "POST",
-//         dataType: "json",
-//         data: data,
-//         success: function(res) {
-
-//         }
-//     });
-//     next_step('#holder-step-2');
-// });
-$(document).on('click', '#import-customers-modal div.modal-footer #next-step', function(e) {
-    e.preventDefault();
-    $holder = this;
-    var tables = [];
-    var selCol = [];
-    var filename = ($("input[name=file_name]").val());
-
-    $('#import-customers-modal #holder-step-2 input[type="checkbox"]:checked').each(function() {
-        var id = $(this).attr('id');
-        var selectVal = $(this).parent().parent().next().find('select').val()
-        selCol.push($(this).val());
-        tables.push(selectVal);
-    });
-
-    // for (index1 = 0; index1 < counter; index1++) { //loop
-    //     if ($("input[name=header[" + index1 + "]]").is(":checked") && $("select[name=column[" + index1 + "]]").val() != "") {
-    //         //modified progress
-    //         selCol.push($("input[name=header[" + index1 + "]]").val());
-    //         tables.push($("select[name=column[" + index1 + "]]").val());
-    //     }
-    // }
-    $.ajax({
-        url: baseURL + "accounting/customers/import-customers",
-        type: "POST",
-        dataType: "json",
-        data: { tables: tables, filename: filename, selCol: selCol },
-        success: function(data) {
-
+    for(var x=0; x<ar; x++){
+        if(selectedHeader[x] != ""){
+            document.getElementById('headersSelector'+x).value = selectedHeader[x];
+            var text = "headersSelector"+x+"";
+            for(var i=0; i<arHead; i++){
+                var text1 = "headersSelector"+i+"";
+                if(text != text1){
+                    $("#headersSelector"+i+" option[value='"+selectedHeader[x]+"'").remove();
+                }
+            }
         }
-    });
-    $('#import-customers-modal div.modal-footer').html('');
-
-    next_step('#holder-step-2');
-    //Progress
-
-
-});
-
-$(document).on('click', '#import-customers-modal div.modal-footer #previous-step', function(e) {
-    previous_step('#holder-step-2');
-});
+    }
+}
