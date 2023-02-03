@@ -244,6 +244,10 @@ class Estimate extends MY_Controller
     
                 $notification = $this->estimate_model->save_notification($notif);
 
+            if ($this->input->post('status') === 'Submitted') {
+                $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
+            }
+
             redirect('estimate');
         } else {
             echo json_encode(0);
@@ -615,6 +619,11 @@ class Estimate extends MY_Controller
     
                 $notification = $this->estimate_model->save_notification($notif);
                 
+
+            if ($this->input->post('status') === 'Submitted') {
+                $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
+            }
+
         redirect('estimate');
         } else {
             echo json_encode(0);
@@ -808,6 +817,10 @@ class Estimate extends MY_Controller
     
                 $notification = $this->estimate_model->save_notification($notif);
 
+
+            if ($this->input->post('status') === 'Submitted') {
+                $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
+            }
 
         redirect('estimate');
         }
@@ -1452,11 +1465,26 @@ class Estimate extends MY_Controller
 
     public function sendEstimateToAcs()
     {
-        $this->load->helper(array('url', 'hashids_helper'));
 
         $id = $this->input->post('id');
         $wo_id = $this->input->post('est_id');
         $urlLogo = $this->input->post('urlLogo');
+
+        $json_data = $this->sendEstimateToCustomer(
+            $id, $wo_id, $urlLogo
+        );
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+
+        echo json_encode($json_data);
+        // return true;
+        // echo "test";
+    }
+
+    private function sendEstimateToCustomer($id, $wo_id, $urlLogo = null)
+    {
+        $this->load->helper(array('url', 'hashids_helper'));
 
         $workData = $this->estimate_model->getEstimate($wo_id);
         $eid      = hashids_encrypt($workData->id, '', 15);
@@ -1580,12 +1608,7 @@ class Estimate extends MY_Controller
             $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
         }
 
-        $this->session->set_flashdata('alert-type', 'success');
-        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
-
-        echo json_encode($json_data);
-        // return true;
-        // echo "test";
+        return $json_data;
     }
 
     public function print($tab = '')
@@ -2051,5 +2074,33 @@ class Estimate extends MY_Controller
         $updateQuery = $this->estimate_model->approveEstimate($id);
 
         echo json_encode($updateQuery);
+    }
+
+    public function addNewCustomer()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = logged('id');
+
+        $new_data = array(
+            'company_id' => $company_id,
+            'fk_user_id' => $user_id,
+            'customer_type' => $this->input->post('customer_type'),
+            'first_name' => $this->input->post('first_name'),
+            'middle_name' => $this->input->post('middle_name'),
+            'last_name' => $this->input->post('last_name'),
+            'email' => $this->input->post('contact_email'),
+            'mail_add' => $this->input->post('street_address'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'zip_code' => $this->input->post('postcode'),
+            'cross_street' => $this->input->post('street_address'),
+            'phone_h' => $this->input->post('contact_phone'),
+            'phone_m' => $this->input->post('contact_mobile')
+        );
+
+        $addQuery = $this->estimate_model->addNewCustomer($new_data);
+
+        $success = 'success';
+        return json_encode($addQuery);
     }
 }
