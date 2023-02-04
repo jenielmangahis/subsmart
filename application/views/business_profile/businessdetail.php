@@ -255,9 +255,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                <div class="form-group">
                   <label>Service Location</label>
                   <div class="help help-sm help-block">Enter the areas or neighborhoods where you provide your services.</div>
-                  <div class="bootstrap-tagsinput"><input type="text" placeholder="Area or neighborhood"></div>
-                  <input type="text" name="service_location" value="<?php echo $profiledata->service_location ?>"  class="form-control" id="service_locations" autocomplete="off" placeholder="Area or neighborhood" style="display: none;">
-                  <span class="validation-error-field" data-formerrors-for-name="service_locations" data-formerrors-message="true" style="display: none;"></span>
+<!--                   <div class="bootstrap-tagsinput"><input type="text" placeholder="Area or neighborhood"></div> -->
+                  <input type="text" name="service_location" class="form-control" value="<?php echo $profiledata->service_location ?>"  class="form-control" id="service_locations" autocomplete="off" placeholder="Area or neighborhood">
+                  <!-- <span class="validation-error-field" data-formerrors-for-name="service_locations" data-formerrors-message="true" style="display: none;"></span> -->
                </div>
                <div class="row">
                   <div class="col-md-12">

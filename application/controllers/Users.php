@@ -131,8 +131,8 @@ class Users extends MY_Controller
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $cid;
 		$this->page_data['profiledata'] = $profiledata;
-		// $this->load->view('business_profile/businessdetail', $this->page_data);
-		$this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
+		$this->load->view('business_profile/businessdetail', $this->page_data);
+		//$this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
 	}
 
 	public function services()
