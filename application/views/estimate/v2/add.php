@@ -5,7 +5,7 @@ echo put_header_assets();
 ?>
 
 <!-- Script for autosaving form -->
-<!-- <script src="<?= base_url("assets/js/estimate/autosave-standard.js") ?>"></script> -->
+<!-- <script src="<?php // base_url("assets/js/estimate/autosave-standard.js") ?>"></script> -->
 
 <div class="wrapper" role="wrapper">
 
@@ -1612,4 +1612,4 @@ $(document).on('click', '.saveCustomer', function() {
 });
 </script>
 
-<script src="<?= base_url("assets/js/custom.js") ?>"></script>
+<!-- <script src="<?php //base_url("assets/js/custom.js") ?>"></script> -->

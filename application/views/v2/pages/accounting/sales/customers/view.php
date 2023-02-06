@@ -156,18 +156,18 @@
                                                                 <div class="col">
                                                                     <label for="filter-type">Type</label>
                                                                     <select class="nsm-field form-select" name="filter_type" id="filter-type" data-applied="<?=empty($type) ? 'all' : $type?>">
-                                                                        <option value="all">All transactions</option>
-                                                                        <option value="all-plus-deposits">All plus deposits</option>
-                                                                        <option value="all-invoices">All invoices</option>
-                                                                        <option value="open-invoices">Open invoices</option>
-                                                                        <option value="overdue-invoices">Overdue invoices</option>
-                                                                        <option value="open-estimates">Open estimates</option>
-                                                                        <option value="credit-memos">Credit memos</option>
-                                                                        <option value="unbilled-income">Unbilled income</option>
-                                                                        <option value="recently-paid">Recently paid</option>
-                                                                        <option value="money-received">Money received</option>
-                                                                        <option value="recurring-templates">Recurring templates</option>
-                                                                        <option value="statements">Statements</option>
+                                                                        <option value="all" <?=empty($type) || $type === 'all' ? 'selected' : ''?>>All transactions</option>
+                                                                        <option value="all-plus-deposits" <?=$type === 'all-plus-deposits' ? 'selected' : ''?>>All plus deposits</option>
+                                                                        <option value="all-invoices" <?=$type === 'all-invoices' ? 'selected' : ''?>>All invoices</option>
+                                                                        <option value="open-invoices" <?=$type === 'open-invoices' ? 'selected' : ''?>>Open invoices</option>
+                                                                        <option value="overdue-invoices" <?=$type === 'overdue-invoices' ? 'selected' : ''?>>Overdue invoices</option>
+                                                                        <option value="open-estimates" <?=$type === 'open-estimates' ? 'selected' : ''?>>Open estimates</option>
+                                                                        <option value="credit-memos" <?=$type === 'credit-memos' ? 'selected' : ''?>>Credit memos</option>
+                                                                        <option value="unbilled-income" <?=$type === 'unbilled-income' ? 'selected' : ''?>>Unbilled income</option>
+                                                                        <option value="recently-paid" <?=$type === 'recently-paid' ? 'selected' : ''?>>Recently paid</option>
+                                                                        <option value="money-received" <?=$type === 'money-received' ? 'selected' : ''?>>Money received</option>
+                                                                        <option value="recurring-templates" <?=$type === 'recurring-templates' ? 'selected' : ''?>>Recurring templates</option>
+                                                                        <option value="statements" <?=$type === 'statements' ? 'selected' : ''?>>Statements</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -175,18 +175,18 @@
                                                                 <div class="col">
                                                                     <label for="filter-date">Date</label>
                                                                     <select class="nsm-field form-select" name="filter_date" id="filter-date" data-applied="<?=empty($date) ? 'all' : $date?>">
-                                                                        <option value="all">All dates</option>
-                                                                        <option value="today">Today</option>
-                                                                        <option value="yesterday">Yesterday</option>
-                                                                        <option value="this-week">This week</option>
-                                                                        <option value="this-month">This month</option>
-                                                                        <option value="this-quarter">This quarter</option>
-                                                                        <option value="this-year">This year</option>
-                                                                        <option value="last-week">Last week</option>
-                                                                        <option value="last-month">Last month</option>
-                                                                        <option value="last-quarter">Last quarter</option>
-                                                                        <option value="last-year">Last year</option>
-                                                                        <option value="last-365-days">Last 365 days</option>
+                                                                        <option value="all" <?=empty($date) || $date === 'all' ? 'selected' : ''?>>All dates</option>
+                                                                        <option value="today" <?=$date === 'today' ? 'selected' : ''?>>Today</option>
+                                                                        <option value="yesterday" <?=$date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                                                        <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
+                                                                        <option value="this-month" <?=$date === 'this-month' ? 'selected' : ''?>>This month</option>
+                                                                        <option value="this-quarter" <?=$date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
+                                                                        <option value="this-year" <?=$date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                                                        <option value="last-week" <?=$date === 'last-week' ? 'selected' : ''?>>Last week</option>
+                                                                        <option value="last-month" <?=$date === 'last-month' ? 'selected' : ''?>>Last month</option>
+                                                                        <option value="last-quarter" <?=$date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
+                                                                        <option value="last-year" <?=$date === 'last-year' ? 'selected' : ''?>>Last year</option>
+                                                                        <option value="last-365-days" <?=$date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
                                                                     </select>
                                                                 </div>
                                                             </div>

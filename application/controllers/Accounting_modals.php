@@ -8592,7 +8592,7 @@ class Accounting_modals extends MY_Controller
                 'estimate_date' => date("Y-m-d", strtotime($data['estimate_date'])),
                 'expiry_date' => date("Y-m-d", strtotime($data['expiry_date'])),
                 'purchase_order_number' => $data['purchase_order_no'],
-                'status' => $data['status'],
+                'status' => $data['estimate_status'],
                 'estimate_type' => 'Standard',
                 'type' => $data['estimate_type'],
                 'attachments' => 'testing',

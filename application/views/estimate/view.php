@@ -828,7 +828,7 @@ span.sc-item {
                                 <tr>
                                   <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
                                   <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
-                                  <td colspan="1" style="text-align: right;"><p>$<?= number_format((int)$estimate->sub_total,2); ?></p></td>
+                                  <td colspan="1" style="text-align: right;"><p>$<?= number_format((float)$estimate->sub_total,2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>

@@ -44,7 +44,7 @@ $("#attachment-file").change(function() {
                 success: function(data) {
                     if (data.search("png") != -1 || data.search("jpeg") != -1 || data.search("jpg") != -1 || data.search("bmp") != -1 || data.search("ico") != -1 || data.search("jfif") != -1 || data.search("pjpeg") != -1 || data.search("pjp") != -1) {
                         $('#attachment').val('/' + data);
-                        $("#attachment-image").attr("src", '/' + data);
+                        $("#attachment-image").attr("src", base_url + data);
                     } else {
                         $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
                         $(".THUMBNAIL_BOX").removeClass("d-none");
@@ -174,7 +174,9 @@ $("#attachment-file").change(function() {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             $(".customer_message_input").val(window.CKEDITOR.instances.Message_Editor.getData());
             if($('#job_color_id').val()=== ""){
-                error('Sorry!','Event Color is required!','warning');
+                error('Error','Event Color is required','error');
+            }else if( $('#EMPLOYEE_SELECT_2').val() === "" ){
+                error('Error','Assigned To is required','error');
             }else{
 
                 var form = $(this);

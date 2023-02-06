@@ -63,7 +63,7 @@ class Invoice_model extends MY_Model
             'job_location'              => $job_location, //
             'job_name'                  => $job_name,//
             'invoice_type'              => $invoice_type,//
-            'po_number'                 => $po_number,//
+            'purchase_order'            => $purchase_order,//
             'date_issued'               => $date_issued,//
             'due_date'                  => $due_date,//
             'status'                    => $status,//

@@ -17,7 +17,7 @@ async function initJobType(selector = "#job_type_option") {
     templateResult: template,
     templateSelection: template,
     ajax: {
-      url: "/job/apiGetJobTypes",
+      url: base_url + "job/apiGetJobTypes",
       dataType: "json",
       data: (params) => {
         return { search: params.term };
@@ -42,13 +42,12 @@ async function initJobTag(selector = "#job_tags") {
   }
 
   const template = templateResult("marker_icon");
-
   $($select).select2({
     placeholder: "Select Job Tag",
     templateResult: template,
     templateSelection: template,
     ajax: {
-      url: "/job/apiGetJobTags",
+      url: base_url + "job/apiGetJobTags",
       dataType: "json",
       data: (params) => {
         return { search: params.term };
@@ -78,7 +77,7 @@ function initTaxRates(selector = "#tax_rate") {
   $($select).select2({
     placeholder: "Select Tax Rate",
     ajax: {
-      url: "/job/apiGetJobTaxRates",
+      url: base_url + "job/apiGetJobTaxRates",
       dataType: "json",
       data: (params) => {
         return { search: params.term };

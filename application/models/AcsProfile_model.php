@@ -13,6 +13,8 @@ class AcsProfile_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+        $this->db->where('first_name !=', '');
+        $this->db->where('last_name !=', '');
 
         if( !empty($conditions) ){
             foreach( $conditions as $c ){

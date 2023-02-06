@@ -116,9 +116,6 @@ class Customers extends MY_Controller {
 
     public function index()
     {
-        // add_css(array(
-        //     "assets/css/accounting/accounting_includes/new_customer.css",
-        // ));
         add_footer_js(array(
             "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
@@ -498,7 +495,7 @@ class Customers extends MY_Controller {
                 case 'this-month':
                     $filters['start-date'] = date("Y-m-01");
                     $filters['end-date'] = date("Y-m-t");
-                    // no break
+                break;
                 case 'this-quarter':
                     $quarters = [
                         1 => [
@@ -520,7 +517,7 @@ class Customers extends MY_Controller {
                     ];
                     $month = date('n');
                     $quarter = ceil($month / 3);
-                    
+
                     $filters['start-date'] = $quarters[$quarter]['start'];
                     $filters['end-date'] = $quarters[$quarter]['end'];
                 break;
@@ -1210,7 +1207,29 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_delayed_credits($transactions, $filters);
                 $transactions = $this->get_delayed_charges($transactions, $filters);
                 $transactions = $this->get_estimates($transactions, $filters);
+                $transactions = $this->get_payments($transactions, $filters);
             break;
+            case 'all-invoices' :
+                $transactions = $this->get_invoices($transactions, $filters);
+            break;
+            case 'open-invoices' :
+                $transactions = $this->get_invoices($transactions, $filters);
+            break;
+            case 'overdue-invoices' :
+                $transactions = $this->get_invoices($transactions, $filters);
+            break;
+            case 'open-estimates' :
+                $transactions = $this->get_estimates($transactions, $filters);
+            break;
+            case 'credit-memos' :
+                $transactions = $this->get_credit_memos($transactions, $filters);
+            break;
+        }
+
+        if(isset($filters['start-date'])) {
+            $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                return strtotime($v['date']) >= strtotime($filters['start-date']) && strtotime($v['date']) <= strtotime($filters['end-date']);
+            }, ARRAY_FILTER_USE_BOTH);
         }
 
         usort($transactions, function($a, $b) {
@@ -1260,28 +1279,48 @@ class Customers extends MY_Controller {
                 </ul>
             </div>';
 
-            $transactions[] = [
-                'id' => $invoice->id,
-                'date' => date("m/d/Y", strtotime($invoice->date_issued)),
-                'type' => 'Invoice',
-                'no' => $invoice->invoice_number,
-                'customer' => $customerName,
-                'method' => '',
-                'source' => '',
-                'memo' => $invoice->message_on_invoice,
-                'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
-                'aging' => '',
-                'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
-                'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => $invoice->customer_email,
-                'attachments' => '',
-                'status' => '',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($invoice->date_created)),
-                'manage' => $manageCol
-            ];
+            $flag = true;
+            switch($filters['type']) {
+                case 'open-invoices' :
+                    if(in_array($invoice->INV_status, ['Draft', 'Declined', 'Paid'])) {
+                        $flag = false;
+                    }
+                break;
+                case 'overdue-invoices' :
+                    if(in_array($invoice->INV_status, ['Draft', 'Declined', 'Paid'])) {
+                        $flag = false;
+                    } else {
+                        if(strtotime($invoice->due_date) > strtotime()) {
+                            $flag = false;
+                        }
+                    }
+                break;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $invoice->id,
+                    'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                    'type' => 'Invoice',
+                    'no' => $invoice->invoice_number,
+                    'customer' => $customerName,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $invoice->message_on_invoice,
+                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                    'aging' => '',
+                    'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
+                    'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $invoice->customer_email,
+                    'attachments' => '',
+                    'status' => $invoice->INV_status,
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y", strtotime($invoice->date_created)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1338,7 +1377,7 @@ class Customers extends MY_Controller {
                 'last_delivered' => '',
                 'email' => $creditMemo->email,
                 'attachments' => '',
-                'status' => '',
+                'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
                 'po_number' => '',
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y", strtotime($creditMemo->created_at)),
@@ -1399,7 +1438,7 @@ class Customers extends MY_Controller {
                 'last_delivered' => '',
                 'email' => $salesReceipt->email,
                 'attachments' => '',
-                'status' => '',
+                'status' => 'Paid',
                 'po_number' => '',
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y", strtotime($salesReceipt->created_at)),
@@ -1454,7 +1493,7 @@ class Customers extends MY_Controller {
                 'last_delivered' => '',
                 'email' => $refundReceipt->email,
                 'attachments' => '',
-                'status' => '',
+                'status' => 'Paid',
                 'po_number' => '',
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y", strtotime($refundReceipt->created_at)),
@@ -1503,7 +1542,7 @@ class Customers extends MY_Controller {
                 'last_delivered' => '',
                 'email' => '',
                 'attachments' => '',
-                'status' => '',
+                'status' => floatval($delayedCredit->remaining_balance) > 0 ? 'Open' : 'Closed',
                 'po_number' => '',
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y", strtotime($delayedCredit->created_at)),
@@ -1552,7 +1591,7 @@ class Customers extends MY_Controller {
                 'last_delivered' => '',
                 'email' => '',
                 'attachments' => '',
-                'status' => '',
+                'status' => floatval($delayedCharge->remaining_balance) > 0 ? 'Open' : 'Closed',
                 'po_number' => '',
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y", strtotime($delayedCharge->created_at)),
@@ -1608,26 +1647,81 @@ class Customers extends MY_Controller {
                 $grandTotal = $estimate->grand_total;
             }
 
+            $flag = true;
+            if($filters['type'] === 'open-estimates') {
+                if(in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer'])) {
+                    $flag = false;
+                }
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $estimate->id,
+                    'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                    'type' => 'Estimate',
+                    'no' => $estimate->estimate_number,
+                    'customer' => $customerName,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $estimate->customer_message,
+                    'due_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => '',
+                    'attachments' => '',
+                    'status' => $estimate->status,
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y", strtotime($estimate->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
+        }
+
+        return $transactions;
+    }
+
+    private function get_payments($transactions, $filters = [])
+    {
+        $payments = $this->accounting_receive_payment_model->get_payments_by_customer_id($filters['customer_id']);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($payments as $payment)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item view-edit-payment" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
             $transactions[] = [
-                'id' => $estimate->id,
-                'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
-                'type' => 'Estimate',
-                'no' => $estimate->estimate_number,
+                'id' => $payment->id,
+                'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                'type' => 'Payment',
+                'no' => $payment->ref_no,
                 'customer' => $customerName,
                 'method' => '',
                 'source' => '',
-                'memo' => $estimate->customer_message,
-                'due_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                'memo' => $payment->memo,
+                'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
                 'aging' => '',
                 'balance' => '0.00',
-                'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
+                'total' => '-'.number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
                 'last_delivered' => '',
-                'email' => '',
+                'email' => $customer->email,
                 'attachments' => '',
-                'status' => '',
+                'status' => 'Closed',
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($estimate->created_at)),
+                'date_created' => date("m/d/Y", strtotime($payment->created_at)),
                 'manage' => $manageCol
             ];
         }

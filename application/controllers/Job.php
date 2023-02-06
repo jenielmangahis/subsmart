@@ -210,6 +210,7 @@ class Job extends MY_Controller
             $default_customer_id = $this->input->get('cus_id');
 
         }
+        
         $this->page_data['title'] = 'Job New';
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
@@ -588,6 +589,7 @@ class Job extends MY_Controller
 
     public function estimate_job($id=null)
     {
+        $this->load->model('AcsProfile_model');        
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -654,8 +656,7 @@ class Job extends MY_Controller
             'table' => 'job_tags',
             'select' => 'id,name',
         );
-        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
-
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);        
         $get_job_types = array(
             'where' => array(
                 'company_id' => logged('company_id')
@@ -705,7 +706,7 @@ class Job extends MY_Controller
         $get_items = array(
             'where' => array(
                 'items.company_id' => logged('company_id'),
-                'is_active' => 1,
+                //'is_active' => 1,
             ),
             'table' => 'items',
             'select' => 'items.id,title,price,type',
@@ -731,9 +732,34 @@ class Job extends MY_Controller
                 'select' => '*'
             );
 
-            $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query, false);
+            $jobs_data = $this->general->get_data_with_param($get_estimate_query, false);
+
+            $default_customer_id = 0;
+            $default_customer_name = '';
+
+            $customer = $this->AcsProfile_model->getByProfId($jobs_data->customer_id);
+            if( $customer ){
+                $default_customer_id   = $customer->prof_id;
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
+            }
+
+            $jobItems  = $this->jobs_model->get_specific_estimate_items($id);
+            $estimate_items = array();
+            foreach($jobItems as $ji){
+                if( isset($estimate_items[$ji->id]) ){
+                    $estimate_items[$ji->id]->qty = $estimate_items[$ji->id]->qty + $ji->qty;
+                }else{
+                    $estimate_items[$ji->id] = $ji;
+                } 
+            }
+
+            $this->page_data['estimate_items'] = $estimate_items;
+            $this->page_data['default_customer_id'] = $default_customer_id;
+            $this->page_data['default_customer_name'] = $default_customer_name;
+            $this->page_data['jobs_data'] = $jobs_data;
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_estimate_items($id);
         }
+        
 
         $this->page_data['table'] = 'estimates';
         add_css([
@@ -754,10 +780,8 @@ class Job extends MY_Controller
             'assets/js/esign/libs/pdf.worker.js',
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
-
 		$this->page_data['page']->title = 'Estimates';
         $this->page_data['idd'] = $id;
-        print_r($this->jobs_data_items);
         $this->load->view('v2/pages/job/job_estimates', $this->page_data);
     }
 
