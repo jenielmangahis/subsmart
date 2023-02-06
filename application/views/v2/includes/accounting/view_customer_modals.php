@@ -2354,3 +2354,40 @@
         </div>
     </form>
 </div>
+
+<div class="modal fade nsm-modal" id="update-status-modal" tabindex="-1" aria-labelledby="update_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="update_status_modal_label">Update estimate status</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form id="update-estimate-status-form">
+                <div class="modal-body">
+                    <div class="row grid-mb">
+                        <div class="col-12">
+                            <label for="status">Status</label>
+                            <select name="status" id="status" class="form-select nsm-field" required>
+                                <option value="Draft">Draft</option>
+                                <option value="Submitted">Submitted</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Declined By Customer">Declined By Customer</option>
+                                <option value="Lost">Lost</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row w-100">
+                        <div class="col-sm-6">
+                            <button type="button" class="nsm-button m-0" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="submit" class="nsm-button success float-end m-0">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

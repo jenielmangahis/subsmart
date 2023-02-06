@@ -1317,7 +1317,7 @@ class Customers extends MY_Controller {
                     'status' => $invoice->INV_status,
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y", strtotime($invoice->date_created)),
+                    'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created)),
                     'manage' => $manageCol
                 ];
             }
@@ -1380,7 +1380,7 @@ class Customers extends MY_Controller {
                 'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($creditMemo->created_at)),
+                'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
                 'manage' => $manageCol
             ];
         }
@@ -1441,7 +1441,7 @@ class Customers extends MY_Controller {
                 'status' => 'Paid',
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($salesReceipt->created_at)),
+                'date_created' => date("m/d/Y H:i:s", strtotime($salesReceipt->created_at)),
                 'manage' => $manageCol
             ];
         }
@@ -1496,7 +1496,7 @@ class Customers extends MY_Controller {
                 'status' => 'Paid',
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($refundReceipt->created_at)),
+                'date_created' => date("m/d/Y H:i:s", strtotime($refundReceipt->created_at)),
                 'manage' => $manageCol
             ];
         }
@@ -1545,7 +1545,7 @@ class Customers extends MY_Controller {
                 'status' => floatval($delayedCredit->remaining_balance) > 0 ? 'Open' : 'Closed',
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($delayedCredit->created_at)),
+                'date_created' => date("m/d/Y H:i:s", strtotime($delayedCredit->created_at)),
                 'manage' => $manageCol
             ];
         }
@@ -1594,7 +1594,7 @@ class Customers extends MY_Controller {
                 'status' => floatval($delayedCharge->remaining_balance) > 0 ? 'Open' : 'Closed',
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($delayedCharge->created_at)),
+                'date_created' => date("m/d/Y H:i:s", strtotime($delayedCharge->created_at)),
                 'manage' => $manageCol
             ];
         }
@@ -1625,7 +1625,7 @@ class Customers extends MY_Controller {
                         <a class="dropdown-item send-estimate" href="#">Send</a>
                     </li>
                     <li>
-                        <a class="dropdown-item update-status" href="#">Update status</a>
+                        <a class="dropdown-item update-estimate-status" href="#">Update status</a>
                     </li>
                     <li>
                         <a class="dropdown-item copy-estimate" href="#">Copy</a>
@@ -1674,7 +1674,7 @@ class Customers extends MY_Controller {
                     'status' => $estimate->status,
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y", strtotime($estimate->created_at)),
+                    'date_created' => date("m/d/Y H:i:s", strtotime($estimate->created_at)),
                     'manage' => $manageCol
                 ];
             }
@@ -1721,7 +1721,7 @@ class Customers extends MY_Controller {
                 'status' => 'Closed',
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y", strtotime($payment->created_at)),
+                'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at)),
                 'manage' => $manageCol
             ];
         }
@@ -1882,5 +1882,19 @@ class Customers extends MY_Controller {
             'data' => $typeId,
             'success' => $deleted > 0 ? true : false
         ]);
+    }
+
+    public function update_estimate_status($estimateId)
+    {
+        $post = $this->input->post();
+
+        $estimateData = [
+            'status' => $post['status'],
+            'accepted_date' => date("Y-m-d", strtotime($post['accepted_date']))
+        ];
+
+        $update = $this->estimate_model->update($estimateId, $estimateData);
+
+        redirect($_SERVER['HTTP_REFERER']);
     }
 }

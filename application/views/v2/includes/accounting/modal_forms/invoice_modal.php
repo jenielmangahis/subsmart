@@ -140,8 +140,8 @@
                                                 <tbody>
                                                     <?php foreach($payments as $payment) : ?>
                                                         <tr>
-                                                            <td><a href="/accounting/view-transaction/unapplied-payment/<?=$payment->receive_payment->id?>" class="text-decoration-none"><?=date("m/d/Y", strtotime($payment->receive_payment->payment_date))?></a></td>
-                                                            <td class="text-end"><?=str_replace('$-', '-$', '$'.number_format(floatval($payment->payment_amount), 2, '.', ','))?></td>
+                                                            <td><?=date("m/d/Y", strtotime($payment->payment_date))?></td>
+                                                            <td class="text-end"><?=str_replace('$-', '-$', '$'.number_format(floatval($payment->invoice_amount), 2, '.', ','))?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
