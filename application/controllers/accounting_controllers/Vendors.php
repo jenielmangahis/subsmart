@@ -426,7 +426,7 @@ class Vendors extends MY_Controller
                 case 'this-month':
                     $filters['start-date'] = date("Y-m-01");
                     $filters['end-date'] = date("Y-m-t");
-                    // no break
+                break;
                 case 'this-quarter':
                     $quarters = [
                         1 => [

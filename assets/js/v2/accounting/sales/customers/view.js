@@ -721,3 +721,146 @@ function sucess(information,id){
         }
     });
 }
+
+$('.dropdown-menu.table-settings, .dropdown-menu.p-3').on('click', function(e) {
+    e.stopPropagation();
+});
+
+$('#filter-type, #filter-date').select2({
+    minimumResultsForSearch: -1
+});
+
+$('#apply-button').on('click', function() {
+    var filterType = $('#filter-type').val();
+    var filterDate = $('#filter-date').val();
+
+    var url = `${base_url}accounting/customers/view/${customerId}?`;
+
+    url += filterType !== 'all' ? `type=${filterType}&` : '';
+    url += filterDate !== 'all' ? `date=${filterDate}` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+    location.href = url;
+});
+
+$('#reset-button').on('click', function() {
+    var url = `${base_url}accounting/customers/view/${customerId}`;
+    location.href = url;
+});
+
+$('#filter-type').on('change', function() {
+    var dateFilter = `<div class="row">
+        <div class="col">
+            <label for="filter-date">Date</label>
+            <select class="nsm-field form-select" name="filter_date" id="filter-date" data-applied="all">
+                <option value="all">All dates</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="this-week">This week</option>
+                <option value="this-month">This month</option>
+                <option value="this-quarter">This quarter</option>
+                <option value="this-year">This year</option>
+                <option value="last-week">Last week</option>
+                <option value="last-month">Last month</option>
+                <option value="last-quarter">Last quarter</option>
+                <option value="last-year">Last year</option>
+                <option value="last-365-days">Last 365 days</option>
+            </select>
+        </div>
+    </div>`;
+
+    switch($(this).val()) {
+        case 'all' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'all-plus-deposits' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'all-invoices' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'open-invoices' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'overdue-invoices' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'open-estimates' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'credit-memos' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'unbilled-income' :
+            
+        break;
+        case 'recently-paid' :
+            $('#filter-date').closest('.row').remove();
+        break;
+        case 'money-received' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+        case 'recurring-templates' :
+            $('#filter-date').closest('.row').remove();
+        break;
+        case 'statements' :
+            if($('#filter-date').length < 1) {
+                $(dateFilter).insertAfter($(this).closest('.row'));
+
+                $('#filter-date').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        break;
+    }
+});

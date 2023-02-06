@@ -944,7 +944,7 @@ echo put_header_assets();
                     <div class="modal-body pt-0 pl-3 pb-3"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary saveCustomer">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -2623,5 +2623,52 @@ echo put_header_assets();
             return $firstInputHasError === null;
         }
     });
+</script>
+<script>
+$(document).on('click', '.saveCustomer', function() {
+
+    var first_name = $('[name="first_name"]').val();
+    var middle_name = $('[name="middle_name"]').val();
+    var last_name = $('[name="last_name"]').val();
+    var contact_email = $('[name="contact_email"]').val();
+    var contact_mobile = $('[name="contact_mobile"]').val();
+    var contact_phone = $('[name="contact_phone"]').val();
+    var customer_type = $('[name="customer_type"]').val();
+    var street_address = $('[name="street_address"]').val();
+    var suite_unit = $('[name="suite_unit"]').val();
+    var city = $('[name="city"]').val();
+    var postcode = $('[name="postcode"]').val();
+    var state = $('[name="state"]').val();
+    // alert(first_name);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+                    data: {
+                        first_name: first_name,
+                        middle_name: middle_name,
+                        last_name: last_name,
+                        contact_email: contact_email,
+                        contact_mobile: contact_mobile,
+                        contact_phone: contact_phone,
+                        customer_type: customer_type,
+                        street_address: street_address,
+                        suite_unit: suite_unit,
+                        city: city,
+                        postcode: postcode,
+                        state: state
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        // alert('success');
+                        location.reload();
+                    },
+                    error: function(response) {
+                        location.reload();
+
+                    }
+                });
+
+});
 </script>
 <script src="<?= base_url("assets/js/custom.js") ?>"></script>
