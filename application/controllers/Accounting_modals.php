@@ -6214,7 +6214,7 @@ class Accounting_modals extends MY_Controller
                 'billing_address' => nl2br($data['billing_address']),
                 'shipping_to_address' => nl2br($data['shipping_to']),
                 'ship_via' => $data['ship_via'],
-                'shipping_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
+                'shipping_date' => !isset($data['template_name']) && !empty($data['shipping_date']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
                 'tracking_number' => $data['tracking_no'],
                 'terms' => $data['terms'],
                 'location_scale' => $data['location_of_sale'],
@@ -8609,9 +8609,7 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'markup_type' => '$',
-                'markup_amount' => $data['markup_input_form'],
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'markup_amount' => $data['markup_input_form']
             );
     
             $estimateId = $this->estimate_model->save_estimate($new_data);
@@ -8705,9 +8703,7 @@ class Accounting_modals extends MY_Controller
                 'sub_total' => $data['table_1_subtotal'],
                 'sub_total2' => $data['table_2_subtotal'],
                 'user_id' => $user_id,
-                'company_id' => $company_id,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'company_id' => $company_id
             );
 
             $addQuery = $this->estimate_model->save_estimate($new_data);
@@ -8835,9 +8831,7 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['table_1_adjustment_name'],
                 'adjustment_value' => $data['table_1_adjustment'],
                 'markup_type' => '$',
-                'markup_amount' => $data['markup_input_form'],
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'markup_amount' => $data['markup_input_form']
             );
 
             $addQuery = $this->estimate_model->save_estimate($new_data);
@@ -12894,12 +12888,19 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        $totalPayment = 0.00;
+        foreach($paymentRecords as $record)
+        {
+            $totalPayment += floatval($record->invoice_amount);
+        }
+
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
         $this->page_data['paymentMethods'] = $paymentMethods;
         $this->page_data['invoice'] = $invoice;
         $this->page_data['items'] = $invoiceItems;
         $this->page_data['payments'] = $paymentRecords;
+        $this->page_data['totalPayment'] = $totalPayment;
         $this->page_data['term'] = $term;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);

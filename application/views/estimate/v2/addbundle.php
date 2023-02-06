@@ -2671,4 +2671,4 @@ $(document).on('click', '.saveCustomer', function() {
 
 });
 </script>
-<script src="<?= base_url("assets/js/custom.js") ?>"></script>
+<!-- <script src="<?php //base_url("assets/js/custom.js") ?>"></script> -->

@@ -878,8 +878,8 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button name="action"value="Draft" type="submit"  class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
-                                        <button name="action"value="Scheduled" type="submit"  class="nsm-button primary but" style="border-radius: 0 !important;">Schedule</button>
+                                        <button name="action" value="Draft" type="submit"  class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
+                                        <button name="action" value="Scheduled" type="submit"  class="nsm-button primary but" style="border-radius: 0 !important;">Schedule</button>
                                         <a href="<?php echo url('customer/ticketslist') ?>" class="btn but-red">Cancel this</a>
                                     </div>
                                 </div>

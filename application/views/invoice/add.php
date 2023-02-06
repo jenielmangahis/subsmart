@@ -905,7 +905,7 @@ input:checked + .slider:before {
                             <br>
                             <div class="row" style="background-color:white;padding-top:10px;">
                                 <div class="col-md-12 form-group">
-                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save as Draft</button>
+                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save</button>
                                     <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
                                     <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
                                 </div>

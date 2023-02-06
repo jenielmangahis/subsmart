@@ -864,3 +864,206 @@ $('#filter-type').on('change', function() {
         break;
     }
 });
+
+$(document).on('click', '#transactions-table .view-edit-invoice', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/invoice/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#invoiceModal';
+        initModalFields('invoiceModal', data);
+
+        $('#invoiceModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-credit-memo', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/credit-memo/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#creditMemoModal';
+        initModalFields('creditMemoModal', data);
+
+        $('#creditMemoModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-sales-receipt', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/sales-receipt/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#salesReceiptModal';
+        initModalFields('salesReceiptModal', data);
+
+        $('#salesReceiptModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-refund-receipt', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/refund-receipt/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#refundReceiptModal';
+        initModalFields('refundReceiptModal', data);
+
+        $('#refundReceiptModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-delayed-credit', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/delayed-credit/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#delayedCreditModal';
+        initModalFields('delayedCreditModal', data);
+
+        $('#delayedCreditModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-delayed-charge', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/delayed-charge/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#delayedChargeModal';
+        initModalFields('delayedChargeModal', data);
+
+        $('#delayedChargeModal').modal('show');
+    });
+});
+
+$('#update-status-modal #status').on('change', function() {
+    if($(this).val() === 'Accepted') {
+        $(this).closest('.row').parent().append(`<div class="row grid-mb">
+            <div class="col-12">
+                <label for="accepted-date">Accepted Date</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control" value="" id="accepted-date" name="accepted_date">
+                </div>
+            </div>
+        </div>`);
+
+        $('#update-status-modal #accepted-date').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+    } else {
+        $('#update-status-modal #accepted-date').closest('.row').remove();
+    }
+});
+
+$(document).on('click', '#transactions-table .update-estimate-status', function() {
+    var estimateId = $(this).closest('tr').find('.select-one').val();
+    var url = `/accounting/customers/update-estimate-status/${estimateId}`;
+
+    $('#update-status-modal #update-estimate-status-form').attr('action', url).attr('method', 'post');
+    $('#update-status-modal #status').val($(this).closest('tr').find('td:nth-child(16)').text().trim()).trigger('change');
+
+    $('#update-status-modal').modal('show');
+});
+
+$('#update-status-modal').on('hidden.bs.modal', function() {
+    $('#update-status-modal #update-estimate-status-form').removeAttr('action').removeAttr('method');
+    $('#update-status-modal #status').val('Draft').trigger('change');
+});
+
+$('#update-status-modal #status').select2({
+    minimumResultsForSearch: -1,
+    dropdownParent: $('#update-status-modal')
+});

@@ -619,7 +619,7 @@ echo put_header_assets();
                                         0.00
                                     </div> -->
                             </div>
-
+                            <br>
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
@@ -666,9 +666,9 @@ echo put_header_assets();
                                 <div class="col-md-12 form-group">
                                     <a href="<?php echo url('accounting/newEstimateList') ?>" class="nsm-button" style="color: black;">Cancel</a>
 
-                                    <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn"">Save as draft</button>
+                                    <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn">Save as Draft</button>
 
-                                    <button type="button" class="nsm-button primary" style="margin: 0; height: 34px;" id="estimate-save-btn"">Save</button>
+                                    <button type="button" class="nsm-button primary" style="margin: 0; height: 34px;" id="estimate-save-btn">Save</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
                                 </div>
                             </div>
