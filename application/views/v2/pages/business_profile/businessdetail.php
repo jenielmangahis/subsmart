@@ -83,8 +83,8 @@
                                             </div>
 
                                             <div class="col-12 col-md-3 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Contact Person <small class="text-muted">(optional)</small></label>
-                                                <input type="text" name="contact_name" value="<?php echo $profiledata->contact_name ?>"  class="nsm-field form-control" autocomplete="off" placeholder="">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Contact Person <span class="nsm-text-error">*</span></label>
+                                                <input type="text" name="contact_name" value="<?php echo $profiledata->contact_name ?>"  class="nsm-field form-control" autocomplete="off" placeholder="" required />
                                             </div>
 
                                             <div class="col-12 col-md-4">
