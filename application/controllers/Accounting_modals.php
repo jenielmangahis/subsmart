@@ -8623,7 +8623,7 @@ class Accounting_modals extends MY_Controller
     
                 $i = 0;
                 foreach($a as $row){
-                    $itemData['items_id'] = $a[$i];
+                    $itemData['items_id'] = str_replace('item-', '', $a[$i]);
                     $itemData['qty'] = $quantity[$i];
                     $itemData['cost'] = $price[$i];
                     $itemData['tax'] = $tax[$i];
@@ -8853,7 +8853,7 @@ class Accounting_modals extends MY_Controller
                     $itemData['tax']            = $tax[$i];
                     $itemData['discount']       = $discount[$i];
                     $itemData['total']          = $total[$i];
-                    $itemData['estimate_type']  = 'Option';
+                    $itemData['estimate_type']  = 'Bundle';
                     $itemData['estimates_id ']  = $addQuery;
                     $itemData['bundle_option_type'] = '1';
                     $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
@@ -8875,7 +8875,7 @@ class Accounting_modals extends MY_Controller
                     $itemData['tax']            = $tax2[$i2];
                     $itemData['discount']       = $discount2[$i2];
                     $itemData['total']          = $total2[$i2];
-                    $itemData['estimate_type']  = 'Option';
+                    $itemData['estimate_type']  = 'Bundle';
                     $itemData['estimates_id ']  = $addQuery;
                     $itemData['bundle_option_type'] = '2';
                     $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
@@ -12050,6 +12050,9 @@ class Accounting_modals extends MY_Controller
             case 'invoice' :
                 $this->view_invoice($transactionId);
             break;
+            case 'estimate' :
+                $this->view_estimate($transactionId);
+            break;
         }
     }
 
@@ -12904,6 +12907,68 @@ class Accounting_modals extends MY_Controller
         $this->page_data['term'] = $term;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
+    }
+
+    private function view_estimate($estimateId)
+    {
+        $estimate = $this->estimate_model->getEstimate($estimateId);
+
+        switch($estimate->estimate_type) {
+            case 'Standard' :
+                $view = "standard_estimate_modal";
+                $items = $this->estimate_model->getItemlistByID($estimateId);
+
+                $discount = 0.00;
+                foreach($items as $key => $item) {
+                    $items[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+
+                    $discount += floatval($item->discount);
+                }
+
+                $this->page_data['discount'] = $discount;
+                $this->page_data['items'] = $items;
+            break;
+            case 'Option' :
+                $view = "options_estimate_modal";
+                $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($estimateId);
+
+                foreach($itemsOption1 as $key => $item) {
+                    $itemsOption1[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                }
+
+                $this->page_data['itemsOption1'] = $itemsOption1;
+
+                $itemsOption2 = $this->estimate_model->getItemlistByIDOption2($estimateId);
+
+                foreach($itemsOption2 as $key => $item) {
+                    $itemsOption2[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                }
+
+                $this->page_data['itemsOption2'] = $itemsOption2;
+            break;
+            case 'Bundle' :
+                $view = "bundle_estimate_modal";
+                $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($estimateId);
+
+                foreach($itemsBundle1 as $key => $item) {
+                    $itemsBundle1[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                }
+
+                $this->page_data['itemsBundle1'] = $itemsBundle1;
+
+                $itemsBundle2 = $this->estimate_model->getItemlistByIDBundle2($estimateId);
+
+                foreach($itemsBundle2 as $key => $item) {
+                    $itemsBundle2[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                }
+
+                $this->page_data['itemsBundle2'] = $itemsBundle2;
+            break;
+        }
+
+        $this->page_data['estimate'] = $estimate;
+
+        $this->load->view("v2/includes/accounting/modal_forms/$view", $this->page_data);
     }
 
     private function get_bills($filters)

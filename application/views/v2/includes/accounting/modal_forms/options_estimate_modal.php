@@ -29,45 +29,66 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-12 col-md-4 text-end grid-mb">
+                                        <?php if(isset($estimate)) : ?>
+                                            <?php if(!$is_copy) : ?>
+                                                <div class="d-flex justify-content-end">
+                                                    <div class="btn-group float-end" role="group">
+                                                        <button type="button" class="nsm-button">
+                                                            Create invoice
+                                                        </button>
+                                                        <div class="btn-group" role="group">
+                                                            <button type="button" class="nsm-button dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="bx bx-fw bx-chevron-down"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" href="#">Copy to purchase order</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="customer-email">Customer Email</label>
-                                        <input type="text" name="customer_email" id="customer-email" class="form-control nsm-field mb-2" value="" disabled>
+                                        <input type="text" name="customer_email" id="customer-email" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $customer->email : ''?>" disabled>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="customer-mobile">Customer Mobile</label>
-                                        <input type="text" name="customer_mobile" id="customer-mobile" class="form-control nsm-field mb-2" value="" disabled>
+                                        <input type="text" name="customer_mobile" id="customer-mobile" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $customer->phone_m : ''?>" disabled>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-12 col-md-3">
                                         <label for="job-location">Job Location</label>
-                                        <input type="text" name="job_location" id="job-location" class="form-control nsm-field mb-2" value="">
+                                        <input type="text" name="job_location" id="job-location" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->job_location : ''?>">
                                     </div>
                                     <div class="col-12 col-md-3">
                                         <label for="job-name">Job Name</label>
-                                        <input type="text" name="job_name" id="job-name" class="form-control nsm-field mb-2" value="">
+                                        <input type="text" name="job_name" id="job-name" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->job_name : ''?>">
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-no">Estimate # <span class="text-danger">*</span></label>
-                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=$est_number?>">
+                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->estimate_number : $est_number?>" <?=isset($estimate) ? 'disabled' : ''?>>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-date">Estimate Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control date nsm-field mb-2" value="">
+                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->estimate_date)) : ''?>">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="expiry-date">Expiry Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="">
+                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->expiry_date)) : ''?>">
                                         </div>
                                     </div>
                                 </div>
@@ -75,25 +96,25 @@
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="purchase-order-no">Purchase Order #</label>
-                                        <input type="text" name="purchase_order_no" id="purchase-order-no" class="form-control nsm-field mb-2" value="">
+                                        <input type="text" name="purchase_order_no" id="purchase-order-no" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->purchase_order_number : ''?>">
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-type">Estimate Type <span class="text-danger">*</span></label>
                                         <select name="estimate_type" id="estimate-type" class="form-control nsm-field">
-                                            <option value="Deposit">Deposit</option>
-                                            <option value="Partial Payment">Partial Payment</option>
-                                            <option value="Final Payment">Final Payment</option>
-                                            <option value="Total Due" selected>Total Due</option>
+                                            <option value="Deposit" <?=isset($estimate) && $estimate->type === 'Deposit' ? 'selected' : '' ?>>Deposit</option>
+                                            <option value="Partial Payment" <?=isset($estimate) && $estimate->type === 'Partial Payment' ? 'selected' : '' ?>>Partial Payment</option>
+                                            <option value="Final Payment" <?=isset($estimate) && $estimate->type === 'Final Payment' ? 'selected' : '' ?>>Final Payment</option>
+                                            <option value="Total Due" <?=isset($estimate) && $estimate->type === 'Total Due' || !isset($estimate) ? 'selected' : '' ?>>Total Due</option>
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-status">Estimate Status <span class="text-danger">*</span></label>
                                         <select name="estimate_status" id="estimate-status" class="form-control nsm-field">
-                                            <option value="Draft">Draft</option>
-                                            <option value="Submitted">Submitted</option>
-                                            <option value="Accepted">Accepted</option>
-                                            <option value="Declined By Customer">Declined By Customer</option>
-                                            <option value="Lost">Lost</option>
+                                            <option value="Draft" <?=isset($estimate) && $estimate->status === 'Draft' || !isset($estimate) ? 'selected' : '' ?>>Draft</option>
+                                            <option value="Submitted" <?=isset($estimate) && $estimate->status === 'Submitted' ? 'selected' : '' ?>>Submitted</option>
+                                            <option value="Accepted" <?=isset($estimate) && $estimate->status === 'Accepted' ? 'selected' : '' ?>>Accepted</option>
+                                            <option value="Declined By Customer" <?=isset($estimate) && $estimate->status === 'Declined By Customer' ? 'selected' : '' ?>>Declined By Customer</option>
+                                            <option value="Lost" <?=isset($estimate) && $estimate->status === 'Lost' ? 'selected' : '' ?>>Lost</option>
                                         </select>
                                     </div>
                                 </div>
@@ -123,15 +144,15 @@
                                                                         <td data-name="Manage"></td>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <?php if(isset($items) && count($items) > 0) : ?>
-                                                                            <?php foreach($items as $item) : ?>
+                                                                        <?php if(isset($itemsOption1) && count($itemsOption1) > 0) : ?>
+                                                                            <?php foreach($itemsOption1 as $item) : ?>
                                                                                 <?php $itemDetails = $item->itemDetails;?>
                                                                                 <?php $locations = $item->locations;?>
                                                                                 <tr>
                                                                                     <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                                                     <td><?=ucfirst($itemDetails->type)?></td>
-                                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->quantity?>"></td>
-                                                                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->qty?>"></td>
+                                                                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->costing), 2, '.', ',')?>"></td>
                                                                                     <td><input type="number" name="discount[]" disabled onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                                                     <td>
@@ -167,7 +188,7 @@
                                                             </div>
                                                             <div class="col-12 col-md-6">
                                                                 <label for="option-1-message">Option 1 Message</label>
-                                                                <textarea name="option_1_message" id="option-1-message" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
+                                                                <textarea name="option_1_message" id="option-1-message" cols="40" rows="2" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->option_message : ''?></textarea>
                                                             </div>
                                                             <div class="col-12 col-md-3 offset-md-3">
                                                                 <table class="nsm-table float-end text-end">
@@ -175,19 +196,49 @@
                                                                         <tr>
                                                                             <td>Subtotal</td>
                                                                             <td>
-                                                                                <span class="table-subtotal">$0.00</span>
+                                                                                <span class="table-subtotal">
+                                                                                <?php if(isset($estimate)) : ?>
+                                                                                    <?php
+                                                                                    $amount = '$'.number_format(floatval($estimate->sub_total), 2, '.', ',');
+                                                                                    $amount = str_replace('$-', '-$', $amount);
+                                                                                    echo $amount;
+                                                                                    ?>
+                                                                                <?php else : ?>
+                                                                                    $0.00
+                                                                                <?php endif; ?>
+                                                                                </span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Taxes</td>
                                                                             <td>
-                                                                                <span class="table-taxes">$0.00</span>
+                                                                                <span class="table-taxes">
+                                                                                <?php if(isset($estimate)) : ?>
+                                                                                    <?php
+                                                                                    $amount = '$'.number_format(floatval($estimate->tax1_total), 2, '.', ',');
+                                                                                    $amount = str_replace('$-', '-$', $amount);
+                                                                                    echo $amount;
+                                                                                    ?>
+                                                                                <?php else : ?>
+                                                                                    $0.00
+                                                                                <?php endif; ?>
+                                                                                </span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Grand Total ($)</td>
                                                                             <td>
-                                                                                <span class="table-total">$0.00</span>
+                                                                                <span class="table-total">
+                                                                                <?php if(isset($estimate)) : ?>
+                                                                                    <?php
+                                                                                    $amount = '$'.number_format(floatval($estimate->option1_total), 2, '.', ',');
+                                                                                    $amount = str_replace('$-', '-$', $amount);
+                                                                                    echo $amount;
+                                                                                    ?>
+                                                                                <?php else : ?>
+                                                                                    $0.00
+                                                                                <?php endif; ?>
+                                                                                </span>
                                                                             </td>
                                                                         </tr>
                                                                     </tfoot>
@@ -226,15 +277,15 @@
                                                                         <td data-name="Manage"></td>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <?php if(isset($items) && count($items) > 0) : ?>
-                                                                            <?php foreach($items as $item) : ?>
+                                                                        <?php if(isset($itemsOption2) && count($itemsOption2) > 0) : ?>
+                                                                            <?php foreach($itemsOption2 as $item) : ?>
                                                                                 <?php $itemDetails = $item->itemDetails;?>
                                                                                 <?php $locations = $item->locations;?>
                                                                                 <tr>
                                                                                     <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                                                     <td><?=ucfirst($itemDetails->type)?></td>
-                                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->quantity?>"></td>
-                                                                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
+                                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->qty?>"></td>
+                                                                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->costing), 2, '.', ',')?>"></td>
                                                                                     <td><input type="number" name="discount[]" disabled onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                                                     <td>
@@ -270,7 +321,7 @@
                                                             </div>
                                                             <div class="col-12 col-md-6">
                                                                 <label for="option-2-message">Option 2 Message</label>
-                                                                <textarea name="option_2_message" id="option-2-message" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
+                                                                <textarea name="option_2_message" id="option-2-message" cols="40" rows="2" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->option2_message : ''?></textarea>
                                                             </div>
                                                             <div class="col-12 col-md-3 offset-md-3">
                                                                 <table class="nsm-table float-end text-end">
@@ -278,19 +329,49 @@
                                                                         <tr>
                                                                             <td>Subtotal</td>
                                                                             <td>
-                                                                                <span class="table-subtotal">$0.00</span>
+                                                                                <span class="table-subtotal">
+                                                                                <?php if(isset($estimate)) : ?>
+                                                                                    <?php
+                                                                                    $amount = '$'.number_format(floatval($estimate->sub_total2), 2, '.', ',');
+                                                                                    $amount = str_replace('$-', '-$', $amount);
+                                                                                    echo $amount;
+                                                                                    ?>
+                                                                                <?php else : ?>
+                                                                                    $0.00
+                                                                                <?php endif; ?>
+                                                                                </span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Taxes</td>
                                                                             <td>
-                                                                                <span class="table-taxes">$0.00</span>
+                                                                                <span class="table-taxes">
+                                                                                <?php if(isset($estimate)) : ?>
+                                                                                    <?php
+                                                                                    $amount = '$'.number_format(floatval($estimate->tax2_total), 2, '.', ',');
+                                                                                    $amount = str_replace('$-', '-$', $amount);
+                                                                                    echo $amount;
+                                                                                    ?>
+                                                                                <?php else : ?>
+                                                                                    $0.00
+                                                                                <?php endif; ?>
+                                                                                </span>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Grand Total ($)</td>
                                                                             <td>
-                                                                                <span class="table-total">$0.00</span>
+                                                                                <span class="table-total">
+                                                                                <?php if(isset($estimate)) : ?>
+                                                                                    <?php
+                                                                                    $amount = '$'.number_format(floatval($estimate->option2_total), 2, '.', ',');
+                                                                                    $amount = str_replace('$-', '-$', $amount);
+                                                                                    echo $amount;
+                                                                                    ?>
+                                                                                <?php else : ?>
+                                                                                    $0.00
+                                                                                <?php endif; ?>
+                                                                                </span>
                                                                             </td>
                                                                         </tr>
                                                                     </tfoot>
@@ -311,12 +392,12 @@
                                     </div>
                                     <div class="col-12 col-md-3">
                                         <select name="deposit_request" class="form-control nsm-field">
-                                            <option value="1" selected="selected">Deposit amount $</option>
-                                            <option value="2">Percentage %</option>
+                                            <option value="1" <?=isset($estimate) && $estimate->deposit_request === '1' ? 'selected' : ''?>>Deposit amount $</option>
+                                            <option value="2" <?=isset($estimate) && $estimate->deposit_request === '2' ? 'selected' : ''?>>Percentage %</option>
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-3">
-                                        <input type="text" name="deposit_amount" value="0" class="form-control nsm-field mb-2" autocomplete="off">
+                                        <input type="text" name="deposit_amount" value="0" class="form-control nsm-field mb-2" autocomplete="off" value="<?=isset($estimate) ? $estimate->deposit_amount : '0.00'?>">
                                     </div>
                                 </div>
 
@@ -324,12 +405,12 @@
                                     <div class="col-12 col-md-6">
                                         <label for="message-to-customer">Message to Customer</label>
                                         <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" id="estimate-message-to-customer" cols="40" rows="2" class="form-control nsm-field mb-2">I would be happy to have an opportunity to work with you.</textarea>
+                                        <textarea name="customer_message" id="estimate-message-to-customer" cols="40" rows="2" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->customer_message : 'I would be happy to have an opportunity to work with you.'?></textarea>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label for="terms-and-conditions">Terms &amp; Conditions</label>
                                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
-                                        <textarea name="terms_conditions" id="estimate-terms-and-conditions" cols="40" rows="2" class="form-control nsm-field mb-2"></textarea>
+                                        <textarea name="terms_conditions" id="estimate-terms-and-conditions" cols="40" rows="2" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->terms_conditions : ''?></textarea>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="attachments">
@@ -349,7 +430,7 @@
                                     <div class="col-12">
                                         <label for="instructions">Instructions</label>
                                         <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
-                                        <textarea name="instructions" id="estimate-instructions" cols="40" rows="2" class="form-control nsm-field"></textarea>
+                                        <textarea name="instructions" id="estimate-instructions" cols="40" rows="2" class="form-control nsm-field"><?=isset($estimate) ? $estimate->instructions : ''?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -366,6 +447,19 @@
                                         <span><a href="#" class="text-dark text-decoration-none" id="print-or-preview">Print or Preview</a></span>
                                         <span class="mx-3 divider"></span>
                                         <span><a href="#" onclick="makeRecurring('options_estimate')" class="text-dark text-decoration-none">Make recurring</a></span>
+                                        <?php if(isset($estimate)) : ?>
+                                        <span class="mx-3 divider"></span>
+                                        <span>
+                                            <div class="dropup">
+                                                <a href="#" class="text-dark text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#" id="copy-estimate">Copy</a>
+                                                    <a class="dropdown-item" href="#" id="delete-estimate">Delete</a>
+                                                    <a class="dropdown-item" href="#">Audit history</a>
+                                                </div>
+                                            </div>
+                                        </span>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>

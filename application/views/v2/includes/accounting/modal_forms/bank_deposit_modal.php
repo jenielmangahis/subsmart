@@ -221,7 +221,7 @@
                                                                             </select>
                                                                         </td>
                                                                         <td><input type="text" name="reference_no[]" class="form-control nsm-field" value="<?=$fund->ref_no?>"></td>
-                                                                        <td><input type="number" name="amount[]" value="<?=number_format(floatval($fund->amount), 2, '.', ',')?>" class="form-control nsm-field text-end" step=".01" onchange="updateBankDepositTotal(this)" required></td>
+                                                                        <td><input type="number" name="amount[]" value="<?=str_replace(',', '', number_format(floatval($fund->amount), 2, '.', ','))?>" class="form-control nsm-field text-end" step=".01" onchange="updateBankDepositTotal(this)" required></td>
                                                                         <td>
                                                                             <button type="button" class="nsm-button delete-row">
                                                                                 <i class='bx bx-fw bx-trash'></i>
