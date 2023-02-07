@@ -36,7 +36,7 @@ class Customers extends MY_Controller {
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
             // "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting.modal.css",
+            // "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -1268,7 +1268,7 @@ class Customers extends MY_Controller {
                         <a class="dropdown-item view-edit-invoice" href="#">View/Edit</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-invoice" href="#">Copy</a>
+                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
                     </li>
                     <li>
                         <a class="dropdown-item delete-invoice" href="#">Delete</a>
@@ -1353,7 +1353,7 @@ class Customers extends MY_Controller {
                         <a class="dropdown-item view-edit-credit-memo" href="#">View/Edit</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-credit-memo" href="#">Copy</a>
+                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
                     </li>
                     <li>
                         <a class="dropdown-item void-credit-memo" href="#">Void</a>
@@ -1411,7 +1411,7 @@ class Customers extends MY_Controller {
                         <a class="dropdown-item view-edit-sales-receipt" href="#">View/Edit</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-sales-receipt" href="#">Copy</a>
+                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
                     </li>
                     <li>
                         <a class="dropdown-item delete-sales-receipt" href="#">Delete</a>
@@ -1628,10 +1628,10 @@ class Customers extends MY_Controller {
                         <a class="dropdown-item update-estimate-status" href="#">Update status</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-estimate" href="#">Copy</a>
+                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
                     </li>
                     <li>
-                        <a class="dropdown-item view-edit-delayed-charge" href="#">View/Edit</a>
+                        <a class="dropdown-item view-edit-estimate" href="#">View/Edit</a>
                     </li>
                 </ul>
             </div>';

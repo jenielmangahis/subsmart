@@ -892,6 +892,47 @@ $(document).on('click', '#transactions-table .view-edit-invoice', function() {
     });
 });
 
+$(document).on('click', '#transactions-table .view-edit-estimate', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/estimate/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        if($('#modal-container #standard-estimate-modal').length > 0) {
+            modalName = '#standard-estimate-modal';
+        }
+
+        if($('#modal-container #options-estimate-modal').length > 0) {
+            modalName = '#options-estimate-modal';
+        }
+
+        if($('#modal-container #bundle-estimate-modal').length > 0) {
+            modalName = '#bundle-estimate-modal';
+        }
+
+        initModalFields(modalName.replace('#', ''), data);
+        CKEDITOR.replace('estimate-terms-and-conditions');
+        CKEDITOR.replace('estimate-message-to-customer');
+        CKEDITOR.replace('estimate-instructions');
+
+        $(modalName).modal('show');
+    });
+});
+
 $(document).on('click', '#transactions-table .view-edit-credit-memo', function() {
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
@@ -1066,4 +1107,38 @@ $('#update-status-modal').on('hidden.bs.modal', function() {
 $('#update-status-modal #status').select2({
     minimumResultsForSearch: -1,
     dropdownParent: $('#update-status-modal')
+});
+
+$('#transactions-table .copy-transaction').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get(`/accounting/copy-transaction/${transactionType}/${id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#modal-container form .modal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#'+$('#modal-container form .modal').attr('id');
+        initModalFields($('#modal-container form .modal').attr('id'), data);
+
+        $(modalName).modal('show');
+    });
 });

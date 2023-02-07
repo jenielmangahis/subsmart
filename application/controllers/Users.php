@@ -131,8 +131,8 @@ class Users extends MY_Controller
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $cid;
 		$this->page_data['profiledata'] = $profiledata;
-		$this->load->view('business_profile/businessdetail', $this->page_data);
-		//$this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
+		///$this->load->view('business_profile/businessdetail', $this->page_data);
+		$this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
 	}
 
 	public function services()
@@ -2458,6 +2458,44 @@ class Users extends MY_Controller
 
 		$json = ['is_success' => $is_success, 'msg' => $msg];
 		echo json_encode($json);			
+	}
+
+	public function ajax_update_business_details()
+	{
+		$this->load->model('Business_model');
+
+		$is_success = 0;
+		$msg = 'Cannot update data';
+
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+		$businessDetails = $this->Business_model->getByCompanyId($cid);
+
+		if( $businessDetails ){			
+			if (!empty($_FILES['image']['name'])) {
+				$target_dir = "./uploads/users/business_profile/".$businessDetails->id."/";
+				if (!file_exists($target_dir)) {
+					mkdir($target_dir, 0777, true);
+				}
+				$business_image = $this->moveUploadedFile($businessDetails->id);
+				$this->business_model->update($businessDetails->id, ['business_image' => $business_image]);
+			}
+
+			unset($post['image']);
+			$this->business_model->update($businessDetails->id, $post);
+
+			$is_success = 1;
+			$msg = '';
+		}else{
+			$msg = 'Cannot find data';
+		} 
+
+		$json_data = [
+            'is_success' => $is_success,
+            'msg' => $message
+        ];
+
+        echo json_encode($json_data);
 	}
 }
 
