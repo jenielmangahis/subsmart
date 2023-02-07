@@ -550,7 +550,7 @@ function formatRepoSelection (repo) {
     return repo.contact_name || repo.text;
 }
 
-function formatRepoUser (repo) {
+/*function formatRepoUser (repo) {
 
     console.log(repo);
     if (repo) {
@@ -569,10 +569,10 @@ function formatRepoUser (repo) {
     $container.find(".select2-result-repository__title").text(repo.name);
 
     return $container;
-}
+}*/
 
 
 function formatRepoSelectionUser (repo) {
-      console.log(repo);
+    //console.log(repo);
     return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
 }
