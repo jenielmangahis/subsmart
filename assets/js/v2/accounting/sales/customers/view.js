@@ -1142,3 +1142,61 @@ $('#transactions-table .copy-transaction').on('click', function(e) {
         $(modalName).modal('show');
     });
 });
+
+$('.export-transactions').on('click', function() {
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/customers/${customerId}/export-transactions" method="post" id="export-form"></form>`);
+    }
+
+    var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('chk_', '')}">`);
+    });
+    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="date" value="${$('#filter-date').attr('data-applied')}">`);
+
+    $('#export-form').append(`<input type="hidden" name="column" value="date">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="desc">`);
+
+    $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).remove();
+});
+
+$('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
+    var chk = $(this);
+    var dataName = $(this).next().text();
+
+    var index = $(`#transactions-table thead td[data-name="${dataName}"]`).index();
+    $(`#transactions-table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index]).show();
+        } else {
+            $($(this).find('td')[index]).hide();
+        }
+    });
+
+    $(`#print_customer_transactions_modal table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
+
+    $(`#print_preview_customer_transactions_modal #customer_transactions_table_print tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
+});
+
+$("#btn_print_customer_transactions").on("click", function() {
+    $("#customer_transactions_table_print").printThis();
+});

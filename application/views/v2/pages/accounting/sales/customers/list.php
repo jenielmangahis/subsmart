@@ -365,7 +365,7 @@
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-customer-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
-                            <button type="button" class="nsm-button export-customers">
+                            <button type="button" class="nsm-button" onclick="location.href='<?= url('accounting/customers/export') ?>'">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customers_modal">

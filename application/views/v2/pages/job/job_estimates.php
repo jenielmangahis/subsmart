@@ -532,13 +532,56 @@
                                                         <hr>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <label><strong>Total</strong></label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <label id="invoice_overall_total"><strong>$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></strong></label>
-                                                            <input step="any" type="number" name="sub_total" id="sub_total_form_input" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
-                                                        </div>
+                                                        <?php if($jobs_data && $jobs_data->deposit_amount): ?>
+                                                            <?php
+                                                                $depositAmount = 0;
+                                                                $percentage = null;
+                                                                $isPercentage = in_array(trim($jobs_data->deposit_request), ['2', '%']); // 1 = $, 2 = %
+
+                                                                if ($isPercentage) {
+                                                                    $percentage = (float) $jobs_data->deposit_amount;
+                                                                    $depositAmount = ($percentage / 100) * $subtotal;
+                                                                } else {
+                                                                    $depositAmount = (float) $jobs_data->deposit_amount;
+                                                                }
+
+                                                                $invoiceOverAllTotal =  (float) $subtotal - (float) $depositAmount;
+                                                                $invoiceOverAllTotalFormatted = number_format((float) $invoiceOverAllTotal, 2, '.', ',');
+                                                                $depositAmountFormatted = number_format((float) $depositAmount, 2, '.', ',');
+                                                            ?>
+                                                            <div class="col-sm-6">
+                                                                <label>Total</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                                            </div>
+
+                                                            <div class="col-sm-6">
+                                                                <label>Requested Deposit</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_requested_deposit" data-value="<?= $depositAmount; ?>">
+                                                                    $<?= isset($jobs_data) ? $depositAmountFormatted : '0.00'; ?>
+                                                                    <?= $isPercentage ? "($percentage%)" : "" ?>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="col-sm-6">
+                                                                <label><strong>Balance Owed</strong></label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <strong><label id="invoice_overall_total_without_deposited_amount">$<?= isset($jobs_data) ? $invoiceOverAllTotalFormatted : '0.00'; ?></label></strong>
+                                                                <input step="any" type="number" name="sub_total" id="sub_total_form_input" value="<?= isset($jobs_data) ? $invoiceOverAllTotalFormatted : '0'; ?>" hidden>
+                                                            </div>
+                                                        <?php else: ?>
+                                                            <div class="col-sm-6">
+                                                                <label><strong>Total</strong></label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_overall_total"><strong>$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></strong></label>
+                                                                <input step="any" type="number" name="sub_total" id="sub_total_form_input" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                            </div>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                                 <!-- <div class="col-md-8 row pr-0">
