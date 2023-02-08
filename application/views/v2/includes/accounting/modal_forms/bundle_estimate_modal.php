@@ -1,5 +1,9 @@
 <div class="full-screen-modal">
+    <?php if(!isset($estimate)) : ?>
     <form onsubmit="submitModalForm(event, this)" id="modal-form">
+    <?php else : ?>
+    <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/bundle-estimate/<?=$estimate->id?>">
+    <?php endif; ?>
         <div id="bundle-estimate-modal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
             <div class="modal-dialog">
                 <!-- Modal content-->

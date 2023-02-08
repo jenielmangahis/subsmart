@@ -128,6 +128,7 @@ class Estimate extends MY_Controller
             'expiry_date' => $this->input->post('expiry_date'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'status' => $this->input->post('status'),
+            'type' => $this->input->post('estimate_type'),
             'estimate_type' => 'Standard',
             //'type' => $this->input->post('estimate_type'),
             // 'ship_via' => $this->input->post('ship_via'),

@@ -204,10 +204,10 @@
                                                             </div>
                                                         </ul>
 
-                                                        <button type="button" class="nsm-button export-items">
+                                                        <button type="button" class="nsm-button export-transactions">
                                                             <i class='bx bx-fw bx-export'></i> Export
                                                         </button>
-                                                        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_vendor_transactions_modal">
+                                                        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customer_transactions_modal">
                                                             <i class='bx bx-fw bx-printer'></i>
                                                         </button>
                                                         <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">

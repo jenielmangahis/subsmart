@@ -709,7 +709,7 @@ echo put_header_assets();
                                                         $adjustment_value = $estimate->adjustment_value;
                                                     }
                                                     ?>
-                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value, 2); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                    <input type="text" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value, 2); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
                                                 </div>
                                                 <span id="adjustmentText" style="display: none;"><?php echo $estimate->adjustment_value; ?></span>
                                             </td>

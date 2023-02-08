@@ -8719,7 +8719,6 @@ class Accounting_modals extends MY_Controller
                 $i = 0;
                 foreach($a as $row){
                     $itemData['items_id']       = $a[$i];
-                    // $itemData['package_id ']    = $packageID[$i];
                     $itemData['qty']            = $quantity[$i];
                     $itemData['cost']           = $price[$i];
                     $itemData['tax']            = $tax[$i];
@@ -8847,7 +8846,6 @@ class Accounting_modals extends MY_Controller
                 $i = 0;
                 foreach($a as $row){
                     $itemData['items_id']       = $a[$i];
-                    // $itemData['package_id ']    = $packageID[$i];
                     $itemData['qty']            = $quantity[$i];
                     $itemData['cost']           = $price[$i];
                     $itemData['tax']            = $tax[$i];
@@ -13327,6 +13325,15 @@ class Accounting_modals extends MY_Controller
             break;
             case 'invoice' :
                 $return = $this->update_invoice($transactionId, $data);
+            break;
+            case 'standard-estimate' :
+                $return = $this->update_standard_estimate($transactionId, $data);
+            break;
+            case 'option-estimate' :
+                $return = $this->update_option_estimate($transactionId, $data);
+            break;
+            case 'bundle-estimate' :
+                $return = $this->update_bundle_estimate($transactionId, $data);
             break;
         }
 
@@ -18027,6 +18034,250 @@ class Accounting_modals extends MY_Controller
         }
 
         $return['data'] = $invoiceId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
+    }
+
+    private function update_standard_estimate($estimateId, $data)
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'id' => $estimateId,
+            'customer_id' => $data['customer'],
+            'job_location' => $data['job_location'],
+            'job_name' => $data['job_name'],
+            'estimate_date' => date("Y-m-d", strtotime($data['estimate_date'])),
+            'expiry_date' => date("Y-m-d", strtotime($data['expiry_date'])),
+            'purchase_order_number' => $data['purchase_order_no'],
+            'status' => $data['estimate_status'],
+            'estimate_type' => 'Standard',
+            'type' => $data['estimate_type'],
+            'attachments' => 'testing',
+            'deposit_request' => $data['deposit_request'],
+            'deposit_amount' => $data['deposit_amount'],
+            'customer_message' => $data['customer_message'],
+            'terms_conditions' => $data['terms_conditions'],
+            'instructions' => $data['instructions'],
+            'sub_total' => $data['subtotal'],
+            'grand_total' => $data['total_amount'],
+            'tax1_total' => $data['tax_total'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'markup_type' => '$',
+            'markup_amount' => $data['markup_input_form']
+        );
+
+        $update = $this->estimate_model->update_estimate($new_data);
+
+        if($update) {
+            $delete = $this->estimate_model->delete_items($estimateId);
+
+            $a = $data['item'];
+            $quantity = $data['quantity'];
+            $price = $data['item_amount'];
+            $tax = $data['item_tax'];
+            $gtotal = $data['item_total'];
+
+            $i = 0;
+            foreach($a as $row){
+                $data['items_id'] = $a[$i];
+                $data['qty'] = $quantity[$i];
+                $data['cost'] = $price[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $gtotal[$i];
+                $data['estimates_id '] = $estimateId;
+                $addQuery2 = $this->estimate_model->add_estimate_items($data);
+                $i++;
+            }
+        }
+
+        $return['data'] = $estimateId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
+    }
+
+    private function update_option_estimate($estimateId, $data)
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'id' => $estimateId,
+            'customer_id' => $data['customer'],
+            'job_location' => $data['job_location'],
+            'job_name' => $data['job_name'],
+            'estimate_date' => date("Y-m-d", strtotime($data['estimate_date'])),
+            'expiry_date' => date("Y-m-d", strtotime($data['expiry_date'])),
+            'purchase_order_number' => $data['purchase_order_no'],
+            'status' => $data['estimate_status'],
+            'estimate_type' => 'Option',
+            'type' => $data['estimate_type'],
+            'attachments' => 'testing',
+            'deposit_request' => $data['deposit_request'],
+            'deposit_amount' => $data['deposit_amount'],
+            'customer_message' => $data['customer_message'],
+            'terms_conditions' => $data['terms_conditions'],
+            'instructions' => $data['instructions'],
+            'option_message' => $data['option_1_message'],
+            'option2_message' => $data['option_2_message'],
+            'option1_total' => $data['table_1_total'],
+            'option2_total' => $data['table_2_total'],
+            'tax1_total' => $data['table_1_taxes'],
+            'tax2_total' => $data['table_2_taxes'],
+            'sub_total' => $data['table_1_subtotal'],
+            'sub_total2' => $data['table_2_subtotal']
+        );
+
+        $update = $this->estimate_model->update_estimateOptions($new_data);
+
+        if($update) {
+            $delete = $this->estimate_model->delete_items($estimateId);
+
+            $a = $data['table_1_item'];
+            $quantity = $data['table_1_quantity'];
+            $price = $data['table_1_item_amount'];
+            $tax = $data['table_1_item_tax'];
+            $discount = $data['table_1_discount'];
+            $total = $data['table_1_item_total'];
+
+            $i = 0;
+            foreach($a as $row){
+                $itemData['items_id']       = $a[$i];
+                $itemData['qty']            = $quantity[$i];
+                $itemData['cost']           = $price[$i];
+                $itemData['tax']            = $tax[$i];
+                $itemData['discount']       = $discount[$i];
+                $itemData['total']          = $total[$i];
+                $itemData['estimate_type']  = 'Option';
+                $itemData['estimates_id ']  = $estimateId;
+                $itemData['bundle_option_type'] = '1';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i++;
+            }
+
+            $a2 = $data['table_2_item'];
+            $quantity2 = $data['table_2_quantity'];
+            $price2 = $data['table_2_item_amount'];
+            $tax2 = $data['table_2_item_tax'];
+            $discount2 = $data['table_2_discount'];
+            $total2 = $data['table_2_item_total'];
+
+            $i2 = 0;
+            foreach($a2 as $row2){
+                $itemData['items_id']       = $a2[$i2];
+                $itemData['qty']            = $quantity2[$i2];
+                $itemData['cost']           = $price2[$i2];
+                $itemData['tax']            = $tax2[$i2];
+                $itemData['discount']       = $discount2[$i2];
+                $itemData['total']          = $total2[$i2];
+                $itemData['estimate_type']  = 'Option';
+                $itemData['estimates_id ']  = $estimateId;
+                $itemData['bundle_option_type'] = '2';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i2++;
+            }
+        }
+
+        $return['data'] = $estimateId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
+    }
+
+    private function update_bundle_estimate($estimateId, $data)
+    {
+        $new_data = array(
+            'id' => $estimateId,
+            'customer_id' => $data['customer'],
+            'job_location' => $data['job_location'],
+            'job_name' => $data['job_name'],
+            'estimate_date' => date("Y-m-d", strtotime($data['estimate_date'])),
+            'expiry_date' => date("Y-m-d", strtotime($data['expiry_date'])),
+            'purchase_order_number' => $data['purchase_order_number'],
+            'status' => $data['estimate_status'],
+            'estimate_type' => 'Bundle',
+            'type' => $data['estimate_type'],
+            'attachments' => 'testing',
+            'deposit_request' => $data['deposit_request'],
+            'deposit_amount' => $data['deposit_amount'],
+            'customer_message' => $data['customer_message'],
+            'terms_conditions' => $data['terms_conditions'],
+            'instructions' => $data['instructions'],
+            'bundle1_message' => $data['bundle_1_message'],
+            'bundle2_message' => $data['bundle_2_message'],
+            'bundle_discount' => $data['table_2_adjustment'],
+            'deposit_request' => '$',
+            'deposit_amount' => $data['adjustment_input'],
+            'bundle1_total' => $data['table_1_total'],
+            'bundle2_total' => $data['table_2_total'],
+            'sub_total' => $data['table_1_subtotal'],
+            'sub_total2' => $data['table_2_subtotal'],
+            'tax1_total' => $data['table_1_taxes'],
+            'tax2_total' => $data['table_2_taxes'],
+            'adjustment_name' => $data['table_1_adjustment_name'],
+            'adjustment_value' => $data['table_1_adjustment'],
+            'markup_type' => '$',
+            'markup_amount' => $data['markup_input_form']
+        );
+
+        $update = $this->estimate_model->update_estimateBundle($new_data);
+
+        if($update) {
+            $delete2 = $this->estimate_model->delete_items($estimateId);
+
+            $a = $data['table_1_item'];
+            $quantity = $data['table_1_quantity'];
+            $price = $data['table_1_item_amount'];
+            $tax = $data['table_1_item_tax'];
+            $discount = $data['table_1_discount'];
+            $total = $data['table_1_item_total'];
+
+            $i = 0;
+            foreach($a as $row){
+                $itemData['items_id']       = $a[$i];
+                $itemData['qty']            = $quantity[$i];
+                $itemData['cost']           = $price[$i];
+                $itemData['tax']            = $tax[$i];
+                $itemData['discount']       = $discount[$i];
+                $itemData['total']          = $total[$i];
+                $itemData['estimate_type']  = 'Bundle';
+                $itemData['estimates_id ']  = $estimateId;
+                $itemData['bundle_option_type'] = '1';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i++;
+            }
+
+            $a2 = $data['table_2_item'];
+            $quantity2 = $data['table_2_quantity'];
+            $price2 = $data['table_2_item_amount'];
+            $tax2 = $data['table_2_item_tax'];
+            $discount2 = $data['table_2_discount'];
+            $total2 = $data['table_2_item_total'];
+
+            $i2 = 0;
+            foreach($a2 as $row2){
+                $itemData['items_id']       = $a2[$i2];
+                $itemData['qty']            = $quantity2[$i2];
+                $itemData['cost']           = $price2[$i2];
+                $itemData['tax']            = $tax2[$i2];
+                $itemData['discount']       = $discount2[$i2];
+                $itemData['total']          = $total2[$i2];
+                $itemData['estimate_type']  = 'Bundle';
+                $itemData['estimates_id ']  = $estimateId;
+                $itemData['bundle_option_type'] = '2';
+                $addQuery2 = $this->estimate_model->add_estimate_details($itemData);
+                $i2++;
+            }
+        }
+
+        $return['data'] = $estimateId;
         $return['success'] = $update ? true : false;
         $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
 

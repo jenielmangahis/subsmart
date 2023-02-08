@@ -1731,119 +1731,59 @@ class Customers extends MY_Controller {
 
     public function export()
     {
-        $this->load->library('PHPXLSXWriter');
-        $post = $this->input->post();
-        $search = $post['search'];
+        $user_id = logged('id');
+        $items =  $this->customer_ad_model->getExportData();
 
-        if(!empty(get('transaction'))) {
-            $this->page_data['transaction'] = get('transaction');
+        $getImportFields = array(
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        );
+        $importFieldsList = $this->general->get_data_with_param($getImportFields);
+        
+        $getCompanyImportSettings= array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'setting_type' => 'export',
+            ),
+            'table' => 'customer_settings',
+            'select' => '*',
+        );
+        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
+        $fieldCompanyValues = explode(',', $importFieldSettings->value);
 
-            switch(get('transaction')) {
-                case 'estimates' :
-                    $customers = $this->AcsProfile_model->get_customers_with_open_estimates(logged('company_id'));
-                break;
-                case 'unbilled-activity' :
-                    $customers = $this->AcsProfile_model->get_customers_with_unbilled_activities(logged('company_id'));
-                break;
-                case 'overdue-invoices' :
-                    $customers = $this->AcsProfile_model->get_customers_with_overdue_invoices(logged('company_id'));
-                break;
-                case 'open-invoices' :
-                    $customers = $this->AcsProfile_model->get_customers_with_open_invoices(logged('company_id'));
-                break;
-                case 'payments' :
-                    $paymentsFilter = [
-                        'start-date' => date("Y-m-d", strtotime("-30 days")),
-                        'company_id' => logged('company_id')
-                    ];
-
-                    $customers = $this->AcsProfile_model->get_customers_with_payments($paymentsFilter);
-                break;
+        $fields = array();
+        $fieldNames = array();
+        foreach($fieldCompanyValues as $field) {
+            foreach($importFieldsList as $importSetting) {
+                if($field == $importSetting->id) {
+                    array_push($fields,$importSetting->field_description);
+                    array_push($fieldNames,$importSetting->field_name);
+                }
             }
-
-            $this->page_data['customers'] = $customers;
         }
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "customers_list_".$time.".csv";
+        $f = fopen('php://memory', 'w');
+        fputcsv($f, $fields, $delimiter);
 
-        if(!empty($search)) {
-            $this->page_data['customers'] = array_filter($this->page_data['customers'], function($customer, $key) use ($search) {
-                $name = $customer->last_name.', '.$customer->first_name;
-                return (stripos($name, $search) !== false);
-            }, ARRAY_FILTER_USE_BOTH);
-        }
-
-        usort($this->page_data['customers'], function ($a, $b) {
-            $nameA = $a->last_name.', '.$a->first_name;
-            $nameB = $b->last_name.', '.$b->first_name;
-            return strcasecmp($nameA, $nameB);
-        });
-
-        $data = [];
-        foreach($this->page_data['customers'] as $customer)
-        {
-            $data[] = [
-                'name' => $customer->last_name.', '.$customer->first_name,
-                'company' => $customer->business_name,
-                'address' => $customer->mail_add,
-                'city' => $customer->city,
-                'state' => $customer->state,
-                'country' => $customer->country,
-                'zip' => $customer->zip_code,
-                'phone' => $customer->phone_h,
-                'email' => $customer->email,
-                'type' => $customer->customer_type,
-                'open_balance' => '',
-                'notes' => $customer->notes
-            ];
-        }
-
-        $writer = new XLSXWriter();
-        $headers = [
-            "Customer",
-            "Company",
-            "Address",
-            "City",
-            "State",
-            "Country",
-            "Zip",
-            "Phone",
-            "Email",
-            "Type",
-            "Open Balance",
-            "Notes"
-        ];
-
-        if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
-            unset($headers[2]);
-        }
-        if(!isset($post['fields']) || !in_array('phone', $post['fields'])) {
-            unset($headers[7]);
-        }
-        if(!isset($post['fields']) || !in_array('email', $post['fields'])) {
-            unset($headers[8]);
-        }
-
-        $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
-
-        foreach($data as $cust) {
-            $name = $cust['name'];
-
-            if(!isset($post['fields']) || !in_array('address', $post['fields'])) {
-                unset($cust['address']);
+        if (!empty($items)) {
+            foreach ($items as $item) {
+                $csvData = array();
+                foreach($fieldNames as $fieldName){
+                    array_push($csvData, $item->$fieldName);
+                }
+                fputcsv($f, $csvData, $delimiter);
             }
-            if(!isset($post['fields']) || !in_array('phone', $post['fields'])) {
-                unset($cust['phone']);
-            }
-            if(!isset($post['fields']) || !in_array('email', $post['fields'])) {
-                unset($cust['email']);
-            }
-
-            $writer->writeSheetRow('Sheet1', $cust);
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="customers.xlsx"');
-        header('Cache-Control: max-age=0');
-        $writer->writeToStdOut();
+        fseek($f, 0);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+        fpassthru($f);
     }
 
     public function add_customer_type()
@@ -1896,5 +1836,189 @@ class Customers extends MY_Controller {
         $update = $this->estimate_model->update($estimateId, $estimateData);
 
         redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    public function export_transactions($customerId)
+    {
+        $this->load->library('PHPXLSXWriter');
+        $post = $this->input->post();
+        $customer = $this->accounting_customers_model->getCustomerDetails($customerId)[0];
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $type = $post['type'];
+        $date = $post['date'];
+
+        $filters = [
+            'customer_id' => $customerId,
+            'type' => $type,
+            'order' => $order
+        ];
+
+        switch ($date) {
+            case 'today':
+                $filters['start-date'] = date("Y-m-d");
+                $filters['end-date'] = date("Y-m-d");
+            break;
+            case 'yesterday':
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+            break;
+            case 'this-week':
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
+            break;
+            case 'this-month':
+                $filters['start-date'] = date("Y-m-01");
+                $filters['end-date'] = date("Y-m-t");
+            break;
+            case 'this-quarter':
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+                
+                $filters['start-date'] = $quarters[$quarter]['start'];
+                $filters['end-date'] = $quarters[$quarter]['end'];
+            break;
+            case 'this-year':
+                $filters['start-date'] = date("Y-01-01");
+                $filters['end-date'] = date("Y-12-t");
+            break;
+            case 'last-week':
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+            break;
+            case 'last-month':
+                $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+            break;
+            case 'last-quarter':
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+
+                $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+            break;
+            case 'last-year':
+                $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+            break;
+            case 'last-365-days':
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                $filters['end-date'] = date("Y-m-d");
+            break;
+        }
+
+        $transactions = $this->get_transactions($filters);
+
+        $excelHead .= "Type: $type · Status: All statuses · Delivery method: Any · Name: $customer->first_name $customer->last_name";
+        $excelHead .= " · Date: ".ucfirst(str_replace("-", " ", $post['date']));
+
+        $writer = new XLSXWriter();
+        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+
+        $headers = [];
+
+        $headers[] = "Date";
+        if(in_array('type', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Type";
+        }
+        if(in_array('no', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "No.";
+        }
+        if(in_array('customer', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Customer";
+        }
+        if(in_array('method', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Method";
+        }
+        if(in_array('source', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Source";
+        }
+        if(in_array('memo', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Memo";
+        }
+        if(in_array('due_date', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Due date";
+        }
+        if(in_array('aging', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Aging";
+        }
+        if(in_array('balance', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Balance";
+        }
+        $headers[] = "Total";
+        if(in_array('last_delivered', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Last Delivered";
+        }
+        if(in_array('email', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Email";
+        }
+        if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Attachments";
+        }
+        if(in_array('status', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Status";
+        }
+        if(in_array('po_number', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "P.O. Number";
+        }
+        if(in_array('sales_rep', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Sales Rep";
+        }
+
+        $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
+        $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+
+        foreach($transactions as $transaction) {
+            $keys = array_keys($transaction);
+
+            foreach($keys as $key) {
+                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
+                    unset($transaction[$key]);
+                }
+            }
+            $transaction['total'] = str_replace('$-', '-$', '$'.$transaction['total']);
+            $transaction['balance'] = str_replace('$-', '-$', '$'.$transaction['balance']);
+            $writer->writeSheetRow('Sheet1', $transaction);
+        }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="sales.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
     }
 }
