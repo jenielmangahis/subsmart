@@ -77,9 +77,14 @@
                                                 <input type="text" name="office_phone" value="<?php echo $profiledata->office_phone ?>"  class="nsm-field form-control" autocomplete="off" placeholder="e.g 123 456 7890">
                                             </div>
 
-                                            <div class="col-12 col-md-2 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Extension <small class="text-muted">(optional)</small></label>
+                                            <div class="col-12 col-md-1 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Ext <small class="text-muted">(optional)</small></label>
                                                 <input type="text" name="office_phone_extn" value="<?php echo $profiledata->office_phone_extn ?>" class="nsm-field form-control" autocomplete="off" placeholder="e.g. 123">
+                                            </div>
+
+                                            <div class="col-12 col-md-3 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Contact Person <span class="nsm-text-error">*</span></label>
+                                                <input type="text" name="contact_name" value="<?php echo $profiledata->contact_name ?>"  class="nsm-field form-control" autocomplete="off" placeholder="" required />
                                             </div>
 
                                             <div class="col-12 col-md-4">
@@ -137,7 +142,7 @@
                                             </div>
                                             <div class="col-12 col-md-6 mt-5">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Service Location <small class="text-muted">(optional)</small></label>
-                                                <input type="text" name="service_location" class="form-control" value="<?php echo $profiledata->service_location ?>"  class="nsm-field form-control" id="service_locations" autocomplete="off" placeholder="Area or neighborhood">
+                                                <input type="text" name="service_location" class="form-control" value="<?php echo $profiledata->service_location ?>"  class="nsm-field form-control" id="service_locations" data-role="tagsinput">
                                                 <label class="content-subtitle text-muted">Enter the areas or neighborhoods where you provide your services.</label>
                                             </div>
                                             <div class="col-12 col-md-12 mt-5">

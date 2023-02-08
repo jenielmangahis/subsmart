@@ -1429,6 +1429,14 @@ function sleep(seconds) {
 
 // https://stackoverflow.com/a/11381730/8062659
 function isMobile() {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  if (params.app) {
+    return true;
+  }
+
   let check = false;
   (function (a) {
     if (

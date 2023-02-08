@@ -45,7 +45,7 @@
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('estimate') ?>" method="GET">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Estimates" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                                <input type="search" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Estimates" value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
                         </form>
                     </div>

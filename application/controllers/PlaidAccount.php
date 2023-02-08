@@ -154,7 +154,7 @@ class PlaidAccount extends MY_Controller {
                 //Check if account id exists
                 $filters['search'][] = ['field' => 'company_id', 'value' => $cid];
                 $filters['search'][] = ['field' => 'institution_id', 'value' => $plaidData->institution->institution_id];
-                $isExists = $this->PlaidBankAccount_model->getByAccountNameAndSubType($plaidData->institution->name,$account->subtype,$filters);
+                $isExists = $this->PlaidBankAccount_model->getByAccountId($account->id);
                 if( !$isExists ){
                     $data = [
                         'company_id' => $cid,
