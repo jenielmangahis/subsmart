@@ -393,6 +393,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
+                                            <hr />
                                             <table class="table">
                                                 <tbody>
                                                     <tr>
@@ -408,10 +409,9 @@
                                                 </tbody>
                                             </table>
                                             <p>Description of Job</p>
-                                            <textarea name="job_description" class="form-control" required><?= isset($jobs_data) ? $jobs_data->job_name : ''; ?></textarea>
-                                            <hr/>
-                                        </div>
-                                        <hr>
+                                            <textarea name="job_description" class="form-control" required><?= isset($jobs_data) ? $jobs_data->job_name : ''; ?></textarea>                                        
+                                            <hr />
+                                        </div>                                        
                                         <h6 class='card_header'>Job Items Listing</h6>                                        
                                         <table class="table table-hover">
                                             <tbody id="jobs_items">
