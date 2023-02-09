@@ -6,50 +6,33 @@
             var form = $(this);
             var payment_method = $("#pay_method").val();
             //var url = form.attr('action');
-            if( payment_method == 'CC' ){
-                $(".btn-save-payment").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-                setTimeout(function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url() ?>job/update_payment_details_cc",
-                        data: form.serialize(), // serializes the form's elements.
-                        dataType:'json',
-                        success: function(data) {
-                            if(data.is_success){
-                                sucess();
-                            }else{
-                                Swal.fire({
-                                    title: 'Sorry!',
-                                    text: data.msg,
-                                    icon: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#32243d',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Ok'
-                                }).then((result) => {
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>job/update_payment_details",
+                data: form.serialize(), // serializes the form's elements.
+                dataType: 'json',
+                success: function(o) {                    
+                    if(o.is_success === 1){
+                        sucess();
+                    }else{
+                        Swal.fire({
+                            title: 'Error!',
+                            text: o.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
 
-                                });
-                            }
-
-                            //$(".btn-save-payment").html('Save');
-                        }
-                    });
-                }, 500);
-            }else{
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url() ?>job/update_payment_details",
-                    data: form.serialize(), // serializes the form's elements.
-                    success: function(data) {
-                        console.log(data);
-                        if(data === '1'){
-                            sucess();
-                        }else{
-                            error();
-                        }
+                        });
                     }
-                });    
-            }
+
+                    $("#btn-billing-pay-now").html('Pay Now');
+                },beforeSend: function() {
+                    $("#btn-billing-pay-now").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                }
+            }); 
         });
     });
 
@@ -63,9 +46,9 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ok'
         }).then((result) => {
-            if (result.value) {
+            //if (result.value) {
                 window.location.href='<?= base_url(); ?>job/';
-            }
+            //}
         });
     }
 
@@ -163,7 +146,7 @@
     }
 
     function HIDE_ALL() {
-        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED').hide();
+        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED, .CHECK_NUMBER').hide();
     }
     function SHOW_ALL() {
         $('.PAYMENT_BUTTON').show();
@@ -181,6 +164,11 @@
             HIDE_ALL();
             SHOW_ALL()
             $('.CASH').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "CHECK") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.CHECK_NUMBER').fadeIn('fast');
         }
         if (SELECTED_PAYMENT == "ACH") {
             HIDE_ALL();

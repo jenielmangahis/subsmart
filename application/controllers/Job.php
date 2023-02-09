@@ -833,51 +833,113 @@ class Job extends MY_Controller
                 'table' => 'acs_profile',
                 'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
             );
+
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
-
             $this->page_data['jobs_data'] = $jobs_data;
+            $this->page_data['page']->title = 'Jobs Billing';
+            $this->load->view('v2/pages/job/job_billing', $this->page_data);
+            //$this->load->view('job/job_billing_v2', $this->page_data);
+        }else{
+            redirect('job');
         }
-        $this->page_data['page']->title = 'Jobs Billing';
-        $this->load->view('v2/pages/job/job_billing', $this->page_data);
-
-        // if ($this->input->get('v1', TRUE)) {
-        //     $this->load->view('job/job_billing', $this->page_data);
-        // } else {
-        //     $this->page_data['page']->title = 'Jobs Billing';
-        //     $this->load->view('job/job_billing_v2', $this->page_data);
-        // }
     }
 
     public function update_payment_details()
     {
-        $input = $this->input->post();
-        $updated=0;
-        // customer_ad_model
+        $input   = $this->input->post();        
+        $updated = 0;
+
+        $is_success = 1;
+        $msg = 'Cannot process payment';
+
+        /*echo "<pre>";
+        print_r($input);
+        exit;*/
+
         if ($input) {
             $payment_data = array();
-            if ($input['pay_method'] == 'CASH') {
-                $payment_data['payment_method'] = $input['pay_method'];
+            $payment_data['payment_method'] = $input['pay_method'];
+
+            if ($input['pay_method'] == 'CASH') {                
                 $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
                 $payment_data['is_paid'] = 1;
+            }elseif($input['pay_method'] == 'CHECK'){
+                $payment_data['check_number']   = $input['chk_check_number'];
+                $payment_data['routing_number'] = $input['chk_routing_number'];
+                $payment_data['account_number'] = $input['chk_account_number'];
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid'] = 1;
+            }elseif($input['pay_method'] == 'ACH'){
+                $payment_data['check_number']      = $input['chk_check_number'];
+                $payment_data['routing_number']    = $input['routing_number'];
+                $payment_data['account_number']    = $input['account_number'];
+                $payment_data['ach_date_of_month'] = $input['day_of_month'];
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid']      = 1;
+            }elseif($input['pay_method'] == 'VENMO'){
+                $payment_data['account_credentials'] = $input['account_credentials'];
+                $payment_data['account_note'] = $input['account_note'];
+                $payment_data['confirmation'] = $input['confirmation'];
+                //$payment_data['ach_date_of_month'] = 0;
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid']      = 1;
+            }elseif($input['pay_method'] == 'HOME_OWNER_FINANCING'){
+                $payment_data['account_credentials'] = $input['account_credential'];
+                $payment_data['account_note'] = $input['account_note'];
+                $payment_data['is_document_signed'] = $input['is_document_signed'];
+                //$payment_data['ach_date_of_month'] = 0;
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid']      = 1;
+            }elseif($input['pay_method'] == 'CREDIT_CARD'){
+                $job = $this->jobs_model->get_specific_job($input['jobs_id']);
+                $converge_data = [
+                    'company_id' => $job->company_id,
+                    'amount' => $input['amount'],
+                    'card_number' => $input['card_number'],
+                    'exp_month' => $input['card_mmyy'],
+                    'exp_year' => $input['exp_year'],
+                    'card_cvc' => $input['card_cvc'],
+                    'address' => $input['mail_add'],
+                    'zip' => $input['zip']
+                ];
+                $result = $this->converge_send_sale($converge_data);
+                if( $result['is_success'] == 1 ){
+                    $payment_data['credit_number']  = $input['card_number'];
+                    $payment_data['credit_expiry']  = $input['card_mmyy'] . '/' . $input['exp_year'];
+                    $payment_data['credit_cvc']     = $input['card_cvc'];
+                    $payment_data['mail_address']   = $input['mail_add'];
+                    $payment_data['mail_locality']  = $input['city'];
+                    $payment_data['mail_state']     = $input['state'];
+                    $payment_data['mail_postcode']  = $input['zip'];
+                    $payment_data['is_collected'] = 1;
+                    $payment_data['is_paid']      = 1;
+                }else{
+                    $is_success = 0;
+                    $msg = $result['msg'];
+                }
+            }else{
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid'] = 1;
             }
-            // $payment_data['paid_datetime'] =date("m-d-Y h:i:s");
-            ;
-            $check = array(
-                'where' => array(
-                    'job_id' => $input['jobs_id']
-                ),
-                'table' => 'job_payments'
-            );
-            $exist = $this->general->get_data_with_param($check, false);
-            if ($exist) {
-                $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
-            } else {
-                $updated =  $this->general->add_($payment_data, 'job_payments');
-            }
+
+            if( $is_success == 1 ){
+                $msg = '';
+                $check = array(
+                    'where' => array(
+                        'job_id' => $input['jobs_id']
+                    ),
+                    'table' => 'job_payments'
+                );
+                $exist = $this->general->get_data_with_param($check, false);
+                if ($exist) {
+                    $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
+                } else {
+                    $updated =  $this->general->add_($payment_data, 'job_payments');
+                } 
+            }            
         }
 
         if ($updated) {
-
             //SMS Notification
             $comp_id = logged('company_id');
             $job = $this->jobs_model->get_specific_job($input['jobs_id']);
@@ -885,10 +947,11 @@ class Job extends MY_Controller
 
             $jobs_data = array();
             $jobs_data['status'] = 'Completed';
-            echo $this->general->update_with_key_field($jobs_data, $input['jobs_id'], 'jobs', 'id');
-        } else {
-            echo '0';
+            $this->general->update_with_key_field($jobs_data, $input['jobs_id'], 'jobs', 'id');
         }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function update_payment_details_cc()
@@ -960,7 +1023,7 @@ class Job extends MY_Controller
 
         $this->load->model('CompanyOnlinePaymentAccount_model');
 
-        $is_success = false;
+        $is_success = 0;
         $msg = '';
         
         $comp_id = logged('company_id');
@@ -972,22 +1035,22 @@ class Job extends MY_Controller
                 'merchant_id' => $convergeCred->converge_merchant_id,
                 'user_id' => $convergeCred->converge_merchant_user_id,
                 'pin' => $convergeCred->converge_merchant_pin,
-                'demo' => false,
+                'demo' => true,
             ]);
             $createSale = $converge->request('ccsale', [
                 'ssl_card_number' => $data['card_number'],
                 'ssl_exp_date' => $exp_date,
                 'ssl_cvv2cvc2' => $data['card_cvc'],
-                'ssl_amount' => $data['amount'],
+                'ssl_amount' => floatval($data['amount']),
                 'ssl_avs_address' => $data['address'],
                 'ssl_avs_zip' => $data['zip'],
             ]);
 
             if ($createSale['success'] == 1) {
-                $is_success = true;
+                $is_success = 1;
                 $msg = '';
             } else {
-                $is_success = false;
+                $is_success = 0;
                 $msg = $createSale['errorMessage'];
             }
         } else {
