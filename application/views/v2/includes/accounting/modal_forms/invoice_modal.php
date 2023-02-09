@@ -87,10 +87,9 @@
                                         <div class="col-12 col-md-3">
                                             <label for="customer">Customer</label>
                                             <select name="customer" id="customer" class="form-control nsm-field" required>
-                                                <?php if(isset($invoice)) : ?>
-                                                    <option value="<?=$invoice->customer_id?>">
+                                                <?php if(isset($customer)) : ?>
+                                                    <option value="<?=$customer->prof_id?>">
                                                     <?php
-                                                        $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
                                                         echo $customer->first_name . ' ' . $customer->last_name;
                                                     ?>
                                                     </option>

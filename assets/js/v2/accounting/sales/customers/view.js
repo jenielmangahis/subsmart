@@ -1200,3 +1200,29 @@ $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function()
 $("#btn_print_customer_transactions").on("click", function() {
     $("#customer_transactions_table_print").printThis();
 });
+
+$('#transactions-table .create-invoice').on('click', function (e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+    var type = $(this).closest('tr').find('td:nth-child(3)').text().trim();
+    
+    $.get(`/accounting/customers/create-invoice/${type.toLowerCase()}/${id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#invoiceModal';
+        initModalFields('invoiceModal');
+
+        $('#invoiceModal #customer').trigger('change');
+
+        $(modalName).modal('show');
+    });
+});

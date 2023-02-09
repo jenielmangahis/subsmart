@@ -313,8 +313,9 @@ $("#attachment-file").change(function() {
             const $requestedDeposit = document.getElementById("invoice_requested_deposit");
             if ($requestedDeposit && $requestedDeposit.dataset.value) {
                 const value = parseFloat($requestedDeposit.dataset.value);
-                const invoiceTotal = parseFloat(parseFloat(total) - value).toFixed(2);
-                $("#invoice_overall_total_without_deposited_amount").html('$' + formatNumber(invoiceTotal));
+                const invoiceTotal = parseFloat(parseFloat(total) - value);
+                total = parseFloat(invoiceTotal).toFixed(2);
+                $("#invoice_overall_total_without_deposited_amount").html('$' + formatNumber(total));
             }
             $('#pay_amount').val(withCommas);
             $('#total_amount').val(total);
