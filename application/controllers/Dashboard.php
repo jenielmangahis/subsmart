@@ -541,6 +541,10 @@ class Dashboard extends Widgets {
 
     public function sales_leaderboard()
     {
+        if(logged('company_id') != 58){
+            return $this->apiGetSalesLeaderBoard();
+        }
+
         $salesLeaderboard=$this->event_model->getSalesLeaderboards(); // fetch Sales Rep and customer they are assigned to
         $revenue = [];
         foreach($salesLeaderboard as $sl){
@@ -552,6 +556,27 @@ class Dashboard extends Widgets {
         }
         $data_arr = array("success" => true, "salesLeaderboard" => $salesLeaderboard, "revenue" => $revenue);
         die(json_encode($data_arr));
+    }
+
+    function apiGetSalesLeaderBoard() {
+        $companyId = logged('company_id');
+        $this->db->select('SUM(job_payments.amount) AS total_revenue,users.LName as sales_rep_lastname,users.FName as sales_rep_firstname, users.id as sales_rep_id, users.profile_img as sales_rep_avatar, COUNT(jobs.customer_id) as total_customers');
+        $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->where('jobs.company_id', $companyId);
+        $this->db->where('jobs.status', 'Completed');
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.start_date, "%Y")');
+        $this->db->group_by('users.id');
+        $this->db->order_by('total_revenue', 'DESC');
+        $query = $this->db->get('jobs');
+        $result = $query->result_array();
+        $result = array_map(function ($leaderboard) {
+            $leaderboard['sales_rep_avatar'] = userProfileImage((int) $leaderboard['sales_rep_id']);
+            return $leaderboard;
+        }, $result);
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $result, 'is_new' => true]);
     }
 
     public function tech_leaderboard()

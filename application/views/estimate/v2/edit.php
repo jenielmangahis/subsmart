@@ -746,8 +746,8 @@ echo put_header_assets();
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <select name="deposit_request" class="form-control">
-                                        <option value="1" selected="selected">Deposit amount $</option>
-                                        <option value="2">Percentage %</option>
+                                        <option value="1" <?= $estimate->deposit_request == "1" ? "selected" : ""; ?>>Deposit amount $</option>
+                                        <option value="2" <?= $estimate->deposit_request == "2" ? "selected" : ""; ?>>Percentage %</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 form-group">

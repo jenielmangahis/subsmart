@@ -72,6 +72,15 @@
                                 </div>
 
                                 <div class="row">
+                                    <?php if($is_copy) : ?>
+                                    <div class="col-12">
+                                        <div class="nsm-callout primary">
+                                            <button><i class='bx bx-x'></i></button>
+                                            <h6 class="mt-0">This is a copy</h6>
+                                            <span>This is a copy of a option estimate. Revise as needed and save the option estimate.</span>
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
                                     <div class="col-12 col-md-2">
                                         <label for="customer-email">Customer Email</label>
                                         <input type="text" name="customer_email" id="customer-email" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $customer->email : ''?>" disabled>
