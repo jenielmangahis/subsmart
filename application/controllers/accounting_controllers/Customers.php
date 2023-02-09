@@ -1250,34 +1250,34 @@ class Customers extends MY_Controller {
 
         foreach($invoices as $invoice)
         {
-            $manageCol = '<div class="dropdown table-management">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class="dropdown-item print-invoice" href="#">Print</a>
+                        <a class='dropdown-item print-invoice' href='/invoice/preview/$invoice->id?format=print' target='_blank'>Print</a>
                     </li>
                     <li>
-                        <a class="dropdown-item send-invoice" href="#">Send</a>
+                        <a class='dropdown-item send-invoice' href='#'>Send</a>
                     </li>
                     <li>
-                        <a class="dropdown-item share-invoice-link" href="#">Share invoice link</a>
+                        <a class='dropdown-item share-invoice-link' href='#'>Share invoice link</a>
                     </li>
                     <li>
-                        <a class="dropdown-item view-edit-invoice" href="#">View/Edit</a>
+                        <a class='dropdown-item view-edit-invoice' href='#'>View/Edit</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
                     </li>
                     <li>
-                        <a class="dropdown-item delete-invoice" href="#">Delete</a>
+                        <a class='dropdown-item delete-invoice' href='#'>Delete</a>
                     </li>
                     <li>
-                        <a class="dropdown-item void-invoice" href="#">Void</a>
+                        <a class='dropdown-item void-invoice' href='#'>Void</a>
                     </li>
                 </ul>
-            </div>';
+            </div>";
 
             $flag = true;
             switch($filters['type']) {
@@ -1610,31 +1610,31 @@ class Customers extends MY_Controller {
 
         foreach($estimates as $estimate)
         {
-            $manageCol = '<div class="dropdown table-management">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                        <a class='dropdown-item create-invoice' href='#'>Create invoice</a>
                     </li>
                     <li>
-                        <a class="dropdown-item print-estimate" href="#">Print</a>
+                        <a class='dropdown-item print-estimate' href='/estimate/print/$estimate->id' target='_blank'>Print</a>
                     </li>
                     <li>
-                        <a class="dropdown-item send-estimate" href="#">Send</a>
+                        <a class='dropdown-item send-estimate' href='#'>Send</a>
                     </li>
                     <li>
-                        <a class="dropdown-item update-estimate-status" href="#">Update status</a>
+                        <a class='dropdown-item update-estimate-status' href='#'>Update status</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
                     </li>
                     <li>
-                        <a class="dropdown-item view-edit-estimate" href="#">View/Edit</a>
+                        <a class='dropdown-item view-edit-estimate' href='#'>View/Edit</a>
                     </li>
                 </ul>
-            </div>';
+            </div>";
 
             $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
             $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
@@ -2020,5 +2020,141 @@ class Customers extends MY_Controller {
         header('Content-Disposition: attachment;filename="sales.xlsx"');
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
+    }
+
+    public function create_invoice($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'estimate' :
+                $estimate = $this->estimate_model->getEstimate($transactionId);
+                $customer = $this->accounting_customers_model->get_by_id($estimate->customer_id);
+                $this->page_data['customer'] = $customer;
+
+                switch($estimate->estimate_type) {
+                    case 'Standard' :
+                        $view = "standard_estimate_modal";
+                        $items = $this->estimate_model->getItemlistByID($transactionId);
+
+                        foreach($items as $key => $item) {
+                            $items[$key]->cost = $item->costing;
+                            $items[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$key]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                        }
+
+                        $this->page_data['items'] = $items;
+                    break;
+                    case 'Option' :
+                        $view = "options_estimate_modal";
+                        $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($transactionId);
+        
+                        $items = [];
+                        $index = 0;
+                        foreach($itemsOption1 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+        
+                        $itemsOption2 = $this->estimate_model->getItemlistByIDOption2($transactionId);
+        
+                        foreach($itemsOption2 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+        
+                        $this->page_data['items'] = $items;
+                    break;
+                    case 'Bundle' :
+                        $view = "bundle_estimate_modal";
+                        $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($transactionId);
+        
+                        $items = [];
+                        $index = 0;
+                        foreach($itemsBundle1 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+        
+                        $itemsBundle2 = $this->estimate_model->getItemlistByIDBundle2($transactionId);
+        
+                        foreach($itemsBundle2 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+        
+                        $this->page_data['items'] = $items;
+                    break;
+                }
+            break;
+            case 'credit' :
+                $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($transactionId);
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $transactionId);
+                $customer = $this->accounting_customers_model->get_by_id($delayedCredit->customer_id);
+                $this->page_data['customer'] = $customer;
+
+                $creditItems = [];
+                foreach($items as $key => $item) {
+                    $creditItem = new stdClass();
+                    $creditItem->items_id = $item->items_id;
+                    $creditItem->location_id = $item->location_id;
+                    $creditItem->qty = $item->quantity;
+                    $creditItem->cost = $item->price;
+                    $creditItem->discount = $item->discount;
+                    $creditItem->tax = $item->tax;
+                    $creditItem->total = $item->total;
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $creditItem->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $creditItem->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $creditItem->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $creditItem->packageItems = json_decode($item->package_item_details);
+                    }
+                    $creditItems[] = $creditItem;
+                }
+
+                $this->page_data['items'] = $creditItems;
+            break;
+            case 'charge' :
+                $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($transactionId);
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $transactionId);
+                $customer = $this->accounting_customers_model->get_by_id($delayedCharge->customer_id);
+                $this->page_data['customer'] = $customer;
+
+                $chargeItems = [];
+                foreach($items as $key => $item) {
+                    $chargeItems = new stdClass();
+                    $chargeItems->items_id = $item->items_id;
+                    $chargeItems->location_id = $item->location_id;
+                    $chargeItems->qty = $item->quantity;
+                    $chargeItems->cost = $item->price;
+                    $chargeItems->discount = $item->discount;
+                    $chargeItems->tax = $item->tax;
+                    $chargeItems->total = $item->total;
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $chargeItems->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $chargeItems->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $chargeItems->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $chargeItems->packageItems = json_decode($item->package_item_details);
+                    }
+                    $creditItems[] = $creditItem;
+                }
+
+                $this->page_data['items'] = $creditItems;
+            break;
+        }
+
+        $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
 }

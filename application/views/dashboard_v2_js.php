@@ -111,6 +111,60 @@ $(document).ready(function() {
     fetch('<?= base_url('Dashboard/sales_leaderboard') ?>',{
         method: 'GET'
     }) .then(response => response.json()).then(response => {
+
+        if (response.is_new) {
+            const getAvatar = (leaderboard) => {
+                const {sales_rep_avatar,sales_rep_firstname,sales_rep_lastname} = leaderboard;
+
+                if (typeof sales_rep_avatar === "string" && !sales_rep_avatar.endsWith("default.png")) {
+                    return `<div class="nsm-profile" style="background-image: url('${sales_rep_avatar}');"></div>`;
+                }
+
+                const repInitials = sales_rep_firstname[0] + ''+ sales_rep_lastname[0];
+                return `
+                    <div class="nsm-profile">
+                        <span>${repInitials}</span>
+                    </div>
+                `;
+            };
+
+            response.data.forEach(leaderboard => {
+                const {sales_rep_firstname, sales_rep_lastname, total_revenue,total_customers} = leaderboard;
+                const repName = `${sales_rep_firstname} ${sales_rep_lastname}`;
+
+                const formatter = Intl.NumberFormat('en-US');
+                const revenue = formatter.format(total_revenue);
+
+                $('#sales_leaderboard').append(
+                `
+                <div class="widget-item">
+                    ${getAvatar(leaderboard)}
+                    <div class="content">
+                        <div class="details">
+                            <span class="content-title">${repName}</span>
+                            <span class="content-subtitle d-block">Sales Rep</span>
+                        </div>
+                        <div style="padding-top: 5px;">
+                            <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">
+                                $${revenue}
+                            </span>
+                            <span class="content-subtitle d-block">revenue</span>
+                        </div>
+                        <div class="controls">
+                            <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">
+                                ${total_customers}
+                            </span>
+                            <span class="content-subtitle d-block">customers</span>
+                        </div>
+                    </div>
+                </div>
+                `
+                )
+            });
+            return;
+        }
+
+
         var {success, salesLeaderboard, revenue} = response;
         console.log(response);
         if(success){
@@ -146,7 +200,10 @@ $(document).ready(function() {
                 var techRev = revenue[x][0]['techRev'] ? parseFloat(revenue[x][0]['techRev']).toFixed(2) : '0.00';
                 // var techRev = rev ? rev : 0.00;
 
-                var count = parseFloat(customerCount[x][0].totalCount) != 0 ? parseFloat(customerCount[x][0].totalCount) : '0';
+                var count = '0';
+                if (customerCount[x][0] && customerCount[x][0].totalCount) {
+                    count = parseFloat(customerCount[x][0].totalCount);
+                }
                 $('#tech_leaderboard').append(
                     '<div class="widget-item"><div class="nsm-profile"><span>'+techLeaderboard[x].FName[0] + ''+ techLeaderboard[x].LName[0]+'</span></div><div class="content"><div class="details"><span class="content-title">'+techLeaderboard[x].FName + ' '+ techLeaderboard[x].LName+'</span><span class="content-subtitle d-block">Technician</span></div><div style="padding-top: 5px;"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$'+techRev+'</span><span class="content-subtitle d-block">revenue</span></div><div class="controls"><span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">'+ count +'</span><span class="content-subtitle d-block">jobs</span></div></div></div>'
                 )

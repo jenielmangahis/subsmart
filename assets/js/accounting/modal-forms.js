@@ -11078,51 +11078,143 @@ const updateTransaction = (event, el) => {
     }
 
     if(customerModals.includes(modalId)) {
-        data.delete('item[]');
-        data.delete('package[]');
-        data.delete('location[]');
-        data.delete('quantity[]');
-        data.delete('item_amount[]');
-        data.delete('discount[]');
-        data.delete('item_tax[]');
-        $(`${modalId} table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function() {
-            if(data.has('item_total[]')) {
-                if($(this).hasClass('package')) {
-                    data.append('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
-                    data.append('location[]', null);
-                    data.append('item_amount[]', $(this).find('span.item-amount').html());
-                    data.append('discount[]', null);
+        if(modalId !== '#options-estimate-modal' && modalId !== '#bundle-estimate-modal') {
+            data.delete('item[]');
+            data.delete('package[]');
+            data.delete('location[]');
+            data.delete('quantity[]');
+            data.delete('item_amount[]');
+            data.delete('discount[]');
+            data.delete('item_tax[]');
+            data.delete('item_linked_transaction[]');
+            data.delete('transaction_item_id[]');
+            $(`${modalId} table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function() {
+                if(data.has('item_total[]')) {
+                    if($(this).hasClass('package')) {
+                        data.append('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                        data.append('location[]', null);
+                        data.append('item_amount[]', $(this).find('span.item-amount').html());
+                        data.append('discount[]', null);
+                    } else {
+                        data.append('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                        data.append('location[]', $(this).find('select[name="location[]"]').val());
+                        data.append('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                        data.append('discount[]', $(this).find('input[name="discount[]"]').val());
+                    }
+                    data.append('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                    data.append('quantity[]', $(this).find('input[name="quantity[]"]').val());
+                    data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                    data.append('item_linked[]', $(this).find('input[name="item_linked_transaction[]"]').length > 0 ? $(this).find('input[name="item_linked_transaction[]"]').val() : '');
+                    data.append('transac_item_id[]', $(this).find('input[name="transaction_item_id[]"]').length > 0 ? $(this).find('input[name="transaction_item_id[]"]').val() : '');
                 } else {
-                    data.append('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
-                    data.append('location[]', $(this).find('select[name="location[]"]').val());
-                    data.append('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
-                    data.append('discount[]', $(this).find('input[name="discount[]"]').val());
+                    if($(this).hasClass('package')) {
+                        data.set('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                        data.set('location[]', null);
+                        data.set('item_amount[]', $(this).find('span.item-amount').html());
+                        data.set('discount[]', null);
+                    } else {
+                        data.set('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                        data.set('location[]', $(this).find('select[name="location[]"]').val());
+                        data.set('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                        data.set('discount[]', $(this).find('input[name="discount[]"]').val());
+                    }
+                    data.set('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                    data.set('quantity[]', $(this).find('input[name="quantity[]"]').val());
+                    data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                    data.set('item_linked[]', $(this).find('input[name="item_linked_transaction[]"]').length > 0 ? $(this).find('input[name="item_linked_transaction[]"]').val() : '');
+                    data.set('transac_item_id[]', $(this).find('input[name="transaction_item_id[]"]').length > 0 ? $(this).find('input[name="transaction_item_id[]"]').val() : '');
                 }
-                data.append('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
-                data.append('quantity[]', $(this).find('input[name="quantity[]"]').val());
-                data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
-            } else {
-                if($(this).hasClass('package')) {
-                    data.set('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
-                    data.set('location[]', null);
-                    data.set('item_amount[]', $(this).find('span.item-amount').html());
-                    data.set('discount[]', null);
-                } else {
-                    data.set('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
-                    data.set('location[]', $(this).find('select[name="location[]"]').val());
-                    data.set('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
-                    data.set('discount[]', $(this).find('input[name="discount[]"]').val());
-                }
-                data.set('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
-                data.set('quantity[]', $(this).find('input[name="quantity[]"]').val());
-                data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
-            }
-        });
+            });
 
-        data.set('total_amount', $(`${modalId} .transaction-grand-total:first-child`).html().replace('$', '').trim());
-        data.set('subtotal', $(`${modalId} .transaction-subtotal:first-child`).html().replace('$', '').trim());
-        data.set('tax_total', $(`${modalId} .transaction-taxes:first-child`).html().replace('$', '').trim());
-        data.set('discount_total', $(`${modalId} .transaction-discounts:first-child`).html().replace('$', '').trim());
+            data.set('total_amount', $(`${modalId} .transaction-grand-total:first-child`).html().replace('$', '').trim());
+            data.set('subtotal', $(`${modalId} .transaction-subtotal:first-child`).html().replace('$', '').trim());
+            data.set('tax_total', $(`${modalId} .transaction-taxes:first-child`).html().replace('$', '').trim());
+            data.set('discount_total', $(`${modalId} .transaction-discounts:first-child`).html().replace('$', '').trim());
+        } else {
+            data.delete('item[]');
+            data.delete('package[]');
+            data.delete('location[]');
+            data.delete('quantity[]');
+            data.delete('item_amount[]');
+            data.delete('discount[]');
+            data.delete('item_tax[]');
+            data.delete('item_linked_transaction[]');
+            data.delete('transaction_item_id[]');
+
+            if(modalId === '#options-estimate-modal') {
+                var table1 = $('#options-estimate-modal #option-1-item-table');
+                var table2 = $('#options-estimate-modal #option-2-item-table');
+            } else {
+                var table1 = $('#bundle-estimate-modal #bundle-1-item-table');
+                var table2 = $('#bundle-estimate-modal #bundle-2-item-table');
+            }
+
+            table1.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function() {
+                if(data.has('table_1_item_total[]')) {
+                    data.append('table_1_item[]', $(this).find('input[name="item[]"]').val());
+                    data.append('table_1_location[]', $(this).find('select[name="location[]"]').val());
+                    data.append('table_1_item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.append('table_1_discount[]', $(this).find('input[name="discount[]"]').val());
+                    data.append('table_1_item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                    data.append('table_1_quantity[]', $(this).find('input[name="quantity[]"]').val());
+                    data.append('table_1_item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                } else {
+                    data.set('table_1_item[]', $(this).find('input[name="item[]"]').val());
+                    data.set('table_1_location[]', $(this).find('select[name="location[]"]').val());
+                    data.set('table_1_item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.set('table_1_discount[]', $(this).find('input[name="discount[]"]').val());
+                    data.set('table_1_item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                    data.set('table_1_quantity[]', $(this).find('input[name="quantity[]"]').val());
+                    data.set('table_1_item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                }
+            });
+
+            var t1subtotal = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.table-subtotal').html().replace('$', '');
+            var t1taxes = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.table-taxes').html().replace('$', '');
+            data.set('table_1_subtotal', t1subtotal);
+            data.set('table_1_taxes', t1taxes);
+
+            if(modalId === '#bundle-estimate-modal') {
+                var t1adjustmentVal = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('input[name="adjustment_value"]').val();
+                var t1adjustmentName = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('input[name="adjustment_name"]').val();
+                data.set('table_1_adjustment_name', t1adjustmentName);
+                data.set('table_1_adjustment', t1adjustmentVal);
+            }
+            var t1total = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.table-total').html().replace('$', '');
+            data.set('table_1_total', t1total);
+
+            table2.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function() {
+                if(data.has('table_2_item_total[]')) {
+                    data.append('table_2_item[]', $(this).find('input[name="item[]"]').val());
+                    data.append('table_2_location[]', $(this).find('select[name="location[]"]').val());
+                    data.append('table_2_item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.append('table_2_discount[]', $(this).find('input[name="discount[]"]').val());
+                    data.append('table_2_item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                    data.append('table_2_quantity[]', $(this).find('input[name="quantity[]"]').val());
+                    data.append('table_2_item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                } else {
+                    data.set('table_2_item[]', $(this).find('input[name="item[]"]').val());
+                    data.set('table_2_location[]', $(this).find('select[name="location[]"]').val());
+                    data.set('table_2_item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.set('table_2_discount[]', $(this).find('input[name="discount[]"]').val());
+                    data.set('table_2_item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                    data.set('table_2_quantity[]', $(this).find('input[name="quantity[]"]').val());
+                    data.set('table_2_item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                }
+            });
+
+            var t2subtotal = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.table-subtotal').html().replace('$', '');
+            var t2taxes = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.table-taxes').html().replace('$', '');
+            data.set('table_2_subtotal', t2subtotal);
+            data.set('table_2_taxes', t2taxes);
+
+            if(modalId === '#bundle-estimate-modal') {
+                var t2adjustmentVal = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('input[name="adjustment_value"]').val();
+                data.set('table_2_adjustment', t2adjustmentVal);
+            }
+            var t2total = table2.closest('.accordion-body').find(`table:not(#${table2.attr('id')})`).find('.table-total').html().replace('$', '');
+            data.set('table_2_total', t2total);
+        }
     }
 
     if(vendorModals.includes(modalId)) {
