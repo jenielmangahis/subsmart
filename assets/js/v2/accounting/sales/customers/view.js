@@ -1222,7 +1222,111 @@ $('#transactions-table .create-invoice').on('click', function (e) {
         initModalFields('invoiceModal');
 
         $('#invoiceModal #customer').trigger('change');
+        $('#invoiceModal input[name="quantity[]"]:first-child').trigger('change');
 
         $(modalName).modal('show');
+    });
+});
+
+$('#transactions-table .send-estimate').on("click", function(e) {
+    e.preventDefault();
+    let id = customerId;
+    let est_id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Sending of Estimate',
+        text: "Send this to customer?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url+"estimate/sendEstimateToAcs",
+                data: {
+                    id: id,
+                    est_id: est_id
+                },
+                success: function(result) {
+                    Swal.fire({
+                        title: 'Good job!',
+                        text: "Successfully sent to Customer!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function() {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Something went wrong, please try again later.",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                },
+
+            });
+        }
+    });
+});
+
+$('#transactions-table .delete-invoice').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Delete Invoice',
+        text: 'Are you sure you want to delete this invoice?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/delete-transaction/invoice/${id}`,
+                type: 'DELETE',
+                success: function(result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#transactions-table .void-invoice').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Void Invoice',
+        text: 'Are you sure you want to void this invoice?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get('/accounting/void-transaction/invoice/'+id, function(res) {
+                location.reload();
+            });
+        }
     });
 });

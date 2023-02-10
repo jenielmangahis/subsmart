@@ -809,23 +809,28 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-12">
+                                                <hr />
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <small>Job Type</small>
+                                                                <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
+                                                            </td>
+                                                            <td>
+                                                                <small>Job Tags</small>
+                                                                <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <p>Description of Job</p>
+                                                <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                                <hr/>
+                                            </div>
                                         </div>
-                                        <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
-                                        <table class="table table-hover">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <small>Job Type</small>
-                                                        <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
-                                                    </td>
-                                                    <td>
-                                                        <small>Job Tags</small>
-                                                        <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
                                         <table class="table table-hover">
                                             <tbody id="jobs_items">
                                             <?php if(isset($jobs_data)): ?>
@@ -869,9 +874,7 @@
                                         <br>
                                         <br>
                                         <div class="col-sm-12">
-                                            <p>Description of Job</p>
-                                            <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
-                                            <hr/>
+                                            
                                         </div>
                                         <div class="col-sm-12">
                                             <input type="text" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>" hidden>
@@ -884,7 +887,7 @@
                                                             <div class="cont">
                                                                 <div class="tit">
                                                                     <?php 
-                                                                        $THUMBNAIL_SRC = (isset($jobs_data)) ? $jobs_data->attachment : "";
+                                                                        $THUMBNAIL_SRC = (isset($jobs_data)) ? base_url($jobs_data->attachment) : "";
                                                                         if(isset($jobs_data) && $jobs_data->attachment != "") {
                                                                             $IMG_HIDE_STATUS = "";
                                                                             $SPAN_HIDE_STATUS = "d-none";
@@ -895,7 +898,7 @@
                                                                     ?>
                                                                     <input id="attachment-file" name="filetoupload" type="file" accept="image/png, image/jpg, image/jpeg, image/bmp, image/ico"/>
                                                                     <img class="<?php echo $IMG_HIDE_STATUS; ?> w-100 IMG_PREVIEW" id="attachment-image" alt="Attachment" src="<?php echo $THUMBNAIL_SRC; ?>">
-                                                                    <button class="btn btn-danger btn-sm REMOVE_THUMBNAIL <?php echo $IMG_HIDE_STATUS; ?>" type="button" style="position: absolute; left: 160px;">Remove</button>
+                                                                    <button class="btn btn-danger btn-sm REMOVE_THUMBNAIL <?php echo $IMG_HIDE_STATUS; ?>" type="button" style="position: absolute; left: 160px;top:45%;">Remove</button>
                                                                     <span class="<?php echo $SPAN_HIDE_STATUS; ?> THUMBNAIL_BOX">
                                                                         <p>Thumbnail</p>
                                                                        <!--  <p class="or-text">Or</p>

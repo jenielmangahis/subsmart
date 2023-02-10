@@ -560,7 +560,7 @@ class Dashboard extends Widgets {
 
     function apiGetSalesLeaderBoard() {
         $companyId = logged('company_id');
-        $this->db->select('SUM(job_payments.amount) AS total_revenue,users.LName as sales_rep_lastname,users.FName as sales_rep_firstname, users.id as sales_rep_id, users.profile_img as sales_rep_avatar, COUNT(jobs.customer_id) as total_customers');
+        $this->db->select('SUM(job_payments.amount) AS total_revenue,users.LName as lastname,users.FName as firstname, users.id as id, users.profile_img as avatar, COUNT(jobs.customer_id) as total_customers');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->where('jobs.company_id', $companyId);
@@ -571,16 +571,20 @@ class Dashboard extends Widgets {
         $query = $this->db->get('jobs');
         $result = $query->result_array();
         $result = array_map(function ($leaderboard) {
-            $leaderboard['sales_rep_avatar'] = userProfileImage((int) $leaderboard['sales_rep_id']);
+            $leaderboard['avatar'] = userProfileImage((int) $leaderboard['id']);
             return $leaderboard;
         }, $result);
 
         header('content-type: application/json');
-        echo json_encode(['data' => $result, 'is_new' => true]);
+        exit(json_encode(['data' => $result, 'is_new' => true]));
     }
 
     public function tech_leaderboard()
     {
+        if(logged('company_id') != 58){
+            return $this->apiGetTechLeaderBoard();
+        }
+
         $techLeaderboards=$this->event_model->getTechLeaderboards(); // fetch Technicians and customer they are assigned to
         $revenue = [];
         $customerCount = [];
@@ -596,6 +600,76 @@ class Dashboard extends Widgets {
         }
         $data_arr = array("success" => true, "techLeaderboard" => $techLeaderboards, "revenue" => $revenue, "customerCount" => $customerCount);
         die(json_encode($data_arr));
+    }
+
+    function apiGetTechLeaderBoard() {
+        $companyId = logged('company_id');
+        $this->db->select('jobs.id,job_payments.amount,jobs.employee2_id,jobs.employee3_id,jobs.employee4_id,jobs.employee5_id,jobs.employee6_id');
+        $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+        $this->db->where('jobs.company_id', $companyId);
+        $this->db->where('jobs.status', 'Completed');
+        $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.start_date, "%Y")');
+        $jobsQuery = $this->db->get('jobs');
+        $jobs = $jobsQuery->result_array();
+
+        $employeeFields = [
+            'employee2_id',
+            'employee3_id',
+            'employee4_id',
+            'employee5_id',
+            'employee6_id',
+        ];
+        $techIds = [];
+        foreach ($jobs as $job) {
+            foreach ($employeeFields as $field) {
+                $employeeId = $job[$field];
+                if ($employeeId && !in_array($employeeId, $techIds)) {
+                    array_push($techIds, $employeeId);
+                }
+            }
+        }
+
+        if (empty($techIds)) {
+            header('content-type: application/json');
+            exit(json_encode(['data' => [], 'is_new' => true]));
+        }
+
+        $this->db->select('users.LName as lastname,users.FName as firstname,users.id as id, users.profile_img as avatar');
+        $this->db->where_in('users.id', $techIds);
+        $employeesQuery = $this->db->get('users');
+        $employees = $employeesQuery->result_array();
+
+        $result = [];
+        foreach ($employees as $employee) {
+            foreach ($jobs as $job) {
+                foreach ($employeeFields as $field) {
+                    $employeeId = $job[$field];
+                    if ($job[$field] != $employee['id']) {
+                        continue;
+                    }
+
+                    if (!array_key_exists($employee['id'], $result)) {
+                        $result[$employee['id']] = array_merge($employee, [
+                            'total_revenue' => 0,
+                            'total_customers' => 0,
+                            'avatar' => userProfileImage((int) $employee['id'])
+                        ]);
+                    }
+
+                    $result[$employee['id']]['total_revenue'] = $result[$employee['id']]['total_revenue'] + (float) $job['amount'];
+                    $result[$employee['id']]['total_customers'] = $result[$employee['id']]['total_customers'] + 1;
+                    break;
+                }
+            }
+        }
+
+        $result = array_values($result);
+        usort($result, function($itemA, $itemB) {
+            return $itemB['total_revenue'] - $itemA['total_revenue'];
+        });
+
+        header('content-type: application/json');
+        exit(json_encode(['data' => $result, 'is_new' => true]));
     }
 
     // public function jobs_status()

@@ -1,5 +1,5 @@
 <?php
-function formatJobNumber($number) {
+function jobsmodule__formatJobNumber($number) {
     $formatFunc = function ($prefix, $number) {
         $numericPart = (int) str_replace($prefix, '', $number);
         return 'JOB-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
@@ -14,6 +14,27 @@ function formatJobNumber($number) {
     }
 
     return $number;
+}
+
+
+function jobsmodule__endsWith($haystack, $needle) {
+    $length = strlen( $needle );
+    if(!$length) return true;
+    return substr( $haystack, -$length ) === $needle;
+}
+
+function jobsmodule__getEmployeeAvatar($employee) {
+    $avatar = $employee['avatar'];
+    $firstName = $employee['FName'];
+    $lastName = $employee['LName'];
+    $name = $firstName . ' ' . $lastName;
+
+    if (!jobsmodule__endsWith($avatar, 'default.png')) {
+        return "<div title=\"$name\" class=\"nsm-profile\" style=\"background-image: url('$avatar');\"></div>";
+    }
+
+    $initials = $firstName[0] . '' . $lastName[0];
+    return "<div title=\"$name\" class=\"nsm-profile\"><span>$initials</span></div>";
 }
 ?>
 <?php include viewPath('v2/includes/header'); ?>
@@ -46,6 +67,22 @@ table.dataTable.no-footer {
      background-color: white !important; 
      color: black !important; 
      cursor: pointer;
+}
+
+.techs {
+    display: flex;
+    padding-left: 12px;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
 }
 </style>
 
@@ -148,7 +185,7 @@ foreach ($jobs as $job) {
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Rep</td>
+                            <td data-name="Tech Rep">Tech Reps</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Job Amount</td>
                             <td data-name="Job Type">Job Type</td>
@@ -193,11 +230,32 @@ foreach ($jobs as $job) {
                             <td>
                                 <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                             </td>
-                            <td class="fw-bold nsm-text-primary"><?php echo formatJobNumber($job->job_number); ?></td>
+                            <td class="fw-bold nsm-text-primary"><?= jobsmodule__formatJobNumber($job->job_number); ?></td>
                             <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
                             <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
                             <td><?php echo $job->FName . ' ' . $job->LName; ?></td>
-                            <td></td>
+                            <td>
+                                <?php
+                                    $employeeFields = [
+                                        'employee2_id',
+                                        'employee3_id',
+                                        'employee4_id',
+                                        'employee5_id',
+                                        'employee6_id',
+                                    ];
+                                ?>
+                                <?php if(!empty($employees)): ?>
+                                    <div class="techs">
+                                        <?php foreach ($employees as $employee): ?>
+                                            <?php foreach ($employeeFields as $employeeField): ?>
+                                                <?php if ($job->$employeeField == $employee['id']): ?>
+                                                    <?= jobsmodule__getEmployeeAvatar($employee); ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <div>
                                     <?php for($x=1;$x<=$badgeCount;$x++){ ?> <span class="nsm-badge primary-enhanced"></span>
@@ -208,7 +266,16 @@ foreach ($jobs as $job) {
                             </td>
                             <td>$<?php echo number_format((float)$job->amount, 2, '.', ',');  ?></td>
                             <td><?php echo $job->job_type; ?></td>
-                            <td><?php echo $job->name; ?></td>
+                            <td>
+                                <?php if(!empty($tags)): ?>
+                                    <?php foreach ($tags as $tag): ?>
+                                        <?php if($job->tags == $tag['name']): ?>
+                                            <span><?= $tag['name']; ?></span>
+                                            <?php break; ?>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </td>
                             <td><?php echo $job->priority; ?></td>
                             <td class="d-none"><?php echo $job->status; ?></td>
                             <td>

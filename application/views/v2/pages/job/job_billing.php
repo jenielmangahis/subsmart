@@ -1,7 +1,12 @@
-<?php include viewPath('v2/includes/header'); ?>
+'[]
+''
+'
+'<?php include viewPath('v2/includes/header'); ?>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'"> <i class='bx bx-tag'></i> </div>
-</div>
+</div>.
+0.
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
@@ -22,6 +27,8 @@
             </div>
         </div>
     </div>
+    <form id="payment_info" method="post">
+    <input type="hidden" name="jobs_id" value="<?= $jobs_data->id; ?>">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -56,11 +63,11 @@
                                         </div>
                                         <div class="col-sm-4 mb-2">
                                             <label>State</label>
-                                            <input type="text" class="form-control" name="city" id="city" value="<?=$profile_info->state;?>" readonly/> 
+                                            <input type="text" class="form-control" name="state" id="state" value="<?=$profile_info->state;?>" readonly/> 
                                         </div>
                                         <div class="col-sm-4 mb-2">
                                             <label>Zip</label>
-                                            <input type="text" class="form-control" name="state" id="state" value="<?= $profile_info->zip_code;?>" readonly/> 
+                                            <input type="text" class="form-control" name="zip" id="zip" value="<?= $profile_info->zip_code;?>" readonly/> 
                                         </div>
                                         <div class="col-sm-12">
                                             <hr>
@@ -98,10 +105,10 @@
                                     <div class="row">
                                         <div class="col-sm-6 mb-2">
                                             <label>Mode of Payment</label>
-                                            <select id="MODE_OF_PAYMENT" class="form-control">
+                                            <select id="MODE_OF_PAYMENT" class="form-control" name="pay_method">
                                                 <option selected value="CREDIT_CARD">Credit Card</option>
                                                 <option value="CASH">Cash</option>
-                                                <option value="Check">Check</option>
+                                                <option value="CHECK">Check</option>
                                                 <option value="ACH">ACH</option>
                                                 <option value="VENMO">Venmo</option>
                                                 <option value="PAYPAL">Paypal</option>
@@ -109,8 +116,8 @@
                                                 <option value="INVOICING">Invoicing</option>
                                                 <option value="WARRANTY_WORK">Warranty Work</option>
                                                 <option value="HOME_OWNER_FINANCING">Home Owner Financing</option>
-                                                <option value="CREDIT_CARD">Other Credit Card Processor</option>
-                                                <option value="OTHERS">Others</option>
+                                                <!-- <option value="CREDIT_CARD">Other Credit Card Processor</option>
+                                                <option value="OTHERS">Others</option> -->
                                             </select>
                                         </div>
                                         <div class="col-sm-6">
@@ -124,8 +131,26 @@
                                         </div>
                                         <div class="col-sm-12 mb-3 CASH">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="is_collected" value="1">
+                                                <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="is_collected" value="1">
                                                 <label class="form-check-label" for="flexCheckDefault">Payment has been collected.</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 mb-3 CHECK_NUMBER">
+                                            <div class="form-check">
+                                                <label>Check Number</label>
+                                                <input type="text" class="form-control" name="chk_check_number" id="chk_check_number" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 mb-3 CHECK_NUMBER">
+                                            <div class="form-check">
+                                                <label>Routing Number</label>
+                                                <input type="text" class="form-control" name="chk_routing_number" id="chk_routing_number" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 mb-3 CHECK_NUMBER">
+                                            <div class="form-check">
+                                                <label>Account Number</label>
+                                                <input type="text" class="form-control" name="chk_account_number" id="chk_account_number" value="" />
                                             </div>
                                         </div>
                                         <div class="col-sm-6 mb-3 CREDIT_CARD">
@@ -156,45 +181,24 @@
                                                 </select>
                                                 <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="form-control input_select">
                                                     <option value selected hidden>- Select Year -</option>
-                                                    <option value="2022">2022</option>
-                                                    <option value="2023">2023</option>
-                                                    <option value="2024">2024</option>
-                                                    <option value="2025">2025</option>
-                                                    <option value="2026">2026</option>
-                                                    <option value="2027">2027</option>
-                                                    <option value="2028">2028</option>
-                                                    <option value="2029">2029</option>
-                                                    <option value="2030">2030</option>
-                                                    <option value="2031">2031</option>
-                                                    <option value="2032">2032</option>
-                                                    <option value="2033">2033</option>
-                                                    <option value="2034">2034</option>
-                                                    <option value="2035">2035</option>
-                                                    <option value="2036">2036</option>
-                                                    <option value="2037">2037</option>
-                                                    <option value="2038">2038</option>
-                                                    <option value="2039">2039</option>
-                                                    <option value="2040">2040</option>
-                                                    <option value="2041">2041</option>
-                                                    <option value="2042">2042</option>
-                                                    <option value="2043">2043</option>
-                                                    <option value="2044">2044</option>
-                                                    <option value="2045">2045</option>
-                                                    <option value="2046">2046</option>
-                                                    <option value="2047">2047</option>
-                                                    <option value="2048">2048</option>
-                                                    <option value="2049">2049</option>
-                                                    <option value="2050">2050</option>
+                                                    <?php  
+                                                        $start_year = date('Y'); 
+                                                        $num_years  = 20;
+                                                    ?>
+                                                    <?php for($start = 0; $start <= $num_years; $start++){ ?>
+                                                        <?= $year_value = date("Y", strtotime("+".$start." years")); ?>
+                                                        <option value="<?= $year_value; ?>"><?= $year_value; ?></option>
+                                                    <?php } ?>
                                                 </select>
                                                 <input type="text" class="form-control" name="card_cvc" id="card_cvc" value="" placeholder="CVC" /> 
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 mb-3 CREDIT_CARD">
+                                        <!-- <div class="col-sm-12 mb-3 CREDIT_CARD">
                                             <div class="form-check">
                                                 <input type="checkbox" name="is_save_file" class="form-check-input" value="1" data-customize="open" id="onoff-customize">
                                                 <label class="form-check-label" for="onoff-customize">Save card to File.</label>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-sm-6 mb-3 ACH">
                                             <label>Routing Number</label>
                                             <input type="text" class="form-control" name="routing_number" id="routing_number" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" />
@@ -214,11 +218,11 @@
                                         </div>
                                         <div class="col-sm-6 mb-3 VENMO">
                                             <label>Account Credential</label>
-                                            <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
+                                            <input type="text" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
                                         </div>
                                         <div class="col-sm-6 mb-3 VENMO">
                                             <label>Account Note</label>
-                                            <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
+                                            <input type="text" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
                                         </div>
                                         <div class="col-sm-12 mb-3 VENMO VENMO_CONFIRMATION">
                                             <label>Confirmation</label>
@@ -230,12 +234,12 @@
                                         <div class="col-sm-12 mb-3 INVOICING_FIELD">
                                             <label>Term</label>
                                             <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="form-control" >
-                                                            <option  value="Due On Receipt">Due On Receipt</option>
-                                                            <option  value="Net 5">Net 5</option>
-                                                            <option  value="Net 10">Net 10</option>
-                                                            <option  value="Net 15">Net 15</option>
-                                                            <option  value="Net 30">Net 30</option>
-                                                            <option  value="Net 60">Net 60</option>
+                                                <option  value="Due On Receipt">Due On Receipt</option>
+                                                <option  value="Net 5">Net 5</option>
+                                                <option  value="Net 10">Net 10</option>
+                                                <option  value="Net 15">Net 15</option>
+                                                <option  value="Net 30">Net 30</option>
+                                                <option  value="Net 60">Net 60</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-6 mb-3 INVOICING_FIELD">
@@ -248,14 +252,14 @@
                                         </div>
                                         <div class="col-sm-12 mb-3 DOCUMENT_SIGNED">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="notify_by" value="1" id="document_signed">
-                                                <label class="form-check-label" for="document_signed">Document Signed.</label>
+                                                <input class="form-check-input" type="checkbox" name="is_document_signed" value="1" id="is_document_signed">
+                                                <label class="form-check-label" for="is_document_signed">Document Signed.</label>
                                             </div>
                                         </div>
                                         <div class="col-sm-12 mt-1 PAYMENT_BUTTON">
                                             <div class="float-end">
                                                 <button class="nsm-button" onclick="window.location.replace('/job')">Cancel</button>
-                                                <button type="submit" class="nsm-button primary">Pay Now</button>
+                                                <button type="submit" class="nsm-button primary" id="btn-billing-pay-now">Pay Now</button>
                                             </div>
                                         </div>
                                     </div>
@@ -280,6 +284,7 @@
             </div>
         </div>
     </div>
+    </form>
 </div>
 </div>
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
