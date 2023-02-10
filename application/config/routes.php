@@ -519,6 +519,7 @@ $route['accounting/customers/delete-customer-type/(:any)']['DELETE'] = 'accounti
 $route['accounting/customers/update-estimate-status/(:any)']['post'] = 'accounting_controllers/customers/update_estimate_status/$1';
 $route['accounting/customers/(:any)/export-transactions']['post'] = 'accounting_controllers/customers/export_transactions/$1';
 $route['accounting/customers/create-invoice/(:any)/(:any)'] = 'accounting_controllers/customers/create_invoice/$1/$2';
+$route['accounting/customers/print-sales-receipt/(:any)'] = 'accounting_controllers/customers/print_sales_receipt/$1';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';

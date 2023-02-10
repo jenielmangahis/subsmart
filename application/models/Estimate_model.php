@@ -830,6 +830,16 @@ class Estimate_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_customer_estimates($customerId, $companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('customer_id', $customerId);
+        $this->db->where_not_in('status', ['Draft', 'Invoiced', 'Lost', 'Declined By Customer']);
+        $this->db->where('view_flag', 0);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }
 
 /* End of file Estimate_model.php */

@@ -543,7 +543,7 @@
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
-                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
+                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs) || isset($linkedTransac)) : ?>
                                                         <td></td>
                                                         <?php endif; ?>
                                                         <td></td>

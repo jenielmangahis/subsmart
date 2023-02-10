@@ -29,6 +29,7 @@ class Customers extends MY_Controller {
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_statements_model');
         $this->load->model('payment_records_model');
+        $this->load->model('business_model');
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Sales';
@@ -313,6 +314,8 @@ class Customers extends MY_Controller {
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/sales/customers/view.js"
         ]);
+        $company = $this->business_model->getByCompanyId(logged('company_id'));
+        $this->page_data['company'] = $company;
         $customer = $this->accounting_customers_model->getCustomerDetails($customerId)[0];
 
         $not = ['', null];
@@ -1396,31 +1399,31 @@ class Customers extends MY_Controller {
 
         foreach($salesReceipts as $salesReceipt)
         {
-            $manageCol = '<div class="dropdown table-management">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class="dropdown-item print-sales-receipt" href="#">Print</a>
+                        <a class='dropdown-item print-sales-receipt' href='/accounting/customers/print-sales-receipt/$salesReceipt->id' target='_blank'>Print</a>
                     </li>
                     <li>
-                        <a class="dropdown-item send-sales-receipt" href="#">Send</a>
+                        <a class='dropdown-item send-sales-receipt' href='#'>Send</a>
                     </li>
                     <li>
-                        <a class="dropdown-item view-edit-sales-receipt" href="#">View/Edit</a>
+                        <a class='dropdown-item view-edit-sales-receipt' href='#'>View/Edit</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
                     </li>
                     <li>
-                        <a class="dropdown-item delete-sales-receipt" href="#">Delete</a>
+                        <a class='dropdown-item delete-sales-receipt' href='#'>Delete</a>
                     </li>
                     <li>
-                        <a class="dropdown-item void-sales-receipt" href="#">Void</a>
+                        <a class='dropdown-item void-sales-receipt' href='#'>Void</a>
                     </li>
                 </ul>
-            </div>';
+            </div>";
 
             $transactions[] = [
                 'id' => $salesReceipt->id,
@@ -2109,7 +2112,7 @@ class Customers extends MY_Controller {
                             $items[$index]->linked_transac = $estimate;
                             $index++;
                         }
-        
+
                         $this->page_data['items'] = $items;
                     break;
                 }
@@ -2192,5 +2195,53 @@ class Customers extends MY_Controller {
         $this->page_data['number'] = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
 
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
+    }
+
+    public function print_sales_receipt($salesReceiptId)
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_sales_receipt";
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_sales_receipt_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+        $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceiptId);
+
+        foreach($receiptItems as $key => $receiptItem) {
+            $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+            $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+            $taxAmount = floatval($taxAmount) / 100;
+
+            $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+            $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $pdfData = [
+            'salesReceipt' => $salesReceipt,
+            'receiptItems' => $receiptItems
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $pdf = file_get_contents(base_url("/assets/pdf/$fileName"));
+
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+        // Header content type
+        header("Content-type: application/pdf");
+        header('Content-Disposition: inline; filename="print.pdf";');
+
+        ob_clean();
+        flush();
+        echo $pdf;
+        exit;
     }
 }

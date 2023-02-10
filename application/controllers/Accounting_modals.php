@@ -8940,6 +8940,7 @@ class Accounting_modals extends MY_Controller
             case 'invoice' :
                 $credits = $this->accounting_delayed_credit_model->get_customer_delayed_credits($id, logged('company_id'));
                 $charges = $this->accounting_delayed_charge_model->get_customer_delayed_charges($id, logged('company_id'));
+                $estimates = $this->estimate_model->get_customer_estimates($id, logged('company_id'));
             break;
         }
 
@@ -9100,6 +9101,36 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        if(isset($estimates) && count($estimates)) {
+            foreach($estimates as $estimate) {
+                $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
+                $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
+
+                if ($estimate->estimate_type == 'Option') {
+                    $grandTotal = $total1;
+                } elseif ($estimate->estimate_type == 'Bundle') {
+                    $grandTotal = $total2;
+                } else {
+                    $grandTotal = $estimate->grand_total;
+                }
+
+                $balance = '$'.number_format(floatval($grandTotal), 2, '.', ',');
+                $total = '$'.number_format(floatval($grandTotal), 2, '.', ',');
+
+                $transactions[] = [
+                    'type' => 'Estimate',
+                    'data_type' => 'estimate',
+                    'id' => $estimate->id,
+                    'number' => $estimate->estimate_number === null || $estimate->estimate_number === '' ? '' : $estimate->estimate_number,
+                    'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                    'formatted_date' => date("F j", strtotime($estimate->estimate_date)),
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance),
+                    'amount' => str_replace('$-', '-$', $balance)
+                ];
+            }
+        }
+
         echo json_encode($transactions);
     }
 
@@ -9121,6 +9152,21 @@ class Accounting_modals extends MY_Controller
             case 'delayed-charge' :
                 $type = 'Delayed Charge';
                 $transaction = $this->accounting_delayed_charge_model->getDelayedChargeDetails($transactionId);
+            break;
+            case 'estimate' :
+                $type = 'Estimate';
+                $transaction = $this->estimate_model->getEstimate($transactionId);
+
+                $total1 = ((float)$transaction->option1_total) + ((float)$transaction->option2_total);
+                $total2 = ((float)$transaction->bundle1_total) + ((float)$transaction->bundle2_total);
+
+                if ($transaction->estimate_type == 'Option') {
+                    $transaction->grand_total = $total1;
+                } elseif ($transaction->estimate_type == 'Bundle') {
+                    $transaction->grand_total = $total2;
+                }
+
+                $transaction->remaining_balance = $transaction->grand_total;
             break;
         }
 
@@ -9149,6 +9195,68 @@ class Accounting_modals extends MY_Controller
             }
 
             $return['categories'] = $categories;
+            $return['items'] = $items;
+        } else if($transactionType === 'estimate') {
+            switch($transaction->estimate_type) {
+                case 'Standard' :
+                    $items = $this->estimate_model->getItemlistByID($transactionId);
+
+                    foreach($items as $key => $item) {
+                        $items[$key]->cost = $item->costing;
+                        $items[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                        $items[$key]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                    }
+                break;
+                case 'Option' :
+                    $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($transactionId);
+                    $transaction->grand_total = ((float)$transaction->option1_total) + ((float)$transaction->option2_total);
+    
+                    $items = [];
+                    $index = 0;
+                    foreach($itemsOption1 as $key => $item) {
+                        $items[] = $item;
+                        $items[$index]->cost = $item->costing;
+                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                        $index++;
+                    }
+
+                    $itemsOption2 = $this->estimate_model->getItemlistByIDOption2($transactionId);
+    
+                    foreach($itemsOption2 as $key => $item) {
+                        $items[] = $item;
+                        $items[$index]->cost = $item->costing;
+                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                        $index++;
+                    }
+                break;
+                case 'Bundle' :
+                    $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($transactionId);
+                    $transaction->grand_total = ((float)$transaction->bundle1_total) + ((float)$transaction->bundle2_total);
+
+                    $items = [];
+                    $index = 0;
+                    foreach($itemsBundle1 as $key => $item) {
+                        $items[] = $item;
+                        $items[$index]->cost = $item->costing;
+                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                        $index++;
+                    }
+
+                    $itemsBundle2 = $this->estimate_model->getItemlistByIDBundle2($transactionId);
+    
+                    foreach($itemsBundle2 as $key => $item) {
+                        $items[] = $item;
+                        $items[$index]->cost = $item->costing;
+                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                        $index++;
+                    }
+                break;
+            }
+
             $return['items'] = $items;
         } else {
             $items = $this->accounting_credit_memo_model->get_customer_transaction_items($type, $transactionId);
@@ -22933,7 +23041,7 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['pdf'] = $pdf;
         $this->page_data['salesReceipt'] = $salesReceipt;
-        $this->load->view('accounting/modals/view_print_sales_receipt', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/view_print_sales_receipt', $this->page_data);
     }
 
     public function download_sales_receipt_pdf($salesReceiptId)
