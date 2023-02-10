@@ -1330,3 +1330,53 @@ $('#transactions-table .void-invoice').on('click', function(e) {
         }
     });
 });
+
+$('#transactions-table .delete-sales-receipt').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Delete Sales Receipt',
+        text: 'Are you sure you want to delete this sales-receipt?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/delete-transaction/sales-receipt/${id}`,
+                type: 'DELETE',
+                success: function(result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#transactions-table .void-sales-receipt').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Void Sales Receipt',
+        text: 'Are you sure you want to void this sales-receipt?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get('/accounting/void-transaction/sales-receipt/'+id, function(res) {
+                location.reload();
+            });
+        }
+    });
+});

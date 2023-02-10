@@ -38,6 +38,40 @@ class Job extends MY_Controller
         $this->page_data['jobs'] = $jobs;
         $this->page_data['title'] = 'Jobs';
 
+        $jobIds = array_map(function ($job) {
+            return $job->id;
+        }, $jobs);
+
+        if (!empty($jobIds)) {
+            // Calculate job amount based on saved job's items.
+
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.qty,job_items.tax');
+            $this->db->from('job_items');
+            $this->db->join('items', 'items.id = job_items.items_id', 'left');
+            $this->db->where_in('job_items.job_id', $jobIds);
+            $itemsQuery = $this->db->get();
+            $items = $itemsQuery->result();
+
+            $jobAmounts = [];
+            foreach ($items as $item) {
+                if (!array_key_exists($item->job_id, $jobAmounts)) {
+                    $jobAmounts[$item->job_id] = 0;
+                }
+
+                $total = (((float) $item->price) * (float) $item->qty); // include tax? (float) $item->tax
+                $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
+            }
+
+            $jobs = array_map(function ($job) use ($jobAmounts) {
+                if (!array_key_exists($job->id, $jobAmounts)) {
+                    return $job;
+                }
+
+                $job->amount = ((float) ($job->tax_rate)) + $jobAmounts[$job->id];
+                return $job;
+            }, $jobs);
+        }
+
         $companyId = logged('company_id');
 
         $this->db->select('id,name,marker_icon');
@@ -843,7 +877,13 @@ class Job extends MY_Controller
 
         if (!$id==null) {
             $jobs_data = $this->jobs_model->get_specific_job($id);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+            $jobItems  = $this->jobs_model->get_specific_job_items($id);
+
+            $job_total_amount = 0;
+            foreach($jobItems as $item){
+                $job_total_amount += (((float) $item->price) * (float) $item->qty);
+            }
+
             $get_customer_info = array(
                 'where' => array(
                     'prof_id' => $jobs_data->customer_id,
@@ -852,6 +892,15 @@ class Job extends MY_Controller
                 'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
             );
 
+            $get_company_info = array(
+                'where' => array(
+                    'id' => logged('company_id'),
+                ),
+                'table' => 'business_profile',
+                'select' => 'business_phone,business_name,business_email,street,city,postal_code,state',
+            );
+            $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
+            $this->page_data['job_total_amount'] = $job_total_amount;
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
             $this->page_data['jobs_data'] = $jobs_data;
             $this->page_data['page']->title = 'Jobs Billing';
@@ -875,13 +924,15 @@ class Job extends MY_Controller
         exit;*/
 
         if ($input) {
+            $job = $this->jobs_model->get_specific_job($input['jobs_id']);
+
             $payment_data = array();
             $payment_data['payment_method'] = $input['pay_method'];
-
-            if ($input['pay_method'] == 'CASH') {                
+            $payment_data['amount']         = $input['job_total_amount'];            
+            if ($input['pay_method'] == 'CASH') {                    
                 $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
                 $payment_data['is_paid'] = 1;
-            }elseif($input['pay_method'] == 'CHECK'){
+            }elseif($input['pay_method'] == 'CHECK'){                
                 $payment_data['check_number']   = $input['chk_check_number'];
                 $payment_data['routing_number'] = $input['chk_routing_number'];
                 $payment_data['account_number'] = $input['chk_account_number'];
@@ -908,8 +959,7 @@ class Job extends MY_Controller
                 //$payment_data['ach_date_of_month'] = 0;
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
-            }elseif($input['pay_method'] == 'CREDIT_CARD'){
-                $job = $this->jobs_model->get_specific_job($input['jobs_id']);
+            }elseif($input['pay_method'] == 'CREDIT_CARD'){                
                 $converge_data = [
                     'company_id' => $job->company_id,
                     'amount' => $input['amount'],
@@ -935,19 +985,37 @@ class Job extends MY_Controller
                     $is_success = 0;
                     $msg = $result['msg'];
                 }
+            }elseif($input['pay_method'] == 'INVOICING'){
+                $payment_data['invoice_date'] = date('Y-m-d', strtotime($input['invoice_date']));
+                $payment_data['invoice_term'] = $input['invoice_term'];
+                $payment_data['invoice_due_date'] = date('Y-m-d', strtotime($input['invoice_due_date']));
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid'] = 1;
+            }elseif($input['pay_method'] == 'WARRANTY_WORK'){
+                $payment_data['account_credentials'] = $input['account_credential'];
+                $payment_data['account_note'] = $input['account_note'];
+                $payment_data['is_document_signed'] = $input['is_document_signed'];
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid']      = 1;
             }else{
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid'] = 1;
             }
 
             if( $is_success == 1 ){
+
+                $payment_data['job_id'] = $input['jobs_id'];
                 $msg = '';
                 $check = array(
                     'where' => array(
-                        'job_id' => $input['jobs_id']
+                        'job_id' => $input['jobs_id'],
+                        'payment_method' => NULL
                     ),
                     'table' => 'job_payments'
-                );
+                ); 
+
+                //$updated =  $this->general->add_($payment_data, 'job_payments');
+
                 $exist = $this->general->get_data_with_param($check, false);
                 if ($exist) {
                     $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
@@ -3496,6 +3564,15 @@ class Job extends MY_Controller
         echo json_encode($json_data);       
 
         exit;
+    }
+
+    public function ajax_load_job_payments()
+    {
+        $post = $this->input->post();
+        $jobPayments = $this->jobs_model->get_all_job_payments_by_job_id($post['jobid']);
+
+        $this->page_data['jobPayments'] = $jobPayments;
+        $this->load->view('v2/pages/job/ajax_load_job_payments', $this->page_data);
     }
 }
 

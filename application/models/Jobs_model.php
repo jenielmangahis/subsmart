@@ -14,6 +14,7 @@ class Jobs_model extends MY_Model
     public $table_employees = 'employees';
     public $table_customers = 'customers';
     public $table_address = 'address';
+    public $table_job_payments = 'job_payments';
 
     //Status
     public $status_new = 'New';
@@ -612,7 +613,17 @@ class Jobs_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_all_job_payments_by_job_id($job_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_job_payments);
+        $this->db->where('job_id', $job_id);
+        $this->db->order_by('date_created', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
-/* End of file JobType_model.php */
-/* Location: ./application/models/JobType_model.php */
+/* End of file Jobs_model.php */
+/* Location: ./application/models/Jobs_model.php */
 

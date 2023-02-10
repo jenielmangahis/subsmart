@@ -2537,3 +2537,41 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal" id="send-transaction-email" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Send email for </span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 grid-mb">
+                        <label for="email-to">To</label>
+                        <input type="text" name="email_to" id="email-to" class="form-control nsm-field" value="<?=$customer->email?>">
+                    </div>
+                    <div class="col-12 grid-mb">
+                        <label for="email-subject">Subject</label>
+                        <input type="text" name="email_subject" id="email-subject" class="form-control nsm-field">
+                    </div>
+                    <div class="col-12 grid-mb">
+                        <label for="email-message">Message</label>
+                        <textarea name="email_message" id="email-message" class="form-control nsm-field">Dear <?=in_array($customer->business_name, ['', null]) ?  $customer->first_name.' '.$customer->last_name : $customer->business_name?>,
+
+Please review the sales receipt below.
+We appreciate it very much.
+
+Thanks for your business!
+<?=$company->business_name?>
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="nsm-button primary" id="send-email">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
