@@ -28,7 +28,8 @@
         </div>
     </div>
     <form id="payment_info" method="post">
-    <input type="hidden" name="jobs_id" value="<?= $jobs_data->id; ?>">
+    <input type="hidden" name="jobs_id" id="job-id" value="<?= $jobs_data->id; ?>">
+    <input type="hidden" id="total_amount" name="job_total_amount" value="<?= $job_total_amount; ?>">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -44,7 +45,8 @@
                                     <div class="row">
                                         <div class="col-sm-6 mb-2">
                                             <label>Firstname</label>
-                                            <input type="text" class="form-control" name="first_name" id="first_name" value="<?= $profile_info->first_name; ?>" readonly/> 
+                                            <input type="text" class="form-control" name="first_name" id="first_name" value="<?= $profile_info->first_name; ?>" 
+                                            <input type="text" class="form-control" name="first_name" id="first_name" value="readonly/> 
                                         </div>
                                         <div class="col-sm-6 mb-2">
                                             <label>Lastname</label>
@@ -123,7 +125,7 @@
                                         <div class="col-sm-6">
                                             <label>Amount to Pay</label>
                                             <div class="input-group mb-3"> <span class="input-group-text"><strong>$</strong></span>
-                                                <input readonly type="text" class="form-control input_select" name="amount" value="<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?>"> 
+                                                <input readonly type="text" class="form-control input_select" name="amount" value="<?= number_format((float)$job_total_amount,2,'.',','); ?>"> 
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -155,11 +157,11 @@
                                         </div>
                                         <div class="col-sm-6 mb-3 CREDIT_CARD">
                                             <label>Account Holder Name</label>
-                                            <input type="text" class="form-control" name="account_name" id="account_name" value="<?= isset($jobs_data ) ?  $jobs_data->first_name .' '. $jobs_data->last_name : '' ?>" /> 
+                                            <input type="text" class="form-control" name="account_name" id="account_name" value="" /> 
                                         </div>
                                         <div class="col-sm-6 mb-3 CREDIT_CARD">
                                             <label>Card Number</label>
-                                            <input type="text" class="form-control" name="card_number" id="card_number" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" /> 
+                                            <input type="text" class="form-control" name="card_number" id="card_number" value="" /> 
                                         </div>
                                         <div class="col-sm-12 mb-3 CREDIT_CARD">
                                             <label>Expiration</label>
@@ -201,11 +203,11 @@
                                         </div> -->
                                         <div class="col-sm-6 mb-3 ACH">
                                             <label>Routing Number</label>
-                                            <input type="text" class="form-control" name="routing_number" id="routing_number" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" />
+                                            <input type="text" class="form-control" name="routing_number" id="routing_number" value="" />
                                         </div>
                                         <div class="col-sm-6 mb-3 ACH">
                                             <label>Account Number</label>
-                                            <input type="text" class="form-control" name="account_number" id="account_numbe" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" />
+                                            <input type="text" class="form-control" name="account_number" id="account_numbe" value="" />
                                         </div>
                                         <div class="col-sm-12 mb-3 ACH">
                                             <label>Day of Month</label>
@@ -218,15 +220,15 @@
                                         </div>
                                         <div class="col-sm-6 mb-3 VENMO">
                                             <label>Account Credential</label>
-                                            <input type="text" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
+                                            <input type="text" class="form-control" name="account_credential" id="account_credential" value="" />
                                         </div>
                                         <div class="col-sm-6 mb-3 VENMO">
                                             <label>Account Note</label>
-                                            <input type="text" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
+                                            <input type="text" class="form-control" name="account_note" id="account_note" value="" />
                                         </div>
                                         <div class="col-sm-12 mb-3 VENMO VENMO_CONFIRMATION">
                                             <label>Confirmation</label>
-                                            <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
+                                            <input type="number" class="form-control" name="confirmation" id="confirmation" value="" />
                                         </div>
                                         <div class="col-sm-12 mb-3 PAYPAL">
                                             <div id="paypal-button-container"></div>
@@ -274,7 +276,9 @@
                                 <hr>
                                 <div class="nsm-card-body">
                                     <div class="row">
-                                        <div class="col-sm-12 mb-2"></div>
+                                        <div class="col-sm-12 mb-2">
+                                            <div id="payment-history-container"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -299,10 +303,28 @@
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <?php include viewPath('job/js/job_billing_js'); ?>
 <script>
+    var company_name = '<?= $company_info->business_name; ?>';
+
     $(function() {
         $("#MODE_OF_PAYMENT").select2({
             placeholder: "Select Payment type..."
         });
+
+        //load_job_payment_history();
+
+        function load_job_payment_history(){
+            var jobid = $('#job-id').val();
+            var url   = base_url + 'job/_load_job_payments';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {jobid:jobid},
+                success: function(result) {
+                    $('#payment-history-container').html(result);
+                },
+            });
+        }
     });
     paypal.Buttons({
         style: {
@@ -315,12 +337,15 @@
             return actions.order.create({
                 payer: {
                     name: {
-                        given_name: 'Testing Paypal'
+                        given_name: '<?= $profile_info->first_name; ?>',
+                        surname : '<?= $profile_info->last_name; ?>'                        
                     },
+                    email_address : '<?= $profile_info->email; ?>',
+                    postal_codestring : '<?= $profile_info->zip_code; ?>'
                 },
                 purchase_units: [{
                     amount: {
-                        value: '0.01'
+                        value: '<?= $job_total_amount; ?>'
                     }
                 }],
                 application_context: {
@@ -338,6 +363,7 @@
                 };
                 //$("#payment-method").val('paypal');
                 $.post("<?= base_url() ?>job/on_update_status", tokenRequest, function(data) {
+                    //paid('Success!', 'Job has been paid!', 'success');
                     paid('Nice!', 'Thank you for your payment!', 'success')
                 });
                 //$("#payment-method-status").val(details.status);

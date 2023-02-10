@@ -1038,6 +1038,7 @@ $route['user/_update_business_details'] = 'Users/ajax_update_business_details';
 $route['job/details/(:any)'] = 'job/details/$1';
 $route['job/_load_upcoming_jobs'] = 'Job/ajax_load_upcoming_jobs';
 $route['job/bird_eye_view'] = 'Workorder/map';
+$route['job/_load_job_payments'] = 'Job/ajax_load_job_payments';
 
 //Estimates
 $route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';

@@ -843,7 +843,13 @@ class Job extends MY_Controller
 
         if (!$id==null) {
             $jobs_data = $this->jobs_model->get_specific_job($id);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+            $jobItems  = $this->jobs_model->get_specific_job_items($id);
+
+            $job_total_amount = 0;
+            foreach($jobItems as $item){
+                $job_total_amount += (((float) $item->price) * (float) $item->qty);
+            }
+
             $get_customer_info = array(
                 'where' => array(
                     'prof_id' => $jobs_data->customer_id,
@@ -852,6 +858,15 @@ class Job extends MY_Controller
                 'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
             );
 
+            $get_company_info = array(
+                'where' => array(
+                    'id' => logged('company_id'),
+                ),
+                'table' => 'business_profile',
+                'select' => 'business_phone,business_name,business_email,street,city,postal_code,state',
+            );
+            $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
+            $this->page_data['job_total_amount'] = $job_total_amount;
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
             $this->page_data['jobs_data'] = $jobs_data;
             $this->page_data['page']->title = 'Jobs Billing';
@@ -879,7 +894,7 @@ class Job extends MY_Controller
 
             $payment_data = array();
             $payment_data['payment_method'] = $input['pay_method'];
-            $payment_data['amount']         = $job->total_amount;            
+            $payment_data['amount']         = $input['job_total_amount'];            
             if ($input['pay_method'] == 'CASH') {                    
                 $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
                 $payment_data['is_paid'] = 1;
@@ -954,22 +969,25 @@ class Job extends MY_Controller
             }
 
             if( $is_success == 1 ){
+
+                $payment_data['job_id'] = $input['jobs_id'];
                 $msg = '';
                 $check = array(
                     'where' => array(
-                        'job_id' => $input['jobs_id']
+                        'job_id' => $input['jobs_id'],
+                        'payment_method' => NULL
                     ),
                     'table' => 'job_payments'
-                );
-                $payment_data['job_id'] = $input['jobs_id'];
-                $updated =  $this->general->add_($payment_data, 'job_payments');
+                ); 
 
-                /*$exist = $this->general->get_data_with_param($check, false);
+                //$updated =  $this->general->add_($payment_data, 'job_payments');
+
+                $exist = $this->general->get_data_with_param($check, false);
                 if ($exist) {
                     $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
                 } else {
                     $updated =  $this->general->add_($payment_data, 'job_payments');
-                } */
+                } 
             }            
         }
 
