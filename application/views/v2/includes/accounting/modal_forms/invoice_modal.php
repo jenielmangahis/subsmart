@@ -34,31 +34,36 @@
                     <div class="row" style="min-height: 100%">
                         <div class="col">
                             <div class="row customer-details">
-                                <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
+                                <?php if(isset($invoice) && !is_null($invoice->linked_transacs) || isset($linkedTransac)) : ?>
                                 <div class="col-12">
                                     <button class="nsm-button open-transactions-container float-end" type="button"><i class="bx bx-fw bx-chevron-left"></i></button>
 
                                     <div class="dropdown">
                                         <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">
-                                            <?php if(count($invoice->linked_transacs) > 1) : ?>
-                                                <?=count($invoice->linked_transacs)?> linked transactions
+                                            <?php if(!isset($linkedTransac)) : ?>
+                                                <?php if(count($invoice->linked_transacs) > 1) : ?>
+                                                    <?=count($invoice->linked_transacs)?> linked transactions
+                                                <?php else : ?>
+                                                    1 linked <?=$invoice->linked_transacs[0]['type']?>
+                                                <?php endif; ?>
                                             <?php else : ?>
-                                                1 linked <?=$invoice->linked_transacs[0]['type']?>
+                                                1 linked <?=$linkedTransac->type?>
                                             <?php endif; ?>
                                         </a>
                                         <div class="dropdown-menu">
-                                            <table class="nsm-table">
+                                            <table class="nsm-table linked-transaction-table">
                                                 <thead>
-                                                    <tr>
+                                                    <tr class="linked-transaction-header">
                                                         <td data-name="Type">Type</td>
                                                         <td data-name="Date">Date</td>
                                                         <td data-name="Amount">Amount</td>
                                                         <td data-name="Action"></td>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody class="linked-transaction-table-body">
+                                                    <?php if(!isset($linkedTransac)) : ?>
                                                     <?php foreach($invoice->linked_transacs as $linkedTransac) : ?>
-                                                    <tr>
+                                                    <tr class="linked-transaction-row">
                                                         <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac['transaction']->id?>" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac['type']))?>"><?=$linkedTransac['type']?></a></td>
                                                         <td><?=$linkedTransac['type'] === 'Delayed Credit' ? date("m/d/Y", strtotime($linkedTransac['transaction']->delayed_credit_date)) : date("m/d/Y", strtotime($linkedTransac['transaction']->delayed_charge_date))?></td>
                                                         <td>
@@ -72,14 +77,49 @@
                                                         <td><button type="button" class="nsm-button unlink-transaction" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac['type']))?>" data-id="<?=$linkedTransac['transaction']->id?>">Remove</button></td>
                                                     </tr>
                                                     <?php endforeach; ?>
+                                                    <?php else : ?>
+                                                    <tr class="linked-transaction-row">
+                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac->transaction->id?>" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac->type === 'Estimate' ? $linkedTransac->type : 'Delayed '.$linkedTransac->type))?>"><?=$linkedTransac->type !== 'Estimate' ? 'Delayed ' : ''?><?=$linkedTransac->type?></a></td>
+                                                        <td>
+                                                            <?php switch($linkedTransac->type) {
+                                                                case 'Estimate' :
+                                                                    echo date("m/d/Y", strtotime($linkedTransac->transaction->estimate_date));
+                                                                break;
+                                                                case 'Credit' :
+                                                                    echo date("m/d/Y", strtotime($linkedTransac->transaction->delayed_credit_date));
+                                                                break;
+                                                                case 'Charge' :
+                                                                    echo date("m/d/Y", strtotime($linkedTransac->transaction->delayed_charge_date));
+                                                                break;
+                                                            } ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if($linkedTransac->type === 'Estimate') {
+                                                                $transacAmount = $linkedTransac->transaction->grand_total;
+                                                            } else {
+                                                                $transacAmount = $linkedTransac->transaction->total_amount;
+                                                            }
+                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+
+                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                            ?>
+                                                        </td>
+                                                        <td><button type="button" class="nsm-button unlink-transaction" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac->type))?>" data-id="<?=$linkedTransac->transaction->id?>">Remove</button></td>
+                                                    </tr>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
 
+                                    <?php if(!isset($linkedTransac)) : ?>
                                     <?php foreach($invoice->linked_transacs as $linkedTransac) : ?>
                                         <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac['type']))?>-<?=$linkedTransac['transaction']->id?>" name="linked_transaction[]">
                                     <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac->type !== 'Estimate' ? 'Delayed '.$linkedTransac->type : $linkedTransac->type))?>-<?=$linkedTransac->transaction->id?>" name="linked_transaction[]">
+                                    <?php endif; ?>
                                 </div>
                                 <?php endif; ?>
                                 <div class="col-12 col-md-8 grid-mb">
@@ -300,7 +340,7 @@
                                             <td data-name="Discount">DISCOUNT</td>
                                             <td data-name="Tax">TAX (CHANGE IN %)</td>
                                             <td data-name="Total">TOTAL</td>
-                                            <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
+                                            <?php if(isset($invoice) && !is_null($invoice->linked_transacs) || isset($linkedTransac)) : ?>
                                             <td data-name="Linked"></td>
                                             <?php endif; ?>
                                             <td data-name="Manage"></td>
@@ -336,28 +376,44 @@
                                                                 ?>
                                                             </span>
                                                         </td>
-                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
-                                                        <td>
+                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs) || isset($linkedTransac)) : ?>
+                                                        <td class="overflow-visible">
                                                         <?php if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id)) : ?>
                                                             <div class="dropdown">
                                                                 <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
                                                                 <div class="dropdown-menu">
-                                                                    <table class="nsm-table">
+                                                                    <table class="nsm-table linked-transaction-table">
                                                                         <thead>
-                                                                            <tr>
+                                                                            <tr class="linked-transaction-header">
                                                                                 <td data-name="Type">Type</td>
                                                                                 <td data-name="Date">Date</td>
                                                                                 <td data-name="Amount">Amount</td>
                                                                                 <td data-name="Action"></td>
                                                                             </tr>
                                                                         </thead>
-                                                                        <tbody>
-                                                                            <tr>
+                                                                        <tbody class="linked-transaction-table-body">
+                                                                            <tr class="linked-transaction-row">
                                                                                 <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$item->linked_transaction_id?>" data-type="<?=str_replace('_', '-', $item->linked_transaction_type)?>"><?=ucwords(str_replace('_', ' ', $item->linked_transaction_type))?></a></td>
-                                                                                <td><?=$item->linked_transaction_type === 'delayed_credit' ? date("m/d/Y", strtotime($item->linked_transac->delayed_credit_date)) : date("m/d/Y", strtotime($item->linked_transac->delayed_charge_date))?></td>
+                                                                                <td>
+                                                                                    <?php switch($item->linked_transaction_type) {
+                                                                                        case 'estimate' :
+                                                                                            echo date("m/d/Y", strtotime($item->linked_transac->estimate_date));
+                                                                                        break;
+                                                                                        case 'delayed_credit' :
+                                                                                            echo date("m/d/Y", strtotime($item->linked_transac->delayed_credit_date));
+                                                                                        break;
+                                                                                        case 'delayed_charge' :
+                                                                                            echo date("m/d/Y", strtotime($item->linked_transac->delayed_charge_date));
+                                                                                        break;
+                                                                                    } ?>
+                                                                                </td>
                                                                                 <td>
                                                                                     <?php
-                                                                                    $transacAmount = $item->linked_transac->total_amount;
+                                                                                    if($item->linked_transaction_type === 'estimate') {
+                                                                                        $transacAmount = $item->linked_transac->grand_total;
+                                                                                    } else {
+                                                                                        $transacAmount = $item->linked_transac->total_amount;
+                                                                                    }
                                                                                     $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
 
                                                                                     echo str_replace('$-', '-$', $transacAmount);
@@ -400,28 +456,44 @@
                                                                 ?>
                                                             </span>
                                                         </td>
-                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
-                                                        <td>
+                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs) || isset($linkedTransac)) : ?>
+                                                        <td class="overflow-visible">
                                                         <?php if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id)) : ?>
                                                             <div class="dropdown">
                                                                 <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
                                                                 <div class="dropdown-menu">
-                                                                    <table class="nsm-table">
+                                                                    <table class="nsm-table linked-transaction-table">
                                                                         <thead>
-                                                                            <tr>
+                                                                            <tr class="linked-transaction-header">
                                                                                 <td data-name="Type">Type</td>
                                                                                 <td data-name="Date">Date</td>
                                                                                 <td data-name="Amount">Amount</td>
                                                                                 <td data-name="Action"></td>
                                                                             </tr>
                                                                         </thead>
-                                                                        <tbody>
-                                                                            <tr>
+                                                                        <tbody class="linked-transaction-table-body">
+                                                                            <tr class="linked-transaction-row">
                                                                                 <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$item->linked_transaction_id?>" data-type="<?=str_replace('_', '-', $item->linked_transaction_type)?>"><?=ucwords(str_replace('_', ' ', $item->linked_transaction_type))?></a></td>
-                                                                                <td><?=$item->linked_transaction_type === 'delayed_credit' ? date("m/d/Y", strtotime($item->linked_transac->delayed_credit_date)) : date("m/d/Y", strtotime($item->linked_transac->delayed_charge_date))?></td>
+                                                                                <td>
+                                                                                    <?php switch($item->linked_transaction_type) {
+                                                                                        case 'estimate' :
+                                                                                            echo date("m/d/Y", strtotime($item->linked_transac->estimate_date));
+                                                                                        break;
+                                                                                        case 'delayed_credit' :
+                                                                                            echo date("m/d/Y", strtotime($item->linked_transac->delayed_credit_date));
+                                                                                        break;
+                                                                                        case 'delayed_charge' :
+                                                                                            echo date("m/d/Y", strtotime($item->linked_transac->delayed_charge_date));
+                                                                                        break;
+                                                                                    } ?>
+                                                                                </td>
                                                                                 <td>
                                                                                     <?php
-                                                                                    $transacAmount = $item->linked_transac->total_amount;
+                                                                                    if($item->linked_transaction_type === 'estimate') {
+                                                                                        $transacAmount = $item->linked_transac->grand_total;
+                                                                                    } else {
+                                                                                        $transacAmount = $item->linked_transac->total_amount;
+                                                                                    }
                                                                                     $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
 
                                                                                     echo str_replace('$-', '-$', $transacAmount);

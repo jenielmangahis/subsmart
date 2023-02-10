@@ -107,59 +107,81 @@ $(document).ready(function() {
     }).catch((error) => {
         console.log('Error:', error);
     })
+
+    const dashboard_getLeaderboardAvatar = (leaderboard) => {
+        let {avatar,firstname,lastname} = leaderboard;
+
+        if (typeof avatar === "string" && !avatar.endsWith("default.png")) {
+            return `<div class="nsm-profile" style="background-image: url('${avatar}');"></div>`;
+        }
+
+        firstname = firstname ? firstname : " ";
+        lastname = lastname ? lastname : " ";
+
+        const initials = firstname[0] + ''+ lastname[0];
+        return `
+            <div class="nsm-profile">
+                <span>${initials}</span>
+            </div>
+        `;
+    };
+
+    const dashboard_getLeaderboardHTMLItem = (leaderboard, nameSubTitle = "Sales Rep") => {
+        const {firstname = "", lastname = "", total_revenue,total_customers} = leaderboard;
+        const fullName = `${firstname} ${lastname}`;
+
+        const formatter = Intl.NumberFormat('en-US');
+        const revenue = formatter.format(total_revenue || 0);
+
+        return `
+        <div class="widget-item">
+            ${dashboard_getLeaderboardAvatar(leaderboard)}
+            <div class="content">
+                <div class="details">
+                    <span class="content-title">${fullName}</span>
+                    <span class="content-subtitle d-block">${nameSubTitle}</span>
+                </div>
+                <div style="padding-top: 5px;">
+                    <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">
+                        $${revenue}
+                    </span>
+                    <span class="content-subtitle d-block">revenue</span>
+                </div>
+                <div class="controls">
+                    <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">
+                        ${total_customers || 0}
+                    </span>
+                    <span class="content-subtitle d-block">customers</span>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
+    const dashboard_getLeaderboardEmptyMessage = () => {
+        return `
+        <div class="nsm-card-content d-flex justify-content-center align-items-center">
+            <div class="nsm-empty">
+                <i class="bx bx-meh-blank"></i>
+                <span>There is currently no leaderboard recorded.</span>
+            </div>
+        </div>
+        `;
+    }
     
     fetch('<?= base_url('Dashboard/sales_leaderboard') ?>',{
         method: 'GET'
     }) .then(response => response.json()).then(response => {
 
         if (response.is_new) {
-            const getAvatar = (leaderboard) => {
-                const {sales_rep_avatar,sales_rep_firstname,sales_rep_lastname} = leaderboard;
-
-                if (typeof sales_rep_avatar === "string" && !sales_rep_avatar.endsWith("default.png")) {
-                    return `<div class="nsm-profile" style="background-image: url('${sales_rep_avatar}');"></div>`;
-                }
-
-                const repInitials = sales_rep_firstname[0] + ''+ sales_rep_lastname[0];
-                return `
-                    <div class="nsm-profile">
-                        <span>${repInitials}</span>
-                    </div>
-                `;
-            };
+            if (!Array.isArray(response.data) || !response.data.length) {
+                $('#sales_leaderboard').css({ height: "100%" });
+                $('#sales_leaderboard').append(dashboard_getLeaderboardEmptyMessage());
+                return;
+            }
 
             response.data.forEach(leaderboard => {
-                const {sales_rep_firstname, sales_rep_lastname, total_revenue,total_customers} = leaderboard;
-                const repName = `${sales_rep_firstname} ${sales_rep_lastname}`;
-
-                const formatter = Intl.NumberFormat('en-US');
-                const revenue = formatter.format(total_revenue);
-
-                $('#sales_leaderboard').append(
-                `
-                <div class="widget-item">
-                    ${getAvatar(leaderboard)}
-                    <div class="content">
-                        <div class="details">
-                            <span class="content-title">${repName}</span>
-                            <span class="content-subtitle d-block">Sales Rep</span>
-                        </div>
-                        <div style="padding-top: 5px;">
-                            <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">
-                                $${revenue}
-                            </span>
-                            <span class="content-subtitle d-block">revenue</span>
-                        </div>
-                        <div class="controls">
-                            <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">
-                                ${total_customers}
-                            </span>
-                            <span class="content-subtitle d-block">customers</span>
-                        </div>
-                    </div>
-                </div>
-                `
-                )
+                $('#sales_leaderboard').append(dashboard_getLeaderboardHTMLItem(leaderboard));
             });
             return;
         }
@@ -193,6 +215,19 @@ $(document).ready(function() {
     fetch('<?= base_url('Dashboard/tech_leaderboard') ?>',{
         
     }).then(response => response.json()).then(response => {
+        if (response.is_new) {
+            if (!Array.isArray(response.data) || !response.data.length) {
+                $('#tech_leaderboard').css({ height: "100%" });
+                $('#tech_leaderboard').append(dashboard_getLeaderboardEmptyMessage());
+                return;
+            }
+
+            response.data.forEach(leaderboard => {
+                $('#tech_leaderboard').append(dashboard_getLeaderboardHTMLItem(leaderboard));
+            });
+            return;
+        }
+
         var {success, techLeaderboard, revenue, customerCount} = response;
         console.log(response);
         if(success){

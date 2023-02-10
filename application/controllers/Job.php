@@ -37,6 +37,24 @@ class Job extends MY_Controller
         }
         $this->page_data['jobs'] = $jobs;
         $this->page_data['title'] = 'Jobs';
+
+        $companyId = logged('company_id');
+
+        $this->db->select('id,name,marker_icon');
+        $this->db->where('company_id', $companyId);
+        $tagsQuery = $this->db->get('job_tags');
+        $this->page_data['tags'] = $tagsQuery->result_array();
+
+        $this->db->select('id, FName, LName');
+        $this->db->where('company_id', $companyId);
+        $employeesQuery = $this->db->get('users');
+        $employees = $employeesQuery->result_array();
+        $employees = array_map(function ($employee) {
+            $employee['avatar'] = userProfileImage((int) $employee['id']);
+            return $employee;
+        }, $employees);
+
+        $this->page_data['employees'] = $employees;
         $this->load->view('v2/pages/job/list', $this->page_data);
     }
 

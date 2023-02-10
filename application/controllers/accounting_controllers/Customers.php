@@ -1622,7 +1622,7 @@ class Customers extends MY_Controller {
                         <a class='dropdown-item print-estimate' href='/estimate/print/$estimate->id' target='_blank'>Print</a>
                     </li>
                     <li>
-                        <a class='dropdown-item send-estimate' href='#'>Send</a>
+                        <a class='dropdown-item send-estimate' href='#' acs-id='$estimate->customer_id' est-id='$estimate->id'>Send</a>
                     </li>
                     <li>
                         <a class='dropdown-item update-estimate-status' href='#'>Update status</a>
@@ -2039,6 +2039,9 @@ class Customers extends MY_Controller {
                             $items[$key]->cost = $item->costing;
                             $items[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
                             $items[$key]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $items[$key]->linked_transaction_type = 'estimate';
+                            $items[$key]->linked_transaction_id = $transactionId;
+                            $items[$key]->linked_transac = $estimate;
                         }
 
                         $this->page_data['items'] = $items;
@@ -2046,6 +2049,7 @@ class Customers extends MY_Controller {
                     case 'Option' :
                         $view = "options_estimate_modal";
                         $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($transactionId);
+                        $estimate->grand_total = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
         
                         $items = [];
                         $index = 0;
@@ -2054,6 +2058,9 @@ class Customers extends MY_Controller {
                             $items[$index]->cost = $item->costing;
                             $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
                             $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $items[$index]->linked_transaction_type = 'estimate';
+                            $items[$index]->linked_transaction_id = $transactionId;
+                            $items[$index]->linked_transac = $estimate;
                             $index++;
                         }
         
@@ -2064,6 +2071,9 @@ class Customers extends MY_Controller {
                             $items[$index]->cost = $item->costing;
                             $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
                             $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $items[$index]->linked_transaction_type = 'estimate';
+                            $items[$index]->linked_transaction_id = $transactionId;
+                            $items[$index]->linked_transac = $estimate;
                             $index++;
                         }
         
@@ -2072,6 +2082,7 @@ class Customers extends MY_Controller {
                     case 'Bundle' :
                         $view = "bundle_estimate_modal";
                         $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($transactionId);
+                        $estimate->grand_total = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
         
                         $items = [];
                         $index = 0;
@@ -2080,6 +2091,9 @@ class Customers extends MY_Controller {
                             $items[$index]->cost = $item->costing;
                             $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
                             $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $items[$index]->linked_transaction_type = 'estimate';
+                            $items[$index]->linked_transaction_id = $transactionId;
+                            $items[$index]->linked_transac = $estimate;
                             $index++;
                         }
         
@@ -2090,29 +2104,37 @@ class Customers extends MY_Controller {
                             $items[$index]->cost = $item->costing;
                             $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
                             $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $items[$index]->linked_transaction_type = 'estimate';
+                            $items[$index]->linked_transaction_id = $transactionId;
+                            $items[$index]->linked_transac = $estimate;
                             $index++;
                         }
         
                         $this->page_data['items'] = $items;
                     break;
                 }
+
+                $this->page_data['linkedTransac']->type = 'Estimate';
+                $this->page_data['linkedTransac']->transaction = $estimate;
             break;
             case 'credit' :
                 $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($transactionId);
                 $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $transactionId);
                 $customer = $this->accounting_customers_model->get_by_id($delayedCredit->customer_id);
                 $this->page_data['customer'] = $customer;
+                $this->page_data['linkedTransac']->type = 'Credit';
+                $this->page_data['linkedTransac']->transaction = $delayedCredit;
 
                 $creditItems = [];
                 foreach($items as $key => $item) {
                     $creditItem = new stdClass();
                     $creditItem->items_id = $item->items_id;
                     $creditItem->location_id = $item->location_id;
-                    $creditItem->qty = $item->quantity;
+                    $creditItem->qty = '-'.$item->quantity;
                     $creditItem->cost = $item->price;
                     $creditItem->discount = $item->discount;
                     $creditItem->tax = $item->tax;
-                    $creditItem->total = $item->total;
+                    $creditItem->total = '-'.$item->total;
                     if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
                         $creditItem->itemDetails = $this->items_model->getItemById($item->item_id)[0];
                         $creditItem->locations = $this->items_model->getLocationByItemId($item->item_id);
@@ -2120,6 +2142,9 @@ class Customers extends MY_Controller {
                         $creditItem->packageDetails = $this->items_model->get_package_by_id($item->package_id);
                         $creditItem->packageItems = json_decode($item->package_item_details);
                     }
+                    $creditItem->linked_transaction_type = 'delayed_credit';
+                    $creditItem->linked_transaction_id = $transactionId;
+                    $creditItem->linked_transac = $delayedCredit;
                     $creditItems[] = $creditItem;
                 }
 
@@ -2130,30 +2155,41 @@ class Customers extends MY_Controller {
                 $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $transactionId);
                 $customer = $this->accounting_customers_model->get_by_id($delayedCharge->customer_id);
                 $this->page_data['customer'] = $customer;
+                $this->page_data['linkedTransac'] = new stdClass();
+                $this->page_data['linkedTransac']->type = 'Charge';
+                $this->page_data['linkedTransac']->transaction = $delayedCharge;
 
                 $chargeItems = [];
                 foreach($items as $key => $item) {
-                    $chargeItems = new stdClass();
-                    $chargeItems->items_id = $item->items_id;
-                    $chargeItems->location_id = $item->location_id;
-                    $chargeItems->qty = $item->quantity;
-                    $chargeItems->cost = $item->price;
-                    $chargeItems->discount = $item->discount;
-                    $chargeItems->tax = $item->tax;
-                    $chargeItems->total = $item->total;
+                    $chargeItem = new stdClass();
+                    $chargeItem->items_id = $item->items_id;
+                    $chargeItem->location_id = $item->location_id;
+                    $chargeItem->qty = $item->quantity;
+                    $chargeItem->cost = $item->price;
+                    $chargeItem->discount = $item->discount;
+                    $chargeItem->tax = $item->tax;
+                    $chargeItem->total = $item->total;
                     if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
-                        $chargeItems->itemDetails = $this->items_model->getItemById($item->item_id)[0];
-                        $chargeItems->locations = $this->items_model->getLocationByItemId($item->item_id);
+                        $chargeItem->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $chargeItem->locations = $this->items_model->getLocationByItemId($item->item_id);
                     } else {
-                        $chargeItems->packageDetails = $this->items_model->get_package_by_id($item->package_id);
-                        $chargeItems->packageItems = json_decode($item->package_item_details);
+                        $chargeItem->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $chargeItem->packageItems = json_decode($item->package_item_details);
                     }
-                    $creditItems[] = $creditItem;
+                    $chargeItem->linked_transaction_type = 'delayed_charge';
+                    $chargeItem->linked_transaction_id = $transactionId;
+                    $chargeItem->linked_transac = $delayedCharge;
+                    $chargeItems[] = $chargeItem;
                 }
 
-                $this->page_data['items'] = $creditItems;
+                $this->page_data['items'] = $chargeItems;
             break;
         }
+
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
+        $this->page_data['number'] = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
 
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
