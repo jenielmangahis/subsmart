@@ -857,13 +857,15 @@ class Job extends MY_Controller
         exit;*/
 
         if ($input) {
+            $job = $this->jobs_model->get_specific_job($input['jobs_id']);
+
             $payment_data = array();
             $payment_data['payment_method'] = $input['pay_method'];
-
-            if ($input['pay_method'] == 'CASH') {                
+            $payment_data['amount']         = $job->total_amount;            
+            if ($input['pay_method'] == 'CASH') {                    
                 $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
                 $payment_data['is_paid'] = 1;
-            }elseif($input['pay_method'] == 'CHECK'){
+            }elseif($input['pay_method'] == 'CHECK'){                
                 $payment_data['check_number']   = $input['chk_check_number'];
                 $payment_data['routing_number'] = $input['chk_routing_number'];
                 $payment_data['account_number'] = $input['chk_account_number'];
@@ -890,8 +892,7 @@ class Job extends MY_Controller
                 //$payment_data['ach_date_of_month'] = 0;
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
-            }elseif($input['pay_method'] == 'CREDIT_CARD'){
-                $job = $this->jobs_model->get_specific_job($input['jobs_id']);
+            }elseif($input['pay_method'] == 'CREDIT_CARD'){                
                 $converge_data = [
                     'company_id' => $job->company_id,
                     'amount' => $input['amount'],
@@ -917,6 +918,18 @@ class Job extends MY_Controller
                     $is_success = 0;
                     $msg = $result['msg'];
                 }
+            }elseif($input['pay_method'] == 'INVOICING'){
+                $payment_data['invoice_date'] = date('Y-m-d', strtotime($input['invoice_date']));
+                $payment_data['invoice_term'] = $input['invoice_term'];
+                $payment_data['invoice_due_date'] = date('Y-m-d', strtotime($input['invoice_due_date']));
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid'] = 1;
+            }elseif($input['pay_method'] == 'WARRANTY_WORK'){
+                $payment_data['account_credentials'] = $input['account_credential'];
+                $payment_data['account_note'] = $input['account_note'];
+                $payment_data['is_document_signed'] = $input['is_document_signed'];
+                $payment_data['is_collected'] = 1;
+                $payment_data['is_paid']      = 1;
             }else{
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid'] = 1;
@@ -930,12 +943,15 @@ class Job extends MY_Controller
                     ),
                     'table' => 'job_payments'
                 );
-                $exist = $this->general->get_data_with_param($check, false);
+                $payment_data['job_id'] = $input['jobs_id'];
+                $updated =  $this->general->add_($payment_data, 'job_payments');
+
+                /*$exist = $this->general->get_data_with_param($check, false);
                 if ($exist) {
                     $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
                 } else {
                     $updated =  $this->general->add_($payment_data, 'job_payments');
-                } 
+                } */
             }            
         }
 
@@ -3478,6 +3494,15 @@ class Job extends MY_Controller
         echo json_encode($json_data);       
 
         exit;
+    }
+
+    public function ajax_load_job_payments()
+    {
+        $post = $this->input->post();
+        $jobPayments = $this->jobs_model->get_all_job_payments_by_job_id($post['jobid']);
+
+        $this->page_data['jobPayments'] = $jobPayments;
+        $this->load->view('v2/pages/job/ajax_load_job_payments', $this->page_data);
     }
 }
 
