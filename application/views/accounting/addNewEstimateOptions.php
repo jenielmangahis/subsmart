@@ -298,7 +298,7 @@ echo put_header_assets();
                             <div class="dropdown d-flex justify-content-end">
                                 <?php //if (hasPermissions('WORKORDER_MASTER')) :
                                 ?>
-                                <a href="<?php echo base_url('estimate') ?>" class="nsm-button primary" aria-expanded="false">
+                                <a href="<?php echo base_url('accounting/newEstimateList') ?>" class="nsm-button primary" aria-expanded="false">
                                     <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
                                 </a>
                                 <?php //endif
