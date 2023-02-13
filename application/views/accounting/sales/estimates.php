@@ -1,5 +1,7 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -80,7 +82,7 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" data-toggle="modal" data-target="#newEstimateModal">
                                 <i class='bx bx-fw bx-list-plus'></i> New Estimate
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -171,7 +173,7 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
+                                        <!-- <li>
                                             <a class="dropdown-item" href="#">Send</a>
                                         </li>
                                         <li>
@@ -194,7 +196,69 @@
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#">Delete</a>
+                                        </li> -->
+                                        <li role="presentation">
+                                            <a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-file-text-o icon"></span> View Estimate</a>
                                         </li>
+
+                                                    <?php if($estimate->estimate_type == 'Standard'){ ?>
+                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php }elseif($estimate->estimate_type == 'Option'){ ?>
+                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php }else{ ?>
+                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php } ?>
+
+                                                    <li role="separator" class="divider"></li>
+                                                    <li role="presentation"><a class="dropdown-item" role="menuitem"
+                                                                               tabindex="-1"
+                                                                               href="#"
+                                                                               data-toggle="modal"
+                                                                               data-target="#modalCloneEstimate"
+                                                                               data-id="<?php echo $estimate->id ?>"
+                                                                               data-wo_num="<?php echo $estimate->estimate_number ?>"
+                                                                               data-name="WO-00433" class="clone-estimate"><span
+                                                                    class="fa fa-files-o icon">
+
+                                                        </span> Clone Estimate</a>
+                                                    </li>
+                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('invoice') ?>"
+                                                                               data-convert-to-invoice-modal="open"
+                                                                               data-id="161983"
+                                                                               data-name="WO-00433"><span
+                                                                    class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a class="dropdown-item" role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                        <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
+                                                    <li role="presentation">
+                                                        <a class="dropdown-item" role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                        <span class="fa fa-print icon"></span>  Print</a></li>
+                                                    <li role="presentation">
+                                                        <!-- <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
+                                                        <a class="dropdown-item" href="" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
+                                                    <li><div class="dropdown-divider"></div></li>
+                                                    <li role="presentation">
+                                                        <!-- <a role="menuitem" href="<?php //echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
+                                                        <a class="dropdown-item" href="#" est-id="<?php echo $estimate->id; ?>" id="delete_estimate"><span class="fa fa-trash-o icon"></span> Delete </a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a class="dropdown-item" role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
+                                                            <span class="fa fa-briefcase icon"></span> Convert to Job</a>
+                                                    </li>
                                     </ul>
                                 </div>
                             </td>
@@ -216,4 +280,40 @@
     </div>
 </div>
 
+
+  
+<div class="modal fade" id="newEstimateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Estimate</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="text-lg margin-bottom">
+            What type of estimate you want to create
+        </p><center>
+        <div class="margin-bottom text-center" style="width:60%;">
+            <div class="help help-sm">Create a regular estimate with items</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimate') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
+        </div>
+        <div class="margin-bottom" style="width:60%;">
+            <div class="help help-sm">Customers can select all <br>or only certain options</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimateOptions?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+        </div>
+        <div  class="margin-bottom" style="width:60%;">
+            <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall discount</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimateBundle?type=3') ?>"><span class="fa fa-cubes"></span> Bundle Estimate</a>
+        </div></center>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js">
+<?php //include viewPath('includes/footer_accounting'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

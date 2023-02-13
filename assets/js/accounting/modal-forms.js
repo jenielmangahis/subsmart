@@ -3708,6 +3708,152 @@ $(function() {
 
                 $(this).parent().parent().parent().parent().parent().remove();
             break;
+            case 'estimate' :
+                $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
+                    var result = JSON.parse(res);
+                    var details = result.details;
+                    var items = result.items;
+
+                    if (items.length > 0) {
+                        if($('#modal-container form .modal #item-table thead tr td').length < 10) {
+                            $('<td></td>').insertBefore($('#modal-container form .modal #item-table thead tr td:last-child'));
+                        }
+
+                        var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+                        var date = new Date(details.estimate_date);
+                        var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                        var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
+
+                        $.each(items, function(index, item) {
+                            var link = `
+                            <td class="overflow-visible">
+                                <div class="dropdown">
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                    <div class="dropdown-menu">
+                                        <table class="nsm-table linked-transaction-table">
+                                            <thead>
+                                                <tr class="linked-transaction-header">
+                                                    <td data-name="Type">Type</td>
+                                                    <td data-name="Date">Date</td>
+                                                    <td data-name="Amount">Amount</td>
+                                                    <td data-name="Action"></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="linked-transaction-table-body">
+                                                <tr class="linked-transaction-row">
+                                                    <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                    <td>${dateString}</td>
+                                                    <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                    <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
+                                <input type="hidden" value="${item.id}" name="transaction_item_id[]">
+                            </td>
+                            `;
+
+                            var itemDetails = item.itemDetails;
+                            var locations = item.locations;
+                            var locs = '';
+                            if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
+                                locs += '<select name="location[]" class="form-control nsm-field" required>';
+                                for (var i in locations) {
+                                    locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                                }
+                                locs += '</select>';
+                            }
+
+                            var type = itemDetails.type;
+
+                            var price = item.price;
+
+                            var total = item.total;
+                            total = '$'+parseFloat(total).toFixed(2);
+
+                            var fields = `
+                                <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
+                                <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+                                <td>${locs}</td>
+                                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="${item.qty}"></td>
+                                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.cost).toFixed(2)}"></td>
+                                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
+                                ${link}
+                                <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
+                            `;
+
+                            $('#modal-container form .modal #item-table tbody:not(#package-items-table, .linked-transaction-table-body)').append(`<tr>${fields}</tr>`);
+            
+                            $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                                minimumResultsForSearch: -1,
+                                dropdownParent: $('#modal-container form .modal')
+                            });
+                        });
+
+                        $('#modal-container form .modal #item-table tbody:not(#package-items-table) tr:last-child input[name="quantity[]"]').trigger('change');
+                    }
+
+                    if ($('#modal-container .modal .close-transactions-container').length > 0) {
+                        var button = $('#modal-container .modal .close-transactions-container');
+                    } else {
+                        var button = $('#modal-container .modal .open-transactions-container');
+                    }
+
+                    button.parent().append(`<input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction[]">`);
+
+                    if($('#modal-container .modal #linked-transaction').length > 0) {
+                        $('#modal-container .modal #linked-transaction').next().find('table tbody').append(`<tr>
+                            <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                            <td>${dateString}</td>
+                            <td>${remainingBalance.replace('$-', '-$')}</td>
+                            <td><button class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                        </tr>`);
+
+
+                        var linkedCount = $('#modal-container .modal input[name="linked_transaction[]"]').length;
+
+                        $('#modal-container .modal #linked-transaction').html(`${linkedCount} linked transactions`);
+                    } else {
+                        button.parent().append(`
+                            <div class="dropdown">
+                                <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="linked-transaction">1 linked Estimate</a>
+                                <div class="dropdown-menu">
+                                    <table class="nsm-table linked-transaction-table">
+                                        <thead>
+                                            <tr class="linked-transaction-header">
+                                                <td data-name="Type">Type</td>
+                                                <td data-name="Date">Date</td>
+                                                <td data-name="Amount">Amount</td>
+                                                <td data-name="Action"></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="linked-transaction-table-body">
+                                            <tr class="linked-transaction-row">
+                                                <td><a class="text-decoration-none open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                                <td>${dateString}</td>
+                                                <td>${remainingBalance.replace('$-', '-$')}</td>
+                                                <td><button type="button" class="nsm-button unlink-transaction" data-type="${data.type}" data-id="${data.id}">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if ($('#modal-container .modal .transactions-container .row div.col-12').length === 2) {
+                        $('#modal-container .modal .transactions-container').parent().remove();
+                        $('#modal-container .modal .close-transactions-container').remove();
+                        $('#modal-container .modal .open-transactions-container').remove();
+                    }
+                });
+
+                $(this).parent().parent().parent().parent().parent().remove();
+            break;
         }
     });
 
@@ -7435,7 +7581,7 @@ $(function() {
 
                             $.each(transactions, function(index, transaction) {
                                 var title = transaction.type;
-                                title += transaction.number !== '' ? '#' + transaction.number : '';
+                                title += transaction.number !== '' ? ' #' + transaction.number : '';
     
                                 if($(`#invoiceModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                                     $('#invoiceModal .modal-body .row .transactions-container .row').append(`

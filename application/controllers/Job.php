@@ -38,6 +38,40 @@ class Job extends MY_Controller
         $this->page_data['jobs'] = $jobs;
         $this->page_data['title'] = 'Jobs';
 
+        $jobIds = array_map(function ($job) {
+            return $job->id;
+        }, $jobs);
+
+        if (!empty($jobIds)) {
+            // Calculate job amount based on saved job's items.
+
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.qty,job_items.tax');
+            $this->db->from('job_items');
+            $this->db->join('items', 'items.id = job_items.items_id', 'left');
+            $this->db->where_in('job_items.job_id', $jobIds);
+            $itemsQuery = $this->db->get();
+            $items = $itemsQuery->result();
+
+            $jobAmounts = [];
+            foreach ($items as $item) {
+                if (!array_key_exists($item->job_id, $jobAmounts)) {
+                    $jobAmounts[$item->job_id] = 0;
+                }
+
+                $total = (((float) $item->price) * (float) $item->qty); // include tax? (float) $item->tax
+                $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
+            }
+
+            $jobs = array_map(function ($job) use ($jobAmounts) {
+                if (!array_key_exists($job->id, $jobAmounts)) {
+                    return $job;
+                }
+
+                $job->amount = ((float) ($job->tax_rate)) + $jobAmounts[$job->id];
+                return $job;
+            }, $jobs);
+        }
+
         $companyId = logged('company_id');
 
         $this->db->select('id,name,marker_icon');

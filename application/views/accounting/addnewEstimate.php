@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+// include viewPath('v2/includes/header');
 include viewPath('v2/includes/accounting_header'); 
 echo put_header_assets();
 ?>
-<?php //include viewPath('includes/sidebars/accounting/accounting'); ?>
-<link rel="stylesheet" href="<?= base_url("assets/css/accounting/accounting.css") ?>">
+
 <!-- Script for autosaving form -->
 <!-- <script src="<?php // base_url("assets/js/estimate/autosave-standard.js") ?>"></script> -->
 
@@ -299,7 +299,6 @@ echo put_header_assets();
     <!-- page wrapper start -->
     <div wrapper__sectio class="nsm-content">
         <div class="page-content" style="background-color:white;">
-            <?php //include viewPath('estimate/v2/header'); ?>
             <?php include viewPath('v2/includes/page_navigations/accounting/tabs/dashboard'); ?>
             <br><br>
             <div class="page-title-box">
@@ -317,7 +316,7 @@ echo put_header_assets();
                             <div class="dropdown d-flex justify-content-end">
                                 <?php //if (hasPermissions('WORKORDER_MASTER')) :
                                 ?>
-                                <a href="<?php echo base_url('estimate') ?>" class="nsm-button primary" aria-expanded="false">
+                                <a href="<?php echo base_url('accounting/newEstimateList') ?>" class="nsm-button primary" aria-expanded="false">
                                     <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
                                 </a>
                                 <?php //endif
@@ -337,7 +336,7 @@ echo put_header_assets();
 
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('accounting/savenewestimateAccounting', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('estimate/savenewestimate', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">

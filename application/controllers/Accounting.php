@@ -4812,8 +4812,8 @@ class Accounting extends MY_Controller
 
     public function savenewestimate()
     {
-        $company_id = getLoggedCompanyID();
-        $user_id = getLoggedUserID();
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
 
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -4826,7 +4826,9 @@ class Accounting extends MY_Controller
             'expiry_date' => $this->input->post('expiry_date'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'status' => $this->input->post('status'),
+            'type' => $this->input->post('estimate_type'),
             'estimate_type' => 'Standard',
+            //'type' => $this->input->post('estimate_type'),
             // 'ship_via' => $this->input->post('ship_via'),
             // 'ship_date' => $this->input->post('ship_date'),
             // 'tracking_no' => $this->input->post('tracking_no'),
@@ -4841,23 +4843,21 @@ class Accounting extends MY_Controller
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
-
-            'estimate_type' => 'Standard',
-
             'user_id' => $user_id,
             'company_id' => $company_id,
             // 'created_by' => logged('id'),
 
-            'sub_total' => $this->input->post('sub_total'), //
-            'deposit_request' => $this->input->post('adjustment_name'), //
-            'deposit_amount' => $this->input->post('adjustment_input'), //
-            'grand_total' => $this->input->post('grand_total'), //
+            'sub_total' => $this->input->post('subtotal'),//
+            // 'deposit_request' => $this->input->post('adjustment_name'),//
+            // 'deposit_amount' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('grand_total'),//
+            'tax1_total' => $this->input->post('taxes'),
 
-            'adjustment_name' => $this->input->post('adjustment_name'), //
-            'adjustment_value' => $this->input->post('adjustment_input'), //
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_value'),//
 
-            'markup_type' => '$', //
-            'markup_amount' => $this->input->post('markup_input_form'), //
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
 
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
@@ -4879,35 +4879,72 @@ class Accounting extends MY_Controller
             //     'created_at' => date("Y-m-d H:i:s"),
             //     'updated_at' => date("Y-m-d H:i:s")
             // );
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
-            // $c = $this->input->post('desc');
-            $d = $this->input->post('quantity');
-            // $e = $this->input->post('location');
-            $f = $this->input->post('price');
-            $g = $this->input->post('discount');
-            $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
+            // $a = $this->input->post('items');
+            // $b = $this->input->post('item_type');
+            // // $c = $this->input->post('desc');
+            // $d = $this->input->post('quantity');
+            // // $e = $this->input->post('location');
+            // $f = $this->input->post('price');
+            // $g = $this->input->post('discount');
+            // $h = $this->input->post('tax');
+            // $ii = $this->input->post('total');
 
-            $i = 0;
-            foreach ($a as $row) {
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
-                // $data['description'] = $c[$i];
-                $data['qty'] = $d[$i];
-                // $data['location'] = $e[$i];
-                $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
-                $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Standard Estimate';
-                $data['type_id'] = $addQuery;
-                $data['status'] = '1';
-                $data['status'] = 'Standard';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
-                $i++;
+            // $i = 0;
+            // foreach ($a as $row) {
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     // $data['description'] = $c[$i];
+            //     $data['qty'] = $d[$i];
+            //     // $data['location'] = $e[$i];
+            //     $data['cost'] = $f[$i];
+            //     $data['discount'] = $g[$i];
+            //     $data['tax'] = $h[$i];
+            //     $data['total'] = $ii[$i];
+            //     $data['type'] = 'Standard Estimate';
+            //     $data['type_id'] = $addQuery;
+            //     $data['status'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+
+                $a          = $this->input->post('itemid');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $h          = $this->input->post('tax');
+                $gtotal     = $this->input->post('total');
+
+                $i = 0;
+                foreach($a as $row){
+                    $data['items_id'] = $a[$i];
+                    $data['qty'] = $quantity[$i];
+                    $data['cost'] = $price[$i];
+                    $data['tax'] = $h[$i];
+                    $data['total'] = $gtotal[$i];
+                    $data['estimates_id '] = $addQuery;
+                    $addQuery2 = $this->estimate_model->add_estimate_items($data);
+                    $i++;
+                }
+
+            // }
+            $userid = logged('id');
+
+            $getname = $this->estimate_model->getname($userid);
+
+                $notif = array(
+            
+                    'user_id'               => $userid,
+                    'title'                 => 'New Estimates',
+                    'content'               => $getname->FName. ' has created new Estimates.'. $this->input->post('estimate_number'),
+                    'date_created'          => date("Y-m-d H:i:s"),
+                    'status'                => '1',
+                    'company_id'            => getLoggedCompanyID()
+                );
+    
+                $notification = $this->estimate_model->save_notification($notif);
+
+            if ($this->input->post('status') === 'Submitted') {
+                $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
             }
 
             redirect('accounting/newEstimateList');
@@ -5034,8 +5071,8 @@ class Accounting extends MY_Controller
 
     public function savenewestimateBundle()
     {
-        $company_id = getLoggedCompanyID();
-        $user_id = getLoggedUserID();
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
 
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -5049,6 +5086,7 @@ class Accounting extends MY_Controller
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'status' => $this->input->post('status'),
             'estimate_type' => 'Bundle',
+            'type' => $this->input->post('estimate_type'),
             'attachments' => 'testing',
             'status' => $this->input->post('status'),
             'deposit_request' => $this->input->post('deposit_request'),
@@ -5057,11 +5095,11 @@ class Accounting extends MY_Controller
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
 
-            'estimate_type' => 'Bundle',
+            // 'estimate_type' => 'Bundle',
             'bundle1_message' => $this->input->post('bundle1_message'),
             'bundle2_message' => $this->input->post('bundle2_message'),
-            'bundle1_total' => $this->input->post('bundle1_total'),
-            'bundle2_total' => $this->input->post('bundle2_total'),
+            // 'bundle1_total' => $this->input->post('bundle1_total'),
+            // 'bundle2_total' => $this->input->post('bundle2_total'),
             'bundle_discount' => $this->input->post('bundle_discount'),
 
 
@@ -5071,14 +5109,22 @@ class Accounting extends MY_Controller
 
             // 'sub_total' => $this->input->post('sub_total'),
             'deposit_request' => '$',
-            'deposit_amount' => $this->input->post('adjustment_input'), //
-            'grand_total' => $this->input->post('supergrandtotal'), //
+            'deposit_amount' => $this->input->post('adjustment_input'),//
+            'bundle1_total' => $this->input->post('grand_total'),//
+            'bundle2_total' => $this->input->post('grand_total2'),//
+            'sub_total' => $this->input->post('sub_total'),//
+            'sub_total2' => $this->input->post('sub_total2'),//
 
-            'adjustment_name' => $this->input->post('adjustment_name'), //
-            'adjustment_value' => $this->input->post('adjustment_input'), //
+            'tax1_total' => $this->input->post('total_tax_'),
+            'tax2_total' => $this->input->post('total_tax2_'),
 
-            'markup_type' => '$', //
-            'markup_amount' => $this->input->post('markup_input_form'), //
+            'grand_total' => $this->input->post('supergrandtotal'),//
+
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
 
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
@@ -5086,60 +5132,144 @@ class Accounting extends MY_Controller
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
         if ($addQuery > 0) {
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
-            $d = $this->input->post('quantity');
-            $f = $this->input->post('price');
-            $g = $this->input->post('discount');
-            $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
+            // $a = $this->input->post('items');
+            // $b = $this->input->post('item_type');
+            // $d = $this->input->post('quantity');
+            // $f = $this->input->post('price');
+            // $g = $this->input->post('discount');
+            // $h = $this->input->post('tax');
+            // $ii = $this->input->post('total');
+
+            // $i = 0;
+            // foreach ($a as $row) {
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     $data['qty'] = $d[$i];
+            //     $data['cost'] = $f[$i];
+            //     $data['discount'] = $g[$i];
+            //     $data['tax'] = $h[$i];
+            //     $data['total'] = $ii[$i];
+            //     $data['type'] = 'Bundle Estimate';
+            //     $data['type_id'] = $addQuery;
+            //     $data['status'] = '1';
+            //     $data['estimate_type'] = 'Bundle';
+            //     $data['bundle_option_type'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+            // }
+
+            // $j = $this->input->post('items2');
+            // $k = $this->input->post('item_type2');
+            // $l = $this->input->post('quantity2');
+            // $m = $this->input->post('price2');
+            // $n = $this->input->post('discount2');
+            // $o = $this->input->post('tax2');
+            // $p = $this->input->post('total2');
+
+            // $z = 0;
+            // foreach ($j as $row2) {
+            //     $data2['item'] = $j[$z];
+            //     $data2['item_type'] = $k[$z];
+            //     $data2['qty'] = $l[$z];
+            //     $data2['cost'] = $m[$z];
+            //     $data2['discount'] = $n[$z];
+            //     $data2['tax'] = $o[$z];
+            //     $data2['total'] = $p[$z];
+            //     $data2['type'] = 'Bundle Estimate';
+            //     $data2['type_id'] = $addQuery;
+            //     $data2['status'] = '1';
+            //     $data2['estimate_type'] = 'Bundle';
+            //     $data2['bundle_option_type'] = '2';
+            //     $data2['created_at'] = date("Y-m-d H:i:s");
+            //     $data2['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
+            //     $z++;
+            // }
+            // redirect('estimate');
+
+            $a          = $this->input->post('itemid');
+            // $packageID  = $this->input->post('packageID');
+            $quantity   = $this->input->post('quantity');
+            $price      = $this->input->post('price');
+            $h          = $this->input->post('tax');
+            $discount   = $this->input->post('discount');
+            $total      = $this->input->post('total');
 
             $i = 0;
-            foreach ($a as $row) {
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
-                $data['qty'] = $d[$i];
-                $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
-                $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Bundle Estimate';
-                $data['type_id'] = $addQuery;
-                $data['status'] = '1';
-                $data['estimate_type'] = 'Bundle';
+            foreach($a as $row){
+                $data['items_id']       = $a[$i];
+                // $data['package_id ']    = $packageID[$i];
+                $data['qty']            = $quantity[$i];
+                $data['cost']           = $price[$i];
+                $data['tax']            = $h[$i];
+                $data['discount']       = $discount[$i];
+                $data['total']          = $total[$i];
+                $data['estimate_type']  = 'Bundle';
+                $data['estimates_id ']  = $addQuery;
                 $data['bundle_option_type'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $addQuery2 = $this->estimate_model->add_estimate_details($data);
                 $i++;
             }
 
-            $j = $this->input->post('items2');
-            $k = $this->input->post('item_type2');
-            $l = $this->input->post('quantity2');
-            $m = $this->input->post('price2');
-            $n = $this->input->post('discount2');
-            $o = $this->input->post('tax2');
-            $p = $this->input->post('total2');
+            $a2          = $this->input->post('itemid2');
+            // $packageID  = $this->input->post('packageID');
+            $quantity2   = $this->input->post('quantity2');
+            $price2      = $this->input->post('price2');
+            $h2          = $this->input->post('tax2');
+            $discount2   = $this->input->post('discount2');
+            $total2      = $this->input->post('total2');
 
-            $z = 0;
-            foreach ($j as $row2) {
-                $data2['item'] = $j[$z];
-                $data2['item_type'] = $k[$z];
-                $data2['qty'] = $l[$z];
-                $data2['cost'] = $m[$z];
-                $data2['discount'] = $n[$z];
-                $data2['tax'] = $o[$z];
-                $data2['total'] = $p[$z];
-                $data2['type'] = 'Bundle Estimate';
-                $data2['type_id'] = $addQuery;
-                $data2['status'] = '1';
-                $data2['estimate_type'] = 'Bundle';
+            $i2 = 0;
+            foreach($a2 as $row2){
+                $data2['items_id']       = $a2[$i2];
+                // $data['package_id ']    = $packageID[$i];
+                $data2['qty']            = $quantity2[$i2];
+                $data2['cost']           = $price2[$i2];
+                $data2['tax']            = $h2[$i2];
+                $data2['discount']       = $discount2[$i2];
+                $data2['total']          = $total2[$i2];
+                $data2['estimate_type']  = 'Bundle';
+                $data2['estimates_id ']  = $addQuery;
                 $data2['bundle_option_type'] = '2';
-                $data2['created_at'] = date("Y-m-d H:i:s");
-                $data2['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
-                $z++;
+                $addQuery2 = $this->estimate_model->add_estimate_details($data2);
+                $i2++;
+            }
+
+            // $getname = $this->workorder_model->getname($user_id);
+
+            // $notif = array(
+        
+            //     'user_id'               => $user_id,
+            //     'title'                 => 'New Work Order',
+            //     'content'               => $getname->FName. ' has created new Work Order.'. $this->input->post('workorder_number'),
+            //     'date_created'          => date("Y-m-d H:i:s"),
+            //     'status'                => '1',
+            //     'company_id'            => getLoggedCompanyID()
+            // );
+
+            // $notification = $this->workorder_model->save_notification($notif);
+
+            $userid = logged('id');
+
+            $getname = $this->estimate_model->getname($userid);
+
+                $notif = array(
+            
+                    'user_id'               => $userid,
+                    'title'                 => 'New Estimates',
+                    'content'               => $getname->FName. ' has created new Bundle Estimates.'. $this->input->post('estimate_number'),
+                    'date_created'          => date("Y-m-d H:i:s"),
+                    'status'                => '1',
+                    'company_id'            => getLoggedCompanyID()
+                );
+    
+                $notification = $this->estimate_model->save_notification($notif);
+                
+
+            if ($this->input->post('status') === 'Submitted') {
+                $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
             }
 
             redirect('accounting/newEstimateList');
