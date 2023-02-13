@@ -1,12 +1,7 @@
-'[]
-''
-'
-'<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/header'); ?>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'"> <i class='bx bx-tag'></i> </div>
-</div>.
-0.
-
+</div>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
@@ -356,21 +351,40 @@
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(details) {
                 // Show a success message to the buyer
-                console.log(details);
-                var tokenRequest = {
+                //console.log(details);
+                createJobPayment();
+                /*var tokenRequest = {
                     id: "<?= $this->uri->segment(3) ?>",
                     stat: 'Completed'
-                };
-                //$("#payment-method").val('paypal');
-                $.post("<?= base_url() ?>job/on_update_status", tokenRequest, function(data) {
-                    //paid('Success!', 'Job has been paid!', 'success');
+                };                
+                $.post("<?= base_url() ?>job/on_update_status", tokenRequest, function(data) {                    
                     paid('Nice!', 'Thank you for your payment!', 'success')
-                });
-                //$("#payment-method-status").val(details.status);
-                //activate_registration();
+                });*/
+                
             });
         }
     }).render('#paypal-button-container');
+
+    function createJobPayment(){
+        var jobid = $('#job-id').val();
+        var payment_method = $('#MODE_OF_PAYMENT').val();
+        var url   = base_url + 'job/_create_job_payment';
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {jobid:jobid,payment_method:payment_method},
+            dataType:'json',
+            success: function(result) {
+                if( result.is_success == 1 ){
+                    sucess();
+                }else{
+                    error();
+                }
+            },
+        });
+    }
+
     // This function displays Smart Payment Buttons on your web page.
     function paid($title, information, $icon) {
         Swal.fire({
