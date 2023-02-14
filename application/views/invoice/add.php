@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
 <!-- Script for autosaving form -->
-<script src="<?=base_url("assets/js/invoice/autosave.js")?>"></script>
+<!-- <script src="<?=base_url("assets/js/invoice/autosave.js")?>"></script> -->
 
 <?php include viewPath('v2/includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -514,6 +514,10 @@ input:checked + .slider:before {
                                                     <option value="Approved">Approved</option>
                                                     <option value="Declined">Declined</option>
                                                     <option value="Schedule">Schedule</option>
+                                                    <option value="Partially Paid">Partially Paid</option>
+                                                    <option value="Paid">Paid</option>
+                                                    <option value="Due">Due</option>
+                                                    <option value="Overdue">Overdue</option>
                                                 </select>
                                 </div>
                             </div>

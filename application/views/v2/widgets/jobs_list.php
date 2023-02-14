@@ -261,11 +261,11 @@ endif;
                                     $JOB_PREVIEW = "";
                                     foreach($latestJobs as $latestJobs_data){
                                         ($latestJobs_data->TECH_1 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
-                                        ($latestJobs_data->TECH_2 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
-                                        ($latestJobs_data->TECH_3 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
-                                        ($latestJobs_data->TECH_4 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
-                                        ($latestJobs_data->TECH_5 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
-                                        ($latestJobs_data->TECH_6 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_1" : null;
+                                        ($latestJobs_data->TECH_2 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_2" : null;
+                                        ($latestJobs_data->TECH_3 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_3" : null;
+                                        ($latestJobs_data->TECH_4 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_4" : null;
+                                        ($latestJobs_data->TECH_5 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_5" : null;
+                                        ($latestJobs_data->TECH_6 != "") ? $TECH_BADGE .= "<br>- $latestJobs_data->TECH_6" : null;
 
                                         if ($latestJobs_data->city == "") {
                                             $ADDRESS = "Not Available";

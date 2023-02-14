@@ -786,6 +786,13 @@ class Job extends MY_Controller
 
             $jobs_data = $this->general->get_data_with_param($get_estimate_query, false);
 
+            if ($jobs_data->deposit_amount) {
+                $this->session->set_flashdata('message', 'Only Accepted estimates can be converted into a job.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+                return redirect('/estimate');
+            }
+
+
             $default_customer_id = 0;
             $default_customer_name = '';
 
@@ -1379,6 +1386,54 @@ class Job extends MY_Controller
             echo "Error";
         }
 
+    }
+
+    public function ajax_create_job_payment()
+    {
+        $post = $this->input->post();
+        $is_success = 0;
+        $msg = 'Cannot update data';
+        
+        $job = $this->jobs_model->get_specific_job($post['jobid']);
+        if( $job ){
+            $jobItems  = $this->jobs_model->get_specific_job_items($id);
+            $job_total_amount = 0;
+            foreach($jobItems as $item){
+                $job_total_amount += (((float) $item->price) * (float) $item->qty);
+            }
+
+            if ($post['payment_method'] == 'PAYPAL') {                    
+                $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
+                $payment_data['is_paid'] = 1;
+            }
+
+            $payment_data['payment_method'] = $post['payment_method'];
+            $payment_data['amount']         = $job_total_amount;  
+            $payment_data['job_id']         = $job->id;
+            $msg = '';
+            $check = array(
+                'where' => array(
+                    'job_id' => $job->id,
+                    'payment_method' => NULL
+                ),
+                'table' => 'job_payments'
+            ); 
+
+            $exist = $this->general->get_data_with_param($check, false);
+            if ($exist) {
+                $updated =  $this->general->update_with_key_field($payment_data, $job->id, 'job_payments', 'job_id');
+            } else {
+                $updated =  $this->general->add_($payment_data, 'job_payments');
+            } 
+
+            $is_success = 1;
+            $msg = '';   
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);       
+
+        exit;
     }
 
     public function get_customer_selected()

@@ -40,6 +40,15 @@
                             For any business, getting customers is only half the battle; creating a job workflow will help track each scheduled ticket from draft to receiving payment.
                         </div>
                     </div>
+
+                    <div class="col-12">
+                        <?php if(!empty($this->session->flashdata('message'))): ?>
+                            <div class="nsm-callout <?= $this->session->flashdata('alert_class') ?>">
+                                <button><i class='bx bx-x'></i></button>
+                                <?= $this->session->flashdata('message'); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
@@ -206,9 +215,11 @@
                                                     <a class="dropdown-item clone-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#clone_estimate_modal" data-id="<?php echo $estimate->id ?>" data-wo_num="<?php echo $estimate->estimate_number ?>" data-name="WO-00433">Clone Estimate</a>
                                                 </li>
 
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/estimate_job/' . $estimate->id) ?>">Convert to Job</a>
-                                                </li>
+                                                <?php if($estimate->status === 'Accepted'): ?>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?= base_url('job/estimate_job/' . $estimate->id) ?>">Convert to Job</a>
+                                                    </li>
+                                                <?php endif; ?>
 
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/estimateConversion/'. $estimate->id) ?>">Convert to Invoice</a>
@@ -218,29 +229,22 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" target="_new">Print</a>
                                                 </li>
 
-                                                <?php
-                                                if ($estimate->estimate_type == 'Standard') :
-                                                ?>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>">Edit</a>
-                                                    </li>
-                                                <?php
-                                                elseif ($estimate->estimate_type == 'Option') :
-                                                ?>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>">Edit</a>
-                                                    </li>
-                                                <?php
-                                                else :
-                                                ?>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>">Edit</a>
-                                                    </li>
-                                                <?php
-                                                endif;
-                                                ?>
+                                                <?php if ($estimate->status !== 'Accepted'): ?>
+                                                    <?php if ($estimate->estimate_type == 'Standard'): ?>
+                                                        <li>
+                                                            <a class="dropdown-item" href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>">Edit</a>
+                                                        </li>
+                                                    <?php elseif ($estimate->estimate_type == 'Option'): ?>
+                                                        <li>
+                                                            <a class="dropdown-item" href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>">Edit</a>
+                                                        </li>
+                                                    <?php else: ?>
+                                                        <li>
+                                                            <a class="dropdown-item" href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>">Edit</a>
+                                                        </li>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
 
-                                               
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" est-id="<?php echo $estimate->id; ?>">Delete</a>
                                                 </li>

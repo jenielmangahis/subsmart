@@ -1350,16 +1350,18 @@
                             <tbody>
                             <?php if(!empty($estimates)): ?>
                                 <?php foreach ($estimates as $estimate): ?>
-                                    <tr>
-                                        <td><?= $estimate->estimate_number; ?></td>
-                                        <td><?= $estimate->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($estimate->estimate_date)); ?></td>
-                                        <td>
-                                            <a href="<?= base_url('job/estimate_job/'. $estimate->id) ?>" id="<?= $estimate->id; ?>" type="button" class="btn btn-sm btn-default">
-                                                <span class="fa fa-briefcase"></span> Convert To Job
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    <?php if ($estimate->status === 'Accepted'): ?>
+                                        <tr>
+                                            <td><?= $estimate->estimate_number; ?></td>
+                                            <td><?= $estimate->job_name; ?></td>
+                                            <td><?= date('M d, Y', strtotime($estimate->estimate_date)); ?></td>
+                                            <td>
+                                                <a href="<?= base_url('job/estimate_job/'. $estimate->id) ?>" id="<?= $estimate->id; ?>" type="button" class="btn btn-sm btn-default">
+                                                    <span class="fa fa-briefcase"></span> Convert To Job
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>

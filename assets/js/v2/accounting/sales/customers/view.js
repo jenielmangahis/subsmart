@@ -2,6 +2,7 @@ const currUrl = window.location.href;
 const urlSplit = currUrl.split('/');
 const customerId = urlSplit[urlSplit.length - 1].includes('?') ? urlSplit[urlSplit.length - 1].split('?')[0].replace('#', '') : urlSplit[urlSplit.length - 1].replace('#', '');
 const customerName = $('span#customer-business-name').html();
+const customerEmail = $('span#customer-email').text().trim();
 import("/assets/js/customer/components/FieldCustomName.js");
 $('.edit-customer, .notes-container').on('click', function(e) {
     e.preventDefault();
@@ -1331,6 +1332,30 @@ $('#transactions-table .void-invoice').on('click', function(e) {
     });
 });
 
+
+$('#transactions-table .void-credit-memo').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Void Credit Memo',
+        text: 'Are you sure you want to void this credit memo?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get('/accounting/void-transaction/credit-memo/'+id, function(res) {
+                location.reload();
+            });
+        }
+    });
+});
+
 $('#transactions-table .delete-sales-receipt').on('click', function(e) {
     e.preventDefault();
 
@@ -1379,4 +1404,73 @@ $('#transactions-table .void-sales-receipt').on('click', function(e) {
             });
         }
     });
+});
+
+$('#transactions-table .send-sales-receipt').on('click', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var ref_no = row.find('td:nth-child(4)').text().trim();
+    var id = row.find('.select-one').val();
+    var email = row.find('td:nth-child(14)').text().trim();
+
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`Sales Receipt #${ref_no} from ${companyName}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Please review the sales receipt below.
+We appreciate it very much.
+
+Thanks for your business!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/sales-receipt/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
+});
+
+$('#transactions-table .send-refund-receipt').on('click', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var ref_no = row.find('td:nth-child(4)').text().trim();
+    var id = row.find('.select-one').val();
+    var email = row.find('td:nth-child(14)').text().trim();
+
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`Refund Receipt from ${companyName}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Please find your refund receipt attached to this email.
+
+Thank you.
+
+Have a great day!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/refund-receipt/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
+});
+
+$('#transactions-table .send-credit-memo').on('click', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var ref_no = row.find('td:nth-child(4)').text().trim();
+    var id = row.find('.select-one').val();
+    var email = row.find('td:nth-child(14)').text().trim();
+
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`Credit Memo #${ref_no} from ${companyName}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Your credit memo is attached.  We have reduced your account balance by the amount shown on the credit memo.
+
+Have a great day!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/credit-memo/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
 });
