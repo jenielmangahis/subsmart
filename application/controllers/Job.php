@@ -244,11 +244,30 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
+        $estimate_dp_amount = 0;
         if (!$id==null) {
+            $jobs_data = $this->jobs_model->get_specific_job($id);
+            if( $jobs_data->estimate_id > 0 ){
+                $get_estimate_query= array(
+                    'where' => array(
+                        'id' => $jobs_data->estimate_id
+                    ),
+                    'table' => 'estimates',
+                    'select' => '*'
+                );
+
+                $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
+                if( $estimate_data ){
+                    $estimate_dp_amount = $estimate_data->deposit_amount;
+                }
+            }
+            
+
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
 
         }
+
         $default_customer_id = 0;
         $default_customer_name = '';
 
@@ -266,6 +285,7 @@ class Job extends MY_Controller
         $this->page_data['title'] = 'Job New';
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
+        $this->page_data['estimate_dp_amount'] = $estimate_dp_amount;
 
         add_css([
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -879,10 +899,29 @@ class Job extends MY_Controller
             $jobs_data = $this->jobs_model->get_specific_job($id);
             $jobItems  = $this->jobs_model->get_specific_job_items($id);
 
+            //Deposit Amount
+            $deposit_amount = 0;
+            if( $jobs_data->estimate_id > 0 ){
+                $get_estimate_query= array(
+                    'where' => array(
+                        'id' => $jobs_data->estimate_id
+                    ),
+                    'table' => 'estimates',
+                    'select' => '*'
+                );
+
+                $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
+                if( $estimate_data ){
+                    $deposit_amount = $estimate_data->deposit_amount;
+                }
+            }
+
             $job_total_amount = 0;
             foreach($jobItems as $item){
                 $job_total_amount += (((float) $item->price) * (float) $item->qty);
             }
+
+            $job_total_amount = ($job_total_amount + $jobs_data->tax_rate) - $deposit_amount;
 
             $get_customer_info = array(
                 'where' => array(
@@ -902,7 +941,7 @@ class Job extends MY_Controller
             $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
             $this->page_data['job_total_amount'] = $job_total_amount;
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
-            $this->page_data['jobs_data'] = $jobs_data;
+            $this->page_data['jobs_data'] = $jobs_data;            
             $this->page_data['page']->title = 'Jobs Billing';
             $this->load->view('v2/pages/job/job_billing', $this->page_data);
             //$this->load->view('job/job_billing_v2', $this->page_data);
@@ -1841,7 +1880,7 @@ class Job extends MY_Controller
         $isJob = $this->general->get_data_with_param($check_job, false);
 
         if(!empty($isJob)){
-            $job_number = $isJob->job_number;
+            $job_number = $isJob->job_number;   
         }else{
             $job_settings = $this->general->get_data_with_param($get_job_settings);
             if( $job_settings ){
@@ -1864,9 +1903,14 @@ class Job extends MY_Controller
         
 
         $jobTag = $this->JobTags_model->getById($input['tags']);
+        $estimate_id = 0;
+        if( $input['estimate_id'] > 0 ){
+            $estimate_id = $input['estimate_id'];
+        }
 
         $jobs_data = array(
             'job_number' => $job_number,
+            'estimate_id' => $estimate_id,
             'customer_id' => $input['customer_id'],
             'employee_id' => $input['employee_id'],
             'employee2_id' => $input['employee2_id'],
