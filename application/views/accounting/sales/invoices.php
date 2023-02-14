@@ -39,7 +39,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year">$0.00</h2>
+                                    <h2 id="total_this_year">$<?=number_format($paid_last_30, 2)?></h2>
                                     <span>PAID LAST 30 DAYS</span>
                                 </div>
                             </div>
@@ -181,9 +181,9 @@
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button">
+                            <a href="<?php echo base_url('accounting/addnewInvoice') ?>" class="btn nsm-button">
                                 <i class='bx bx-fw bx-list-plus'></i> New Invoice
-                            </button>
+                            </a>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
@@ -220,7 +220,7 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <td data-name="Recurring"></td>
-                            <td data-name="Date">DATE</td>
+                            <td data-name="Date">DATE ISSUED</td>
                             <td data-name="No.">NO.</td>
                             <td data-name="Customer">CUSTOMER</td>
                             <td data-name="Amount">AMOUNT</td>
@@ -242,7 +242,13 @@
                                 </div>
                             </td>
                             <td></td>
-                            <td><?=date("m/d/Y", strtotime($invoice->date_issued))?></td>
+                            <td><?php
+                            // echo $invoice->date_issued;
+                            // $timestamp = strtotime($invoice->date_issued);
+                            //  echo $new_date = date("d-m-Y", $timestamp); 
+                            $myDateTime = DateTime::createFromFormat('Y-m-d', $invoice->date_issued);
+                            echo $newDateString = $myDateTime->format('m-d-Y');
+                             ?></td>
                             <td><?=$invoice->invoice_number?></td>
                             <td>
                                 <?php
@@ -250,7 +256,7 @@
                                 echo $customer->last_name.', '.$customer->first_name;
                                 ?>
                             </td>
-                            <td>$<?=$invoice->grand_total?></td>
+                            <td>$<?= number_format($invoice->grand_total,2) ?></td>
                             <td></td>
                             <td></td>
                             <td></td>
