@@ -371,7 +371,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Email</td>
-                                                                <td><?=$customer->email?></td>
+                                                                <td><span id="customer-email"><?=$customer->email?></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Phone</td>
@@ -460,4 +460,7 @@
     </div>
 </div>
 
+<script>
+    const companyName = "<?=$company->business_name?>";
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

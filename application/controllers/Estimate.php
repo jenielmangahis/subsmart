@@ -921,6 +921,12 @@ class Estimate extends MY_Controller
         $this->load->model('Customer_model', 'customer_model');
 
         $this->page_data['estimate'] = $this->estimate_model->getById($id);
+        if ($this->page_data['estimate']->status === 'Accepted') {
+            $this->session->set_flashdata('message', 'Accepted estimate cannot be edited.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            return redirect('/estimate');
+        }
+
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
@@ -957,6 +963,12 @@ class Estimate extends MY_Controller
         $this->load->model('Customer_model', 'customer_model');
 
         $this->page_data['estimate'] = $this->estimate_model->getById($id);
+        if ($this->page_data['estimate']->status === 'Accepted') {
+            $this->session->set_flashdata('message', 'Accepted estimate cannot be edited.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            return redirect('/estimate');
+        }
+
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
@@ -995,6 +1007,12 @@ class Estimate extends MY_Controller
         $this->load->model('Customer_model', 'customer_model');
 
         $this->page_data['estimate'] = $this->estimate_model->getById($id);
+        if ($this->page_data['estimate']->status === 'Accepted') {
+            $this->session->set_flashdata('message', 'Accepted estimate cannot be edited.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            return redirect('/estimate');
+        }
+
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);

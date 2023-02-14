@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
 <!-- Script for autosaving form -->
-<script src="<?=base_url("assets/js/invoice/autosave.js")?>"></script>
+<!-- <script src="<?=base_url("assets/js/invoice/autosave.js")?>"></script> -->
 
 <?php include viewPath('v2/includes/header'); ?>
 <div class="wrapper" role="wrapper">

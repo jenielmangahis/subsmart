@@ -806,6 +806,13 @@ class Job extends MY_Controller
 
             $jobs_data = $this->general->get_data_with_param($get_estimate_query, false);
 
+            if ($jobs_data->deposit_amount) {
+                $this->session->set_flashdata('message', 'Only Accepted estimates can be converted into a job.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+                return redirect('/estimate');
+            }
+
+
             $default_customer_id = 0;
             $default_customer_name = '';
 

@@ -30,6 +30,7 @@ class Customers extends MY_Controller {
         $this->load->model('accounting_statements_model');
         $this->load->model('payment_records_model');
         $this->load->model('business_model');
+        $this->load->model('accounting_payment_methods_model');
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Sales';
@@ -1341,28 +1342,28 @@ class Customers extends MY_Controller {
 
         foreach($creditMemos as $creditMemo)
         {
-            $manageCol = '<div class="dropdown table-management">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class="dropdown-item print-credit-memo" href="#">Print</a>
+                        <a class='dropdown-item print-credit-memo' href='/accounting/customers/print-transaction/credit-memo/$creditMemo->id' target='_blank'>Print</a>
                     </li>
                     <li>
-                        <a class="dropdown-item send-credit-memo" href="#">Send</a>
+                        <a class='dropdown-item send-credit-memo' href='#'>Send</a>
                     </li>
                     <li>
-                        <a class="dropdown-item view-edit-credit-memo" href="#">View/Edit</a>
+                        <a class='dropdown-item view-edit-credit-memo' href='#'>View/Edit</a>
                     </li>
                     <li>
-                        <a class="dropdown-item copy-transaction" href="#">Copy</a>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
                     </li>
                     <li>
-                        <a class="dropdown-item void-credit-memo" href="#">Void</a>
+                        <a class='dropdown-item void-credit-memo' href='#'>Void</a>
                     </li>
                 </ul>
-            </div>';
+            </div>";
 
             $transactions[] = [
                 'id' => $creditMemo->id,
@@ -1405,7 +1406,7 @@ class Customers extends MY_Controller {
                 </a>
                 <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class='dropdown-item print-sales-receipt' href='/accounting/customers/print-sales-receipt/$salesReceipt->id' target='_blank'>Print</a>
+                        <a class='dropdown-item print-sales-receipt' href='/accounting/customers/print-transaction/sales-receipt/$salesReceipt->id' target='_blank'>Print</a>
                     </li>
                     <li>
                         <a class='dropdown-item send-sales-receipt' href='#'>Send</a>
@@ -1460,25 +1461,25 @@ class Customers extends MY_Controller {
 
         foreach($refundReceipts as $refundReceipt)
         {
-            $manageCol = '<div class="dropdown table-management">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class="dropdown-item print-refund-receipt-check" href="#">Print check</a>
+                        <a class='dropdown-item print-refund-receipt-check' href='#'>Print check</a>
                     </li>
                     <li>
-                        <a class="dropdown-item send-refund-receipt" href="#">Send</a>
+                        <a class='dropdown-item send-refund-receipt' href='#'>Send</a>
                     </li>
                     <li>
-                        <a class="dropdown-item print-refund-receipt" href="#">Print</a>
+                        <a class='dropdown-item print-refund-receipt' href='/accounting/customers/print-transaction/refund-receipt/$refundReceipt->id' target='_blank'>Print</a>
                     </li>
                     <li>
-                        <a class="dropdown-item view-edit-refund-receipt" href="#">View/Edit</a>
+                        <a class='dropdown-item view-edit-refund-receipt' href='#'>View/Edit</a>
                     </li>
                 </ul>
-            </div>';
+            </div>";
 
             $transactions[] = [
                 'id' => $refundReceipt->id,
@@ -2197,36 +2198,99 @@ class Customers extends MY_Controller {
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
 
-    public function print_sales_receipt($salesReceiptId)
+    public function print_transaction($transactionType, $transactionId)
     {
         $this->load->helper('string');
         $this->load->library('pdf');
-        $view = "accounting/modals/print_action/print_sales_receipt";
 
         $extension = '.pdf';
 
-        do {
-            $randomString = random_string('alnum');
-            $fileName = 'print_sales_receipt_'.$randomString . '.' .$extension;
-            $exists = file_exists('./assets/pdf/'.$fileName);
-        } while ($exists);
+        switch($transactionType) {
+            case 'sales-receipt' :
+                $view = "accounting/modals/print_action/print_sales_receipt";
 
-        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
-        $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceiptId);
+                do {
+                    $randomString = random_string('alnum');
+                    $fileName = 'print_sales_receipt_'.$randomString . '.' .$extension;
+                    $exists = file_exists('./assets/pdf/'.$fileName);
+                } while ($exists);
+        
+                $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+                $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceiptId);
+        
+                foreach($receiptItems as $key => $receiptItem) {
+                    $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                    $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                    $taxAmount = floatval($taxAmount) / 100;
+        
+                    $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                    $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                }
+        
+                $pdfData = [
+                    'salesReceipt' => $salesReceipt,
+                    'receiptItems' => $receiptItems
+                ];
+            break;
+            case 'refund-receipt' :
+                $view = "accounting/modals/print_action/print_refund_receipt";
 
-        foreach($receiptItems as $key => $receiptItem) {
-            $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
-            $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
-            $taxAmount = floatval($taxAmount) / 100;
+                do {
+                    $randomString = random_string('alnum');
+                    $fileName = 'print_refund_receipt_'.$randomString . '.' .$extension;
+                    $exists = file_exists('./assets/pdf/'.$fileName);
+                } while ($exists);
 
-            $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
-            $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transactionId);
+                $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $transactionId);
+                $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method);
+
+                foreach($receiptItems as $key => $receiptItem) {
+                    $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                    $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                    $taxAmount = floatval($taxAmount) / 100;
+        
+                    $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                    $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                }
+
+                $fileName = 'Refund_Receipt_'.$refundReceipt->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+
+                $pdfData = [
+                    'paymentMethod' => $paymentMethod,
+                    'refundReceipt' => $refundReceipt,
+                    'receiptItems' => $receiptItems
+                ];
+            break;
+            case 'credit-memo' :
+                $view = "accounting/modals/print_action/print_credit_memo";
+
+                do {
+                    $randomString = random_string('alnum');
+                    $fileName = 'print_credit_memo_'.$randomString . '.' .$extension;
+                    $exists = file_exists('./assets/pdf/'.$fileName);
+                } while ($exists);
+
+                $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transactionId);
+                $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $transactionId);
+
+                foreach($memoItems as $key => $creditMemoItem) {
+                    $subtotal = floatval($creditMemoItem->price) * floatval($creditMemoItem->quantity);
+                    $taxAmount = floatval($creditMemoItem->tax) * floatval($subtotal);
+                    $taxAmount = floatval($taxAmount) / 100;
+
+                    $memoItems[$key]->item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+                    $memoItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                }
+
+                $fileName = 'Credit_Memo_'.$creditMemo->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+
+                $pdfData = [
+                    'creditMemo' => $creditMemo,
+                    'memoItems' => $memoItems
+                ];
+            break;
         }
-
-        $pdfData = [
-            'salesReceipt' => $salesReceipt,
-            'receiptItems' => $receiptItems
-        ];
 
         $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
 
@@ -2243,5 +2307,97 @@ class Customers extends MY_Controller {
         flush();
         echo $pdf;
         exit;
+    }
+
+    public function send_transaction($transactionType, $transactionId)
+    {
+        $this->load->library('pdf');
+        $this->load->library('email');
+        $post = $this->input->post();
+
+        $company = $this->business_model->getByCompanyId(logged('company_id'));
+
+        switch($transactionType) {
+            case 'sales-receipt' :
+                $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($transactionId);
+                $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $transactionId);
+                $fileName = 'Sales_Receipt_'.$salesReceipt->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+
+                foreach($receiptItems as $key => $receiptItem) {
+                    $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                    $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                    $taxAmount = floatval($taxAmount) / 100;
+        
+                    $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                    $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                }
+
+                $view = "accounting/modals/print_action/print_sales_receipt";
+
+                $pdfData = [
+                    'salesReceipt' => $salesReceipt,
+                    'receiptItems' => $receiptItems
+                ];
+            break;
+            case 'refund-receipt' :
+                $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transactionId);
+                $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $transactionId);
+                $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method);
+
+                foreach($receiptItems as $key => $receiptItem) {
+                    $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                    $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                    $taxAmount = floatval($taxAmount) / 100;
+        
+                    $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                    $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                }
+
+                $fileName = 'Refund_Receipt_'.$refundReceipt->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+                $view = "accounting/modals/print_action/print_refund_receipt";
+
+                $pdfData = [
+                    'paymentMethod' => $paymentMethod,
+                    'refundReceipt' => $refundReceipt,
+                    'receiptItems' => $receiptItems
+                ];
+            break;
+            case 'credit-memo' :
+                $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transactionId);
+                $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $transactionId);
+
+                foreach($memoItems as $key => $creditMemoItem) {
+                    $subtotal = floatval($creditMemoItem->price) * floatval($creditMemoItem->quantity);
+                    $taxAmount = floatval($creditMemoItem->tax) * floatval($subtotal);
+                    $taxAmount = floatval($taxAmount) / 100;
+
+                    $memoItems[$key]->item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+                    $memoItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                }
+
+                $fileName = 'Credit_Memo_'.$creditMemo->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+                $view = "accounting/modals/print_action/print_credit_memo";
+
+                $pdfData = [
+                    'creditMemo' => $creditMemo,
+                    'memoItems' => $memoItems
+                ];
+            break;
+        }
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $this->email->clear(true);
+        $this->email->from('nsmartrac@gmail.com');
+        $this->email->to($post['email_to']);
+        $this->email->subject($post['email_subject']);
+        $this->email->message($post['email_message']);
+        $this->email->attach(base_url("/assets/pdf/$fileName"));
+
+        $this->email->send();
+
+        unlink(getcwd()."/assets/pdf/$fileName");
+
+        redirect($_SERVER['HTTP_REFERER']);
     }
 }
