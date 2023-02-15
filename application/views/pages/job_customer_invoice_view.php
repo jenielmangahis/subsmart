@@ -234,6 +234,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <hr>
                                     <b>Sub Total</b>
                                     <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+                                    <br />
+                                    <b>Tax Amount</b>
+                                    <b class="right-text">$<?= number_format((float)$jobs_data->tax_rate,2,'.',','); ?></b>
+                                    <br />
+                                    <?php if( $estimate_deposit_amount > 0 ){ ?>
+                                    <b>Deposit Amount Paid</b>
+                                    <b class="right-text">$<?= number_format((float)$estimate_deposit_amount,2,'.',','); ?></b>
+                                    <?php } ?>
                                     <br><hr>
 
                                     <?php if($jobs_data->tax != NULL): ?>

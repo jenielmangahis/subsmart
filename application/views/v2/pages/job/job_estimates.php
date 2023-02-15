@@ -538,14 +538,13 @@
                                                                 $depositAmount = 0;
                                                                 $percentage = null;
                                                                 $isPercentage = in_array(trim($jobs_data->deposit_request), ['2', '%']); // 1 = $, 2 = %
-
+                                                                $subtotal = $subtotal + $jobs_data->tax1_total;
                                                                 if ($isPercentage) {
                                                                     $percentage = (float) $jobs_data->deposit_amount;
                                                                     $depositAmount = ($percentage / 100) * $subtotal;
                                                                 } else {
                                                                     $depositAmount = (float) $jobs_data->deposit_amount;
                                                                 }
-
                                                                 $invoiceOverAllTotal =  (float) $subtotal - (float) $depositAmount;
                                                                 $invoiceOverAllTotalFormatted = number_format((float) $invoiceOverAllTotal, 2, '.', ',');
                                                                 $depositAmountFormatted = number_format((float) $depositAmount, 2, '.', ',');

@@ -196,7 +196,7 @@ $(document).on("focusout", ".adjustment_input", function () {
 
   // alert(adjustment);
 
-  $('#grand_total_input').val(new_grand.toFixed(2));
+  $('#grand_total_input').val(new_grand.toFixed(2)).trigger('change');
   $('#grand_total').text(new_grand.toFixed(2));
   $('#adjustmentText').text(adjustment);
   $("#payment_amount").val(new_grand.toFixed(2));
@@ -328,7 +328,7 @@ $(document).on("focusout", ".tax_change2", function () {
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#payment_amount").val(grand_total_w.toFixed(2));
 
@@ -504,7 +504,7 @@ $("#total_tax_").val(subtotaltax.toFixed(2));
 
 
 $("#grand_total").text(grand_total_w.toFixed(2));
-$("#grand_total_input").val(grand_total_w.toFixed(2));
+$("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
 $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 $("#payment_amount").val(grand_total_w.toFixed(2));
 
@@ -664,7 +664,7 @@ $("#total_tax_").val(subtotaltax.toFixed(2));
 
 
 $("#grand_total").text(grand_total_w.toFixed(2));
-$("#grand_total_input").val(grand_total_w.toFixed(2));
+$("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
 $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 $("#payment_amount").val(grand_total_w.toFixed(2));
 
@@ -1140,7 +1140,7 @@ $(document).on("focusout", ".qtyest2", function () {
   var pricetotal  = $("#item_total").val();
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
-  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2)).trigger('change');
   $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
   $("#balanceDueText").text(s_grandtotal.toFixed(2));
@@ -1201,7 +1201,7 @@ $(document).on("focusout", ".qtyest3", function () {
   var pricetotal  = $("#item_total").val();
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
-  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2)).trigger('change');
   // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
   
@@ -1327,7 +1327,7 @@ $(document).on("focusout", ".qtyest3", function () {
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#payment_amount").val(grand_total_w.toFixed(2));
 
@@ -1443,7 +1443,7 @@ function calculation_x(counter) {
     // alert('none');
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
     $("#grand_total_inputs").val(grand_total_w.toFixed(2));
     $("#payment_amount").val(grand_total_w.toFixed(2));
     $("#balanceDueText").text(grand_total_w.toFixed(2));
@@ -1858,7 +1858,7 @@ $(document).on("focusout", ".price2", function () {
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
   $("#balanceDueText").text(s_grandtotal.toFixed(2));
-  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2)).trigger('change');
   // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
 });
@@ -1919,7 +1919,7 @@ $(document).on("focusout", ".price_w", function () {
   var pricetotal  = $("#item_total").val();
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
-  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2)).trigger('change');
   // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
 });
@@ -1980,7 +1980,7 @@ $(document).on("focusout", ".price_inv", function () {
   var pricetotal  = $("#item_total").val();
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
-  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2)).trigger('change');
   // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
 });
@@ -2044,7 +2044,7 @@ var in_id = $(this).attr('data-counter');
   var pricetotal  = $("#item_total").val();
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
-  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2)).trigger('change');
   $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
 });
@@ -2103,7 +2103,7 @@ $(document).on("focusout", ".quantity_inv", function () {
     var pricetotal  = $("#item_total").val();
     var s_grandtotal = subtotaltax + priceqty;
     $("#grand_total").text(s_grandtotal.toFixed(2));
-    $("#grand_total_input").val(s_grandtotal.toFixed(2));
+    $("#grand_total_input").val(s_grandtotal.toFixed(2)).trigger('change');
     $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
     $("#payment_amount").val(s_grandtotal.toFixed(2));
   });
@@ -2231,7 +2231,7 @@ function calculation(counter) {
   
   // grand_total_input
   $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
   $("#payment_amount").val(grand_total_w.toFixed(2));
@@ -2244,7 +2244,7 @@ function calculation(counter) {
     // alert('none');
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
     $("#grand_total_inputs").val(grand_total_w.toFixed(2));
     $("#payment_amount").val(grand_total_w.toFixed(2));
     $("#balanceDueText").text(grand_total_w.toFixed(2));
@@ -2405,7 +2405,7 @@ function calculation2(counter) {
     // alert('none');
   }else{
     $("#grand_total2").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
     $("#grand_total_inputs").val(grand_total_w.toFixed(2));
     $("#payment_amount").val(grand_total_w.toFixed(2));
 
@@ -2889,7 +2889,7 @@ $("#total_tax_").text(over_tax);
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#payment_amount").val(grand_total_w.toFixed(2));
 
@@ -3009,7 +3009,7 @@ $(document).on("click", ".remove2", function (e) {
     // alert('none');
   }else{
     $("#grand_total2").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
     $("#grand_total_inputs").val(grand_total_w.toFixed(2));
     $("#payment_amount").val(grand_total_w.toFixed(2));
 
@@ -3447,7 +3447,7 @@ $(".addCreatePackage").click(function () {
                   var grand_total_w = grand_total + parseFloat(markup);
                   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
                   $("#grand_total").text(grand_total_w.toFixed(2));
-                  $("#grand_total_input").val(grand_total_w.toFixed(2));
+                  $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
                   $("#payment_amount").val(grand_total_w.toFixed(2));
   
                   $("#balanceDueText").text(grand_total_w.toFixed(2));
@@ -3552,7 +3552,7 @@ $(".addCreatePackage").click(function () {
                 var grand_total_w = grand_total + parseFloat(markup);
                 $("#grand_total_inputs").val(grand_total_w.toFixed(2));
                 $("#grand_total").text(grand_total_w.toFixed(2));
-                $("#grand_total_input").val(grand_total_w.toFixed(2));
+                $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');
                 $("#payment_amount").val(grand_total_w.toFixed(2));
 
                 $("#balanceDueText").text(grand_total_w.toFixed(2));

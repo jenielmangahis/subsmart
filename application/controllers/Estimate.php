@@ -140,8 +140,10 @@ class Estimate extends MY_Controller
             // 'message_invoice' => $this->input->post('message_invoice'),
             // 'message_statement' => $this->input->post('message_statement'),
             'status' => $this->input->post('status'),
-            'deposit_request' => $this->input->post('deposit_request'),
+            //'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_request' => 2, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('deposit_amount'),
+
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
@@ -437,7 +439,8 @@ class Estimate extends MY_Controller
             'type' => $this->input->post('estimate_type'),
             'attachments' => 'testing',
             'status' => $this->input->post('status'),
-            'deposit_request' => $this->input->post('deposit_request'),
+            //'deposit_request' => $this->input->post('deposit_request'), // 1 = amount / 2 = percentage
+            'deposit_request' => 2, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('deposit_amount'),
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
