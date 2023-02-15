@@ -22087,7 +22087,7 @@ class Accounting_modals extends MY_Controller
                 switch($estimate->estimate_type) {
                     case 'Standard' :
                         $view = "standard_estimate_modal";
-                        $items = $this->estimate_model->getItemlistByID($estimateId);
+                        $items = $this->estimate_model->getItemlistByID($transactionId);
 
                         $discount = 0.00;
                         foreach($items as $key => $item) {
@@ -22101,7 +22101,7 @@ class Accounting_modals extends MY_Controller
                     break;
                     case 'Option' :
                         $view = "options_estimate_modal";
-                        $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($estimateId);
+                        $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($transactionId);
 
                         foreach($itemsOption1 as $key => $item) {
                             $itemsOption1[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
@@ -22109,7 +22109,7 @@ class Accounting_modals extends MY_Controller
 
                         $this->page_data['itemsOption1'] = $itemsOption1;
 
-                        $itemsOption2 = $this->estimate_model->getItemlistByIDOption2($estimateId);
+                        $itemsOption2 = $this->estimate_model->getItemlistByIDOption2($transactionId);
 
                         foreach($itemsOption2 as $key => $item) {
                             $itemsOption2[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
@@ -22119,7 +22119,7 @@ class Accounting_modals extends MY_Controller
                     break;
                     case 'Bundle' :
                         $view = "bundle_estimate_modal";
-                        $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($estimateId);
+                        $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($transactionId);
 
                         foreach($itemsBundle1 as $key => $item) {
                             $itemsBundle1[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
@@ -22127,7 +22127,7 @@ class Accounting_modals extends MY_Controller
 
                         $this->page_data['itemsBundle1'] = $itemsBundle1;
 
-                        $itemsBundle2 = $this->estimate_model->getItemlistByIDBundle2($estimateId);
+                        $itemsBundle2 = $this->estimate_model->getItemlistByIDBundle2($transactionId);
 
                         foreach($itemsBundle2 as $key => $item) {
                             $itemsBundle2[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
@@ -22413,21 +22413,19 @@ class Accounting_modals extends MY_Controller
     public function load_payment_invoices($paymentId)
     {
         $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
-        $post = json_decode(file_get_contents('php://input'), true);
-        $search = $post['columns'][0]['search']['value'];
-        $start = $post['start'];
-        $limit = $post['length'];
+        $post = $this->input->post();
+        $search = $post['search'];
 
         $filters = [
             'overdue' => $post['overdue'],
             'customer_id' => $payment->customer_id
         ];
 
-        if($post['from_date'] !== "") {
+        if(!empty($post['from_date'])) {
             $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
         }
 
-        if($post['to_date'] !== "") {
+        if(!empty($post['to_date'])) {
             $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
         }
 
@@ -22439,7 +22437,7 @@ class Accounting_modals extends MY_Controller
         foreach($paymentInvoices as $paymentInvoice) {
             $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
             $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
-            $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+            $description = "<a href='/invoice/genview/$invoice->id' class='text-decoration-none'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
 
@@ -22475,7 +22473,7 @@ class Accounting_modals extends MY_Controller
 
         foreach($invoices as $invoice) {
             $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
-            $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+            $description = "<a href='/invoice/genview/$invoice->id' class='text-decoration-none'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
 
@@ -22513,34 +22511,24 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($invoices),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     public function load_payment_credits($paymentId)
     {
         $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
-        $post = json_decode(file_get_contents('php://input'), true);
-        $search = $post['columns'][0]['search']['value'];
-        $start = $post['start'];
-        $limit = $post['length'];
+        $post = $this->input->post();
+        $search = $post['search'];
 
         $filters = [
-            'overdue' => $post['overdue'],
             'customer_id' => $payment->customer_id
         ];
 
-        if($post['from_date'] !== "") {
+        if(!empty($post['from_date'])) {
             $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
         }
 
-        if($post['to_date'] !== "") {
+        if(!empty($post['to_date'])) {
             $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
         }
 
@@ -22552,7 +22540,7 @@ class Accounting_modals extends MY_Controller
         foreach($paymentCredits as $credit) {
             $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($credit->credit_memo_id);
 
-            $description = "<a href='/accounting/view-transaction/credit-memo/$creditMemo->id' class='text-info'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
+            $description = "<a href='/accounting/view-transaction/credit-memo/$creditMemo->id' class='text-decoration-none'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
 
             if($search !== "") {
                 if(stripos($creditMemo->ref_no, $search) !== false) {
@@ -22580,7 +22568,7 @@ class Accounting_modals extends MY_Controller
         }
 
         foreach($creditMemos as $creditMemo) {
-            $description = "<a href='/accounting/view-transaction/credit-memo/$creditMemo->id' class='text-info'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
+            $description = "<a href='/accounting/view-transaction/credit-memo/$creditMemo->id' class='text-decoration-none'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
 
             $lookup = array_filter($data, function($v, $k) use ($creditMemo) {
                 return $v['id'] === $creditMemo->id;
@@ -22613,7 +22601,7 @@ class Accounting_modals extends MY_Controller
 
 
         foreach($unappliedPayments as $unappliedPayment) {
-            $description = "<a href='/accounting/view-transaction/unapplied-payment/$unappliedPayment->id' class='text-info'>Unapplied Payment</a> (".date("m/d/Y", strtotime($unappliedPayment->payment_date)).")";
+            $description = "<a href='/accounting/view-transaction/unapplied-payment/$unappliedPayment->id' class='text-decoration-none'>Unapplied Payment</a> (".date("m/d/Y", strtotime($unappliedPayment->payment_date)).")";
 
             if($search === '') {
                 $data[] = [
@@ -22627,14 +22615,7 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($paymentCredits),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     public function print_payment($paymentId)

@@ -101,6 +101,7 @@
                     </div>
                 </div>
                 <form method="post" name="myform" id="jobs_form">
+                <input type="hidden" name="estimate_id" value="<?= $jobs_data->id; ?>">
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">

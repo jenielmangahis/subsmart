@@ -183,7 +183,7 @@
         if (SELECTED_PAYMENT == "PAYPAL") {
             HIDE_ALL();
             $('.PAYMENT_BUTTON').hide();
-            $('.VENMO').fadeIn('fast');
+            //$('.VENMO').fadeIn('fast');
             $('.PAYPAL').fadeIn('fast');
         }
         if (SELECTED_PAYMENT == "INVOICING") {

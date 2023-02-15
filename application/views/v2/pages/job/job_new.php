@@ -950,16 +950,44 @@
                                                     </div>
                                                     <div class="row">
                                                         <hr>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <label><strong>Total</strong></label>
+                                                    </div>                                                    
+                                                    <?php if( $estimate_dp_amount > 0 ){ ?>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <label>Total</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_overall_total"></label>
+                                                                <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-sm-6">
-                                                            <label id="invoice_overall_total"><strong>$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></strong></label>
-                                                            <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <label>Deposit Paid</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_requested_deposit" data-value="<?= $estimate_dp_amount; ?>">$<?= number_format((float) $estimate_dp_amount, 2, '.', ','); ?></label>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <label><strong>Balance Owed</strong></label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <strong><label id="invoice_overall_total_without_deposited_amount"></label></strong>
+                                                            </div>
+                                                        </div>                                                        
+                                                    <?php }else{ ?>                                                                                            
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <label><strong>Total</strong></label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_overall_total"></label>
+                                                                <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
                                                     <!-- <div class="col-sm-6"> -->
                                                         <!-- <small>Tax Rate</small> -->
                                                         <!--<a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>-->

@@ -383,11 +383,28 @@
                                         <span>(<?= $percentage; ?>%)</span>
                                     <?php endif; ?>
                                 </p>
-
                                 <br />
-                                <p><b>Instructions</b><br />&emsp;<?= $instructions; ?></p><br />
-                                <p><b>Message</b><br />&emsp;<?= $customer_message; ?></p><br />
-                                <p><b>Terms</b><br />&emsp;<?= $terms_conditions; ?></p><Br />
+
+                                <?php if (!empty($instructions)): ?>
+                                    <div>
+                                        <div><b>Instructions</b></div>
+                                        <p><?= $instructions; ?></p>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (!empty($customer_message)): ?>
+                                    <div>
+                                        <div><b>Message</b></div>
+                                        <p><?= $customer_message; ?></p>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (!empty($terms_conditions)): ?>
+                                    <div>
+                                        <div><b>Terms</b></div>
+                                        <p><?= $terms_conditions; ?></p>
+                                    </div>
+                                <?php endif; ?>
 
                             <div style="float:right;">
                                 <a href="<?php  echo $urlApprove; ?>" style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 24px;border: 0;color: #000021;background: #1de9b6;line-height: 1.15;font-size: 16px;text-decoration:none;">Accept Estimate</a> 

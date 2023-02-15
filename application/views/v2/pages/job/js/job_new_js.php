@@ -309,12 +309,12 @@ $("#attachment-file").change(function() {
                 $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
             }
             $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
-
+                        
             const $requestedDeposit = document.getElementById("invoice_requested_deposit");
             if ($requestedDeposit && $requestedDeposit.dataset.value) {
                 const value = parseFloat($requestedDeposit.dataset.value);
                 const invoiceTotal = parseFloat(parseFloat(total) - value);
-                total = parseFloat(invoiceTotal).toFixed(2);
+                total = parseFloat(invoiceTotal).toFixed(2);                
                 $("#invoice_overall_total_without_deposited_amount").html('$' + formatNumber(total));
             }
             $('#pay_amount').val(withCommas);
