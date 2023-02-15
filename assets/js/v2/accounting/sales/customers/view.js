@@ -1069,6 +1069,36 @@ $(document).on('click', '#transactions-table .view-edit-delayed-charge', functio
     });
 });
 
+$(document).on('click', '#transactions-table .view-edit-payment', function(e) {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: 'Receive Payment'
+    };
+
+    $.get('/accounting/view-transaction/receive-payment/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#receivePaymentModal';
+        initModalFields('receivePaymentModal', data);
+
+        loadPaymentInvoices(data);
+        loadPaymentCredits(data);
+
+        $('#receivePaymentModal').modal('show');
+    });
+});
+
 $('#update-status-modal #status').on('change', function() {
     if($(this).val() === 'Accepted') {
         $(this).closest('.row').parent().append(`<div class="row grid-mb">

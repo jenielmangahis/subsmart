@@ -12744,7 +12744,7 @@ const loadCustomerInvoices = () => {
                         <td>${invoice.due_date}</td>
                         <td>${invoice.original_amount}</td>
                         <td>${invoice.open_balance}</td>
-                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
+                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
                     </tr>
                     `);
                 });
@@ -12796,7 +12796,7 @@ const loadCustomerCredits = () => {
                         <td>${credit.description}</td>
                         <td>${credit.original_amount}</td>
                         <td>${credit.open_balance}</td>
-                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
+                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]"></td>
                     </tr>
                     `);
                 });
@@ -12806,6 +12806,57 @@ const loadCustomerCredits = () => {
                 });
             } else {
                 $('#receivePaymentModal #credits-table tbody').html(`<tr>
+                    <td colspan="6">
+                        <div class="nsm-empty">
+                            <span>There are no transactions matching the criteria.</span>
+                        </div>
+                    </td>
+                </tr>`);
+            }
+        }
+    });
+}
+
+const loadPaymentInvoices = (paymentdata) => {
+    var data = new FormData();
+    data.set('search', $('#receivePaymentModal #search-invoice-no').val());
+    data.set('from_date', $('#receivePaymentModal #invoices-from').attr('data-applied') !== undefined ? $('#receivePaymentModal #invoices-from').attr('data-applied') : "");
+    data.set('to_date', $('#receivePaymentModal #invoices-to').attr('data-applied') !== undefined ? $('#receivePaymentModal #invoices-to').attr('data-applied') : "");
+    data.set('overdue', $('#receivePaymentModal #overdue-invoices-only').attr('data-applied') !== undefined ? $('#receivePaymentModal #overdue-invoices-only').attr('data-applied') : "");
+
+    $.ajax({
+        url: `/accounting/load-payment-invoices/${paymentdata.id}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var invoices = JSON.parse(result);
+
+            $('#receivePaymentModal #invoices-table tbody').html('');
+            if(invoices.length > 0) {
+                $.each(invoices, function(key, invoice) {
+                    $('#receivePaymentModal #invoices-table tbody').append(`
+                    <tr>
+                        <td>
+                            <div class="table-row-icon table-checkbox">
+                                <input class="form-check-input select-one table-select" type="checkbox" value="${invoice.id}" ${invoice.checked ? 'checked' : ''}>
+                            </div>
+                        </td>
+                        <td>${invoice.description}</td>
+                        <td>${invoice.due_date}</td>
+                        <td>${invoice.original_amount}</td>
+                        <td>${invoice.open_balance}</td>
+                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]" ${invoice.checked ? `value="${invoice.payment_amount}"` : ''}></td>
+                    </tr>
+                    `);
+                });
+
+                $('#receivePaymentModal #invoices-table').nsmPagination({
+                    itemsPerPage: parseInt($('#receivePaymentModal #invoice-table-rows li a.active').html())
+                });
+            } else {
+                $('#receivePaymentModal #invoices-table tbody').html(`<tr>
                     <td colspan="6">
                         <div class="nsm-empty">
                             <span>There are no transactions matching the criteria.</span>
@@ -12909,6 +12960,58 @@ const loadCustomerCredits = () => {
 //         ]
 //     });
 // }
+
+const loadPaymentCredits = (paymentdata) => {
+    var data = new FormData();
+    data.set('search', $('#receivePaymentModal #search-credit-memo-no').val());
+    data.set('from_date', $('#receivePaymentModal #credit-memo-from').attr('data-applied') !== undefined ? $('#receivePaymentModal #credit-memo-from').attr('data-applied') : "");
+    data.set('to_date', $('#receivePaymentModal #credit-memo-to').attr('data-applied') !== undefined ? $('#receivePaymentModal #credit-memo-to').attr('data-applied') : "");
+
+    $.ajax({
+        url: `/accounting/load-payment-credits/${paymentdata.id}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var credits = JSON.parse(result);
+
+            $('#receivePaymentModal #credits-table tbody').html('');
+            if(credits.length > 0) {
+                $.each(credits, function(key, credit) {
+                    if($('#receivePaymentModal #invoices-table tbody tr input.select-one:checked').length > 0) {
+                        var checkboxCol = `<div class="table-row-icon table-checkbox">
+                            <input class="form-check-input select-one table-select" type="checkbox" value="${credit.type}_${credit.id}" ${credit.checked ? 'checked' : ''}>
+                        </div>`;
+                    } else {
+                        var checkboxCol = '';
+                    }
+                    $('#receivePaymentModal #credits-table tbody').append(`
+                    <tr data-id="${credit.id}" data-type="${credit.type}">
+                        <td>${checkboxCol}</td>
+                        <td>${credit.description}</td>
+                        <td>${credit.original_amount}</td>
+                        <td>${credit.open_balance}</td>
+                        <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="credit_payment[]" ${credit.checked ? `value="${credit.payment_amount}"` : ''}></td>
+                    </tr>
+                    `);
+                });
+
+                $('#receivePaymentModal #credits-table').nsmPagination({
+                    itemsPerPage: parseInt($('#receivePaymentModal #credits-table-rows li a.active').html())
+                });
+            } else {
+                $('#receivePaymentModal #credits-table tbody').html(`<tr>
+                    <td colspan="6">
+                        <div class="nsm-empty">
+                            <span>There are no transactions matching the criteria.</span>
+                        </div>
+                    </td>
+                </tr>`);
+            }
+        }
+    });
+}
 
 // const loadPaymentCredits = (data) => {
 //     if($.fn.DataTable.isDataTable(`#receivePaymentModal #credits-table`)) {
