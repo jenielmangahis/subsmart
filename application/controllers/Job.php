@@ -1875,258 +1875,289 @@ class Job extends MY_Controller
         $this->load->helper(array('hashids_helper'));
         $this->load->model('JobTags_model');
 
+        $is_success = 1;
+        $msg = '';
+
         $input = $this->input->post();
         $comp_id = logged('company_id');
-        $get_job_settings = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
-            'table' => 'job_settings',
-            'select' => '*',
-        );
 
-        $check_job = array(
-            'where' => array(
-                'job_number' => $input['job_number']
-            ),
-            'table' => 'jobs',
-            'select' => 'job_number, id'
-        );
-        $isJob = $this->general->get_data_with_param($check_job, false);
-
-        if(!empty($isJob)){
-            $job_number = $isJob->job_number;   
-        }else{
-            $job_settings = $this->general->get_data_with_param($get_job_settings);
-            if( $job_settings ){
-                $prefix   = $job_settings[0]->job_num_prefix;
-                $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);            
-                //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
-            }else{
-                $prefix = 'JOB-';
-                $lastId = $this->jobs_model->getlastInsert($comp_id);
-                if( $lastId ){
-                    $next_num = $lastId->id + 1;
-                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-                }else{
-                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-                }            
-            }
-
-            $job_number = $prefix . $next_num;
-        }
-        
-
-        $jobTag = $this->JobTags_model->getById($input['tags']);
-        $estimate_id = 0;
-        if( $input['estimate_id'] > 0 ){
-            $estimate_id = $input['estimate_id'];
+        if( $input['item_name'] == null ){
+            $is_success = 0;
+            $msg = 'Please select an item';
         }
 
-        $jobs_data = array(
-            'job_number' => $job_number,
-            'estimate_id' => $estimate_id,
-            'customer_id' => $input['customer_id'],
-            'employee_id' => $input['employee_id'],
-            'employee2_id' => $input['employee2_id'],
-            'employee3_id' => $input['employee3_id'],
-            'employee4_id' => $input['employee4_id'],
-            'employee5_id' => $input['employee5_id'],
-            'employee6_id' => $input['employee6_id'],
-            'job_name' => $input['job_name'],
-            'job_description' => $input['job_description'],
-            'start_date' => $input['start_date'],
-            'start_time' => $input['start_time'],
-            'end_date' => $input['end_date'],
-            'end_time' => $input['end_time'],
-            'event_color' => $input['event_color'],
-            'customer_reminder_notification' => $input['customer_reminder_notification'],
-            'priority' => $input['priority'],//$this->input->post('job_priority'),
-            'tags' => $jobTag->name,//$this->input->post('job_priority'),
-            'status' => 'Scheduled',//$this->input->post('job_status'),
-            // 'message' => $input['message'],
-            'company_id' => $comp_id,
-            'date_created' => date('Y-m-d H:i:s'),
-            //'notes' => $input['notes'],
-            'attachment' => $input['attachment'],
-            'tax_rate' => $input['tax'],
-            'job_type' => $input['job_type'],
-            'date_issued' => $input['start_date'],
-        );
-
-        if (!empty($input['customer_message'])) {
-            $jobs_data['message'] = $input['customer_message'];
-        }
-        if (!empty($input['message'])) {
-            $jobs_data['message'] = $input['message'];
+        if( $input['total_amount'] <= 0 ){
+            $is_success = 0;
+            $msg = 'Cannot accept job having 0 amount';
         }
 
-        if(empty($isJob)){
-            // INSERT DATA TO JOBS TABLE
-            $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
-            //Create hash_id
-            $job_hash_id = hashids_encrypt($jobs_id, '', 15);
-            $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
-            
-            customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
-
-            //Google Calendar
-            createSyncToCalendar($jobs_id, 'job', $comp_id);
-
-            // insert data to job items table (items_id, qty, jobs_id)
-            if (isset($input['item_id'])) {
-                $devices = count($input['item_id']);
-                for ($xx=0;$xx<$devices;$xx++) {
-                    $job_items_data = array();
-                    $job_items_data['job_id'] = $jobs_id; //from jobs table
-                    $job_items_data['items_id'] = $input['item_id'][$xx];
-                    $job_items_data['qty'] = $input['item_qty'][$xx];
-                    $this->general->add_($job_items_data, 'job_items');
-                    unset($job_items_data);
-                }
-            }
-
-            // insert data to job url links table
-            $link = isset($input['link']) ? $input['link'] : 'none';
-            $jobs_links_data = array(
-                'link' => $link,
-                'job_id' => $jobs_id,
-            );
-            $this->general->add_($jobs_links_data, 'job_url_links');
-
-            // insert data to jobs approval table
-            $jobs_approval_data = array(
-                'authorize_name' => $input['authorize_name'],
-                'signature_link' => $input['signature_link'],
-                'datetime_signed' => $input['datetime_signed'],
-                'jobs_id' => $jobs_id,
-            );
-            $this->general->add_($jobs_approval_data, 'jobs_approval');
-
-            // insert data to job payments table
-            $job_payment_query = array(
-                'amount' => $input['total_amount'],
-                'job_id' => $jobs_id,
-            );
-            $this->general->add_($job_payment_query, 'job_payments');
-            
-            // insert data to job settings table
-            $jobs_settings_data = array(
-                'job_num_next' => $job_settings[0]->job_num_next + 1
-            );
-            $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
-        }else{
-            $jobs_id = $isJob->id;
-            // update data to job items table (items_id, qty, jobs_id)
-            if (isset($input['item_id'])) {
-                $devices = count($input['item_id']);
-                for ($xx=0;$xx<$devices;$xx++) {
-                    $check_item = array(
-                        'where' => array(
-                            'job_id' => $isJob->id,
-                            'items_id' => $input['item_id'][$xx]
-                        ),
-                        'table' => 'job_items',
-                        'select' => 'job_id'
-                    );
-                    $isItem = $this->general->get_data_with_param($check_item, false);
-
-                    $job_items_data = array();
-                    $job_items_data['qty'] = $input['item_qty'][$xx];
-                    $job_items_data['tax'] = $input['tax'];
-                    $where['job_id'] = $isJob->id;
-                    $where['items_id'] = $input['item_id'][$xx];
-                    if(empty($isItem)){
-                        $job_items_data['items_id'] = $input['item_id'][$xx];
-                        $job_items_data['job_id'] = $isJob->id; //from jobs table
-                        $this->general->add_($job_items_data, 'job_items');
-
-                    }else{
-                        $this->general->update_job_items($job_items_data, $where);
-                    }
-                    unset($job_items_data);
-                }
-            }
-
-            // update data to job url links table
-            $jobs_links_data = array(
-                'link' => $input['link'],
-            );
-            $this->general->update_with_key_field($jobs_links_data, $isJob->id, 'job_url_links', 'job_id');
-
-            // insert data to jobs approval table
-            $jobs_approval_data = array(
-                'authorize_name' => $input['authorize_name'],
-                'signature_link' => $input['signature_link'],
-                'datetime_signed' => $input['datetime_signed'],
-            );
-            $this->general->update_with_key_field($jobs_approval_data, $isJob->id, 'jobs_approval', 'jobs_id');
-
-            // insert data to job payments table
-            $job_payment_query = array(
-                'amount' => $input['total_amount'],
-            );
-            $isset = $this->general->update_with_key_field($job_payment_query, $isJob->id, 'job_payments', 'job_id');
-            
-            $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
-        }
-        if (isset($input['wo_id'])) {
-            $get_work_order_data = array(
+        if( $is_success == 1 ){
+            $get_job_settings = array(
                 'where' => array(
-                    'id' => $input['wo_id']
+                    'company_id' => $comp_id
                 ),
-                'table' => 'work_orders',
+                'table' => 'job_settings',
                 'select' => '*',
             );
-            $workorder_data = $this->general->get_data_with_param($get_work_order_data);
 
-            $check_exist = array(
-                'where' => array('fk_prof_id' => $input['customer_id']),
-                'table' => 'acs_alarm'
+            $check_job = array(
+                'where' => array(
+                    'job_number' => $input['job_number']
+                ),
+                'table' => 'jobs',
+                'select' => 'job_number, id'
             );
-            $is_exist = $this->general->get_data_with_param($check_exist);
+            $isJob = $this->general->get_data_with_param($check_job, false);
 
-            $customer_data = array();
-            $customer_data['passcode'] = $workorder_data->password;
-            $customer_data['panel_type'] = $workorder_data->panel_type;
-            $customer_data['system_type'] = $workorder_data->plan_type;
-            if (empty($is_exist)) {
-                $customer_data['fk_prof_id'] = $input['customer_id'];
-                $this->general->add_($customer_data, 'acs_alarm');
-            } else {
-                $this->general->update_with_key_field($customer_data, $input['customer_id'], 'acs_alarm', 'fk_prof_id');
+            if(!empty($isJob)){
+                $job_number = $isJob->job_number;   
+            }else{
+                $job_settings = $this->general->get_data_with_param($get_job_settings);
+                if( $job_settings ){
+                    $prefix   = $job_settings[0]->job_num_prefix;
+                    $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);            
+                    //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+                }else{
+                    $prefix = 'JOB-';
+                    $lastId = $this->jobs_model->getlastInsert($comp_id);
+                    if( $lastId ){
+                        $next_num = $lastId->id + 1;
+                        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                    }else{
+                        $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                    }            
+                }
+
+                $job_number = $prefix . $next_num;
+            }
+            
+
+            $jobTag = $this->JobTags_model->getById($input['tags']);
+            $estimate_id = 0;
+            if( $input['estimate_id'] > 0 ){
+                $estimate_id = $input['estimate_id'];
             }
 
-            $customer_data_office = array();
-        }
+            $get_customer_info = array(
+                'where' => array(
+                    'prof_id' => $input['customer_id'],
+                ),
+                'table' => 'acs_profile',
+                'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
+            );
+            $customer = $this->general->get_data_with_param($get_customer_info, false);
 
-        //SMS Notification
-        createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
+            $job_location = $customer->mail_add;
 
-        if( $input['employee2_id'] > 0 ){
-            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
-        }
-        if( $input['employee3_id'] > 0 ){
-            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee3_id'], 0);
-        }
-        if( $input['employee4_id'] > 0 ){
-            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
-        }
-        if( $input['employee5_id'] > 0 ){
-            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee5_id'], 0);
-        }
-        if( $input['employee6_id'] > 0 ){
-            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee6_id'], 0);
-        }
+            $jobs_data = array(
+                'job_number' => $job_number,
+                'estimate_id' => $estimate_id,
+                'customer_id' => $input['customer_id'],
+                'employee_id' => $input['employee_id'],
+                'employee2_id' => $input['employee2_id'],
+                'employee3_id' => $input['employee3_id'],
+                'employee4_id' => $input['employee4_id'],
+                'employee5_id' => $input['employee5_id'],
+                'employee6_id' => $input['employee6_id'],
+                'job_name' => $input['job_name'],
+                'job_location' => $job_location,
+                'job_description' => $input['job_description'],
+                'start_date' => $input['start_date'],
+                'start_time' => $input['start_time'],
+                'end_date' => $input['end_date'],
+                'end_time' => $input['end_time'],
+                'event_color' => $input['event_color'],
+                'customer_reminder_notification' => $input['customer_reminder_notification'],
+                'priority' => $input['priority'],//$this->input->post('job_priority'),
+                'tags' => $jobTag->name,//$this->input->post('job_priority'),
+                'status' => 'Scheduled',//$this->input->post('job_status'),
+                // 'message' => $input['message'],
+                'company_id' => $comp_id,
+                'date_created' => date('Y-m-d H:i:s'),
+                //'notes' => $input['notes'],
+                'attachment' => $input['attachment'],
+                'tax_rate' => $input['tax'],
+                'job_type' => $input['job_type'],
+                'date_issued' => $input['start_date'],
+            );
 
-        if (!is_null($this->input->get('json', TRUE))) {
-            // Returns json data, when ?json is set on URL query string.
-            header('content-type: application/json');
-            exit(json_encode(['id' => $job_number]));
-        } else {
-            $data_arr = array("data" => "Success", "qty" => $input['item_qty']);
-            exit(json_encode($data_arr));
-        }
+            if (!empty($input['customer_message'])) {
+                $jobs_data['message'] = $input['customer_message'];
+            }
+            if (!empty($input['message'])) {
+                $jobs_data['message'] = $input['message'];
+            }
+
+            if(empty($isJob)){
+                // INSERT DATA TO JOBS TABLE
+                $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+                //Create hash_id
+                $job_hash_id = hashids_encrypt($jobs_id, '', 15);
+                $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
+                
+                customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
+
+                //Google Calendar
+                createSyncToCalendar($jobs_id, 'job', $comp_id);
+
+                // insert data to job items table (items_id, qty, jobs_id)
+                if (isset($input['item_id'])) {
+                    $devices = count($input['item_id']);
+                    for ($xx=0;$xx<$devices;$xx++) {
+                        $job_items_data = array();
+                        $job_items_data['job_id'] = $jobs_id; //from jobs table
+                        $job_items_data['items_id'] = $input['item_id'][$xx];
+                        $job_items_data['qty'] = $input['item_qty'][$xx];
+                        $this->general->add_($job_items_data, 'job_items');
+                        unset($job_items_data);
+                    }
+                }
+
+                // insert data to job url links table
+                $link = isset($input['link']) ? $input['link'] : 'none';
+                $jobs_links_data = array(
+                    'link' => $link,
+                    'job_id' => $jobs_id,
+                );
+                $this->general->add_($jobs_links_data, 'job_url_links');
+
+                // insert data to jobs approval table
+                $jobs_approval_data = array(
+                    'authorize_name' => $input['authorize_name'],
+                    'signature_link' => $input['signature_link'],
+                    'datetime_signed' => $input['datetime_signed'],
+                    'jobs_id' => $jobs_id,
+                );
+                $this->general->add_($jobs_approval_data, 'jobs_approval');
+
+                // insert data to job payments table
+                $job_payment_query = array(
+                    'amount' => $input['total_amount'],
+                    'job_id' => $jobs_id,
+                );
+                $this->general->add_($job_payment_query, 'job_payments');
+                
+                // insert data to job settings table
+                $jobs_settings_data = array(
+                    'job_num_next' => $job_settings[0]->job_num_next + 1
+                );
+                $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+            }else{
+                $jobs_id = $isJob->id;
+                // update data to job items table (items_id, qty, jobs_id)
+                if (isset($input['item_id'])) {
+                    $devices = count($input['item_id']);
+                    for ($xx=0;$xx<$devices;$xx++) {
+                        $check_item = array(
+                            'where' => array(
+                                'job_id' => $isJob->id,
+                                'items_id' => $input['item_id'][$xx]
+                            ),
+                            'table' => 'job_items',
+                            'select' => 'job_id'
+                        );
+                        $isItem = $this->general->get_data_with_param($check_item, false);
+
+                        $job_items_data = array();
+                        $job_items_data['qty'] = $input['item_qty'][$xx];
+                        $job_items_data['tax'] = $input['tax'];
+                        $where['job_id'] = $isJob->id;
+                        $where['items_id'] = $input['item_id'][$xx];
+                        if(empty($isItem)){
+                            $job_items_data['items_id'] = $input['item_id'][$xx];
+                            $job_items_data['job_id'] = $isJob->id; //from jobs table
+                            $this->general->add_($job_items_data, 'job_items');
+
+                        }else{
+                            $this->general->update_job_items($job_items_data, $where);
+                        }
+                        unset($job_items_data);
+                    }
+                }
+
+                // update data to job url links table
+                $jobs_links_data = array(
+                    'link' => $input['link'],
+                );
+                $this->general->update_with_key_field($jobs_links_data, $isJob->id, 'job_url_links', 'job_id');
+
+                // insert data to jobs approval table
+                $jobs_approval_data = array(
+                    'authorize_name' => $input['authorize_name'],
+                    'signature_link' => $input['signature_link'],
+                    'datetime_signed' => $input['datetime_signed'],
+                );
+                $this->general->update_with_key_field($jobs_approval_data, $isJob->id, 'jobs_approval', 'jobs_id');
+
+                // insert data to job payments table
+                $job_payment_query = array(
+                    'amount' => $input['total_amount'],
+                );
+                $isset = $this->general->update_with_key_field($job_payment_query, $isJob->id, 'job_payments', 'job_id');
+                
+                $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
+            }
+            if (isset($input['wo_id'])) {
+                $get_work_order_data = array(
+                    'where' => array(
+                        'id' => $input['wo_id']
+                    ),
+                    'table' => 'work_orders',
+                    'select' => '*',
+                );
+                $workorder_data = $this->general->get_data_with_param($get_work_order_data);
+
+                $check_exist = array(
+                    'where' => array('fk_prof_id' => $input['customer_id']),
+                    'table' => 'acs_alarm'
+                );
+                $is_exist = $this->general->get_data_with_param($check_exist);
+
+                $customer_data = array();
+                $customer_data['passcode'] = $workorder_data->password;
+                $customer_data['panel_type'] = $workorder_data->panel_type;
+                $customer_data['system_type'] = $workorder_data->plan_type;
+                if (empty($is_exist)) {
+                    $customer_data['fk_prof_id'] = $input['customer_id'];
+                    $this->general->add_($customer_data, 'acs_alarm');
+                } else {
+                    $this->general->update_with_key_field($customer_data, $input['customer_id'], 'acs_alarm', 'fk_prof_id');
+                }
+
+                $customer_data_office = array();
+            }
+
+            //SMS Notification
+            createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
+
+            if( $input['employee2_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
+            }
+            if( $input['employee3_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee3_id'], 0);
+            }
+            if( $input['employee4_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
+            }
+            if( $input['employee5_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee5_id'], 0);
+            }
+            if( $input['employee6_id'] > 0 ){
+                createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee6_id'], 0);
+            }
+        } 
+        
+            /*if (!is_null($this->input->get('json', TRUE))) {
+                // Returns json data, when ?json is set on URL query string.
+                header('content-type: application/json');
+                exit(json_encode(['id' => $job_number]));
+            } else {
+                $data_arr = array("data" => "Success", "qty" => $input['item_qty']);
+                exit(json_encode($data_arr));
+            }*/
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
     public function delete()

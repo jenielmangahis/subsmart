@@ -188,9 +188,15 @@ $("#attachment-file").change(function() {
                     type: "POST",
                     url: "<?= base_url() ?>/job/save_job",
                     data: form.serialize(), // serializes the form's elements.
+                    dataType:'json',
                     success: function(data) {
-                        if ($overlay) $overlay.style.display = "none";
-                        sucess_add_job(data);
+                        if( data.is_success == 1 ){
+                            if ($overlay) $overlay.style.display = "none";
+                            sucess_add_job(data);    
+                        }else{
+                            error('Error',data.msg,'error');
+                        }
+                        
                     }, beforeSend: function() {
                         if ($overlay) $overlay.style.display = "flex";
                     }

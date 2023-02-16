@@ -744,12 +744,32 @@ echo put_header_assets();
                                     <h6>Request a Deposit</h6>
                                     <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-2 form-group">
+                                    <div class="input-group">
+                                        <!-- <div class="input-group-addon bold">$</div> -->
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">%</div>
+                                        </div>                                        
+                                        <input type="number" step="any" name="deposit_amount" id="deposit-percentage" value="<?= $estimate->deposit_amount; ?>" class="form-control" placeholder="Percentage of total amount" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">$</div>
+                                        </div>
+                                        <?php 
+                                            $deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100);
+                                        ?>
+                                        <input type="text" id="deposit-total-amount" value="<?= number_format($deposit_amount,2); ?>" readonly="" disabled="" class="form-control">
+                                    </div>
+                                </div>
+                                <!-- <div class="col-md-3 form-group">
                                     <select name="deposit_request" class="form-control">
                                         <option value="1" <?= $estimate->deposit_request == "1" ? "selected" : ""; ?>>Deposit amount $</option>
                                         <option value="2" <?= $estimate->deposit_request == "2" ? "selected" : ""; ?>>Percentage %</option>
                                     </select>
-                                </div>
+                                </div> -->
                                 <div class="col-md-3 form-group">
                                     <div class="input-group">
                                         <!-- <div class="input-group-addon bold">$</div> -->
