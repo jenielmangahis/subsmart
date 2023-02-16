@@ -599,6 +599,8 @@ $route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post']
 $route['accounting/chart-of-accounts/(:any)/save-transaction/(:any)']['post'] = 'accounting_controllers/chart_of_accounts/save_transaction/$1/$2';
 $route['accounting/chart-of-accounts/add-attachment']['post'] = 'accounting_controllers/chart_of_accounts/add_attachment';
 $route['accounting/chart-of-accounts/inactive-batch']['post'] = 'accounting_controllers/chart_of_accounts/inactive_batch';
+$route['accounting/chart-of-accounts/get-import-data']['post'] = 'accounting_controllers/chart_of_accounts/get_import_data';
+$route['accounting/chart-of-accounts/import-accounts-data']['post'] = 'accounting_controllers/chart_of_accounts/import_accounts_data';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';

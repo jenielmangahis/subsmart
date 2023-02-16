@@ -1433,7 +1433,7 @@ tr {
                                                 <input type="text" name="firstname" id="firstname" class="nsm-field form-control name-field">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">First name</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">Last name</label>
                                                 <input type="text" name="lastname" id="lastname" class="nsm-field form-control name-field">
                                             </div>
                                             <div class="col-12 d-none" id="commercial_account">
@@ -1477,7 +1477,7 @@ tr {
                                                 <input type="text" name="mobile" class="nsm-field form-control number-field">
                                             </div>
                                             <div class="col-12">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Mobile</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">Email</label>
                                                 <input type="email" name="email" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -1607,7 +1607,7 @@ tr {
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="content-subtitle fw-bold d-block mb-2">Amount ( $ )</label>
-                                        <input type="number" name="payment_amount" id="payment_amount" class="nsm-field form-control" required />
+                                        <input step=".01" type="number" name="payment_amount" id="payment_amount" class="nsm-field form-control" required />
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="content-subtitle fw-bold d-block mb-2">Billing Date</label>

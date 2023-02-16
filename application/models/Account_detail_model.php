@@ -52,4 +52,11 @@ class Account_detail_model extends MY_Model {
 		$this->db->where('acc_detail_name', $name);
 		return $this->db->get($this->table)->row();
 	}
+	public function get_by_name_and_type_id($name, $accTypeId)
+	{
+		$this->db->where('LOWER(acc_detail_name)', strtolower($name));
+		$this->db->where('acc_type_id', $accTypeId);
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }
