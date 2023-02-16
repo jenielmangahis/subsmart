@@ -4,10 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_Api extends MYF_Controller {
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function createAdtSalesPortalProjects()
     {
@@ -368,7 +368,7 @@ class Cron_Api extends MYF_Controller {
                     $job = $this->Jobs_model->get_specific_job($gs->object_id);
                     if( $job ){
                         if( $job->tags != '' ){
-                            $tags = $j->tags;
+                            $tags = $job->tags;
                         }else{
                             $tags = '---';
                         }
@@ -572,4 +572,3 @@ class Cron_Api extends MYF_Controller {
     }
         
 }
-
