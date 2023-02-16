@@ -93,7 +93,7 @@ class Tickets_model extends MY_Model
             'id' => $id,
         );
 
-        $this->db->select('*');
+        $this->db->select('*, tickets.business_name as business_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id');
 		$this->db->where($where);

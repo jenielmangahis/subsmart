@@ -1,6 +1,26 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 
+<?php
+
+function workordermodule__formatWorkOrderNumber($number) {
+    $formatFunc = function ($prefix, $number) {
+        $numericPart = (int) str_replace($prefix, '', $number);
+        return 'WO-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
+    };
+
+    if (strpos(strtoupper($number), 'WO-') === 0) {
+        return $formatFunc('WO-', $number);
+    }
+
+    if (strpos(strtoupper($number), 'WO') === 0) {
+        return $formatFunc('WO', $number);
+    }
+
+    return $number;
+}
+
+?>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
@@ -173,7 +193,7 @@
                                             <input class="form-check-input select-one table-select" type="checkbox" name="id[<?php echo $workorder->id ?>]" value="<?php echo $workorder->id ?>" id="work_order_id_<?php echo $workorder->id ?>">
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary"><?php echo $workorder->work_order_number ?></td>
+                                    <td class="fw-bold nsm-text-primary"><?= workordermodule__formatWorkOrderNumber($workorder->work_order_number) ?></td>
                                     <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
                                     <td>
                                         <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link">

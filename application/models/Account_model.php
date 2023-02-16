@@ -80,4 +80,10 @@ class Account_model extends MY_Model {
 		return  $insert_id;
 	}
 	
+	public function get_by_name($name)
+	{
+		$this->db->where('LOWER(account_name)', strtolower($name));
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }
