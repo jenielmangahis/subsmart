@@ -952,8 +952,10 @@ class Settings extends MY_Controller {
 
         if( $post['account_type'] == 'gmail' ){
             $this->load->model('GoogleAccounts_model');
+            $this->load->model('GoogleCalendar_model');
 
             $this->GoogleAccounts_model->deleteByCompanyId($company_id);
+            $this->GoogleCalendar_model->deleteByCompanyId($company_id);
         }
 
         $this->session->set_flashdata('message', 'Calendar settings was successfully updated');
