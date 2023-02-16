@@ -258,7 +258,11 @@ class Job extends MY_Controller
 
                 $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
                 if( $estimate_data ){
-                    $estimate_dp_amount = $estimate_data->deposit_amount;
+                    if( $estimate_data->deposit_request == 2 ){
+                        $estimate_dp_amount = $estimate_data->grand_total * ($estimate_data->deposit_amount / 100);
+                    }else{
+                        $estimate_dp_amount = $estimate_data->deposit_amount;
+                    }
                 }
             }
             
@@ -806,7 +810,7 @@ class Job extends MY_Controller
 
             $jobs_data = $this->general->get_data_with_param($get_estimate_query, false);
 
-            if ($jobs_data->deposit_amount) {
+            if ($jobs_data->status != 'Accepted') {
                 $this->session->set_flashdata('message', 'Only Accepted estimates can be converted into a job.');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
                 return redirect('/estimate');
@@ -919,7 +923,11 @@ class Job extends MY_Controller
 
                 $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
                 if( $estimate_data ){
-                    $deposit_amount = $estimate_data->deposit_amount;
+                    if( $estimate_data->deposit_request == 2 ){
+                        $deposit_amount = $estimate_data->grand_total * ($estimate_data->deposit_amount / 100);
+                    }else{
+                        $deposit_amount = $estimate_data->deposit_amount;
+                    }
                 }
             }
 

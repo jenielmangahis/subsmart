@@ -303,15 +303,25 @@ class Pages extends MYF_Controller {
         // load models
         $this->load->model('general_model');
         $this->load->model('jobs_model');
+        $this->load->model('Estimate_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
 
         // load helpers
         $this->load->helper('functions');
     	//$this->load->helper(array('hashids_helper'));
 
-    	$job      = $this->jobs_model->get_specific_job_by_hash_id($eid);    	
+    	$job  = $this->jobs_model->get_specific_job_by_hash_id($eid);    	
     	if($job){
-    		$job_id   = $job->id;
+    		$job_id = $job->id;
+    		if( $job->estimate_id > 0 ){
+    			$estimate = $this->Estimate_model->getEstimate($job->estimate_id);
+    			if( $estimate ){
+    				$estimate_deposit_amount = $estimate->deposit_amount;
+    			}
+    		}else{
+    			$estimate_deposit_amount = 0;
+    		}
+
             $get_company_info = array(
                 'where' => array(
                     'company_id' => $job->company_id,
@@ -320,6 +330,7 @@ class Pages extends MYF_Controller {
                 'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
             );
 
+            $this->page_data['estimate_deposit_amount'] = $estimate_deposit_amount;
             $this->page_data['onlinePaymentAccount'] = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
             $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);

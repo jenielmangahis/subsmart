@@ -137,13 +137,13 @@
                         <div class="progress-wrapper" style="padding-bottom: 100px;">
                             <div id="progress-bar-container">
                                 <ul>
-                                    <li class="step step01 active">
+                                    <li class="step step1 active">
                                         <div class="step-inner">Step 1</div>
                                     </li>
-                                    <li class="step step02">
+                                    <li class="step step2">
                                         <div class="step-inner">Step 2</div>
                                     </li>
-                                    <li class="step step03">
+                                    <li class="step step3">
                                         <div class="step-inner">Step 3</div>
                                     </li>
                                 </ul>
@@ -170,7 +170,7 @@
                                         <p>Map Headings</p>
                                         <div class="row grid-mb">
                                             <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Detail Type</b> <span class='mapping-line'>-----------------</span>
+                                                <b >Account Name</b> <span class='mapping-line'>-----------------</span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector0" onclick="test()">
@@ -180,7 +180,7 @@
                                         </div>
                                         <div class="row grid-mb">
                                             <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Account Name</b> <span class='mapping-line'>-----------------</span>
+                                                <b >Detail Type</b> <span class='mapping-line'>-----------------</span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector1" onclick="test()">
@@ -190,20 +190,10 @@
                                         </div>
                                         <div class="row grid-mb">
                                             <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Account number</b> <span class='mapping-line'>-----------------</span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector2" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
                                                 <b >Type</b> <span class='mapping-line'>-----------------</span>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector3" onclick="test()">
+                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector2" onclick="test()">
                                                     <option value="">Select Heading</option>
                                                 </select>
                                             </div>
@@ -222,9 +212,6 @@
                                                 <table class="table tbl" style="height: 100px;overflow-y: auto; overflow-x: hidden;border-collapse: collapse; ">
                                                     <thead>
                                                         <tr id='tableHeader'>
-                                                            <td>Account Name</td>
-                                                            <td>Type</td>
-                                                            <td>Detail Type</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="imported_accounts"></tbody>

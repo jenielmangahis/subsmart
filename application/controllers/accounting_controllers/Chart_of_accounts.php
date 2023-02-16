@@ -5360,4 +5360,91 @@ class Chart_of_accounts extends MY_Controller {
             $this->chart_of_accounts_model->inactive($id);
         }
     }
+
+    public function addJSONResponseHeader() {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        header("Content-Type: application/json");
+    }
+
+    public function get_import_data()
+    {
+        self::addJSONResponseHeader();
+        if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csvHeader = array_shift($csv);
+
+            $this->load->library('CSVReader');
+            $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+            $customerArray = []; // initialize array for storing import data
+
+            if (!empty($csvData)) {
+                foreach ($csvData as $row) {
+                    $customerElement = [];
+                    for($x=0; $x<count($csvHeader); $x++){
+                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:","", str_replace("$","",$row[$csvHeader[$x]]))));
+                        //$data = preg_replace('/\s+/', '', $trimmedData);
+                        $customerElement[$csvHeader[$x]] = $trimmedData;
+                        //echo $csvHeader[$x]. PHP_EOL;
+                        //echo $row[$csvHeader[$x]]. PHP_EOL;
+                    }
+                    //print_r(json_encode($customerElement)) . PHP_EOL;
+                    //echo 'fasdf' . PHP_EOL;
+                    $customerArray[] = $customerElement;
+                }
+                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
+            }else{
+                $data_arr = array("success" => FALSE,"message" => 'Something is wrong with your CSV file.');
+            }
+        }else{
+            //echo 'No upload' . PHP_EOL;
+        }
+        die(json_encode($data_arr));
+    }
+
+    public function import_accounts_data()
+    {
+        self::addJSONResponseHeader();
+        $input = $this->input->post();
+
+        if($input) {
+            $accounts = json_decode($input['accounts'], true); //data CSV
+            $mappingSelected = json_decode($input['mapHeaders'], true); //selected Headers
+            $csvHeaders = json_decode($input['csvHeaders'], true); //CSV Headers
+
+            $inserted = 0;
+            foreach($accounts as $data)
+            {
+                $mapName = $data[$csvHeaders[$mappingSelected[0]]];
+                $mapDetailType = $data[$csvHeaders[$mappingSelected[1]]];
+                $mapType = $data[$csvHeaders[$mappingSelected[2]]];
+                $type = $this->account_model->get_by_name($mapType);
+                $detailType = $this->account_detail_model->get_by_name_and_type_id($mapDetailType, $type->id);
+
+                $accountData = [
+                    'company_id' => logged('company_id'),
+                    'name' => $mapName,
+                    'account_id' => $type->id,
+                    'acc_detail_id' => $detailType->acc_detail_id,
+                    'balance' => 0.00,
+                    'active' => 1
+                ];
+
+                $insertId = $this->chart_of_accounts_model->saverecords($accountData);
+
+                if($insertId) {
+                    $inserted++;
+                }
+            }
+
+            $data_arr = array("success" => TRUE, "message" => "Successfully imported ".$inserted." accounts!", "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "accounts" => $accounts);
+        } else{
+            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+        }
+
+        die(json_encode($data_arr));
+    }
 }

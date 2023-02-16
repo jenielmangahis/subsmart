@@ -5,7 +5,7 @@ echo put_header_assets();
 ?>
 
 <!-- Script for autosaving form -->
-<!-- <script src="<?php // base_url("assets/js/estimate/autosave-standard.js") ?>"></script> -->
+<script src="<?= base_url("assets/js/estimate/autosave-standard.js") ?>"></script>
 
 <div class="wrapper" role="wrapper">
 
@@ -407,23 +407,24 @@ echo put_header_assets();
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
                                             required placeholder="Enter Estimate#"  value="<?php echo "EST-" . date("YmdHis"); ?>" /> -->
-                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date" required placeholder="Enter Estimate#" value="<?php echo "EST-";
-                                                                                                                                                                    foreach ($number as $num) :
-                                                                                                                                                                        $next = $num->estimate_number;
-                                                                                                                                                                        $arr = explode("-", $next);
-                                                                                                                                                                        $date_start = $arr[0];
-                                                                                                                                                                        $nextNum = $arr[1];
-                                                                                                                                                                    //    echo $number;
-                                                                                                                                                                    endforeach;
-                                                                                                                                                                    if($nextNum){
-                                                                                                                                                                        $val = (int)$nextNum + 1;
-                                                                                                                                                                        echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                                                                                                                                                    }else{
-                                                                                                                                                                        $val = 1;
-                                                                                                                                                                        echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                                                                                                                                                    }
-                                                                                                                                                                    
-                                                                                                                                                                    ?>" />
+                                    <?php 
+                                    foreach ($number as $num) :
+                                        $next = $num->estimate_number;
+                                        $arr = explode("-", $next);
+                                        $date_start = $arr[0];
+                                        $nextNum = $arr[1];
+                                    //    echo $number;
+                                    endforeach;
+                                    if($nextNum){
+                                        $val = (int)$nextNum + 1;
+                                        $est_number = str_pad($val, 9, "0", STR_PAD_LEFT);
+                                    }else{
+                                        $val = 1;
+                                        $est_number = str_pad($val, 9, "0", STR_PAD_LEFT);
+                                    }
+                                        $est_number = 'EST-'. $est_number;
+                                    ?>
+                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date" required placeholder="Enter Estimate#" value="<?= $est_number; ?>" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
@@ -603,21 +604,29 @@ echo put_header_assets();
                                     <h6>Request a Deposit</h6>
                                     <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <!-- <div class="col-md-3 form-group">
                                     <select name="deposit_request" class="form-control">
                                         <option value="1" selected="selected">Deposit amount $</option>
                                         <option value="2">Percentage %</option>
                                     </select>
-                                </div>
-                                <div class="col-md-3 form-group">
+                                </div> -->
+                                <div class="col-md-2 form-group">
                                     <div class="input-group">
                                         <!-- <div class="input-group-addon bold">$</div> -->
-                                        <input type="text" name="deposit_amount" value="0" class="form-control" autocomplete="off">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">%</div>
+                                        </div>                                        
+                                        <input type="number" step="any" name="deposit_amount" id="deposit-percentage" value="0" class="form-control" placeholder="Percentage of total amount" autocomplete="off">
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-3 form-group">
-                                        0.00
-                                    </div> -->
+                                <div class="col-md-2 form-group">
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">$</div>
+                                        </div>
+                                        <input type="text" id="deposit-total-amount" value="0.00" readonly="" disabled="" class="form-control">
+                                    </div>
+                                </div>
                             </div>
                             <br>
                             <div class="row mb-3" style="background-color:white;">
@@ -1065,6 +1074,7 @@ echo put_header_assets();
 <script>
     $(document).ready(function() {
 
+
         $('#sel-customer').change(function() {
             var id = $(this).val();
             load_customer_address(id);
@@ -1160,6 +1170,30 @@ echo put_header_assets();
         $("#datepicker_dateissued").datepicker({
             format: 'M dd, yyyy'
         });
+
+        $('#deposit-percentage').keypress(function(){
+            computeDepositAmount();
+        });
+
+        $('#deposit-percentage').keyup(function(){
+            computeDepositAmount();
+        });
+
+        $('#grand_total_input').change(function(){
+            computeDepositAmount();
+        });
+
+        function computeDepositAmount(){
+            var deposit_amount = $('#deposit-percentage').val() / 100;
+            var total_amount   = $('#grand_total_input').val();
+
+            if( total_amount > 0 ){
+                total_amount = total_amount * deposit_amount;
+                $('#deposit-total-amount').val(total_amount.toFixed(2));    
+            }else{
+                $('#deposit-total-amount').val('0.00');   
+            }
+        }
     });
 </script>
 <script>
