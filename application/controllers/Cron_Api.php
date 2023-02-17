@@ -385,35 +385,34 @@ class Cron_Api extends MYF_Controller {
 
                         $attendees = array();
                         $techNames = array();
-                        if( $job->e_employee_id != '' ){
-                            $user = $this->Users_model->getUserByID($job->e_employee_id);
+                        if( $job->employee_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->employee_id);
                             if( $user ){
                                 $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
-                        if( $job->employee2_employee_id != '' ){
-                            $user = $this->Users_model->getUserByID($job->employee2_employee_id);
+                        if( $job->employee2_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->employee2_id);
                             if( $user ){
                                 $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
-                        if( $job->employee3_employee_id != '' ){
-                            $user = $this->Users_model->getUserByID($job->employee3_employee_id);
+                        if( $job->employee3_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->employee3_id);
                             if( $user ){
                                 $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
-                        if( $job->employee4_employee_id != '' ){
-                            $user = $this->Users_model->getUserByID($job->employee4_employee_id);
+                        if( $job->employee4_id != '' ){
+                            $user = $this->Users_model->getUserByID($job->employee4_id);
                             if( $user ){
                                 $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
-
                         if( !empty($techNames) ){
                             $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
