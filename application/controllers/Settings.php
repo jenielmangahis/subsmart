@@ -729,7 +729,7 @@ class Settings extends MY_Controller {
                         $updateCalendar = $capi->updateCalendar($this->GoogleCalendar_model->calendarAppointmentColorID(), $google_credentials['api_key'], $token['access_token'], $calendarAppointment['id']);
                         //Create calendar
                         $calendar_data = [
-                            'company_id' => $g->company_id,
+                            'company_id' => $company_id,
                             'calendar_id' => $calendarAppointment['id'],
                             'calendar_name' => $calendar_appointment_name,
                             'calendar_type' => $this->GoogleCalendar_model->calendarTypeAppointment(),
@@ -745,7 +745,7 @@ class Settings extends MY_Controller {
                         $updateCalendar = $capi->updateCalendar($this->GoogleCalendar_model->calendarEventColorID(), $google_credentials['api_key'], $token['access_token'], $calendarEvent['id']);
                         //Create calendar
                         $calendar_data = [
-                            'company_id' => $g->company_id,
+                            'company_id' => $company_id,
                             'calendar_id' => $calendarEvent['id'],
                             'calendar_name' => $calendar_events_name,
                             'calendar_type' => $this->GoogleCalendar_model->calendarTypeEvent(),
@@ -761,7 +761,7 @@ class Settings extends MY_Controller {
                         $updateCalendar = $capi->updateCalendar($this->GoogleCalendar_model->calendarTCOffColorID(), $google_credentials['api_key'], $token['access_token'], $calendarTCOff['id']);
                         //Create calendar
                         $calendar_data = [
-                            'company_id' => $g->company_id,
+                            'company_id' => $company_id,
                             'calendar_id' => $calendarTCOff['id'],
                             'calendar_name' => $calendar_tc_off_name,
                             'calendar_type' => $this->GoogleCalendar_model->calendarTypeTCOff(),
@@ -777,7 +777,7 @@ class Settings extends MY_Controller {
                         $updateCalendar = $capi->updateCalendar($this->GoogleCalendar_model->calendarJobsColorID(), $google_credentials['api_key'], $token['access_token'], $calendarJob['id']);
                         //Create calendar
                         $calendar_data = [
-                            'company_id' => $g->company_id,
+                            'company_id' => $company_id,
                             'calendar_id' => $calendarJob['id'],
                             'calendar_name' => $calendar_job_name,
                             'calendar_type' => $this->GoogleCalendar_model->calendarTypeJob(),
@@ -793,7 +793,7 @@ class Settings extends MY_Controller {
                         $updateCalendar = $capi->updateCalendar($this->GoogleCalendar_model->calendarServiceTicketColorID(), $google_credentials['api_key'], $token['access_token'], $calendarServiceTicket['id']);
                         //Create calendar
                         $calendar_data = [
-                            'company_id' => $g->company_id,
+                            'company_id' => $company_id,
                             'calendar_id' => $calendarServiceTicket['id'],
                             'calendar_name' => $calendar_services_name,
                             'calendar_type' => $this->GoogleCalendar_model->calendarTypeServiceTicket(),
@@ -952,8 +952,10 @@ class Settings extends MY_Controller {
 
         if( $post['account_type'] == 'gmail' ){
             $this->load->model('GoogleAccounts_model');
+            $this->load->model('GoogleCalendar_model');
 
             $this->GoogleAccounts_model->deleteByCompanyId($company_id);
+            $this->GoogleCalendar_model->deleteByCompanyId($company_id);
         }
 
         $this->session->set_flashdata('message', 'Calendar settings was successfully updated');

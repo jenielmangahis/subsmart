@@ -51,7 +51,12 @@ class GoogleCalendar_model extends MY_Model
 
         $query = $this->db->get()->row();
         return $query;
-    }   
+    }  
+
+    public function deleteByCompanyId($company_id)
+    {
+        $this->db->delete($this->table, array('company_id' => $company_id));
+    } 
 
     public function calendarTypeAppointment()
     {

@@ -211,7 +211,7 @@ a.btn-primary.btn-md {
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label for="city"><b>Business Name</b> (optional)</label>
-                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" />
+                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name"  value="<?php echo $companyName->business_name; ?>"/>
                     </div>
                 </div>
                 <div class="row">

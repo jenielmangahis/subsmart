@@ -209,7 +209,7 @@
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Birth Date</label>
-                                                <input type="text" name="birthdate" id="birthdate" class="nsm-field form-control datepicker" required />
+                                                <input type="date" name="birthdate" id="birthdate" class="nsm-field form-control datepicker" required />
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
@@ -561,7 +561,7 @@
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Schedule Date Given</label>
-                                                        <input type="text" name="schedule_date_given" class="nsm-field form-control datepicker" required />
+                                                        <input type="date" name="schedule_date_given" class="nsm-field form-control datepicker" required />
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
@@ -586,7 +586,7 @@
                                             <div class="col-12 col-md-4">
                                                 <div class="row g-3">
                                                     <div class="col-12">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Type</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Name</label>
                                                         <input type="text" name="job_name" class="nsm-field form-control" required />
                                                     </div>
                                                     <div class="col-12">
@@ -628,7 +628,7 @@
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Amount ( $ )</label>
-                                                <input type="text" name="payment_amount" class="nsm-field form-control" required />
+                                                <input type="number" step=".01" name="payment_amount" class="nsm-field form-control" required />
                                             </div>
                                             <div class="col-12 col-md-4 d-none" id="cash_area">
                                                 <div class="d-flex align-items-center h-100">
@@ -870,7 +870,7 @@
                                             <div class="col-12 col-md-3">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Status</label>
                                                 <select name="status" class="nsm-field form-select">
-                                                    <option value="New">Neasw</option>
+                                                    <option value="New">New</option>
                                                     <option value="Draft">Draft</option>
                                                     <option value="Scheduled">Scheduled</option>
                                                     <option value="Started">Started</option>

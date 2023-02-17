@@ -1413,4 +1413,121 @@ class Products_and_services extends MY_Controller {
 
         echo json_encode($locations);
     }
+
+    public function addJSONResponseHeader()
+    {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        header("Content-Type: application/json");
+    }
+
+    public function get_import_data()
+    {
+        self::addJSONResponseHeader();
+        if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csvHeader = array_shift($csv);
+
+            $this->load->library('CSVReader');
+            $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+            $customerArray = []; // initialize array for storing import data
+
+            if (!empty($csvData)) {
+                foreach ($csvData as $row) {
+                    $customerElement = [];
+                    for($x=0; $x<count($csvHeader); $x++){
+                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:","", str_replace("$","",$row[$csvHeader[$x]]))));
+                        //$data = preg_replace('/\s+/', '', $trimmedData);
+                        $customerElement[$csvHeader[$x]] = $trimmedData;
+                        //echo $csvHeader[$x]. PHP_EOL;
+                        //echo $row[$csvHeader[$x]]. PHP_EOL;
+                    }
+                    //print_r(json_encode($customerElement)) . PHP_EOL;
+                    //echo 'fasdf' . PHP_EOL;
+                    $customerArray[] = $customerElement;
+                }
+                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
+            }else{
+                $data_arr = array("success" => FALSE,"message" => 'Something is wrong with your CSV file.');
+            }
+        }else{
+            //echo 'No upload' . PHP_EOL;
+        }
+        die(json_encode($data_arr));
+    }
+
+    public function import_items_data()
+    {
+        self::addJSONResponseHeader();
+        $input = $this->input->post();
+
+        if($input) {
+            $items = json_decode($input['items'], true); //data CSV
+            $mappingSelected = json_decode($input['mapHeaders'], true); //selected Headers
+            $csvHeaders = json_decode($input['csvHeaders'], true); //CSV Headers
+
+            $inserted = 0;
+            foreach($items as $data)
+            {
+                $mapName = $data[$csvHeaders[$mappingSelected[0]]];
+                $mapSKU = $data[$csvHeaders[$mappingSelected[1]]];
+                $mapType = $data[$csvHeaders[$mappingSelected[2]]];
+                $mapSDesc = $data[$csvHeaders[$mappingSelected[3]]];
+                $mapPrice = $data[$csvHeaders[$mappingSelected[4]]];
+                $mapRebatable = $data[$csvHeaders[$mappingSelected[5]]];
+                $mapPurchDesc = $data[$csvHeaders[$mappingSelected[6]]];
+                $mapCost = $data[$csvHeaders[$mappingSelected[7]]];
+                $mapQuantity = $data[$csvHeaders[$mappingSelected[8]]];
+                $mapReorderPoint = $data[$csvHeaders[$mappingSelected[9]]];
+
+                $itemData = [
+                    'company_id' => logged('company_id'),
+                    'title' => $mapName,
+                    'type' => $mapType,
+                    'rebate' => strtolower($mapRebatable) === 'yes' ? 1 : 0,
+                    're_order_points' => $mapReorderPoint,
+                    'description' => $mapSDesc,
+                    'price' => $mapPrice,
+                    'cost' => $mapCost,
+                    'is_active' => 1
+                ];
+
+                $insertId = $this->items_model->create($itemData);
+
+                if($insertId) {
+                    $accountingDetails = [
+                        'item_id' => $insertId,
+                        'sku' => $mapSKU,
+                        'purchase_description' => $mapPurchDesc,
+                    ];
+                    $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+
+                    $locations = [
+                        [
+                            'company_id' => logged('company_id'),
+                            'qty' => $mapQuantity,
+                            'initial_qty' => $mapQuantity,
+                            'name' => '',
+                            'item_id' => $insertId,
+                            'insert_date' => date('Y-m-d H:i:s')
+                        ]
+                    ];
+                    $addItemLocs = $this->items_model->saveBatchItemLocation($locations);
+
+                    if($itemAccDetails && $addItemLocs) {
+                        $inserted++;
+                    }
+                }
+            }
+
+            $data_arr = array("success" => TRUE, "message" => "Successfully imported ".$inserted." items!", "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "items" => $items);
+        } else{
+            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+        }
+
+        die(json_encode($data_arr));
+    }
 }

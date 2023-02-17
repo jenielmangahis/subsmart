@@ -97,7 +97,7 @@
                                     </div>
                                 </li>
                             <?php } ?>
-                            <li type="button" class="mb-2">
+                            <!-- <li type="button" class="mb-2">
                                 <div class="nsm-card">
                                     <div class="nsm-card-header mb-0">
                                         <div class="nsm-card-title">
@@ -120,7 +120,7 @@
                                         <label class="content-subtitle">Apple Account</label>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
                         </ul>
 
                         <div class="mt-5">
