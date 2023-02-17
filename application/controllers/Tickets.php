@@ -1017,6 +1017,7 @@ class Tickets extends MY_Controller
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         $this->page_data['user'] = $this->tickets_model->getUserDetails($userID);
+        $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/customer_tickets_apmt', $this->page_data);
@@ -1175,6 +1176,7 @@ class Tickets extends MY_Controller
         $this->page_data['appointment_type_id'] = $this->input->post('appointment_type_id');
         
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
 
         $this->page_data['user'] = $this->tickets_model->getUserDetails($userID);
 

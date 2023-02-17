@@ -114,6 +114,19 @@ class Tickets_model extends MY_Model
         return $query->row();
     }
 
+    public function getCompany($id)
+    {
+        $where = array(
+            'company_id' => $id,
+        );
+
+        $this->db->select('*');
+        $this->db->from('business_profile');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function get_tickets_clients($company_id)
     {
         $where = array(
