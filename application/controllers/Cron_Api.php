@@ -384,32 +384,41 @@ class Cron_Api extends MYF_Controller {
                         ];
 
                         $attendees = array();
+                        $techNames = array();
                         if( $job->e_employee_id != '' ){
                             $user = $this->Users_model->getUserByID($job->e_employee_id);
                             if( $user ){
+                                $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
                         if( $job->employee2_employee_id != '' ){
                             $user = $this->Users_model->getUserByID($job->employee2_employee_id);
                             if( $user ){
+                                $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
                         if( $job->employee3_employee_id != '' ){
                             $user = $this->Users_model->getUserByID($job->employee3_employee_id);
                             if( $user ){
+                                $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
                         if( $job->employee4_employee_id != '' ){
                             $user = $this->Users_model->getUserByID($job->employee4_employee_id);
                             if( $user ){
+                                $techNames[] = $user->FName;
                                 $attendees[] = ['email' => $user->email];
                             }
                         }
 
-                        $location = $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code;
+                        if( !empty($techNames) ){
+                            $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
+                        }
+
+                        $location = $job->mail_add . ' ' . $job->cust_state . ' ' . $job->cust_zip_code;
 
                         if( $job->hash_id != '' ){
                             $job_eid = $job->hash_id;
