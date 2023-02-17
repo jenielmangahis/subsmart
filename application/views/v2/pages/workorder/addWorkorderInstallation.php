@@ -1412,7 +1412,7 @@ tr {
                                                 <input type="text" name="password" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">SSN (optional)</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">SSN (Optional)</label>
                                                 <input type="text" name="ssn" class="nsm-field form-control" placeholder="XXX-XX-XXXX">
                                             </div>
                                         </div>
@@ -1428,6 +1428,13 @@ tr {
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
+                                            <div class="col-12">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Customer (Optional)</label>
+                                                <select id="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                    <option selected hidden>Select Customer</option>
+                                                </select>
+                                            </div>
+
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">First name</label>
                                                 <input type="text" name="firstname" id="firstname" class="nsm-field form-control name-field">
@@ -2293,5 +2300,67 @@ $(".nsm-subtitle").html(function() {
         $('.totalDue').val(val3.toFixed(2));
         $('#payment_amount').val(val3.toFixed(2));
     }
+</script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        $('#customer_id').select2({
+            ajax: {
+                url: '<?= base_url('autocomplete/_company_customer') ?>',
+                dataType: 'json',
+                delay: 250,
+                cache: true,
+                data: function (params) {
+                    return { q: params.term, page: params.page };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return { results: data };
+                }
+            },
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: (repo) => {
+                return "first_name" in repo ? `${repo.first_name} ${repo.last_name}` : repo.text
+            }
+        });
+
+        function formatRepoCustomer(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            return $(
+                '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+            );
+        }
+
+        $("#customer_id").on( 'change', function () {
+            if(this.value !== ""){
+                autoFillCustomer(this.value);
+            }
+        });
+
+        function autoFillCustomer(customerId){
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/get_customer_selected",
+                data: { id : customerId },
+                success: function(data) {
+                    const {data: customer} = JSON.parse(data);
+                    $("[name=firstname]").val(customer.first_name);
+                    $("[name=lastname]").val(customer.last_name);
+                    $("[name=address]").val(customer.mail_add);
+                    $("[name=city]").val(customer.city);
+                    $("[name=state]").val(customer.state);
+                    $("[name=postcode]").val(customer.zip_code);
+                    $("[name=country]").val(customer.country);
+                    $("[name=phone]").val(customer.phone_h);
+                    $("[name=mobile]").val(customer.phone_m);
+                    $("[name=email]").val(customer.email);
+                    $("[name=state]").val(customer.state);
+                }
+            });
+        }
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
