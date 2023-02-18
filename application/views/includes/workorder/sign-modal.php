@@ -1,10 +1,10 @@
-<div class="modal fade wo-signatureModal" tabindex="-1" role="dialog" id="company-representative-approval-signature">
+<div class="modal fade wo-signatureModal nsm-modal" tabindex="-1" role="dialog" id="company-representative-approval-signature">
   <div class="modal-dialog modal-lg mobileHeight" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Company Representative Approval</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -23,19 +23,19 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-action="save">Add signature</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade wo-signatureModal" tabindex="-1" role="dialog" id="primary-account-holder-signature">
+<div class="modal fade wo-signatureModal nsm-modal" tabindex="-1" role="dialog" id="primary-account-holder-signature">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Company Representative Approval</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -54,19 +54,19 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-action="save">Add signature</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade wo-signatureModal" tabindex="-1" role="dialog" id="secondary-account-holder-signature">
+<div class="modal fade wo-signatureModal nsm-modal" tabindex="-1" role="dialog" id="secondary-account-holder-signature">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Company Representative Approval</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -85,7 +85,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-action="save">Add signature</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

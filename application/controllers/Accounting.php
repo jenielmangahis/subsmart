@@ -1142,7 +1142,7 @@ class Accounting extends MY_Controller
         
     }
 
-    public function deposits()
+    public function deposits1()
     {
         $company_id = getLoggedCompanyID();
 

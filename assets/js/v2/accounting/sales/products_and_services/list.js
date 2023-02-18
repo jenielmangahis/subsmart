@@ -892,3 +892,151 @@ $('#item-locations-modal').on('hidden.bs.modal', function() {
         </td>
     </tr>`);
 });
+
+const $overlay = document.getElementById('overlay');
+$("#import-items-modal #file-upload").change(function(){
+    const formData = new FormData();
+    const fileInput = document.getElementById('file-upload');
+    formData.append('file', fileInput.files[0]);
+
+    if ($overlay) $overlay.style.display = "flex";
+    fetch(base_url+'accounting/products-and-services/get-import-data', {
+        method: 'POST',
+        body: formData
+    }) .then(response => response.json() ).then(response => {
+        var { data, headers, success, message }  = response;
+        if ($overlay) $overlay.style.display = "none";
+        if(!success){
+            sweetAlert('Sorry!','error',message);
+        }else{
+            $.each(headers,function(i,o){
+                $('#import-items-modal .headersSelector').append(
+                    '<option value="'+i+'">'+o+'</option>'
+                );
+                $('#import-items-modal #tableHeader').append(
+                    '<th><strong>'+o+'</strong></th>'
+                );
+            });
+            csvHeaders = headers;
+            itemsData = data; // save customer array data
+            // process mapping preview
+            $.each(data,function(i,o){
+                var toAppend = '';
+                $.each(o,function(index,data){
+                    toAppend += '<td>'+data+'</td>';
+                });
+                $('#import-items-modal #imported_items').append(
+                    '<tr>'+toAppend+'</tr>'
+                );
+            });
+
+            $('#import-items-modal #nextBtn1').prop("disabled", false);
+        }
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+});
+
+$(document).on('click', "#import-items-modal .step", function () {
+    $(this).addClass("active").prevAll().addClass("active");
+    $(this).nextAll().removeClass("active");
+});
+
+$(document).on('click', "#import-items-modal .step01", function () {
+    $("#import-items-modal #line-progress").css("width", "8%");
+    $("#import-items-modal .step1").addClass("active").siblings().removeClass("active");
+});
+
+$(document).on('click', "#import-items-modal .step02", function () {
+    $("#import-items-modal #line-progress").css("width", "50%");
+    $("#import-items-modal .step2").addClass("active").siblings().removeClass("active");
+
+    $('#import-items-modal .modal-footer').html(`<button type="button" class="nsm-button step01">Back</button>
+    <button type="button" class="nsm-button primary step03">Next</button>`);
+});
+
+$(document).on('click', "#import-items-modal .step03", function () {
+    $("#import-items-modal #line-progress").css("width", "100%");
+    $("#import-items-modal .step3").addClass("active").siblings().removeClass("active");
+
+    $('#import-items-modal .modal-footer').html(`<button type="button" class="nsm-button step02">Back</button>
+    <button type="button" class="nsm-button primary" id="importItem">Import</button>`);
+});
+
+$(document).on('click', "#import-items-modal #importItem", function(e) {
+    // prepare form data to be posted
+    
+    var selectedHeader = [];
+    $('#import-items-modal select[name="headers[]"]').each(function() {
+        selectedHeader.push(this.value);
+    });
+
+    const formData = new FormData();
+    formData.append('items', JSON.stringify(itemsData));
+    formData.append('mapHeaders', JSON.stringify(selectedHeader));
+    formData.append('csvHeaders', JSON.stringify(csvHeaders));
+    
+    if ($overlay) $overlay.style.display = "flex";
+    // perform post request
+    fetch(base_url+'accounting/products-and-services/import-items-data', {
+        method: 'POST',
+        body: formData,
+    }) .then(response => response.json() ).then(response => {
+        if ($overlay) $overlay.style.display = "none";
+        var { customer, csv, mapping, fields, dataValue, office, billing, profile, message, success }  = response;
+        if(success){
+            sweetAlert('Awesome!','success',message ,1);
+        }else{
+            sweetAlert('Sorry!','error',message);
+        }
+
+        console.log(response);
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+});
+
+function sweetAlert(title,icon,information,is_reload){
+    Swal.fire({
+        title: title,
+        text: information,
+        icon: icon,
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+        if(is_reload === 1){
+            if (result.value) {
+                window.location.reload();
+            }
+        }
+    });
+}
+
+function test(){
+    var selectedHeader = [];
+    var head = [];
+    $('#import-items-modal select[name="headers[]"]').each(function() {
+        selectedHeader.push(this.value);
+    });
+    var ar = selectedHeader.length;
+    for(var x=0; x<ar; x++){
+        head.push(x);
+    }
+
+    var arHead = head.length;
+
+    for(var x=0; x<ar; x++){
+        if(selectedHeader[x] != ""){
+            document.getElementById('headersSelector'+x).value = selectedHeader[x];
+            var text = "headersSelector"+x+"";
+            for(var i=0; i<arHead; i++){
+                var text1 = "headersSelector"+i+"";
+                if(text != text1){
+                    $("#headersSelector"+i+" option[value='"+selectedHeader[x]+"'").remove();
+                }
+            }
+        }
+    }
+}

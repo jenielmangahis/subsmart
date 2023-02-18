@@ -522,6 +522,8 @@ $route['accounting/customers/create-invoice/(:any)/(:any)'] = 'accounting_contro
 $route['accounting/customers/print-transaction/(:any)/(:any)'] = 'accounting_controllers/customers/print_transaction/$1/$2';
 $route['accounting/customers/send-transaction/(:any)/(:any)']['post'] = 'accounting_controllers/customers/send_transaction/$1/$2';
 
+$route['accounting/deposits'] = 'accounting_controllers/deposits/index';
+
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
@@ -672,6 +674,8 @@ $route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_contr
 $route['accounting/vendors/print-multiple-transactions']['post'] = 'accounting_controllers/vendors/print_multiple';
 $route['accounting/vendors/(:any)/print-transactions']['post'] = 'accounting_controllers/vendors/print_transactions/$1';
 $route['accounting/vendors/(:any)/export-transactions']['post'] = 'accounting_controllers/vendors/export_transactions/$1';
+$route['accounting/vendors/get-import-data']['post'] = 'accounting_controllers/vendors/get_import_data';
+$route['accounting/vendors/import-vendors-data']['post'] = 'accounting_controllers/vendors/import_vendors_data';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';
