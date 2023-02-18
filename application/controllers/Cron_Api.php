@@ -445,10 +445,10 @@ class Cron_Api extends MYF_Controller {
                             $phone_m = $job->phone_h;
                         }  
 
-                        $description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
-                        $description .= "Job Type : ".$job->job_type."\n";                
-                        $description .= "Phone Number : ".$phone_m."\n";                
-                        $description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_state . ' ' . $job->cust_zip_code . "\n";
+                        //$description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
+                        //$description .= "Job Type : ".$job->job_type."\n";                
+                        $description = "Phone Number : ".$phone_m."\n";                
+                        //$description .= "Location : " . $job->mail_add . ' ' . $job->cust_city . ', ' . $job->cust_zip_code . "\n";
                         $description .= "Job Description : ". $job_description ."\n";
                         $description .= "Notes : ". $job_notes ."\n";
                         $description .= $view_link . "\n";
