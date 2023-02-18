@@ -565,9 +565,19 @@ function Signing(hash) {
 
       if (customer && specs.name && !value) {
         if (specs.name.toLowerCase() === "zip") {
-          value = customer[specs.name] || customer["zip_code"];
+          value =
+            customer[specs.name] ||
+            customer[specs.name.toLowerCase()] ||
+            customer["zip_code"];
+        } else if (specs.name.toLowerCase() === "address") {
+          value =
+            customer[specs.name] ||
+            customer[specs.name.toLowerCase()] ||
+            customer["mail_add"] ||
+            customer["subdivision"];
         } else {
-          value = customer[specs.name] || "";
+          value =
+            customer[specs.name] || customer[specs.name.toLowerCase()] || "";
         }
       }
 

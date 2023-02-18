@@ -1048,7 +1048,8 @@
                                                                 if (isset($jobs_data)) { 
                                                                     $MESSAGE = "$jobs_data->message"; 
                                                                 } else { 
-                                                                    $MESSAGE = "Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service";                                                                
+                                                                    //$MESSAGE = "Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service";                                                                
+                                                                    $MESSAGE = '';
                                                                 } 
                                                             ?>
                                                             <div id="Message_Editor">
