@@ -267,15 +267,32 @@ class Invoice_model extends MY_Model
         return true;
     }
 
+    public function get_invoice_by_invoice_number($invoiceNum, $company_id)
+    {
+        $this->db->where('invoice_number', $invoiceNum);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get('invoices');
+        return $query->row();
+    }
+
+    public function get_company_payments($company_id)
+    {
+        $this->db->where('company_id', $company_id);
+        // $this->db->group_by('payment_date');
+        $this->db->order_by('payment_date', 'desc');
+        $query = $this->db->get('payment_records');
+        return $query->result();
+    }
+
     public function getPaidInv($company_id)
     {
         $where = array(
             'invoices.company_id'    => $company_id,
             'invoices.status'        => 'Paid',
-          );
+        );
 
         // $this->db->select('*');
-        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, SUM(payment_records.invoice_amount) AS groupAmount, COUNT(invoices.id) AS invCount');
+        $this->db->select('invoices.*, DATE(payment_records.payment_date) AS payment_date, payment_records.id AS payment_id, payment_records.invoice_tip, payment_records.invoice_amount, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, SUM(payment_records.invoice_amount) AS groupAmount, COUNT(invoices.id) AS invCount');
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
         $this->db->join('payment_records', 'invoices.invoice_number = payment_records.invoice_number');
         $this->db->group_by('DATE(payment_records.payment_date)');

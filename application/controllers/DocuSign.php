@@ -1515,12 +1515,16 @@ SQL;
 
     private function _getJobCustomer($jobId)
     {
-        $query = <<<SQL
-        SELECT * FROM `jobs`
-        LEFT JOIN acs_profile ON jobs.customer_id = acs_profile.prof_id WHERE jobs.id = ?
-SQL;
+        $this->db->where('id', $jobId);
+        $this->db->select('customer_id');
+        $job = $this->db->get('jobs')->row();
 
-        return $this->db->query($query, [$jobId])->row();
+        if (!$job) {
+            return null;
+        }
+
+        $this->db->where('prof_id', $job->customer_id);
+        return $this->db->get('acs_profile')->row();
     }
 
     private function getJobEmployee($job)

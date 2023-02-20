@@ -2834,4 +2834,113 @@ class Vendors extends MY_Controller
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
     }
+
+    public function addJSONResponseHeader()
+    {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        header("Content-Type: application/json");
+    }
+
+    public function get_import_data()
+    {
+        self::addJSONResponseHeader();
+        if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csvHeader = array_shift($csv);
+
+            $this->load->library('CSVReader');
+            $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+            $customerArray = []; // initialize array for storing import data
+
+            if (!empty($csvData)) {
+                foreach ($csvData as $row) {
+                    $customerElement = [];
+                    for($x=0; $x<count($csvHeader); $x++){
+                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:","", str_replace("$","",$row[$csvHeader[$x]]))));
+                        //$data = preg_replace('/\s+/', '', $trimmedData);
+                        $customerElement[$csvHeader[$x]] = $trimmedData;
+                        //echo $csvHeader[$x]. PHP_EOL;
+                        //echo $row[$csvHeader[$x]]. PHP_EOL;
+                    }
+                    //print_r(json_encode($customerElement)) . PHP_EOL;
+                    //echo 'fasdf' . PHP_EOL;
+                    $customerArray[] = $customerElement;
+                }
+                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
+            }else{
+                $data_arr = array("success" => FALSE,"message" => 'Something is wrong with your CSV file.');
+            }
+        }else{
+            //echo 'No upload' . PHP_EOL;
+        }
+        die(json_encode($data_arr));
+    }
+
+    public function import_vendors_data()
+    {
+        self::addJSONResponseHeader();
+        $input = $this->input->post();
+
+        if($input) {
+            $vendors = json_decode($input['vendors'], true); //data CSV
+            $mappingSelected = json_decode($input['mapHeaders'], true); //selected Headers
+            $csvHeaders = json_decode($input['csvHeaders'], true); //CSV Headers
+
+            $inserted = 0;
+            foreach($vendors as $data)
+            {
+                $mapName = $data[$csvHeaders[$mappingSelected[0]]];
+                $mapCompanyName = $data[$csvHeaders[$mappingSelected[1]]];
+                $mapEmail = $data[$csvHeaders[$mappingSelected[2]]];
+                $mapPhone = $data[$csvHeaders[$mappingSelected[3]]];
+                $mapMobile = $data[$csvHeaders[$mappingSelected[4]]];
+                $mapFax = $data[$csvHeaders[$mappingSelected[5]]];
+                $mapWebsite = $data[$csvHeaders[$mappingSelected[6]]];
+                $mapStreet = $data[$csvHeaders[$mappingSelected[7]]];
+                $mapCity = $data[$csvHeaders[$mappingSelected[8]]];
+                $mapState = $data[$csvHeaders[$mappingSelected[9]]];
+                $mapZip = $data[$csvHeaders[$mappingSelected[10]]];
+                $mapCountry = $data[$csvHeaders[$mappingSelected[11]]];
+                $mapOpeningBalance = $data[$csvHeaders[$mappingSelected[12]]];
+                $mapOpeningBalanceDate = $data[$csvHeaders[$mappingSelected[13]]];
+                $mapTaxId = $data[$csvHeaders[$mappingSelected[14]]];
+
+                $vendorData = [
+                    'company_id' => logged('company_id'),
+                    'display_name' => $mapName,
+                    'company' => $mapCompanyName,
+                    'email' => $mapEmail,
+                    'phone' => $mapPhone,
+                    'mobile' => $mapMobile,
+                    'fax' => $mapFax,
+                    'website' => $mapWebsite,
+                    'street' => $mapStreet,
+                    'city' => $mapCity,
+                    'state' => $mapState,
+                    'zip' => $mapZip,
+                    'country' => $mapCountry,
+                    'opening_balance' => $mapOpeningBalance,
+                    'opening_balance_as_of_date' => $mapOpeningBalanceDate,
+                    'tax_id' => $mapTaxId,
+                    'status' => 1
+                ];
+
+                $insertId = $this->vendors_model->createVendor($vendorData);
+
+                if($insertId) {
+                    $inserted++;
+                }
+            }
+
+            $data_arr = array("success" => TRUE, "message" => "Successfully imported ".$inserted." vendors!", "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "vendors" => $vendors);
+        } else{
+            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+        }
+
+        die(json_encode($data_arr));
+    }
 }
