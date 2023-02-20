@@ -1030,7 +1030,7 @@ $("#attachment-file").change(function() {
             var {success, data} = response;
 
             if(success){
-                var phone_h = '(xxx) xxx-xxxx';
+                var phone_m = '(xxx) xxx-xxxx';
                 $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
                 // if(data.mail_add !== null){
                 //     $('#cust_address').text(data.mail_add + ' ');
@@ -1042,11 +1042,12 @@ $("#attachment-file").change(function() {
                     $('#cust_address').text(data.mail_add + ' ');
                     ADDR_1 = data.mail_add;
                 }
-                if(data.phone_h){
-                    if(data.phone_h.includes('Mobile:')){
-                        phone_h = ((data.phone_h).slice(0,13))
+                if(data.phone_m){
+                    if(data.phone_m.includes('Mobile:')){
+                        phone_m = ((data.phone_m).slice(0,13))
                     }else{
-                        phone_h = data.phone_h;
+                        //phone_h = data.phone_h;
+                        phone_m = formatPhoneNumber(data.phone_m);
                     }
                 }
                 if(data.city || data.state || data.zip_code){
@@ -1061,7 +1062,7 @@ $("#attachment-file").change(function() {
                     $('#cust_email').text('Email is not available.');
                 }
                 $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
-                $('#cust_number').text(phone_h);
+                $('#cust_number').text(phone_m);
                 $('#mail_to').attr("href","mailto:"+data.email);
                 $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
                 $('.MAP_LOADER').fadeIn();
@@ -1071,6 +1072,16 @@ $("#attachment-file").change(function() {
                 // loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
             }
         })
+    }
+
+    function formatPhoneNumber(phoneNumberString) {
+      var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+      var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+      if (match) {
+        return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+      }else{
+        return phoneNumberString;
+      }      
     }
 
 // $('#TEMPORARY_MAP_VIEW').load(function(){
