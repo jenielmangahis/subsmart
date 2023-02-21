@@ -54,7 +54,7 @@
                         required placeholder="Enter Zip Code" 
                         onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                 <label for="job_location" class="required mt-2"><b>Customer Phone #</b></label>
-                <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number" />
+                <input type="text" class="form-control" name="customer_phone" id="ticket_customer_phone" required placeholder="Enter Phone Number" />
             </div>
         </div>        
     </div>
@@ -374,6 +374,11 @@ $(document).ready(function(){
         templateSelection: formatRepoSelectionUser
     });
 
+    $('#sel-customer_t').select2({     
+        dropdownParent: $("#modal-quick-add-service-ticket"),   
+        minimumInputLength: 0        
+    });
+
     $('#add-another-items').on('click', function(){
         $('#quick-add-service-ticket-item-list').modal('show');
     });
@@ -387,10 +392,10 @@ $(document).ready(function(){
             data: {id : id },
             dataType: 'json',
             success: function(response){            
-                if( response.phone_m != '' ){
-                    $("#customer_phone").val(response.phone_m);
+                if( response.phone_m != null ){
+                    $("#ticket_customer_phone").val(response.phone_m);
                 }else{
-                    $("#customer_phone").val(response.phone_h);
+                    $("#ticket_customer_phone").val(response.phone_h);
                 }
                 $("#service_location").val(response.mail_add);
                 $("#customer_city").val(response.city);
