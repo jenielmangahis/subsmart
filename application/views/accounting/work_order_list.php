@@ -1,6 +1,16 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
-
+<style>
+    table.dataTable thead th {
+    border-bottom: 1px solid #111;
+}
+table.dataTable tfoot th {
+    border-top: 1px solid  #111;
+}
+tbody, td, tfoot, th, thead, tr {
+    border-color: white;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -18,11 +28,11 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('workorder') ?>" method="GET">
+                        <!-- <form action="<?php echo base_url('workorder') ?>" method="GET">
                             <div class="nsm-field-group search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" value="<?php echo (!empty($search)) ? $search : '' ?>" placeholder="Search Work Order">
                             </div>
-                        </form>
+                        </form> -->
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
@@ -63,7 +73,7 @@
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
                                 <i class='bx bx-fw bx-window-alt'></i> Industry Templates
                             </button>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal_accounting">
                                 <i class='bx bx-fw bx-task'></i> New Work Order
                             </button>
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('workorder/settings') ?>'">
@@ -72,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="table" id="dataTableWork">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
@@ -144,7 +154,8 @@
                                             <input class="form-check-input select-one table-select" type="checkbox" name="id[<?php echo $workorder->id ?>]" value="<?php echo $workorder->id ?>" id="work_order_id_<?php echo $workorder->id ?>">
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary"><?php echo $workorder->work_order_number ?></td>
+                                    <td class="fw-bold nsm-text-primary"><?= //workordermodule__formatWorkOrderNumber($workorder->work_order_number) 
+                                    $workorder->work_order_number ?></td>
                                     <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
                                     <td>
                                         <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link">
@@ -233,7 +244,8 @@
         </div>
     </div>
 </div>
-
+<!-- //cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css -->
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
@@ -317,5 +329,10 @@
             });
         });
     });
+</script>
+<script>
+    $(document).ready( function () {
+    $('#dataTableWork').DataTable();
+} );
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
