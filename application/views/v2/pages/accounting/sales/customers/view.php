@@ -171,8 +171,15 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
+                                                            <?php if(!in_array($type, ['recently-paid', 'recurring-templates'])) : ?>
                                                             <div class="row">
                                                                 <div class="col">
+                                                                    <?php if($type === 'unbilled-income') : ?>
+                                                                    <label for="filter-as-of">Unbilled Income As Of</label>
+                                                                    <div class="nsm-field-group calendar">
+                                                                        <input type="text" name="filter_as_of_date" id="filter-as-of" class="form-control nsm-field date" value="<?=date("m/d/Y")?>">
+                                                                    </div>
+                                                                    <?php else : ?>
                                                                     <label for="filter-date">Date</label>
                                                                     <select class="nsm-field form-select" name="filter_date" id="filter-date" data-applied="<?=empty($date) ? 'all' : $date?>">
                                                                         <option value="all" <?=empty($date) || $date === 'all' ? 'selected' : ''?>>All dates</option>
@@ -188,8 +195,10 @@
                                                                         <option value="last-year" <?=$date === 'last-year' ? 'selected' : ''?>>Last year</option>
                                                                         <option value="last-365-days" <?=$date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
                                                                     </select>
+                                                                    <?php endif; ?>
                                                                 </div>
                                                             </div>
+                                                            <?php endif; ?>
                                                             <div class="row mt-3">
                                                                 <div class="col-6">
                                                                     <button type="button" class="nsm-button" id="reset-button">
@@ -215,7 +224,10 @@
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                                             <p class="m-0">Columns</p>
-                                                            <div class="form-check">
+                                                            <?php foreach($settingsCols as $settingsCol) : ?>
+                                                            <?=$settingsCol?>
+                                                            <?php endforeach; ?>
+                                                            <!-- <div class="form-check">
                                                                 <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
                                                                 <label for="chk_type" class="form-check-label">Type</label>
                                                             </div>
@@ -266,7 +278,8 @@
                                                             <div class="form-check">
                                                                 <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
                                                                 <label for="chk_status" class="form-check-label">Status</label>
-                                                            </div>
+                                                            </div> -->
+                                                            <?php if($type !== 'recurring-templates') : ?>
                                                             <div class="form-check">
                                                                 <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
                                                                 <label for="chk_po_number" class="form-check-label">P.O. Number</label>
@@ -275,6 +288,7 @@
                                                                 <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                                                                 <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
                                                             </div>
+                                                            <?php endif; ?>
                                                             <p class="m-0">Rows</p>
                                                             <div class="form-check">
                                                                 <input type="checkbox" name="compact" id="compact" class="form-check-input">
@@ -290,7 +304,10 @@
                                                         <td class="table-icon text-center">
                                                             <input class="form-check-input select-all table-select" type="checkbox">
                                                         </td>
-                                                        <td data-name="Date">DATE</td>
+                                                        <?php foreach($headers as $header) : ?>
+                                                        <?=$header?>
+                                                        <?php endforeach; ?>
+                                                        <!-- <td data-name="Date">DATE</td>
                                                         <td data-name="Type">TYPE</td>
                                                         <td data-name="No.">NO.</td>
                                                         <td data-name="Customer">CUSTOMER</td>
@@ -308,13 +325,14 @@
                                                         </td>
                                                         <td data-name="Status">STATUS</td>
                                                         <td data-name="P.O. Number">P.O. NUMBER</td>
-                                                        <td data-name="Sales Rep">SALES REP</td>
+                                                        <td data-name="Sales Rep">SALES REP</td> -->
                                                         <td data-name="Manage"></td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php if(count($transactions) > 0) : ?>
                                                         <?php foreach($transactions as $transaction) : ?>
+                                                        <?php if($type !== 'recurring-templates') : ?>
                                                         <tr>
                                                             <td>
                                                                 <div class="table-row-icon table-checkbox">
@@ -340,6 +358,42 @@
                                                             <td><?=$transaction['sales_rep']?></td>
                                                             <td><?=$transaction['manage']?></td>
                                                         </tr>
+                                                        <?php else : ?>
+                                                        <tr data-recurring="<?=$transaction['recurring_id']?>">
+                                                            <td>
+                                                                <div class="table-row-icon table-checkbox">
+                                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                                                </div>
+                                                            </td>
+                                                            <td><?=$transaction['name']?></td>
+                                                            <td><?=$transaction['type']?></td>
+                                                            <td><?=$transaction['txn_type']?></td>
+                                                            <td><?=$transaction['interval']?></td>
+                                                            <td><?=$transaction['previous_date']?></td>
+                                                            <td><?=$transaction['next_date']?></td>
+                                                            <td><?=$transaction['amount']?></td>
+                                                            <td><?=$transaction['po_number']?></td>
+                                                            <td><?=$transaction['sales_rep']?></td>
+                                                            <td>
+                                                                <div class='dropdown table-management'>
+                                                                    <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                                    </a>
+                                                                    <ul class='dropdown-menu dropdown-menu-end'>
+                                                                        <li>
+                                                                            <a class="dropdown-item edit-recurring-transaction" href="#">Edit</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class="dropdown-item use-recurring-transaction" href="#">Use</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class="dropdown-item delete-recurring-transaction" href="#">Delete</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <?php endif; ?>
                                                         <?php endforeach; ?>
                                                     <?php else : ?>
                                                     <tr>

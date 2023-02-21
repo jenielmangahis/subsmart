@@ -81,7 +81,7 @@ tr {
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
-                <?php echo form_open_multipart('workorder/savenewWorkorderAgreement', ['class' => 'form-validate', 'id' => 'form_new_adi_workorder', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart('accounting/savenewWorkorderAgreement', ['class' => 'form-validate', 'id' => 'form_new_adi_workorder', 'autocomplete' => 'off']); ?>
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="nsm-card primary">

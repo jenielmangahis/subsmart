@@ -179,7 +179,7 @@ class Dashboard extends Widgets {
 
         //$this->page_data['events'] = $this->event_model->get_all_events(5);
         //$this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
-        $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
+        $this->page_data['upcomingInvoice']=$this->event_model->getUnpaidInvoices();
         $this->page_data['subs']=$this->event_model->getAllsubs();
         
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
@@ -303,6 +303,12 @@ class Dashboard extends Widgets {
         $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
+    }
+
+    public function apiGetUnpaidInvoices()
+    {
+        $invoices = $this->event_model->getUnpaidInvoices();
+        exit(json_encode(['data' => $invoices]));
     }
 
     private function getActiveCustomerStatuses()

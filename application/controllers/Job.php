@@ -73,6 +73,8 @@ class Job extends MY_Controller
         }
 
         $companyId = logged('company_id');
+        $user_id   = logged('id');
+        $user_type = logged('user_type');
 
         $this->db->select('id,name,marker_icon');
         $this->db->where('company_id', $companyId);
@@ -88,6 +90,7 @@ class Job extends MY_Controller
             return $employee;
         }, $employees);
 
+        $this->page_data['user_type'] = $user_type;
         $this->page_data['employees'] = $employees;
         $this->load->view('v2/pages/job/list', $this->page_data);
     }
@@ -198,7 +201,8 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'is_active' => 1,
+                'items.company_id' => logged('company_id'),
+                //'is_active' => 1,
             ),
             'table' => 'items',
             'select' => 'items.id,title,price,type',
@@ -610,7 +614,7 @@ class Job extends MY_Controller
         $get_items = array(
             'where' => array(
                 'items.company_id' => logged('company_id'),
-                'is_active' => 1,
+                //'is_active' => 1,
             ),
             'table' => 'items',
             'select' => 'items.id,title,price,type',
@@ -3711,6 +3715,162 @@ class Job extends MY_Controller
 
         $this->page_data['jobPayments'] = $jobPayments;
         $this->load->view('v2/pages/job/ajax_load_job_payments', $this->page_data);
+    }
+
+    public function edit_job_item($id=null)
+    {
+        $this->load->model('AcsProfile_model'); 
+        $this->load->helper('functions');
+
+        add_css([
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/esign/fill-and-sign/job/approve.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
+            'https://html2canvas.hertzen.com/dist/html2canvas.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+        ]);
+
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        $jobs_data = $this->jobs_model->get_specific_job($id);
+        $jobs_data_items = $this->jobs_model->get_specific_job_items($id);
+
+        $get_sales_rep = array(
+            'where' => array(
+                'users.company_id' => $comp_id,
+                'users.id' => $jobs_data->employee_id
+            ),
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName'
+        );        
+        $salesRep = $this->general->get_data_with_param($get_sales_rep);    
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'id' => $jobs_data->employee2_id
+            ),
+            'table' => 'users',
+            'select' => 'id, FName, LName',
+        );
+        $assignedEmployee2 = $this->general->get_data_with_param($get_employee);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'id' => $jobs_data->employee3_id
+            ),
+            'table' => 'users',
+            'select' => 'id, FName, LName',
+        );
+        $assignedEmployee3 = $this->general->get_data_with_param($get_employee);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'id' => $jobs_data->employee4_id
+            ),
+            'table' => 'users',
+            'select' => 'id, FName, LName',
+        );
+        $assignedEmployee4 = $this->general->get_data_with_param($get_employee);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'id' => $jobs_data->employee5_id
+            ),
+            'table' => 'users',
+            'select' => 'id, FName, LName',
+        );
+        $assignedEmployee5 = $this->general->get_data_with_param($get_employee);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'id' => $jobs_data->employee6_id
+            ),
+            'table' => 'users',
+            'select' => 'id, FName, LName',
+        );
+        $assignedEmployee6 = $this->general->get_data_with_param($get_employee);
+
+        $assignedEmployees = array();
+        if( $assignedEmployee2 ){
+            $assignedEmployees[] = $assignedEmployee2[0]->FName . ' ' . $assignedEmployee2[0]->LName;
+        }
+
+        if( $assignedEmployee3 ){
+            $assignedEmployees[] = $assignedEmployee3[0]->FName . ' ' . $assignedEmployee3[0]->LName;
+        }
+
+        if( $assignedEmployee4 ){
+            $assignedEmployees[] = $assignedEmployee4[0]->FName . ' ' . $assignedEmployee4[0]->LName;
+        }
+
+        if( $assignedEmployee5 ){
+            $assignedEmployees[] = $assignedEmployee5[0]->FName . ' ' . $assignedEmployee5[0]->LName;
+        }
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'is_active' => 1,
+            ),
+            'table' => 'items',
+            'select' => 'items.id,title,price,type',
+        );
+
+        $items = $this->general->get_data_with_param($get_items);
+
+        if( $jobs_data->estimate_id > 0 ){
+            $get_estimate_query= array(
+                'where' => array(
+                    'id' => $jobs_data->estimate_id
+                ),
+                'table' => 'estimates',
+                'select' => '*'
+            );
+
+            $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
+            if( $estimate_data ){
+                if( $estimate_data->deposit_request == 2 ){
+                    $estimate_dp_amount = $estimate_data->grand_total * ($estimate_data->deposit_amount / 100);
+                }else{
+                    $estimate_dp_amount = $estimate_data->deposit_amount;
+                }
+            }
+        }
+
+
+        $customer = $this->AcsProfile_model->getByProfId($jobs_data->customer_id);
+        if( $customer ){
+            $default_customer_id = $customer->prof_id;
+            $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
+        }
+        $default_customer_id = $this->input->get('cus_id');
+
+        $this->page_data['salesRep']  = $salesRep;
+        $this->page_data['jobs_data'] = $jobs_data;
+        $this->page_data['jobs_data_items'] = $jobs_data_items;
+        $this->page_data['items']     = $items;
+        $this->page_data['customer']  = $customer;
+        $this->page_data['assignedEmployee2'] = $assignedEmployee2;
+        $this->page_data['assignedEmployees'] = $assignedEmployees;
+        $this->page_data['default_customer_id'] = $default_customer_id;
+        $this->page_data['default_customer_name'] = $default_customer_name;
+        $this->page_data['estimate_dp_amount'] = $estimate_dp_amount;
+
+        $this->load->view('v2/pages/job/edit_job_item', $this->page_data);
     }
 }
 
