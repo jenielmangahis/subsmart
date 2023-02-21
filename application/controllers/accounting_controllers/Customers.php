@@ -16,6 +16,7 @@ class Customers extends MY_Controller {
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('General_model', 'general');
         $this->load->model('IndustryType_model');
+        $this->load->model('accounting_recurring_transactions_model');
 
         $this->load->model('AcsProfile_model');
         $this->load->model('invoice_model');
@@ -575,7 +576,13 @@ class Customers extends MY_Controller {
             $this->page_data['date'] = get('date');
         }
 
-        $this->page_data['transactions'] = $this->get_transactions($filters);
+        $get = $this->get_transactions($filters);
+
+
+
+        $this->page_data['transactions'] = $get['transactions'];
+        $this->page_data['headers'] = $get['headers'];
+        $this->page_data['settingsCols'] = $get['settingsCols'];
 
         $this->load->view('v2/pages/accounting/sales/customers/view', $this->page_data);
     }
@@ -1202,6 +1209,82 @@ class Customers extends MY_Controller {
     private function get_transactions($filters = [])
     {
         $transactions = [];
+
+        $headers = [
+            '<td data-name="Date">DATE</td>',
+            '<td data-name="Type">TYPE</td>',
+            '<td data-name="No.">NO.</td>',
+            '<td data-name="Customer">CUSTOMER</td>',
+            '<td data-name="Method">METHOD</td>',
+            '<td data-name="Source">SOURCE</td>',
+            '<td data-name="Memo">MEMO</td>',
+            '<td data-name="Due date">DUE DATE</td>',
+            '<td data-name="Aging">AGING</td>',
+            '<td data-name="Balance">BALANCE</td>',
+            '<td data-name="Total">TOTAL</td>',
+            '<td data-name="Last Delivered">LAST DELIVERED</td>',
+            '<td data-name="Email">EMAIL</td>',
+            '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+            '<td data-name="Status">STATUS</td>',
+            '<td data-name="P.O. Number">P.O. NUMBER</td>',
+            '<td data-name="Sales Rep">SALES REP</td>',
+        ];
+
+        $settingsCols = [
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                <label for="chk_type" class="form-check-label">Type</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                <label for="chk_no" class="form-check-label">No.</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                <label for="chk_customer" class="form-check-label">Customer</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_method" class="form-check-input">
+                <label for="chk_method" class="form-check-label">Method</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_source" class="form-check-input">
+                <label for="chk_source" class="form-check-label">Source</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                <label for="chk_memo" class="form-check-label">Memo</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
+                <label for="chk_due_date" class="form-check-label">Due date</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_aging" class="form-check-input">
+                <label for="chk_aging" class="form-check-label">Aging</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
+                <label for="chk_balance" class="form-check-label">Balance</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                <label for="chk_email" class="form-check-label">Email</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                <label for="chk_attachments" class="form-check-label">Attachments</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                <label for="chk_status" class="form-check-label">Status</label>
+            </div>'
+        ];
+
         switch($filters['type']) {
             default :
                 $transactions = $this->get_invoices($transactions, $filters);
@@ -1228,6 +1311,55 @@ class Customers extends MY_Controller {
             case 'credit-memos' :
                 $transactions = $this->get_credit_memos($transactions, $filters);
             break;
+            case 'money-received' :
+                $transactions = $this->get_payments($transactions, $filters);
+            break;
+            case 'recurring-templates' :
+                $headers = [
+                    '<td data-name="Name">NAME</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="Txn Type">TXN TYPE</td>',
+                    '<td data-name="Interval">INTERVAL</td>',
+                    '<td data-name="Previous Date">PREVIOUS DATE</td>',
+                    '<td data-name="Next Date">NEXT DATE</td>',
+                    '<td data-name="Amount">AMOUNT</td>',
+                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
+                    '<td data-name="Sales Rep">SALES REP</td>',
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_name" class="form-check-input">
+                        <label for="chk_name" class="form-check-label">Name</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_txn_type" class="form-check-input">
+                        <label for="chk_txn_type" class="form-check-label">Txn Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_interval" class="form-check-input">
+                        <label for="chk_interval" class="form-check-label">Interval</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_previous_date" class="form-check-input">
+                        <label for="chk_previous_date" class="form-check-label">Previous Date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_next_date" class="form-check-input">
+                        <label for="chk_next_date" class="form-check-label">Next Date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_amount" class="form-check-input">
+                        <label for="chk_amount" class="form-check-label">Amount</label>
+                    </div>',
+                ];
+
+                $transactions = $this->get_recurring_templates($transactions, $filters);
+            break;
         }
 
         if(isset($filters['start-date'])) {
@@ -1243,7 +1375,11 @@ class Customers extends MY_Controller {
             return strtotime($b['date']) > strtotime($a['date']);
         });
 
-        return $transactions;
+        return [
+            'transactions' => $transactions,
+            'headers' => $headers,
+            'settingsCols' => $settingsCols
+        ];
     }
 
     private function get_invoices($transactions, $filters = [])
@@ -1727,6 +1863,363 @@ class Customers extends MY_Controller {
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at)),
                 'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    public function get_recurring_templates($transactions, $filters = [])
+    {
+        $invoices = $this->accounting_recurring_transactions_model->get_customer_recurring_invoices($filters['customer_id']);
+        $creditMemos = $this->accounting_recurring_transactions_model->get_customer_recurring_credit_memos($filters['customer_id']);
+        $salesReceipts = $this->accounting_recurring_transactions_model->get_customer_recurring_sales_receipt($filters['customer_id']);
+        $refundReceipts = $this->accounting_recurring_transactions_model->get_customer_recurring_refund_receipt($filters['customer_id']);
+        $delayedCredits = $this->accounting_recurring_transactions_model->get_customer_recurring_delayed_credit($filters['customer_id']);
+        $delayedCharges = $this->accounting_recurring_transactions_model->get_customer_recurring_delayed_charge($filters['customer_id']);
+
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($invoices as $invoice)
+        {
+            $recurringData = $this->accounting_recurring_transactions_model->get_by_type_and_transaction_id('invoice', $invoice->id);
+
+            $previous = !is_null($recurringData->previous_date) && $recurringData->previous_date !== '' ? date("m/d/Y", strtotime($recurringData->previous_date)) : null;
+            $next = date("m/d/Y", strtotime($recurringData->next_date));
+
+            switch ($recurringData->recurring_interval) {
+                case 'daily' :
+                    $interval = 'Every Day';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Days";
+                    }
+                break;
+                case 'weekly' :
+                    $interval = 'Every Week';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Weeks";
+                    }
+                break;
+                case 'monthly' :
+                    $interval = 'Every Month';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Months";
+                    }
+                break;
+                case 'yearly' :
+                    $interval = 'Every Year';
+                break;
+                default :
+                    $interval = '';
+                    $previous = '';
+                    $next = '';
+                break;
+            }
+
+            $total = number_format($invoice->grand_total, 2, '.', ',');
+
+            $transactions[] = [
+                'id' => $invoice->id,
+                'recurring_id' => $recurringData->id,
+                'name' => $customerName,
+                'type' => ucfirst($recurringData->recurring_type),
+                'txn_type' => 'Invoice',
+                'interval' => $interval,
+                'previous_date' => $previous,
+                'next_date' => $recurringData->status === "2" ? "Paused" : $next,
+                'amount' => $total,
+                'po_number' => $invoice->po_number,
+                'sales_rep' => '',
+                'date' => date("m/d/Y", strtotime($recurringData->created_at))
+            ];
+        }
+
+        foreach($creditMemos as $creditMemo)
+        {
+            $recurringData = $this->accounting_recurring_transactions_model->get_by_type_and_transaction_id('credit memo', $creditMemo->id);
+
+            $previous = !is_null($recurringData->previous_date) && $recurringData->previous_date !== '' ? date("m/d/Y", strtotime($recurringData->previous_date)) : null;
+            $next = date("m/d/Y", strtotime($recurringData->next_date));
+
+            switch ($recurringData->recurring_interval) {
+                case 'daily' :
+                    $interval = 'Every Day';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Days";
+                    }
+                break;
+                case 'weekly' :
+                    $interval = 'Every Week';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Weeks";
+                    }
+                break;
+                case 'monthly' :
+                    $interval = 'Every Month';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Months";
+                    }
+                break;
+                case 'yearly' :
+                    $interval = 'Every Year';
+                break;
+                default :
+                    $interval = '';
+                    $previous = '';
+                    $next = '';
+                break;
+            }
+
+            $total = number_format($creditMemo->total_amount, 2, '.', ',');
+
+            $transactions[] = [
+                'id' => $creditMemo->id,
+                'recurring_id' => $recurringData->id,
+                'name' => $customerName,
+                'type' => ucfirst($recurringData->recurring_type),
+                'txn_type' => 'Credit Memo',
+                'interval' => $interval,
+                'previous_date' => $previous,
+                'next_date' => $recurringData->status === "2" ? "Paused" : $next,
+                'amount' => $total,
+                'po_number' => $creditMemo->po_number,
+                'sales_rep' => $creditMemo->sales_rep,
+                'date' => date("m/d/Y", strtotime($recurringData->created_at))
+            ];
+        }
+
+        foreach($salesReceipts as $salesReceipt)
+        {
+            $recurringData = $this->accounting_recurring_transactions_model->get_by_type_and_transaction_id('sales receipt', $salesReceipt->id);
+
+            $previous = !is_null($recurringData->previous_date) && $recurringData->previous_date !== '' ? date("m/d/Y", strtotime($recurringData->previous_date)) : null;
+            $next = date("m/d/Y", strtotime($recurringData->next_date));
+
+            switch ($recurringData->recurring_interval) {
+                case 'daily' :
+                    $interval = 'Every Day';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Days";
+                    }
+                break;
+                case 'weekly' :
+                    $interval = 'Every Week';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Weeks";
+                    }
+                break;
+                case 'monthly' :
+                    $interval = 'Every Month';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Months";
+                    }
+                break;
+                case 'yearly' :
+                    $interval = 'Every Year';
+                break;
+                default :
+                    $interval = '';
+                    $previous = '';
+                    $next = '';
+                break;
+            }
+
+            $total = number_format($salesReceipt->total_amount, 2, '.', ',');
+
+            $transactions[] = [
+                'id' => $salesReceipt->id,
+                'recurring_id' => $recurringData->id,
+                'name' => $customerName,
+                'type' => ucfirst($recurringData->recurring_type),
+                'txn_type' => 'Sales Receipt',
+                'interval' => $interval,
+                'previous_date' => $previous,
+                'next_date' => $recurringData->status === "2" ? "Paused" : $next,
+                'amount' => $total,
+                'po_number' => $salesReceipt->po_number,
+                'sales_rep' => $salesReceipt->sales_rep,
+                'date' => date("m/d/Y", strtotime($recurringData->created_at))
+            ];
+        }
+
+        foreach($refundReceipts as $refundReceipt)
+        {
+            $recurringData = $this->accounting_recurring_transactions_model->get_by_type_and_transaction_id('refund', $refundReceipt->id);
+
+            $previous = !is_null($recurringData->previous_date) && $recurringData->previous_date !== '' ? date("m/d/Y", strtotime($recurringData->previous_date)) : null;
+            $next = date("m/d/Y", strtotime($recurringData->next_date));
+
+            switch ($recurringData->recurring_interval) {
+                case 'daily' :
+                    $interval = 'Every Day';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Days";
+                    }
+                break;
+                case 'weekly' :
+                    $interval = 'Every Week';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Weeks";
+                    }
+                break;
+                case 'monthly' :
+                    $interval = 'Every Month';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Months";
+                    }
+                break;
+                case 'yearly' :
+                    $interval = 'Every Year';
+                break;
+                default :
+                    $interval = '';
+                    $previous = '';
+                    $next = '';
+                break;
+            }
+
+            $total = number_format($refundReceipt->total_amount, 2, '.', ',');
+
+            $transactions[] = [
+                'id' => $refundReceipt->id,
+                'recurring_id' => $recurringData->id,
+                'name' => $customerName,
+                'type' => ucfirst($recurringData->recurring_type),
+                'txn_type' => 'Refund',
+                'interval' => $interval,
+                'previous_date' => $previous,
+                'next_date' => $recurringData->status === "2" ? "Paused" : $next,
+                'amount' => $total,
+                'po_number' => $refundReceipt->po_number,
+                'sales_rep' => $refundReceipt->sales_rep,
+                'date' => date("m/d/Y", strtotime($recurringData->created_at))
+            ];
+        }
+
+        foreach($delayedCredits as $delayedCredit)
+        {
+            $recurringData = $this->accounting_recurring_transactions_model->get_by_type_and_transaction_id('npcredit', $delayedCredit->id);
+
+            $previous = !is_null($recurringData->previous_date) && $recurringData->previous_date !== '' ? date("m/d/Y", strtotime($recurringData->previous_date)) : null;
+            $next = date("m/d/Y", strtotime($recurringData->next_date));
+
+            switch ($recurringData->recurring_interval) {
+                case 'daily' :
+                    $interval = 'Every Day';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Days";
+                    }
+                break;
+                case 'weekly' :
+                    $interval = 'Every Week';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Weeks";
+                    }
+                break;
+                case 'monthly' :
+                    $interval = 'Every Month';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Months";
+                    }
+                break;
+                case 'yearly' :
+                    $interval = 'Every Year';
+                break;
+                default :
+                    $interval = '';
+                    $previous = '';
+                    $next = '';
+                break;
+            }
+
+            $total = number_format($delayedCredit->total_amount, 2, '.', ',');
+
+            $transactions[] = [
+                'id' => $delayedCredit->id,
+                'recurring_id' => $recurringData->id,
+                'name' => $customerName,
+                'type' => ucfirst($recurringData->recurring_type),
+                'txn_type' => 'Credit',
+                'interval' => $interval,
+                'previous_date' => $previous,
+                'next_date' => $recurringData->status === "2" ? "Paused" : $next,
+                'amount' => $total,
+                'po_number' => '',
+                'sales_rep' => '',
+                'date' => date("m/d/Y", strtotime($recurringData->created_at))
+            ];
+        }
+
+        foreach($delayedCharges as $delayedCharge)
+        {
+            $recurringData = $this->accounting_recurring_transactions_model->get_by_type_and_transaction_id('npcharge', $delayedCharge->id);
+
+            $previous = !is_null($recurringData->previous_date) && $recurringData->previous_date !== '' ? date("m/d/Y", strtotime($recurringData->previous_date)) : null;
+            $next = date("m/d/Y", strtotime($recurringData->next_date));
+
+            switch ($recurringData->recurring_interval) {
+                case 'daily' :
+                    $interval = 'Every Day';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Days";
+                    }
+                break;
+                case 'weekly' :
+                    $interval = 'Every Week';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Weeks";
+                    }
+                break;
+                case 'monthly' :
+                    $interval = 'Every Month';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Months";
+                    }
+                break;
+                case 'yearly' :
+                    $interval = 'Every Year';
+                break;
+                default :
+                    $interval = '';
+                    $previous = '';
+                    $next = '';
+                break;
+            }
+
+            $total = number_format($delayedCharge->total_amount, 2, '.', ',');
+
+            $transactions[] = [
+                'id' => $delayedCharge->id,
+                'recurring_id' => $recurringData->id,
+                'name' => $customerName,
+                'type' => ucfirst($recurringData->recurring_type),
+                'txn_type' => 'Charge',
+                'interval' => $interval,
+                'previous_date' => $previous,
+                'next_date' => $recurringData->status === "2" ? "Paused" : $next,
+                'amount' => $total,
+                'po_number' => '',
+                'sales_rep' => '',
+                'date' => date("m/d/Y", strtotime($recurringData->created_at))
             ];
         }
 

@@ -90,4 +90,67 @@ class Accounting_recurring_transactions_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_customer_recurring_invoices($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('is_recurring', 1);
+        $this->db->where('view_flag', 0);
+        $this->db->where('voided', 0);
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
+    public function get_customer_recurring_credit_memos($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('status', 1);
+        $this->db->where('recurring', 1);
+        $query = $this->db->get('accounting_credit_memo');
+        return $query->result();
+    }
+
+    public function get_customer_recurring_sales_receipt($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('status', 1);
+        $this->db->where('recurring', 1);
+        $query = $this->db->get('accounting_sales_receipt');
+        return $query->result();
+    }
+
+    public function get_customer_recurring_refund_receipt($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('status', 1);
+        $this->db->where('recurring', 1);
+        $query = $this->db->get('accounting_refund_receipt');
+        return $query->result();
+    }
+
+    public function get_customer_recurring_delayed_credit($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('status', 1);
+        $this->db->where('recurring', 1);
+        $query = $this->db->get('accounting_delayed_credit');
+        return $query->result();
+    }
+
+    public function get_customer_recurring_delayed_charge($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('status', 1);
+        $this->db->where('recurring', 1);
+        $query = $this->db->get('accounting_delayed_charge');
+        return $query->result();
+    }
+
+    public function get_by_type_and_transaction_id($txnType, $txnId)
+    {
+        $this->db->where('txn_type', $txnType);
+        $this->db->where('txn_id', $txnId);
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
 }

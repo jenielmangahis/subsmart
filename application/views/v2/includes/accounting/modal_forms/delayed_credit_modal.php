@@ -400,21 +400,8 @@
 
                 <div class="modal-footer">
                     <div class="row w-100">
-                        <div class="col-12 col-md-4 order-md-last text-center text-md-end">
-                            <!-- Split dropup button -->
-                            <div class="btn-group float-md-end" role="group">
-                                <button type="button" class="nsm-button success" onclick="saveAndCloseForm(event)">
-                                    Save and close
-                                </button>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-fw bx-chevron-up text-white"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-12 col-md-4">
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
                         </div>
                         <div class="col-md-4 <?=!isset($credit) ? 'd-flex' : ''?>">
                             <?php if(!isset($credit)) : ?>
@@ -438,8 +425,21 @@
                             </div>
                             <?php endif; ?>
                         </div>
-                        <div class="col-12 col-md-4 order-md-first text-center text-md-start">
-                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                        <div class="col-12 col-md-4">
+                            <!-- Split dropup button -->
+                            <div class="btn-group float-md-end" role="group">
+                                <button type="button" class="nsm-button success" onclick="saveAndCloseForm(event)">
+                                    Save and close
+                                </button>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-fw bx-chevron-up text-white"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

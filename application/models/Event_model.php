@@ -233,6 +233,38 @@ class Event_model extends MY_Model
         }
     }
 
+    public function getUnpaidInvoices($limit = 5)
+    {
+        $company_id = logged('company_id');
+        $this->db->from('invoices');
+        $this->db->select('
+            invoices.id,
+            invoices.invoice_number,
+            invoices.due_date,
+            invoices.status,
+            acs_profile.email AS customer_email,
+            acs_profile.first_name, 
+            acs_profile.last_name,
+            acs_profile.fk_user_id as user_id,
+            invoices.grand_total,
+            invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance
+        ');
+        $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->where('invoices.grand_total >', 0);
+        $this->db->where_in('invoices.status', ['Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+        $this->db->group_by('invoices.id');
+        $this->db->order_by('balance', 'DESC');
+        $this->db->limit($limit);
+        $query = $this->db->get();
+        $results = $query->result();
+
+        return array_filter($results, function($result) {
+            return $result->balance > 0;
+        });
+    }
+
     public function getTodayStats()
     {
         $company_id = logged('company_id');

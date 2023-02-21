@@ -19,7 +19,7 @@
                         <?php elseif ($company_work_order_used->work_order_template_id == '1') : ?>
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Work Order</button>
                         <?php elseif ($company_work_order_used->work_order_template_id == '2') : ?>
-                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addsolarworkorder') ?>'">New Work Order</button>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addSolarWorkorder') ?>'">New Work Order</button>
                         <?php else : ?>
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Work Order</button>
                         <?php endif; ?>
@@ -33,12 +33,62 @@
                     <?php elseif ($company_id == '31') : ?>
                         <div class="col-12">
                             <label class="content-subtitle d-block mb-2">Create new Solar work order</label>
-                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addsolarworkorder') ?>'">Alternate Solar Form Here</button>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addSolarWorkorder') ?>'">Alternate Solar Form Here</button>
                         </div>
                     <?php endif; ?>
                     <div class="col-12">
                         <label class="content-subtitle d-block mb-2">Existing work order</label>
                         <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/NewworkOrder?type=2') ?>'">Existing</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="new_workorder_modal_accounting" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="new_workorder_modal_label">New Work Order</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row text-center gy-3">
+                    <div class="col-12">
+                        <label class="content-title">What type of work order you want to create</label>
+                    </div>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Create new work order</label>
+                        <?php if (empty($company_work_order_used->work_order_template_id)) : ?>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/NewworkOrder') ?>'">New Work Order</button>
+                        <?php elseif ($company_work_order_used->work_order_template_id == '0') : ?>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/NewworkOrder') ?>'">New Work Order</button>
+                        <?php elseif ($company_work_order_used->work_order_template_id == '1') : ?>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/workorderInstallation') ?>'">New Work Order</button>
+                        <?php elseif ($company_work_order_used->work_order_template_id == '2') : ?>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/addSolarWorkorder') ?>'">New Work Order</button>
+                        <?php else : ?>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/workorderInstallation') ?>'">New Work Order</button>
+                        <?php endif; ?>
+                    </div>
+                    <?php $company_id = logged('company_id');
+                    if ($company_id == '58') : ?>
+                        <div class="col-12">
+                            <label class="content-subtitle d-block mb-2">Create new System Agreement work order</label>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/workorderInstallation') ?>'">New Alternate Workorder</button>
+                        </div>
+                    <?php elseif ($company_id == '31') : ?>
+                        <div class="col-12">
+                            <label class="content-subtitle d-block mb-2">Create new Solar work order</label>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/addSolarWorkorder') ?>'">Alternate Solar Form Here</button>
+                        </div>
+                    <?php endif; ?>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Existing work order</label>
+                        <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('accounting/NewworkOrder?type=2') ?>'">Existing</button>
                     </div>
                 </div>
             </div>
