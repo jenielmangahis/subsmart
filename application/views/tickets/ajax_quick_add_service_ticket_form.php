@@ -20,7 +20,7 @@
                         <?php } ?>
                     </select>
                     <label for="city" class="mt-2"><b>Business Name</b></label>
-                    <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" required="" />
+                    <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" />
                     <label for="job_name" class="mt-2"><b>Service description</b> (optional)</label>
                     <textarea class="form-control" name="service_description"></textarea>
                     <label for="city" class="mt-2">Service Tag</label><label style="float:right;margin-bottom:10px;"></label>
@@ -415,7 +415,7 @@ $(document).ready(function(){
         "ordering": false,
     });
 
-    $(".quick-add-service-ticket-item").on('click', function(){
+    $(document).on('click', '.quick-add-service-ticket-item', function(){
         var idd = this.id;
         var title = $(this).data('itemname');
         var price = $(this).data('price');
