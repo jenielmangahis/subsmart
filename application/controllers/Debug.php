@@ -817,7 +817,8 @@ class Debug extends MY_Controller {
 
     public function testSms()
     {
-        $to_number = '+8504638629';
+        //$to_number = '+8504638629';
+        $to_number = '+8506195914';
         $result = $this->sendSms($to_number, 'this is a test sms');
         echo "<pre>";
         print_r($result);
@@ -830,10 +831,14 @@ class Debug extends MY_Controller {
         $this->load->model('RingCentralAccounts_model');
 
         $cid  = logged('company_id');
+        $cid  = 2;
         $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
 
         $to_number = '8506195914';
-        $replies = ringCentralMessageReplies($ringCentral,$to_number);
+        //$to_number = '8503081341';
+        //$to_number = '8504780530';
+        $date_from = '2023-02-01';
+        $replies = ringCentralMessageReplies($ringCentral,$to_number,$date_from);
 
         echo "<pre>";
         print_r($replies);
@@ -955,9 +960,9 @@ class Debug extends MY_Controller {
     {
         $this->load->helper(array('plaid_helper'));
 
-        $client_id = '62cd17c4e7bf0f001347726e';
-        $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
-        $client_name = 'NsmarTrac';
+        $client_id = '630c41bbbc22bd0014dea7b4';
+        $client_secret = '8342cb37d9c5b7f1efc0385c1388cc';
+        $client_name = 'nSMART LLC';
         $client_user_id = 'user_good';
         $plaidToken = linkTokenCreate($client_id, $client_secret, $client_user_id, $client_name);
 
@@ -1440,9 +1445,10 @@ class Debug extends MY_Controller {
         $this->load->model('RingCentralAccounts_model');
 
         $cid = logged('company_id');
+        $cid = 2;
         $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
 
-        $date_from = '2022-04-03';
+        $date_from = '2021-04-03';
         $messages  = ringCentralAllMessages($ringCentral, $date_from);
 
         echo "<pre>";
@@ -1859,6 +1865,67 @@ class Debug extends MY_Controller {
 
         echo "Total Jobs :" . $total_jobs . "<br />";
         echo "Total Services :" . $total_services . "<br />";
+        exit;
+    }
+
+    public function generateHashId()
+    {   
+        $this->load->helper(array('url', 'hashids_helper'));
+        $id  = 42;
+        $eid = hashids_encrypt($id, '', 15);
+        echo $eid;
+    }
+
+    public function testJob()
+    {
+        $this->load->model('Jobs_model');
+        $job = $this->Jobs_model->get_specific_job(312);
+        echo "<pre>";
+        print_r($job);
+        exit;
+    }
+
+    public function fixMobile()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('General_model');
+
+        $customers = $this->AcsProfile_model->getAll();
+        $total_updated = 0;
+        $total_m = 0;
+        $total_h = 0;
+        foreach($customers as $c){
+            if (strpos($c->phone_h, 'Mobile') !== false) {
+                $collection = explode('Mobile:', $c->phone_h);
+                $data = array();
+                if( trim($collection[1]) != '' ){
+                    $phone_m = formatPhoneNumber($collection[1]);
+                    $phone_h = formatPhoneNumber($collection[0]);
+                    //$data['id'] = $c->prof_id;
+                    if( trim($phone_m) != '' && $c->phone_m == '' ){
+                        $data['phone_m'] = $phone_m;    
+                        $total_m++;
+                    }elseif( $c->phone_m == '' && trim($phone_h) != ''){
+                        $data['phone_m'] = $phone_h;  
+                        $total_m++;
+                    }
+
+                    if( trim($phone_h) != '' ){
+                        $data['phone_h'] = $phone_h;    
+                        $total_h++;
+                    }else{
+                        $data['phone_h'] = '';    
+                    }
+                    
+                    $this->General_model->update_with_key_field($data, $c->prof_id,'acs_profile','prof_id');
+                    $total_updated++;
+                }
+            }
+        }
+
+        echo "Total Updated : " . $total_updated . "<br />";
+        echo "Total Phone M : " . $total_m . "/" . "Total Phone H : " . $total_h;
+
         exit;
     }
 }
