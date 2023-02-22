@@ -1298,10 +1298,10 @@ class Tickets extends MY_Controller
             $is_valid = 0;
         }
 
-        if( $this->input->post('business_name') == '' ){
+        /*if( $this->input->post('business_name') == '' ){
             $msg = 'Please specify business name';
             $is_valid = 0;
-        }
+        }*/
 
         if( $this->input->post('customer_city') == '' || $this->input->post('service_location') == '' || $this->input->post('customer_state') == ''){
             $msg = 'Please specify location (city, state, service location)';

@@ -123,7 +123,7 @@
                                                 Transaction List
                                             </button>
                                             <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">
-                                                Vendor Details
+                                                Customer Details
                                             </button>
                                         </div>
                                     </nav>
@@ -177,7 +177,7 @@
                                                                     <?php if($type === 'unbilled-income') : ?>
                                                                     <label for="filter-as-of">Unbilled Income As Of</label>
                                                                     <div class="nsm-field-group calendar">
-                                                                        <input type="text" name="filter_as_of_date" id="filter-as-of" class="form-control nsm-field date" value="<?=date("m/d/Y")?>">
+                                                                        <input type="text" name="filter_as_of_date" id="filter-as-of" class="form-control nsm-field date" value="<?=str_replace('-', '/', $date)?>" data-applied="<?=str_replace('-', '/', $date)?>">
                                                                     </div>
                                                                     <?php else : ?>
                                                                     <label for="filter-date">Date</label>
@@ -279,7 +279,7 @@
                                                                 <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
                                                                 <label for="chk_status" class="form-check-label">Status</label>
                                                             </div> -->
-                                                            <?php if($type !== 'recurring-templates') : ?>
+                                                            <?php if($type !== 'recurring-templates' && $type !== 'unbilled-income') : ?>
                                                             <div class="form-check">
                                                                 <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
                                                                 <label for="chk_po_number" class="form-check-label">P.O. Number</label>
@@ -307,93 +307,117 @@
                                                         <?php foreach($headers as $header) : ?>
                                                         <?=$header?>
                                                         <?php endforeach; ?>
-                                                        <!-- <td data-name="Date">DATE</td>
-                                                        <td data-name="Type">TYPE</td>
-                                                        <td data-name="No.">NO.</td>
-                                                        <td data-name="Customer">CUSTOMER</td>
-                                                        <td data-name="Method">METHOD</td>
-                                                        <td data-name="Source">SOURCE</td>
-                                                        <td data-name="Memo">MEMO</td>
-                                                        <td data-name="Due date">DUE DATE</td>
-                                                        <td data-name="Aging">AGING</td>
-                                                        <td data-name="Balance">BALANCE</td>
-                                                        <td data-name="Total">TOTAL</td>
-                                                        <td data-name="Last Delivered">LAST DELIVERED</td>
-                                                        <td data-name="Email">EMAIL</td>
-                                                        <td class="table-icon text-center" data-name="Attachments">
-                                                            <i class='bx bx-paperclip'></i>
-                                                        </td>
-                                                        <td data-name="Status">STATUS</td>
-                                                        <td data-name="P.O. Number">P.O. NUMBER</td>
-                                                        <td data-name="Sales Rep">SALES REP</td> -->
                                                         <td data-name="Manage"></td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php if(count($transactions) > 0) : ?>
                                                         <?php foreach($transactions as $transaction) : ?>
-                                                        <?php if($type !== 'recurring-templates') : ?>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="table-row-icon table-checkbox">
-                                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
-                                                                </div>
-                                                            </td>
-                                                            <td><?=$transaction['date']?></td>
-                                                            <td><?=$transaction['type']?></td>
-                                                            <td><?=$transaction['no']?></td>
-                                                            <td><?=$transaction['customer']?></td>
-                                                            <td><?=$transaction['method']?></td>
-                                                            <td><?=$transaction['source']?></td>
-                                                            <td><?=$transaction['memo']?></td>
-                                                            <td><?=$transaction['due_date']?></td>
-                                                            <td><?=$transaction['aging']?></td>
-                                                            <td><?=$transaction['balance']?></td>
-                                                            <td><?=$transaction['total']?></td>
-                                                            <td><?=$transaction['last_delivered']?></td>
-                                                            <td><?=$transaction['email']?></td>
-                                                            <td><?=$transaction['attachments']?></td>
-                                                            <td><?=$transaction['status']?></td>
-                                                            <td><?=$transaction['po_number']?></td>
-                                                            <td><?=$transaction['sales_rep']?></td>
-                                                            <td><?=$transaction['manage']?></td>
-                                                        </tr>
-                                                        <?php else : ?>
-                                                        <tr data-recurring="<?=$transaction['recurring_id']?>">
-                                                            <td>
-                                                                <div class="table-row-icon table-checkbox">
-                                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
-                                                                </div>
-                                                            </td>
-                                                            <td><?=$transaction['name']?></td>
-                                                            <td><?=$transaction['type']?></td>
-                                                            <td><?=$transaction['txn_type']?></td>
-                                                            <td><?=$transaction['interval']?></td>
-                                                            <td><?=$transaction['previous_date']?></td>
-                                                            <td><?=$transaction['next_date']?></td>
-                                                            <td><?=$transaction['amount']?></td>
-                                                            <td><?=$transaction['po_number']?></td>
-                                                            <td><?=$transaction['sales_rep']?></td>
-                                                            <td>
-                                                                <div class='dropdown table-management'>
-                                                                    <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
-                                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                                    </a>
-                                                                    <ul class='dropdown-menu dropdown-menu-end'>
-                                                                        <li>
-                                                                            <a class="dropdown-item edit-recurring-transaction" href="#">Edit</a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="dropdown-item use-recurring-transaction" href="#">Use</a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="dropdown-item delete-recurring-transaction" href="#">Delete</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <?php endif; ?>
+                                                        <?php switch($type) {
+                                                            case 'recurring-templates' :
+                                                                echo '<tr data-recurring="'.$transaction['recurring_id'].'">
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['name'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['txn_type'].'</td>
+                                                                    <td>'.$transaction['interval'].'</td>
+                                                                    <td>'.$transaction['previous_date'].'</td>
+                                                                    <td>'.$transaction['next_date'].'</td>
+                                                                    <td>'.$transaction['amount'].'</td>
+                                                                    <td>'.$transaction['po_number'].'</td>
+                                                                    <td>'.$transaction['sales_rep'].'</td>
+                                                                    <td>
+                                                                        <div class="dropdown table-management">
+                                                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                                                                            </a>
+                                                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                                                <li>
+                                                                                    <a class="dropdown-item edit-recurring-transaction" href="#">Edit</a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a class="dropdown-item use-recurring-transaction" href="#">Use</a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a class="dropdown-item delete-recurring-transaction" href="#">Delete</a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>';
+                                                            break;
+                                                            case 'unbilled-income' :
+                                                                switch($transaction['type']) {
+                                                                    case 'Charge' :
+                                                                        $tranType = 'delayed-charge';
+                                                                    break;
+                                                                    case 'Credit' :
+                                                                        $tranType = 'delayed-credit';
+                                                                    break;
+                                                                }
+                                                                echo '<tr>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['date'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['no'].'</td>
+                                                                    <td>'.$transaction['customer'].'</td>
+                                                                    <td>'.$transaction['memo'].'</td>
+                                                                    <td>'.$transaction['total'].'</td>
+                                                                    <td>'.$transaction['attachments'].'</td>
+                                                                    <td>'.$transaction['status'].'</td>
+                                                                    <td>
+                                                                        <div class="dropdown table-management">
+                                                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                                                                            </a>
+                                                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                                                <li>
+                                                                                    <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a class="dropdown-item view-edit-'.$tranType.'" href="#">View/Edit</a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>';
+                                                            break;
+                                                            default :
+                                                                echo '<tr>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['date'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['no'].'</td>
+                                                                    <td>'.$transaction['customer'].'</td>
+                                                                    <td>'.$transaction['method'].'</td>
+                                                                    <td>'.$transaction['source'].'</td>
+                                                                    <td>'.$transaction['memo'].'</td>
+                                                                    <td>'.$transaction['due_date'].'</td>
+                                                                    <td>'.$transaction['aging'].'</td>
+                                                                    <td>'.$transaction['balance'].'</td>
+                                                                    <td>'.$transaction['total'].'</td>
+                                                                    <td>'.$transaction['last_delivered'].'</td>
+                                                                    <td>'.$transaction['email'].'</td>
+                                                                    <td>'.$transaction['attachments'].'</td>
+                                                                    <td>'.$transaction['status'].'</td>
+                                                                    <td>'.$transaction['po_number'].'</td>
+                                                                    <td>'.$transaction['sales_rep'].'</td>
+                                                                    <td>'.$transaction['manage'].'</td>
+                                                                </tr>';
+                                                            break;
+                                                        } ?>
                                                         <?php endforeach; ?>
                                                     <?php else : ?>
                                                     <tr>

@@ -4968,3 +4968,22 @@ function formatPhoneNumber($phoneNumber) {
 
     return $phoneNumber;
 }
+
+if(!function_exists('formatInvoiceNumber')) {
+    function formatInvoiceNumber($number) {
+        $formatFunc = function ($prefix, $number) {
+            $numericPart = (int) str_replace($prefix, '', $number);
+            return 'INV-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
+        };
+    
+        if (strpos(strtoupper($number), 'INV-') === 0) {
+            return $formatFunc('INV-', $number);
+        }
+    
+        if (strpos(strtoupper($number), 'INV') === 0) {
+            return $formatFunc('INV', $number);
+        }
+    
+        return $number;
+    }
+}

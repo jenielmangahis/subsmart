@@ -28,7 +28,7 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function get_all_jobs()
+    public function get_all_jobs($userId = null, $leaderBoardType = null)
     {
         $cid=logged('company_id');
         $this->db->from($this->table);
@@ -38,6 +38,24 @@ class Jobs_model extends MY_Model
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
         $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
         $this->db->where("jobs.company_id", $cid);
+
+        if (in_array($leaderBoardType, ['sales', 'tech'])) {
+            if (is_numeric($userId)) {
+                if ($leaderBoardType === 'sales') {
+                    $this->db->where('jobs.employee_id', $userId);
+                } else {
+                    $this->db
+                        ->group_start()
+                        ->where('jobs.employee2_id', $userId)
+                        ->or_where('jobs.employee3_id', $userId)
+                        ->or_where('jobs.employee4_id', $userId)
+                        ->or_where('jobs.employee5_id', $userId)
+                        ->or_where('jobs.employee6_id', $userId)
+                        ->group_end();
+                }
+            }
+        }
+
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();
@@ -46,7 +64,7 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function get_all_jobs_by_tag($tag_id)
+    public function get_all_jobs_by_tag($tag_id, $userId = null, $leaderBoardType = null)
     {
         $cid=logged('company_id');
         $this->db->from($this->table);
@@ -56,6 +74,24 @@ class Jobs_model extends MY_Model
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
         $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
         $this->db->where("jobs.company_id", $cid);
+
+        if (in_array($leaderBoardType, ['sales', 'tech'])) {
+            if (is_numeric($userId)) {
+                if ($leaderBoardType === 'sales') {
+                    $this->db->where('jobs.employee_id', $userId);
+                } else {
+                    $this->db
+                        ->group_start()
+                        ->where('jobs.employee2_id', $userId)
+                        ->or_where('jobs.employee3_id', $userId)
+                        ->or_where('jobs.employee4_id', $userId)
+                        ->or_where('jobs.employee5_id', $userId)
+                        ->or_where('jobs.employee6_id', $userId)
+                        ->group_end();
+                }
+            }
+        }
+
         $this->db->where("jobs.tags", $tag_id);
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();

@@ -28,8 +28,39 @@ endif;
                     <?php 
                         $invoiceAvatar = userProfilePicture($invoice->user_id);
                         $invoiceInitial = getLoggedNameInitials($invoice->user_id);
+
+                        $statusBadgeColor = "";
+                        switch ($invoice->status) {
+                            case "Partially Paid":
+                                $statusBadgeColor = "secondary";
+                                break;
+                            case "Paid":
+                                $statusBadgeColor = "success";
+                                break;
+                            case "Due":
+                                $statusBadgeColor = "secondary";
+                                break;
+                            case "Overdue":
+                                $statusBadgeColor = "error";
+                                break;
+                            case "Submitted":
+                                $statusBadgeColor = "success";
+                                break;
+                            case "Approved":
+                                $statusBadgeColor = "success";
+                                break;
+                            case "Declined":
+                                $statusBadgeColor = "error";
+                                break;
+                            case "Scheduled":
+                                $statusBadgeColor = "primary";
+                                break;
+                            default:
+                                $statusBadgeColor = "";
+                                break;
+                        }
                     ?>
-                    <div class="widget-item">
+                    <a class="widget-item" style="text-decoration: none; color: inherit; cursor: pointer;" target="_blank" href="/invoice/genview/<?= $invoice->id; ?>">
                         <?php if (is_null($invoiceAvatar)): ?>
                             <div class="nsm-profile"><span><?= $invoiceInitial; ?></span></div>
                         <?php else: ?>
@@ -38,7 +69,7 @@ endif;
 
                         <div class="content">
                             <div class="details">
-                                <span class="content-title"><?= $invoice->invoice_number; ?></span>
+                                <span class="content-title"><?= formatInvoiceNumber($invoice->invoice_number); ?></span>
                                 <span class="content-subtitle d-block"><?= $invoice->first_name . ' ' . $invoice->last_name; ?></span>
                             </div>
                             <div style="padding-top: 5px;">
@@ -48,7 +79,7 @@ endif;
                                 <span class="content-subtitle d-block">balance</span>
                             </div>
                             <div class="controls">
-                                <span class="nsm-badge success">
+                                <span class="nsm-badge <?= $statusBadgeColor; ?>">
                                     <?= $invoice->status; ?>
                                 </span>
                                 <span class="content-subtitle d-block">
@@ -56,7 +87,7 @@ endif;
                                 </span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 <?php endforeach; ?>
             <?php else: ?>
                 <div class="nsm-empty">

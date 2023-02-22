@@ -19,7 +19,7 @@
                             <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                         <?php } ?>
                     </select>
-                    <label for="city" class="mt-2"><b>Business Name</b></label>
+                    <label for="city" class="mt-2"><b>Business Name</b> (optional)</label>
                     <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" />
                     <label for="job_name" class="mt-2"><b>Service description</b> (optional)</label>
                     <textarea class="form-control" name="service_description"></textarea>

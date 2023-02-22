@@ -484,101 +484,103 @@ class Customers extends MY_Controller {
         }
 
         if(!empty(get('date'))) {
-            switch (get('date')) {
-                case 'today':
-                    $filters['start-date'] = date("Y-m-d");
-                    $filters['end-date'] = date("Y-m-d");
-                break;
-                case 'yesterday':
-                    $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
-                    $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
-                break;
-                case 'this-week':
-                    $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
-                    $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
-                break;
-                case 'this-month':
-                    $filters['start-date'] = date("Y-m-01");
-                    $filters['end-date'] = date("Y-m-t");
-                break;
-                case 'this-quarter':
-                    $quarters = [
-                        1 => [
-                            'start' => date("01/01/Y"),
-                            'end' => date("03/t/Y")
-                        ],
-                        2 => [
-                            'start' => date("04/01/Y"),
-                            'end' => date("06/t/Y")
-                        ],
-                        3 => [
-                            'start' => date("07/01/Y"),
-                            'end' => date("09/t/Y")
-                        ],
-                        4 => [
-                            'start' => date("10/01/Y"),
-                            'end' => date("12/t/Y")
-                        ]
-                    ];
-                    $month = date('n');
-                    $quarter = ceil($month / 3);
-
-                    $filters['start-date'] = $quarters[$quarter]['start'];
-                    $filters['end-date'] = $quarters[$quarter]['end'];
-                break;
-                case 'this-year':
-                    $filters['start-date'] = date("Y-01-01");
-                    $filters['end-date'] = date("Y-12-t");
-                break;
-                case 'last-week':
-                    $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
-                    $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
-                break;
-                case 'last-month':
-                    $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
-                    $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
-                break;
-                case 'last-quarter':
-                    $quarters = [
-                        1 => [
-                            'start' => date("01/01/Y"),
-                            'end' => date("03/t/Y")
-                        ],
-                        2 => [
-                            'start' => date("04/01/Y"),
-                            'end' => date("06/t/Y")
-                        ],
-                        3 => [
-                            'start' => date("07/01/Y"),
-                            'end' => date("09/t/Y")
-                        ],
-                        4 => [
-                            'start' => date("10/01/Y"),
-                            'end' => date("12/t/Y")
-                        ]
-                    ];
-                    $month = date('n');
-                    $quarter = ceil($month / 3);
+            if($filters['type'] !== 'unbilled-income') {
+                switch (get('date')) {
+                    case 'today':
+                        $filters['start-date'] = date("Y-m-d");
+                        $filters['end-date'] = date("Y-m-d");
+                    break;
+                    case 'yesterday':
+                        $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                        $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                    break;
+                    case 'this-week':
+                        $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
+                        $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
+                    break;
+                    case 'this-month':
+                        $filters['start-date'] = date("Y-m-01");
+                        $filters['end-date'] = date("Y-m-t");
+                    break;
+                    case 'this-quarter':
+                        $quarters = [
+                            1 => [
+                                'start' => date("01/01/Y"),
+                                'end' => date("03/t/Y")
+                            ],
+                            2 => [
+                                'start' => date("04/01/Y"),
+                                'end' => date("06/t/Y")
+                            ],
+                            3 => [
+                                'start' => date("07/01/Y"),
+                                'end' => date("09/t/Y")
+                            ],
+                            4 => [
+                                'start' => date("10/01/Y"),
+                                'end' => date("12/t/Y")
+                            ]
+                        ];
+                        $month = date('n');
+                        $quarter = ceil($month / 3);
     
-                    $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
-                    $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
-                break;
-                case 'last-year':
-                    $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
-                    $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
-                break;
-                case 'last-365-days':
-                    $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
-                    $filters['end-date'] = date("Y-m-d");
-                break;
+                        $filters['start-date'] = $quarters[$quarter]['start'];
+                        $filters['end-date'] = $quarters[$quarter]['end'];
+                    break;
+                    case 'this-year':
+                        $filters['start-date'] = date("Y-01-01");
+                        $filters['end-date'] = date("Y-12-t");
+                    break;
+                    case 'last-week':
+                        $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                        $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+                    break;
+                    case 'last-month':
+                        $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                        $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+                    break;
+                    case 'last-quarter':
+                        $quarters = [
+                            1 => [
+                                'start' => date("01/01/Y"),
+                                'end' => date("03/t/Y")
+                            ],
+                            2 => [
+                                'start' => date("04/01/Y"),
+                                'end' => date("06/t/Y")
+                            ],
+                            3 => [
+                                'start' => date("07/01/Y"),
+                                'end' => date("09/t/Y")
+                            ],
+                            4 => [
+                                'start' => date("10/01/Y"),
+                                'end' => date("12/t/Y")
+                            ]
+                        ];
+                        $month = date('n');
+                        $quarter = ceil($month / 3);
+        
+                        $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                        $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+                    break;
+                    case 'last-year':
+                        $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                        $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+                    break;
+                    case 'last-365-days':
+                        $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                        $filters['end-date'] = date("Y-m-d");
+                    break;
+                }
+            } else {
+                $filters['start-date'] = date("Y-m-d", strtotime(str_replace('-', '/', get('date'))));
             }
 
             $this->page_data['date'] = get('date');
         }
 
         $get = $this->get_transactions($filters);
-
-
 
         $this->page_data['transactions'] = $get['transactions'];
         $this->page_data['headers'] = $get['headers'];
@@ -1295,6 +1297,7 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_delayed_charges($transactions, $filters);
                 $transactions = $this->get_estimates($transactions, $filters);
                 $transactions = $this->get_payments($transactions, $filters);
+                $transactions = $this->get_billable_expenses($transactions, $filters);
             break;
             case 'all-invoices' :
                 $transactions = $this->get_invoices($transactions, $filters);
@@ -1310,6 +1313,47 @@ class Customers extends MY_Controller {
             break;
             case 'credit-memos' :
                 $transactions = $this->get_credit_memos($transactions, $filters);
+            break;
+            case 'unbilled-income' :
+                $headers = [
+                    '<td data-name="Date">DATE</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="No.">NO.</td>',
+                    '<td data-name="Customer">CUSTOMER</td>',
+                    '<td data-name="Memo">MEMO</td>',
+                    '<td data-name="Total">TOTAL</td>',
+                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+                    '<td data-name="Status">STATUS</td>'
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>'
+                ];
+
+                $transactions = $this->get_unbilled_incomes($transactions, $filters);
             break;
             case 'money-received' :
                 $transactions = $this->get_payments($transactions, $filters);
@@ -1362,7 +1406,7 @@ class Customers extends MY_Controller {
             break;
         }
 
-        if(isset($filters['start-date'])) {
+        if(isset($filters['start-date']) && $filters['type'] !== 'unbilled-income') {
             $transactions = array_filter($transactions, function($v, $k) use ($filters) {
                 return strtotime($v['date']) >= strtotime($filters['start-date']) && strtotime($v['date']) <= strtotime($filters['end-date']);
             }, ARRAY_FILTER_USE_BOTH);
@@ -1869,7 +1913,163 @@ class Customers extends MY_Controller {
         return $transactions;
     }
 
-    public function get_recurring_templates($transactions, $filters = [])
+    private function get_unbilled_incomes($transactions, $filters = [])
+    {
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        $delayedCredits = $this->accounting_delayed_credit_model->get_customer_delayed_credits($filters['customer_id'], logged('company_id'));
+        $delayedCharges = $this->accounting_delayed_charge_model->get_customer_delayed_charges($filters['customer_id'], logged('company_id'));
+        $billableExpenses = $this->accounting_customers_model->get_customer_billable_expenses($filters['customer_id']);
+
+        foreach($delayedCredits as $credit)
+        {
+            if($credit->status === '1' && strtotime($credit->delayed_credit_date) <= strtotime($filters['start-date'])) {
+                $transactions[] = [
+                    'id' => $credit->id,
+                    'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
+                    'type' => 'Credit',
+                    'no' => $credit->ref_no,
+                    'customer' => $customerName,
+                    'memo' => $credit->memo,
+                    'total' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
+                    'attachments' => '',
+                    'status' => floatval($credit->remaining_balance) > 0 ? 'Open' : 'Closed'
+                ];
+            }
+        }
+
+        foreach($delayedCharges as $charge)
+        {
+            if($charge->status === '1' && strtotime($charge->delayed_charge_date) <= strtotime($filters['start-date'])) {
+                $transactions[] = [
+                    'id' => $charge->id,
+                    'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
+                    'type' => 'Charge',
+                    'no' => $charge->ref_no,
+                    'customer' => $customerName,
+                    'memo' => $charge->memo,
+                    'total' => number_format(floatval(str_replace(',', '', $charge->total_amount)), 2, '.', ','),
+                    'attachments' => '',
+                    'status' => floatval($charge->remaining_balance) > 0 ? 'Open' : 'Closed'
+                ];
+            }
+        }
+
+        foreach($billableExpenses as $billableExpense)
+        {
+            switch($billableExpense->transaction_type) {
+                case 'Expense' :
+                    $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($expense->payment_date));
+                break;
+                case 'Check' :
+                    $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($check->payment_date));
+                break;
+                case 'Bill' :
+                    $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($bill->bill_date));
+                break;
+                case 'Vendor Credit' :
+                    $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                break;
+                case 'Credit Card Credit' :
+                    $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                break;
+            }
+
+            $transactions[] = [
+                'id' => $billableExpense->id,
+                'date' => $date,
+                'type' => 'Billable Expense Charge',
+                'no' => '',
+                'customer' => $customerName,
+                'memo' => $billableExpense->description,
+                'total' => number_format(floatval(str_replace(',', '', $billableExpense->amount)), 2, '.', ','),
+                'attachments' => '',
+                'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open'
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_billable_expenses($transactions, $filters = [])
+    {
+        $billableExpenses = $this->accounting_customers_model->get_customer_billable_expenses($filters['customer_id']);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($billableExpenses as $billableExpense)
+        {
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="#">Create invoice</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            switch($billableExpense->transaction_type) {
+                case 'Expense' :
+                    $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($expense->payment_date));
+                break;
+                case 'Check' :
+                    $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($check->payment_date));
+                break;
+                case 'Bill' :
+                    $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($bill->bill_date));
+                break;
+                case 'Vendor Credit' :
+                    $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                break;
+                case 'Credit Card Credit' :
+                    $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                break;
+            }
+
+            $transactions[] = [
+                'id' => $billableExpense->id,
+                'date' => $date,
+                'type' => 'Billable Expense Charge',
+                'no' => '',
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $billableExpense->description,
+                'due_date' => $date,
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $billableExpense->amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($billableExpense->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_recurring_templates($transactions, $filters = [])
     {
         $invoices = $this->accounting_recurring_transactions_model->get_customer_recurring_invoices($filters['customer_id']);
         $creditMemos = $this->accounting_recurring_transactions_model->get_customer_recurring_credit_memos($filters['customer_id']);

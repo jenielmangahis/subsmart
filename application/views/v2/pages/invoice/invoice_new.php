@@ -194,7 +194,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?php echo $invoice->invoice_number ?></td>
+                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?></td>
                                     <td><?php echo get_format_date($invoice->date_issued) ?></td>
                                     <td><?php echo get_format_date($invoice->due_date) ?></td>
                                     <td>

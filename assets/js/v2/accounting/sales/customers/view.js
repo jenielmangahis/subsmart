@@ -732,13 +732,21 @@ $('#filter-type, #filter-date').select2({
 });
 
 $('#apply-button').on('click', function() {
+    const noDate = [
+        'unbilled-income',
+        'recently-paid',
+        'recurring-templates'
+    ];
+
     var filterType = $('#filter-type').val();
     var filterDate = $('#filter-date').val();
+    var filterAsOf = $('#filter-as-of').val();
 
     var url = `${base_url}accounting/customers/view/${customerId}?`;
 
     url += filterType !== 'all' ? `type=${filterType}&` : '';
-    url += filterDate !== 'all' ? `date=${filterDate}` : '';
+    url += noDate.includes(filterType) === false && filterDate !== 'all' ? `date=${filterDate}` : '';
+    url += filterType === 'unbilled-income' ? `date=${filterAsOf.replaceAll('/', '-')}` : '';
 
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 
