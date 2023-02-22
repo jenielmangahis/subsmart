@@ -7519,14 +7519,21 @@ $(function() {
                     $('#invoiceModal #billing-address').html(customerName.trim());
                     $('#invoiceModal #billing-address').append('\n');
                 }
-                var address = '';
-                address += customer.mail_add !== "" ? customer.mail_add : "";
-                address += customer.city !== "" ? '\n' + customer.city : "";
-                address += customer.state !== "" ? ', ' + customer.state : "";
-                address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
-                address += customer.country !== "" ? ' ' + customer.country : "";
+                var billingAdd = '';
+                billingAdd += customer.mail_add !== "" ? customer.mail_add : "";
+                billingAdd += customer.city !== "" ? '\n' + customer.city : "";
+                billingAdd += customer.state !== "" ? ', ' + customer.state : "";
+                billingAdd += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
+                billingAdd += customer.country !== "" ? ' ' + customer.country : "";
     
-                $('#invoiceModal #billing-address').append(address.trim());
+                $('#invoiceModal #billing-address').append(billingAdd.trim());
+
+                var jobLoc = '';
+                jobLoc += customer.mail_add !== "" ? customer.mail_add : "";
+                jobLoc += customer.city !== "" ? ' ' + customer.city : "";
+                jobLoc += customer.state !== "" ? ', ' + customer.state : "";
+                $('#invoiceModal #job-location').val(jobLoc.trim());
+
                 $('#invoiceModal #customer-email').val(customer.email);
             });
 
@@ -8794,6 +8801,12 @@ $(function() {
     $(document).on('change', '#standard-estimate-modal #customer, #options-estimate-modal #customer, #bundle-estimate-modal #customer', function() {
         $.get('/accounting/get-customer-details/' + $(this).val(), function(res) {
             var customer = JSON.parse(res);
+
+            var jobLoc = '';
+            jobLoc += customer.mail_add !== "" ? customer.mail_add : "";
+            jobLoc += customer.city !== "" ? ' ' + customer.city : "";
+            jobLoc += customer.state !== "" ? ', ' + customer.state : "";
+            $('#modal-form .modal #job-location').val(jobLoc.trim());
 
             $('#modal-form .modal #customer-email').val(customer.email);
             $('#modal-form .modal #customer-mobile').val(customer.phone_m);

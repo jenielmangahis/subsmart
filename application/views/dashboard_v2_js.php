@@ -127,14 +127,15 @@ $(document).ready(function() {
     };
 
     const dashboard_getLeaderboardHTMLItem = (leaderboard, nameSubTitle = "Sales Rep") => {
-        const {firstname = "", lastname = "", total_revenue,total_customers} = leaderboard;
+        const {firstname = "", lastname = "", total_revenue,total_customers,employee_id} = leaderboard;
         const fullName = `${firstname} ${lastname}`;
 
         const formatter = Intl.NumberFormat('en-US');
         const revenue = formatter.format(total_revenue || 0);
+        const leaderboardType = nameSubTitle === "Sales Rep" ? "sales" : "tech";
 
         return `
-        <div class="widget-item">
+        <a class="widget-item" style="text-decoration: none; color: inherit; cursor: pointer;" target="_blank" href="/job?user_id=${employee_id}&leader_board_type=${leaderboardType}">
             ${dashboard_getLeaderboardAvatar(leaderboard)}
             <div class="content">
                 <div class="details">
@@ -154,7 +155,7 @@ $(document).ready(function() {
                     <span class="content-subtitle d-block">customers</span>
                 </div>
             </div>
-        </div>
+        </a>
         `;
     }
 
@@ -223,7 +224,7 @@ $(document).ready(function() {
             }
 
             response.data.forEach(leaderboard => {
-                $('#tech_leaderboard').append(dashboard_getLeaderboardHTMLItem(leaderboard));
+                $('#tech_leaderboard').append(dashboard_getLeaderboardHTMLItem(leaderboard, "Tech Rep"));
             });
             return;
         }

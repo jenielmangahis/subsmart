@@ -45,10 +45,17 @@ class Widgets extends MY_Controller
     public function getV2OverdueInvoices()
     {
         $this->load->model('widgets_model');
-        $comp_id = getLoggedCompanyID();
 
-        $data['invoices'] = $this->widgets_model->getOverdueInvoices($comp_id);
+        $data['invoices'] = $this->widgets_model->getCurrentCompanyOverdueInvoices();
         $this->load->view('v2/widgets/accounting/overdue_invoices_details', $data);
+    }
+
+    public function apiGetOverdueInvoices()
+    {
+        $this->load->model('widgets_model');
+
+        $invoices = $this->widgets_model->getCurrentCompanyOverdueInvoices();
+        exit(json_encode(['data' => $invoices]));
     }
 
     public function getJobTags()

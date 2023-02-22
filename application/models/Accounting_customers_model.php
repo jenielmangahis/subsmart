@@ -298,6 +298,15 @@ class Accounting_customers_model extends MY_Model
         $query = $this->db->update_batch($this->table, $data, 'prof_id');
         return $query;
     }
+
+    public function get_customer_billable_expenses($customerId)
+    {
+        $this->db->where('transaction_type !=', 'Purchase Order');
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('billable', 1);
+        $query = $this->db->get('accounting_vendor_transaction_categories');
+        return $query->result();
+    }
 }
 
 

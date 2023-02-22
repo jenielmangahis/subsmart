@@ -29,11 +29,14 @@ class Job extends MY_Controller
     public function index()
     {
         $this->isAllowedModuleAccess(15);
+        $userId = get('user_id');
+        $leaderBoardType = get('leader_board_type');
+
         if( get('job_tag') ){
             $tag_id = get('job_tag');
-            $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id);
+            $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType);
         }else{
-            $jobs = $this->jobs_model->get_all_jobs();
+            $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
         }
         $this->page_data['jobs'] = $jobs;
         $this->page_data['title'] = 'Jobs';

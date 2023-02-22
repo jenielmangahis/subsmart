@@ -567,7 +567,7 @@ class Dashboard extends Widgets {
 
     function apiGetSalesLeaderBoard() {
         $companyId = logged('company_id');
-        $this->db->select('SUM(job_payments.amount) AS total_revenue,users.LName as lastname,users.FName as firstname, users.id as id, users.profile_img as avatar, COUNT(jobs.customer_id) as total_customers');
+        $this->db->select('users.id as employee_id,SUM(job_payments.amount) AS total_revenue,users.LName as lastname,users.FName as firstname, users.id as id, users.profile_img as avatar, COUNT(jobs.customer_id) as total_customers');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->where('jobs.company_id', $companyId);
@@ -659,7 +659,8 @@ class Dashboard extends Widgets {
                         $result[$employee['id']] = array_merge($employee, [
                             'total_revenue' => 0,
                             'total_customers' => 0,
-                            'avatar' => userProfileImage((int) $employee['id'])
+                            'avatar' => userProfileImage((int) $employee['id']),
+                            'employee_id' => $employee['id']
                         ]);
                     }
 
