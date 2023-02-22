@@ -325,6 +325,7 @@ class Cron_Api extends MYF_Controller {
                             'end_time' => $end_time
                         ];
 
+                        $techNames = array();
                         $attendees = array();
                         $assigned_employees = unserialize($ticket->technicians);
                         if( !empty($assigned_employees) ){
@@ -332,11 +333,16 @@ class Cron_Api extends MYF_Controller {
                                 $user = $this->Users_model->getUserByID($eid);
                                 if( $user ){
                                     $attendees[] = ['email' => $user->email];
+                                    $techNames[] = $user->FName;
                                 }
                             }
                         }
 
-                        $location = $ticket->service_location . ' ' . $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
+                        if( !empty($techNames) ){
+                            $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
+                        }
+
+                        $location = $ticket->service_location . ' ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
 
                         if( $ticket->job_description != '' ){
                             $job_description = $ticket->job_description;
@@ -350,10 +356,8 @@ class Cron_Api extends MYF_Controller {
                             $instructions = 'None';
                         }
 
-                        
-                        $notes = 'None';
-                        $description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
-                        $description .= "Phone Number : ".$ticket->phone_m."\n";                  
+                        //$description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
+                        $description .= "Phone Number : ".formatPhoneNumber($ticket->customer_phone)."\n";                  
                         $description .= "Service Location : " . $ticket->service_location . "\n";
                         $description .= "Job Description : ". $job_description ."\n";
                         $description .= "Instructions / Notes : ". $instructions ."\n";
@@ -442,8 +446,10 @@ class Cron_Api extends MYF_Controller {
 
                         $phone_m = $job->phone_m;
                         if( $job->phone_m == '' ){
-                            $phone_m = $job->phone_h;
-                        }  
+                            $phone_m = formatPhoneNumber($job->phone_h);
+                        }else{
+                            $phone_m = formatPhoneNumber($job->phone_m);
+                        }                        
 
                         //$description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                         //$description .= "Job Type : ".$job->job_type."\n";                
