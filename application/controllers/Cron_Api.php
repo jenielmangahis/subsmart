@@ -359,7 +359,7 @@ class Cron_Api extends MYF_Controller {
                         }
 
                         //$description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
-                        $description .= "Phone Number : ".formatPhoneNumber($ticket->customer_phone)."\n";                  
+                        $description = "Phone Number : ".formatPhoneNumber($ticket->customer_phone)."\n";                  
                         $description .= "Service Location : " . $ticket->service_location . "\n";
                         $description .= "Job Description : ". $job_description ."\n";
                         $description .= "Instructions / Notes : ". $instructions ."\n";
