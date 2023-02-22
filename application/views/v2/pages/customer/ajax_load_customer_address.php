@@ -26,11 +26,11 @@
 </label>
 <label class="content-title" style="cursor: pointer;margin-bottom: 4px;margin-top: 5px;">
     <span class="address-label" style="width:165px;"><i class='bx bx-mobile'></i> Mobile Number : </span>
-    <input type="text" style="display:inline-block;width: 20%;width:178px;" id="m-customer-mobile" class="nsm-field form-control" value="<?= $customer->phone_m != '' ? $customer->phone_m : '---'; ?>" />    
+    <input type="text" style="display:inline-block;width: 20%;width:178px;" id="m-customer-mobile" class="nsm-field form-control" value="<?= $customer->phone_m != '' ? formatPhoneNumber($customer->phone_m) : '---'; ?>" />    
 </label>
 <label class="content-title" style="cursor: pointer;margin-bottom: 4px;margin-top: 5px;">
     <span class="address-label" style="width:165px;"><i class="bx bxs-phone"></i> Phone Number : </span>
-    <input type="text" style="display:inline-block;width: 20%;width:178px;" id="m-customer-phone" class="nsm-field form-control" value="<?= $customer->phone_h != '' ? $customer->phone_h : '---'; ?>" />
+    <input type="text" style="display:inline-block;width: 20%;width:178px;" id="m-customer-phone" class="nsm-field form-control" value="<?= $customer->phone_h != '' ? formatPhoneNumber($customer->phone_h) : '---'; ?>" />
     <button type="button" class="nsm-button btn-update-customer-info" style="display:inline-block;background-color: #ffffff;margin:0px;">
         <i class='bx bxs-user-check' style="position: relative;top:2px;line-height: 0px;"></i> Update
     </button>

@@ -190,7 +190,7 @@ class Cron_Api extends MYF_Controller {
                         }else{
                             $calendar_type  = $this->GoogleCalendar_model->calendarTypeAppointment();
                             $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->customer_name;
-                            $location       = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
+                            $location       = $appointment->mail_add . ',  ' . $appointment->cust_city . ', ' . $appointment->cust_zip_code;
                         }
 
                         $start_time     = date("Y-m-d\TH:i:s", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time_from));
@@ -200,6 +200,7 @@ class Cron_Api extends MYF_Controller {
                             'end_time' => $end_time
                         ];
 
+                        $techNames = array();
                         $attendees = array();
                         $assigned_employees = json_decode($appointment->assigned_employee_ids);
                         if( !empty($assigned_employees) ){
@@ -207,8 +208,13 @@ class Cron_Api extends MYF_Controller {
                                 $user = $this->Users_model->getUserByID($eid);
                                 if( $user ){
                                     $attendees[] = ['email' => $user->email];
+                                    $techNames[] = $user->FName;
                                 }
                             }
+                        }
+
+                        if( !empty($techNames) ){
+                            $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
 
                         $appointment_eid = hashids_encrypt($appointment->id, '', 15);
@@ -242,7 +248,7 @@ class Cron_Api extends MYF_Controller {
 
                     $calendar_title = 'Schedule Off - ' . implode(", ", $tech_names);
                     $start_time     = date("Y-m-d", strtotime($technicianScheduleOff->leave_start_date));
-                    $end_time       = date("Y-m-d", strtotime($technicianScheduleOff->leave_end_date));
+                    $end_time       = date("Y-m-d", strtotime($technicianScheduleOff->leave_end_date .' +1 day'));
                     $event_time = [
                         'start_date' => $start_time,
                         'end_date' => $end_time
