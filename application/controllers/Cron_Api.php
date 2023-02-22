@@ -344,7 +344,7 @@ class Cron_Api extends MYF_Controller {
                             $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
 
-                        $location = $ticket->service_location . ' ' . $ticket->acs_city . ' ' . $ticket->acs_zip;
+                        $location = $ticket->service_location . ', ' . $ticket->acs_city . ', ' . $ticket->acs_zip;
 
                         if( $ticket->job_description != '' ){
                             $job_description = $ticket->job_description;
@@ -423,7 +423,7 @@ class Cron_Api extends MYF_Controller {
                             $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
 
-                        $location = $job->mail_add . ' ' . $job->cust_city . ' ' . $job->cust_zip_code;
+                        $location = $job->mail_add . ', ' . $job->cust_city . ', ' . $job->cust_zip_code;
 
                         if( $job->hash_id != '' ){
                             $job_eid = $job->hash_id;
