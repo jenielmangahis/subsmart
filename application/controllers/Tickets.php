@@ -1434,8 +1434,8 @@ class Tickets extends MY_Controller
                 'city' => $customer->city,
                 'state' => $customer->state,
                 'zip_code' => $customer->zip_code,
-                'phone_h' => $customer->phone_h,
-                'phone_m' => $customer->phone_m,
+                'phone_h' => formatPhoneNumber($customer->phone_h),
+                'phone_m' => formatPhoneNumber($customer->phone_m),
                 'business_name' => $customer->business_name
             ];    
         }else{

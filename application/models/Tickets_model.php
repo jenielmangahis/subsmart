@@ -273,7 +273,7 @@ class Tickets_model extends MY_Model
 
     public function get_tickets_by_id_and_company_id($id = 0, $company_id = 0)
     {
-        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name, users.FName, users.LName');
+        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name, acs_profile.phone_m, users.FName, users.LName');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'acs_profile.prof_id = tickets.customer_id', 'left');        
         $this->db->join('users', 'users.id = tickets.sales_rep', 'left');        

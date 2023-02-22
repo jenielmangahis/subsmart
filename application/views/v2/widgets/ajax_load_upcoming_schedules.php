@@ -332,7 +332,7 @@ $(function(){
 
     $('.quick-view-upcoming-schedule').on('click', function(){
         var appointment_type = $(this).attr('data-type');
-        var appointment_id   = $(this).attr('dat-id');
+        var appointment_id   = $(this).attr('data-id');
 
         $('#upcoming-schedule-view-more-details').attr('data-type', appointment_type);
         $('#upcoming-schedule-view-more-details').attr('data-id', appointment_id);

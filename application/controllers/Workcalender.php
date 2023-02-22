@@ -749,7 +749,7 @@ class Workcalender extends MY_Controller
         $technicianScheduleOff = $this->TechnicianDayOffSchedule_model->getAllByCompanyId($company_id);
         foreach( $technicianScheduleOff as $tc ){
             $start_date_time = date('Y-m-d 00:00:00', strtotime($tc->leave_start_date));             
-            $start_date_end  = date('Y-m-d 23:59:59', strtotime($tc->leave_end_date)); 
+            $start_date_end  = date('Y-m-d 23:59:59', strtotime($tc->leave_end_date . '+1 day')); 
             $backgroundColor = "#ff0000";
 
             $custom_html = '<div class="calendar-title-header">';
@@ -777,6 +777,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['start'] = $start_date_time;
             $resources_user_events[$inc]['end'] = $start_date_end;
             $resources_user_events[$inc]['starttime'] = $start_date_time;
+            $resources_user_events[$inc]['allDay'] = true;
             $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
 
             $inc++;

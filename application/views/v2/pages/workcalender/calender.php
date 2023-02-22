@@ -1208,12 +1208,11 @@
                     editable: true,
                     droppable: true
                 },
-                weekView: {
-                    
+                weekView: {                    
                     nowIndicator: true,
                     type: 'timeGridWeek',
                     buttonText: 'Week',
-                    allDaySlot: false, 
+                    allDaySlot: true, 
                     expandRows: true,
                     editable: true,
                     droppable: true,
