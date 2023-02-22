@@ -95,9 +95,9 @@ class GoogleCalendarApi
 			$curlPost['reminders'] = $reminders;
 		}
 
-		if($all_day == 1) {
-			$curlPost['start'] = array('date' => $event_time['event_date']);
-			$curlPost['end'] = array('date' => $event_time['event_date']);
+		if($all_day == 'FIXED-DATE') {
+			$curlPost['start'] = array('date' => $event_time['start_date']);
+			$curlPost['end'] = array('date' => $event_time['end_date']);			
 		}
 		else {
 			$curlPost['start'] = array('dateTime' => $event_time['start_time'], 'timeZone' => $event_timezone);

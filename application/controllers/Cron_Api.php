@@ -148,7 +148,8 @@ class Cron_Api extends MYF_Controller {
         $total_sync = 0;
         foreach($googleSync as $gs){                    
             $is_valid = false;
-            $err_msg  = '';            
+            $err_msg  = '';        
+            $all_day_event = 'FIXED-TIME';    
             switch ($gs->module_name) {
                 case 'appointment':     
                     $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->object_id, $gs->company_id);
@@ -240,11 +241,11 @@ class Cron_Api extends MYF_Controller {
                     }
 
                     $calendar_title = 'Schedule Off - ' . implode(", ", $tech_names);
-                    $start_time     = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_start_date));
-                    $end_time       = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_end_date));
+                    $start_time     = date("Y-m-d", strtotime($technicianScheduleOff->leave_start_date));
+                    $end_time       = date("Y-m-d", strtotime($technicianScheduleOff->leave_end_date));
                     $event_time = [
-                        'start_time' => $start_time,
-                        'end_time' => $end_time
+                        'start_date' => $start_time,
+                        'end_date' => $end_time
                     ];
 
                     $attendees = array();
@@ -266,6 +267,7 @@ class Cron_Api extends MYF_Controller {
                     $location  = '';
                     $description = $technicianScheduleOff->task_details;
                     
+                    $all_day_event = 'FIXED-DATE';
                     $is_valid = true;
                 }
                 break;
@@ -342,7 +344,7 @@ class Cron_Api extends MYF_Controller {
                             $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
 
-                        $location = $ticket->service_location . ' ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
+                        $location = $ticket->service_location . ' ' . $ticket->acs_city . ' ' . $ticket->acs_zip;
 
                         if( $ticket->job_description != '' ){
                             $job_description = $ticket->job_description;
@@ -421,7 +423,7 @@ class Cron_Api extends MYF_Controller {
                             $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
 
-                        $location = $job->mail_add . ' ' . $job->cust_state . ' ' . $job->cust_zip_code;
+                        $location = $job->mail_add . ' ' . $job->cust_city . ' ' . $job->cust_zip_code;
 
                         if( $job->hash_id != '' ){
                             $job_eid = $job->hash_id;
@@ -532,7 +534,7 @@ class Cron_Api extends MYF_Controller {
                         $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                         $googleCalendar = $this->GoogleCalendar_model->getByCompanyIdAndCalendarType($gs->company_id, $calendar_type);
                         if( $googleCalendar ){
-                          $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
+                          $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, $all_day_event, $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
                         }else{
                             $is_valid = false;
                         }
