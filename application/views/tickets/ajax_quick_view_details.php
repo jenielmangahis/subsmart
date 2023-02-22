@@ -64,7 +64,7 @@
                 </tr>                               
                 <tr>
                     <td align="right" style="width:47%;">Scheduled Date:</td>
-                    <td align="right"><?php echo $tickets->ticket_date; ?></td>
+                    <td align="right"><?php echo date('m/d/Y', strtotime($tickets->ticket_date)); ?></td>
                 </tr>
                 <tr>
                     <td align="right">Scheduled Time:</td>
