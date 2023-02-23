@@ -685,7 +685,8 @@
                                         <div class="col-sm-12">
                                             <p>Notes</p>
                                             <?php 
-                                                $message = "Thank you for your business, Please call ".$company_info->business_name." at ".$company_info->business_phone." for quality customer service";
+                                                //$message = "Thank you for your business, Please call ".$company_info->business_name." at ".$company_info->business_phone." for quality customer service";
+                                                $message = '';
                                             ?>
                                             <textarea name="job_notes" class="form-control" required=""><?= $message; ?></textarea>
                                             <hr/>
@@ -919,7 +920,8 @@ $(function() {
           }
 
           var $container = $(
-            '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+            //'<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+            '<div>'+repo.first_name + ' ' + repo.last_name + '</div>'
           );
 
           return $container;

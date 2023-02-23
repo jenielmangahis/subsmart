@@ -52,8 +52,9 @@
     ?>
     <div class="col-12 col-md-12">
         <label class="content-subtitle fw-bold d-block mb-2" style="font-size:20px;">
-            <?= $appointment->appointment_number; ?>
+            <?= $appointment->appointment_number; ?>            
             <?= $text_tags != '' ? ' - ' . $text_tags : ''; ?>        
+            <br /><small style="    font-size: 12px;margin-bottom: 13px;display: block;margin-top: 5px;">Appointment Type : <?= $appointment->appointment_type; ?></small>
         </label>
     </div>
     <?php if( $appointment->appointment_type_id == 4 ){ ?>
@@ -104,7 +105,7 @@
                 <?= date("l, F d, Y", strtotime($appointment->appointment_date)); ?> - <?= date("g:i A", strtotime($appointment->appointment_time_from)); ?> to <?= date("g:i A", strtotime($appointment->appointment_time_to)); ?></label>
             <?php if( $appointment->appointment_type_id != 4 ) { ?> 
                 <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
-                    <span class="fw-bold"><i class='bx bx-phone-call'></i></span>
+                    <span class="fw-bold"><i class='bx bx-info-circle'></i></span>
                     <?= $appointment->priority; ?>
                 </label>
             <?php } ?>        
@@ -116,7 +117,7 @@
                     ---
                 <?php } ?>
             </label>
-            <?php if( $appointment->appointment_type_id != 4 ){ ?>
+            <?php if( $appointment->appointment_type_id != 4 && $appointment->appointment_type_id != 14 ){ ?>
             <label class="content-subtitle d-block mb-2 font-15">
                 <span class="fw-bold"><i class='bx bx-barcode' ></i> </span> 
                 <?= $appointment->invoice_number . ' - $' . number_format($appointment->cost,2); ?>

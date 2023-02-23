@@ -148,7 +148,8 @@ class Cron_Api extends MYF_Controller {
         $total_sync = 0;
         foreach($googleSync as $gs){                    
             $is_valid = false;
-            $err_msg  = '';            
+            $err_msg  = '';        
+            $all_day_event = 'FIXED-TIME';    
             switch ($gs->module_name) {
                 case 'appointment':     
                     $appointment = $this->Appointment_model->getByIdAndCompanyId($gs->object_id, $gs->company_id);
@@ -189,7 +190,7 @@ class Cron_Api extends MYF_Controller {
                         }else{
                             $calendar_type  = $this->GoogleCalendar_model->calendarTypeAppointment();
                             $calendar_title = $appointment->appointment_number . $tags . ' : ' . $appointment->customer_name;
-                            $location       = $appointment->mail_add . ' ' . $appointment->cust_city . ', ' . $appointment->cust_state . ' ' . $appointment->cust_zip_code;
+                            $location       = $appointment->mail_add . ',  ' . $appointment->cust_city . ', ' . $appointment->cust_zip_code;
                         }
 
                         $start_time     = date("Y-m-d\TH:i:s", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time_from));
@@ -199,6 +200,7 @@ class Cron_Api extends MYF_Controller {
                             'end_time' => $end_time
                         ];
 
+                        $techNames = array();
                         $attendees = array();
                         $assigned_employees = json_decode($appointment->assigned_employee_ids);
                         if( !empty($assigned_employees) ){
@@ -206,8 +208,13 @@ class Cron_Api extends MYF_Controller {
                                 $user = $this->Users_model->getUserByID($eid);
                                 if( $user ){
                                     $attendees[] = ['email' => $user->email];
+                                    $techNames[] = $user->FName;
                                 }
                             }
+                        }
+
+                        if( !empty($techNames) ){
+                            $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
 
                         $appointment_eid = hashids_encrypt($appointment->id, '', 15);
@@ -240,11 +247,11 @@ class Cron_Api extends MYF_Controller {
                     }
 
                     $calendar_title = 'Schedule Off - ' . implode(", ", $tech_names);
-                    $start_time     = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_start_date));
-                    $end_time       = date("Y-m-d\TH:i:s", strtotime($technicianScheduleOff->leave_end_date));
+                    $start_time     = date("Y-m-d", strtotime($technicianScheduleOff->leave_start_date));
+                    $end_time       = date("Y-m-d", strtotime($technicianScheduleOff->leave_end_date .' +1 day'));
                     $event_time = [
-                        'start_time' => $start_time,
-                        'end_time' => $end_time
+                        'start_date' => $start_time,
+                        'end_date' => $end_time
                     ];
 
                     $attendees = array();
@@ -266,6 +273,7 @@ class Cron_Api extends MYF_Controller {
                     $location  = '';
                     $description = $technicianScheduleOff->task_details;
                     
+                    $all_day_event = 'FIXED-DATE';
                     $is_valid = true;
                 }
                 break;
@@ -325,6 +333,7 @@ class Cron_Api extends MYF_Controller {
                             'end_time' => $end_time
                         ];
 
+                        $techNames = array();
                         $attendees = array();
                         $assigned_employees = unserialize($ticket->technicians);
                         if( !empty($assigned_employees) ){
@@ -332,11 +341,16 @@ class Cron_Api extends MYF_Controller {
                                 $user = $this->Users_model->getUserByID($eid);
                                 if( $user ){
                                     $attendees[] = ['email' => $user->email];
+                                    $techNames[] = $user->FName;
                                 }
                             }
                         }
 
-                        $location = $ticket->service_location . ' ' . $ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip;
+                        if( !empty($techNames) ){
+                            $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
+                        }
+
+                        $location = $ticket->service_location . ',  ' . $ticket->acs_city . ', ' . $ticket->acs_zip;
 
                         if( $ticket->job_description != '' ){
                             $job_description = $ticket->job_description;
@@ -350,10 +364,8 @@ class Cron_Api extends MYF_Controller {
                             $instructions = 'None';
                         }
 
-                        
-                        $notes = 'None';
-                        $description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
-                        $description .= "Phone Number : ".$ticket->phone_m."\n";                  
+                        //$description  = "Customer Name : ".$ticket->first_name . ' ' . $ticket->last_name."\n";
+                        $description = "Phone Number : ".formatPhoneNumber($ticket->customer_phone)."\n";                  
                         $description .= "Service Location : " . $ticket->service_location . "\n";
                         $description .= "Job Description : ". $job_description ."\n";
                         $description .= "Instructions / Notes : ". $instructions ."\n";
@@ -417,7 +429,7 @@ class Cron_Api extends MYF_Controller {
                             $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
                         }
 
-                        $location = $job->mail_add . ' ' . $job->cust_state . ' ' . $job->cust_zip_code;
+                        $location = $job->mail_add . ',  ' . $job->cust_city . ', ' . $job->cust_zip_code;
 
                         if( $job->hash_id != '' ){
                             $job_eid = $job->hash_id;
@@ -442,8 +454,10 @@ class Cron_Api extends MYF_Controller {
 
                         $phone_m = $job->phone_m;
                         if( $job->phone_m == '' ){
-                            $phone_m = $job->phone_h;
-                        }  
+                            $phone_m = formatPhoneNumber($job->phone_h);
+                        }else{
+                            $phone_m = formatPhoneNumber($job->phone_m);
+                        }                        
 
                         //$description  = "Customer Name : ".$job->first_name . ' ' . $job->last_name."\n";
                         //$description .= "Job Type : ".$job->job_type."\n";                
@@ -526,7 +540,7 @@ class Cron_Api extends MYF_Controller {
                         $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                         $googleCalendar = $this->GoogleCalendar_model->getByCompanyIdAndCalendarType($gs->company_id, $calendar_type);
                         if( $googleCalendar ){
-                          $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, 'FIXED-TIME', $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
+                          $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, $all_day_event, $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
                         }else{
                             $is_valid = false;
                         }

@@ -243,7 +243,7 @@ a.btn-primary.btn-md {
                     </div>
                     <div class="col-md-2" style="display: ;">
                         <label for="job_location"><b>Customer Phone #</b></label>
-                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" value="<?php echo $custIndividual->phone_h; ?>" required placeholder="Enter address" />
+                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" value="<?php echo $custIndividual->phone_h.' '.$custIndividual->phone_m; ?> " required placeholder="Enter address" />
                     </div>
                 </div>
                 <div class="row">

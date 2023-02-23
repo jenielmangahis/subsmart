@@ -398,6 +398,14 @@
         </div>
 
 
+        <div class="modal fade nsm-modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modal_label" aria-hidden="true" style="margin-top:10%;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/bootstrap-colorpicker.min.css") ?>">
@@ -563,6 +571,8 @@
         var url = base_url + "settings/create_google_account";
         var auth_code = authResult['code'];
         if (typeof auth_code !== "undefined") {
+            $('#loading_modal').modal('show');
+            $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Connecting your google account....');
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -574,6 +584,7 @@
 
                 },
                 success: function(data) {
+                    $('#loading_modal').modal('hide');
                     Swal.fire({
                         title: 'Save Successful!',
                         text: "Calendar Gmail/Gsuit Account Updated Successfully.",
