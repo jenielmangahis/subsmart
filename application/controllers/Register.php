@@ -825,8 +825,80 @@ class Register extends MYF_Controller {
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
 
+        }elseif( $post['offer_code'] == 'CPNSMART2023' ){
+            $num_days_trial = 30;
+            $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
+            $today = strtotime(date("Y-m-d"));
+            $cid   = $this->Clients_model->create([
+                'first_name' => $post['firstname'],
+                'last_name'  => $post['lastname'],
+                'email_address' => $post['email'],
+                'phone_number'  => $post['phone'],
+                'business_name' => $post['business_name'],
+                'business_address' => $post['business_address'],
+                'zip_code' => $post['zip_code'],
+                'number_of_employee' => $post['number_of_employee'],
+                'industry_type_id' => $post['industry_type_id'],
+                'password' => $post['password'],
+                'ip_address' => getValidIpAddress(),
+                'plan_date_registered' => date("Y-m-d"),
+                'plan_date_expiration' => date("Y-m-d", strtotime("+".$num_days_trial." day")),
+                'date_created'  => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s"),
+                'is_plan_active' => 1,
+                'nsmart_plan_id' => $post['plan_id'],
+                'is_trial' => 1,
+                'is_startup' => 1,
+                'payment_method' => 'offer code',
+                'is_auto_renew' => 0,  
+                'next_billing_date' => $next_billing_date,
+                'num_months_discounted' => 0,
+                'recurring_payment_type' => 'monthly',
+                'checklist' => '',
+                'is_checklist' => 1
+            ]);
+
+            $uid = $this->users_model->create([
+                'role' => 3,
+                'FName' => $post['firstname'],
+                'LName' => $post['lastname'],
+                'username' => $post['email'],
+                'email' => $post['email'],
+                'company_id' => $cid,
+                'status' => 1,
+                'password_plain' =>  $post['password'],
+                'password' => hash( "sha256", $post['password'] ),
+            ]);
+
+            //Create customer
+            $customer_data = array(
+                'company_id'      => 1,
+                'fk_user_id'      => 5,
+                'fk_sa_id'        => 0,
+                'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
+                'status'          => '',
+                'customer_type'   => 'Business',
+                'business_name'   => $post['business_name'],
+                'first_name'      => $post['firstname'],
+                'middle_name'     => '',
+                'industry_type_id' => $post['industry_type_id'],
+                'last_name'       => $post['lastname'],
+                'mail_add'        => $post['business_address'],
+                'city'            => '',
+                'state'           => '',
+                'zip_code'        => $post['zip_code'],
+                'phone_h'         => '',
+                'phone_m'         => $post['phone']
+            );
+            $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
+            
+            $is_valid = true;
+            $msg      = 'Registration completed. Redirecting to login page.';
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
         }else{
-            $msg = 'Invalid offer code';
+            $msg = 'Invalid offer code';   
         }
 
         $json_data = ['is_valid' => $is_valid, 'msg' => $msg];
