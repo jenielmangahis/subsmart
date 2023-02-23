@@ -60,54 +60,76 @@ defined('BASEPATH') or exit('No direct script access allowed');
         height: 80px;
     }
 } 
+
+@media (max-width: 1366px) {
+    .lamesa { 
+        font-size:9px !important; 
+        width:125% !important;
+        margin-left: -35px !important;
+    }
+}
+
 </style>
-            <div class="nsm-page-content" style="padding:2%;">
+            <div class="" style="padding:2%;">
                 <div class="row">
-                    <div class="col-md-6">
-                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class="compLogo"/> 
+                    <div class="col-md-3">
+                       <br><br>
                         <?php //echo $tickets->id; ?>
                     </div>
                     <div class="col-md-6">
-                        <div class="" style="float:right;">
+                        
+                    </div>
+                    <div class="col-md-3">
+                        <div class="">
                             <!-- <div style="text-align: center;border:solid gray 1px;">
                                 <h5>Ticket no</h5><hr>
                                 <h5><?php //echo $tickets->ticket_no; ?></h5>
                             </div> -->
                             <div style="font-size:16px;">
-                            <table class="table-borderless mustRight">
-                                <tr>
-                                    <td colspan="2" style="text-align: center;"><h1><b>Service Ticket</b></h1></td>
-                                </tr>
-                                <tr>
-                                    <td>Ticket no:</td>
-                                    <td><?php echo $tickets->ticket_no; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Scheduled Date:</td>
-                                    <td><?php echo $tickets->ticket_date; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Scheduled Time:</td>
-                                    <td><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Purchase Order No:</td>
-                                    <td><?php echo $tickets->purchase_order_no; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Status:</td>
-                                    <td><?php echo $tickets->ticket_status; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Business Name:</td>
-                                    <td><?php echo $tickets->business_name; ?></td>
-                                </tr>
-                            </table>
+                            
                             </div>
                         </div>
                     </div>
                 </div>
 
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class="compLogo"/> 
+                    </div>
+                    <div class="col-md-4 spaceDiv">
+                    </div>
+                    <div class="col-md-4 summaryArea">
+                        <table class="">
+                            <tr style="font-weight:;">
+                                <td>Ticket no:</td>
+                                <td style="text-align:right;"><?php echo $tickets->ticket_no; ?></td>
+                            </tr>
+                            <tr style="font-weight:;">
+                                <td>Scheduled Date:</td>
+                                <td style="text-align:right;"><?php echo $tickets->ticket_date; ?></td>
+                            </tr>
+                            <tr style="font-weight:;">
+                                <td>Scheduled Time:</td>
+                                <td style="text-align:right;"><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
+                            </tr>
+                            <tr style="font-weight:;">
+                                <td>Purchase Order No:</td>
+                                <td style="text-align:right;"><?php echo $tickets->purchase_order_no; ?></td>
+                            </tr>
+                            <tr style="font-weight:;">
+                                <td>Status:</td>
+                                <td style="text-align:right;"><?php echo $tickets->ticket_status; ?></td>
+                            </tr>
+                            <tr style="font-weight:;">
+                                <td>Business Name:</td>
+                                <td style="text-align:right;"><?php echo $tickets->business_name; ?></td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                </div>
+                <br><br>
                 <div class="row">
                     <div class="col-md-4">
                         <!-- <h4>From</h4> -->
@@ -167,9 +189,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <br>
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered lamesa">
                             <thead style="background-color: #F3F3F3;">
-                                <th>#</th>
+                                <!-- <th>#</th> -->
                                 <th>Items</th>
                                 <th>Item Type</th>
                                 <th style="text-align:center;">Price</th>
@@ -182,7 +204,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 $i = 1;
                                  foreach($items as $item){ ?>
                                 <tr>
-                                    <td><?php echo $i; ?></td>
+                                    <!-- <td><?php //echo $i; ?></td> -->
                                     <td><?php echo $item->title; ?></td>
                                     <td><?php echo $item->item_type; ?></td>
                                     <td style="text-align:center;">$<?php echo number_format($item->costing,2); ?></td>
@@ -199,7 +221,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
                 <div class="row">
                     <div class="col-md-4 paymentArea">
-                        <table class="table table-borderless" style="width:50%;">
+                        <table class="table table-borderless" style="width:100%;">
                             <tr>
                                 <td><b>Payment Method: </b></td>
                                 <td style="text-align:;"><?php echo $tickets->payment_method; ?></td>

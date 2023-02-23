@@ -1445,7 +1445,7 @@ $(document).ready(function(){
          $("#customer_city").val(response['customer'].city);
          $("#customer_state").val(response['customer'].state);
          $("#customer_zip").val(response['customer'].zip_code);
-         $("#customer_phone").val(response['customer'].phone_h);
+         $("#customer_phone").val(response['customer'].phone_h +' '+ response['customer'].phone_m);
         //  $("#email").val(response['customer'].email);
         //  $("#date_of_birth").val(response['customer'].date_of_birth);
         //  $("#phone_no").val(test_p);

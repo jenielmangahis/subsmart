@@ -1299,13 +1299,220 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_payments($transactions, $filters);
                 $transactions = $this->get_billable_expenses($transactions, $filters);
             break;
+            case 'all-plus-deposits' :
+                $transactions = $this->get_invoices($transactions, $filters);
+                $transactions = $this->get_credit_memos($transactions, $filters);
+                $transactions = $this->get_sales_receipts($transactions, $filters);
+                $transactions = $this->get_refund_receipts($transactions, $filters);
+                $transactions = $this->get_delayed_credits($transactions, $filters);
+                $transactions = $this->get_delayed_charges($transactions, $filters);
+                $transactions = $this->get_estimates($transactions, $filters);
+                $transactions = $this->get_payments($transactions, $filters);
+                $transactions = $this->get_billable_expenses($transactions, $filters);
+            break;
             case 'all-invoices' :
+                $headers = [
+                    '<td data-name="Date">DATE</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="No.">NO.</td>',
+                    '<td data-name="Customer">CUSTOMER</td>',
+                    '<td data-name="Memo">MEMO</td>',
+                    '<td data-name="Due date">DUE DATE</td>',
+                    '<td data-name="Aging">AGING</td>',
+                    '<td data-name="Balance">BALANCE</td>',
+                    '<td data-name="Total">TOTAL</td>',
+                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
+                    '<td data-name="Email">EMAIL</td>',
+                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+                    '<td data-name="Status">STATUS</td>',
+                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
+                    '<td data-name="Sales Rep">SALES REP</td>',
+                ];
+        
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
+                        <label for="chk_due_date" class="form-check-label">Due date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_aging" class="form-check-input">
+                        <label for="chk_aging" class="form-check-label">Aging</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
+                        <label for="chk_balance" class="form-check-label">Balance</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>'
+                ];
+
                 $transactions = $this->get_invoices($transactions, $filters);
             break;
             case 'open-invoices' :
+                $headers = [
+                    '<td data-name="Date">DATE</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="No.">NO.</td>',
+                    '<td data-name="Customer">CUSTOMER</td>',
+                    '<td data-name="Memo">MEMO</td>',
+                    '<td data-name="Due date">DUE DATE</td>',
+                    '<td data-name="Aging">AGING</td>',
+                    '<td data-name="Balance">BALANCE</td>',
+                    '<td data-name="Total">TOTAL</td>',
+                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
+                    '<td data-name="Email">EMAIL</td>',
+                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+                    '<td data-name="Status">STATUS</td>',
+                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
+                    '<td data-name="Sales Rep">SALES REP</td>',
+                ];
+        
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
+                        <label for="chk_due_date" class="form-check-label">Due date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_aging" class="form-check-input">
+                        <label for="chk_aging" class="form-check-label">Aging</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
+                        <label for="chk_balance" class="form-check-label">Balance</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>'
+                ];
+
                 $transactions = $this->get_invoices($transactions, $filters);
+                $transactions = $this->get_credit_memos($transactions, $filters);
             break;
             case 'overdue-invoices' :
+                $headers = [
+                    '<td data-name="Date">DATE</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="No.">NO.</td>',
+                    '<td data-name="Customer">CUSTOMER</td>',
+                    '<td data-name="Memo">MEMO</td>',
+                    '<td data-name="Due date">DUE DATE</td>',
+                    '<td data-name="Aging">AGING</td>',
+                    '<td data-name="Balance">BALANCE</td>',
+                    '<td data-name="Total">TOTAL</td>',
+                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
+                    '<td data-name="Email">EMAIL</td>',
+                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+                    '<td data-name="Status">STATUS</td>',
+                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
+                    '<td data-name="Sales Rep">SALES REP</td>',
+                ];
+        
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
+                        <label for="chk_due_date" class="form-check-label">Due date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_aging" class="form-check-input">
+                        <label for="chk_aging" class="form-check-label">Aging</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
+                        <label for="chk_balance" class="form-check-label">Balance</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>'
+                ];
+
                 $transactions = $this->get_invoices($transactions, $filters);
             break;
             case 'open-estimates' :
@@ -1354,6 +1561,89 @@ class Customers extends MY_Controller {
                 ];
 
                 $transactions = $this->get_unbilled_incomes($transactions, $filters);
+            break;
+            case 'recently-paid' :
+                $headers = [
+                    '<td data-name="Date">DATE</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="No.">NO.</td>',
+                    '<td data-name="Customer">CUSTOMER</td>',
+                    '<td data-name="Method">METHOD</td>',
+                    '<td data-name="Source">SOURCE</td>',
+                    '<td data-name="Memo">MEMO</td>',
+                    '<td data-name="Due date">DUE DATE</td>',
+                    '<td data-name="Aging">AGING</td>',
+                    '<td data-name="Balance">BALANCE</td>',
+                    '<td data-name="Total">TOTAL</td>',
+                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
+                    '<td data-name="Email">EMAIL</td>',
+                    '<td data-name="Latest Payment">LATEST PAYMENT</td>',
+                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+                    '<td data-name="Status">STATUS</td>',
+                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
+                    '<td data-name="Sales Rep">SALES REP</td>',
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_method" class="form-check-input">
+                        <label for="chk_method" class="form-check-label">Method</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_source" class="form-check-input">
+                        <label for="chk_source" class="form-check-label">Source</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
+                        <label for="chk_due_date" class="form-check-label">Due date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_aging" class="form-check-input">
+                        <label for="chk_aging" class="form-check-label">Aging</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
+                        <label for="chk_balance" class="form-check-label">Balance</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_latest_payment" class="form-check-input">
+                        <label for="chk_latest_payment" class="form-check-label">Latest Payment</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>'
+                ];
+
+                $transactions = $this->get_recently_paid_invoices($transactions, $filters);
             break;
             case 'money-received' :
                 $transactions = $this->get_payments($transactions, $filters);
@@ -1444,9 +1734,6 @@ class Customers extends MY_Controller {
                     </li>
                     <li>
                         <a class='dropdown-item send-invoice' href='#'>Send</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item share-invoice-link' href='#'>Share invoice link</a>
                     </li>
                     <li>
                         <a class='dropdown-item view-edit-invoice' href='#'>View/Edit</a>
@@ -1545,28 +1832,30 @@ class Customers extends MY_Controller {
                 </ul>
             </div>";
 
-            $transactions[] = [
-                'id' => $creditMemo->id,
-                'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
-                'type' => 'Credit Memo',
-                'no' => $creditMemo->ref_no,
-                'customer' => $customerName,
-                'method' => '',
-                'source' => '',
-                'memo' => $creditMemo->message_credit_memo,
-                'due_date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
-                'aging' => '',
-                'balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
-                'total' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => $creditMemo->email,
-                'attachments' => '',
-                'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
-                'manage' => $manageCol
-            ];
+            if($filters['type'] === 'open-invoices' && floatval($creditMemo->balance) > 0 || $filters['type'] !== 'open-invoices') {
+                $transactions[] = [
+                    'id' => $creditMemo->id,
+                    'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'type' => 'Credit Memo',
+                    'no' => $creditMemo->ref_no,
+                    'customer' => $customerName,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $creditMemo->message_credit_memo,
+                    'due_date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'aging' => '',
+                    'balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
+                    'total' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $creditMemo->email,
+                    'attachments' => '',
+                    'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1991,6 +2280,70 @@ class Customers extends MY_Controller {
                 'total' => number_format(floatval(str_replace(',', '', $billableExpense->amount)), 2, '.', ','),
                 'attachments' => '',
                 'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open'
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_recently_paid_invoices($transactions, $filters = [])
+    {
+        $payments = $this->invoice_model->get_customer_payments($filters['customer_id'], logged('company_id'));
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($payments as $payment)
+        {
+            $invoice = $this->invoice_model->get_invoice_by_invoice_number($payment->invoice_number, logged('company_id'));
+
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item print-invoice' href='/invoice/preview/$invoice->id?format=print' target='_blank'>Print</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-invoice' href='#'>Send</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item view-edit-invoice' href='#'>View/Edit</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item delete-invoice' href='#'>Delete</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item void-invoice' href='#'>Void</a>
+                    </li>
+                </ul>
+            </div>";
+
+            $transactions[] = [
+                'id' => $invoice->id,
+                'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                'type' => 'Invoice',
+                'no' => $invoice->invoice_number,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $invoice->message_on_invoice,
+                'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                'aging' => '',
+                'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
+                'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $invoice->customer_email,
+                'latest_payment' => date("m/d/Y", strtotime($payment->payment_date)),
+                'attachments' => '',
+                'status' => $invoice->INV_status,
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created)),
+                'manage' => $manageCol
             ];
         }
 
