@@ -314,6 +314,81 @@
                                                     <?php if(count($transactions) > 0) : ?>
                                                         <?php foreach($transactions as $transaction) : ?>
                                                         <?php switch($type) {
+                                                            case 'all-invoices' :
+                                                                echo '<tr>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['date'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['no'].'</td>
+                                                                    <td>'.$transaction['customer'].'</td>
+                                                                    <td>'.$transaction['memo'].'</td>
+                                                                    <td>'.$transaction['due_date'].'</td>
+                                                                    <td>'.$transaction['aging'].'</td>
+                                                                    <td>'.$transaction['balance'].'</td>
+                                                                    <td>'.$transaction['total'].'</td>
+                                                                    <td>'.$transaction['last_delivered'].'</td>
+                                                                    <td>'.$transaction['email'].'</td>
+                                                                    <td>'.$transaction['attachments'].'</td>
+                                                                    <td>'.$transaction['status'].'</td>
+                                                                    <td>'.$transaction['po_number'].'</td>
+                                                                    <td>'.$transaction['sales_rep'].'</td>
+                                                                    <td>'.$transaction['manage'].'</td>
+                                                                </tr>';
+                                                            break;
+                                                            case 'open-invoices' :
+                                                                echo '<tr>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['date'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['no'].'</td>
+                                                                    <td>'.$transaction['customer'].'</td>
+                                                                    <td>'.$transaction['memo'].'</td>
+                                                                    <td>'.$transaction['due_date'].'</td>
+                                                                    <td>'.$transaction['aging'].'</td>
+                                                                    <td>'.$transaction['balance'].'</td>
+                                                                    <td>'.$transaction['total'].'</td>
+                                                                    <td>'.$transaction['last_delivered'].'</td>
+                                                                    <td>'.$transaction['email'].'</td>
+                                                                    <td>'.$transaction['attachments'].'</td>
+                                                                    <td>'.$transaction['status'].'</td>
+                                                                    <td>'.$transaction['po_number'].'</td>
+                                                                    <td>'.$transaction['sales_rep'].'</td>
+                                                                    <td>'.$transaction['manage'].'</td>
+                                                                </tr>';
+                                                            break;
+                                                            case 'overdue-invoices' :
+                                                                echo '<tr>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['date'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['no'].'</td>
+                                                                    <td>'.$transaction['customer'].'</td>
+                                                                    <td>'.$transaction['memo'].'</td>
+                                                                    <td>'.$transaction['due_date'].'</td>
+                                                                    <td>'.$transaction['aging'].'</td>
+                                                                    <td>'.$transaction['balance'].'</td>
+                                                                    <td>'.$transaction['total'].'</td>
+                                                                    <td>'.$transaction['last_delivered'].'</td>
+                                                                    <td>'.$transaction['email'].'</td>
+                                                                    <td>'.$transaction['attachments'].'</td>
+                                                                    <td>'.$transaction['status'].'</td>
+                                                                    <td>'.$transaction['po_number'].'</td>
+                                                                    <td>'.$transaction['sales_rep'].'</td>
+                                                                    <td>'.$transaction['manage'].'</td>
+                                                                </tr>';
+                                                            break;
                                                             case 'recurring-templates' :
                                                                 echo '<tr data-recurring="'.$transaction['recurring_id'].'">
                                                                     <td>
@@ -388,6 +463,34 @@
                                                                             </ul>
                                                                         </div>
                                                                     </td>
+                                                                </tr>';
+                                                            break;
+                                                            case 'recently-paid' :
+                                                                echo '<tr>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['date'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['no'].'</td>
+                                                                    <td>'.$transaction['customer'].'</td>
+                                                                    <td>'.$transaction['method'].'</td>
+                                                                    <td>'.$transaction['source'].'</td>
+                                                                    <td>'.$transaction['memo'].'</td>
+                                                                    <td>'.$transaction['due_date'].'</td>
+                                                                    <td>'.$transaction['aging'].'</td>
+                                                                    <td>'.$transaction['balance'].'</td>
+                                                                    <td>'.$transaction['total'].'</td>
+                                                                    <td>'.$transaction['last_delivered'].'</td>
+                                                                    <td>'.$transaction['email'].'</td>
+                                                                    <td>'.$transaction['latest_payment'].'</td>
+                                                                    <td>'.$transaction['attachments'].'</td>
+                                                                    <td>'.$transaction['status'].'</td>
+                                                                    <td>'.$transaction['po_number'].'</td>
+                                                                    <td>'.$transaction['sales_rep'].'</td>
+                                                                    <td>'.$transaction['manage'].'</td>
                                                                 </tr>';
                                                             break;
                                                             default :

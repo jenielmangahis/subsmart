@@ -275,6 +275,16 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
+    public function get_customer_payments($customerId, $companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('customer_id', $customerId);
+        $this->db->order_by('payment_date', 'desc');
+        $this->db->group_by('invoice_number');
+        $query = $this->db->get('payment_records');
+        return $query->result();
+    }
+
     public function get_company_payments($company_id)
     {
         $this->db->where('company_id', $company_id);
