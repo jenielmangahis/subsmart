@@ -329,7 +329,8 @@ $("#attachment-file").change(function() {
         }
         //$(".color-scheme").on( 'click', function () {});
         function formatNumber(num) {
-            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            num = num.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+            return num;
         }
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");

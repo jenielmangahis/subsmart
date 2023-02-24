@@ -283,8 +283,15 @@ foreach ($jobs as $job) {
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a></li>
+                                        
+                                        <?php if( $user_type == 7 || $user_type == 1 ){ //Admin ?>
                                         <li><a class="dropdown-item" href="<?php echo base_url('job/new_job1/') . $job->id; ?>">Edit</a></li>
                                         <li class="DELETE_ITEM" onclick="DELETE_JOB(<?php echo $job->id; ?>)"><a class="dropdown-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a></li>
+                                        <?php } ?>
+
+                                        <?php if( $user_type == 6 ){ //Field tech ?>
+                                            <li><a class="dropdown-item add-item" href="<?= base_url('job/edit_job_item/' . $job->id); ?>">Add Item</a></li>
+                                        <?php } ?>
                                     </ul>
                                 </div>
                             </td>

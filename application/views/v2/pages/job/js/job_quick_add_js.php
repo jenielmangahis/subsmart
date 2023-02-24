@@ -268,6 +268,7 @@ function load_customer_data($id){
 
         if(success){
             var phone_h = '(xxx) xxx-xxxx';
+            var phone_m = '(xxx) xxx-xxxx';
             $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
             // if(data.mail_add !== null){
             //     $('#cust_address').text(data.mail_add + ' ');
@@ -279,13 +280,17 @@ function load_customer_data($id){
                 $('#cust_address').text(data.mail_add + ' ');
                 ADDR_1 = data.mail_add;
             }
-            if(data.phone_h){
+            /*if(data.phone_h){
                 if(data.phone_h.includes('Mobile:')){
                     phone_h = ((data.phone_h).slice(0,13))
                 }else{
                     phone_h = data.phone_h;
                 }
+            }*/
+            if( data.phone_m ){
+                phone_m = formatNumber(data.phone_m);
             }
+            
             if(data.city || data.state || data.zip_code){
                 $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
                 ADDR_2 = data.city + ',' + ' ' + data.state + ' ' + data.zip_code;
@@ -298,12 +303,17 @@ function load_customer_data($id){
                 $('#cust_email').text('Email is not available.');
             }
             $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
-            $('#cust_number').text(phone_h);
+            $('#cust_number').text(phone_m);
             $('#mail_to').attr("href","mailto:"+data.email);
             $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
             $('.MAP_LOADER').fadeIn();
             //$('#TEMPORARY_MAP_VIEW').hide();
         }
     })
+}
+
+function formatNumber(num) {
+    num = num.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+    return num;
 }
 </script>
