@@ -670,6 +670,13 @@ class Job extends MY_Controller
         $this->load->view('v2/pages/job/job_workorder', $this->page_data);
     }
 
+    public function apiGetWorkorderJobItems($id)
+    {
+        $items = $this->jobs_model->get_specific_workorder_items($id);
+        header('content-type: application/json');
+        exit(json_encode(['data' => $items]));
+    }
+
     public function estimate_job($id=null)
     {
         $this->load->model('AcsProfile_model');        

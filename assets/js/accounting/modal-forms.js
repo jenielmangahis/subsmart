@@ -55,6 +55,7 @@ const dropdownFields = [
     'term',
     'person-tracking',
     'expense-account',
+    'markup-account',
     'expense-payment-account',
     'bank-account',
     'payment-account',
@@ -8936,6 +8937,56 @@ $(function() {
         });
 
         $('#bundle-estimate-modal span.transaction-grand-total').html(formatter.format(transactionTotal));
+    });
+
+    $(document).on('click', '#billableExpenseModal #view-parent-transaction', function(e) {
+        var id = $(this).data().id;
+        var type = $(this).data().type;
+
+        var data = {
+            id: id,
+            type: type
+        };
+
+        $.get(`/accounting/view-transaction/${type}/${id}`, function(res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+    
+            switch(type) {
+                case 'expense' :
+                    initModalFields('expenseModal', data);
+    
+                    $('#expenseModal').modal('show');
+                break;
+                case 'check' :
+                    initModalFields('checkModal', data);
+            
+                    $('#checkModal').modal('show');
+                break;
+                case 'bill' :
+                    initModalFields('billModal', data);
+    
+                    $('#billModal').modal('show');
+                break;
+                case 'cc-credit' :
+                    initModalFields('creditCardCreditModal', data);
+    
+                    $('#creditCardCreditModal').modal('show');
+                break;
+                case 'vendor-credit' :
+                    initModalFields('vendorCreditModal', data);
+    
+                    $('#vendorCreditModal').modal('show');
+                break;
+            }
+        });
     });
 });
 

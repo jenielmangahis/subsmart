@@ -1467,6 +1467,7 @@ $(document).ready(function(){
              }
      });
 });
+
 });
 </script>
 
