@@ -209,7 +209,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <td><?php echo $item->item_type; ?></td>
                                     <td style="text-align:center;">$<?php echo number_format($item->costing,2); ?></td>
                                     <td style="text-align:center;"><?php echo $item->qty; ?></td>
-                                    <td style="text-align:center;">$<?php echo number_format($item->discount,2); ?></td>
+                                    <td style="text-align:center;">$<?php echo '0'.number_format($item->discount,2); ?></td>
                                     <td style="text-align:center;">$<?php echo number_format($item->total,2); ?></td>
                                 </tr>
                                 <?php 
@@ -371,15 +371,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </tr>
                             <tr style="font-weight:bold;">
                                 <td>Taxes</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
+                                <td style="text-align:right;">$<?php if(empty($tickets->taxes)){ echo '0';} echo number_format($tickets->taxes,2); ?></td>
                             </tr>
                             <tr style="font-weight:bold;">
                                 <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
+                                <td style="text-align:right;">$<?php if(empty($tickets->adjustment_value)){ echo '0';} echo number_format($tickets->adjustment_value,2); ?></td>
                             </tr>
                             <tr style="font-weight:bold;">
                                 <td>Markup</td>
-                                <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
+                                <td style="text-align:right;">$<?php if(empty($tickets->markup)){ echo '0';} echo number_format($tickets->markup,2); ?></td>
                             </tr>
                             <tr style="font-weight:bold;">
                                 <td>Grand Total</td>

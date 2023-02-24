@@ -874,6 +874,33 @@ $('#filter-type').on('change', function() {
     }
 });
 
+$(document).on('click', '#transactions-table .view-edit-billable-expense', function() {
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/billable-expense/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#billableExpenseModal';
+        initModalFields('billableExpenseModal', data);
+
+        $('#billableExpenseModal').modal('show');
+    });
+});
+
 $(document).on('click', '#transactions-table .view-edit-invoice', function() {
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();

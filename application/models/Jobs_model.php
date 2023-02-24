@@ -177,7 +177,92 @@ class Jobs_model extends MY_Model
     }
 
     public function get_specific_workorder_items($id)
-    {
+    {   
+        $this->db->select('work_order_types.name');
+        $this->db->from('work_orders');
+        $this->db->join('work_order_types', 'work_order_types.id = work_orders.work_order_type_id', 'left');
+        $this->db->where('work_orders.id', $id);
+        $workorderTypeQuery = $this->db->get();
+        $workorderType = $workorderTypeQuery->row();
+
+        if ($workorderType && $workorderType->name == 'Repair') {
+            // Repair is saving items on work_orders_agreement_products
+            // which is not related on items table. So
+            // we have to create a new item entry if it's item (name) doesnt exist.
+
+            $this->db->select('*');
+            $this->db->from('work_orders_agreement_products');
+            $this->db->where('qty !=', '');
+            $this->db->where('price !=', '');
+            $this->db->where('work_order_id', $id);
+            $productsQuery = $this->db->get();
+            $products = $productsQuery->result();
+
+            $productNames = array_map(function ($product) {
+                return $product->item;
+            }, $products);
+
+            if (!count($productNames)) {
+                return [];
+            }
+
+            $this->load->model('Items_model', 'items_model');
+            $currentCompanyId = logged('company_id');
+
+            $this->db->select('*');
+            $this->db->from('items');
+            $this->db->where_in('title', $productNames);
+            $this->db->where('company_id', $currentCompanyId);
+            $matchedItemsQuery = $this->db->get();
+            $matchedItems = $matchedItemsQuery->result();
+
+            $items = [];
+
+            foreach ($productNames as $productName) {
+                $currentProduct = null;
+                foreach ($products as $product) {
+                    if ($product->item === $productName) {
+                        $currentProduct = $product;
+                    }
+                }
+
+                if (is_null($currentProduct)) {
+                    continue;
+                }
+
+                $currentProductMatchedItem = null;
+                foreach ($matchedItems as $matchedItem) {
+                    if ($matchedItem->title === $currentProduct->item) {
+                        $currentProductMatchedItem = $matchedItem;
+                    }
+                }
+
+                if (is_null($currentProductMatchedItem)) {
+                    // product not found, create new item
+                    $itemInput = [
+                        'title' => $currentProduct->item,
+                        'company_id' => $currentCompanyId,
+                        'is_active' => true,
+                        'type' => 'Product',
+                        'description' => 'Auto-created from work order'
+                    ];
+
+                    $id = $this->items_model->insert($itemInput);
+                    $this->db->select('*');
+                    $this->db->from('items');
+                    $this->db->where('id', $id);
+                    $createdItemQuery = $this->db->get();
+                    $currentProductMatchedItem = $createdItemQuery->row();
+                }
+
+                $currentProductMatchedItem->price = $currentProduct->price;
+                $currentProductMatchedItem->qty = $currentProduct->qty;
+                $items[] = $currentProductMatchedItem;
+            }
+
+            return $items;
+        }
+
         $this->db->from('work_orders_items');
         $this->db->select('items.id,items.title,items.price,items.type,work_orders_items.qty');
         $this->db->join('items', 'items.id = work_orders_items.items_id');
