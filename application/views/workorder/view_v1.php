@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/header'); ?>
 <style>
 /* common */
 .ribbon {
@@ -686,15 +686,18 @@ table input.form-control {
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
-	<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/workorder'); ?>
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-				<!-- <div class="order-heading">
-					<h3>Work Order # <?php //echo $workorder->work_order_number ?></h3>
-				</div> -->
-
-				<div class="order-menu">
+	
+		
+    <div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/workorder_subtabs'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
 					<div class="row">
 						<div class="col-md-4">
 										<div class="user-return">
@@ -782,8 +785,8 @@ table input.form-control {
 
 			<div class="row" style="padding:1%;margin-top:-30px;">
 				<div class="col-md-12" id="printableArea">
-					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
-					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
+					<div role="white__holder" style="">
+					<div class="ribbon_ ribbon-top-left_"><span><?php echo $workorder->status ?></span></div>
 					<div class="mobile_header" style="width:;"><?php echo $workorder->header; ?></div>
 					<?php if($workorder->work_order_type_id == '3'){ ?>
 					<div>
@@ -1449,14 +1452,14 @@ table input.form-control {
 										</div>
 										
 										<div class="row" style="font-size:;">                   
-											<div class=" col-md-6 box-left-mini">
+											<div class=" col-md-6">
 												<center>
-												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:1%;border-radius:20px;width:95%;">
+												<div class="front" style="">
 													<h6>Items</h6>
 												</div>
 												</center><br>
-												<div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
-													<table  class="table-bordered">
+												<div class="behind_container" style="">
+													<table  class="table table-bordered">
 														<thead align="center">
 															<th>Items</th>
 															<th>Quantity</th>
@@ -1522,7 +1525,7 @@ table input.form-control {
 															<b>Billing Date</b>
 														</div>
 												</div>
-												<div class="row" style="margin-top:-10px;">                   
+												<div class="row" style="margin-top:;">                   
 													<div class="col-md-12">
 														<div style="text-align: justify; text-justify: inter-word;font-size:16px;">
 															<!-- <b>PAYMENT DETAILS:</b>
@@ -1672,7 +1675,7 @@ table input.form-control {
 												</div>
 												<br> -->
 												<center>
-												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:100%;">
+												<div class="front" style="">
 													<h6>Details:</h6>
 												</div>
 												</center>
@@ -2204,7 +2207,7 @@ table input.form-control {
 		</div>
 	</div>
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php //include viewPath('includes/footer'); ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=initialize"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initialize&libraries=&v=weekly"></script> -->
@@ -2821,3 +2824,4 @@ createSeries(
 //   createValueAxis("Funding", false)
 // );
 </script>
+<?php include viewPath('v2/includes/footer'); ?>

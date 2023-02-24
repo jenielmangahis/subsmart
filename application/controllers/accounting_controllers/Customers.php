@@ -2367,7 +2367,7 @@ class Customers extends MY_Controller {
                         <a class="dropdown-item" href="#">Create invoice</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#">View/Edit</a>
+                        <a class="dropdown-item view-edit-billable-expense" href="#">View/Edit</a>
                     </li>
                 </ul>
             </div>';

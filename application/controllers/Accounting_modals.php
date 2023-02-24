@@ -10340,6 +10340,18 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
+            case 'markup-account' :
+                $types = $this->account_model->getAccounts();
+                usort($types, function($a, $b) {
+                    return strcmp($a->account_name, $b->account_name);
+                });
+                $accountTypes = [];
+                foreach($types as $type) {
+                    $accountTypes[] = $type->account_name;
+                }
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
             case 'expense-payment-account':
                 $accountTypes = [
                     'Bank',
@@ -12159,6 +12171,9 @@ class Accounting_modals extends MY_Controller
             case 'estimate' :
                 $this->view_estimate($transactionId);
             break;
+            case 'billable-expense' :
+                $this->view_billable_expense($transactionId);
+            break;
         }
     }
 
@@ -13077,6 +13092,43 @@ class Accounting_modals extends MY_Controller
         $this->page_data['estimate'] = $estimate;
 
         $this->load->view("v2/includes/accounting/modal_forms/$view", $this->page_data);
+    }
+
+    private function view_billable_expense($id)
+    {
+        $billableExpense = $this->expenses_model->get_vendor_transaction_category_by_id($id);
+        $customer = $this->accounting_customers_model->get_by_id($billableExpense->customer_id);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        switch($billableExpense->transaction_type) {
+            case 'Expense' :
+                $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
+                $date = date("m/d/Y", strtotime($expense->payment_date));
+            break;
+            case 'Check' :
+                $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
+                $date = date("m/d/Y", strtotime($check->payment_date));
+            break;
+            case 'Bill' :
+                $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
+                $date = date("m/d/Y", strtotime($bill->bill_date));
+            break;
+            case 'Vendor Credit' :
+                $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+            break;
+            case 'Credit Card Credit' :
+                $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                $date = date("m/d/Y", strtotime($ccCredit->payment_date));
+            break;
+        }
+
+        $this->page_data['billableExpense'] = $billableExpense;
+        $this->page_data['customer'] = $customerName;
+        $this->page_data['date'] = $date;
+        $this->page_data['account'] = $this->chart_of_accounts_model->getById($billableExpense->expense_account_id);
+        $this->page_data['markupAcc'] = $this->chart_of_accounts_model->getById($billableExpense->markup_account_id);
+        $this->load->view("v2/includes/accounting/modal_forms/billable_expense_modal", $this->page_data);
     }
 
     private function get_bills($filters)
