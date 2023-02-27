@@ -44,4 +44,21 @@ class Accounting_account_transactions_model extends MY_Model {
 		$query = $this->db->delete($this->table);
 		return $query;
 	}
+
+	public function get_transaction_with_custom_filter($filter = [])
+	{
+		foreach($filter as $col => $val)
+		{
+			$this->db->where($col, $val);
+		}
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
+
+	public function update_transaction($id, $data)
+	{
+		$this->db->where('id', $id);
+		$update = $this->db->update($this->table, $data);
+		return $update;
+	}
 }

@@ -386,8 +386,13 @@ border: none;
 
 	.mobile_size
 	{
-		font-size:14px !important;
-		margin-left:50% !important;
+		font-size: 9px !important;
+		/* margin-left:50% !important; */
+	}
+
+	.select-wrap_
+	{
+		padding: 1%;
 	}
 
 	.mobile_div
@@ -800,10 +805,10 @@ table input.form-control {
 							</div>
 							<hr style="border: 2px solid gray;">
 								<div clas="row">
-										<div class="col-sm-12 col-sm-push-12 text-right-sm">
+									<div class="col-md-12">
 										<div class="row">
 											<div class="col-md-3">
-												<div class="" style="margin-bottom: 20px;margin-left: 0px !important;">
+												<div class="" style="margin-bottom: ;margin-left: 0px !important;">
 													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
 													<?php if($workorder->work_order_type_id == '4'){ ?> 
 														<img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>"  style="max-width: 230px; max-height: 200px;" class="" /> 
@@ -813,9 +818,9 @@ table input.form-control {
 												</div>
 											</div>
 											<div class="col-md-9">
-											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">											    
+											<div class="workorder-text" style="margin-top: ; margin-bottom: ;float:right;">											    
 												<!-- </div>	-->
-												<div align="right" class="mobile_size notIncluded"> 
+												<div align="" class="mobile_size notIncluded"> 
 													<table>
 														<tbody>
 														<tr>
@@ -980,7 +985,7 @@ table input.form-control {
 		         							   			<div class="ul-info">
 			         							   			<ul>
 			         							   				<li><span class="ul-head">Job Location </span></li>
-																<li class="show_mobile_view"><hr></li>
+																<li class="show_mobile_view"></li>
 																<li><?php echo $workorder->job_location .'<br>'. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code;  ?> &emsp; 
 																<!-- <a href="#" style="color:green;">Show Map</a> -->
 																</li>	
@@ -1372,81 +1377,55 @@ table input.form-control {
 
 										<div class="row">
 											<div class="form-group col-md-2">
-												<div class="select-wrap">
-													<label for="lead_source">Lead Source</label>
-													<select id="lead_source" name="lead_source" class="form-control custom-select m_select" disabled>
+												<div class="select-wrap_">
+													<label for="lead_source"><b>Lead Source</b></label> <br>
+													
 														<?php foreach($lead_source as $leads){ ?>
-														<option value="<?php echo $leads->ls_id; ?>" <?php if($workorder->lead_source_id == $leads->ls_id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $leads->ls_name; ?></option>
-														<?php } ?>
+														<?php //echo $leads->ls_id; ?> <?php if($workorder->lead_source_id == $leads->ls_id){ echo $leads->ls_name; }else{ echo ''; } ?>
+														<?php //echo $leads->ls_name; ?>
+														<?php } if(empty($workorder->lead_source_id)){ echo 'N/A<br>'; }
+														?>
 													</select>
 												</div>    
 											</div> 
+											
 											<div class="form-group col-md-2">
-												<div class="select-wrap">
-													<label for="lead_source">Account Type</label>
-													<select id="account_type" name="account_type" class="form-control custom-select m_select" disabled>
-														<option value="<?php echo $workorder->account_type; ?>"><?php echo $workorder->account_type; ?></option>
+												<div class="select-wrap_">
+													<label for="lead_source"><b>Account Type</b></label> <br>
+													<?php echo $workorder->account_type; if(empty($workorder->account_type)){ echo 'N/A<br>'; } ?>
 														<!-- <option value="Residential">Residential</option>
 														<option value="Commercial">Commercial</option>
 														<option value="Rental">Rental</option>
 														<option value="Inhouse">Inhouse</option> -->
-													</select>
 													<input type="hidden" value="<?php echo $workorder->account_type; ?>" class="account_typeClass">
 												</div>    
 											</div> 
+											
 											<div class="form-group col-md-2">
-												<div class="select-wrap">
-													<label for="lead_source">Communication Type</label>
-													<select id="communication_type" name="communication_type" class="form-control custom-select m_select" disabled>
+												<div class="select-wrap_">
+													<label for="lead_source"><b>Communication Type</b></label> <br>
+													
 														<?php //oreach($system_package_type as $lead){ ?>
-														<option value=""><?php echo $workorder->panel_communication; ?></option>
-														<?php //} ?>
-													</select>
+														<?php echo $workorder->panel_communication; ?>
+														<?php //} 
+														if(empty($workorder->panel_communication)){ echo 'N/A<br>'; } ?>
+													
 												</div>    
 											</div> 
+											
 											<div class="form-group col-md-2">
-												<div class="select-wrap">
-													<label for="lead_source">Panel Type</label>
-													<select name="panel_type" id="panel_type" class="form-control m_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>" disabled>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-														<option <?php if(isset($workorder)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
-													</select>
+												<div class="select-wrap_">
+													<label for="lead_source"><b>Panel Type</b></label> <br>
+													<?php echo $workorder->panel_type; if(empty($workorder->panel_type)){ echo 'N/A<br>'; } ?>
 												</div> 
 											</div>   
+											
 											<div class="form-group col-md-2">
-												<div class="select-wrap">
+												<div class="select-wrap_">
 													<label for="lead_source">Jobs Tags</label>
-													<select id="job_tags" name="job_tags" class="form-control custom-select m_select" disabled>
 														<?php foreach($job_tags as $jb){ ?>
-														<option value="<?php echo $jb->name; ?>" <?php if($workorder->job_tags == $jb->id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $jb->name; ?></option>
-														<?php } ?>
-													</select>
+														<?php if($workorder->job_tags == $jb->id){ echo $jb->name; }else{ echo ''; } ?>
+														<?php } if(empty($workorder->job_tags)){ echo 'N/A<br>'; }?>
 												</div>    
 											</div> 
 										</div>
@@ -1469,10 +1448,10 @@ table input.form-control {
 														<tbody>
 															<?php foreach($agree_items as $aItems) { ?>
 															<tr>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="<?php echo $aItems->item; if($aItems->check_data == NULL){ echo ''; }else{ echo ' ('. $aItems->check_data .') ';} ?>" readonly></td>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]" value="<?php echo $aItems->qty ?>" readonly></td>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]" value="<?php echo $aItems->location ?>" readonly></td>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  value="<?php echo $aItems->price ?>" readonly></td>
+																<td><?php echo $aItems->item; if($aItems->check_data == NULL){ echo ''; }else{ echo ' ('. $aItems->check_data .') ';} ?></td>
+																<td><?php echo $aItems->qty ?></td>
+																<td><?php echo $aItems->location ?></td>
+																<td><?php echo $aItems->price ?></td>
 															</tr>
 															<?php } ?>
 														</tbody>
@@ -1481,21 +1460,21 @@ table input.form-control {
 												<br>
 												<div class="row"> 
 													<div class="col-md-6">
-														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php 
+														<?php 
 														$originalDate = $workorder->install_date;
-														$newDate = date("m-d-Y", strtotime($originalDate)); echo $newDate ?>" readonly style="background-color: #fff;">
+														$newDate = date("m-d-Y", strtotime($originalDate)); echo $newDate ?> <br>
 														<b>Installation Date:</b>
 													</div>
 													<div class="col-md-6">
-														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->install_time; ?>" readonly style="background-color: #fff;">
+														<?php echo $workorder->install_time; ?> <br>
 														<b>Install Time Date:</b>
 													</div>
 												</div>
-												<br><br>
+												<br>
 												<div class="row">                   
 													<div class="form-group col-md-4">
-														<div class="select-wrap">
-														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->payment_method; ?>" readonly style="background-color: #fff;">
+														<div class="select-wrap_ mobile_size">
+														<?php echo $workorder->payment_method; ?> <br>
 															<b>Payment Method</b>
 																<!-- <select name="payment_method" id="payment_method" class="form-control custom-select m_select">
 																	<option value="">Choose method</option>
@@ -1517,17 +1496,17 @@ table input.form-control {
 															</div> 
 														</div>     
 														<div class="form-group col-md-4">
-															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="payment_amount" id="payment_amount"  value="<?php echo number_format((float)$workorder->payment_amount,2); ?>" readonly  style="background-color: #fff;"/>
+															<?php echo number_format((float)$workorder->payment_amount,2); ?> <br>
 															<b>Amount<small class="help help-sm"> ( $ )</small></b>
 														</div>
 														<div class="form-group col-md-4">
-															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->billing_date; ?>" readonly  style="background-color: #fff;"  />
+															<?php echo $agreements->billing_date; ?> <br>
 															<b>Billing Date</b>
 														</div>
 												</div>
 												<div class="row" style="margin-top:;">                   
 													<div class="col-md-12">
-														<div style="text-align: justify; text-justify: inter-word;font-size:16px;">
+														<div style="text-align: justify; text-justify: inter-word;font-size:16px;" class="mobile_size">
 															<!-- <b>PAYMENT DETAILS:</b>
 															<hr> -->
 																<?php //echo 'Amount: '.$amount; ?>
@@ -1631,7 +1610,7 @@ table input.form-control {
 													<div class="col-md-12">
 														<b>Notes</b>
 														<!-- <textarea class="form-control" style="width:100%;"></textarea> -->
-														<div class="" style="font-size:16px;">
+														<div class="mobile_size" style="font-size:16px;">
 															<?php echo $workorder->comments; ?>
 														</div>
 														<br><br>
@@ -1783,7 +1762,7 @@ table input.form-control {
 													<br>
 													<div class="row"> 
 														<div class="col-md-12">
-															<table class="table table-bordered table-sm" style="width:80%;">
+															<table class="table table-bordered table-sm" style="width:100%;">
 																<tr>
 																	<td>Equipment Cost</td>
 																	<td><h5>$ <?php echo number_format((Float)$workorder->subtotal,2); ?></h5> </td>

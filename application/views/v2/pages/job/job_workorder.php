@@ -749,7 +749,7 @@
                                         </div>
                                         <hr>
                                         <h6 class='card_header'>Job Items Listing</h6>
-                                        <table class="table table-hover">
+                                        <table class="table table-hover d-none">
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -1237,7 +1237,6 @@
                                         if (!empty($items)) {
                                             foreach ($items as $item) {
                                                $item_qty = get_total_item_qty($item->id);
-                                               if ($item_qty[0]->total_qty > 0) {
                                     ?>
                                     <tr>
                                         <td style="width: 0% !important;">
@@ -1248,7 +1247,7 @@
                                         <td><?= $item->price; ?></td>
                                         <td><?= $item->type; ?></td>
                                     </tr>
-                                    <?php } } } ?>
+                                    <?php } } ?>
                                 </tbody>
                             </table>
                         </div>

@@ -22,10 +22,10 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-server"></i> Popular Reports</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Monthly Closeout</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Yearly Closeout</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Profit and Loss</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales Leaderboard</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/monthly-closeout' ?>"><i class="bx bx-fw bx-chevron-right"></i> Monthly Closeout</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/yearly-closeout' ?>"><i class="bx bx-fw bx-chevron-right"></i> Yearly Closeout</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/profit-loss' ?>"><i class="bx bx-fw bx-chevron-right"></i> Profit and Loss</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/work-order-by-employee' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales Leaderboard </a></li>
                                 </ul>
                             </div>
                         </div>
@@ -35,13 +35,13 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-line-chart"></i> Sales</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Payments Type Summary</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Payments Received</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales By Items</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Material Sales Report</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Product Sales Report</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Repeated Business</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales Demographics</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-by-method' ?>"><i class="bx bx-fw bx-chevron-right"></i> Payments Type Summary </a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-by-month' ?>"><i class="bx bx-fw bx-chevron-right"></i> Payments Received</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-by-item' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales By Items</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-by-material-item' ?>"><i class="bx bx-fw bx-chevron-right"></i> Material Sales Report</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-by-product-item' ?>"><i class="bx bx-fw bx-chevron-right"></i> Product Sales Report</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-repeated-by-customer' ?>"><i class="bx bx-fw bx-chevron-right"></i> Repeated Business</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/sales-demographics' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales Demographics</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -51,10 +51,10 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-purchase-tag-alt"></i> Receivables</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Account Receivable</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Invoice by Date</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Aging Summary</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Commercial vs Residential</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/account-receivable' ?>"><i class="bx bx-fw bx-chevron-right"></i> Account Receivable</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/invoice-by-date' ?>"><i class="bx bx-fw bx-chevron-right"></i> Invoice by Date</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/invoice-aging-summary' ?>"><i class="bx bx-fw bx-chevron-right"></i> Aging Summary</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/account-receivable-com-vs-res' ?>"><i class="bx bx-fw bx-chevron-right"></i> Commercial vs Residential</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -67,11 +67,11 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-purchase-tag-alt"></i> Expenses</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Category Summary</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Category</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Customer</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Work Order</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Vendor</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/expense-by-category' ?>"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Category Summary</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/expense-by-month-by-category' ?>"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Category</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/expense-by-month-by-customer' ?>"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Customer</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/expense-by-month-by-work-order' ?>"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Work Order</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/expense-by-month-by-vendor' ?>"><i class="bx bx-fw bx-chevron-right"></i> Expenses By Vendor</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-receipt"></i> Estimates</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Estimates Summary</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/estimate-status-by-month' ?>"><i class="bx bx-fw bx-chevron-right"></i> Estimates Summary</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -91,13 +91,13 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-group"></i> Customers</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales Summary By Customer</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales By Customer</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales By Customer Groups</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales By Customer Source</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Tax Paid by Customers</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Customer Demographics</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Customer Source</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-by-customer' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales Summary By Customer</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/customer-sales' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales By Customer</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/payment-by-customer-group' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales By Customer Groups</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/customer-source' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales By Customer Source</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/customer-tax-by-month' ?>"><i class="bx bx-fw bx-chevron-right"></i> Tax Paid by Customers</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/customer-by-city-state' ?>"><i class="bx bx-fw bx-chevron-right"></i> Customer Demographics</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/customer-by-source' ?>"><i class="bx bx-fw bx-chevron-right"></i> Customer Source</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -110,10 +110,10 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-group"></i> Employees</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Payroll Summary</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Payroll By Employee</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Payroll Log Details</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Percent Sales Commission Report</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/employee-payroll-summary' ?>"><i class="bx bx-fw bx-chevron-right"></i> Payroll Summary</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/employee-payroll-by-employee' ?>"><i class="bx bx-fw bx-chevron-right"></i> Payroll By Employee</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/employee-payroll-log' ?>"><i class="bx bx-fw bx-chevron-right"></i> Payroll Log Details</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/employee-payroll-percent-commission' ?>"><i class="bx bx-fw bx-chevron-right"></i> Percent Sales Commission Report</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -123,8 +123,8 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-time"></i> Timesheet</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Time Log Summary</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Time Log Details</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/summary-by-period' ?>"><i class="bx bx-fw bx-chevron-right"></i> Time Log Summary</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/timesheet-entries' ?>"><i class="bx bx-fw bx-chevron-right"></i> Time Log Details</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-task"></i> Work Orders</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Work Order Status</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/work-order-status' ?>"><i class="bx bx-fw bx-chevron-right"></i> Work Order Status</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -147,8 +147,8 @@
                             <div class="nsm-card-header d-block"><i class="bx bx-fw bx-receipt"></i> Taxes</div>
                             <div class="nsm-card-content">
                                 <ul class="list-unstyled m-0">
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Sales Tax</li>
-                                    <li class="cursor-pointer p-1"><i class="bx bx-fw bx-chevron-right"></i> Non Taxable Sales</li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/sales-tax' ?>"><i class="bx bx-fw bx-chevron-right"></i> Sales Tax</a></li>
+                                    <li class="cursor-pointer p-1"><a href="<?php echo base_url() . 'reports/main/report/invoice-items-no-tax' ?>"><i class="bx bx-fw bx-chevron-right"></i> Non Taxable Sales</a></li>
                                 </ul>
                             </div>
                         </div>

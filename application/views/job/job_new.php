@@ -1143,7 +1143,6 @@ add_css(array(
                             <?php if(!empty($items)): ?>
                                 <?php foreach ($items as $item): ?>
                                     <?php $item_qty = get_total_item_qty($item->id); ?>
-                                    <?php if($item_qty[0]->total_qty > 0): ?>
                                     <tr>
                                         <td><?= $item->title; ?></td>
                                         <td><?= $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
@@ -1155,7 +1154,6 @@ add_css(array(
                                             </button>
                                         </td>
                                     </tr>
-                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>

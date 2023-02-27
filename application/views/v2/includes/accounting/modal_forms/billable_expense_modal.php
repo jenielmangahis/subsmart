@@ -73,7 +73,7 @@
                                     <label for="expense-account">Account</label>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <select name="expense_account[]" id="expense-account" class="form-select nsm-field">
+                                    <select name="expense_account" id="expense-account" class="form-select nsm-field">
                                         <option value="<?=$account->id?>"><?=$account->name?></option>
                                     </select>
                                 </div>
@@ -132,7 +132,7 @@
                             <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
                         </div>
                         <div class="col-12 col-md-6">
-                            <button type="button" class="nsm-button float-end" id="save">Save</button>
+                            <button type="button" class="nsm-button success float-end" onclick="saveAndCloseForm(event)">Save</button>
                         </div>
                     </div>
                 </div>
