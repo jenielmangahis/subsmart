@@ -811,7 +811,7 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <hr />
-                                                <table class="table table-hover">
+                                                <table class="table table-hover d-none">
                                                     <tbody>
                                                         <tr>
                                                             <td>
@@ -1334,7 +1334,6 @@
                                         if (!empty($items)) {
                                             foreach ($items as $item) {
                                                $item_qty = get_total_item_qty($item->id);
-                                               if ($item_qty[0]->total_qty > 0) {
                                     ?>
                                     <tr>
                                         <td style="width: 0% !important;">
@@ -1345,7 +1344,7 @@
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                     </tr>
-                                    <?php } } } ?>
+                                    <?php } } ?>
                                 </tbody>
                             </table>
                         </div>

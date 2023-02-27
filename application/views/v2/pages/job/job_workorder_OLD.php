@@ -994,19 +994,17 @@
                             <?php if(!empty($items)): ?>
                                 <?php foreach ($items as $item): ?>
                                     <?php $item_qty = get_total_item_qty($item->id); ?>
-                                    <?php if($item_qty[0]->total_qty > 0): ?>
                                     <tr>
                                         <td><?php echo $item->title; ?></td>
                                         <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
                                         <td><?php echo $item->price; ?></td>
-                                        <td><?php echoucfirst($item->type); ?></td>
+                                        <td><?php echo ucfirst($item->type); ?></td>
                                         <td>
                                             <button id="<?php echo $item->id; ?>" data-item_type="<?php echo ucfirst($item->type); ?>" data-quantity="<?php echo $item->units; ?>" data-itemname="<?php echo $item->title; ?>" data-price="<?php echo $item->price; ?>" type="button" data-bs-dismiss="modal" class="nsm-button primary select_item">
                                             <i class='bx bx-plus'></i>
                                             </button>
                                         </td>
                                     </tr>
-                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>
