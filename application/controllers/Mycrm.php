@@ -33,9 +33,8 @@ class Mycrm extends MY_Controller {
         $business   = $this->Business_model->getByCompanyId($company_id);
 
         $this->page_data['business'] = $business;
-		// $this->load->view('mycrm/index', $this->page_data);
+		// $this->load->view('mycrm/index', $this->page_data);		
 		$this->load->view('v2/pages/mycrm/index', $this->page_data);
-
     }
     
     public function membership()
@@ -1015,6 +1014,144 @@ class Mycrm extends MY_Controller {
         $json_data = ['is_success' => $is_success, 'err_num' => $err_num];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_add_multi_account()
+    {
+    	$this->load->helper(array('hashids_helper'));
+
+    	$this->load->model('Users_model');
+    	$this->load->model('CompanyMultiAccount_model');
+
+    	$is_success = 0;
+    	$msg = '';
+    	$email = '';
+
+    	$post = $this->input->post();
+    	$company_id = logged('company_id');
+
+    	$login_data = ['username' => $post['multi_email'], 'password' => $post['multi_password']];
+    	$isValid = $this->Users_model->attempt($login_data);
+    	if( $isValid == 'valid' ){    		
+    		//Create data
+    		$user = $this->Users_model->getUserByEmail($post['multi_email']);    		
+    		//Check if company id already in the list. Can only accept 1 company user 
+    		$isExists = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkCompanyId($company_id, $user->company_id);
+    		if( $isExists ){
+    			$msg = 'An account under company <b>' . $isExists->company_name . '</b> already exists. Cannot accept more than 1 account under same company';
+    		}else{
+    			$data_multi = [
+	    			'parent_company_id' => $company_id,
+	    			'link_company_id' => $user->company_id,
+	    			'link_user_id' => $user->id,
+	    			'status' => $this->CompanyMultiAccount_model->statusNotVerified(),
+	    			'created' => date("Y-m-d H:i:s")
+	    		];
+
+	    		$lastId  = $this->CompanyMultiAccount_model->create($data_multi);
+	    		$hash_id = hashids_encrypt($lastId, '', 15);
+	    		$this->CompanyMultiAccount_model->update($lastId, ['hash_id' => $hash_id]);
+
+	    		//Send activation link
+	    		$is_sent = $this->sendMultiAccountActivationEmail($hash_id, $user->email);
+
+	    		$email = $user->email;
+	    		$is_success = 1;
+    		}
+    		
+    	}else{
+    		$msg = 'Invalid email / password';
+    	}
+
+    	$json_data = ['is_success' => $is_success, 'email' => $email, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_load_multi_account_list()
+    {
+    	$this->load->model('CompanyMultiAccount_model');
+
+    	$company_id = logged('company_id');
+
+    	$multiAccounts = $this->CompanyMultiAccount_model->getByAllByCompanyParentId($company_id);
+
+    	$this->page_data['status_verified'] = $this->CompanyMultiAccount_model->statusVerified();
+    	$this->page_data['multiAccounts'] = $multiAccounts;
+    	$this->load->view('v2/pages/mycrm/ajax_load_multi_account_list', $this->page_data);
+    }
+
+    public function ajax_delete_multi_account()
+    {
+    	$this->load->model('CompanyMultiAccount_model');
+
+    	$is_success = 0;
+    	$msg = 'Cannot find data';
+
+    	$post = $this->input->post();
+    	$company_id = logged('company_id');
+
+    	$multiAccount = $this->CompanyMultiAccount_model->getByIdAndParentCompanyId($post['mid'],$company_id);
+    	if( $multiAccount ){
+    		$this->CompanyMultiAccount_model->delete($multiAccount->id);
+
+    		$is_success = 1;
+    		$msg = '';
+    	}  
+
+    	$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_resend_multi_account_activation_email()
+    {
+    	$this->load->model('CompanyMultiAccount_model');
+
+    	$is_success = 0;
+    	$msg = 'Cannot find data';
+
+    	$post = $this->input->post();
+    	$company_id = logged('company_id');
+
+    	$multiAccount = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkUserId($company_id, $post['uid']);
+    	if( $multiAccount ){
+    		$isSent = $this->sendMultiAccountActivationEmail($multiAccount->hash_id, $multiAccount->user_email);
+    		if( $isSent == 1 ){
+    			$is_success = 1;
+    			$msg = '';
+    		}else{
+    			$msg = 'Cannot send email. Please contact system administrator.';
+    		}
+    	}  
+
+    	$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function sendMultiAccountActivationEmail($hash_id, $recipient_email)
+    {
+    	$is_sent = 1;
+
+    	$subject = "nSmartrac: Multi Account Activation";
+    	
+    	$activation_link = base_url('activate_multi_account/'.$hash_id);
+    	$msg  = "<p>To activate your multi account click the link below.</p><br />";
+    	$msg .= "<a href='".$activation_link."'>Activate Multi Account</a>";
+    	$msg .= "<br /><br />From <br />nSmartrac Team";
+
+    	$mail = email__getInstance(['subject' => $subject]);
+        $mail->FromName = 'NsmarTrac';
+        $mail->addAddress($recipient_email, $recipient_email);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $msg;
+        if (!$mail->Send()) {
+            $is_sent = 0;
+        }
+
+        return $is_sent;
     }
 }
 

@@ -1263,4 +1263,32 @@ class Pages extends MYF_Controller {
         	redirect('home');
         }
 	}
+
+	public function front_activate_multi_account( $eid )
+	{
+		$this->load->helper(array('hashids_helper'));
+		$this->load->model('CompanyMultiAccount_model');
+
+		$id = hashids_decrypt($eid, '', 15);
+		$is_valid     = 0;
+		$multiAccount = $this->CompanyMultiAccount_model->getById($id);
+
+		if( $multiAccount ){
+			if( $multiAccount->status == $this->CompanyMultiAccount_model->statusNotVerified() ){
+				$this->CompanyMultiAccount_model->update($multiAccount->id, ['date_activated' => date("Y-m-d H:i:s"), 'status' => $this->CompanyMultiAccount_model->statusVerified()]);
+
+				$is_valid = 1;
+				$msg = 'Account activated';
+			}else{
+				$msg = 'Account already active';
+			}
+		}else{
+			$msg = 'Account doesnt exists';
+		}
+
+		$this->page_data['msg'] = $msg;
+		$this->page_data['is_valid'] = $is_valid;
+	    $this->load->view('pages/front_activate_multi_account', $this->page_data);
+
+	}
 }

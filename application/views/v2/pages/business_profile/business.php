@@ -420,15 +420,73 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="nsm-card primary mt-4">
+                            <div class="nsm-card-header">
+                                <div class="nsm-card-title">
+                                    <span>Link Accounts</span>
+                                </div>
+                                <div class="nsm-card-controls">                                    
+                                    <button type="button" class="nsm-button btn-sm" id="add-multi-account">
+                                        <i class='bx bx-fw bx-edit'></i> Add
+                                    </button>                                    
+                                </div>
+                            </div>
+                            <div class="nsm-card-content"><div id="company-multi-accounts-container"></div></div>
+                            
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade nsm-modal fade" id="modal-add-multi-account" tabindex="-1" aria-labelledby="modal-add-multi-account-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form id="add-multi-account-form" method="POST">
+                <div class="modal-content" style="width:78% !important;">
+                    <div class="modal-header">
+                        <span class="modal-title content-title"><i class='bx bx-link-alt'></i> Link a company account to <?= $profiledata->business_name; ?></span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please enter the login and password for the company you would like to link to this login</p>
+                        <div class="row">
+                            <div class="col-12">                                
+                                <label class="content-subtitle fw-bold d-block mb-2">Email</label>
+                                <input type="email" class="form-control" name="multi_email" id="multi-email" required="">                                
+                            </div>
+                            <div class="col-12 mt-3">
+                                <label class="content-subtitle fw-bold d-block mb-2">Password</label>
+                                <input type="password" class="form-control" name="multi_password" id="multi-password" required="">
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="modal-footer">                    
+                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-add-multi-account">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modal_label" aria-hidden="true" style="margin-top:10%;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        load_multi_accounts_list();
+
         $("#form-business-details").on("submit", function(e) {
             let _this = $(this);
             e.preventDefault();
@@ -459,6 +517,162 @@
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
+            });
+        });
+
+        $('#add-multi-account').on('click', function(){
+            $('#multi-email').val('');
+            $('#multi-password').val('');
+            $('#modal-add-multi-account').modal('show');
+        });
+
+        function load_multi_accounts_list(){
+            var url  = base_url + 'mycrm/_load_multi_account_list';
+            
+            $('#company-multi-accounts-container').html('<span class="bx bx-loader bx-spin"></span>'); 
+
+            setTimeout(function () {
+              $.ajax({
+                 type: "GET",
+                 url: url,
+                 success: function(o)
+                 {          
+                    $('#company-multi-accounts-container').html(o);
+                 }
+              });
+            }, 500);   
+        }
+
+        $('#add-multi-account-form').on('submit', function(e){
+            e.preventDefault();
+
+            var url  = base_url + 'mycrm/_add_multi_account';
+            var form = $(this);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType:'json',
+                data: form.serialize(), 
+                success: function(data) {
+                    
+                    $('#btn-add-multi-account').html('Save'); 
+                    $('#btn-add-multi-account').prop("disabled", false);
+
+                    if( data.is_success == 1 ){
+                        $('#modal-add-multi-account').modal('hide');
+                        $('#multi-email').val('');
+                        $('#multi-password').val('');
+
+                        Swal.fire({
+                            html: 'An email was sent to <b>' + data.email + '</b> to activate and verify account.',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#6a4a86',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            load_multi_accounts_list();
+                        });    
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: data.msg
+                        });
+                    }
+                }, beforeSend: function() {
+                    $('#btn-add-multi-account').html('<span class="bx bx-loader bx-spin"></span>'); 
+                    //$('#btn-add-multi-account').find("button[type=submit]").prop("disabled", true);    
+                }
+            });            
+        });
+
+        $(document).on('click', '.btn-delete-multi-account', function(){
+            var mid = $(this).attr("data-id");
+            var company_name = $(this).attr('data-companyname');
+            var url = base_url + 'mycrm/_delete_multi_account';
+
+            Swal.fire({
+                title: 'Delete Multi Account',
+                html: "Are you sure you want to delete multi account from company <b>"+company_name+"</b>?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        dataType: 'json',
+                        data: {mid:mid},
+                        success: function(o) {
+                            if( o.is_success == 1 ){   
+                                Swal.fire({
+                                    html: "Multi account was deleted successfully",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    load_multi_accounts_list();
+                                });
+                            }else{
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                              });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-resend-activation', function(){
+            var uid = $(this).attr("data-userid");
+            var user_email = $(this).attr('data-email');
+            var url = base_url + 'mycrm/_resend_multi_account_activation_email';
+
+            Swal.fire({
+                title: 'Resend Activation Link',
+                html: "Are you sure you want to send activation link to <b>"+user_email+"</b>?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        dataType: 'json',
+                        data: {uid:uid},
+                        success: function(o) {
+                            $('#loading_modal').modal('hide');
+                            if( o.is_success == 1 ){   
+                                Swal.fire({
+                                    html: "Email activation link was sent successfully",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    
+                                });
+                            }else{
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                              });
+                            }
+                        },beforeSend: function() {
+                            $('#loading_modal').modal('show');
+                            $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Sending email....');
+                        }
+                    });
+                }
             });
         });
     });

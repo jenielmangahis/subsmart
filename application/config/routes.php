@@ -1281,6 +1281,7 @@ $route['mycrm/_add_multi_account'] = 'Mycrm/ajax_add_multi_account';
 $route['mycrm/_load_multi_account_list'] = 'Mycrm/ajax_load_multi_account_list';
 $route['activate_multi_account/(:any)'] = 'Pages/front_activate_multi_account/$1';
 $route['mycrm/_delete_multi_account'] = 'Mycrm/ajax_delete_multi_account';
+$route['mycrm/_resend_multi_account_activation_email'] = 'Mycrm/ajax_resend_multi_account_activation_email';
 
 //Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
