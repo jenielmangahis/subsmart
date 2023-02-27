@@ -1131,7 +1131,7 @@ class Mycrm extends MY_Controller {
     {
     	$is_sent = 1;
 
-    	$subject = "nSmartrac: Multi Account Activation";
+    	$subject = "nSmarTrac: Multi Account Activation";
     	
     	$activation_link = base_url('activate_multi_account/'.$hash_id);
     	$msg  = "<p>To activate your multi account click the link below.</p><br />";
@@ -1139,7 +1139,7 @@ class Mycrm extends MY_Controller {
     	$msg .= "<br /><br />From <br />nSmartrac Team";
 
     	$mail = email__getInstance(['subject' => $subject]);
-        $mail->FromName = 'NsmarTrac';
+        $mail->FromName = 'nSmarTrac';
         $mail->addAddress($recipient_email, $recipient_email);
         $mail->isHTML(true);
         $mail->Subject = $subject;
@@ -1149,6 +1149,16 @@ class Mycrm extends MY_Controller {
         }
 
         return $is_sent;
+    }
+
+    public function ajax_hdr_load_multi_account_list()
+    {
+    	$this->load->model('CompanyMultiAccount_model');
+
+    	$company_id    = logged('company_id');    	
+    	$multiAccounts = $this->CompanyMultiAccount_model->getByAllByCompanyParentId($company_id);
+    	$this->page_data['multiAccounts'] = $multiAccounts;    	
+    	$this->load->view('v2/pages/mycrm/ajax_hdr_load_multi_account_list', $this->page_data);
     }
 }
 
