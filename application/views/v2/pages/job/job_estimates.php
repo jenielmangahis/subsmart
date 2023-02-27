@@ -395,7 +395,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <hr />
-                                            <table class="table">
+                                            <table class="table d-none">
                                                 <tbody>
                                                     <tr>
                                                         <td>

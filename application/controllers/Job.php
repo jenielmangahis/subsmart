@@ -162,7 +162,7 @@ class Job extends MY_Controller
         // get all job tags
         $get_job_tags = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_tags',
             'select' => 'id,name,marker_icon',
@@ -171,7 +171,7 @@ class Job extends MY_Controller
 
         $get_job_types = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_types',
             'select' => 'id,title,icon_marker',
@@ -185,7 +185,7 @@ class Job extends MY_Controller
         // get color settings
         $get_color_settings = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'color_settings',
             'select' => '*',
@@ -194,7 +194,7 @@ class Job extends MY_Controller
         
         $get_company_info = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
             ),
             'table' => 'business_profile',
             'select' => 'business_phone,business_name',
@@ -204,7 +204,7 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'items.company_id' => logged('company_id'),
+                'items.company_id' => $comp_id,
                 //'is_active' => 1,
             ),
             'table' => 'items',
@@ -215,7 +215,7 @@ class Job extends MY_Controller
         // get estimates
         $get_estimates = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
             ),
             'table' => 'estimates',
             'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
@@ -225,7 +225,7 @@ class Job extends MY_Controller
         // get workorder
         $get_workorder = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
             ),
             'table' => 'work_orders',
             'select' => 'id,work_order_number,job_name,customer_id,date_created',
@@ -235,7 +235,7 @@ class Job extends MY_Controller
         // get invoices
         $get_invoices = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
             ),
             'table' => 'invoices',
             'select' => 'id,invoice_number,date_issued,job_name,customer_id',
@@ -338,6 +338,31 @@ class Job extends MY_Controller
         $this->page_data['redirect_calendar']  = $redirect_calendar;
 
         $this->load->view('v2/pages/job/job_new', $this->page_data);
+    }
+
+    public function apiGetItems()
+    {
+        $comp_id = logged('company_id');
+        $get_items = array(
+            'where' => array(
+                'items.company_id' => $comp_id,
+                //'is_active' => 1,
+            ),
+            'table' => 'items',
+            'select' => 'items.id,title,price,type,company_id',
+        );
+        $items1 = $this->general->get_data_with_param($get_items);
+
+
+        $this->db->where('company_id', $comp_id);
+        $this->db->select('id,title,price,type,company_id');
+        $items2 = $this->db->get('items')->result();
+
+        header('content-type: application/json');
+        exit(json_encode([
+            'items1total' => count($items1),
+            'items2total' => count($items2),
+            'items1' => $items1, 'items2' => $items2]));
     }
 
     public function new_job2($id=null)
@@ -574,7 +599,7 @@ class Job extends MY_Controller
         // get all job tags
         $get_job_tags = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_tags',
             'select' => 'id,name',
@@ -582,7 +607,7 @@ class Job extends MY_Controller
         $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
         $get_job_types = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_types',
             'select' => 'id,title',
@@ -596,7 +621,7 @@ class Job extends MY_Controller
         // get color settings
         $get_color_settings = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'color_settings',
             'select' => '*',
@@ -606,7 +631,7 @@ class Job extends MY_Controller
 
         $get_company_info = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
             ),
             'table' => 'business_profile',
             'select' => 'business_phone,business_name',
@@ -616,7 +641,7 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'items.company_id' => logged('company_id'),
+                'items.company_id' => $comp_id,
                 //'is_active' => 1,
             ),
             'table' => 'items',
@@ -741,7 +766,7 @@ class Job extends MY_Controller
         // get all job tags
         $get_job_tags = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_tags',
             'select' => 'id,name',
@@ -749,7 +774,7 @@ class Job extends MY_Controller
         $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);        
         $get_job_types = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_types',
             'select' => 'id,title',
@@ -762,7 +787,7 @@ class Job extends MY_Controller
 
         $get_estimates_item = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
                 'estimates_id'
             ),
             'table' => 'job_types',
@@ -775,7 +800,7 @@ class Job extends MY_Controller
         // get color settings
         $get_color_settings = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'color_settings',
             'select' => '*',
@@ -785,7 +810,7 @@ class Job extends MY_Controller
 
         $get_company_info = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
             ),
             'table' => 'business_profile',
             'select' => 'business_phone,business_name',
@@ -795,7 +820,7 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'items.company_id' => logged('company_id'),
+                'items.company_id' => $comp_id,
                 //'is_active' => 1,
             ),
             'table' => 'items',
@@ -3466,7 +3491,7 @@ class Job extends MY_Controller
         // get all job tags
         $get_job_tags = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_tags',
             'select' => 'id,name,marker_icon',
@@ -3475,7 +3500,7 @@ class Job extends MY_Controller
 
         $get_job_types = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'job_types',
             'select' => 'id,title,icon_marker',
@@ -3489,7 +3514,7 @@ class Job extends MY_Controller
         // get color settings
         $get_color_settings = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $comp_id
             ),
             'table' => 'color_settings',
             'select' => '*',
@@ -3498,7 +3523,7 @@ class Job extends MY_Controller
         
         $get_company_info = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $comp_id,
             ),
             'table' => 'business_profile',
             'select' => 'business_phone,business_name',

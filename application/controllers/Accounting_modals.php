@@ -8941,6 +8941,7 @@ class Accounting_modals extends MY_Controller
                 $credits = $this->accounting_delayed_credit_model->get_customer_delayed_credits($id, logged('company_id'));
                 $charges = $this->accounting_delayed_charge_model->get_customer_delayed_charges($id, logged('company_id'));
                 $estimates = $this->estimate_model->get_customer_estimates($id, logged('company_id'));
+                $billableExpenses = $this->accounting_customers_model->get_customer_billable_expenses($id);
             break;
         }
 
@@ -9131,6 +9132,50 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        if(isset($billableExpenses) && count($billableExpenses)) {
+            foreach($billableExpenses as $billableExpense) {
+                $balance = '$'.number_format(floatval($billableExpense->amount), 2, '.', ',');
+                $total = '$'.number_format(floatval($billableExpense->amount), 2, '.', ',');
+
+                switch($billableExpense->transaction_type) {
+                    case 'Expense' :
+                        $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $date = date("m/d/Y", strtotime($expense->payment_date));
+                    break;
+                    case 'Check' :
+                        $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $date = date("m/d/Y", strtotime($check->payment_date));
+                    break;
+                    case 'Bill' :
+                        $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $date = date("m/d/Y", strtotime($bill->bill_date));
+                    break;
+                    case 'Vendor Credit' :
+                        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                    break;
+                    case 'Credit Card Credit' :
+                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                    break;
+                }
+
+                if(floatval($billableExpense->received) === 0.00) {
+                    $transactions[] = [
+                        'type' => 'Billable Expense',
+                        'data_type' => 'billable-expense',
+                        'id' => $billableExpense->id,
+                        'number' => '',
+                        'date' => $date,
+                        'formatted_date' => date("F j", strtotime($date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance),
+                        'amount' => str_replace('$-', '-$', $balance)
+                    ];
+                }
+            }
+        }
+
         echo json_encode($transactions);
     }
 
@@ -9167,6 +9212,10 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $transaction->remaining_balance = $transaction->grand_total;
+            break;
+            case 'billable-expense' :
+                $type = 'Billable Expense';
+                $transaction = $this->expenses_model->get_vendor_transaction_category_by_id($transactionId);
             break;
         }
 
@@ -9259,16 +9308,20 @@ class Accounting_modals extends MY_Controller
 
             $return['items'] = $items;
         } else {
-            $items = $this->accounting_credit_memo_model->get_customer_transaction_items($type, $transactionId);
+            if($transactionType !== 'billable-expense') {
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items($type, $transactionId);
 
-            foreach($items as $index => $item) {
-                if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
-                    $items[$index]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
-                    $items[$index]->locations = $this->items_model->getLocationByItemId($item->item_id);
-                } else {
-                    $items[$index]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
-                    $items[$index]->packageItems = json_decode($item->package_item_details);
+                foreach($items as $index => $item) {
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $items[$index]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $items[$index]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $items[$index]->packageItems = json_decode($item->package_item_details);
+                    }
                 }
+            } else {
+                $items = [];
             }
 
             $return['items'] = $items;
@@ -13496,6 +13549,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'bundle-estimate' :
                 $return = $this->update_bundle_estimate($transactionId, $data);
+            break;
+            case 'billable-expense' :
+                $return = $this->update_billable_expense($transactionId, $data);
             break;
         }
 
@@ -18442,6 +18498,82 @@ class Accounting_modals extends MY_Controller
         }
 
         $return['data'] = $estimateId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
+    }
+
+    private function update_billable_expense($categoryId, $data)
+    {
+        $category = $this->expenses_model->get_vendor_transaction_category_by_id($categoryId);
+
+        $categoryData = [
+            'expense_account_id' => $data['expense_account'],
+            'markup_account_id' => $data['markup_account']
+        ];
+
+        $update = $this->vendors_model->update_transaction_category_details($category->id, $categoryData);
+
+        if($update) {
+            if($category->expense_account_id !== $data['expense_account']) {
+                $transactionType = $category->transaction_type === 'Credit Card Credit' ? 'CC Credit' : $category->transaction_type;
+                $filter = [
+                    'transaction_type' => $transactionType,
+                    'transaction_id' => $category->transaction_id,
+                    'account_id' => $category->expense_account_id,
+                    'child_id' => $category->id,
+                    'is_category' => 1,
+                    'is_item_category' => null
+                ];
+                $accountTransaction = $this->accounting_account_transactions_model->get_transaction_with_custom_filter($filter);
+    
+                $account = $this->chart_of_accounts_model->getById($accountTransaction->account_id);
+                $accountType = $this->account_model->getById($account->account_id);
+    
+                if($accountType->account_name === 'Credit Card') {
+                    $newBalance = $accountTransaction->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $accountTransaction->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $accountTransaction->amount));
+                } else {
+                    $newBalance = $accountTransaction->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $accountTransaction->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $accountTransaction->amount));
+                }
+    
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $accData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($accData);
+    
+                $transacData = [
+                    'account_id' => $data['expense_account']
+                ];
+                $this->accounting_account_transactions_model->update_transaction($accountTransaction->id, $transacData);
+    
+                $newAccount = $this->chart_of_accounts_model->getById($data['expense_account']);
+                $newAccountType = $this->account_model->getById($newAccount->account_id);
+    
+                if($newAccountType->account_name === 'Credit Card') {
+                    $newBalance = $accountTransaction->type === 'increase' ? floatval(str_replace(',', '', $newAccount->balance)) - floatval(str_replace(',', '', $accountTransaction->amount)) : floatval(str_replace(',', '', $newAccount->balance)) + floatval(str_replace(',', '', $accountTransaction->amount));
+                } else {
+                    $newBalance = $accountTransaction->type === 'increase' ? floatval(str_replace(',', '', $newAccount->balance)) + floatval(str_replace(',', '', $accountTransaction->amount)) : floatval(str_replace(',', '', $newAccount->balance)) - floatval(str_replace(',', '', $accountTransaction->amount));
+                }
+    
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $newAccData = [
+                    'id' => $newAccount->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval(str_replace(',', '', $newBalance))
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($newAccData);
+            }
+        }
+
+        $return['data'] = $categoryId;
         $return['success'] = $update ? true : false;
         $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
 

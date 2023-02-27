@@ -193,7 +193,7 @@ class Jobs_model extends MY_Model
             $this->db->select('*');
             $this->db->from('work_orders_agreement_products');
             $this->db->where('qty !=', '');
-            $this->db->where('price !=', '');
+            // $this->db->where('price !=', '');
             $this->db->where('work_order_id', $id);
             $productsQuery = $this->db->get();
             $products = $productsQuery->result();
@@ -255,7 +255,7 @@ class Jobs_model extends MY_Model
                     $currentProductMatchedItem = $createdItemQuery->row();
                 }
 
-                $currentProductMatchedItem->price = $currentProduct->price;
+                $currentProductMatchedItem->price = $currentProduct->price || 0;
                 $currentProductMatchedItem->qty = $currentProduct->qty;
                 $items[] = $currentProductMatchedItem;
             }

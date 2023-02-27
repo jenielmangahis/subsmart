@@ -3855,6 +3855,13 @@ $(function() {
 
                 $(this).parent().parent().parent().parent().parent().remove();
             break;
+            case 'billable-expense' :
+                $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
+                    
+                });
+
+                $(this).parent().parent().parent().parent().parent().remove();
+            break;
         }
     });
 
