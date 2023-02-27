@@ -6,8 +6,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mycrm extends MY_Controller {
 
-
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -19,7 +17,6 @@ class Mycrm extends MY_Controller {
         add_css(array(
             'assets/frontend/css/mycrm/main.css',
         ));
-
 	}
 
 	public function index()
