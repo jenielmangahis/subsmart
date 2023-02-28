@@ -1472,7 +1472,7 @@ tr {
                                                 <input type="text" name="postcode" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Country</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">County</label>
                                                 <input type="text" name="county" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">

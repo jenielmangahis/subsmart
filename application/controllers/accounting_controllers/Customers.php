@@ -17,6 +17,7 @@ class Customers extends MY_Controller {
         $this->load->model('General_model', 'general');
         $this->load->model('IndustryType_model');
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('expenses_model');
 
         $this->load->model('AcsProfile_model');
         $this->load->model('invoice_model');
@@ -2364,7 +2365,7 @@ class Customers extends MY_Controller {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                        <a class="dropdown-item" href="#">Create invoice</a>
+                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
                     </li>
                     <li>
                         <a class="dropdown-item view-edit-billable-expense" href="#">View/Edit</a>
@@ -3233,6 +3234,65 @@ class Customers extends MY_Controller {
                 }
 
                 $this->page_data['items'] = $chargeItems;
+            break;
+            case 'billable-expense-charge' :
+                $billableExpense = $this->expenses_model->get_vendor_transaction_category_by_id($transactionId);
+                switch($billableExpense->transaction_type) {
+                    case 'Expense' :
+                        $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $billableExpense->date = date("m/d/Y", strtotime($expense->payment_date));
+                    break;
+                    case 'Check' :
+                        $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $billableExpense->date = date("m/d/Y", strtotime($check->payment_date));
+                    break;
+                    case 'Bill' :
+                        $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $billableExpense->date = date("m/d/Y", strtotime($bill->bill_date));
+                    break;
+                    case 'Vendor Credit' :
+                        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $billableExpense->date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                    break;
+                    case 'Credit Card Credit' :
+                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                        $billableExpense->date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                    break;
+                }
+
+                $items = [];
+                $item = new stdClass();
+                $item->qty = 1;
+                $item->cost = $billableExpense->amount;
+                $item->tax = $billableExpense->tax;
+                $item->total = $billableExpense->amount;
+                $item->linked_transaction_type = 'billable_expense';
+                $item->linked_transaction_id = $transactionId;
+                $item->linked_transac = $billableExpense;
+                $item->itemDetails = new stdClass();
+                $items[] = $item;
+
+                if(floatval($billableExpense->markup_percentage) > 0.00) {
+                    $amount = floatval($billableExpense->amount) / 100;
+
+                    $item = new stdClass();
+                    $item->qty = 1;
+                    $item->cost = $amount;
+                    $item->tax = 0;
+                    $item->total = $amount;
+                    $item->linked_transaction_type = 'billable_expense';
+                    $item->linked_transaction_id = $transactionId;
+                    $item->linked_transac = $billableExpense;
+                    $item->itemDetails = new stdClass();
+                    $items[] = $item;
+                }
+
+                $customer = $this->accounting_customers_model->get_by_id($billableExpense->customer_id);
+                $this->page_data['customer'] = $customer;
+                $this->page_data['linkedTransac'] = new stdClass();
+                $this->page_data['linkedTransac']->type = 'Billexp Charge';
+                $this->page_data['linkedTransac']->transaction = $billableExpense;
+                $this->page_data['items'] = $items;
             break;
         }
 
