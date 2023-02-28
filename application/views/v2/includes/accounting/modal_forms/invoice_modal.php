@@ -79,7 +79,7 @@
                                                     <?php endforeach; ?>
                                                     <?php else : ?>
                                                     <tr class="linked-transaction-row">
-                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac->transaction->id?>" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac->type === 'Estimate' ? $linkedTransac->type : 'Delayed '.$linkedTransac->type))?>"><?=$linkedTransac->type !== 'Estimate' ? 'Delayed ' : ''?><?=$linkedTransac->type?></a></td>
+                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac->transaction->id?>" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac->type === 'Estimate' || $linkedTransac->type === 'Billexp Charge' ? $linkedTransac->type : 'Delayed '.$linkedTransac->type))?>"><?=$linkedTransac->type !== 'Estimate' && $linkedTransac->type !== 'Billexp Charge' ? 'Delayed ' : ''?><?=$linkedTransac->type?></a></td>
                                                         <td>
                                                             <?php switch($linkedTransac->type) {
                                                                 case 'Estimate' :
@@ -91,12 +91,17 @@
                                                                 case 'Charge' :
                                                                     echo date("m/d/Y", strtotime($linkedTransac->transaction->delayed_charge_date));
                                                                 break;
+                                                                case 'Billexp Charge' :
+                                                                    echo date("m/d/Y", strtotime($linkedTransac->transaction->date));
+                                                                break;
                                                             } ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if($linkedTransac->type === 'Estimate') {
                                                                 $transacAmount = $linkedTransac->transaction->grand_total;
+                                                            } else if($linkedTransac->type === 'Billexp Charge') {
+                                                                $transacAmount = $linkedTransac->transaction->amount;
                                                             } else {
                                                                 $transacAmount = $linkedTransac->transaction->total_amount;
                                                             }
@@ -118,7 +123,7 @@
                                         <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac['type']))?>-<?=$linkedTransac['transaction']->id?>" name="linked_transaction[]">
                                     <?php endforeach; ?>
                                     <?php else : ?>
-                                        <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac->type !== 'Estimate' ? 'Delayed '.$linkedTransac->type : $linkedTransac->type))?>-<?=$linkedTransac->transaction->id?>" name="linked_transaction[]">
+                                        <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac->type !== 'Estimate' && $linkedTransac->type !== 'Billexp Charge' ? 'Delayed '.$linkedTransac->type : $linkedTransac->type))?>-<?=$linkedTransac->transaction->id?>" name="linked_transaction[]">
                                     <?php endif; ?>
                                 </div>
                                 <?php endif; ?>

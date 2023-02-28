@@ -1057,9 +1057,7 @@
                                                                         <td><strong>Name</strong></td>
                                                                         <td><strong>Type</strong></td>
                                                                         <td><strong>Points</strong></td>
-                                                                        <td><strong>Price</strong></td>
                                                                         <td><strong>Qty</strong></td>
-                                                                        <td><strong>SubTotal</strong></td>
                                                                         <td><strong>Location</strong></td>
                                                                     </tr>
                                                                 </thead>
@@ -1068,6 +1066,12 @@
                                                                         if (isset($jobs_data_items)) { 
                                                                             $subtotal = 0.00;
                                                                             foreach ($jobs_data_items as $item) {
+                                                                            
+                                                                            // Service don't have inventory
+                                                                            if (strtolower($item->type) === 'service') {
+                                                                                continue;
+                                                                            }
+
                                                                             $total = $item->price * $item->qty;
                                                                     ?>
                                                                     <tr>
@@ -1082,9 +1086,7 @@
                                                                         <td><?= $item->title; ?></td>
                                                                         <td><?= $item->type; ?></td>
                                                                         <td><?= $item->points; ?></td>
-                                                                        <td><?= number_format((float)$item->price,2,'.',','); ?></td>
                                                                         <td><?= $item->qty; ?></td>
-                                                                        <td><?= number_format((float)$total,2,'.',','); ?></td>
                                                                         <td><?= $item->location; ?></td>
                                                                     </tr>
                                                                     <?php } } ?>

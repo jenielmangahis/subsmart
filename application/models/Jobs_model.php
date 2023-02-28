@@ -255,7 +255,14 @@ class Jobs_model extends MY_Model
                     $currentProductMatchedItem = $createdItemQuery->row();
                 }
 
-                $currentProductMatchedItem->price = $currentProduct->price || 0;
+                if (strtolower(trim($currentProduct->item)) === 'type of install' && $currentProduct->check_data) {
+                    $currentProductMatchedItem->title = $currentProduct->check_data;
+                    
+                    // HACK! type of install should be stored in services table
+                    $currentProductMatchedItem->type = 'Service';
+                }
+
+                $currentProductMatchedItem->price = $currentProduct->price ? $currentProduct->price : 0;
                 $currentProductMatchedItem->qty = $currentProduct->qty;
                 $items[] = $currentProductMatchedItem;
             }

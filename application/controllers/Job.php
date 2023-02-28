@@ -669,6 +669,42 @@ class Job extends MY_Controller
         $this->load->model('workorder_model');
         if ($id!=null) {
             $this->page_data['jobs_data'] = $this->workorder_model->get_workorder_details($id);
+
+            $workorder = $this->page_data['jobs_data'];
+            if ($workorder && $workorder->install_time && preg_match("/^([0-9]+)-([0-9]+)$/", trim($workorder->install_time))) {
+                /**
+                 * The workorder has [timestart]-[timend] format for install time,
+                 * we're trying our best below to parse that and convert to a compatible
+                 * time format with job. wth!
+                 */
+                $getMeridiem = function ($hour) {
+                    $isAM = $hour == '8' || $hour == '10';
+                    return $isAM ? 'am' : 'pm';
+                };
+
+                $installTimeArray = explode('-', $workorder->install_time);
+                $startTime = ($installTimeArray[0] . ':00 ') . $getMeridiem($installTimeArray[0]);
+                $endTime = ($installTimeArray[1] . ':00 ') . $getMeridiem($installTimeArray[1]);
+                $this->page_data['jobs_data']->start_time = $startTime;
+                $this->page_data['jobs_data']->end_time = $endTime;
+            }
+
+            if ($workorder && !is_numeric($workorder->job_tags)) {
+                /**
+                 * Guess what workorder job_tags seems like an array because its plural, but NO!
+                 * It's actually an ID or String sometimes. wtfh! So if it's a String we're
+                 * doing our best to get the ID of that tag. And use tags property
+                 * because that what the job form is expecting.
+                 */
+
+                foreach ($this->page_data['tags'] as $tag) {
+                    if ($tag->name == $workorder->job_tags) {
+                        $this->page_data['jobs_data']->tags = $tag->id;
+                        break;
+                    }
+                }
+            }
+
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_workorder_items($id);
         }
 
