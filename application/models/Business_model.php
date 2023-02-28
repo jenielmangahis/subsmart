@@ -98,6 +98,18 @@ class Business_model extends MY_Model {
     {
         $this->db->delete($this->table, array('company_id' => $company_id));
     }
+
+    public function getByCompanyFieldsByCompanyId($company_id, $fields)
+    {
+        $fields = implode(",", $fields);
+        $this->db->select($fields);
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
 
 /* End of file Business_model.php */

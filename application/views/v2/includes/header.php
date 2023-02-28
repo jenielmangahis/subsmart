@@ -59,6 +59,10 @@ if ($this->session->userdata('usertimezone') == null) {
         .nsm-nav-items #clockOut i {
             color: "green";
         }
+        #hdr-multi-account-list .nsm-loader{            
+            height: 62px !important;
+            min-height: 10px !important;
+        }
     </style>
 </head>
 
@@ -77,6 +81,20 @@ if ($this->session->userdata('usertimezone') == null) {
             </div>
 
             <ul class="nsm-sidebar-menu">
+                <?php                     
+                    $fields = ['id', 'business_name'];
+                    $cid    = logged('company_id');                    
+                    $hdrCompanyData     = getCompanyData($cid, $fields);
+                ?>
+                <?php if( $hdrCompanyData ){ ?>
+                    <li>
+                        <a href="javscript:void(0);" class="hdr-drpdown-multi-accounts">
+                            <i class='bx bx-fw bx-buildings'></i> <?= $hdrCompanyData->business_name; ?>
+                            <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                        </a>
+                        <div id="hdr-multi-account-list"></div>
+                    </li>
+                <?php } ?>
                 <li class="<?php if ($page->title == 'Dashboard') : echo 'selected ';
                             endif;
                             if ($page->parent == 'Dashboard') : echo 'active';
