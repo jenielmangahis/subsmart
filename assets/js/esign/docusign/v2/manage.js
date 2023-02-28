@@ -163,6 +163,7 @@ const columns = {
     const COPY = "copy";
     const HISTORY = "history";
     const SAVE_AS_TEMPLATE = "save as template";
+    const VIEW = "view";
 
     switch (true) {
       case isVoided:
@@ -186,8 +187,8 @@ const columns = {
         break;
 
       case isCompleted:
-        menu.primary = HISTORY;
-        menu.secondary = [SAVE_AS_TEMPLATE];
+        menu.primary = VIEW;
+        menu.secondary = [HISTORY, SAVE_AS_TEMPLATE];
         break;
     }
 
@@ -263,6 +264,9 @@ const columns = {
 };
 
 const actions = {
+  view: function (row) {
+    window.open(`/DocuSign/viewCompletedEsign/${row.id}`, "_blank");
+  },
   delete: async function (row, table) {
     const $deleteModal = $("#confirmDelete");
     $deleteModal.modal("show");

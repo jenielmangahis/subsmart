@@ -9163,7 +9163,7 @@ class Accounting_modals extends MY_Controller
                 if(floatval($billableExpense->received) === 0.00) {
                     $transactions[] = [
                         'type' => 'Billable Expense',
-                        'data_type' => 'billable-expense',
+                        'data_type' => 'billexp-charge',
                         'id' => $billableExpense->id,
                         'number' => '',
                         'date' => $date,
@@ -9213,9 +9213,32 @@ class Accounting_modals extends MY_Controller
 
                 $transaction->remaining_balance = $transaction->grand_total;
             break;
-            case 'billable-expense' :
+            case 'billexp-charge' :
                 $type = 'Billable Expense';
                 $transaction = $this->expenses_model->get_vendor_transaction_category_by_id($transactionId);
+
+                switch($transaction->transaction_type) {
+                    case 'Expense' :
+                        $expense = $this->vendors_model->get_expense_by_id($transaction->transaction_id, logged('company_id'));
+                        $transaction->date = date("m/d/Y", strtotime($expense->payment_date));
+                    break;
+                    case 'Check' :
+                        $check = $this->vendors_model->get_check_by_id($transaction->transaction_id, logged('company_id'));
+                        $transaction->date = date("m/d/Y", strtotime($check->payment_date));
+                    break;
+                    case 'Bill' :
+                        $bill = $this->vendors_model->get_bill_by_id($transaction->transaction_id, logged('company_id'));
+                        $transaction->date = date("m/d/Y", strtotime($bill->bill_date));
+                    break;
+                    case 'Vendor Credit' :
+                        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($transaction->transaction_id, logged('company_id'));
+                        $transaction->date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                    break;
+                    case 'Credit Card Credit' :
+                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transaction->transaction_id, logged('company_id'));
+                        $transaction->date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                    break;
+                }
             break;
         }
 
