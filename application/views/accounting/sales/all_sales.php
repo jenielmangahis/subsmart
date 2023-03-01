@@ -1,5 +1,11 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 
+<style>
+    .nsm-counter.selected, .nsm-counter.co-selected {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.35);
+    }
+</style>
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -19,7 +25,7 @@
                     <div class="col-12 col-md-4">
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter primary h-100 mb-2">
+                                <div class="nsm-counter primary h-100 mb-2 <?=$transaction === 'estimates' ? 'selected' : ''?>" id="estimates">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
@@ -32,7 +38,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter secondary h-100 mb-2">
+                                <div class="nsm-counter secondary h-100 mb-2 <?=$transaction === 'unbilled-activity' ? 'selected' : ''?>" id="unbilled-activity">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
@@ -49,7 +55,7 @@
                     <div class="col-12 col-md-4">
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter error h-100 mb-2">
+                                <div class="nsm-counter error h-100 mb-2 <?=$transaction === 'overdue-invoices' ? 'selected' : ''?><?=$transaction === 'open-invoices' ? 'co-selected' : ''?>" id="overdue-invoices">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
@@ -62,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter h-100 mb-2">
+                                <div class="nsm-counter h-100 mb-2 <?=$transaction === 'open-invoices' ? 'selected' : ''?>" id="open-invoices">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
@@ -77,7 +83,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter success h-100 mb-2">
+                        <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -179,13 +185,13 @@
                                     <div class="col-4">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y", strtotime("-1 year"))?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-1 year"))?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" id="filter-to">
+                                            <input type="text" class="nsm-field form-control date" id="filter-to">
                                         </div>
                                     </div>
                                 </div>
@@ -199,12 +205,12 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button">
+                                        <button type="button" class="nsm-button" id="reset-button">
                                             Reset
                                         </button>
                                     </div>
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button primary float-end">
+                                        <button type="button" class="nsm-button primary float-end" id="apply-button">
                                             Apply
                                         </button>
                                     </div>
@@ -242,66 +248,19 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
+                                <?php foreach($settingsCols as $settingsCol) : ?>
+                                <?=$settingsCol?>
+                                <?php endforeach; ?>
+                                <?php if($type !== 'recurring-templates' && $type !== 'unbilled-income') : ?>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_type" id="chk_type" class="form-check-input">
-                                    <label for="chk_type" class="form-check-label">Type</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_no" id="chk_no" class="form-check-input">
-                                    <label for="chk_no" class="form-check-label">No.</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_customer" id="chk_customer" class="form-check-input">
-                                    <label for="chk_customer" class="form-check-label">Customer</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_method" id="chk_method" class="form-check-input">
-                                    <label for="chk_method" class="form-check-label">Method</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_source" id="chk_source" class="form-check-input">
-                                    <label for="chk_source" class="form-check-label">Source</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_memo" id="chk_memo" class="form-check-input">
-                                    <label for="chk_memo" class="form-check-label">Memo</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_due_date" id="chk_due_date" class="form-check-input">
-                                    <label for="chk_due_date" class="form-check-label">Due Date</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_aging" id="chk_aging" class="form-check-input">
-                                    <label for="chk_aging" class="form-check-label">Aging</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_balance" id="chk_balance" class="form-check-input">
-                                    <label for="chk_balance" class="form-check-label">Balance</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_last_delivered" id="chk_last_delivered" class="form-check-input">
-                                    <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_email" id="chk_email" class="form-check-input">
-                                    <label for="chk_email" class="form-check-label">Email</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_attachments" id="chk_attachments" class="form-check-input">
-                                    <label for="chk_attachments" class="form-check-label">Attachments</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_status" id="chk_status" class="form-check-input">
-                                    <label for="chk_status" class="form-check-label">Status</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_po_number" id="chk_po_number" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
                                     <label for="chk_po_number" class="form-check-label">P.O. Number</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_sales_rep" id="chk_sales_rep" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                                     <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
                                 </div>
+                                <?php endif; ?>
                                 <p class="m-0">Rows</p>
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -325,31 +284,15 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="transactions-table">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
-                            <td data-name="Date">DATE</td>
-                            <td data-name="Type">TYPE</td>
-                            <td data-name="No.">NO.</td>
-                            <td data-name="Customer">CUSTOMER</td>
-                            <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
-                            <td data-name="Memo">MEMO</td>
-                            <td data-name="Due Date">DUE DATE</td>
-                            <td data-name="Aging">AGING</td>
-                            <td data-name="Balacne">BALANCE</td>
-                            <td data-name="Total">TOTAL</td>
-                            <td data-name="Last Delivered">LAST DELIVERED</td>
-                            <td data-name="Email">EMAIL</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
-                            <td data-name="Status">STATUS</td>
-                            <td data-name="P.O. number">P.O. NUMBER</td>
-                            <td data-name="Sales Rep">SALES REP</td>
+                            <?php foreach($headers as $header) : ?>
+                            <?=$header?>
+                            <?php endforeach; ?>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>

@@ -524,8 +524,10 @@ $route['accounting/customers/send-transaction/(:any)/(:any)']['post'] = 'account
 
 $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
+$route['accounting/all-sales'] = 'accounting_controllers/all_sales/index';
+
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
-$route['accounting/all-sales'] = 'accounting/allsales';
+// $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
 $route['accounting/filter/invoices-page'] = 'accounting/invoices_page_filter';
 $route['invoice-page/get/send-invoice-reminder'] = 'accounting/get_info_for_send_invoice_reminder';
