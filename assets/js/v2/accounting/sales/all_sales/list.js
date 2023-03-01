@@ -1,0 +1,786 @@
+const currUrl = window.location.href;
+const urlSplit = currUrl.split('/');
+
+$('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
+    var chk = $(this);
+    var dataName = $(this).next().text();
+
+    var index = $(`#transactions-table thead td[data-name="${dataName}"]`).index();
+    $(`#transactions-table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index]).show();
+        } else {
+            $($(this).find('td')[index]).hide();
+        }
+    });
+
+    // $(`#print_customer_transactions_modal table tr`).each(function() {
+    //     if(chk.prop('checked')) {
+    //         $($(this).find('td')[index - 1]).show();
+    //     } else {
+    //         $($(this).find('td')[index - 1]).hide();
+    //     }
+    // });
+
+    // $(`#print_preview_customer_transactions_modal #customer_transactions_table_print tr`).each(function() {
+    //     if(chk.prop('checked')) {
+    //         $($(this).find('td')[index - 1]).show();
+    //     } else {
+    //         $($(this).find('td')[index - 1]).hide();
+    //     }
+    // });
+});
+
+$('.dropdown-menu.table-filter .date').datepicker({
+    format: 'mm/dd/yyyy',
+    orientation: 'bottom',
+    autoclose: true
+});
+
+$('.dropdown-menu.table-settings, .dropdown-menu.p-3').on('click', function(e) {
+    e.stopPropagation();
+});
+
+$('#reset-button').on('click', function() {
+    var url = `${base_url}accounting/all-sales`;
+    location.href = url;
+});
+
+$('#apply-button').on('click', function() {
+    const noDate = [
+        'unbilled-income',
+        'recently-paid'
+    ];
+
+    var filterType = $('#filter-type').val();
+    var filterStatus = $('#filter-status').val();
+    var filterDeliveryMethod = $('#filter-delivery-method').val();
+    var filterDate = $('#filter-date').val();
+    var filterFrom = $('#filter-from').val();
+    var filterTo = $('#filter-to').val();
+    var filterCustomer = $('#filter-customer').val();
+    var filterAsOf = $('#filter-as-of').val();
+
+    var url = `${base_url}accounting/customers/view/${customerId}?`;
+
+    url += filterType !== 'all' ? `type=${filterType}&` : '';
+    url += filterStatus !== 'all-statuses' ? `status=${filterStatus}&` : '';
+    url += filterDeliveryMethod !== 'any' ? `delivery-method=${filterDeliveryMethod}&` : '';
+    url += noDate.includes(filterType) === false && filterDate !== 'all-dates' ? `date=${filterDate}` : '';
+    url += filterType === 'unbilled-income' ? `date=${filterAsOf.replaceAll('/', '-')}` : '';
+    url += filterType !== 'unbilled-income' && filterType !== 'recently-paid' ? `from=${filterFrom.replaceAll('/', '-')}` : '';
+    url += filterType !== 'unbilled-income' && filterType !== 'recently-paid' ? `to=${filterTo.replaceAll('/', '-')}` : '';
+    url += filterType !== 'unbilled-income' ? `customer=${filterCustomer}` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+    location.href = url;
+});
+
+$('#filter-type').on('change', function() {
+    switch($(this).val()) {
+        case 'unbilled-income' :
+            $(this).closest('.row').siblings(':not(.mt-3)').remove();
+            $(this).parent().addClass('col-12').removeClass('col-5');
+
+            var date = new Date();
+            var dd = String(date.getDate()).padStart(2, '0');
+            var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = date.getFullYear();
+
+            date = mm + '/' + dd + '/' + yyyy;
+
+            $(`<div class="row">
+                <div class="col">
+                    <label for="filter-as-of">Unbilled Income As Of</label>
+                    <div class="nsm-field-group calendar">
+                        <input type="text" name="filter_as_of_date" id="filter-as-of" class="form-control nsm-field date" value="${date}">
+                    </div>
+                </div>
+            </div>`).insertAfter($(this).closest('.row'));
+
+            $('#filter-as-of').datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        break;
+        case 'recently-paid' :
+            $(this).closest('.row').siblings(':not(.mt-3)').remove();
+            $(this).parent().addClass('col-12').removeClass('col-5');
+
+            $(`<div class="row">
+                <div class="col-12">
+                    <label for="filter-customer">Customer</label>
+                    <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                        <option value="all" selected="selected">All</option>
+                    </select>
+                </div>
+            </div>`).insertAfter($(this).closest('.row'));
+        break;
+        case 'estimates' :
+            if($('#filter-date').length < 1) {
+                $(this).closest('.row').siblings(':not(.mt-3)').remove();
+                $(this).parent().addClass('col-5').removeClass('col-12');
+    
+                $(`<div class="row">
+                    <div class="col-12">
+                        <label for="filter-customer">Customer</label>
+                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                            <option value="all" selected="selected">All</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-date">Date</label>
+                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                            <option value="last-365-days" selected="selected">Last 365 days</option>
+                            <option value="custom">Custom</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This week</option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year">This year</option>
+                            <option value="last-week">Last week</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-quarter">Last quarter</option>
+                            <option value="last-year">Last year</option>
+                            <option value="all-dates">All dates</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-from">From</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-to">To</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+                        </div>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-status">Status</label>
+                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                            <option value="all-statuses" selected="selected">All statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="filter-delivery-method">Delivery method</label>
+                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+                            <option value="any" selected="selected">Any</option>
+                            <option value="print-later">Print later</option>
+                            <option value="send-later">Send later</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $('.table-filter .date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+    
+                $('#filter-date').trigger('change');   
+            } else {
+                $('#filter-status').html(`<option value="all-statuses" selected="selected">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="accepted">Accepted</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+                <option value="rejected">Rejected</option>
+                <option value="expired">Expired</option>`);
+            }
+        break;
+        case 'invoices' :
+            if($('#filter-date').length < 1) {
+                $(this).closest('.row').siblings(':not(.mt-3)').remove();
+                $(this).parent().addClass('col-5').removeClass('col-12');
+    
+                $(`<div class="row">
+                    <div class="col-12">
+                        <label for="filter-customer">Customer</label>
+                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                            <option value="all" selected="selected">All</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-date">Date</label>
+                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                            <option value="last-365-days" selected="selected">Last 365 days</option>
+                            <option value="custom">Custom</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This week</option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year">This year</option>
+                            <option value="last-week">Last week</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-quarter">Last quarter</option>
+                            <option value="last-year">Last year</option>
+                            <option value="all-dates">All dates</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-from">From</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-to">To</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+                        </div>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-status">Status</label>
+                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                            <option value="all-statuses" selected="selected">All statuses</option>
+                            <option value="open">Open</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="paid">Paid</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="filter-delivery-method">Delivery method</label>
+                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+                            <option value="any" selected="selected">Any</option>
+                            <option value="print-later">Print later</option>
+                            <option value="send-later">Send later</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $('.table-filter .date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+    
+                $('#filter-date').trigger('change');   
+            } else {
+                $('#filter-status').html(`<option value="all-statuses" selected="selected">All statuses</option>
+                <option value="open">Open</option>
+                <option value="overdue">Overdue</option>
+                <option value="paid">Paid</option>`);
+            }
+        break;
+        case 'sales-receipts' :
+            if($('#filter-date').length < 1) {
+                $(this).closest('.row').siblings(':not(.mt-3)').remove();
+                $(this).parent().addClass('col-5').removeClass('col-12');
+    
+                $(`<div class="row">
+                    <div class="col-12">
+                        <label for="filter-customer">Customer</label>
+                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                            <option value="all" selected="selected">All</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-date">Date</label>
+                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                            <option value="last-365-days" selected="selected">Last 365 days</option>
+                            <option value="custom">Custom</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This week</option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year">This year</option>
+                            <option value="last-week">Last week</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-quarter">Last quarter</option>
+                            <option value="last-year">Last year</option>
+                            <option value="all-dates">All dates</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-from">From</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-to">To</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+                        </div>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-status">Status</label>
+                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                            <option value="all-statuses" selected="selected">All statuses</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="filter-delivery-method">Delivery method</label>
+                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+                            <option value="any" selected="selected">Any</option>
+                            <option value="print-later">Print later</option>
+                            <option value="send-later">Send later</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $('.table-filter .date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+    
+                $('#filter-date').trigger('change');   
+            } else {
+                $('#filter-status').children(':not([value="all-statuses"])').remove();
+            }
+        break;
+        case 'credit-memos' :
+            if($('#filter-date').length < 1) {
+                $(this).closest('.row').siblings(':not(.mt-3)').remove();
+                $(this).parent().addClass('col-5').removeClass('col-12');
+    
+                $(`<div class="row">
+                    <div class="col-12">
+                        <label for="filter-customer">Customer</label>
+                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                            <option value="all" selected="selected">All</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-date">Date</label>
+                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                            <option value="last-365-days" selected="selected">Last 365 days</option>
+                            <option value="custom">Custom</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This week</option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year">This year</option>
+                            <option value="last-week">Last week</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-quarter">Last quarter</option>
+                            <option value="last-year">Last year</option>
+                            <option value="all-dates">All dates</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-from">From</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-to">To</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+                        </div>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-status">Status</label>
+                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                            <option value="all-statuses" selected="selected">All statuses</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="filter-delivery-method">Delivery method</label>
+                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+                            <option value="any" selected="selected">Any</option>
+                            <option value="print-later">Print later</option>
+                            <option value="send-later">Send later</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $('.table-filter .date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+    
+                $('#filter-date').trigger('change');   
+            } else {
+                $('#filter-status').children(':not([value="all-statuses"])').remove();
+            }
+        break;
+        case 'money-received' :
+            if($('#filter-date').length < 1) {
+                $(this).closest('.row').siblings(':not(.mt-3)').remove();
+                $(this).parent().addClass('col-5').removeClass('col-12');
+    
+                $(`<div class="row">
+                    <div class="col-12">
+                        <label for="filter-customer">Customer</label>
+                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                            <option value="all" selected="selected">All</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-date">Date</label>
+                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                            <option value="last-365-days" selected="selected">Last 365 days</option>
+                            <option value="custom">Custom</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This week</option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year">This year</option>
+                            <option value="last-week">Last week</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-quarter">Last quarter</option>
+                            <option value="last-year">Last year</option>
+                            <option value="all-dates">All dates</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-from">From</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-to">To</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+                        </div>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-status">Status</label>
+                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                            <option value="all-statuses" selected="selected">All statuses</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $('.table-filter .date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+    
+                $('#filter-date').trigger('change');   
+            } else {
+                $('#filter-status').children(':not([value="all-statuses"])').remove();
+                $('#filter-delivery-method').parent().remove();
+            }
+        break;
+        case 'statements' :
+            if($('#filter-date').length < 1) {
+                $(this).closest('.row').siblings(':not(.mt-3)').remove();
+                $(this).parent().addClass('col-5').removeClass('col-12');
+    
+                $(`<div class="row">
+                    <div class="col-12">
+                        <label for="filter-customer">Customer</label>
+                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                            <option value="all" selected="selected">All</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-date">Date</label>
+                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                            <option value="last-365-days" selected="selected">Last 365 days</option>
+                            <option value="custom">Custom</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This week</option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year">This year</option>
+                            <option value="last-week">Last week</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-quarter">Last quarter</option>
+                            <option value="last-year">Last year</option>
+                            <option value="all-dates">All dates</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-from">From</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-to">To</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+                        </div>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $('.table-filter .date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+    
+                $('#filter-date').trigger('change');   
+            } else {
+                $('#filter-status').closest('.row').remove();
+            }
+        break;
+        default :
+            if($('#filter-date').length < 1) {
+                $(this).closest('.row').siblings(':not(.mt-3)').remove();
+                $(this).parent().addClass('col-5').removeClass('col-12');
+    
+                $(`<div class="row">
+                    <div class="col-12">
+                        <label for="filter-customer">Customer</label>
+                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+                            <option value="all" selected="selected">All</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-date">Date</label>
+                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                            <option value="last-365-days" selected="selected">Last 365 days</option>
+                            <option value="custom">Custom</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This week</option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year">This year</option>
+                            <option value="last-week">Last week</option>
+                            <option value="last-month">Last month</option>
+                            <option value="last-quarter">Last quarter</option>
+                            <option value="last-year">Last year</option>
+                            <option value="all-dates">All dates</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-from">From</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label for="filter-to">To</label>
+                        <div class="nsm-field-group calendar">
+                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+                        </div>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $(`<div class="row">
+                    <div class="col-4">
+                        <label for="filter-status">Status</label>
+                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
+                            <option value="all-statuses" selected="selected">All statuses</option>
+                            <option value="open">Open</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="paid">Paid</option>
+                            <option value="pending">Pending</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="closed">Closed</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="filter-delivery-method">Delivery method</label>
+                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+                            <option value="any" selected="selected">Any</option>
+                            <option value="print-later">Print later</option>
+                            <option value="send-later">Send later</option>
+                        </select>
+                    </div>
+                </div>`).insertAfter($(this).closest('.row'));
+    
+                $('.table-filter .date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    orientation: 'bottom',
+                    autoclose: true
+                });
+    
+                $('#filter-date').trigger('change');   
+            }
+        break;
+    }
+});
+
+$(document).on('change', '#filter-date', function() {
+    switch($(this).val()) {
+        case 'last-365-days' :
+            var date = new Date();
+            date.setDate(date.getDate() - 365);
+
+            var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = '';
+        break;
+        case 'custom' :
+            var from_date = $('#payBillsModal #from').val();
+            var to_date = $('#payBillsModal #to').val();
+        break;
+        case 'today' :
+            var date = new Date();
+            var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'yesterday' :
+            var date = new Date();
+            date.setDate(date.getDate() - 1);
+            var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+            var to = from + 6;
+
+            var from_date = new Date(date.setDate(from));
+            var to_date = new Date(date.setDate(to));
+
+            from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = '01/01/' + date.getFullYear();
+                    var to_date = '03/31/'+ date.getFullYear();
+                break;
+                case 2 :
+                    var from_date = '04/01/' + date.getFullYear();
+                    var to_date = '06/30/'+ date.getFullYear();
+                break;
+                case 3 :
+                    var from_date = '07/01/' + date.getFullYear();
+                    var to_date = '09/30/'+ date.getFullYear();
+                break;
+                case 4 :
+                    var from_date = '10/01/' + date.getFullYear();
+                    var to_date = '12/31/'+ date.getFullYear();
+                break;
+            }
+        break;
+        case 'this-year' :
+            var date = new Date();
+
+            var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'last-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+
+            var from_date = new Date(date.setDate(from - 7));
+            var to_date = new Date(date.setDate(date.getDate() + 6));
+
+            from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
+
+            from_date = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                    var to_date = new Date('03/31/'+ date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                    var to_date = new Date('06/30/'+ date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                    var to_date = new Date('09/30/'+ date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                    var to_date = new Date('12/31/'+ date.getFullYear());
+                break;
+            }
+
+            from_date.setMonth(from_date.getMonth() - 3);
+            to_date.setMonth(to_date.getMonth() - 3);
+
+            if(to_date.getDate() === 1) {
+                to_date.setDate(to_date.getDate() - 1);
+            }
+
+            from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-year' :
+            var date = new Date();
+            date.setFullYear(date.getFullYear() - 1);
+
+            var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        default :
+            var from_date = '';
+            var to_date = '';
+        break;
+    }
+
+    $('#filter-from').val(from_date);
+    $('#filter-to').val(to_date);
+});

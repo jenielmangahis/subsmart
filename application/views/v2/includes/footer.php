@@ -10,6 +10,14 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade nsm-modal fade" id="hdr_multi_account_loading_modal" aria-labelledby="hdr_multi_account_loading_modal_label" aria-hidden="true" style="margin-top:10%;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
     <!-- DataTables -->
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <!-- Chart JS -->
@@ -91,6 +99,31 @@
 
         $(document).ready(function() {
             getNotificationsAll();
+
+            $('.hdr-drpdown-multi-accounts').on('click', function(){
+                var parent = $(this).closest('li');
+                if(parent.hasClass('shown')){
+                    load_company_multi_account_list();
+                }else{
+                    $('#hdr-multi-account-list').html('');
+                }
+            });
+
+            function load_company_multi_account_list(){
+                var url = base_url + "mycrm/_hdr_load_multi_account_list";
+                showLoader($("#hdr-multi-account-list"));        
+
+                setTimeout(function () {
+                  $.ajax({
+                     type: "GET",
+                     url: url,
+                     success: function(o)
+                     {          
+                        $("#hdr-multi-account-list").html(o);
+                     }
+                  });
+                }, 500);
+            }
 
             $('#manage_widgets_modal').on('show.bs.modal', function () {
                 $.ajax({
@@ -386,7 +419,7 @@
                 dataType: 'json',
                 success: function (e) {
                     if( e.is_valid == 1 ){
-                        location.href = '<?= base_url('admin/users'); ?>'
+                        location.href = '<?= base_url('admin/users'); ?>';
                     }else{
                         Swal.fire({
                           icon: 'error',

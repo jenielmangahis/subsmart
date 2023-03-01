@@ -1001,6 +1001,8 @@ if (!function_exists('getCompany')){
         return $CI->db->query('select * from business_profile where id = ' . $company_id);
     }
 }
+
+
 if (!function_exists('convertDecimal_to_Time')){
     function convertDecimal_to_Time($dec,$requet){
         $CI = &get_instance();
@@ -3591,6 +3593,26 @@ function getPaymentByCustomerGroup($start_date, $end_date) {
 
     array_push($fn, array("Total", $grand_count, dollar_format($grand_total)));
     return $fn;
+}
+
+function getCompanyData($company_id, $fields){
+    $CI =& get_instance();
+    $CI->load->model('Business_model');    
+    $company = $CI->business_model->getByCompanyFieldsByCompanyId($company_id, $fields);
+    return $company;
+}
+
+function getSessionParentMultiAccount(){
+    $CI = &get_instance();
+    $multi_account_parent_company_id = 0;
+    $multi_account_parent_user_id    = 0;
+    if( $CI->session->userdata('multi_account_parent_company_id') && $CI->session->userdata('multi_account_parent_user_id') ){
+        $multi_account_parent_company_id = $CI->session->userdata('multi_account_parent_company_id');
+        $multi_account_parent_user_id    = $CI->session->userdata('multi_account_parent_user_id');
+    }
+
+    $data = ['multi_account_parent_company_id' => $multi_account_parent_company_id, 'multi_account_parent_user_id' => $multi_account_parent_user_id];
+    return $data;
 }
 
 function getCustomerSource($start_date, $end_date) {

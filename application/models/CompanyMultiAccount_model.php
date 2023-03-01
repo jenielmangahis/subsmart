@@ -43,6 +43,19 @@ class CompanyMultiAccount_model extends MY_Model
         return $query;
     }
 
+    public function getByParentCompanyIdAndHashId($parent_company_id, $hash_id)
+    {
+        $this->db->select('company_multi_accounts.*, users.email AS user_email, business_profile.business_name AS company_name');
+        $this->db->from($this->table);
+        $this->db->join('users', 'company_multi_accounts.link_user_id = users.id','left');     
+        $this->db->join('business_profile', 'company_multi_accounts.link_company_id = business_profile.company_id','left');   
+        $this->db->where('company_multi_accounts.parent_company_id', $parent_company_id);
+        $this->db->where('company_multi_accounts.hash_id', $hash_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByParentCompanyIdAndLinkUserId($parent_id, $user_id)
     {
         $this->db->select('company_multi_accounts.*, users.email AS user_email, business_profile.business_name AS company_name');

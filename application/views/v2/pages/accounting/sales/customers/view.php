@@ -227,58 +227,6 @@
                                                             <?php foreach($settingsCols as $settingsCol) : ?>
                                                             <?=$settingsCol?>
                                                             <?php endforeach; ?>
-                                                            <!-- <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
-                                                                <label for="chk_type" class="form-check-label">Type</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
-                                                                <label for="chk_no" class="form-check-label">No.</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
-                                                                <label for="chk_customer" class="form-check-label">Customer</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_method" class="form-check-input">
-                                                                <label for="chk_method" class="form-check-label">Method</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_source" class="form-check-input">
-                                                                <label for="chk_source" class="form-check-label">Source</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
-                                                                <label for="chk_memo" class="form-check-label">Memo</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
-                                                                <label for="chk_due_date" class="form-check-label">Due date</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_aging" class="form-check-input">
-                                                                <label for="chk_aging" class="form-check-label">Aging</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
-                                                                <label for="chk_balance" class="form-check-label">Balance</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
-                                                                <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
-                                                                <label for="chk_email" class="form-check-label">Email</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
-                                                                <label for="chk_attachments" class="form-check-label">Attachments</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
-                                                                <label for="chk_status" class="form-check-label">Status</label>
-                                                            </div> -->
                                                             <?php if($type !== 'recurring-templates' && $type !== 'unbilled-income') : ?>
                                                             <div class="form-check">
                                                                 <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
