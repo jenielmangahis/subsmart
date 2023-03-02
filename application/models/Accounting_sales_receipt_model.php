@@ -55,6 +55,15 @@ class Accounting_sales_receipt_model extends MY_Model
         return  $insert_id;
     }
 
+    public function get_all_by_company_id($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
+        $query = $this->db->get('accounting_sales_receipt');
+        return $query->result();
+    }
+
     public function getAllByCompany($company_id)
     {
         $this->db->select('*');

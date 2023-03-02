@@ -3895,12 +3895,12 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'is_active' => 1,
+                'items.company_id' => $comp_id,
+                //'is_active' => 1,
             ),
             'table' => 'items',
             'select' => 'items.id,title,price,type',
         );
-
         $items = $this->general->get_data_with_param($get_items);
 
         if( $jobs_data->estimate_id > 0 ){
@@ -3942,6 +3942,34 @@ class Job extends MY_Controller
         $this->page_data['estimate_dp_amount'] = $estimate_dp_amount;
 
         $this->load->view('v2/pages/job/edit_job_item', $this->page_data);
+    }
+
+    public function api_edit_job_items($id)
+    {
+        foreach ($_POST['item_id'] as $key => $value) {
+            if ($value != 0) {
+                $this->db->where('items_id', $value);
+                $this->db->update('job_items', ['qty' => $_POST['item_qty'][$key]]);
+            } else {
+                // TODO: insert new item
+
+                // $this->db->insert('job_items', [
+                //     'job_id' => $id,
+                //     'items_id' => $value,
+                //     'qty' => $_POST['item_qty'][$key],
+                // ]);
+            }
+        }
+
+        $postIds = array_filter($_POST['item_id'], function ($id) {
+            return $id != 0;
+        });
+
+        $this->db->where_not_in('items_id', $postIds);
+        $this->db->where('job_id', $id);
+        $this->db->delete('job_items');
+
+        exit(json_encode(['success' => true]));
     }
 }
 
