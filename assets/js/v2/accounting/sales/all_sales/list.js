@@ -31,6 +31,10 @@ $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function()
     // });
 });
 
+$('.table-filter select:not(#filter-customer)').select2({
+    minimumResultsForSearch: -1
+});
+
 $('.dropdown-menu.table-filter .date').datepicker({
     format: 'mm/dd/yyyy',
     orientation: 'bottom',
@@ -52,25 +56,28 @@ $('#apply-button').on('click', function() {
         'recently-paid'
     ];
 
+    var selected = $('.nsm-counter.selected');
+
     var filterType = $('#filter-type').val();
-    var filterStatus = $('#filter-status').val();
-    var filterDeliveryMethod = $('#filter-delivery-method').val();
+    var filterStatus = $('#filter-status');
+    var filterDeliveryMethod = $('#filter-delivery-method');
     var filterDate = $('#filter-date').val();
     var filterFrom = $('#filter-from').val();
     var filterTo = $('#filter-to').val();
     var filterCustomer = $('#filter-customer').val();
     var filterAsOf = $('#filter-as-of').val();
 
-    var url = `${base_url}accounting/customers/view/${customerId}?`;
+    var url = `${base_url}accounting/all-sales?`;
 
-    url += filterType !== 'all' ? `type=${filterType}&` : '';
-    url += filterStatus !== 'all-statuses' ? `status=${filterStatus}&` : '';
-    url += filterDeliveryMethod !== 'any' ? `delivery-method=${filterDeliveryMethod}&` : '';
-    url += noDate.includes(filterType) === false && filterDate !== 'all-dates' ? `date=${filterDate}` : '';
-    url += filterType === 'unbilled-income' ? `date=${filterAsOf.replaceAll('/', '-')}` : '';
-    url += filterType !== 'unbilled-income' && filterType !== 'recently-paid' ? `from=${filterFrom.replaceAll('/', '-')}` : '';
-    url += filterType !== 'unbilled-income' && filterType !== 'recently-paid' ? `to=${filterTo.replaceAll('/', '-')}` : '';
-    url += filterType !== 'unbilled-income' ? `customer=${filterCustomer}` : '';
+    url += filterType !== 'all-transactions' ? `type=${filterType}&` : '';
+    url += filterStatus.length > 0 && filterStatus.val() !== 'all-statuses' ? `status=${filterStatus.val()}&` : '';
+    url += filterDeliveryMethod.length > 0 && filterDeliveryMethod.val() !== 'any' ? `delivery-method=${filterDeliveryMethod.val()}&` : '';
+    url += noDate.includes(filterType) === false && filterDate !== 'last-365-days' ? `date=${filterDate}&` : '';
+    url += filterType === 'unbilled-income' ? `date=${filterAsOf.replaceAll('/', '-')}&` : '';
+    url += filterType !== 'unbilled-income' && filterType !== 'recently-paid' && filterDate !== 'last-365-days' ? `from=${filterFrom.replaceAll('/', '-')}&` : '';
+    url += filterType !== 'unbilled-income' && filterType !== 'recently-paid' && filterDate !== 'last-365-days' ? `to=${filterTo.replaceAll('/', '-')}&` : '';
+    url += filterType !== 'unbilled-income' && filterCustomer !== 'all' ? `customer=${filterCustomer}&` : '';
+    url += selected.length > 0 ? `transaction=${selected.attr('id')}` : '';
 
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 
@@ -205,6 +212,10 @@ $('#filter-type').on('change', function() {
                 <option value="rejected">Rejected</option>
                 <option value="expired">Expired</option>`);
             }
+
+            if($('#filter-customer').parent().hasClass('col-12')) {
+                $('#filter-customer').parent().removeClass('col-12').addClass('col-5');
+            }
         break;
         case 'invoices' :
             if($('#filter-date').length < 1) {
@@ -286,6 +297,10 @@ $('#filter-type').on('change', function() {
                 <option value="overdue">Overdue</option>
                 <option value="paid">Paid</option>`);
             }
+
+            if($('#filter-customer').parent().hasClass('col-12')) {
+                $('#filter-customer').parent().removeClass('col-12').addClass('col-5');
+            }
         break;
         case 'sales-receipts' :
             if($('#filter-date').length < 1) {
@@ -360,6 +375,10 @@ $('#filter-type').on('change', function() {
                 $('#filter-date').trigger('change');   
             } else {
                 $('#filter-status').children(':not([value="all-statuses"])').remove();
+            }
+
+            if($('#filter-customer').parent().hasClass('col-12')) {
+                $('#filter-customer').parent().removeClass('col-12').addClass('col-5');
             }
         break;
         case 'credit-memos' :
@@ -436,6 +455,10 @@ $('#filter-type').on('change', function() {
             } else {
                 $('#filter-status').children(':not([value="all-statuses"])').remove();
             }
+
+            if($('#filter-customer').parent().hasClass('col-12')) {
+                $('#filter-customer').parent().removeClass('col-12').addClass('col-5');
+            }
         break;
         case 'money-received' :
             if($('#filter-date').length < 1) {
@@ -504,6 +527,10 @@ $('#filter-type').on('change', function() {
                 $('#filter-status').children(':not([value="all-statuses"])').remove();
                 $('#filter-delivery-method').parent().remove();
             }
+
+            if($('#filter-customer').parent().hasClass('col-12')) {
+                $('#filter-customer').parent().removeClass('col-12').addClass('col-5');
+            }
         break;
         case 'statements' :
             if($('#filter-date').length < 1) {
@@ -561,6 +588,10 @@ $('#filter-type').on('change', function() {
                 $('#filter-date').trigger('change');   
             } else {
                 $('#filter-status').closest('.row').remove();
+            }
+
+            if($('#filter-customer').parent().hasClass('col-12')) {
+                $('#filter-customer').parent().removeClass('col-12').addClass('col-5');
             }
         break;
         default :
@@ -642,6 +673,20 @@ $('#filter-type').on('change', function() {
                 });
     
                 $('#filter-date').trigger('change');   
+            } else {
+                $('#filter-status').html(`<option value="all-statuses" selected="selected">All statuses</option>
+                <option value="open">Open</option>
+                <option value="overdue">Overdue</option>
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+                <option value="accepted">Accepted</option>
+                <option value="closed">Closed</option>
+                <option value="rejected">Rejected</option>
+                <option value="expired">Expired</option>`);
+            }
+
+            if($('#filter-customer').parent().hasClass('col-12')) {
+                $('#filter-customer').parent().removeClass('col-12').addClass('col-5');
             }
         break;
     }
@@ -783,4 +828,213 @@ $(document).on('change', '#filter-date', function() {
 
     $('#filter-from').val(from_date);
     $('#filter-to').val(to_date);
+});
+
+$('.nsm-counter').on('click', function() {
+    var id = $(this).attr('id');
+    var val = id.includes('-invoices') ? 'invoices' : id;
+
+    if($(this).hasClass('selected')) {
+        $('#filter-type').val('all-transactions').trigger('change');
+
+        $(this).removeClass('selected');
+
+        if(id === 'open-invoices') {
+            $('#overdue-invoices').removeClass('co-selected');
+        }
+    } else {
+        $('.nsm-counter').removeClass('selected');
+        $('.nsm-counter').removeClass('co-selected');
+
+        $('#filter-type').val(val).trigger('change');
+
+        switch(id) {
+            case 'estimates' :
+                $('#filter-status').val('open').trigger('change');
+            break;
+            case 'overdue-invoices' :
+                $('#filter-status').val('overdue').trigger('change');
+            break;
+            case 'open-invoices' :
+                $('#filter-status').val('open').trigger('change');
+
+                $('.nsm-counter#overdue-invoices').addClass('co-selected');
+            break;
+        }
+
+        $(this).addClass('selected');
+    }
+
+    $('#apply-button').trigger('click');
+});
+
+$('#new-invoice').on('click', function() {
+    $.get('/accounting/get-other-modals/invoice_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#invoiceModal';
+        initModalFields('invoiceModal');
+
+        $('#invoiceModal').modal('show');
+    });
+});
+
+$('#new-payment').on('click', function() {
+    $.get('/accounting/get-other-modals/receive_payment_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#receivePaymentModal';
+        initModalFields('receivePaymentModal');
+
+        $('#receivePaymentModal').modal('show');
+    });
+});
+
+$('#new-sales-receipt').on('click', function() {
+    $.get('/accounting/get-other-modals/sales_receipt_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#salesReceiptModal';
+        initModalFields('salesReceiptModal');
+
+        $('#salesReceiptModal').modal('show');
+    });
+});
+
+$('#new-credit-memo').on('click', function() {
+    $.get('/accounting/get-other-modals/credit_memo_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#creditMemoModal';
+        initModalFields('creditMemoModal');
+
+        $('#creditMemoModal').modal('show');
+    });
+});
+
+$('#new-delayed-charge').on('click', function() {
+    $.get('/accounting/get-other-modals/delayed_charge_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#delayedChargeModal';
+        initModalFields('delayedChargeModal');
+
+        $('#delayedChargeModal').modal('show');
+    });
+});
+
+$('#new-time-activity').on('click', function() {
+    $.get('/accounting/get-other-modals/single_time_activity_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#singleTimeModal';
+        initModalFields('singleTimeModal');
+
+        $('#singleTimeModal').modal('show');
+    });
+});
+
+$('#new-standard-estimate').on('click', function() {
+    $.get('/accounting/get-other-modals/standard_estimate_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#standard-estimate-modal';
+        initModalFields('standard-estimate-modal');
+
+        $('#standard-estimate-modal').modal('show');
+    });
+});
+
+$('#new-options-estimate').on('click', function() {
+    $.get('/accounting/get-other-modals/options_estimate_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#options-estimate-modal';
+        initModalFields('options-estimate-modal');
+
+        $('#options-estimate-modal').modal('show');
+    });
+});
+
+$('#new-bundle-estimate').on('click', function() {
+    $.get('/accounting/get-other-modals/bundle_estimate_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#bundle-estimate-modal';
+        initModalFields('bundle-estimate-modal');
+
+        $('#bundle-estimate-modal').modal('show');
+    });
 });

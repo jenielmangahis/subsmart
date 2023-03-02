@@ -35,7 +35,7 @@ class Vendors extends MY_Controller
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
             // "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting.modal.css",
+            // "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",

@@ -17,7 +17,10 @@ class All_sales extends MY_Controller {
         $this->load->model('estimate_model');
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('accounting_sales_receipt_model');
+        $this->load->model('accounting_refund_receipt_model');
         $this->load->model('accounting_credit_memo_model');
+        $this->load->model('accounting_delayed_credit_model');
+        $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_statements_model');
 
         $this->page_data['page']->title = 'Sales Transactions';
@@ -26,7 +29,7 @@ class All_sales extends MY_Controller {
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
             // "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting.modal.css",
+            // "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -147,6 +150,14 @@ class All_sales extends MY_Controller {
             $this->page_data['date'] = get('date');
         }
 
+        if(!empty(get('customer'))) {
+            $filters['customer_id'] = get('customer');
+            $this->page_data['customer']->id = get('customer');
+            $customer = $this->accounting_customers_model->get_by_id(get('customer'));
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $this->page_data['customer']->name = $customerName;
+        }
+
         $get = $this->get_transactions($filters);
 
         $this->page_data['transactions'] = $get['transactions'];
@@ -238,15 +249,18 @@ class All_sales extends MY_Controller {
 
         switch($filters['type']) {
             default :
-                // $transactions = $this->get_invoices($transactions, $filters);
-                // $transactions = $this->get_credit_memos($transactions, $filters);
-                // $transactions = $this->get_sales_receipts($transactions, $filters);
-                // $transactions = $this->get_refund_receipts($transactions, $filters);
-                // $transactions = $this->get_delayed_credits($transactions, $filters);
-                // $transactions = $this->get_delayed_charges($transactions, $filters);
-                // $transactions = $this->get_estimates($transactions, $filters);
-                // $transactions = $this->get_payments($transactions, $filters);
-                // $transactions = $this->get_billable_expenses($transactions, $filters);
+                $transactions = $this->get_invoices($transactions, $filters);
+                $transactions = $this->get_credit_memos($transactions, $filters);
+                $transactions = $this->get_sales_receipts($transactions, $filters);
+                $transactions = $this->get_refund_receipts($transactions, $filters);
+                $transactions = $this->get_delayed_credits($transactions, $filters);
+                $transactions = $this->get_delayed_charges($transactions, $filters);
+                $transactions = $this->get_estimates($transactions, $filters);
+                $transactions = $this->get_payments($transactions, $filters);
+                $transactions = $this->get_billable_expenses($transactions, $filters);
+            break;
+            case 'estimates' :
+                $transactions = $this->get_estimates($transactions, $filters);
             break;
         }
 
@@ -268,5 +282,585 @@ class All_sales extends MY_Controller {
             'headers' => $headers,
             'settingsCols' => $settingsCols
         ];
+    }
+
+    private function get_invoices($transactions, $filters = [])
+    {
+        $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
+        
+        foreach($invoices as $invoice)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item print-invoice' href='/invoice/preview/$invoice->id?format=print' target='_blank'>Print</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-invoice' href='#'>Send</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item view-edit-invoice' href='#'>View/Edit</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item delete-invoice' href='#'>Delete</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item void-invoice' href='#'>Void</a>
+                    </li>
+                </ul>
+            </div>";
+
+            $flag = true;
+            switch($filters['status']) {
+                case 'open' :
+                    if(in_array($invoice->status, ['Draft', 'Declined', 'Paid'])) {
+                        $flag = false;
+                    }
+                break;
+                case 'overdue' :
+                    if(in_array($invoice->INV_status, ['Draft', 'Declined', 'Paid'])) {
+                        $flag = false;
+                    } else {
+                        if(strtotime($invoice->due_date) > strtotime()) {
+                            $flag = false;
+                        }
+                    }
+                break;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $invoice->id,
+                    'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                    'type' => 'Invoice',
+                    'no' => $invoice->invoice_number,
+                    'customer' => $customerName,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $invoice->message_on_invoice,
+                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                    'aging' => '',
+                    'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
+                    'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $invoice->customer_email,
+                    'attachments' => '',
+                    'status' => $invoice->status,
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created)),
+                    'manage' => $manageCol
+                ];
+            }
+        }
+
+        return $transactions;
+    }
+
+    private function get_credit_memos($transactions, $filters = [])
+    {
+        $creditMemos = $this->accounting_credit_memo_model->get_company_credit_memos(['company_id' => logged('company_id')]);
+
+        foreach($creditMemos as $creditMemo)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item print-credit-memo' href='/accounting/customers/print-transaction/credit-memo/$creditMemo->id' target='_blank'>Print</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-credit-memo' href='#'>Send</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item view-edit-credit-memo' href='#'>View/Edit</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item void-credit-memo' href='#'>Void</a>
+                    </li>
+                </ul>
+            </div>";
+
+            if($filters['type'] === 'open-invoices' && floatval($creditMemo->balance) > 0 || $filters['type'] !== 'open-invoices') {
+                $transactions[] = [
+                    'id' => $creditMemo->id,
+                    'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'type' => 'Credit Memo',
+                    'no' => $creditMemo->ref_no,
+                    'customer' => $customerName,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $creditMemo->message_credit_memo,
+                    'due_date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'aging' => '',
+                    'balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
+                    'total' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $creditMemo->email,
+                    'attachments' => '',
+                    'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
+        }
+
+        return $transactions;
+    }
+
+    private function get_sales_receipts($transactions, $filters = [])
+    {
+        $salesReceipts = $this->accounting_sales_receipt_model->get_all_by_company_id(logged('company_id'));
+
+        foreach($salesReceipts as $salesReceipt)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item print-sales-receipt' href='/accounting/customers/print-transaction/sales-receipt/$salesReceipt->id' target='_blank'>Print</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-sales-receipt' href='#'>Send</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item view-edit-sales-receipt' href='#'>View/Edit</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item delete-sales-receipt' href='#'>Delete</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item void-sales-receipt' href='#'>Void</a>
+                    </li>
+                </ul>
+            </div>";
+
+            $transactions[] = [
+                'id' => $salesReceipt->id,
+                'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                'type' => 'Sales Receipt',
+                'no' => $salesReceipt->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $salesReceipt->message_sales_receipt,
+                'due_date' => '',
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $salesReceipt->email,
+                'attachments' => '',
+                'status' => 'Paid',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($salesReceipt->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_refund_receipts($transactions, $filters = [])
+    {
+        $refundReceipts = $this->accounting_refund_receipt_model->get_company_refund_receipts(['company_id' => logged('company_id')]);
+
+        foreach($refundReceipts as $refundReceipt)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item print-refund-receipt-check' href='#'>Print check</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-refund-receipt' href='#'>Send</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item print-refund-receipt' href='/accounting/customers/print-transaction/refund-receipt/$refundReceipt->id' target='_blank'>Print</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item view-edit-refund-receipt' href='#'>View/Edit</a>
+                    </li>
+                </ul>
+            </div>";
+
+            $transactions[] = [
+                'id' => $refundReceipt->id,
+                'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                'type' => 'Refund',
+                'no' => $refundReceipt->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $refundReceipt->message_refund_receipt,
+                'due_date' => '',
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $refundReceipt->email,
+                'attachments' => '',
+                'status' => 'Paid',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($refundReceipt->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_delayed_credits($transactions, $filters = [])
+    {
+        $delayedCredits = $this->accounting_delayed_credit_model->get_company_delayed_credits(['company_id' => logged('company_id')]);
+
+        foreach($delayedCredits as $delayedCredit)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($delayedCredit->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-delayed-credit" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $delayedCredit->id,
+                'date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                'type' => 'Credit',
+                'no' => $delayedCredit->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $delayedCredit->memo,
+                'due_date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => floatval($delayedCredit->remaining_balance) > 0 ? 'Open' : 'Closed',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($delayedCredit->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_delayed_charges($transactions, $filters = [])
+    {
+        $delayedCharges = $this->accounting_delayed_charge_model->get_company_delayed_charges(['company_id' => logged('company_id')]);
+
+        foreach($delayedCharges as $delayedCharge)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($delayedCharge->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-delayed-charge" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $delayedCharge->id,
+                'date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                'type' => 'Charge',
+                'no' => $delayedCharge->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $delayedCharge->memo,
+                'due_date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => floatval($delayedCharge->remaining_balance) > 0 ? 'Open' : 'Closed',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($delayedCharge->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_estimates($transactions, $filters = [])
+    {
+        $estimates = $this->estimate_model->getAllByCompany(logged('company_id'));
+
+        foreach($estimates as $estimate)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($estimate->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item create-invoice' href='#'>Create invoice</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item print-estimate' href='/estimate/print/$estimate->id' target='_blank'>Print</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-estimate' href='#' acs-id='$estimate->customer_id' est-id='$estimate->id'>Send</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item update-estimate-status' href='#'>Update status</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item view-edit-estimate' href='#'>View/Edit</a>
+                    </li>
+                </ul>
+            </div>";
+
+            $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
+            $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
+
+            if ($estimate->estimate_type == 'Option') {
+                $grandTotal = $total1;
+            } elseif ($estimate->estimate_type == 'Bundle') {
+                $grandTotal = $total2;
+            } else {
+                $grandTotal = $estimate->grand_total;
+            }
+
+            $flag = true;
+            switch($filters['status']) {
+                case 'pending' :
+
+                break;
+                case 'accepted' :
+
+                break;
+                case 'open' :
+                    if(in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer'])) {
+                        $flag = false;
+                    }
+                break;
+                case 'closed' :
+
+                break;
+                case 'rejected' :
+
+                break;
+                case 'expired' :
+
+                break;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $estimate->id,
+                    'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                    'type' => 'Estimate',
+                    'no' => $estimate->estimate_number,
+                    'customer' => $customerName,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $estimate->customer_message,
+                    'due_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => '',
+                    'attachments' => '',
+                    'status' => $estimate->status,
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($estimate->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
+        }
+
+        return $transactions;
+    }
+
+    private function get_payments($transactions, $filters = [])
+    {
+        $payments = $this->accounting_receive_payment_model->get_company_receive_payments(['company_id' => logged('company_id')]);
+
+        foreach($payments as $payment)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item view-edit-payment" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            $transactions[] = [
+                'id' => $payment->id,
+                'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                'type' => 'Payment',
+                'no' => $payment->ref_no,
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $payment->memo,
+                'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => '-'.number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $customer->email,
+                'attachments' => '',
+                'status' => 'Closed',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_billable_expenses($transactions, $filters = [])
+    {
+        $billableExpenses = $this->accounting_customers_model->get_company_billable_expenses(logged('company_id'));
+
+        foreach($billableExpenses as $billableExpense)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($billableExpense->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $manageCol = '<div class="dropdown table-management">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item view-edit-billable-expense" href="#">View/Edit</a>
+                    </li>
+                </ul>
+            </div>';
+
+            switch($billableExpense->transaction_type) {
+                case 'Expense' :
+                    $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($expense->payment_date));
+                break;
+                case 'Check' :
+                    $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($check->payment_date));
+                break;
+                case 'Bill' :
+                    $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($bill->bill_date));
+                break;
+                case 'Vendor Credit' :
+                    $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                break;
+                case 'Credit Card Credit' :
+                    $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                break;
+            }
+
+            $transactions[] = [
+                'id' => $billableExpense->id,
+                'date' => $date,
+                'type' => 'Billable Expense Charge',
+                'no' => '',
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => $billableExpense->description,
+                'due_date' => $date,
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval(str_replace(',', '', $billableExpense->amount)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($billableExpense->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
     }
 }

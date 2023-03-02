@@ -38,7 +38,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="nsm-counter secondary h-100 mb-2 <?=$transaction === 'unbilled-activity' ? 'selected' : ''?>" id="unbilled-activity">
+                                <div class="nsm-counter secondary h-100 mb-2 <?=$transaction === 'unbilled-income' ? 'selected' : ''?>" id="unbilled-income">
                                     <div class="row h-100">
                                         <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                             <i class='bx bx-receipt'></i>
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
+                        <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'recently-paid' ? 'selected' : ''?>" id="recently-paid">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -124,85 +124,135 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col-5">
+                                    <div class="<?=in_array($type, ['unbilled-income', 'recently-paid']) ? 'col-12' : 'col-5'?>">
                                         <label for="filter-type">Type</label>
                                         <select class="nsm-field form-select" name="filter_type" id="filter-type">
-                                            <option value="all-transactions" selected="selected">All transactions</option>
-                                            <option value="estimates">Estimate</option>
-                                            <option value="invoices">Invoices</option>
-                                            <option value="sales-receipts">Sales Receipts</option>
-                                            <option value="credit-memos">Credit memos</option>
-                                            <option value="unbilled-income">Unbilled income</option>
-                                            <option value="recently-paid">Recently paid</option>
-                                            <option value="money-received">Money received</option>
-                                            <option value="statements">Statements</option>
+                                            <option value="all-transactions" <?=empty($type) || $type === 'all-transactions' ? 'selected' : ''?>>All transactions</option>
+                                            <option value="estimates" <?=$type === 'estimates' ? 'selected' : ''?>>Estimates</option>
+                                            <option value="invoices" <?=$type === 'invoices' ? 'selected' : ''?>>Invoices</option>
+                                            <option value="sales-receipts" <?=$type === 'sales-receipts' ? 'selected' : ''?>>Sales Receipts</option>
+                                            <option value="credit-memos" <?=$type === 'credit-memos' ? 'selected' : ''?>>Credit memos</option>
+                                            <option value="unbilled-income" <?=$type === 'unbilled-income' ? 'selected' : ''?>>Unbilled income</option>
+                                            <option value="recently-paid" <?=$type === 'recently-paid' ? 'selected' : ''?>>Recently paid</option>
+                                            <option value="money-received" <?=$type === 'money-received' ? 'selected' : ''?>>Money received</option>
+                                            <option value="statements" <?=$type === 'statements' ? 'selected' : ''?>>Statements</option>
                                         </select>
                                     </div>
                                 </div>
+                                <?php if(!in_array($type, ['unbilled-income', 'recently-paid', 'statements'])) : ?>
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="filter-status">Status</label>
                                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                                            <option value="all-statuses" selected="selected">All statuses</option>
-                                            <option value="open">Open</option>
-                                            <option value="overdue">Overdue</option>
-                                            <option value="paid">Paid</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="accepted">Accepted</option>
-                                            <option value="closed">Closed</option>
-                                            <option value="rejected">Rejected</option>
-                                            <option value="expired">Expired</option>
+                                            <?php switch($type) {
+                                                case 'estimates' : ?>
+                                                    <option value="all-statuses" <?=empty($status) || $status === 'all-statuses' ? 'selected' : ''?>>All statuses</option>
+                                                    <option value="pending" <?=$status === 'pending' ? 'selected' : ''?>>Pending</option>
+                                                    <option value="accepted" <?=$status === 'accepted' ? 'selected' : ''?>>Accepted</option>
+                                                    <option value="open" <?=$status === 'open' ? 'selected' : ''?>>Open</option>
+                                                    <option value="closed" <?=$status === 'closed' ? 'selected' : ''?>>Closed</option>
+                                                    <option value="rejected" <?=$status === 'rejected' ? 'selected' : ''?>>Rejected</option>
+                                                    <option value="expired" <?=$status === 'expired' ? 'selected' : ''?>>Expired</option>
+                                                <?php break;
+                                                case 'invoices' : ?>
+                                                    <option value="all-statuses" <?=empty($status) || $status === 'all-statuses' ? 'selected' : ''?>>All statuses</option>
+                                                    <option value="open" <?=$status === 'open' ? 'selected' : ''?>>Open</option>
+                                                    <option value="overdue" <?=$status === 'overdue' ? 'selected' : ''?>>Overdue</option>
+                                                    <option value="paid" <?=$status === 'paid' ? 'selected' : ''?>>Paid</option>
+                                                <?php break;
+                                                case 'sales-receipts' :
+                                                    echo '<option value="all-statuses" selected>All statuses</option>';
+                                                break;
+                                                case 'credit-memos' :
+                                                    echo '<option value="all-statuses" selected>All statuses</option>';
+                                                break;
+                                                case 'money-received' :
+                                                    echo '<option value="all-statuses" selected>All statuses</option>';
+                                                break;
+                                                default : ?>
+                                                    <option value="all-statuses" <?=empty($status) || $status === 'all-statuses' ? 'selected' : ''?>>All statuses</option>
+                                                    <option value="open" <?=$status === 'open' ? 'selected' : ''?>>Open</option>
+                                                    <option value="overdue" <?=$status === 'overdue' ? 'selected' : ''?>>Overdue</option>
+                                                    <option value="paid" <?=$status === 'paid' ? 'selected' : ''?>>Paid</option>
+                                                    <option value="pending" <?=$status === 'pending' ? 'selected' : ''?>>Pending</option>
+                                                    <option value="accepted" <?=$status === 'accepted' ? 'selected' : ''?>>Accepted</option>
+                                                    <option value="closed" <?=$status === 'closed' ? 'selected' : ''?>>Closed</option>
+                                                    <option value="rejected" <?=$status === 'rejected' ? 'selected' : ''?>>Rejected</option>
+                                                    <option value="expired" <?=$status === 'expired' ? 'selected' : ''?>>Expired</option>
+                                                <?php break;
+                                            } ?>
                                         </select>
                                     </div>
+                                    <?php if($type !== 'money-received') : ?>
                                     <div class="col-3">
                                         <label for="filter-delivery-method">Delivery method</label>
                                         <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
-                                            <option value="any" selected="selected">Any</option>
-                                            <option value="print-later">Print later</option>
-                                            <option value="send-later">Send later</option>
+                                            <option value="any" <?=empty($delivery_method) || $delivery_method === 'any' ? 'selected' : ''?>>Any</option>
+                                            <option value="print-later" <?=$delivery_method === 'print-later' ? 'selected' : ''?>>Print later</option>
+                                            <option value="send-later" <?=$delivery_method === 'send-later' ? 'selected' : ''?>>Send later</option>
                                         </select>
                                     </div>
+                                    <?php endif; ?>
                                 </div>
+                                <?php endif; ?>
+                                <?php if(!in_array($type, ['unbilled-income', 'recently-paid'])) : ?>
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="filter-date">Date</label>
                                         <select class="nsm-field form-select" name="filter_date" id="filter-date">
-                                            <option value="last-365-days" selected="selected">Last 365 days</option>
-                                            <option value="custom">Custom</option>
-                                            <option value="today">Today</option>
-                                            <option value="yesterday">Yesterday</option>
-                                            <option value="this-week">This week</option>
-                                            <option value="this-month">This month</option>
-                                            <option value="this-quarter">This quarter</option>
-                                            <option value="this-year">This year</option>
-                                            <option value="last-week">Last week</option>
-                                            <option value="last-month">Last month</option>
-                                            <option value="last-quarter">Last quarter</option>
-                                            <option value="last-year">Last year</option>
-                                            <option value="all-dates">All dates</option>
+                                            <option value="last-365-days" <?=empty($date) || $date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
+                                            <option value="custom" <?=$date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                            <option value="today" <?=$date === 'today' ? 'selected' : ''?>>Today</option>
+                                            <option value="yesterday" <?=$date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                            <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
+                                            <option value="this-month" <?=$date === 'this-month' ? 'selected' : ''?>>This month</option>
+                                            <option value="this-quarter" <?=$date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
+                                            <option value="this-year" <?=$date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                            <option value="last-week" <?=$date === 'last-week' ? 'selected' : ''?>>Last week</option>
+                                            <option value="last-month" <?=$date === 'last-month' ? 'selected' : ''?>>Last month</option>
+                                            <option value="last-quarter" <?=$date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
+                                            <option value="last-year" <?=$date === 'last-year' ? 'selected' : ''?>>Last year</option>
+                                            <option value="all-dates" <?=$date === 'all-dates' ? 'selected' : ''?>>All dates</option>
                                         </select>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-1 year"))?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control date" value="<?=empty($from_date) ? date("m/d/Y", strtotime("-1 year")) : $from_date?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" id="filter-to">
+                                            <input type="text" class="nsm-field form-control date" id="filter-to" value="<?=empty($to_date) ? '' : $to_date?>">
                                         </div>
                                     </div>
                                 </div>
+                                <?php endif; ?>
+                                <?php if($type === 'unbilled-income') : ?>
                                 <div class="row">
-                                    <div class="col-5">
+                                    <div class="col">
+                                        <label for="filter-as-of">Unbilled Income As Of</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" name="filter_as_of_date" id="filter-as-of" class="form-control nsm-field date" value="<?=date("m/d/Y", strtotime($date))?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                                <?php if($type !== 'unbilled-income') : ?>
+                                <div class="row">
+                                    <div class="<?=$type === 'recently-paid' ? 'col-12' : 'col-5'?>">
                                         <label for="filter-customer">Customer</label>
                                         <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
-                                            <option value="all" selected="selected">All</option>
+                                            <?php if(empty($customer)) : ?>
+                                                <option value="all" selected="selected">All</option>
+                                            <?php else : ?>
+                                                <option value="<?=$customer->id?>"><?=$customer->name?></option>
+                                            <?php endif; ?>
                                         </select>
                                     </div>
                                 </div>
+                                <?php endif; ?>
                                 <div class="row mt-3">
                                     <div class="col-6">
                                         <button type="button" class="nsm-button" id="reset-button">
@@ -227,8 +277,9 @@
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-invoice">Invoice</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-payment">Payment</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-estimate">Estimate</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-payment-link">Payment Link</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-standard-estimate">Standard Estimate</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-options-estimate">Options Estimate</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-bundle-estimate">Bundle Estimate</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-sales-receipt">Sales Receipt</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-credit-memo">Credit Memo</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-delayed-charge">Delayed Charge</a></li>
@@ -297,9 +348,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count([]) > 0) : ?>
-						<?php foreach([] as $transaction) : ?>
-                        
+                        <?php if(count($transactions) > 0) : ?>
+						<?php foreach($transactions as $transaction) : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['no']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['method']?></td>
+                            <td><?=$transaction['source']?></td>
+                            <td><?=$transaction['memo']?></td>
+                            <td><?=$transaction['due_date']?></td>
+                            <td><?=$transaction['aging']?></td>
+                            <td><?=$transaction['balance']?></td>
+                            <td><?=$transaction['total']?></td>
+                            <td><?=$transaction['last_delivered']?></td>
+                            <td><?=$transaction['email']?></td>
+                            <td><?=$transaction['attachments']?></td>
+                            <td><?=$transaction['status']?></td>
+                            <td><?=$transaction['po_number']?></td>
+                            <td><?=$transaction['sales_rep']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>

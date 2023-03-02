@@ -307,6 +307,17 @@ class Accounting_customers_model extends MY_Model
         $query = $this->db->get('accounting_vendor_transaction_categories');
         return $query->result();
     }
+
+    public function get_company_billable_expenses($companyId)
+    {
+        $this->db->select('accounting_vendor_transaction_categories.*');
+        $this->db->where('accounting_vendor_transaction_categories.transaction_type !=', 'Purchase Order');
+        $this->db->where('acs_profile.company_id', $companyId);
+        $this->db->where('accounting_vendor_transaction_categories.billable', 1);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_vendor_transaction_categories.customer_id');
+        $query = $this->db->get('accounting_vendor_transaction_categories');
+        return $query->result();
+    }
 }
 
 
