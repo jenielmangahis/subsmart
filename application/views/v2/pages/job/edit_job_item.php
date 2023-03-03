@@ -456,7 +456,6 @@
                         </div>
                     </div>
                 </div>
-                <form method="post" name="myform" id="jobs_form">
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">                        
@@ -547,7 +546,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <form class="col-md-8" id="techupdateform">
                                 <div class="nsm-card primary table-custom" style="margin-top: 30px;">
                                     <div class="nsm-card-content">
                                         <div class="row">
@@ -608,7 +607,10 @@
                                                         <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                     </td>
                                                     <td><small>Qty</small>
-                                                        <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                                        <input
+                                                        min="0"
+                                                        onchange="onChangeItemQuantity(this)"
+                                                        data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                     </td>
                                                     <td><small>Unit Price</small>
                                                         <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
@@ -619,8 +621,13 @@
                                                         <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
                                                     </td>
                                                     <td>
-                                                        <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
+                                                        <button
+                                                        onclick="onRemoveItem(this)"
+                                                        type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                     </td>
+
+                                                    <!-- This is required for creating new job item -->
+                                                    <input type="hidden" value="<?= $item->fk_item_id ? $item->fk_item_id : "0" ?>" name="fk_item_id[]">
                                                 </tr>
                                             <?php
                                                 $subtotal = $subtotal + $total;
@@ -628,6 +635,33 @@
                                             ?>
                                             </tbody>
                                         </table>
+                                                
+                                        <template id="itemrowtemplate">
+                                            <tr>
+                                                <td width="35%"><small>Item name</small>
+                                                    <input value="" type="text" name="item_name[]" class="form-control" readonly>
+                                                    <input type="hidden" value='' name="item_id[]">
+                                                </td>
+                                                <td><small>Qty</small>
+                                                    <input data-itemid='' min="0"  id='' value='' type="number" name="item_qty[]" class="form-control qty">
+                                                </td>
+                                                <td><small>Unit Price</small>
+                                                    <input id='price' value=''  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
+                                                </td>
+                                                <td><small>Item Type</small><input readonly type="text" class="form-control item-type" value=''></td>
+                                                <td>
+                                                    <small>Amount</small><br>
+                                                    <b data-subtotal='' id='sub_total' class="total_per_item">$</b>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
+                                                </td>
+
+                                                <!-- This is required for creating new job item -->
+                                                <input type="hidden" name="fk_item_id[]">
+                                            </tr>
+                                        </template>
+
                                         <div class="row mt-5">                                            
                                             <div class="col-sm-12 text-end">
                                                 <button class="nsm-button primary link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
@@ -638,12 +672,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                           
                     </div>
                 </div>
-                </form>
             </div>
         </div>
     </div>
@@ -698,7 +731,6 @@
                                         if (!empty($items)) {
                                             foreach ($items as $item) {
                                                $item_qty = get_total_item_qty($item->id);
-                                               if ($item_qty[0]->total_qty > 0) {
                                     ?>
                                     <tr>
                                         <td style="width: 0% !important;">
@@ -709,7 +741,7 @@
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                     </tr>
-                                    <?php } } } ?>
+                                    <?php } } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -829,49 +861,98 @@
 </div> -->
 
 
-<!-- 
-                                                <script type="text/javascript">
-        $(".select_item").click(function () {
-            var TR_ID = this.id;
-            var ITEM_NAME = $(this).data('itemname');
-            var ITEM_TYPE = $(this).data('item_type');
-            var POINTS = "";
-            var PRICE = $(this).data('price');
-            var QUANTITY = $(this).data('quantity');
-            var SUB_TOTAL = parseFloat(PRICE * QUANTITY).toFixed(2);
-            var LOCATION = "";
 
-            var id = this.id;
-            var title = $(this).data('itemname');
-            var price = $(this).data('price');
-            var qty = $(this).data('quantity');
-            var item_type = $(this).data('item_type');
-            var total_ = price * qty;
-            var total = parseFloat(total_).toFixed(2);
-            var withCommas = Number(total).toLocaleString('en');
-            // markup2 = "<tr id=\"sss\">" +
-            //     "<td >"+title+"</td>\n" +
-            //     "<td >0</td>\n" +
-            //     "<td >"+price+"</td>\n" +
-            //     "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
-            //     "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
-            //     "<td ></td>\n" +
-            //     "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
-            //     "</tr>";\
-            markup2 = "<tr id='"+TR_ID+"'>" +
-                      "<td>"+ITEM_NAME+"</td>" +
-                      "<td>"+ITEM_TYPE+"</td>" +
-                      "<td>"+POINTS+"</td>" +
-                      "<td>"+PRICE+"</td>" +
-                      "<td>"+QUANTITY+"</td>" +
-                      "<td>"+SUB_TOTAL+"</td>" +
-                      "<td>"+LOCATION+"</td>" +
-                      "</tr>";
-            tableBody2 = $("#device_audit_append");
-            tableBody2.append(markup2);
-            // calculate_subtotal();
-        });
-</script> -->
+
+<script type="text/javascript">
+    const items = <?php echo json_encode($items); ?>;
+
+    $(".select_item").click(function () {
+        const item = items.find(item => item.id == this.id);
+        if (!item) return;
+
+        const $template = document.getElementById("itemrowtemplate");
+        const template = $template.content;
+        const $row = document.importNode(template, true);
+
+        $row.querySelector("[name='item_name[]']").setAttribute("value", item.title);
+        $row.querySelector("[name='item_id[]']").setAttribute("value", 0);
+
+        const $itemQty = $row.querySelector("[name='item_qty[]']");
+        $itemQty.setAttribute("value", 1);
+        $itemQty.dataset.itemid = item.id;
+        $itemQty.setAttribute("id", item.id);
+        $itemQty.addEventListener("change", () => onChangeItemQuantity($itemQty));
+
+        const $itemPrice = $row.querySelector("[name='item_price[]']");
+        $itemPrice.setAttribute("value", item.price);
+        $itemPrice.setAttribute("id", "price" + item.id);
+
+        $row.querySelector(".item-type").value = item.type;
+        
+        const $itemSubTotal = $row.querySelector("#sub_total");
+        const subTotal = parseFloat(item.price * 1).toFixed(2);
+        $itemSubTotal.setAttribute("id", "sub_total" + item.id);
+        $itemSubTotal.dataset.subtotal = subTotal;
+        $itemSubTotal.innerHTML = "$" + subTotal;
+
+        $removeBtn = $row.querySelector(".items_remove_btn");
+        $removeBtn.addEventListener("click", () => onRemoveItem($removeBtn));
+
+        $row.querySelector("[name='fk_item_id[]']").value = item.id;
+
+        $("#jobs_items").append($($row));
+        // calculate_subtotal();
+    });
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    function onChangeItemQuantity(event) {
+        const $input = event;
+        const $row = $($input).closest("tr");
+        const price = $row.find("[name='item_price[]']").val();
+        const subTotal = parseFloat(price * $input.value);
+        $row.find(".total_per_item").text(currencyFormatter.format(subTotal));
+    }
+
+    function onRemoveItem(event) {
+        const $row = $(event).closest("tr");
+        $row.remove()
+    }
+
+    const $form = document.getElementById("techupdateform");
+    const jobId = <?= $jobs_data->id ?> 
+    $form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        let isSuccess = false;
+        try {
+            const response = await fetch(`/Job/api_edit_job_items/${jobId}`, {
+                method: "POST",
+                body: new FormData($form),
+            });
+            const json = await response.json();
+            isSuccess = response.status === 200;
+        } catch (error) { }
+
+        if (isSuccess) {
+            await Swal.fire(
+                'Update Success',
+                'Job has been updated successfully',
+                'success'
+            )
+            window.location.reload()
+        } else {
+            Swal.fire(
+                'Update Error',
+                'Something went wrong updating this job',
+                'error'
+            )
+        }
+    })
+</script>
 
 
 <!-- On My Way Modal -->
@@ -1295,3 +1376,16 @@ $(function() {
         }
 </script>
 <script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ITEMS_TABLE = $('#items_table').DataTable({
+            "ordering": false,
+        });
+        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+            ITEMS_TABLE.search($(this).val()).draw()
+        });
+        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
+    })
+</script>

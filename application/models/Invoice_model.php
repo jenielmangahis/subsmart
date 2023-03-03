@@ -1004,6 +1004,15 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function get_all_company_invoice($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('is_recurring', 0);
+        $this->db->where('view_flag', 0);
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
     public function get_invoice_items($invoiceId)
     {
         $this->db->where('invoice_id', $invoiceId);

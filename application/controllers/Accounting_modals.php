@@ -10784,6 +10784,7 @@ class Accounting_modals extends MY_Controller
         if ($field === 'pay-bills-vendor' ||
         $field === 'payee' && is_null($this->input->get('modal')) ||
         $field === 'payee' && $this->input->get('for') === 'filter' ||
+        $field === 'customer' && $this->input->get('for') === 'filter' ||
         $field === 'expense-account' && $this->input->get('for') === 'filter') {
             array_unshift($return['results'], ['id' => 'all', 'text' => 'All']);
         } else {
