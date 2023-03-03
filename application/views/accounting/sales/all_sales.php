@@ -147,11 +147,14 @@
                                             <?php switch($type) {
                                                 case 'estimates' : ?>
                                                     <option value="all-statuses" <?=empty($status) || $status === 'all-statuses' ? 'selected' : ''?>>All statuses</option>
-                                                    <option value="pending" <?=$status === 'pending' ? 'selected' : ''?>>Pending</option>
-                                                    <option value="accepted" <?=$status === 'accepted' ? 'selected' : ''?>>Accepted</option>
                                                     <option value="open" <?=$status === 'open' ? 'selected' : ''?>>Open</option>
                                                     <option value="closed" <?=$status === 'closed' ? 'selected' : ''?>>Closed</option>
-                                                    <option value="rejected" <?=$status === 'rejected' ? 'selected' : ''?>>Rejected</option>
+                                                    <option value="draft" <?=$status === 'draft' ? 'selected' : ''?>>Draft</option>
+                                                    <option value="submitted" <?=$status === 'submitted' ? 'selected' : ''?>>Submitted</option>
+                                                    <option value="accepted" <?=$status === 'accepted' ? 'selected' : ''?>>Accepted</option>
+                                                    <option value="invoiced" <?=$status === 'invoiced' ? 'selected' : ''?>>Invoiced</option>
+                                                    <option value="lost" <?=$status === 'lost' ? 'selected' : ''?>>Lost</option>
+                                                    <option value="declined-by-customer" <?=$status === 'declined-by-customer' ? 'selected' : ''?>>Declined By Customer</option>
                                                     <option value="expired" <?=$status === 'expired' ? 'selected' : ''?>>Expired</option>
                                                 <?php break;
                                                 case 'invoices' : ?>
@@ -173,11 +176,14 @@
                                                     <option value="all-statuses" <?=empty($status) || $status === 'all-statuses' ? 'selected' : ''?>>All statuses</option>
                                                     <option value="open" <?=$status === 'open' ? 'selected' : ''?>>Open</option>
                                                     <option value="overdue" <?=$status === 'overdue' ? 'selected' : ''?>>Overdue</option>
-                                                    <option value="paid" <?=$status === 'paid' ? 'selected' : ''?>>Paid</option>
-                                                    <option value="pending" <?=$status === 'pending' ? 'selected' : ''?>>Pending</option>
-                                                    <option value="accepted" <?=$status === 'accepted' ? 'selected' : ''?>>Accepted</option>
                                                     <option value="closed" <?=$status === 'closed' ? 'selected' : ''?>>Closed</option>
-                                                    <option value="rejected" <?=$status === 'rejected' ? 'selected' : ''?>>Rejected</option>
+                                                    <option value="paid" <?=$status === 'paid' ? 'selected' : ''?>>Paid</option>
+                                                    <option value="accepted" <?=$status === 'accepted' ? 'selected' : ''?>>Accepted</option>
+                                                    <option value="draft" <?=$status === 'draft' ? 'selected' : ''?>>Draft</option>
+                                                    <option value="submitted" <?=$status === 'submitted' ? 'selected' : ''?>>Submitted</option>
+                                                    <option value="invoiced" <?=$status === 'invoiced' ? 'selected' : ''?>>Invoiced</option>
+                                                    <option value="lost" <?=$status === 'lost' ? 'selected' : ''?>>Lost</option>
+                                                    <option value="declined-by-customer" <?=$status === 'declined-by-customer' ? 'selected' : ''?>>Declined By Customer</option>
                                                     <option value="expired" <?=$status === 'expired' ? 'selected' : ''?>>Expired</option>
                                                 <?php break;
                                             } ?>
@@ -302,16 +308,6 @@
                                 <?php foreach($settingsCols as $settingsCol) : ?>
                                 <?=$settingsCol?>
                                 <?php endforeach; ?>
-                                <?php if($type !== 'recurring-templates' && $type !== 'unbilled-income') : ?>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
-                                    <label for="chk_po_number" class="form-check-label">P.O. Number</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
-                                    <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                                </div>
-                                <?php endif; ?>
                                 <p class="m-0">Rows</p>
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -350,6 +346,57 @@
                     <tbody>
                         <?php if(count($transactions) > 0) : ?>
 						<?php foreach($transactions as $transaction) : ?>
+                        <?php switch($type) {
+                        case 'estimates' : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['no']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['memo']?></td>
+                            <td><?=$transaction['expiration_date']?></td>
+                            <td><?=$transaction['total']?></td>
+                            <td><?=$transaction['last_delivered']?></td>
+                            <td><?=$transaction['email']?></td>
+                            <td><?=$transaction['accepted_date']?></td>
+                            <td><?=$transaction['attachments']?></td>
+                            <td><?=$transaction['status']?></td>
+                            <td><?=$transaction['po_number']?></td>
+                            <td><?=$transaction['sales_rep']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
+                        <?php break;
+                        case 'invoices' : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['no']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['memo']?></td>
+                            <td><?=$transaction['due_date']?></td>
+                            <td><?=$transaction['aging']?></td>
+                            <td><?=$transaction['balance']?></td>
+                            <td><?=$transaction['total']?></td>
+                            <td><?=$transaction['last_delivered']?></td>
+                            <td><?=$transaction['email']?></td>
+                            <td><?=$transaction['attachments']?></td>
+                            <td><?=$transaction['status']?></td>
+                            <td><?=$transaction['po_number']?></td>
+                            <td><?=$transaction['sales_rep']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
+                        <?php break;
+                        default : ?>
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
@@ -375,6 +422,8 @@
                             <td><?=$transaction['sales_rep']?></td>
                             <td><?=$transaction['manage']?></td>
                         </tr>
+                        <?php break;
+                        } ?>
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>

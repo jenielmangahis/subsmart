@@ -35,6 +35,26 @@ $('.table-filter select:not(#filter-customer)').select2({
     minimumResultsForSearch: -1
 });
 
+$('#filter-customer').select2({
+    ajax: {
+        url: '/accounting/get-dropdown-choices',
+        dataType: 'json',
+        data: function(params) {
+            var query = {
+                search: params.term,
+                type: 'public',
+                field: 'customer',
+                for: 'filter'
+            }
+
+            // Query parameters will be ?search=[term]&type=public&field=[type]
+            return query;
+        }
+    },
+    templateResult: formatResult,
+    templateSelection: optionSelect
+});
+
 $('.dropdown-menu.table-filter .date').datepicker({
     format: 'mm/dd/yyyy',
     orientation: 'bottom',
@@ -177,12 +197,15 @@ $('#filter-type').on('change', function() {
                     <div class="col-4">
                         <label for="filter-status">Status</label>
                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                            <option value="all-statuses" selected="selected">All statuses</option>
-                            <option value="pending">Pending</option>
-                            <option value="accepted">Accepted</option>
+                            <option value="all-statuses" selected>All statuses</option>
                             <option value="open">Open</option>
                             <option value="closed">Closed</option>
-                            <option value="rejected">Rejected</option>
+                            <option value="draft">Draft</option>
+                            <option value="submitted">Submitted</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="invoiced">Invoiced</option>
+                            <option value="lost">Lost</option>
+                            <option value="declined-by-customer">Declined By Customer</option>
                             <option value="expired">Expired</option>
                         </select>
                     </div>
@@ -204,12 +227,15 @@ $('#filter-type').on('change', function() {
     
                 $('#filter-date').trigger('change');   
             } else {
-                $('#filter-status').html(`<option value="all-statuses" selected="selected">All statuses</option>
-                <option value="pending">Pending</option>
-                <option value="accepted">Accepted</option>
+                $('#filter-status').html(`<option value="all-statuses" selected>All statuses</option>
                 <option value="open">Open</option>
                 <option value="closed">Closed</option>
-                <option value="rejected">Rejected</option>
+                <option value="draft">Draft</option>
+                <option value="submitted">Submitted</option>
+                <option value="accepted">Accepted</option>
+                <option value="invoiced">Invoiced</option>
+                <option value="lost">Lost</option>
+                <option value="declined-by-customer">Declined By Customer</option>
                 <option value="expired">Expired</option>`);
             }
 
