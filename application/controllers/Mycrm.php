@@ -1019,6 +1019,7 @@ class Mycrm extends MY_Controller {
 
     	$this->load->model('Users_model');
     	$this->load->model('CompanyMultiAccount_model');
+    	$this->load->model('Business_model');
 
     	$is_success = 0;
     	$msg = '';
@@ -1031,31 +1032,39 @@ class Mycrm extends MY_Controller {
     	$isValid = $this->Users_model->attempt($login_data);
     	if( $isValid == 'valid' ){    		
     		//Create data
-    		$user = $this->Users_model->getUserByEmail($post['multi_email']);    		
-    		//Check if company id already in the list. Can only accept 1 company user 
-    		$isExists = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkCompanyId($company_id, $user->company_id);
-    		if( $isExists ){
-    			$msg = 'An account under company <b>' . $isExists->company_name . '</b> already exists. Cannot accept more than 1 account under same company';
+    		$user = $this->Users_model->getUserByEmail($post['multi_email']);    
+    		if( $user->company_id != $company_id ){
+    			//Check if company id already in the list. Can only accept 1 company user 
+	    		$isExists = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkCompanyId($company_id, $user->company_id);
+	    		if( $isExists ){
+	    			$msg = 'An account under company <b>' . $isExists->company_name . '</b> already exists. Cannot accept more than 1 account under same company';
+	    		}else{
+	    			if( $user->status == 1 ){
+	    				$data_multi = [
+			    			'parent_company_id' => $company_id,
+			    			'link_company_id' => $user->company_id,
+			    			'link_user_id' => $user->id,
+			    			'status' => $this->CompanyMultiAccount_model->statusNotVerified(),
+			    			'created' => date("Y-m-d H:i:s")
+			    		];
+
+			    		$lastId  = $this->CompanyMultiAccount_model->create($data_multi);
+			    		$hash_id = hashids_encrypt($lastId, '', 15);
+			    		$this->CompanyMultiAccount_model->update($lastId, ['hash_id' => $hash_id]);
+
+			    		//Send activation link
+			    		$is_sent = $this->sendMultiAccountActivationEmail($hash_id, $user->email);
+
+			    		$email = $user->email;
+			    		$is_success = 1;
+	    			}else{
+	    				$msg = 'Email <b>' . $post['multi_email'] . '</b> is currently inactive. Cannot login email.';
+	    			}	    			
+	    		}
     		}else{
-    			$data_multi = [
-	    			'parent_company_id' => $company_id,
-	    			'link_company_id' => $user->company_id,
-	    			'link_user_id' => $user->id,
-	    			'status' => $this->CompanyMultiAccount_model->statusNotVerified(),
-	    			'created' => date("Y-m-d H:i:s")
-	    		];
-
-	    		$lastId  = $this->CompanyMultiAccount_model->create($data_multi);
-	    		$hash_id = hashids_encrypt($lastId, '', 15);
-	    		$this->CompanyMultiAccount_model->update($lastId, ['hash_id' => $hash_id]);
-
-	    		//Send activation link
-	    		$is_sent = $this->sendMultiAccountActivationEmail($hash_id, $user->email);
-
-	    		$email = $user->email;
-	    		$is_success = 1;
-    		}
-    		
+    			$business = $this->Business_model->getByCompanyId($company_id);
+    			$msg = 'Email <b>' . $post['multi_email'] . '</b> belongs to current logged company <b>'.$business->business_name.'</b>. Cannot link company data.';
+    		}	
     	}else{
     		$msg = 'Invalid email / password';
     	}
@@ -1113,12 +1122,16 @@ class Mycrm extends MY_Controller {
 
     	$multiAccount = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkUserId($company_id, $post['uid']);
     	if( $multiAccount ){
-    		$isSent = $this->sendMultiAccountActivationEmail($multiAccount->hash_id, $multiAccount->user_email);
-    		if( $isSent == 1 ){
-    			$is_success = 1;
-    			$msg = '';
+    		if( $multiAccount->status == $this->CompanyMultiAccount_model->statusNotVerified() ){
+    			$isSent = $this->sendMultiAccountActivationEmail($multiAccount->hash_id, $multiAccount->user_email);
+	    		if( $isSent == 1 ){
+	    			$is_success = 1;
+	    			$msg = '';
+	    		}else{
+	    			$msg = 'Cannot send email. Please contact system administrator.';
+	    		}	
     		}else{
-    			$msg = 'Cannot send email. Please contact system administrator.';
+    			$msg = 'Account already verified. Cannot resend activation email.';
     		}
     	}  
 
@@ -1157,7 +1170,8 @@ class Mycrm extends MY_Controller {
 
     	$loggedMultiAccount = getSessionParentMultiAccount();	
     	$company_id    = logged('company_id');      	
-    	$multiAccounts = $this->CompanyMultiAccount_model->getByAllByCompanyParentId($company_id);
+    	$conditions[]  = ['field' => 'company_multi_accounts.status', 'value' => $this->CompanyMultiAccount_model->statusVerified()];
+    	$multiAccounts = $this->CompanyMultiAccount_model->getByAllByCompanyParentId($company_id, $conditions);
     	$this->page_data['multiAccounts'] = $multiAccounts;    	
     	$this->page_data['loggedMultiAccount'] = $loggedMultiAccount;
     	$this->load->view('v2/pages/mycrm/ajax_hdr_load_multi_account_list', $this->page_data);
@@ -1178,12 +1192,53 @@ class Mycrm extends MY_Controller {
     	$post = $this->input->post();
     	$user_id      = logged('id');
     	$company_id   = logged('company_id');
+
     	$multiAccount = $this->CompanyMultiAccount_model->getByParentCompanyIdAndHashId($company_id, $post['hashid']);
     	if($multiAccount){
-    		//Login User
-    		$user = $this->Users_model->getUserByID($multiAccount->link_user_id);
-        	$data = ['username' => $user->username, 'password' => $user->password_plain];
-        	$attempt = $this->Users_model->attempt($data, true);        	
+    		//Login User    		
+    		$user   = $this->Users_model->getUserByID($multiAccount->link_user_id);
+    		$client = $this->Clients_model->getById($user->company_id);        	
+        	if( $client->is_plan_active == 3 ){
+        		$msg = 'Company account is currently disabled. Cannot login.';  
+        	}else{        		
+        		$data   = ['username' => $user->username, 'password' => $user->password_plain];
+    			$attempt = $this->Users_model->attempt($data, true);        
+    			if ($attempt == 'valid') {
+    				// Get all access modules
+	                if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+	                    $access_modules = array(0 => 'all');
+	                } else {                
+	                    if ($client) {
+	                        $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+	                        if ($industryType) {
+	                            $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+	                            foreach ($industryModules as $im) {
+	                                $access_modules[] = $im->industry_module_id;
+	                            }
+	                        }
+	                    }
+	                }
+
+	                //Get company deactivated modules
+	                $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
+	                $deactivated_modules = array();
+
+	                foreach( $deactivatedModules as $dm ){
+	                    $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
+	                } 
+
+	                $this->session->set_userdata('deactivated_modules', $deactivated_modules);
+	                $this->session->set_userdata('userAccessModules', $access_modules);
+	                $this->session->set_userdata('is_plan_active', $client->is_plan_active);
+	                $this->session->set_userdata('multi_account_parent_company_id', $company_id);
+	                $this->session->set_userdata('multi_account_parent_user_id', $user_id);
+
+	                 $is_valid = 1;
+	                 $msg = '';
+    			}else{
+    				$msg = 'Invalid multi account login password.';
+    			}	
+        	}	
         	if ($attempt == 'valid') {
         		$this->Users_model->login($user);
         		$client = $this->Clients_model->getById($user->company_id);
@@ -1251,55 +1306,45 @@ class Mycrm extends MY_Controller {
     	$multi_parent_company_id = $this->session->userdata('multi_account_parent_company_id');
     	$multi_parent_user_id    = $this->session->userdata('multi_account_parent_user_id');
     	if( $multi_parent_company_id > 0 && $multi_parent_user_id > 0 ){
-    		//Login User
-    		$user = $this->Users_model->getUserByID($multi_parent_user_id);
-        	$data = ['username' => $user->username, 'password' => $user->password_plain];
-        	$attempt = $this->Users_model->attempt($data, true);        	
-        	if ($attempt == 'valid') {
-        		$this->Users_model->login($user);
-        		$client = $this->Clients_model->getById($user->company_id);
-        		if( $client->is_plan_active == 3 ){
-	                $msg = 'Company account is currently disabled. Cannot login.';                
-	            }else{
-	            	// Get all access modules
-	                if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
-	                    $access_modules = array(0 => 'all');
-	                } else {                
-	                    if ($client) {
-	                        $industryType = $this->IndustryType_model->getById($client->industry_type_id);
-	                        if ($industryType) {
-	                            $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
-	                            foreach ($industryModules as $im) {
-	                                $access_modules[] = $im->industry_module_id;
-	                            }
-	                        }
-	                    }
-	                }
+    		$user   = $this->Users_model->getUserByID($multi_parent_user_id);
+    		$client = $this->Clients_model->getById($user->company_id);
 
-	                //Get company deactivated modules
-	                $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
-	                $deactivated_modules = array();
+    		$this->Users_model->login($user);
+    		// Get all access modules
+            if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+                $access_modules = array(0 => 'all');
+            } else {                
+                if ($client) {
+                    $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                    if ($industryType) {
+                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+                        foreach ($industryModules as $im) {
+                            $access_modules[] = $im->industry_module_id;
+                        }
+                    }
+                }
+            }
 
-	                foreach( $deactivatedModules as $dm ){
-	                    $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
-	                } 
+            //Get company deactivated modules
+            $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
+            $deactivated_modules = array();
 
-	                $this->session->set_userdata('deactivated_modules', $deactivated_modules);
-	                $this->session->set_userdata('userAccessModules', $access_modules);
-	                $this->session->set_userdata('is_plan_active', $client->is_plan_active);
-	                $this->session->set_userdata('multi_account_parent_company_id', $company_id);
-	                $this->session->set_userdata('multi_account_parent_user_id', $user_id);
+            foreach( $deactivatedModules as $dm ){
+                $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
+            } 
 
-	                $this->session->unset_userdata('multi_account_parent_company_id');
-	                $this->session->unset_userdata('multi_account_parent_user_id');
+            $this->session->set_userdata('deactivated_modules', $deactivated_modules);
+            $this->session->set_userdata('userAccessModules', $access_modules);
+            $this->session->set_userdata('is_plan_active', $client->is_plan_active);
+            $this->session->set_userdata('multi_account_parent_company_id', $company_id);
+            $this->session->set_userdata('multi_account_parent_user_id', $user_id);
 
-	                 $is_valid = 1;
-	                 $msg = '';
-	            }
+            $this->session->unset_userdata('multi_account_parent_company_id');
+            $this->session->unset_userdata('multi_account_parent_user_id');
 
-        	}else{
-        		$msg = 'Invalid multi account login password.';
-        	}
+             $is_valid = 1;
+             $msg = '';
+
     	}else{
     		$msg = 'Cannot find main account data';
     	}

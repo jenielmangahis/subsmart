@@ -11,14 +11,16 @@
             ?>
             <li>
                 <a href="javascript:void(0);" class="hdr-multi-account-switch-back">
-                    <i class='bx bx-fw bxs-buildings'></i> Switch Back to <b><?= $hdrCompanyData->business_name; ?></b>
+                    <div class="hdr-multi-company-img" style="background-image: url('<?= businessProfileImage($hdrCompanyData->id); ?>')"></div>
+                    <span class="hdr-multi-company-name">Switch Back to <b><?= $hdrCompanyData->business_name; ?></b></span>
                 </a>
             </li>
         <?php } ?>
         <?php foreach($multiAccounts as $account){ ?>
             <li>
-                <a href="javascript:void(0);" data-hash="<?= $account->hash_id; ?>" class="hdr-multi-account">
-                    <i class='bx bx-fw bxs-buildings'></i> <?= $account->company_name; ?>
+                <a href="javascript:void(0);" data-hash="<?= $account->hash_id; ?>" class="hdr-multi-account">                    
+                    <div class="hdr-multi-company-img" style="background-image: url('<?= businessProfileImageByCompanyId($account->link_company_id); ?>')"></div>
+                    <span class="hdr-multi-company-name"><?= $account->company_name; ?></span>
                 </a>
             </li>
         <?php } ?>        
@@ -33,7 +35,8 @@
             ?>
             <li>
                 <a href="javascript:void(0);" class="hdr-multi-account-switch-back">
-                    <i class='bx bx-fw bxs-buildings'></i> Switch Back to <b><?= $hdrCompanyData->business_name; ?></b>
+                    <div class="hdr-multi-company-img" style="background-image: url('<?= businessProfileImage($hdrCompanyData->id); ?>')"></div>
+                    <span class="hdr-multi-company-name">Switch Back to <b><?= $hdrCompanyData->business_name; ?></b></span>
                 </a>
             </li>
         </ul>

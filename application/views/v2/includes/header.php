@@ -63,6 +63,25 @@ if ($this->session->userdata('usertimezone') == null) {
             height: 62px !important;
             min-height: 10px !important;
         }
+        .hdr-multi-company-img{
+            background-image: url(../images/profile-placeholder.jpeg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 40px;
+            width: 40px;
+            background-color: #6a4a86;
+            color: #fff;
+            border-radius: 100%;
+            display: inline-block;
+            border: 3px solid #fff;
+        }
+        .hdr-multi-company-name{
+            display: inline-block;
+            vertical-align: top;
+            line-height: 42px;
+            margin-left: 7px;
+        }
     </style>
 </head>
 
@@ -89,7 +108,8 @@ if ($this->session->userdata('usertimezone') == null) {
                 <?php if( $hdrCompanyData ){ ?>
                     <li>
                         <a href="javscript:void(0);" class="hdr-drpdown-multi-accounts">
-                            <i class='bx bx-fw bx-buildings'></i> <?= $hdrCompanyData->business_name; ?>
+                            <div class="hdr-multi-company-img" style="background-image: url('<?= businessProfileImage($hdrCompanyData->id); ?>')"></div>
+                            <span class="hdr-multi-company-name"><?= $hdrCompanyData->business_name; ?></span>
                             <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                         </a>
                         <div id="hdr-multi-account-list"></div>
