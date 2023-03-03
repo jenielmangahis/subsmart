@@ -608,6 +608,7 @@
                                                     </td>
                                                     <td><small>Qty</small>
                                                         <input
+                                                        min="0"
                                                         onchange="onChangeItemQuantity(this)"
                                                         data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                     </td>
@@ -624,6 +625,9 @@
                                                         onclick="onRemoveItem(this)"
                                                         type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                     </td>
+
+                                                    <!-- This is required for creating new job item -->
+                                                    <input type="hidden" value="<?= $item->fk_item_id ? $item->fk_item_id : "0" ?>" name="fk_item_id[]">
                                                 </tr>
                                             <?php
                                                 $subtotal = $subtotal + $total;
@@ -639,7 +643,7 @@
                                                     <input type="hidden" value='' name="item_id[]">
                                                 </td>
                                                 <td><small>Qty</small>
-                                                    <input data-itemid=''  id='' value='' type="number" name="item_qty[]" class="form-control qty">
+                                                    <input data-itemid='' min="0"  id='' value='' type="number" name="item_qty[]" class="form-control qty">
                                                 </td>
                                                 <td><small>Unit Price</small>
                                                     <input id='price' value=''  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
@@ -652,6 +656,9 @@
                                                 <td>
                                                     <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                 </td>
+
+                                                <!-- This is required for creating new job item -->
+                                                <input type="hidden" name="fk_item_id[]">
                                             </tr>
                                         </template>
 
@@ -891,6 +898,8 @@
         $removeBtn = $row.querySelector(".items_remove_btn");
         $removeBtn.addEventListener("click", () => onRemoveItem($removeBtn));
 
+        $row.querySelector("[name='fk_item_id[]']").value = item.id;
+
         $("#jobs_items").append($($row));
         // calculate_subtotal();
     });
@@ -918,12 +927,30 @@
     $form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const response = await fetch(`/Job/api_edit_job_items/${jobId}`, {
-            method: "POST",
-            body: new FormData($form),
-        });
+        let isSuccess = false;
+        try {
+            const response = await fetch(`/Job/api_edit_job_items/${jobId}`, {
+                method: "POST",
+                body: new FormData($form),
+            });
+            const json = await response.json();
+            isSuccess = response.status === 200;
+        } catch (error) { }
 
-        await response.json();
+        if (isSuccess) {
+            await Swal.fire(
+                'Update Success',
+                'Job has been updated successfully',
+                'success'
+            )
+            window.location.reload()
+        } else {
+            Swal.fire(
+                'Update Error',
+                'Something went wrong updating this job',
+                'error'
+            )
+        }
     })
 </script>
 

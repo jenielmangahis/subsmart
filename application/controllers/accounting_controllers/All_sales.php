@@ -152,6 +152,7 @@ class All_sales extends MY_Controller {
 
         if(!empty(get('customer'))) {
             $filters['customer_id'] = get('customer');
+            $this->page_data['customer'] = new stdClass();
             $this->page_data['customer']->id = get('customer');
             $customer = $this->accounting_customers_model->get_by_id(get('customer'));
             $customerName = $customer->first_name . ' ' . $customer->last_name;
@@ -244,6 +245,14 @@ class All_sales extends MY_Controller {
             '<div class="form-check">
                 <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
                 <label for="chk_status" class="form-check-label">Status</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
+                <label for="chk_po_number" class="form-check-label">P.O. Number</label>
+            </div>',
+            '<div class="form-check">
+                <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
+                <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
             </div>'
         ];
 
@@ -260,13 +269,180 @@ class All_sales extends MY_Controller {
                 $transactions = $this->get_billable_expenses($transactions, $filters);
             break;
             case 'estimates' :
+                $headers = [
+                    '<td data-name="Date">DATE</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="No.">NO.</td>',
+                    '<td data-name="Customer">CUSTOMER</td>',
+                    '<td data-name="Memo">MEMO</td>',
+                    '<td data-name="Expiration Date">EXPIRATION DATE</td>',
+                    '<td data-name="Total">TOTAL</td>',
+                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
+                    '<td data-name="Email">EMAIL</td>',
+                    '<td data-name="Accepted Date">ACCEPTED DATE</td>',
+                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+                    '<td data-name="Status">STATUS</td>',
+                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
+                    '<td data-name="Sales Rep">SALES REP</td>',
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_expiration_date" class="form-check-input">
+                        <label for="chk_expiration_date" class="form-check-label">Expiration Date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_acccepted_date" class="form-check-input">
+                        <label for="chk_acccepted_date" class="form-check-label">Accepted Date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
+                        <label for="chk_po_number" class="form-check-label">P.O. Number</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
+                        <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
+                    </div>'
+                ];
+
                 $transactions = $this->get_estimates($transactions, $filters);
+            break;
+            case 'invoices' :
+                $headers = [
+                    '<td data-name="Date">DATE</td>',
+                    '<td data-name="Type">TYPE</td>',
+                    '<td data-name="No.">NO.</td>',
+                    '<td data-name="Customer">CUSTOMER</td>',
+                    '<td data-name="Memo">MEMO</td>',
+                    '<td data-name="Due Date">DUE DATE</td>',
+                    '<td data-name="Total">TOTAL</td>',
+                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
+                    '<td data-name="Email">EMAIL</td>',
+                    '<td data-name="Accepted Date">ACCEPTED DATE</td>',
+                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
+                    '<td data-name="Status">STATUS</td>',
+                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
+                    '<td data-name="Sales Rep">SALES REP</td>',
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
+                        <label for="chk_due_date" class="form-check-label">Due date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_aging" class="form-check-input">
+                        <label for="chk_aging" class="form-check-label">Aging</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
+                        <label for="chk_balance" class="form-check-label">Balance</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
+                        <label for="chk_po_number" class="form-check-label">P.O. Number</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
+                        <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
+                    </div>'
+                ];
+
+                $transactions = $this->get_invoices($transactions, $filters);
+            break;
+            case 'sales-receipts' :
+                $transactions = $this->get_sales_receipts($transactions, $filters);
+            break;
+            case 'credit-memos' :
+                $transactions = $this->get_credit_memos($transactions, $filters);
+            break;
+            case 'unbilled-income' :
+                $transactions = $this->get_unbilled_incomes($transactions, $filters);
+            break;
+            case 'recently-paid' :
+                $transactions = $this->get_recently_paid_invoices($transactions, $filters);
+            break;
+            case 'money-received' :
+                $transactions = $this->get_payments($transactions, $filters);
+            break;
+            case 'statements' :
+
             break;
         }
 
         if(isset($filters['start-date']) && $filters['type'] !== 'unbilled-income') {
             $transactions = array_filter($transactions, function($v, $k) use ($filters) {
                 return strtotime($v['date']) >= strtotime($filters['start-date']) && strtotime($v['date']) <= strtotime($filters['end-date']);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        if(isset($filters['customer_id'])) {
+            $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                return $filters['customer_id'] === $v['customer_id'];
             }, ARRAY_FILTER_USE_BOTH);
         }
 
@@ -327,12 +503,17 @@ class All_sales extends MY_Controller {
                     }
                 break;
                 case 'overdue' :
-                    if(in_array($invoice->INV_status, ['Draft', 'Declined', 'Paid'])) {
+                    if(in_array($invoice->status, ['Draft', 'Declined', 'Paid'])) {
                         $flag = false;
                     } else {
-                        if(strtotime($invoice->due_date) > strtotime()) {
+                        if(strtotime($invoice->due_date) > strtotime(date("m/d/Y"))) {
                             $flag = false;
                         }
+                    }
+                break;
+                case 'paid' :
+                    if($invoice->status !== 'Paid' || floatval($invoice->balance) > 0.00) {
+                        $flag = false;
                     }
                 break;
             }
@@ -344,6 +525,7 @@ class All_sales extends MY_Controller {
                     'type' => 'Invoice',
                     'no' => $invoice->invoice_number,
                     'customer' => $customerName,
+                    'customer_id' => $invoice->customer_id,
                     'method' => '',
                     'source' => '',
                     'memo' => $invoice->message_on_invoice,
@@ -405,6 +587,7 @@ class All_sales extends MY_Controller {
                     'type' => 'Credit Memo',
                     'no' => $creditMemo->ref_no,
                     'customer' => $customerName,
+                    'customer_id' => $creditMemo->customer_id,
                     'method' => '',
                     'source' => '',
                     'memo' => $creditMemo->message_credit_memo,
@@ -468,6 +651,7 @@ class All_sales extends MY_Controller {
                 'type' => 'Sales Receipt',
                 'no' => $salesReceipt->ref_no,
                 'customer' => $customerName,
+                'customer_id' => $salesReceipt->customer_id,
                 'method' => '',
                 'source' => '',
                 'memo' => $salesReceipt->message_sales_receipt,
@@ -524,6 +708,7 @@ class All_sales extends MY_Controller {
                 'type' => 'Refund',
                 'no' => $refundReceipt->ref_no,
                 'customer' => $customerName,
+                'customer_id' => $refundReceipt->customer_id,
                 'method' => '',
                 'source' => '',
                 'memo' => $refundReceipt->message_refund_receipt,
@@ -574,6 +759,7 @@ class All_sales extends MY_Controller {
                 'type' => 'Credit',
                 'no' => $delayedCredit->ref_no,
                 'customer' => $customerName,
+                'customer_id' => $delayedCredit->customer_id,
                 'method' => '',
                 'source' => '',
                 'memo' => $delayedCredit->memo,
@@ -624,6 +810,7 @@ class All_sales extends MY_Controller {
                 'type' => 'Charge',
                 'no' => $delayedCharge->ref_no,
                 'customer' => $customerName,
+                'customer_id' => $delayedCharge->customer_id,
                 'method' => '',
                 'source' => '',
                 'memo' => $delayedCharge->memo,
@@ -693,51 +880,100 @@ class All_sales extends MY_Controller {
 
             $flag = true;
             switch($filters['status']) {
-                case 'pending' :
-
-                break;
-                case 'accepted' :
-
-                break;
                 case 'open' :
                     if(in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer'])) {
                         $flag = false;
                     }
                 break;
                 case 'closed' :
-
+                    if(in_array($estimate->status, ['Draft', 'Submitted', 'Accepted'])) {
+                        $flag = false;
+                    }
                 break;
-                case 'rejected' :
-
+                case 'draft' :
+                    if($estimate->status !== 'Draft') {
+                        $flag = false;
+                    }
+                break;
+                case 'submitted' :
+                    if($estimate->status !== 'Submitted') {
+                        $flag = false;
+                    }
+                break;
+                case 'accepted' :
+                    if($estimate->status !== 'Accepted') {
+                        $flag = false;
+                    }
+                break;
+                case 'invoiced' :
+                    if($estimate->status !== 'Invoiced') {
+                        $flag = false;
+                    }
+                break;
+                case 'lost' :
+                    if($estimate->status !== 'Lost') {
+                        $flag = false;
+                    }
+                break;
+                case 'declined-by-customer' :
+                    if($estimate->status !== 'Declined By Customer') {
+                        $flag = false;
+                    }
                 break;
                 case 'expired' :
-
+                    if(in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer']) || !in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer']) && strtotime($estimate->expiry_date) > strtotime(date('m/d/Y'))) {
+                        $flag = false;
+                    }
                 break;
             }
 
             if($flag) {
-                $transactions[] = [
-                    'id' => $estimate->id,
-                    'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
-                    'type' => 'Estimate',
-                    'no' => $estimate->estimate_number,
-                    'customer' => $customerName,
-                    'method' => '',
-                    'source' => '',
-                    'memo' => $estimate->customer_message,
-                    'due_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
-                    'aging' => '',
-                    'balance' => '0.00',
-                    'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
-                    'last_delivered' => '',
-                    'email' => '',
-                    'attachments' => '',
-                    'status' => $estimate->status,
-                    'po_number' => '',
-                    'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($estimate->created_at)),
-                    'manage' => $manageCol
-                ];
+                if($filters['type'] === 'estimates') {
+                    $transactions[] = [
+                        'id' => $estimate->id,
+                        'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                        'type' => 'Estimate',
+                        'no' => $estimate->estimate_number,
+                        'customer' => $customerName,
+                        'customer_id' => $estimate->customer_id,
+                        'memo' => $estimate->customer_message,
+                        'expiration_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                        'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
+                        'last_delivered' => '',
+                        'email' => '',
+                        'accepted_date' => !empty($estimate->accepted_date) && in_array($estimate->status, ['Accepted', 'Invoiced']) ? date("m/d/Y", strtotime($estimate->accepted_date)) : '',
+                        'attachments' => '',
+                        'status' => $estimate->status,
+                        'po_number' => '',
+                        'sales_rep' => '',
+                        'date_created' => date("m/d/Y H:i:s", strtotime($estimate->created_at)),
+                        'manage' => $manageCol
+                    ];
+                } else {
+                    $transactions[] = [
+                        'id' => $estimate->id,
+                        'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                        'type' => 'Estimate',
+                        'no' => $estimate->estimate_number,
+                        'customer' => $customerName,
+                        'customer_id' => $estimate->customer_id,
+                        'method' => '',
+                        'source' => '',
+                        'memo' => $estimate->customer_message,
+                        'due_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                        'aging' => '',
+                        'balance' => '0.00',
+                        'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
+                        'last_delivered' => '',
+                        'email' => '',
+                        'attachments' => '',
+                        'status' => $estimate->status,
+                        'po_number' => '',
+                        'sales_rep' => '',
+                        'date_created' => date("m/d/Y H:i:s", strtotime($estimate->created_at)),
+                        'manage' => $manageCol
+                    ];
+                }
             }
         }
 
@@ -770,6 +1006,7 @@ class All_sales extends MY_Controller {
                 'type' => 'Payment',
                 'no' => $payment->ref_no,
                 'customer' => $customerName,
+                'customer_id' => $payment->customer_id,
                 'method' => '',
                 'source' => '',
                 'memo' => $payment->memo,
@@ -843,6 +1080,7 @@ class All_sales extends MY_Controller {
                 'type' => 'Billable Expense Charge',
                 'no' => '',
                 'customer' => $customerName,
+                'customer_id' => $billableExpense->customer_id,
                 'method' => '',
                 'source' => '',
                 'memo' => $billableExpense->description,
@@ -857,6 +1095,165 @@ class All_sales extends MY_Controller {
                 'po_number' => '',
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($billableExpense->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_unbilled_incomes($transactions, $filters = [])
+    {
+        $delayedCredits = $this->accounting_delayed_credit_model->get_company_delayed_credits(['company_id' => logged('company_id')]);
+        $delayedCharges = $this->accounting_delayed_charge_model->get_company_delayed_charges(['company_id' => logged('company_id')]);
+        $billableExpenses = $this->accounting_customers_model->get_company_billable_expenses(logged('company_id'));
+
+        foreach($delayedCredits as $credit)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($credit->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            if($credit->status === '1' && strtotime($credit->delayed_credit_date) <= strtotime($filters['start-date'])) {
+                $transactions[] = [
+                    'id' => $credit->id,
+                    'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
+                    'type' => 'Credit',
+                    'no' => $credit->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $credit->customer_id,
+                    'memo' => $credit->memo,
+                    'total' => number_format(floatval(str_replace(',', '', $credit->total_amount)), 2, '.', ','),
+                    'attachments' => '',
+                    'status' => floatval($credit->remaining_balance) > 0 ? 'Open' : 'Closed'
+                ];
+            }
+        }
+
+        foreach($delayedCharges as $charge)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($charge->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            if($charge->status === '1' && strtotime($charge->delayed_charge_date) <= strtotime($filters['start-date'])) {
+                $transactions[] = [
+                    'id' => $charge->id,
+                    'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
+                    'type' => 'Charge',
+                    'no' => $charge->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $charge->customer_id,
+                    'memo' => $charge->memo,
+                    'total' => number_format(floatval(str_replace(',', '', $charge->total_amount)), 2, '.', ','),
+                    'attachments' => '',
+                    'status' => floatval($charge->remaining_balance) > 0 ? 'Open' : 'Closed'
+                ];
+            }
+        }
+
+        foreach($billableExpenses as $billableExpense)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($billableExpense->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            switch($billableExpense->transaction_type) {
+                case 'Expense' :
+                    $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($expense->payment_date));
+                break;
+                case 'Check' :
+                    $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($check->payment_date));
+                break;
+                case 'Bill' :
+                    $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($bill->bill_date));
+                break;
+                case 'Vendor Credit' :
+                    $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                break;
+                case 'Credit Card Credit' :
+                    $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
+                    $date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                break;
+            }
+
+            $transactions[] = [
+                'id' => $billableExpense->id,
+                'date' => $date,
+                'type' => 'Billable Expense Charge',
+                'no' => '',
+                'customer' => $customerName,
+                'customer_id' => $billableExpense->customer_id,
+                'memo' => $billableExpense->description,
+                'total' => number_format(floatval(str_replace(',', '', $billableExpense->amount)), 2, '.', ','),
+                'attachments' => '',
+                'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open'
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_recently_paid_invoices($transactions, $filters = [])
+    {
+        $payments = $this->invoice_model->get_company_payments(logged('company_id'));
+
+        foreach($payments as $payment)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            $invoice = $this->invoice_model->get_invoice_by_invoice_number($payment->invoice_number, logged('company_id'));
+
+            $manageCol = "<div class='dropdown table-management'>
+                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item print-invoice' href='/invoice/preview/$invoice->id?format=print' target='_blank'>Print</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-invoice' href='#'>Send</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item view-edit-invoice' href='#'>View/Edit</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item delete-invoice' href='#'>Delete</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item void-invoice' href='#'>Void</a>
+                    </li>
+                </ul>
+            </div>";
+
+            $transactions[] = [
+                'id' => $invoice->id,
+                'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                'type' => 'Invoice',
+                'no' => $invoice->invoice_number,
+                'customer' => $customerName,
+                'customer_id' => $invoice->customer_id,
+                'method' => '',
+                'source' => '',
+                'memo' => $invoice->message_on_invoice,
+                'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                'aging' => '',
+                'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
+                'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => $invoice->customer_email,
+                'latest_payment' => date("m/d/Y", strtotime($payment->payment_date)),
+                'attachments' => '',
+                'status' => $invoice->INV_status,
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created)),
                 'manage' => $manageCol
             ];
         }

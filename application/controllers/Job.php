@@ -3946,21 +3946,6 @@ class Job extends MY_Controller
 
     public function api_edit_job_items($id)
     {
-        foreach ($_POST['item_id'] as $key => $value) {
-            if ($value != 0) {
-                $this->db->where('items_id', $value);
-                $this->db->update('job_items', ['qty' => $_POST['item_qty'][$key]]);
-            } else {
-                // TODO: insert new item
-
-                // $this->db->insert('job_items', [
-                //     'job_id' => $id,
-                //     'items_id' => $value,
-                //     'qty' => $_POST['item_qty'][$key],
-                // ]);
-            }
-        }
-
         $postIds = array_filter($_POST['item_id'], function ($id) {
             return $id != 0;
         });
@@ -3969,7 +3954,35 @@ class Job extends MY_Controller
         $this->db->where('job_id', $id);
         $this->db->delete('job_items');
 
-        exit(json_encode(['success' => true]));
+        foreach ($_POST['item_id'] as $key => $itemId) {
+            if ($itemId != 0) {
+                $this->db->where('items_id', $itemId);
+                $this->db->update('job_items', ['qty' => $_POST['item_qty'][$key]]);
+                continue;
+            }
+
+            if ($_POST['fk_item_id'][$key] == 0) {
+                continue;
+            }
+
+            $this->db->where('job_id', $id);
+            $this->db->where('items_id', $_POST['fk_item_id'][$key]);
+            $existingItem = $this->db->get('job_items')->row();
+
+            if ($existingItem) {
+                $this->db->where('job_id', $existingItem->job_id);
+                $this->db->where('items_id', $existingItem->items_id);
+                $this->db->update('job_items', ['qty' => (int) $_POST['item_qty'][$key] + (int) $existingItem->qty]);
+            } else {
+                $this->db->insert('job_items', [
+                    'job_id' => $id,
+                    'items_id' => $_POST['fk_item_id'][$key],
+                    'qty' => $_POST['item_qty'][$key],
+                ]);
+            }
+        }
+
+        exit(json_encode(['success' => $_POST]));
     }
 }
 

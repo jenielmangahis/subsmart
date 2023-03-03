@@ -1762,7 +1762,7 @@ class Customers extends MY_Controller {
                     if(in_array($invoice->INV_status, ['Draft', 'Declined', 'Paid'])) {
                         $flag = false;
                     } else {
-                        if(strtotime($invoice->due_date) > strtotime()) {
+                        if(strtotime($invoice->due_date) > strtotime(date("m/d/Y"))) {
                             $flag = false;
                         }
                     }
