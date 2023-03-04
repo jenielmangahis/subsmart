@@ -5,10 +5,15 @@
                 <span>Inventory</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Location'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('inventory/location') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Location</span>
+            </a>
+        </li>
         <li class="<?php if($page->title == 'Inventory Settings'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('inventory/settings') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Settings</span>
             </a>
-        </li>
+        </li>   
     </ul>
 </div>

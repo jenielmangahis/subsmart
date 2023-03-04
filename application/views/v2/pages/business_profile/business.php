@@ -644,34 +644,38 @@
                 cancelButtonText: "Cancel"
             }).then((result) => {
                 if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: url,
-                        dataType: 'json',
-                        data: {uid:uid},
-                        success: function(o) {
-                            $('#loading_modal').modal('hide');
-                            if( o.is_success == 1 ){   
-                                Swal.fire({
-                                    html: "Email activation link was sent successfully",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    
-                                });
-                            }else{
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                html: o.msg
-                              });
+                    $('#loading_modal').modal('show');
+                    $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Sending email....');
+                    
+                    setTimeout(function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            dataType: 'json',
+                            data: {uid:uid},
+                            success: function(o) {
+                                $('#loading_modal').modal('hide');
+                                if( o.is_success == 1 ){   
+                                    Swal.fire({
+                                        html: "Email activation link was sent successfully",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        
+                                    });
+                                }else{
+                                  Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: o.msg
+                                  });
+                                }
+                            },beforeSend: function() {
+                                
                             }
-                        },beforeSend: function() {
-                            $('#loading_modal').modal('show');
-                            $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Sending email....');
-                        }
-                    });
+                        });
+                    }, 500);
                 }
             });
         });

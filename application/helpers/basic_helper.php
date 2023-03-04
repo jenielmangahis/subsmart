@@ -214,6 +214,20 @@ if (!function_exists('businessProfileImage')) {
     }
 }
 
+function businessProfileImageByCompanyId($company_id)
+{
+
+    $CI = &get_instance();
+
+    if( !file_exists(FCPATH.'uploads/users/business_profile/' . $company_id . '/' . $CI->business_model->getRowByWhere(['company_id' => $company_id], 'business_image')) ){
+        $url = base_url('assets/img/onboarding/profile-avatar.png');
+    }else{
+        $url = base_url('uploads/users/business_profile/' . $company_id . '/' . $CI->business_model->getRowByWhere(['company_id' => $company_id], 'business_image') . '?' . time());
+    }
+
+    return $url;
+}
+
 if (!function_exists('getCompanyBusinessProfileImage')) {
 
     function getCompanyBusinessProfileImage()

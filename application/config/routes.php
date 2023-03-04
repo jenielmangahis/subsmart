@@ -1282,6 +1282,7 @@ $route['mycrm/_add_employee'] = 'Mycrm/ajax_add_employee';
 $route['mycrm/_add_multi_account'] = 'Mycrm/ajax_add_multi_account';
 $route['mycrm/_load_multi_account_list'] = 'Mycrm/ajax_load_multi_account_list';
 $route['activate_multi_account/(:any)'] = 'Pages/front_activate_multi_account/$1';
+$route['mycrm/_resend_multi_account_activation_email'] = 'Mycrm/ajax_resend_multi_account_activation_email';
 $route['mycrm/_delete_multi_account'] = 'Mycrm/ajax_delete_multi_account';
 $route['mycrm/_hdr_load_multi_account_list'] = 'Mycrm/ajax_hdr_load_multi_account_list';
 $route['mycrm/_login_multi_account'] = 'Mycrm/ajax_login_multi_account';
@@ -1459,6 +1460,7 @@ $route['customer/_adt_sales_sync_setting'] = 'Customer/ajax_adt_sales_sync_setti
 $route['api/create_auto_sms_notification'] = 'Api/create_auto_sms_notification';
 $route['api/create_hash_id'] = 'Api/create_hash_id';
 $route['api/create_google_calendar_event'] = 'Api/createGoogleCalendarEvent';
+$route['api/get_company_multi_accounts'] = 'Api/fetchCompanyMultiAccountList';
 
 //Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';

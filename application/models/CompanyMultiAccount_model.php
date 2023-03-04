@@ -92,13 +92,41 @@ class CompanyMultiAccount_model extends MY_Model
         return $query->result();
     }
 
-    public function getByAllByCompanyParentId($company_parent_id)
+    public function getByAllByCompanyParentId($company_parent_id, $conditions = array())
     {
         $this->db->select('company_multi_accounts.*, users.email AS user_email, business_profile.business_name AS company_name');
         $this->db->from($this->table);
         $this->db->join('users', 'company_multi_accounts.link_user_id = users.id','left');     
         $this->db->join('business_profile', 'company_multi_accounts.link_company_id = business_profile.company_id','left');     
         $this->db->where('company_multi_accounts.parent_company_id', $company_parent_id);
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
+            }
+        }
+
+        $this->db->order_by('company_multi_accounts.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function apiGetByAllByCompanyParentId($company_parent_id, $conditions = array())
+    {
+        $this->db->select('company_multi_accounts.*, users.email AS user_email, business_profile_a.business_name AS parent_company_name,  business_profile_b.business_name AS link_company_name');
+        $this->db->from($this->table);
+        $this->db->join('users', 'company_multi_accounts.link_user_id = users.id','left');     
+        $this->db->join('business_profile AS business_profile_a', 'company_multi_accounts.parent_company_id = business_profile_a.company_id','left');     
+        $this->db->join('business_profile AS business_profile_b', 'company_multi_accounts.link_company_id = business_profile_b.company_id','left');             
+        $this->db->where('company_multi_accounts.parent_company_id', $company_parent_id);
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
+            }
+        }
+
         $this->db->order_by('company_multi_accounts.id', 'DESC');
 
         $query = $this->db->get();

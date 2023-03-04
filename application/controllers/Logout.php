@@ -36,6 +36,8 @@ class Logout extends CI_Controller {
 		$this->activity_model->add("User: ".getLoggedFullName(logged('id')).' Logged Out'); 
 
 		$this->users_model->logout();
+		$this->session->unset_userdata('multi_account_parent_company_id');
+	    $this->session->unset_userdata('multi_account_parent_user_id');
 
 		redirect('login','refresh');
 
