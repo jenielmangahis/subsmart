@@ -40,6 +40,7 @@ class Inventory extends MY_Controller
 
     public function index()
     {
+        
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
 
@@ -472,6 +473,12 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function deleteLocation(){
+        $post = $this->input->post();
+        $id   = $post['id'];
+        $item = $this->items_model->deleteLocation($id);
+
+    }
     public function delete()
     {
         $post = $this->input->post();
@@ -1180,13 +1187,45 @@ class Inventory extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function settings() 
+    public function settings()  
     {
         $this->page_data['page']->title = 'Inventory Settings';
 		$this->page_data['page']->parent = 'Tools';
 
         $this->page_data['fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
         $this->load->view('v2/pages/inventory/settings', $this->page_data);
+    }
+
+    public function location() 
+    {
+        $this->page_data['page']->title = 'Location';
+		$this->page_data['page']->parent = 'Tools';
+
+        $this->page_data['location'] = $this->items_model->getLocationByCompanyId();
+        $this->load->view('v2/pages/inventory/location/list', $this->page_data);
+    }
+
+    public function addInventoryLocation() 
+    {
+        $this->page_data['page']->title = 'Location';
+		$this->page_data['page']->parent = 'Tools';
+
+        print_r($this->page_data['item_list'] );
+        $this->load->view('v2/pages/inventory/location/add', $this->page_data);
+    }
+    public function selectItems()
+    {
+        $items = $this->items_model->getItemlist();
+
+        foreach($items as $item){
+            $result[] = [
+                'id' => $item->id,
+                'title' => $item->title
+            ]; 
+        }   
+    
+
+        die(json_encode($result));   
     }
 
     public function add_custom_field()
